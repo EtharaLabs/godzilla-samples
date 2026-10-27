@@ -71,7 +71,7 @@ Each bundle directory is a complete Harbor task: `task.toml` is the runner manif
 
 ## License
 
-See the license of the repository that publishes this lane.
+Released under the MIT License. See [LICENSE](LICENSE). Each task keeps the license of any third-party input its environment carries.
 
 ## Contact
 
