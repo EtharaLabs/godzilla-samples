@@ -76,3 +76,9 @@ Released under the MIT License. See [LICENSE](LICENSE). Each task keeps the lice
 ## Contact
 
 Open an issue on [Ethara.AI on GitHub](https://github.com/Ethara-Ai), report a vulnerability privately through [SECURITY.md](SECURITY.md), and read [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution route.
+
+---
+
+## Copyright
+
+Copyright (c) 2026 Green Rider Technology LLP (Ethara AI). All rights reserved.
