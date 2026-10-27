@@ -60,8 +60,12 @@ Each bundle directory is a complete Harbor task: `task.toml` is the runner manif
 ## Cite
 
 ```bibtex
-@misc{godzillasamples,
-  title = {godzilla: samples}
+@misc{godzilla2026,
+  title        = {godzilla: Harbor-Format Terminal Tasks Filtered by Frontier-Model Pass Rate},
+  author       = {{Ethara.AI}},
+  year         = {2026},
+  howpublished = {\url{https://github.com/EtharaOrion/godzilla}},
+  note         = {Each task is a containerized directive carrying its own environment, reference solution, and verifier. Only tasks the frontier cannot reliably solve are delivered.}
 }
 ```
 
@@ -71,4 +75,4 @@ See the license of the repository that publishes this lane.
 
 ## Contact
 
-[Ethara AI on GitHub](https://github.com/Ethara-Ai), [SECURITY.md](SECURITY.md) for a private report, and [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution route.
+Open an issue on [Ethara.AI on GitHub](https://github.com/Ethara-Ai), report a vulnerability privately through [SECURITY.md](SECURITY.md), and read [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution route.
