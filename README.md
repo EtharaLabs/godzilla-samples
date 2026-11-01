@@ -64,7 +64,7 @@ Each bundle directory is a complete Harbor task: `task.toml` is the runner manif
   title        = {godzilla: Harbor-Format Terminal Tasks Filtered by Frontier-Model Pass Rate},
   author       = {{Ethara.AI}},
   year         = {2026},
-  howpublished = {\url{https://github.com/EtharaOrion/godzilla}},
+  howpublished = {\url{https://github.com/EtharaLabs/godzilla}},
   note         = {Each task is a containerized directive carrying its own environment, reference solution, and verifier. Only tasks the frontier cannot reliably solve are delivered.}
 }
 ```
