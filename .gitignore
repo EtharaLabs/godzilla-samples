@@ -1,0 +1,18 @@
+# samples — lane checkout. Trinity's gate never trusts this file: every ignored path is read as
+# dirt unless ignored_bytes.py tolerates it; only the root caches below are tolerated here
+# (scope LANE), and install writes no file into this checkout (ADR 0081).
+
+# Interpreter and linter caches a tool may write at this checkout's root
+# (ignored_bytes.ROOT_CACHE_DIRECTORIES: the only directories every scope tolerates).
+/.venv/
+/.pytest_cache/
+/.mypy_cache/
+/.ruff_cache/
+
+# Bytecode is tolerated only when it is the genuine bytecode of a sibling .py
+# (ignored_bytes._genuine); orphan or stale .pyc still reads as dirt.
+__pycache__/
+*.pyc
+
+# macOS litter (ignored_bytes.OS_LITTER is tolerated at any depth).
+.DS_Store
