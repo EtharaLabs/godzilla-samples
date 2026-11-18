@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--canonical",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "::: note\nBefore\n%% render(\"a　b\") %%\nafter _word_.\n:::\n\n```markdown\nBefore\n%% render(\"a　b\") %%\nafter _word_.\n```\n\n<!-- fmt: template.delimiters \"%%\" \"%%\" scope=file -->\n",
+ "cwd": ".",
+ "files": {}
+}

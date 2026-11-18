@@ -1,0 +1,13 @@
+{
+ "setup": {
+  "stdout": "Configured yamark Git filter in <worktree>\nUpdated <repo>/.git/info/attributes with 4 new attribute pattern(s)\n\nNext step:\n  git add --renormalize .\n\nUndo:\n  Temporarily stage one file exactly as it appears in the working tree:\n    git -c filter.yamark-md.clean=cat add <path>\n  Permanently remove this local setup:\n    yamark git-filter teardown\n\nPer-file control:\n  Add later Git attribute lines to .git/info/attributes or .gitattributes:\n    NEWS.md -filter\n  Then use the normal formatter for that file, for example:\n    yamark format --wrap 72 NEWS.md\n  Use <!-- fmt: skip file --> inside a Markdown file to leave its contents untouched.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "teardown": {
+  "stdout": "Removed yamark Git filter setup from <worktree>\nUnset 4 local Git config value(s)\nRemoved 4 yamark attribute pattern(s) from <repo>/.git/info/attributes\n\nTracked files keep their current index content until staged again. Run:\n  git add --renormalize .\nif you want to restage them without the filter.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "info_attributes_after": ""
+}

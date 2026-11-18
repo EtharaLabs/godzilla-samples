@@ -1,0 +1,22 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "nonexistent.md",
+  "--config",
+  "explicit.toml"
+ ],
+ "stdin": "First sentence. Second sentence.\n",
+ "cwd": "nested",
+ "files": {
+  "yamark.toml": "W2Zvcm1hdF0Kd3JhcCA9ICJzZW50ZW5jZSIK",
+  "nested/explicit.toml": "W2Zvcm1hdF0Kd3JhcCA9ICJub25lIgo="
+ },
+ "check_args": [
+  "format",
+  "--check",
+  "--config",
+  "explicit.toml",
+  "nonexistent.md"
+ ]
+}

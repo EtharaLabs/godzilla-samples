@@ -1,0 +1,35 @@
+--- openapi.yaml
++++ openapi.yaml
+@@ -1,8 +1,10 @@
+ openapi: 3.0.3
+ info:
+   title: Pet Store
+-  version: '1.0.0'
+-  description: "A sample API that uses a petstore as an example to demonstrate features in the OpenAPI specification."
++  version: 1.0.0
++  description: >-
++    A sample API that uses a petstore as an example to demonstrate features
++    in the OpenAPI specification.
+ paths:
+   /pets/{petId}:
+     get:
+@@ -12,7 +14,7 @@
+         - name: petId
+           in: path
+           required: true
+-          schema: { type: string }
++          schema: {type: string}
+       responses:
+         '200':
+           description: Expected response to a valid request
+@@ -26,8 +28,8 @@
+   schemas:
+     Pet:
+       type: object
+-      required: [id,name]
++      required: [id, name]
+       properties:
+         id: {type: integer, format: int64}
+         name: {type: string}
+-        tag:  {type: string, nullable: True}
++        tag: {type: string, nullable: true}

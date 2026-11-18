@@ -1,0 +1,14 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "in.py"
+ ],
+ "stdin": "def f():\n    # fmt: markdown scope=next wrap=20\n    x = \"\"\"\n    Some   *markdown*  text, __strong__.\n    * item\n    \"\"\"\n\n",
+ "files": {
+  "yamark.toml": {
+   "text": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": []
+}

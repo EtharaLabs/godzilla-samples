@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "Configured yamark Git filter in {} Updated {} with {added} new attribute\npattern(s)\n\nNext step: git add --renormalize .\n\nUndo: Temporarily stage one file exactly as it appears in the working\ntree:\n    git -c filter.yamark-md.clean=cat add <path>\nPermanently remove this local setup:\n    yamark git-filter teardown\n\nPer-file control: Add later Git attribute lines to .git/info/attributes\nor .gitattributes:\n    NEWS.md -filter\nThen use the normal formatter for that file, for example:\n    yamark format --wrap {width} NEWS.md\n  Use <!-- fmt: skip file --> inside a Markdown file to leave its contents untouched.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "Configured yamark Git filter in {}\nUpdated {} with {added} new attribute pattern(s)\n\nNext step:\n  git add --renormalize .\n\nUndo:\n  Temporarily stage one file exactly as it appears in the working tree:\n    git -c filter.yamark-md.clean=cat add <path>\n  Permanently remove this local setup:\n    yamark git-filter teardown\n\nPer-file control:\n  Add later Git attribute lines to .git/info/attributes or .gitattributes:\n    NEWS.md -filter\n  Then use the normal formatter for that file, for example:\n    yamark format --wrap {width} NEWS.md\n  Use <!-- fmt: skip file --> inside a Markdown file to leave its contents untouched."
+  }
+ }
+}

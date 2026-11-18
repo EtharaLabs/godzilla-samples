@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--canonical",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "<!-- fmt: template.delimiters \"{{\" \"END\" scope=file -->\n<!-- fmt: template.delimiters \"{{!\" \"FIN\" scope=file -->\nBefore\n{{ value END\nafter _word_ and {{ ordinary.name }}.\n\n> Before\n> {{ render(\"a　b\") END\n> after _word_.\n\nBefore\n{{! keep   this FIN\nafter _word_.\n",
+ "cwd": ".",
+ "files": {}
+}

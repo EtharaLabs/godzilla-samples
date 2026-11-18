@@ -1,0 +1,8 @@
+{
+ "status": 0,
+ "stdout": "def f():\n    # fmt: embedded upper\n    x = \"\"\"SOME   TEXT ON OPEN LINE\n    MORE\n    \"\"\"\n\n",
+ "stderr": "",
+ "files": {
+  "yamark.toml": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.quote]\nformatter = { command = [\"sh\", \"-c\", \"cat; echo '\\\"\\\"\\\"'\", \"{path}\"], path_suffix = \".txt\" }\n"
+ }
+}

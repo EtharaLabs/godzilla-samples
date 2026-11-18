@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "::: note\rBefore %% render(\"a　b\") %% after _word_.\r:::\r\r```markdown\rBefore %% render(\"a　b\") %% after _word_.\r```\r\r<!-- fmt: template.delimiters \"%%\" \"%%\" scope=file -->\r",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "::: note\rBefore\r%% render(\"a　b\") %%\rafter _word_.\r:::\r\r```markdown\rBefore\r%% render(\"a　b\") %%\rafter _word_.\r```\r\r<!-- fmt: template.delimiters \"%%\" \"%%\" scope=file -->\r"
+  }
+ }
+}

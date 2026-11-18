@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "# fmt: compact table\n- {name: a,         type: int}\n- {name: long_name, type: string}\n\nitems:\n  - name: keep\n    value:\n      - one\n      - two\n\n# fmt: table\n- name: preserve\n  type: block\nafter: done\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.yaml": "# fmt: compact table\n- name: a\n  type: int\n- name: long_name\n  type: string\n\nitems:\n  - name: keep\n    value: [ one , two]\n\n# fmt: table\n- name: preserve\n  type: block\nafter: done\n"
+  }
+ }
+}

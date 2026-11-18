@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "#!/bin/sh\nfind \"$1\" -name '*.yaml' -exec perl -0pi -e 's/probe:\\s+\\[one,two\\]/probe: [one, two]/g; s/name:\\s+/name: /g' {} +\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 1 unchanged, 0 skipped, 0 failed\n",
+  "status": 0,
+  "files": {
+   "in.md": "#!/bin/sh\nfind \"$1\" -name '*.yaml' -exec perl -0pi -e 's/probe:\\s+\\[one,two\\]/probe: [one, two]/g; s/name:\\s+/name: /g' {} +\n"
+  }
+ }
+}

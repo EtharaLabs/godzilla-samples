@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "---\neditor_options:\n  markdown: sentence\n---\n\nFirst sentence here.\nSecond sentence\nfollows and is long\nenough to wrap at a\nnarrow column.\n\nUse __strong__ text.\n\n| a         | b   |\n| --------- | --- |\n| long cell | x   |\n\nText[^1].\n\n[^1]: A footnote\n  text.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "doc.md": "---\neditor_options:\n  markdown: sentence\n---\n\nFirst sentence here. Second sentence follows and is long enough to wrap at a narrow column.\n\nUse __strong__ text.\n\n| a | b |\n|---|---|\n| long cell | x |\n\nText[^1].\n\n[^1]: A   footnote   text.\n"
+  }
+ }
+}

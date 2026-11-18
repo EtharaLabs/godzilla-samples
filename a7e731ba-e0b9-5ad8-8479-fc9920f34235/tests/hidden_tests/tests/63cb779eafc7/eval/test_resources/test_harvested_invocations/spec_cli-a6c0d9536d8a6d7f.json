@@ -1,0 +1,16 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.py",
+  "--config",
+  "ext/yamark.toml"
+ ],
+ "stdin": "\"\"\"Module docstring.\"\"\"\n\ndef read_source() -> str:\n    return run(\n        # fmt: r\n        stdin=\"\"\"\n            f <- function(x)x+1\n        \"\"\",\n    )\n",
+ "files": {
+  "ext/yamark.toml": {
+   "text": "[embedded.r]\nformatter = { command = [\"python\", \"-c\", \"import sys; sys.stdout.buffer.write(sys.stdin.buffer.read().replace(b'function(x)x+1', b'function(x) x + 1'))\", \"{path}\"], path_suffix = \".R\" }\n"
+  }
+ },
+ "path_dirs": []
+}

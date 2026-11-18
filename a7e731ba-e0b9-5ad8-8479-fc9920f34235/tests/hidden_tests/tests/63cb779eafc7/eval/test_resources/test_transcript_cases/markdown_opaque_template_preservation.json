@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--canonical",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "<!-- fmt: skip -->\nBefore\n{{ render(\"keep   this\") }}\nafter [real](  target  ) _word_.\n\n<!-- fmt: off -->\nBefore\n{{ render(\"keep   this\") }}\nafter [real](  target  ) _word_.\n<!-- fmt: on -->\n\nBefore\n{{ render(\"keep   this\") }}\nafter [real](  target  ) _word_.\n"
+}

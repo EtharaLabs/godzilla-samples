@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "in.yaml:1:1: error: invalid UTF-8: invalid utf-8 sequence of 1 bytes from index 6\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\nin.yaml:1:1: error: failed to read file: invalid UTF-8: invalid utf-8 sequence of 1 bytes from index 6\n",
+  "status": 1,
+  "files": {
+   "in.yaml": "a: caf\udce9\n"
+  }
+ }
+}

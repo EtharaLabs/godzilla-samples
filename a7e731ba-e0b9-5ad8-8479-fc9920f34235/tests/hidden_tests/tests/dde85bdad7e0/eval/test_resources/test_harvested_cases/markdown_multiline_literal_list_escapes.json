@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence",
+  "--canonical"
+ ],
+ "stdin": "- Before \\$ escaped then $first  \n    second \\$ [x]( url )$ after _outside_ [real](  target  ).\n\n- _Before \\` escaped_ then `first  \n    second [x]( url )` after _outside_ [real](  target  ).\n\n- _Before \\`` escaped_ then `first\n    second` after _outside_.\n\n# Existing tokenizer fallback\n\n- Before \\` escaped then `first\n    second` after _outside_ [real](  target  ).\n",
+ "cwd": ".",
+ "files": {}
+}

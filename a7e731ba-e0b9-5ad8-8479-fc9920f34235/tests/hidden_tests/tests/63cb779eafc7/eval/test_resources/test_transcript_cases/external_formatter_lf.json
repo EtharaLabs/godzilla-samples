@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--config",
+  "tests/fixtures/external_formatter_line_endings.toml"
+ ],
+ "stdin": "```python\nx=1\nx\n```\n\n```{python}\nx=1\nx\n```\n\n```yaml\n# fmt: python\ncode: |\n  x=1\n  x\nother: 1\n```\n\nAfter.\n"
+}

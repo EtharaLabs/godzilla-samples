@@ -1,0 +1,19 @@
+--- model.R
++++ model.R
+@@ -1,11 +1,12 @@
+ #| name: model-fit
+-#| depends:   [data-prep, features]
+-#| cache: TRUE
++#| depends: [data-prep, features]
++#| cache: true
+ 
+ fit <- lm(y ~ x, data = df)
+ 
+ # fmt: markdown
+-# ##  Model notes
++# ## Model notes
+ #
+-# The linear model is fitted on the cleaned data.   Residual plots are saved under `figures/` for review by the analysis team.
++# The linear model is fitted on the cleaned data. Residual plots are
++# saved under `figures/` for review by the analysis team.
+ summary(fit)

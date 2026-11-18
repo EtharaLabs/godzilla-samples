@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--canonical",
+  "--wrap",
+  "sentence",
+  "--stdin-file-path",
+  "input.md"
+ ],
+ "stdin": "Before\nwith {{ \"foo\" }} after [real](  target  ) _outside_.\n\nBefore\nwith {{ foo | filter }} after [real](  target  ) _outside_.\n\nBefore\nwith {{ foo({ bar }) }} after [real](  target  ) _outside_.\n\nBefore\nwith {{{ foo }}} after [real](  target  ) _outside_.\n\nBefore\nwith {{ foo {{ bar }} }} after [real](  target  ) _outside_.\n\nBefore\nwith {% foo %} after [real](  target  ) _outside_.\n\nBefore\nwith {# foo #} after [real](  target  ) _outside_.\n\nBefore\nwith <% foo %> after [real](  target  ) _outside_.\n",
+ "cwd": ".",
+ "files": {}
+}

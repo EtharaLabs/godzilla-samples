@@ -1,0 +1,29 @@
+---
+title: Why YAML + Markdown?
+description: >-
+  The source languages of LLM work - structured fields for tools alongside
+  instructions, examples, and context for models.
+tags: [llm, authoring, formats]
+---
+
+# Why YAML + Markdown?
+
+When LLMs become part of a software system, YAML and Markdown start to
+feel like programming languages. YAML defines named fields tools can act
+on; Markdown carries the instructions, examples, and context that shape
+model behavior. Together they create a shared source file that stays
+readable to people and models, exposes explicit structure to software,
+produces clear diffs, and renders directly.
+
+Where the combination shines:
+
+- Agent skills and prompt files keep names, versions, and tool metadata
+  beside the instructions they describe.
+  - The Markdown body can carry code samples and nested structures with
+    their own syntax and indentation.
+- Reference documents stay readable to authors and models without a
+  separate source format or build step.
+- Tool inputs and model outputs survive chat, Git, and documentation
+  pipelines as recognizable text.
+- One source can render as HTML or PDF and travel unchanged as agent
+  context.

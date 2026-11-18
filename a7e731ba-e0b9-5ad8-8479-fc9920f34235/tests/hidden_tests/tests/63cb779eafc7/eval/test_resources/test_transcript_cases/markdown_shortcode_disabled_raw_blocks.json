@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "<!-- fmt: off -->\n````text\n{{< unfinished\n```\n{{% still inside the longer fence\n````\nKeep   this disabled.\n<!-- fmt: on -->\nFormat   after backtick\nfence.\n\n<!-- fmt: off -->\n~~~text\n{{% unfinished message=\"\n~~~\n<!-- fmt: on -->\nFormat   after tilde\nfence.\n\n<!-- fmt: off -->\n<!-- ordinary comment\n```text\n{{< unfinished\n-->\n<!-- fmt: on -->\nFormat   after HTML\ncomment.\n\n<!-- fmt: off -->\n<!-- ordinary comment\n<!-- fmt: on -->\nFormat   after the existing\nlinewise directive.\n\n<!-- fmt: off -->\n```text\n<!-- fmt: on -->\nFormat   after the existing\nfenced directive.\n"
+}

@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "- Before  $first\n    second \\$ [x]( url )$ after _outside_ [real](  target  ).\n\n  > > Before `first\n  > >   second [x]( url )` after _outside_.\n\n  Before `{{ render_item() }}` after [real](  target  ).\n\n  Before `{{\n    render_item()\n  }}` after _outside_ [real](  target  ).\n\n  > > Before <tag> value.\n  > > Next [r](  t  ) _outside_.\n\n  > > Before [r](  t  ) _outside_.\n  > > > Next [r](  t  ) _outside_.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "- Before  $first  \n    second \\$ [x]( url )$ after _outside_ [real](  target  ).\n\n  > > Before `first\t\n  > >   second [x]( url )` after _outside_.\n\n  Before `{{ render_item() }}` after [real](  target  ).\n\n  Before `{{\n    render_item()\n  }}` after _outside_ [real](  target  ).\n\n  > > Before <tag> value.\n  > > Next [r](  t  ) _outside_.\n\n  > > Before [r](  t  ) _outside_.\n  > > > Next [r](  t  ) _outside_.\n"
+  }
+ }
+}

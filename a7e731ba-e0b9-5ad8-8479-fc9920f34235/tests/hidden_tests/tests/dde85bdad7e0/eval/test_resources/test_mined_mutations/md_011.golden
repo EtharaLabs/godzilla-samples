@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "> ---\n> title: Hello\n> body: !markdown |\n>   This is **strong**.\n> ---\n> Text **strong**.\n>\n> <!-- fmt: canonical=true scope=file -->\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "> ---\n> title: \"Hello\"\n> body: !markdown \"This is __strong__.\"\n> ---\n> Text __strong__.\n>\n> <!-- fmt: canonical=true scope=file -->\n"
+  }
+ }
+}

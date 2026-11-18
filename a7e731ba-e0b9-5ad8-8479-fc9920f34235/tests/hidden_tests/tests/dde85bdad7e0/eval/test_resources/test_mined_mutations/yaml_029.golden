@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "held: &saved # parent\n\t'Café value'\nquoted: \"<< item >>\"\nitems: [<< a,b >>]\nbody: !markdown \"\"\n\tKeep __strong__ and << literal\tbytes >>.\nplain: !markdown \"\"\n\tKeep __strong__ and `literal\tbytes`.\nattached: !markdown\n\t|\n\t\tKeep __attached__.\nok: [x, y]\n# fmt: template.delimiters \"<<\" \">>\" scope=file\n# fmt: markdown canonical=true scope=file\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.yaml": "held: &saved # parent\n\t'Café value'\nquoted: \"<< item >>\"\nitems: [<< a,b >>]\nbody: !markdown |\n\tKeep __strong__ and << literal\tbytes >>.\nplain: !markdown |\n\tKeep __strong__ and `literal\tbytes`.\nattached: !markdown\n\t|\n\t\tKeep __attached__.\nok: [x,y]\n# fmt: template.delimiters \"<<\" \">>\" scope=file\n# fmt: markdown canonical=true scope=file\n"
+  }
+ }
+}

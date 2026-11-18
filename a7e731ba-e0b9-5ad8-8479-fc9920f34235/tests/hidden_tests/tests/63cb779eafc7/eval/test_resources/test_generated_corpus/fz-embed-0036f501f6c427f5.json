@@ -1,0 +1,15 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "in.yaml",
+  "--skip-embedded-formatters"
+ ],
+ "stdin": "# fmt: grow\n--- plain *md*   text __here__\n",
+ "files": {
+  "yamark.toml": {
+   "text": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.grow]\nformatter = { command = [\"sh\", \"-c\", \"cat; echo extra\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.fail]\nformatter = { command = [\"sh\", \"-c\", \"echo bad >&2; exit 1\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.empty]\nformatter = { command = [\"sh\", \"-c\", \"cat >/dev/null\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": []
+}

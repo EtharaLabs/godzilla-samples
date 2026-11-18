@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "#!/bin/sh\nif [ \"$1\" = \"--version\" ]; then\n  echo \"{version}\"\n  exit 0\nfi\ntarget=\nfor arg do\n  target=\"$arg\"\ndone\nif [ -d \"$target\" ]; then\n  find \"$target\" -name '*.md' -exec perl -0pi -e 's/Generated Markdown Benchmark Document/Formatted Markdown Benchmark Document/g' {{}} +\nelse\n  perl -0pi -e 's/Generated Markdown Benchmark Document/Formatted Markdown Benchmark Document/g' \"$target\"\nfi\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 1 unchanged, 0 skipped, 0 failed\n",
+  "status": 0,
+  "files": {
+   "in.md": "#!/bin/sh\nif [ \"$1\" = \"--version\" ]; then\n  echo \"{version}\"\n  exit 0\nfi\ntarget=\nfor arg do\n  target=\"$arg\"\ndone\nif [ -d \"$target\" ]; then\n  find \"$target\" -name '*.md' -exec perl -0pi -e 's/Generated Markdown Benchmark Document/Formatted Markdown Benchmark Document/g' {{}} +\nelse\n  perl -0pi -e 's/Generated Markdown Benchmark Document/Formatted Markdown Benchmark Document/g' \"$target\"\nfi\n"
+  }
+ }
+}

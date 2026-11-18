@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--wrap",
+  "none",
+  "--verify"
+ ],
+ "stdin": "held: &saved # parent\n  'Café value'\ntemplated: [\"{{ keep   bytes }}\",  1]\nitems:\n  - one\n  - two\nbody: !markdown |\n  Keep __strong__.\n  Continue on another line.\n# fmt: compact scope=file\n# fmt: markdown canonical=true wrap=paragraph scope=file\n",
+ "cwd": ".",
+ "files": {}
+}

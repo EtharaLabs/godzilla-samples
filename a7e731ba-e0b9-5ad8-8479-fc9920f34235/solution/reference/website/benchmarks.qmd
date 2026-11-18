@@ -1,0 +1,190 @@
+---
+title: Benchmarks
+description: Yamark performance against other YAML and Markdown formatters.
+---
+
+```{r}
+#| label: benchmark-data
+#| include: false
+
+source("_benchmark-data.R")
+```
+
+`r benchmark_headline()`
+
+Each table compares the formatter CLIs in this harness that accept that input.
+Tools use their default formatting behavior, with no formatting options, shims,
+or adapters, so the roster differs by input kind.
+
+## At a glance
+
+The next-lowest result is the lowest median wall time among the other CLIs for
+that workload. Relative time shows that result as a multiple of Yamark's time.
+The output note keeps differences in default formatting behavior beside the
+timing.
+
+::: {.benchmark-summary-shell}
+```{r}
+#| label: benchmark-summary-table
+#| echo: false
+#| results: asis
+
+write_table(
+  benchmark_summary_table(),
+  align = c("l", "r", "l", "r", "l"),
+  table_class = "perf-table benchmark-summary-table",
+  caption = "Yamark and the next-lowest elapsed time in each workload"
+)
+```
+:::
+
+```{r}
+#| label: benchmark-full-field
+#| echo: false
+#| results: asis
+
+write_benchmark_chart(
+  id = "benchmark-full-field",
+  title = "Elapsed time by formatter",
+  subtitle = paste(
+    "Median wall time; lower is better.",
+    "All four panels share a logarithmic seconds scale."
+  ),
+  rows = benchmark_full_field_rows()
+)
+```
+
+## Detailed results
+
+::: {.panel-tabset}
+
+### Markdown
+
+One generated 4 MB Markdown document (`big.md`): prose paragraphs, links, and
+nested lists. Each tool's CLI formats a fresh copy. Wall time includes process
+startup and is `r measurement_inline(big_target_rows(markdown_target))`. Peak
+RSS is the median across measured runs.
+
+```{r}
+#| echo: false
+#| results: asis
+write_table(
+  big_table(markdown_target),
+  align = c("l", "r", "r")
+)
+```
+
+### YAML
+
+One generated 4 MB YAML file (`big.yaml`): block maps and sequences,
+block scalars, and comments. Same procedure as the Markdown comparison.
+
+```{r}
+#| echo: false
+#| results: asis
+write_table(
+  big_table(yaml_target),
+  align = c("l", "r", "r")
+)
+```
+
+### Markdown + front matter
+
+The same 4 MB document shape (`big-with-frontmatter.md`) with a
+`r fmt_kb(big_requested_frontmatter_yaml)` deliberately unformatted YAML
+front matter block - about a third of the document's lines are YAML. The
+Front matter column reports what each tool did with that block:
+**formatted** (rewrote it), **untouched** (passed it through), or **not
+preserved** (broke the delimiters).
+
+```{r}
+#| echo: false
+#| results: asis
+write_table(
+  big_table(frontmatter_target, front_matter = TRUE),
+  align = c("l", "r", "r", "c")
+)
+```
+
+The harness derives that column from the output bytes: trailing-whitespace
+trimming does not count as formatting. `dprint`'s Markdown plugin passes
+front matter through unformatted. `mdformat`, installed without its front-matter
+plugin, reads the opening `---` as a thematic break and does not preserve the
+front matter delimiters.
+
+### Directory
+
+`r flow_directory_rows$files[[1]]` generated YAML service-configuration files
+of about 100 KB each (`r fmt_mb_round(flow_directory_rows$corpus_bytes[[1]])` in
+total). Each tool receives the directory root once and discovers the files
+itself. Every run uses a fresh copy and is verified to reformat all
+`r flow_directory_rows$files[[1]]` files. Wall time is `r measurement_inline()`.
+
+```{r}
+#| echo: false
+#| results: asis
+
+directory_table <- data.frame(
+  Formatter = flow_directory_rows$formatter,
+  `Wall time` = fmt_sec(flow_directory_rows$median_seconds),
+  `User CPU time` = fmt_sec(flow_directory_rows$median_user_seconds),
+  check.names = FALSE
+)
+write_table(directory_table, align = c("l", "r", "r"))
+```
+
+Yamark formats the directory in parallel, as do `deno-fmt` and `dprint`, so
+total user CPU time can exceed wall time. User CPU time is summed across threads
+and processes and excludes system CPU time.
+
+:::
+
+## Methodology
+
+The benchmark scripts (`tools/bench/big.py` and `tools/bench/run.py`) generate
+the corpora deterministically and run each included tool through its own CLI.
+Across the four workloads, Yamark is compared with `r compared_tools_inline()`.
+
+Two details keep cached work out of the timings and limit `dprint`'s
+configuration to plugin selection:
+
+- `panache` and `dprint` cache formatting results. The harness stores their
+  caches in the benchmark work directory and clears cached formatting results
+  between repetitions, so each timed run formats from scratch.
+- `dprint` has no built-in plugins, so it runs with a config file that
+  names the first-party plugin for the input kind and sets no formatting
+  options.
+
+Autofixing linters (`pymarkdown`, `markdownlint-cli2`) are outside this
+formatter-CLI comparison. The harness can still run them with `--tools`.
+
+Wall time can vary with system load and scheduling, especially for the parallel
+directory workload.
+
+Measured on a MacBook Pro (`r host_inline()`) using
+Yamark `r benchmark_yamark_version_inline()`, built from commit
+`r benchmark_commit_inline()` with `cargo build --release --locked`.
+`r tool_versions_block()`
+
+The tables use the latest complete checked-in
+`r artifact_link(big_ok_rows, "single-file results")` and
+`r artifact_link(flow_directory_rows, "directory results")`. The artifacts
+record the full per-run timings, output hashes, git commit, and host details. A
+table renders only when every tool in its roster completes the benchmark.
+
+## Reproducing
+
+```sh
+tools/bench/big.py --reps 20 --warmups 2
+tools/bench/run.py --invocation directory --files 500 --items 540 \
+  --reps 7 --warmups 1 \
+  --tools yamark,yamlfmt,prettier,yamlfix,dprint-yaml,deno-fmt
+```
+
+The corpora are generated deterministically, so the same commands reproduce
+the same inputs anywhere; each script writes a JSON artifact under
+`docs/benchmarks/`.
+
+Run `tools/bench/run-all.py` for the complete suite using one frozen release
+binary. It saves the artifacts, logs, retained corpora, and a manifest under
+`target/bench-all/`.

@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "in.yaml:6:9: error: fmt: r targets a literal block scalar\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\nin.yaml:6:9: error: fmt: r targets a literal block scalar\n",
+  "status": 1,
+  "files": {
+   "in.yaml": "\"\"\"Module docstring.\"\"\"\n\ndef read_source() -> str:\n    return run(\n        # fmt: r\n        stdin=\"\"\"\n            f <- function(x) x + 1\n        \"\"\",\n    )\n"
+  }
+ }
+}

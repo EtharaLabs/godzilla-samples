@@ -1,0 +1,25 @@
+{
+ "args": [
+  "format",
+  "."
+ ],
+ "stdin": "",
+ "files": {
+  "formatter.py": {
+   "text": "import pathlib, sys\npathlib.Path(sys.argv[1]).touch()\nsys.stdout.buffer.write(sys.stdin.buffer.read())\n"
+  },
+  "yamark.toml": {
+   "text": "[embedded.txt]\nformatter = { command = [\"python\", \"/tmp/.tmpyrozmR/formatter.py\", \"/tmp/.tmpyrozmR/formatter-ran\", \"{path}\"], path_suffix = \".txt\" }\n"
+  },
+  "a.md": {
+   "text": "```txt\nabc\n```\n"
+  },
+  "z/yamark.toml": {
+   "text": "[format]\nunknown = true\n"
+  },
+  "z/b.md": {
+   "text": "# Title\n"
+  }
+ },
+ "path_dirs": []
+}

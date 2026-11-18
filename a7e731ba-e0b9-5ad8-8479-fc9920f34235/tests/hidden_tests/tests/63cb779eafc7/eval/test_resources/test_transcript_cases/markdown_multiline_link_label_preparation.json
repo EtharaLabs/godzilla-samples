@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence",
+  "--canonical"
+ ],
+ "stdin": "Before [first\nsecond](  target  ) after _outside_.\n\n- Before [first\n  second](  target  ) after _outside_.\n\n> Before [first\n> second](  target  ) after _outside_.\n\nBefore ![first\nsecond](  image.png  ) after _outside_.\n\n# Existing opaque boundaries\n\n- Before <kbd>`first\n    second`</kbd> after _outside_.\n\n- Before <kbd>$first\n    second$</kbd> after _outside_.\n\nBefore [label `first\nsecond`](  target  ) after _outside_.\n"
+}

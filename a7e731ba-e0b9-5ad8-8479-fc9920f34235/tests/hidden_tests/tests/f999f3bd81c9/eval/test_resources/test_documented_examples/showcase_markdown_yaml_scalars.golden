@@ -1,0 +1,12 @@
+agents:
+  reviewer:
+    instructions: !markdown |
+      Focus on correctness and tests. Flag any change that lacks a regression
+      test. Prefer concrete suggestions: name the function, name the case.
+  summarizer:
+    # fmt: markdown
+    instructions: |
+      You write release notes.
+
+      - One bullet per user-visible change.
+      - No internal refactors.

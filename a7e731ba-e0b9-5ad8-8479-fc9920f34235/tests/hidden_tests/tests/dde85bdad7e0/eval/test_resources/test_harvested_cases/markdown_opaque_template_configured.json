@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--canonical",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "<!-- fmt: template.delimiters \"<<\" \">>\" scope=file -->\nBefore\n<< render(\">>\", \"_keep_ [x](  url  )\") >>\nafter _outside_.\n\n> - Before\n>   << render(\"_raw_ [x](  url  )\") >>\n>   after _word_.\n",
+ "cwd": ".",
+ "files": {}
+}

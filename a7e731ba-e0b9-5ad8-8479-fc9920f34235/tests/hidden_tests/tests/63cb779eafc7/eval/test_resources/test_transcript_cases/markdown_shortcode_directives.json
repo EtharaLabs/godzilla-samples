@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "<!-- fmt: skip -->\n::: {.note}\n{{< call   \nmessage=\"keep   spacing\"   \n>}}\nKeep   this body.\n:::\n\n<!-- fmt: skip -->\n{{< skipped   token >}}\nFormat   after the token.\n\n<!-- fmt: off -->\n{{% notice message=\"\n<!-- fmt: on -->\n%}} still   quoted\"\n%}}\nKeep   this\nbody.\n{{% /notice %}}\n<!-- fmt: on -->\nFormat   this\nparagraph.\n\n{{< data message=\"\n<!-- fmt: skip file -->\n<!-- fmt: invalid -->\n\" >}}\n<!-- fmt: skip -->\nKeep   this\nparagraph.\n\nFormat   this one.\n\n<!-- fmt: off -->\n{{< whole >}}\nKeep   the whole\nbody.\n{{< /whole >}}\n<!-- fmt: on -->\nResume   formatting.\n"
+}

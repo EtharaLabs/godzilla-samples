@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence",
+  "--canonical"
+ ],
+ "stdin": "Before *x *x *x late* after.\n\nBefore **x *x ***x **x late** after.\n\nBefore ***x **x *x ***x late*** after.\n\nBefore \\*escaped* and *x \\*x *x late* after.\n\nBefore \\_escaped_ and _x \\_x _x late_ after.\n\nBefore word_name and _x a_b _x late_ after.\n\nBefore *  *x  * late* after.\n\nBefore _  _x  _ late_ after.\n\nBefore *x *x\n*x late* after.\n\nBefore *x\nlate* after.\n\nBefore *x `literal *x *x` *x late* after.\n\nBefore _x $literal _x \\$ _x$ _x late_ after.\n\nBefore *x `literal\n*x` *x late* after.\n\nBefore _x [raw _word_](target) _x late_ after.\n\nBefore _x <kbd>_raw_</kbd> _x late_ after.\n\nBefore _x {key=\"_raw_\"} _x late_ after.\n\nBefore _x [raw\n_word_](target) _x late_ after.\n\nBefore `{{ foo }}` *x *x *x after.\n\nBefore `code` *x *x *x after.\n\nBefore *x *x *x after.\n\n# _ _ and _outside_\n\n# _ _ and _outside_\n"
+}

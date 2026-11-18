@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--line-width",
+  "12",
+  "--verify"
+ ],
+ "stdin": "[\"\\x30xFF\", abc]\n---\n[\"\\x30o77\", abc]\n---\n[\"\\x30b11\", abc]\n---\n[!!str \"\\x30XAF\", abc]\n---\n[\"\\x30xyz\", abc]\n---\n[\"0xFF\", abc]\n---\n[\"\\x30xFF\"]\n---\n[\"\\x30abc\", abc]\n"
+}

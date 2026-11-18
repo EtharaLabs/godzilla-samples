@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "doc.yaml:1:1: error: embedded formatter wrote to stderr: warning: deprecated option\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\ndoc.yaml:1:1: error: embedded formatter wrote to stderr: warning: deprecated option\n",
+  "status": 1,
+  "files": {
+   "doc.yaml": "# fmt: python\ncode: |\n  x=1\n  y=2\nother: [a,b]\n"
+  }
+ }
+}

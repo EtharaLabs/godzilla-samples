@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "::: {.outer}\nBefore   child. \n\n```markdown\n<!-- fmt: skip file -->\nKeep   child prose.  \t\n`unclosed   code  \n<div malformed  \n```\n\nAfter   child. \n:::\n\n````markdown\nBefore   div. \n\n::: {.inner}\n<!-- fmt: skip file -->\nKeep   child without shortcodes.  \n$$ unclosed   math  \t\n:::\n\nAfter   div. \n````\n\n::: {.outer}\n```markdown\nBefore   skipped node. \n\n<!-- fmt: skip -->\nKeep   nested paragraph.  \t\n\nAfter   skipped node. \n```\n:::\n\nFormat   outside. \n"
+}

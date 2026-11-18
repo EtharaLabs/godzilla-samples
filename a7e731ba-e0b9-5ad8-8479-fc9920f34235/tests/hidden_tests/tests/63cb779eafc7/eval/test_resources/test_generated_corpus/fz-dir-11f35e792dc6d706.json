@@ -1,0 +1,14 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "in.yaml"
+ ],
+ "stdin": "a: 1\n# fmt: skip extra\nmap:\n  a:   1\n  b:\n    - x\n    - y\nother:  2\n",
+ "files": {
+  "yamark.toml": {
+   "text": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": []
+}

@@ -1,0 +1,67 @@
+schema_version = "1.4"
+reward_type = "bounded_continuous"
+artifacts = [{ source = "/workspace", exclude = ["./executable", "./target", "./.git"] }]
+
+[task]
+name = "ethara/a7e731ba-e0b9-5ad8-8479-fc9920f34235"
+version = "1.0.0"
+description = "Rebuild Yamark, a formatter for YAML and Markdown files and the code embedded in them, in Rust with only the standard library, from its documentation and a compiled reference binary."
+authors = [{ name = "Vaibhav Singh", email = "vaibhav.singh@ethara.ai" }]
+keywords = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "formatter", "yaml", "markdown"]
+
+[metadata]
+instance_id = "t-kalinowski__yamark.6e82fa4"
+repository = "t-kalinowski/yamark"
+commit = "6e82fa4fb913e259e57b1b4f62b2c7b697d668de"
+language = "rust"
+difficulty = "medium"
+base_commit = "45319139e888be489fa5eea70a239dba30bf09d8"
+reference_commit = "09d9daef4824bf41727e65bebbae7596d29e4f22"
+platforms = ["linux/arm64", "linux/amd64"]
+test_branches = 3
+active_tests = 6875
+ignored_tests = 68
+language_policy = "original"
+tests_provenance = "mixed"
+generator_fingerprint = "1456e8187ce6dd51"
+test_suite_sha256 = "f55b1835b47f4f6c89c5b4ffbb50f7051ced325f8ae02ac2d7973519aab51254"
+category = "software-engineering"
+reward_type = "bounded_continuous"
+domain = "software-engineering"
+field = "computer-science"
+subfield = "developer-tools"
+tags = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "formatter", "yaml", "markdown"]
+expert_time_estimate_hours = 80.0
+null_floor = 0.0
+discrimination_weight = 1.0
+
+[agent]
+timeout_sec = 86400
+user = "agent"
+network_mode = "allowlist"
+allowed_hosts = ["api.openai.com", "api.anthropic.com"]
+
+[verifier]
+timeout_sec = 43200
+user = "root"
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+env = { PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/cargo/bin" }

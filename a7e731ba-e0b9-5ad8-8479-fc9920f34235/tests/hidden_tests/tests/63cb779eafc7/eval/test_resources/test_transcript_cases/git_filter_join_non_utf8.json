@@ -1,0 +1,48 @@
+{
+ "args": [
+  "git-filter",
+  "join",
+  "--markdown-wrap-at-column",
+  "32"
+ ],
+ "stdin": "",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "false",
+   "core.quotePath": "true"
+  },
+  "files": {
+   ".gitattributes": "*.md filter=yamark-md\n",
+   "post.md": "First sentence.\nSecond sentence?\n"
+  },
+  "unix-index-files": [
+   {
+    "name_bytes": [
+     117,
+     110,
+     114,
+     101,
+     108,
+     97,
+     116,
+     101,
+     100,
+     45,
+     255,
+     46,
+     98,
+     105,
+     110
+    ],
+    "contents": "unrelated file\n"
+   }
+  ]
+ },
+ "git_status": true,
+ "git_index": [
+  "post.md"
+ ],
+ "git_worktree": [
+  "post.md"
+ ]
+}

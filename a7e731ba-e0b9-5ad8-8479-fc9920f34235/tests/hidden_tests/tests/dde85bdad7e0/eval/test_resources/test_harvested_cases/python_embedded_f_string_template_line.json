@@ -1,0 +1,19 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.py",
+  "--wrap",
+  "72"
+ ],
+ "stdin": "from textwrap import dedent\n\n# fmt: markdown\nprompt += dedent(f\"\"\"\n\n    Stage: verification with pending finding.\n\n    Pending finding:\n    {pending_finding}\n\n    Allowed dispositions are fixed.\n    \"\"\")\n",
+ "cwd": ".",
+ "files": {},
+ "check_args": [
+  "format",
+  "--check",
+  "--wrap",
+  "72",
+  "input.py"
+ ]
+}

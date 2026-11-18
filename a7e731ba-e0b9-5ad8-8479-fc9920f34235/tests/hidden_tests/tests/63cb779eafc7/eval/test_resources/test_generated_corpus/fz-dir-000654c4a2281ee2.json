@@ -1,0 +1,14 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "in.py"
+ ],
+ "stdin": "# fmt: table-widths=bad\n",
+ "files": {
+  "yamark.toml": {
+   "text": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": []
+}

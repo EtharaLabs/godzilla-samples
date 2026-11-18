@@ -1,0 +1,21 @@
+--- site.yml
++++ site.yml
+@@ -2,8 +2,8 @@
+ - hosts: webservers
+   become: yes
+   vars:
+-    http_port:    80
+-    packages: ['nginx','git']
++    http_port: 80
++    packages: [nginx, git]
+   tasks:
+   - name: ensure packages are installed
+     ansible.builtin.apt:
+@@ -14,5 +14,5 @@
+     notify:
+     - restart nginx
+   handlers:
+-    - name: restart nginx
+-      ansible.builtin.service: name=nginx state=restarted
++  - name: restart nginx
++    ansible.builtin.service: name=nginx state=restarted

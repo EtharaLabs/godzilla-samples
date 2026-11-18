@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--wrap",
+  "sentence",
+  "--verify"
+ ],
+ "stdin": "paragraphs: !markdown \"Before `\\n\\n<% keep   this %>\\nafter `\"\nheading: !markdown \"Before `\\n====\\n<% keep   this %>\\nafter `\"\nsubheading: !markdown \"Before `\\n--\\n<% keep   this %>\\nafter `\"\n",
+ "check_rerun": true
+}

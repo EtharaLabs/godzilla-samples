@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "Format   before. \n\n<!-- fmt: off -->  \nKeep   prose.  \t\n\n{{< unclosed arg=\"  \n```markdown  \n<div>  \n$$  \n<!-- fmt: on -->  \nFormat   after. Second   sentence. \n\n<!-- fmt: off -->\n[malformed](  \t\n    code   at EOF.  \t\n",
+ "cwd": ".",
+ "files": {}
+}

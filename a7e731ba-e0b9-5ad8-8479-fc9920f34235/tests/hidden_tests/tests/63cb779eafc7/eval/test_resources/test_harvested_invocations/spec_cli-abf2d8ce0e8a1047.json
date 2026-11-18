@@ -1,0 +1,18 @@
+{
+ "args": [
+  "format",
+  "--diagnostics",
+  "--stdin-file-path",
+  "input.md"
+ ],
+ "stdin": "```python\n    x=1\n```\n",
+ "files": {
+  "_bin0/ruff": {
+   "text": "#!/bin/sh\ncat >/dev/null\nprintf 'error: Failed to parse input.md.embedded.2.ipynb:7:9: Unexpected indentation\\n' >&2\nprintf '> 7 |     x=1\\n' >&2\nprintf '    |         ^\\n' >&2\nexit 2\n",
+   "mode": 493
+  }
+ },
+ "path_dirs": [
+  "_bin0"
+ ]
+}

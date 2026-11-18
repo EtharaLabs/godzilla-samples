@@ -1,0 +1,26 @@
+{
+ "args": [
+  "git-filter",
+  "adopt",
+  "--markdown-wrap-at-column",
+  "32"
+ ],
+ "stdin": "",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "false"
+  },
+  "files": {
+   ".gitattributes": "*.md text eol=crlf\n",
+   "post.md": "First sentence. Second sentence?\r\n"
+  }
+ },
+ "git_status": true,
+ "git_index": [
+  ".gitattributes",
+  "post.md"
+ ],
+ "git_worktree": [
+  "post.md"
+ ]
+}

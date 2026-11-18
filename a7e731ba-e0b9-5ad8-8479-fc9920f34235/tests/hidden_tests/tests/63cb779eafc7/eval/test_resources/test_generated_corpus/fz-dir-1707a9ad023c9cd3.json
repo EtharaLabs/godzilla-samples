@@ -1,0 +1,14 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "in.md"
+ ],
+ "stdin": "```markdown\n<!-- fmt: markdown footnotes=preserve -->\nKeep <<  this  >> and {{ that }} together in a sentence that wraps around.\n```\n",
+ "files": {
+  "yamark.toml": {
+   "text": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": []
+}

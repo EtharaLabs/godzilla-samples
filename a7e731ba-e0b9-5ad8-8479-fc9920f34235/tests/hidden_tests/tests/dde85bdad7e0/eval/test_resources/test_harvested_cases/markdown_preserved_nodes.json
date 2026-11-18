@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "<!-- fmt: skip -->  \nKeep   é prose.  \t\nAnd   this line.   \n\nFormat   outside. Second   sentence. \n\n<!-- fmt: skip -->\n- Keep   list.  \t\n  continuation   unchanged.  \n- Another   item.   \n\n<!-- fmt: skip -->\n> Keep   quote.  \n> Next   line. \t\n\n<!-- fmt: skip -->\n::: {.note}  \nKeep   prose.  \n\n```text\ncode   with spaces  \n```\n\n$$\nx + y  \n$$\n\n<div>\nHTML   with spaces  \n</div>\n\n[malformed](   \n:::  \n\n<!-- fmt: skip -->\n```markdown  \nKeep   fence prose.  \n````  \n\nFormat   after containers. \n",
+ "cwd": ".",
+ "files": {}
+}

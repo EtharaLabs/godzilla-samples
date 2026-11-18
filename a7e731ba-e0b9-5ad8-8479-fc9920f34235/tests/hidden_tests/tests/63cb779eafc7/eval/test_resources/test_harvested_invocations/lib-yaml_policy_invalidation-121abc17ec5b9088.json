@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--compact"
+ ],
+ "stdin": "held: &saved # parent\r\n  'Café value'\r\ntemplated: [\"{{ keep   bytes }}\",  1]\r\nitems:\r\n  - one\r\n  - two\r\n# fmt: compact=false scope=file\r\n",
+ "files": {},
+ "path_dirs": [],
+ "check_rerun": true
+}

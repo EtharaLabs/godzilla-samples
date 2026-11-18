@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "````md\nUse **strong** here.\n````\n\n::: aside\nAlso **this** one.\n:::\n\n```yaml\nb: !md |\n  **x**\n```\n\n<!-- fmt: canonical -->\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "doc.md": "````md\nUse __strong__ here.\n````\n\n::: aside\nAlso __this__ one.\n:::\n\n```yaml\nb: !md \"__x__\"\n```\n\n<!-- fmt: canonical -->\n"
+  }
+ }
+}

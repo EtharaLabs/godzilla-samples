@@ -1,0 +1,22 @@
+exit status: 0
+--- stdout
+root:
+  list:
+    - alpha
+    - beta
+    - gamma
+    - delta
+    - epsilon
+    - zeta
+  nested:
+    key: value
+    other:
+      a: 1
+      b: 2
+  text: >-
+    This is a long prose string that should be represented as a folded block
+    scalar so diffs reveal changes.
+  seq:
+    - one
+    - two
+--- stderr

@@ -1,0 +1,21 @@
+{
+ "args": [
+  "git-filter",
+  "join",
+  "--markdown-wrap-at-column",
+  "32"
+ ],
+ "stdin": "",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "true"
+  },
+  "files": {
+   ".gitattributes": "*.md filter=yamark-md\n",
+   "post.md": "First sentence.\r\nSecond sentence?\r\n"
+  }
+ },
+ "git_status": true,
+ "git_index": [],
+ "git_worktree": []
+}

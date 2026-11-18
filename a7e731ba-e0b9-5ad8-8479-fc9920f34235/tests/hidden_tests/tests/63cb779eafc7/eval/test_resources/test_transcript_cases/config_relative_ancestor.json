@@ -1,0 +1,21 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md"
+ ],
+ "stdin": "First sentence. Second sentence.\n",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "false"
+  },
+  "cwd": "nested",
+  "files": {
+   "yamark.toml": "[format]\nwrap = \"sentence\"\n",
+   "nested/input.md": ""
+  }
+ },
+ "git_status": false,
+ "git_index": [],
+ "git_worktree": []
+}

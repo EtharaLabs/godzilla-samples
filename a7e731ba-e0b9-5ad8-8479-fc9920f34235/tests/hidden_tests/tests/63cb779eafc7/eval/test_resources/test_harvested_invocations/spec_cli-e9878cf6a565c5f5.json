@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml"
+ ],
+ "stdin": "# fmt: skip\nroot: # keep root with child\n  child:    value\nother: [ one ,  two ] # keep flow comment\nitems:\n- item # keep scalar comment\n- # keep empty item comment\n",
+ "files": {},
+ "path_dirs": []
+}

@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "doc.yaml:1:1: error: formatting this BOM-prefixed YAML root is unsupported\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\ndoc.yaml:1:1: error: formatting this BOM-prefixed YAML root is unsupported\n",
+  "status": 1,
+  "files": {
+   "doc.yaml": "﻿-   a\n# fmt: compact\n- - b\n  - c\n"
+  }
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "args": [
+  "git-filter",
+  "check",
+  "--repo",
+  ".."
+ ],
+ "stdin": "",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "false"
+  },
+  "cwd": "caller",
+  "files": {
+   ".gitattributes": "*.md filter=yamark-md\n",
+   "docs/yamark.toml": "[format]\nmarkdown_horizontal_rule = \"***\"\n",
+   "docs/post.md": "***\n",
+   "caller/.keep": ""
+  }
+ },
+ "git_status": false,
+ "git_index": [],
+ "git_worktree": []
+}

@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "items: [one, two]\nmapping: {a: b}\nblock_seq: [one, two]\nblock_map: {a: b}\nanchored: &items [one]\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.yaml": "items: !!seq [ one , two ]\nmapping: !!map { a : b }\nblock_seq: !!seq\n  - one\n  - two\nblock_map: !!map\n  a: b\nanchored: &items !!seq [ one ]\n"
+  }
+ }
+}

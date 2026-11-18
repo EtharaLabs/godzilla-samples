@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "doc.yaml:1:1: error: embedded formatter emitted invalid notebook JSON: expected ident at line 1 column 2\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\ndoc.yaml:1:1: error: embedded formatter emitted invalid notebook JSON: expected ident at line 1 column 2\n",
+  "status": 1,
+  "files": {
+   "doc.yaml": "# fmt: python\ncode: |\n  x=1\n  y=2\nother: [a,b]\n"
+  }
+ }
+}

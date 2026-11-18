@@ -1,0 +1,21 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence",
+  "--verify"
+ ],
+ "stdin": "Before\n*`<% keep   this %>`* after.\n\nBefore\n[`<% keep   this %>`](url) after.\n",
+ "cwd": ".",
+ "files": {},
+ "check_args": [
+  "format",
+  "--check",
+  "--wrap",
+  "sentence",
+  "--verify",
+  "input.md"
+ ]
+}

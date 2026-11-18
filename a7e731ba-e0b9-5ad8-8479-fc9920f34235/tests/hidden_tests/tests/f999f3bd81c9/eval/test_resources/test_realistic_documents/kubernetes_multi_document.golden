@@ -1,0 +1,38 @@
+# Deployment and service for the demo app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+  labels: {app: demo, tier: backend}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+        - name: demo
+          image: registry.example.com/demo:1.4.2
+          args: [--port, "8080", --log-level, info]
+          resources:
+            limits: {cpu: 500m, memory: 256Mi}
+          env:
+          - name: GREETING
+            value: Hello, world
+          - name: ENABLED
+            value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector: {app: demo}
+...

@@ -1,0 +1,24 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "nonexistent.md",
+  "--config",
+  "explicit.toml"
+ ],
+ "stdin": "First sentence. Second sentence.\n",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "false"
+  },
+  "cwd": "nested",
+  "files": {
+   "yamark.toml": "[format]\nwrap = \"sentence\"\n",
+   "nested/explicit.toml": "[format]\nwrap = \"none\"\n"
+  }
+ },
+ "git_status": false,
+ "git_index": [],
+ "git_worktree": [],
+ "check_rerun": true
+}

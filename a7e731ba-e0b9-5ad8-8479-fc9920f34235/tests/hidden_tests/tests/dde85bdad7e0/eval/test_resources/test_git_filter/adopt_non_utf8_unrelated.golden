@@ -1,0 +1,16 @@
+{
+ "stdout": "Adopted yamark Git filter in <repo>\nUpdated .gitattributes with 4 new attribute pattern(s)\nStaged .gitattributes and 1 normalized Markdown file(s).\n\nReview and commit with:\n  git diff --cached\n  git commit -m \"Normalize Markdown with yamark Git filter\"\n",
+ "stderr": "",
+ "status": 0,
+ "git_status": "A  .gitattributes\nM  post.md\n",
+ "filter_config": "filter.yamark-md.clean <yamark> git-filter clean --stdin-filename %f\nfilter.yamark-md.smudge <yamark> git-filter smudge --stdin-filename %f --markdown-wrap-at-column 32\nfilter.yamark-md.required true\nmerge.renormalize true\n",
+ "info_attributes": null,
+ "index": {
+  ".gitattributes": "*.md filter=yamark-md\n*.qmd filter=yamark-md\n*.Rmd filter=yamark-md\n*.rmd filter=yamark-md\n",
+  "post.md": "First sentence.\nSecond sentence?\n"
+ },
+ "worktree": {
+  ".gitattributes": "*.md filter=yamark-md\n*.qmd filter=yamark-md\n*.Rmd filter=yamark-md\n*.rmd filter=yamark-md\n",
+  "post.md": "First sentence. Second sentence?\n"
+ }
+}

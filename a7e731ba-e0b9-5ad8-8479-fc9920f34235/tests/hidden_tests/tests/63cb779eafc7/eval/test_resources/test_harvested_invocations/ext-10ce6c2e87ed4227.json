@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "input.yaml"
+ ],
+ "stdin": "",
+ "files": {
+  "input.yaml": {
+   "text": "# Shared service defaults\ndefaults: &defaults\n  retries: 3\n  labels: [core,api]\n  health: !endpoint {path: /health, method: GET} # custom-tagged flow\nservices:\n  - &api\n    name: api\n    <<: *defaults\n    ports: [80,443] # preserve trailing comment\n  - name: worker\n    <<: *defaults\n    depends_on: [*api]\ntemplates:\n  tagged: !service &template {name: base, enabled:true}\n  alias: *template\nnotes: &notes !markdown |\n  #   Anchored Note\n\n  See   alias.\nreference: *notes\n"
+  }
+ },
+ "path_dirs": []
+}

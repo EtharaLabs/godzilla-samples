@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "Keep << a   b >> here and\nthere.\n\n- item << c   d >> x\n\n> quote << e   f >> y\n\n<!-- fmt: template.delimiters \"<<\" \">>\" scope=file -->\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "doc.md": "Keep << a   b >> here   and there.\n\n- item << c   d >>   x\n\n> quote << e   f >>   y\n\n<!-- fmt: template.delimiters \"<<\" \">>\" scope=file -->\n"
+  }
+ }
+}

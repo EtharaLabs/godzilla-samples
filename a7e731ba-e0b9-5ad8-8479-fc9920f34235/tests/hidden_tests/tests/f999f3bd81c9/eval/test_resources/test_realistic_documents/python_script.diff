@@ -1,0 +1,27 @@
+--- clean_data.py
++++ clean_data.py
+@@ -1,6 +1,6 @@
+-#| title:    Data cleaning
+-#| tags: [etl,daily]
+-#| retries:  3
++#| title: Data cleaning
++#| tags: [etl, daily]
++#| retries: 3
+ 
+ import pandas as pd
+ 
+@@ -8,10 +8,11 @@
+ HELP = """
+ # clean-data
+ 
+-Reads the raw CSV export,   drops duplicate rows, and writes a parquet file that downstream jobs read every morning.
++Reads the raw CSV export, drops duplicate rows, and writes a parquet
++file that downstream jobs read every morning.
+ 
+-*   `--input`: path to the CSV file
+-*   `--output`: destination
++- `--input`: path to the CSV file
++- `--output`: destination
+ """
+ 
+ 

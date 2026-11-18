@@ -1,0 +1,168 @@
+---
+title: Yamark
+body-classes: yamark-home
+toc: false
+---
+
+```{r}
+#| label: setup-homepage-examples
+#| include: false
+source("_yamark-build.R")
+
+get_chunk <- function(label) {
+  paste(knitr::knit_code$get(label), collapse = "\n")
+}
+
+emit_before_after <- function(label, stdin_file_path = "example.md") {
+  before <- get_chunk(label)
+  after <- yamark_format(before, stdin_file_path = stdin_file_path)
+
+  writeLines(c(
+    ":::: {.before-after}",
+    "::: {.before-after-pane #demo-before}",
+    '**Before** <label class="softwrap-toggle"><input type="checkbox" id="demo-softwrap-toggle"> soft wrap</label>',
+    "",
+    markdown_fence(before),
+    "",
+    ":::",
+    "",
+    "::: {.before-after-pane}",
+    "**After**",
+    "",
+    markdown_fence(after),
+    ":::",
+    "::::"
+  ))
+}
+```
+
+::: {.hero-shell}
+::: {.hero-copy}
+::: {.hero-kicker}
+![](assets/favicon.svg){.hero-mark}
+:::
+
+<h1 class="hero-thesis">A fast formatter for YAML and Markdown.</h1>
+
+Yamark formats whole files and embedded content with the consistency we expect
+from code, keeping source readable and changes easy to review.
+
+::: {.hero-actions}
+[Install](usage.qmd#install){.hero-button .primary}
+[See examples](examples.qmd){.hero-button}
+:::
+
+::: {.hero-command}
+<span>Run directly from PyPI</span>
+`uvx yamark format`
+:::
+:::
+:::
+
+::: {.workflow-strip}
+::: {.workflow-item}
+**Format**
+
+Rewrite supported files in place.
+:::
+
+::: {.workflow-item}
+**Check**
+
+Use non-mutating CI and diff modes.
+:::
+
+::: {.workflow-item}
+**Embed**
+
+Format marked Markdown in YAML, Python, or R.
+:::
+
+::: {.workflow-item}
+**Recurse**
+
+Format nested YAML and Markdown inside fenced blocks.
+:::
+:::
+
+## A quick example
+
+A short Markdown file with YAML front matter - a native document format for LLM
+work. It combines software-readable structure with natural language for prompts,
+skills, reference documents, and generated output. The Before pane shows the
+unformatted source; the After pane shows what `yamark format` writes back.
+
+```{cat}
+#| label: example-text
+#| include: false
+---
+title: Why YAML + Markdown?
+description: The source languages of LLM work - structured fields for tools alongside instructions, examples, and context for models.
+tags: [llm,authoring,formats]
+---
+
+#   Why YAML + Markdown? ##
+
+When LLMs become part of a software system, YAML and Markdown start to feel like programming languages. YAML defines named fields tools can act on; Markdown carries the instructions, examples, and context that shape model behavior. Together they create a shared source file that stays readable to people and models, exposes explicit structure to software, produces clear diffs, and renders directly.
+
+Where the combination shines:
+
+- Agent skills and prompt files keep names, versions, and tool metadata beside the instructions they describe.
+  - The Markdown body can carry code samples and nested structures with their own syntax and indentation.
+- Reference documents stay readable to authors and models without a separate source format or build step.
+- Tool inputs and model outputs survive chat, Git, and documentation pipelines as recognizable text.
+- One source can render as HTML or PDF and travel unchanged as agent context.
+```
+
+```{r}
+#| label: render-example-text
+#| echo: false
+#| results: asis
+emit_before_after("example-text")
+```
+
+Toggle soft wrap on the Before pane to inspect the input's physical lines.
+Yamark wraps and indents each region according to its own grammar.
+
+```{=html}
+<script>
+(function () {
+  var toggle = document.getElementById('demo-softwrap-toggle');
+  var pane = document.getElementById('demo-before');
+  if (!toggle || !pane) return;
+  var apply = function () { pane.classList.toggle('soft-wrap', toggle.checked); };
+  toggle.addEventListener('change', apply);
+  apply();
+})();
+</script>
+```
+
+## Performance
+
+```{r}
+#| label: setup-home-benchmarks
+#| include: false
+source("_benchmark-data.R")
+```
+
+`r benchmark_headline()`
+
+```{r}
+#| label: homepage-benchmark-field
+#| echo: false
+#| results: asis
+
+write_benchmark_chart(
+  id = "homepage-benchmark-field",
+  title = "Elapsed time across formatter CLIs",
+  subtitle = paste(
+    "Every formatter in the checked-in comparison.",
+    "Median wall time; lower is better.",
+    "All four panels share a logarithmic seconds scale."
+  ),
+  rows = benchmark_full_field_rows()
+)
+```
+
+The [Benchmarks](benchmarks.qmd) page includes detailed tables, methodology,
+checked-in results, and reproduction commands.

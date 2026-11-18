@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "# _Before <kbd title=\"`\">raw</kbd> after_ and `code`\n\n# _Before [link](`target) after_ and `code`\n\nBefore\n<kbd>_raw_</kbd>\nafter\n_outside_\n[real]( target ).\n\nBefore <42\n`_raw_`>\nafter\n_outside_\n[real]( target ).\n\nBefore _with `{{ value }} _raw_` inside_ after [real](  target  ).\n\n- Before\n  {{ value }}\n  _raw_\n  [real](\n    target\n  ).\n\nBefore\n*```` unmatched `[x](  url  )`*\nafter\n[r](t).\n\nBefore\n`code`` [x](url) tail`\nafter\n[r](t).\n\nBefore $$[x](  url  )$$ after _outside_ [r](  t  ).\n\n# Before ``unmatched _word_` after _outside_\n\n# _Before <kbd>_raw_</kbd> after_\n\n# _Before [raw _text_](target) after_\n\n# _Before <42 _raw_> after_\n\n# _Before {key=\"_raw_\"} after_\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "# _Before <kbd title=\"`\">raw</kbd> after_ and `code`\n\n# _Before [link](`target) after_ and `code`\n\nBefore <kbd>_raw_</kbd> after _outside_ [real](  target  ).\n\nBefore <42 `_raw_`> after _outside_ [real](  target  ).\n\nBefore _with `{{ value }} _raw_` inside_ after [real](  target  ).\n\n- Before {{ value }} _raw_ [real](  target  ).\n\nBefore *```` unmatched `[x](  url  )`* after [r](  t  ).\n\nBefore `code`` [x](  url  ) tail` after [r](  t  ).\n\nBefore $$[x](  url  )$$ after _outside_ [r](  t  ).\n\n# Before ``unmatched _word_` after _outside_\n\n# _Before <kbd>_raw_</kbd> after_\n\n# _Before [raw _text_](target) after_\n\n# _Before <42 _raw_> after_\n\n# _Before {key=\"_raw_\"} after_\n"
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--config",
+  "ext/yamark.toml"
+ ],
+ "stdin": "# fmt: txt scope=next\nbody: |\n  abc\n",
+ "files": {
+  "ext/yamark.toml": {
+   "text": "[embedded.txt]\nformatter = { command = [\"python\", \"-c\", \"import sys; sys.stdout.buffer.write(sys.stdin.buffer.read().upper())\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": []
+}

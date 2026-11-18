@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "{{\n  \"schema_version\": 1,\n  \"benchmark\": \"yaml-formatting\",\n  \"run_id\": \"{commit}\",\n  \"git\": {{\n    \"commit\": \"{commit}\",\n    \"short_commit\": \"{commit}\",\n    \"commit_time\": \"{commit_time}\",\n    \"dirty\": false\n  }},\n  \"corpus\": {{\n    \"kind\": \"yaml\",\n    \"shape\": \"representative\",\n    \"files\": 2,\n    \"items_per_file\": 2,\n    \"bytes\": 2048\n  }},\n  \"invocation\": {{\n    \"unit\": \"per-file\"\n  }},\n  \"results\": [\n    {{\n      \"formatter\": \"yamark\",\n      \"status\": \"ok\",\n      \"command\": \"yamark format TARGET\",\n      \"invocation\": \"per-file\",\n      \"operation\": \"write\",\n      \"width_profile\": \"default\",\n      \"changed_files\": 2,\n      \"output_bytes\": 2048,\n      \"repetitions\": [{yamark_seconds}],\n      \"median_seconds\": {yamark_seconds},\n      \"mean_seconds\": {yamark_seconds},\n      \"mb_per_second\": 1.0\n    }},\n    {{\n      \"formatter\": \"dprint-yaml\",\n      \"status\": \"ok\",\n      \"command\": \"dprint fmt TARGET\",\n      \"invocation\": \"per-file\",\n      \"operation\": \"write\",\n      \"width_profile\": \"default\",\n      \"changed_files\": 2,\n      \"output_bytes\": 2048,\n      \"repetitions\": [0.040],\n      \"median_seconds\": 0.040,\n      \"mean_seconds\": 0.040,\n      \"mb_per_second\": 0.5\n    }}\n] }}\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "{{\n  \"schema_version\": 1,\n  \"benchmark\": \"yaml-formatting\",\n  \"run_id\": \"{commit}\",\n  \"git\": {{\n    \"commit\": \"{commit}\",\n    \"short_commit\": \"{commit}\",\n    \"commit_time\": \"{commit_time}\",\n    \"dirty\": false\n  }},\n  \"corpus\": {{\n    \"kind\": \"yaml\",\n    \"shape\": \"representative\",\n    \"files\": 2,\n    \"items_per_file\": 2,\n    \"bytes\": 2048\n  }},\n  \"invocation\": {{\n    \"unit\": \"per-file\"\n  }},\n  \"results\": [\n    {{\n      \"formatter\": \"yamark\",\n      \"status\": \"ok\",\n      \"command\": \"yamark format TARGET\",\n      \"invocation\": \"per-file\",\n      \"operation\": \"write\",\n      \"width_profile\": \"default\",\n      \"changed_files\": 2,\n      \"output_bytes\": 2048,\n      \"repetitions\": [{yamark_seconds}],\n      \"median_seconds\": {yamark_seconds},\n      \"mean_seconds\": {yamark_seconds},\n      \"mb_per_second\": 1.0\n    }},\n    {{\n      \"formatter\": \"dprint-yaml\",\n      \"status\": \"ok\",\n      \"command\": \"dprint fmt TARGET\",\n      \"invocation\": \"per-file\",\n      \"operation\": \"write\",\n      \"width_profile\": \"default\",\n      \"changed_files\": 2,\n      \"output_bytes\": 2048,\n      \"repetitions\": [0.040],\n      \"median_seconds\": 0.040,\n      \"mean_seconds\": 0.040,\n      \"mb_per_second\": 0.5\n    }}\n  ]\n}}\n"
+  }
+ }
+}

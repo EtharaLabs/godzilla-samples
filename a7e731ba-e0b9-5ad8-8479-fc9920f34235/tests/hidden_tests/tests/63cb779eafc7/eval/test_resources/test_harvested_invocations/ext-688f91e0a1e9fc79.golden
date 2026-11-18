@@ -1,0 +1,8 @@
+{
+ "status": 0,
+ "stdout": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+ "stderr": "",
+ "files": {
+  "input.md": "---\ntitle: Pathological corpus\ntags: [yaml, markdown, fixtures]\neditor_options:\n  markdown:\n    wrap: sentence\n---\n\n# Corpus fixture\n\nFirst sentence that should stay on its own line.\nSecond sentence that should wrap as a separate sentence when front matter options are honored.\n\n```yaml\n# fmt: table\nrows:\n  - {name: alpha,     tags: [docs, yaml],             enabled: true}\n  - {name: beta-long, tags: [markdown, front-matter], enabled: false}\n```\n\n```{python}\n#| fmt: skip\nvalue={ \"do\": \"not touch\" }\n```\n\n::: callout-note\nPreserve this fenced div.\n:::\n"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--line-width",
+  "12",
+  "--wrap",
+  "none",
+  "--verify"
+ ],
+ "stdin": "held: &saved # parent\n  'Café value'\nquoted: \"<< item >>\"\nitems: [<< a,b >>]\nbody: !markdown |\n  Keep __strong__ and << literal  bytes >>.\nplain: !markdown |\n  Keep __strong__ and `literal  bytes`.\nattached: !markdown\n  |\n    Keep __attached__.\nok: [x,y]\n# fmt: template.delimiters \"<<\" \">>\" scope=file\n# fmt: markdown canonical=true scope=file\n"
+}

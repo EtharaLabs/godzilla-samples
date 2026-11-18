@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "g:\n  - \"a\\x01b\"\n  - \"c\\uFEFFd\"\n  - \"e\\x85f\"\n  - \"tab\\tx\"\n  - \" \"\nh: [x]\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "doc.yaml": "g: [ \"a\\x01b\" , \"c\\ufeffd\" , \"e\\x85f\" , \"tab\\tx\" , \"\\u2028\" ]\nh: [ x ]\n"
+  }
+ }
+}

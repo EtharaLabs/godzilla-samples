@@ -1,0 +1,41 @@
+# Widget Factory
+
+[![CI](
+  https://github.com/example/widget/actions/workflows/ci.yml/badge.svg
+)](https://github.com/example/widget/actions/workflows/ci.yml)
+[![License: MIT](
+  https://img.shields.io/badge/License-MIT-yellow.svg
+)](https://opensource.org/licenses/MIT)
+
+Widget Factory builds widgets. It is fast, small, and has no runtime
+dependencies, which makes it a good fit for embedded targets and
+command-line tools alike.
+
+## Install
+
+```sh
+cargo install widget-factory
+```
+
+## Usage
+
+- `widget new <name>` creates a widget.
+- `widget build` compiles every widget in the current directory and
+  writes the results to `target/widgets`.
+    - Pass `--release` for optimised output.
+- `widget clean`
+
+| Command | Description                        |
+| ------- | ---------------------------------- |
+| `new`   | Create a widget                    |
+| `build` | Build all widgets in the workspace |
+| `clean` | Remove build output                |
+
+1) First, read the [contributing guide](CONTRIBUTING.md).
+2) Then open an issue describing the change you want to make before
+   sending a pull request.
+
+> **Note** Widgets are not gadgets.
+
+---
+Licensed under MIT.

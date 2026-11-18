@@ -1,0 +1,13 @@
+lorem: !md |
+  Lorem **ipsum**.
+ipsum: !markdown &dolor |-
+  Lorem **ipsum** dolor sit amet.
+sit: *dolor
+amet: [lorem, ipsum]
+---
+- !md &ipsum |
+  Lorem **ipsum**.
+- *ipsum
+- !markdown |-
+  Lorem **ipsum** dolor sit amet.
+- [lorem, ipsum]

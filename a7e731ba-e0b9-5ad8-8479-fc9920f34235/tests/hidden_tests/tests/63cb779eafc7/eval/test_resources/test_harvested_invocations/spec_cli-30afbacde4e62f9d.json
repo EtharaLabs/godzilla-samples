@@ -1,0 +1,18 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.qmd",
+  "--wrap",
+  "24",
+  "--config",
+  "ext/yamark.toml"
+ ],
+ "stdin": "```{r, echo=FALSE, fig.width=8}\r\n1 + 1\r\n```\r\n",
+ "files": {
+  "ext/yamark.toml": {
+   "text": "[embedded.r]\nformatter = { command = [\"python\", \"-c\", \"import sys; sys.stdout.buffer.write(sys.stdin.buffer.read())\", \"{path}\"], path_suffix = \".R\" }\n"
+  }
+ },
+ "path_dirs": []
+}

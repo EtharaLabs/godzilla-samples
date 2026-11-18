@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "- <!-- fmt: off -->\n  ````text\n  {{< unfinished\n  ```\n  {{% still inside the longer fence\n  ````\n  Keep   this disabled.\n  <!-- fmt: on -->\n  Format   after backtick\n  fence.\n\n  <!-- fmt: off -->\n  ~~~text\n  {{% unfinished message=\"\n  ~~~\n  <!-- fmt: on -->\n  Format   after tilde\n  fence.\n\n  <!-- fmt: off -->\n  <!-- ordinary comment\n  ```text\n  {{< unfinished\n  -->\n  <!-- fmt: on -->\n  Format   after HTML\n  comment.\n\n  <!-- fmt: off -->\n  <!-- ordinary comment\n  <!-- fmt: on -->\n  Format   after the existing\n  linewise directive.\n\n  <!-- fmt: off -->\n  ```text\n  <!-- fmt: on -->\n  Format   after the existing\n  fenced directive.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 1 unchanged, 0 skipped, 0 failed\n",
+  "status": 0,
+  "files": {
+   "in.md": "- <!-- fmt: off -->\n  ````text\n  {{< unfinished\n  ```\n  {{% still inside the longer fence\n  ````\n  Keep   this disabled.\n  <!-- fmt: on -->\n  Format   after backtick\n  fence.\n\n  <!-- fmt: off -->\n  ~~~text\n  {{% unfinished message=\"\n  ~~~\n  <!-- fmt: on -->\n  Format   after tilde\n  fence.\n\n  <!-- fmt: off -->\n  <!-- ordinary comment\n  ```text\n  {{< unfinished\n  -->\n  <!-- fmt: on -->\n  Format   after HTML\n  comment.\n\n  <!-- fmt: off -->\n  <!-- ordinary comment\n  <!-- fmt: on -->\n  Format   after the existing\n  linewise directive.\n\n  <!-- fmt: off -->\n  ```text\n  <!-- fmt: on -->\n  Format   after the existing\n  fenced directive.\n"
+  }
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--canonical",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "Before\n{{ render(\"unterminated }} after [real](  target  ) _word_.\n\nBefore\n{{ render({nested: 1) }} after [real](  target  ) _word_.\n\nBefore\n{{ render(\"multi\nline\") }} after [real](  target  ) _word_.\n\nBefore\n{{ render(\"[x](  url  ) _raw_\") }} with `[x](  url  ) _code_` and $[x](  url  )$ after _word_.\n"
+}

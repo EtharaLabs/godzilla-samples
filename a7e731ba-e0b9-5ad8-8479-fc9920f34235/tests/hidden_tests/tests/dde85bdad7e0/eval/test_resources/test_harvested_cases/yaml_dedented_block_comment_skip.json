@@ -1,0 +1,17 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "lorem.yaml",
+  "--verify"
+ ],
+ "stdin": "lorem:\n  |\n    Lorem ipsum.\n  # fmt: skip scope=file\nipsum: [dolor,sit]\n",
+ "cwd": ".",
+ "files": {},
+ "check_args": [
+  "format",
+  "--check",
+  "--verify",
+  "lorem.yaml"
+ ]
+}

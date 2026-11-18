@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "none",
+  "--canonical"
+ ],
+ "stdin": "Before  $first  \n  second \\$ [x]( url )$ after _outside_ [real](  target  ).\n\n> > Before `first\t\n> >   second [x]( url )` after _outside_.\n\nBefore `{{ render_item() }}` after [real](  target  ).\n\nBefore `{{\n  render_item()\n}}` after _outside_ [real](  target  ).\n\n> > Before <tag> value.\n> > Next [r](  t  ) _outside_.\n\n> > Before [r](  t  ) _outside_.\n> > > Next [r](  t  ) _outside_.\n"
+}

@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "- <!-- fmt: template.delimiters \"{{\" \"END\" scope=file -->\n  <!-- fmt: template.delimiters \"{{!\" \"FIN\" scope=file -->\n  Before\n  {{ value END\n  after _word_ and {{ ordinary.name }}.\n\n  > Before\n  > {{ render(\"a　b\") END\n  > after _word_.\n\n  Before\n  {{! keep   this FIN\n  after _word_.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 1 unchanged, 0 skipped, 0 failed\n",
+  "status": 0,
+  "files": {
+   "in.md": "- <!-- fmt: template.delimiters \"{{\" \"END\" scope=file -->\n  <!-- fmt: template.delimiters \"{{!\" \"FIN\" scope=file -->\n  Before\n  {{ value END\n  after _word_ and {{ ordinary.name }}.\n\n  > Before\n  > {{ render(\"a　b\") END\n  > after _word_.\n\n  Before\n  {{! keep   this FIN\n  after _word_.\n"
+  }
+ }
+}

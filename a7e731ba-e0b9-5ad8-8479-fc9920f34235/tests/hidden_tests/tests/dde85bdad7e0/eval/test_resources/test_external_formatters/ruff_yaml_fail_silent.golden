@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "# fmt: python\ncode: |\n  x=1\n  y=2\nother: [a, b]\n",
+  "stderr": "doc.yaml:3:1: note: embedded formatter `ruff` failed; left chunk unchanged\ndoc.yaml:1:1: note: yaml trace: <counters>\n",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\ndoc.yaml:1:1: note: yaml trace: <counters>\ndoc.yaml:3:1: note: embedded formatter `ruff` failed; left chunk unchanged\n",
+  "status": 1,
+  "files": {
+   "doc.yaml": "# fmt: python\ncode: |\n  x=1\n  y=2\nother: [a,b]\n"
+  }
+ }
+}

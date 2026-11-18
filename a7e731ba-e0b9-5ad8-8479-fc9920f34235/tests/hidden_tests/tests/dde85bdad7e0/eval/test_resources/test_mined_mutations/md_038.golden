@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "> <!-- fmt: skip -->  \n> Keep   é prose.  \t\n> And   this line.   \n>\n> Format outside. Second sentence.\n>\n> <!-- fmt: skip -->\n> - Keep   list.  \t\n>   continuation   unchanged.  \n> - Another   item.   \n>\n> <!-- fmt: skip -->\n> > Keep   quote.  \n> > Next   line. \t\n>\n> <!-- fmt: skip -->\n> ::: {.note}  \n> Keep   prose.  \n>\n> ```text\n> code   with spaces  \n> ```\n>\n> $$\n> x + y  \n> $$\n>\n> <div>\n> HTML   with spaces  \n> </div>\n>\n> [malformed](   \n> :::  \n>\n> <!-- fmt: skip -->\n> ```markdown  \n> Keep   fence prose.  \n> ````  \n>\n> Format after containers.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "> <!-- fmt: skip -->  \n> Keep   é prose.  \t\n> And   this line.   \n>\n> Format   outside. Second   sentence. \n>\n> <!-- fmt: skip -->\n> - Keep   list.  \t\n>   continuation   unchanged.  \n> - Another   item.   \n>\n> <!-- fmt: skip -->\n> > Keep   quote.  \n> > Next   line. \t\n>\n> <!-- fmt: skip -->\n> ::: {.note}  \n> Keep   prose.  \n>\n> ```text\n> code   with spaces  \n> ```\n>\n> $$\n> x + y  \n> $$\n>\n> <div>\n> HTML   with spaces  \n> </div>\n>\n> [malformed](   \n> :::  \n>\n> <!-- fmt: skip -->\n> ```markdown  \n> Keep   fence prose.  \n> ````  \n>\n> Format   after containers. \n"
+  }
+ }
+}

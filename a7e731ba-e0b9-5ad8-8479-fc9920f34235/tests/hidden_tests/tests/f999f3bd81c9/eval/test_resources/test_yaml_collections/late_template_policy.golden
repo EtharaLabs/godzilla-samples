@@ -1,0 +1,13 @@
+held: &saved # parent
+  'Café value'
+quoted: "<< item >>"
+items: [<< a,b >>]
+body: !markdown |
+  Keep __strong__ and << literal  bytes >>.
+plain: !markdown |
+  Keep **strong** and `literal  bytes`.
+attached: !markdown |
+  Keep **attached**.
+ok: [x, y]
+# fmt: template.delimiters "<<" ">>" scope=file
+# fmt: markdown canonical=true scope=file

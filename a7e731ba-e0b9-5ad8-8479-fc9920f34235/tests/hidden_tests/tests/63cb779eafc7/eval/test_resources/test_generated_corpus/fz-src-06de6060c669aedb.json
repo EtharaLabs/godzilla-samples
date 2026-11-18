@@ -1,0 +1,15 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "in.py"
+ ],
+ "stdin": "def f():\n    # fmt: markdown wrap=20 canonical\n    #\n    # after empty\n    #\n\n",
+ "files": {
+  "yamark.toml": {
+   "text": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.quote]\nformatter = { command = [\"sh\", \"-c\", \"cat; echo '\\\"\\\"\\\"'\", \"{path}\"], path_suffix = \".txt\" }\n"
+  }
+ },
+ "path_dirs": [],
+ "check_rerun": true
+}

@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--line-width",
+  "120"
+ ],
+ "stdin": "﻿merge:\n  <<: *a\n  extra: 1\n? complex key\n: complex value\n? [flow, key]\n: v\nanchor: &a value\ntag_null: !!null \"\"\nurl: http://example.com/path?x=1#frag\nempty_flow: {}\n# fmt: markdown\nmd: \"This is **markdown** text with a [link](http://x.y) and _emphasis_.\"\n",
+ "files": {},
+ "path_dirs": []
+}

@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "{{< notice >}}\n\nFirst\nsentence. Second\nsentence.\n\n{{< /notice >}}\n\n{{% outer %}}\n{{< raw >}}\nFormat   this\nbody.\n{{% verbatim %}}\nNested   ordinary\nMarkdown.\n{{< /raw >}}\n{{% /different %}}\n{{% /verbatim %}}\n{{% /outer %}}\n\n{{< something.inline />}}\nAfter   the self-closing\ncall.\n{{% single /%}}\n{{< /orphan >}}\n{{% /orphan %}}\n",
+ "cwd": ".",
+ "files": {}
+}

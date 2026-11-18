@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--indent-width",
+  "10"
+ ],
+ "stdin": "url: http://example.com/path?x=1#frag\nnums: [0x1F, 0o17, 1_000, +12, -0.5, .5, 1e3, .inf, -.Inf, .NAN, 0b101, 012]\n# fmt: compact table\ncrows:\n  - name: a\n    v: 1\n  - name: bb\n    v: 22\nnested:\n    deep:\n        deeper: value\n        list:\n            - a\n            -   b\n            - - nested seq\n              - x\n            - k: v\n              k2: v2\njinja: \"{% if x %}y{% endif %}\"\n",
+ "files": {},
+ "path_dirs": []
+}

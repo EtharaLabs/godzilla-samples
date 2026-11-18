@@ -1,0 +1,21 @@
+#| title: Data cleaning
+#| tags: [etl, daily]
+#| retries: 3
+
+import pandas as pd
+
+# fmt: markdown
+HELP = """
+# clean-data
+
+Reads the raw CSV export, drops duplicate rows, and writes a parquet
+file that downstream jobs read every morning.
+
+- `--input`: path to the CSV file
+- `--output`: destination
+"""
+
+
+def main():
+    df = pd.read_csv("raw.csv")
+    return df.drop_duplicates()

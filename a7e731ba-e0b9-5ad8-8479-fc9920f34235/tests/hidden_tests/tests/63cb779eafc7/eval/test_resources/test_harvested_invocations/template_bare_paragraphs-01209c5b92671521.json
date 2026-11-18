@@ -1,0 +1,17 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "ext/input.md",
+  "--wrap",
+  "8"
+ ],
+ "stdin": "<!-- fmt: wrap=8 scope=next -->\nBefore\n{{ foo }}\nafter.\n\n<!-- fmt: template.delimiters \"{{\" \"}}\" scope=file -->\n",
+ "files": {
+  "ext/yamark.toml": {
+   "text": "[template]\nreplace_delimiters = []\n"
+  }
+ },
+ "path_dirs": [],
+ "check_rerun": true
+}

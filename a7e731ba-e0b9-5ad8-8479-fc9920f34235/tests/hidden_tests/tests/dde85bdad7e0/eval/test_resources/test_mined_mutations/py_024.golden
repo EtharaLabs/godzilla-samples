@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "\"\"\"Module docstring.\"\"\"\r\n\r\ndef read_source() -> str:\r\n    return run(\r\n        # fmt: r\r\n        stdin=\"\"\"\r\n            f <- function(x)x+1\r\n        \"\"\",\r\n    )\r\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 1 unchanged, 0 skipped, 0 failed\n",
+  "status": 0,
+  "files": {
+   "in.py": "\"\"\"Module docstring.\"\"\"\r\n\r\ndef read_source() -> str:\r\n    return run(\r\n        # fmt: r\r\n        stdin=\"\"\"\r\n            f <- function(x)x+1\r\n        \"\"\",\r\n    )\r\n"
+  }
+ }
+}

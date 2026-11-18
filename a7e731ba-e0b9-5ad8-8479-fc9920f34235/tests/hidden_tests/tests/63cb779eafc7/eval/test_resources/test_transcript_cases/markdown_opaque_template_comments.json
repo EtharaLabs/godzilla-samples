@@ -1,0 +1,11 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--canonical",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "Before\n{# don't   alter this #}\nafter _word_ and [link](  url  ).\n\n> Before\n> {# \" _literal_ [x](  url  ) { }} ` $ < a　b #}\n> after _word_.\n\n- Before\n  {# 'first #}{# second { #}\n  after _word_.\n\nBefore\n{# missing closer\nafter _word_.\n\nBefore {#identifier}\n{# next line #}\nafter _word_.\n"
+}

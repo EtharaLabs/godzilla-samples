@@ -1,0 +1,8 @@
+{
+ "status": 0,
+ "stdout": "```python\n%load_ext d2lbook.tab\nx = 1\n```\n",
+ "stderr": "",
+ "files": {
+  "_bin0/ruff": "#!/usr/bin/env python3\nimport json\nimport sys\n\nif sys.argv[1:3] != [\"format\", \"--stdin-filename\"] or sys.argv[4:] != [\"-\"]:\n    sys.stderr.write(f\"unexpected argv: {sys.argv[1:]!r}\\n\")\n    sys.exit(2)\n\nif not sys.argv[3].endswith(\".ipynb\"):\n    sys.stderr.write(f\"expected ipynb path, got {sys.argv[3]}\\n\")\n    sys.exit(2)\n\ntry:\n    notebook = json.load(sys.stdin)\nexcept Exception as err:\n    sys.stderr.write(f\"stdin was not notebook json: {err}\\n\")\n    sys.exit(2)\n\ncells = notebook.get(\"cells\")\nif not isinstance(cells, list) or len(cells) != 1:\n    sys.stderr.write(\"expected exactly one notebook cell\\n\")\n    sys.exit(2)\n\ncell = cells[0]\nif cell.get(\"cell_type\") != \"code\":\n    sys.stderr.write(\"expected a code cell\\n\")\n    sys.exit(2)\n\nsource = cell.get(\"source\")\nif isinstance(source, list):\n    source = \"\".join(source)\nelif not isinstance(source, str):\n    sys.stderr.write(\"expected string or array cell source\\n\")\n    sys.exit(2)\n\nif source.startswith(\"%%tab pytorch\\n\"):\n    formatted = source\nelse:\n    formatted = source.replace(\"x= 1\", \"x = 1\")\n\nif \"%load_ext d2lbook.tab\" in source:\n    cell[\"source\"] = formatted.splitlines(True)\nelse:\n    cell[\"source\"] = formatted\n\njson.dump(notebook, sys.stdout)\n"
+ }
+}

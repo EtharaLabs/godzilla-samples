@@ -1,0 +1,14 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "lorem.yaml",
+  "--wrap",
+  "none",
+  "--canonical",
+  "--verify"
+ ],
+ "stdin": "lorem: !md 'Lorem __ipsum__.'\n  # Outside the scalar.\nipsum: [dolor,sit]\n---\n# fmt: markdown\nlorem: \"Lorem __ipsum__.\"\n\n    # Outside the scalar.\nipsum: [dolor,sit]\n---\nlorem: !md Lorem __ipsum__.\n # Outside the scalar.\nipsum: [dolor,sit]\n",
+ "cwd": ".",
+ "files": {}
+}

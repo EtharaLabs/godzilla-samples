@@ -1,0 +1,19 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.md",
+  "--wrap",
+  "sentence"
+ ],
+ "stdin": "-   First.\n  - Second.\n ~~~text\nalpha    beta\n ~~~\n\n - First.\n- Second.\n ~~~text\nalpha    beta\n ~~~\n\n - First.\n- Second.\n ```text\nalpha    beta\n ```\n\n - First.\n- Second.\n <pre>\nalpha    beta\n </pre>\n\n - First.\n- Second.\n <!--\nalpha    beta\n -->\n\n - First.\n- Second.\n $$\nalpha    beta\n $$\n",
+ "cwd": ".",
+ "files": {},
+ "check_args": [
+  "format",
+  "--check",
+  "--wrap",
+  "sentence",
+  "input.md"
+ ]
+}

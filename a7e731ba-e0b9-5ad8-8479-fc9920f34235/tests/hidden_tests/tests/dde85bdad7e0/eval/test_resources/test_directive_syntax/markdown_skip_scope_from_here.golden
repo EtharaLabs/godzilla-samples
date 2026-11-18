@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "input.md:1:6: error: fmt: skip does not support scope=from-here\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\ninput.md:1:6: error: fmt: skip does not support scope=from-here\n",
+  "status": 1,
+  "files": {
+   "input.md": "<!-- fmt: skip scope=from-here -->\n\nSome __strong__   text that is long enough to wrap around the default column width of seventy-two.\n\n| a | b |\n|---|---|\n| longer cell | x |\n"
+  }
+ }
+}

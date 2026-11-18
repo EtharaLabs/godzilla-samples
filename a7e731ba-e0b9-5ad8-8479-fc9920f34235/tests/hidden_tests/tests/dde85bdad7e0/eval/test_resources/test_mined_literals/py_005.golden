@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "in.py:6:1: error: fmt: template.delimiters needs explicit scope\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\nin.py:6:1: error: fmt: template.delimiters needs explicit scope\n",
+  "status": 1,
+  "files": {
+   "in.py": "# fmt: markdown wrap=none\nbody: |\n  #   Title ##\n  text\n\n# fmt: template.delimiters \"<<\" \">>\"\nvalue: \"<< keep   this >>\"\n\n# fmt: table\n- {name: a, type: int}\n- {name: long_name, type: string}\n\nflow: [ one ,  two]\nmap: { a : b , long : value }\n"
+  }
+ }
+}

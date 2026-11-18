@@ -1,0 +1,18 @@
+---
+{id: 1, profile: {name: planner, active: true}}
+---
+id: 2
+profile: {name: researcher, active: true}
+usage: {input_tokens: 640, output_tokens: 128}
+---
+id: 3
+profile:
+  name: reviewer
+  active: true
+  model: gpt-5
+  region: us
+  tools: [search, python]
+events:
+  - {type: tool_call, tools: [search, open, python, write]}
+  - {type: usage, tokens: {input: 900, output: 240}}
+  - {type: completion, status: ok}

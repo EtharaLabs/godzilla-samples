@@ -1,0 +1,12 @@
+{
+ "status": 1,
+ "stdout": "",
+ "stderr": "{{workdir}}/z/yamark.toml:1:1: error: unknown format config key: format.unknown\n",
+ "files": {
+  "a.md": "```txt\nabc\n```\n",
+  "formatter.py": "import pathlib, sys\npathlib.Path(sys.argv[1]).touch()\nsys.stdout.buffer.write(sys.stdin.buffer.read())\n",
+  "yamark.toml": "[embedded.txt]\nformatter = { command = [\"python\", \"/tmp/.tmpyrozmR/formatter.py\", \"/tmp/.tmpyrozmR/formatter-ran\", \"{path}\"], path_suffix = \".txt\" }\n",
+  "z/b.md": "# Title\n",
+  "z/yamark.toml": "[format]\nunknown = true\n"
+ }
+}

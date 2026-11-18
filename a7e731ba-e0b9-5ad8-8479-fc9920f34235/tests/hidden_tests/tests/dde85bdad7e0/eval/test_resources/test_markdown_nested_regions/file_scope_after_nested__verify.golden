@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "```yaml\na: [1, 2]\nbody: !markdown |\n  One sentence.\n  Two sentences.\n```\n\n````markdown\nSome text.\nMore text here.\n````\n\n::: note\nDiv text.\nMore div text.\n:::\n\nTop paragraph.\nSecond sentence.\n\n<!-- fmt: wrap=sentence -->\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "doc.md": "```yaml\na:   [1,2]\nbody: !markdown \"One   sentence. Two sentences.\"\n```\n\n````markdown\nSome   text. More text here.\n````\n\n::: note\nDiv   text. More div text.\n:::\n\nTop paragraph. Second sentence.\n\n<!-- fmt: wrap=sentence -->\n"
+  }
+ }
+}

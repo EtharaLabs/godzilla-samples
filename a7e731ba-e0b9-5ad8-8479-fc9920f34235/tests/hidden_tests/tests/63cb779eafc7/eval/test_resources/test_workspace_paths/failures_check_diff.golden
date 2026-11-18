@@ -1,0 +1,20 @@
+exit status: 1
+--- stdout
+--- stderr
+3 files scanned, 1 formatted, 0 unchanged, 0 skipped, 2 failed
+./a/u16.md:1:1: error: failed to read file: unsupported encoding: UTF-16 BOM
+./z/latin.md:1:1: error: failed to read file: invalid UTF-8: invalid utf-8 sequence of 1 bytes from index 0
+=== diff
+exit status: 1
+--- stdout
+--- ./ok.yaml
++++ ./ok.yaml
+@@ -1,2 +1,2 @@
+-a:  1
+-b:   [1,2]
++a: 1
++b: [1, 2]
+--- stderr
+3 files scanned, 1 formatted, 0 unchanged, 0 skipped, 2 failed
+./a/u16.md:1:1: error: failed to read file: unsupported encoding: UTF-16 BOM
+./z/latin.md:1:1: error: failed to read file: invalid UTF-8: invalid utf-8 sequence of 1 bytes from index 0

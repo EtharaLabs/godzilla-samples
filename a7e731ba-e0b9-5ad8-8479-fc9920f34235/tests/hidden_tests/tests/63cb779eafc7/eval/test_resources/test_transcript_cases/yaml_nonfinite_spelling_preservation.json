@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--verify"
+ ],
+ "stdin": "positive:\n  - .inf\n  - .Inf\n  - .INF\n  - +.inf\n  - +.Inf\n  - +.INF\nnegative: [-.inf, -.Inf, -.INF]\nnan: [.nan, .NaN, .NAN]\n",
+ "check_rerun": true
+}

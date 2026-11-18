@@ -1,0 +1,21 @@
+exit status: 0
+--- stdout
+Configured yamark Git filter in {{repo}}
+Updated {{repo}}/.git/info/attributes with 4 new attribute pattern(s)
+
+Next step:
+  git add --renormalize .
+
+Undo:
+  Temporarily stage one file exactly as it appears in the working tree:
+    git -c filter.yamark-md.clean=cat add <path>
+  Permanently remove this local setup:
+    yamark git-filter teardown
+
+Per-file control:
+  Add later Git attribute lines to .git/info/attributes or .gitattributes:
+    NEWS.md -filter
+  Then use the normal formatter for that file, for example:
+    yamark format --wrap 72 NEWS.md
+  Use <!-- fmt: skip file --> inside a Markdown file to leave its contents untouched.
+--- stderr

@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "One\nsentence. * two\nwords. * three\nwords.\nLast\nsentence.\n\nCode `*`.\nOpening\nsentence.\n\\* More\nprose.\n\nHTML\n<span title=\"*\">x</span>.\nOpening\nsentence.\n\\* value.\n\nLiteral\n\\*.\nOpening\nsentence.\n\\* value.\n\nLiteral \\*\nhere.\nOpening\nsentence. * value.\n\nEscaped\n\\\\*.\nOpening\nsentence. * value.\n\nMath\n\\(x \\* y\\).\nOpening\nsentence.\n\\* value.\n\nComment <!-- * -->. Opening sentence. * value.\n\nEm *x*.\nOpening\nsentence.\n\\* value.\n\nStrong\n**x**.\nOpening\nsentence.\n\\* value.\n\nNested\n**x *y* z**.\nOpening\nsentence. * value.\n\nMath\n*$x * y$*.\nOpening\nsentence. * value.\n\nUnmatched\n*x.\nOpening\nsentence. * value.\n\nEm *unmatched \\(*. Opening sentence. (b) value.\n\nHTML *<!-- \\> -->*. Opening sentence. * value.\n\nEm\n*x * y*.\nOpening\nsentence. * value.\n\nMath 2 * 3.\nOpening\nsentence. * value.\n",
+  "stderr": "",
+  "status": 0
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 1 formatted, 0 unchanged, 0 skipped, 0 failed\n",
+  "status": 1,
+  "files": {
+   "in.md": "One sentence. * two words. * three words. Last sentence.\n\nCode `*`. Opening sentence. * More prose.\n\nHTML <span title=\"*\">x</span>. Opening sentence. * value.\n\nLiteral \\*. Opening sentence. * value.\n\nLiteral \\* here. Opening sentence. * value.\n\nEscaped \\\\*. Opening sentence. * value.\n\nMath \\(x \\* y\\). Opening sentence. * value.\n\nComment <!-- * -->. Opening sentence. * value.\n\nEm *x*. Opening sentence. * value.\n\nStrong **x**. Opening sentence. * value.\n\nNested **x *y* z**. Opening sentence. * value.\n\nMath *$x * y$*. Opening sentence. * value.\n\nUnmatched *x. Opening sentence. * value.\n\nEm *unmatched \\(*. Opening sentence. (b) value.\n\nHTML *<!-- \\> -->*. Opening sentence. * value.\n\nEm *x * y*. Opening sentence. * value.\n\nMath 2 * 3. Opening sentence. * value.\n"
+  }
+ }
+}

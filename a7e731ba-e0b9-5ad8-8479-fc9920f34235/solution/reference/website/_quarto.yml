@@ -1,0 +1,74 @@
+project:
+  type: website
+  render:
+    - "*.qmd"
+  resources:
+    - benchmark-charts.js
+  output-dir: _site
+
+website:
+  title: Yamark
+  description: A fast formatter for YAML and Markdown.
+  site-url: https://t-kalinowski.github.io/yamark/
+  favicon: assets/favicon.svg
+  repo-url: https://github.com/t-kalinowski/yamark
+  repo-branch: main
+  repo-subdir: website
+  repo-actions: [edit, issue]
+  open-graph:
+    image: assets/social-card.svg
+  twitter-card:
+    image: assets/social-card.svg
+    card-style: summary_large_image
+  navbar:
+    search: true
+    left:
+      - text: Usage
+        href: usage.qmd
+      - text: Examples
+        href: examples.qmd
+      - text: Directives
+        href: directives.qmd
+      - text: Editors
+        href: editors.qmd
+      - text: Reference
+        menu:
+          - text: Overview
+            href: reference.qmd
+          - text: Supported files and syntax
+            href: reference-files.qmd
+          - text: Formatting settings
+            href: reference-options.qmd
+          - text: Configuration
+            href: reference-config.qmd
+          - text: Directive syntax
+            href: reference-directives.qmd
+          - text: Command line
+            href: cli-help.qmd
+      - text: Benchmarks
+        href: benchmarks.qmd
+    right:
+      - text: PyPI
+        href: https://pypi.org/project/yamark/
+        target: _blank
+      - icon: github
+        href: https://github.com/t-kalinowski/yamark
+        target: _blank
+        aria-label: Yamark on GitHub
+  page-footer:
+    left: "Yamark · MIT-licensed · Tomasz Kalinowski"
+    right: "Built with [Quarto](https://quarto.org)."
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: darkly
+    css: styles.css
+    keep-md: true
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+    anchor-sections: true
+    include-after-body:
+      - text: <script defer src="benchmark-charts.js"></script>

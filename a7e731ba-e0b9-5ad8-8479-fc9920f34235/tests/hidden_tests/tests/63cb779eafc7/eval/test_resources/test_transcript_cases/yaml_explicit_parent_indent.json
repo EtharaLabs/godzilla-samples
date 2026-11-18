@@ -1,0 +1,12 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "lorem.yaml",
+  "--canonical",
+  "--wrap",
+  "none",
+  "--verify"
+ ],
+ "stdin": "# fmt: markdown\nlorem:\n  |2\n      Lorem __ipsum__.\nipsum: [dolor,sit]\n---\n- !md\n  |2\n      Lorem __ipsum__.\n- [dolor,sit]\n---\n    !markdown |2\n      Lorem __ipsum__.\n"
+}

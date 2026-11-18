@@ -1,0 +1,10 @@
+{
+ "status": 1,
+ "stdout": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\n",
+ "stderr": "lorem.yaml:1:1: error: /usr/bin/python3: can't open file '/tmp/pytest-of-root/pytest-9/popen-gw0/test_cli_retains_original_line1/lorem.py': [Errno 2] No such file or directory\n",
+ "files": {
+  "lorem.py": "import sys\nfrom pathlib import Path\nPath(sys.argv[1]).write_text(sys.argv[2], encoding='utf-8')\nsys.stdout.buffer.write(sys.stdin.buffer.read())\n",
+  "lorem.yaml": "lorem: !md\n  |\n    ````yaml\n    ipsum: !md\n      |\n        ```lorem\n        Lorem ipsum.\n        ```\n    ````\n",
+  "yamark.toml": "[embedded.lorem]\nformatter = { command = [\"/usr/bin/python3\", \"/tmp/pytest-of-root/pytest-9/popen-gw0/test_cli_retains_original_line1/lorem.py\", \"/tmp/pytest-of-root/pytest-9/popen-gw0/test_cli_retains_original_line1/ipsum.txt\", \"{path}\"], path_suffix = \".txt\" }\n"
+ }
+}

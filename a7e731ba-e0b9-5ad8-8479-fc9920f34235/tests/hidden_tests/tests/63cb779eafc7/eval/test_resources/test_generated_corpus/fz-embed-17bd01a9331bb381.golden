@@ -1,0 +1,8 @@
+{
+ "status": 0,
+ "stdout": "```yaml\nitems:\n  # fmt: upper\n  - |+\n    KEPT\n\n  - other\n```\n",
+ "stderr": "",
+ "files": {
+  "yamark.toml": "[embedded.upper]\nformatter = { command = [\"sh\", \"-c\", \"tr a-z A-Z\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.grow]\nformatter = { command = [\"sh\", \"-c\", \"cat; echo extra\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.fail]\nformatter = { command = [\"sh\", \"-c\", \"echo bad >&2; exit 1\", \"{path}\"], path_suffix = \".txt\" }\n[embedded.empty]\nformatter = { command = [\"sh\", \"-c\", \"cat >/dev/null\", \"{path}\"], path_suffix = \".txt\" }\n"
+ }
+}

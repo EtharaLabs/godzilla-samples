@@ -1,0 +1,17 @@
+base: &base
+  a: 1
+der:
+  <<: *base
+  b: 2
+list: &l
+  - 1
+tagged:
+  x: 1
+seq_tagged:
+  - 1
+custom: !foo
+  - a
+both: &a !bar
+  k: v
+flow: &f [1, 2]
+ref: *f

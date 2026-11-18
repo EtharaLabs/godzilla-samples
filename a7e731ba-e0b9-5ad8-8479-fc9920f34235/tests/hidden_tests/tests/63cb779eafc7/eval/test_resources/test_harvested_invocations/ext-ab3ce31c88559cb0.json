@@ -1,0 +1,20 @@
+{
+ "args": [
+  "format",
+  "--verify",
+  "lorem.yaml"
+ ],
+ "stdin": "",
+ "files": {
+  "lorem.py": {
+   "text": "import sys\nfrom pathlib import Path\nPath(sys.argv[1]).write_text(sys.argv[2], encoding='utf-8')\nsys.stdout.buffer.write(sys.stdin.buffer.read())\n"
+  },
+  "yamark.toml": {
+   "text": "[embedded.lorem]\nformatter = { command = [\"/usr/bin/python3\", \"/tmp/pytest-of-root/pytest-9/popen-gw0/test_cli_retains_original_line1/lorem.py\", \"/tmp/pytest-of-root/pytest-9/popen-gw0/test_cli_retains_original_line1/ipsum.txt\", \"{path}\"], path_suffix = \".txt\" }\n"
+  },
+  "lorem.yaml": {
+   "text": "lorem: !md\n  |\n    ````yaml\n    ipsum: !md\n      |\n        ```lorem\n        Lorem ipsum.\n        ```\n    ````\n"
+  }
+ },
+ "path_dirs": []
+}

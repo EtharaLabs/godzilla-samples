@@ -1,0 +1,28 @@
+{
+ "args": [
+  "git-filter",
+  "adopt",
+  "--markdown-wrap-at-column",
+  "32"
+ ],
+ "stdin": "",
+ "git_fixture": {
+  "config": {
+   "core.autocrlf": "false",
+   "core.quotePath": "true"
+  },
+  "files": {
+   "café.md": "First sentence. Second sentence?\n",
+   "with space.md": "Third sentence. Fourth sentence?\n"
+  }
+ },
+ "git_status": false,
+ "git_index": [
+  "café.md",
+  "with space.md"
+ ],
+ "git_worktree": [
+  "café.md",
+  "with space.md"
+ ]
+}

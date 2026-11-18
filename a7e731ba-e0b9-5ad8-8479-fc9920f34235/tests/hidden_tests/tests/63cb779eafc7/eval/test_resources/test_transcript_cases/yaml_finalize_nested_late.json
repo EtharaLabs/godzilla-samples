@@ -1,0 +1,10 @@
+{
+ "args": [
+  "format",
+  "--stdin-file-path",
+  "input.yaml",
+  "--wrap",
+  "none"
+ ],
+ "stdin": "plain: [one,two]\n# fmt: markdown\ninline: \"This is __strong__.\"\nblock: !markdown |\n  This is __strong__ too.\n# fmt: skip\nskipped: !markdown |\n  Keep __raw__  here.\n# fmt: markdown canonical=true scope=file\n"
+}

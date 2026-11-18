@@ -1,0 +1,14 @@
+{
+ "stdout": "Configured yamark Git filter in <repo>\nUpdated <repo>/.git/info/attributes with 0 new attribute pattern(s)\n\nNext step:\n  git add --renormalize .\n\nUndo:\n  Temporarily stage one file exactly as it appears in the working tree:\n    git -c filter.yamark-md.clean=cat add <path>\n  Permanently remove this local setup:\n    yamark git-filter teardown\n\nPer-file control:\n  Add later Git attribute lines to .git/info/attributes or .gitattributes:\n    NEWS.md -filter\n  Then use the normal formatter for that file, for example:\n    yamark format --wrap 72 NEWS.md\n  Use <!-- fmt: skip file --> inside a Markdown file to leave its contents untouched.\n",
+ "stderr": "",
+ "status": 0,
+ "git_status": "",
+ "filter_config": "filter.yamark-md.clean <yamark> git-filter clean --stdin-filename %f\nfilter.yamark-md.smudge <yamark> git-filter smudge --stdin-filename %f --markdown-wrap-at-column 72\nfilter.yamark-md.required true\nmerge.renormalize true\n",
+ "info_attributes": "*.md filter=yamark-md\n*.qmd filter=yamark-md\n*.Rmd filter=yamark-md\n*.rmd filter=yamark-md\n",
+ "index": {
+  "post.md": "A. B.\n"
+ },
+ "worktree": {
+  "post.md": "A. B.\n"
+ }
+}

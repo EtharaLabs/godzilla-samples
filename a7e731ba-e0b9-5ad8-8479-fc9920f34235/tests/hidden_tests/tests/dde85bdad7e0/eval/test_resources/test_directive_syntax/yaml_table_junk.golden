@@ -1,0 +1,15 @@
+{
+ "stdin": {
+  "stdout": "",
+  "stderr": "input.yaml:1:1: error: invalid fmt: table directive\n",
+  "status": 1
+ },
+ "check": {
+  "stdout": "",
+  "stderr": "1 files scanned, 0 formatted, 0 unchanged, 0 skipped, 1 failed\ninput.yaml:1:1: error: invalid fmt: table directive\n",
+  "status": 1,
+  "files": {
+   "input.yaml": "# fmt: table wide\nfirst:   1\nsecond: !markdown \"Some __strong__   text.\"\nlist: [a,b]\n"
+  }
+ }
+}
