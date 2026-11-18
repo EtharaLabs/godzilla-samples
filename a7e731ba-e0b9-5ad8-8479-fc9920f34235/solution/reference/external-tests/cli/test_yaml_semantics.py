@@ -1,0 +1,217 @@
+"""Run via `uv run external-tests/run.py --suite cli/test_yaml_semantics.py`."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from yaml12 import read_yaml
+
+from _support import run_command
+
+
+LOCAL_YAML_CASES: list[tuple[str, str]] = [
+    (
+        "flow-spacing",
+        "items: [{a: b,c: d}, {a: e,c: f}]\n",
+    ),
+    (
+        "skip-node",
+        """normal: [1,2,3]
+# fmt: skip
+manual:
+    -   [ 1,2,3]
+    -   [ 4,5,6]
+""",
+    ),
+    (
+        "flow-table",
+        """# fmt: table
+- {name: a, type: int, default: 0}
+- {name: long_name, type: string, default: ""}
+""",
+    ),
+    ("crlf", "items: [a,b,c]\r\n"),
+    (
+        "quoted-decoder-escapes",
+        r'''value: "\0\a\b\t\n\v\f\r\e\"\/\\\xE9\u00E9\U0001F600"
+single: 'Café isn''t ASCII'
+flow: ["\u0031", "\u0074rue", "\u0020space", 'it''s quoted']
+''',
+    ),
+    (
+        "quoted-decoder-multiline",
+        "single: 'first\n  second'\ndouble: \"first\\\n  second\"\nitems: [a,b]\n",
+    ),
+    (
+        "quoted-decoder-crlf-continuation",
+        "value: \"first\\\r\n  second\"\r\nitems: [a,b]\r\n",
+    ),
+    (
+        "literal-block",
+        """script: |
+  echo "do not fold this"
+  echo "hard line breaks matter"
+""",
+    ),
+    (
+        "quoted-numeric-strings",
+        """version: '1.10'
+scientific: "1e2"
+hex: '0x2A'
+octal: '0o52'
+positive: '+42'
+inf: '.Inf'
+nan: '.NaN'
+plain_string: 'release 1.10 candidate'
+""",
+    ),
+    (
+        "quoted-strings-needing-style",
+        r"""boolish: "true"
+nullish: "null"
+empty: ""
+leading: " space"
+trailing: "space "
+tabbed: "a\tb"
+colon: "a: b"
+comment: "a # b"
+""",
+    ),
+    (
+        "escape-heavy-quoted-string",
+        r"""output:
+  result:
+    content:
+      - type: text
+        text: "{\"python\":\"print('hello')\",\"wait_ms\":0}"
+flow: {text: "{\"python\":\"print('hello')\",\"wait_ms\":0}"}
+""",
+    ),
+    (
+        "literal-block-leading-spaces",
+        r"""mixed: "\u0020\u0020first\nsecond"
+both: "\u0020\u0020first\n\u0020\u0020second"
+escape_heavy: "\u0020\u0020{\"python\":\"print(\u0027hello\u0027)\"}"
+""",
+    ),
+    (
+        "escaped-multiline-quoted-string",
+        r"""result:
+  content:
+    - type: text
+      text: "\n\x20*** caught segfault ***\n\
+        address 0x0, cause 'invalid permissions'\n\n\
+        Traceback:\n\x201: tools::pskill(Sys.getpid(), signal = 11L)\n\n\
+        Possible actions:\n\
+        1: abort (with core dump, if enabled)\n\
+        2: normal R exit\n\
+        3: exit R without saving workspace\n\
+        4: exit R saving workspace\n\
+        Selection: R is aborting now ...\n\
+        worker sideband read failed: worker sideband closed"
+  isError: true
+""",
+    ),
+    (
+        "root-document-marker-strings",
+        """"---"
+---
+"--- x"
+---
+"..."
+---
+"... x"
+""",
+    ),
+    (
+        "trailing-colon-strings",
+        """sequence:
+  - "foo:"
+mapping: "foo:"
+flow_sequence: ["foo:"]
+flow_mapping: {value: "foo:"}
+flow_boundary_whitespace: [" foo", "foo "]
+""",
+    ),
+    (
+        "non-ascii-whitespace",
+        """trailing: foo 
+leading:  foo
+core_like:  null 
+""",
+    ),
+    (
+        "core-tags",
+        """string: !!str hello world
+string_bool: !!str true
+int: !!int 3
+bool: !!bool true
+float: !!float 1.10
+null: !!null null
+""",
+    ),
+    (
+        "anchored-tagged-flow",
+        """items: &items [a,b]
+tagged: !seq [c,d]
+both: !seq &both [e,f]
+ref: *items
+""",
+    ),
+    (
+        "multiline-plain-scalar",
+        """description: first line
+  second line
+items: [a,b]
+""",
+    ),
+    (
+        "folded-scalar-double-space",
+        """description: >-
+  Lorem ipsum  dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+""",
+    ),
+    (
+        "folded-scalar-sentence-spacing",
+        """description: >-
+  Lorem ipsum dolor sit amet.  Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+""",
+    ),
+    (
+        "folded-scalar-wide-space-run",
+        """description: >-
+  Lorem ipsum    dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+""",
+    ),
+    (
+        "plain-scalar-wide-space-run",
+        """description: Lorem ipsum    dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+""",
+    ),
+]
+
+
+def test_cli_preserves_yaml12_values_for_local_yaml_regressions(
+    tmp_path: Path,
+) -> None:
+    paths = []
+    for idx, (_, input_text) in enumerate(LOCAL_YAML_CASES):
+        path = tmp_path / f"{idx:03}-case.yaml"
+        path.write_text(input_text, encoding="utf-8")
+        paths.append(path)
+
+    before = [read_yaml(path, multi=True) for path in paths]
+
+    run_command("yamark", "format", *paths)
+
+    after = [read_yaml(path, multi=True) for path in paths]
+
+    for path, before_value, after_value in zip(paths, before, after):
+        assert before_value == after_value, (
+            f"YAML values are not identical for {path}"
+        )
+
+    run_command("yamark", "format", *paths)
+    reformatted = [path.read_text(encoding="utf-8") for path in paths]
+    run_command("yamark", "format", *paths)
+    assert reformatted == [path.read_text(encoding="utf-8") for path in paths]

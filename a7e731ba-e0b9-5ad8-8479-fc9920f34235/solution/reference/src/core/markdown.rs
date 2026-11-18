@@ -1,0 +1,2084 @@
+//! Markdown document parsing and directive propagation. Block-specific modules
+//! recognize fences and containers; planning resolves the final policy before
+//! emission consumes the document.
+
+mod containers;
+mod fences;
+mod frontmatter;
+mod list;
+mod planning;
+
+use crate::config::Config;
+use crate::core::directives::{
+    Directive, DirectiveDelta, DirectiveEngine, DirectiveState, Scope, TemplateDelimiter,
+    contains_markdown_template_span, file_scope_delta, parse_markdown_html_directive,
+    parse_markdown_html_directive_checked,
+};
+use crate::core::document::{
+    Document, DocumentKind, EmitPlan, FormatOptions, MarkdownNodeKind, Node, NodeKind,
+};
+use crate::core::source::{SourceBuffer, Span};
+use crate::diagnostic::Result;
+use containers::{
+    blockquote_at, blockquote_block_supported, definition_list_at, definition_list_end,
+    definition_list_supported, footnote_block_end, footnote_definition_at, list_block_end,
+    list_block_supported, list_item_at,
+};
+use fences::{
+    code_cell_formatter_body, code_fence_at, code_fence_code_cell_without_language,
+    code_fence_info, code_fence_is_code_cell, code_fence_language,
+    code_fence_language_supported_opaque, code_fence_local_skip, code_fence_raw_format,
+    find_code_fence_closing, normalized_code_fence_opening, quarto_fence_skip,
+};
+use frontmatter::{find_front_matter_closing, front_matter_markdown_delta, front_matter_opening};
+pub(crate) use list::{
+    ListBlockKind, ListItem, ListStructure, leading_spaces as leading_list_spaces,
+};
+pub(crate) use planning::MarkdownPlans;
+pub(crate) use planning::{document_emit_options, finalize_document, release_planning};
+use planning::{
+    push_markdown_format_node, push_markdown_list_node, push_structural_markdown_format_node,
+    validate_markdown_format_target,
+};
+
+pub(crate) fn parse_markdown(
+    source: &SourceBuffer,
+    range: Span,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<Document> {
+    parse_markdown_with_mode(source, range, options, config, MarkdownParseMode::Concrete)
+}
+
+pub(crate) fn parse_markdown_for_formatting(
+    source: &SourceBuffer,
+    range: Span,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<Document> {
+    parse_markdown_with_mode(
+        source,
+        range,
+        options,
+        config,
+        MarkdownParseMode::SemanticOnly,
+    )
+}
+
+pub(crate) fn parse_markdown_for_validation(
+    source: &SourceBuffer,
+    range: Span,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<Document> {
+    parse_markdown_with_mode(
+        source,
+        range,
+        options,
+        config,
+        MarkdownParseMode::SemanticOnlyValidation,
+    )
+}
+
+pub(crate) fn parse_markdown_for_concrete_validation(
+    source: &SourceBuffer,
+    range: Span,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<Document> {
+    parse_markdown_with_mode(
+        source,
+        range,
+        options,
+        config,
+        MarkdownParseMode::ConcreteValidation,
+    )
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum MarkdownParseMode {
+    Concrete,
+    SemanticOnly,
+    ConcreteValidation,
+    SemanticOnlyValidation,
+}
+
+impl MarkdownParseMode {
+    fn plans_yaml_emits(self) -> bool {
+        matches!(self, Self::Concrete | Self::SemanticOnly)
+    }
+}
+
+fn parse_markdown_with_mode(
+    source: &SourceBuffer,
+    range: Span,
+    options: FormatOptions,
+    config: &Config,
+    mode: MarkdownParseMode,
+) -> Result<Document> {
+    let mut options = options;
+    if !matches!(
+        source.dominant_line_ending,
+        crate::core::source::LineEnding::None
+    ) {
+        options.default_line_ending = source.dominant_line_ending.as_str();
+    }
+    let mut doc = Document::new(DocumentKind::Markdown, range);
+    doc.options = options;
+    let mut engine = DirectiveEngine::for_document(&mut doc, config.template_delimiters.clone());
+    let start_line = first_line_index(source, range);
+    let mut i = start_line;
+    let end_line = end_line_index(source, range);
+
+    if i < end_line
+        && front_matter_opening(source.line_text(i))
+        && let Some(closing) = find_front_matter_closing(source, i + 1, end_line)
+    {
+        let opening = source.lines[i].full;
+        let closing_span = source.lines[closing].full;
+        let content = Span::new(opening.end(), source.lines[closing].full.start());
+        let nested_document = parse_nested_yaml(source, content, options, config, mode)?;
+        if nested_document.skip_file {
+            doc.skip_file = true;
+            return Ok(doc);
+        }
+        let markdown_delta = options
+            .respect_frontmatter_markdown_options
+            .then(|| front_matter_markdown_delta(source, &nested_document))
+            .flatten();
+        let nested = doc.push_nested(nested_document);
+        let state = engine.state_for_node(&mut doc, true);
+        doc.push_node(Node {
+            kind: NodeKind::Markdown(MarkdownNodeKind::FrontMatter),
+            span: Span::new(opening.start(), closing_span.end()),
+            state,
+            emit: EmitPlan::MarkdownFrontMatter {
+                opening: opening.into(),
+                closing: closing_span.into(),
+                nested,
+            },
+        });
+        if let Some(delta) = markdown_delta {
+            engine.apply_directive(
+                &mut doc,
+                Directive::Markdown {
+                    scope: Scope::FromHere,
+                    delta,
+                },
+            );
+        }
+        i = closing + 1;
+    }
+
+    while i < end_line {
+        let line = source.lines[i];
+        let text = source.line_text(i);
+
+        // Disabled regions use the existing linewise directive policy. Block
+        // structure, including shortcodes, does not hide a fmt: on line.
+        if engine.formatting_disabled() {
+            if markdown_on_directive_line(text) {
+                let state = engine.state_for_node(&mut doc, false);
+                doc.push_node(Node {
+                    kind: NodeKind::Markdown(MarkdownNodeKind::Directive),
+                    span: line.full.into(),
+                    state,
+                    emit: EmitPlan::Preserve,
+                });
+                engine.apply_directive(&mut doc, Directive::On);
+                i += 1;
+                continue;
+            }
+
+            let start = i;
+            i = markdown_disabled_region_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Raw),
+                span: Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                ),
+                state,
+                emit: EmitPlan::Preserve,
+            });
+            continue;
+        }
+
+        if line_is_blank(source, i) {
+            let state = engine.state_for_node(&mut doc, false);
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Blank),
+                span: line.full.into(),
+                state,
+                emit: EmitPlan::Copy,
+            });
+            i += 1;
+            continue;
+        }
+
+        if let Some(directive) = parse_markdown_html_directive_checked(text).map_err(|message| {
+            markdown_error_at(
+                source,
+                line.text.start() + text.find("fmt:").unwrap_or(0),
+                message,
+            )
+        })? {
+            let directive =
+                infer_markdown_directive_scope(source, start_line, i, end_line, directive)
+                    .map_err(|message| {
+                        markdown_error_at(
+                            source,
+                            line.text.start() + text.find("fmt:").unwrap_or(0),
+                            message,
+                        )
+                    })?;
+            let state = engine.state_for_node(&mut doc, false);
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Directive),
+                span: line.full.into(),
+                state,
+                emit: EmitPlan::Preserve,
+            });
+            let delta = file_scope_delta(&directive);
+            engine.apply_directive(&mut doc, directive);
+            if doc.skip_file {
+                return Ok(doc);
+            }
+            if let Some(delta) = delta {
+                patch_nested_documents_after_file_scope_delta(
+                    source, &mut doc, &delta, options, config, mode,
+                )?;
+            }
+            i += 1;
+            continue;
+        }
+
+        if markdown_indented_code_at(text) {
+            let start = i;
+            i = raw_sensitive_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            validate_markdown_format_target(source, &doc, state, span, false)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Raw),
+                span,
+                state,
+                emit: EmitPlan::Copy,
+            });
+            continue;
+        }
+
+        if let Some(marker_len) = quarto_div_opening(text) {
+            let start = i;
+            let Some(closing) = find_quarto_div_closing(
+                (i + 1..end_line).map(|line| source.line_text(line)),
+                marker_len,
+            )
+            .map(|offset| i + 1 + offset) else {
+                i = end_line;
+                let state = engine.state_for_node(&mut doc, true);
+                let span = Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                );
+                validate_markdown_format_target(source, &doc, state, span, false)?;
+                doc.push_node(Node {
+                    kind: NodeKind::Markdown(MarkdownNodeKind::QuartoDiv),
+                    span,
+                    state,
+                    emit: EmitPlan::Copy,
+                });
+                continue;
+            };
+            let state = engine.state_for_node(&mut doc, true);
+            let opening = source.lines[start].full;
+            let closing_span = source.lines[closing].full;
+            let content = Span::new(opening.end(), closing_span.start());
+            let state_value = doc.state(state).clone();
+            let nested_options = state_value.markdown_options(options);
+            let nested_config = config_for_directive_state(config, &state_value);
+            let nested = doc.push_nested(parse_markdown_with_mode(
+                source,
+                content,
+                nested_options,
+                &nested_config,
+                mode,
+            )?);
+            let span = Span::new(opening.start(), closing_span.end());
+            validate_markdown_format_target(source, &doc, state, span, true)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::QuartoDiv),
+                span,
+                state,
+                emit: EmitPlan::MarkdownDiv {
+                    opening: opening.into(),
+                    closing: closing_span.into(),
+                    nested,
+                },
+            });
+            i = closing + 1;
+            continue;
+        }
+
+        if pandoc_grid_table_at(source, i, end_line) {
+            let start = i;
+            i = raw_sensitive_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            push_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::PandocTable,
+                Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                ),
+                MarkdownBlockFormatKind::PandocTable,
+                options,
+            )?;
+            continue;
+        }
+
+        if let Some(table_end) = pandoc_multiline_table_end(source, i, end_line) {
+            let start = i;
+            i = table_end;
+            let state = engine.state_for_node(&mut doc, true);
+            push_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::PandocTable,
+                Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                ),
+                MarkdownBlockFormatKind::PandocTable,
+                options,
+            )?;
+            continue;
+        }
+
+        if pandoc_table_at(source, i, end_line) {
+            let start = i;
+            i = pandoc_simple_table_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            push_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::PandocTable,
+                Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                ),
+                MarkdownBlockFormatKind::PandocTable,
+                options,
+            )?;
+            continue;
+        }
+
+        if definition_list_at(source, i, end_line) {
+            let start = i;
+            i = definition_list_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            push_structural_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::DefinitionList,
+                span,
+                MarkdownBlockFormatKind::DefinitionList,
+                options,
+                definition_list_supported(source, start, i),
+            )?;
+            continue;
+        }
+
+        if paired_html_block_start(text).is_some() {
+            let start = i;
+            i = raw_sensitive_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            validate_markdown_format_target(source, &doc, state, span, false)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Raw),
+                span,
+                state,
+                emit: EmitPlan::Copy,
+            });
+            continue;
+        }
+
+        if let Some((content, depth)) = setext_heading_at(source, i, end_line) {
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(source.lines[i].full.start(), source.lines[i + 1].full.end());
+            let supported = !contains_markdown_template_span(
+                source.slice(span),
+                &doc.state(state).template_delimiters,
+            );
+            validate_markdown_format_target(source, &doc, state, span, supported)?;
+            let emit = plan_markdown_setext_heading(source, span, content, depth, doc.state(state));
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::SetextHeading),
+                span,
+                state,
+                emit,
+            });
+            i += 2;
+            continue;
+        }
+
+        if let Some((marker, content)) = heading_ranges(source, i) {
+            let state = engine.state_for_node(&mut doc, true);
+            let supported = !contains_markdown_template_span(
+                source.slice(line.full),
+                &doc.state(state).template_delimiters,
+            );
+            validate_markdown_format_target(source, &doc, state, line.full.into(), supported)?;
+            let emit =
+                plan_markdown_heading(source, line.full.into(), marker, content, doc.state(state));
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Heading),
+                span: line.full.into(),
+                state,
+                emit,
+            });
+            i += 1;
+            continue;
+        }
+
+        if thematic_break_at(line_without_bom(source, i)) {
+            let state = engine.state_for_node(&mut doc, true);
+            validate_markdown_format_target(source, &doc, state, line.full.into(), true)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::ThematicBreak),
+                span: line.full.into(),
+                state,
+                emit: plan_markdown_thematic_break(),
+            });
+            i += 1;
+            continue;
+        }
+
+        if pipe_table_at(source, i, end_line) {
+            let start = i;
+            i += 2;
+            while i < end_line {
+                let candidate = source.line_text(i);
+                if !pipe_table_body_row(candidate) {
+                    break;
+                }
+                i += 1;
+            }
+            let state = engine.state_for_node(&mut doc, true);
+            push_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::GfmPipeTable,
+                Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                ),
+                MarkdownBlockFormatKind::Table,
+                options,
+            )?;
+            continue;
+        }
+
+        if list_item_at(text) {
+            let start = i;
+            let block = list_block_end(source, i, end_line);
+            i = block.end;
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            let structure = (!block.preserve)
+                .then(|| ListStructure::recognize(source.slice(span)))
+                .flatten()
+                .filter(|structure| list_block_supported(source, start, i, structure));
+            push_markdown_list_node(source, &mut doc, state, span, options, structure)?;
+            continue;
+        }
+
+        if blockquote_at(text) {
+            let start = i;
+            i += 1;
+            while i < end_line && blockquote_at(source.line_text(i)) {
+                i += 1;
+            }
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            push_structural_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::Blockquote,
+                span,
+                MarkdownBlockFormatKind::Blockquote,
+                options,
+                blockquote_block_supported(source, start, i),
+            )?;
+            continue;
+        }
+
+        if footnote_definition_at(text) {
+            let start = i;
+            i = footnote_block_end(source, i, end_line);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            let state = engine.state_for_node(&mut doc, true);
+            push_markdown_format_node(
+                source,
+                &mut doc,
+                state,
+                MarkdownNodeKind::FootnoteDefinition,
+                span,
+                MarkdownBlockFormatKind::Paragraph,
+                options,
+            )?;
+            continue;
+        }
+
+        if html_comment_at(text) {
+            let start = i;
+            i = html_comment_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, false);
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::HtmlComment),
+                span: Span::new(
+                    source.lines[start].full.start(),
+                    source.lines[i - 1].full.end(),
+                ),
+                state,
+                emit: EmitPlan::Copy,
+            });
+            continue;
+        }
+
+        if let Some(token_start) = shortcode_block_start(source, i) {
+            i = push_shortcode_token(source, &mut doc, &mut engine, i, token_start, range);
+            continue;
+        }
+
+        if display_math_block_at(text) {
+            let start = i;
+            i = raw_sensitive_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            validate_markdown_format_target(source, &doc, state, span, true)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::DisplayMath),
+                span,
+                state,
+                emit: EmitPlan::MarkdownOpaque,
+            });
+            continue;
+        }
+
+        if link_definition_start(text.trim_start()) {
+            let start = i;
+            i = raw_sensitive_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            validate_markdown_format_target(source, &doc, state, span, true)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::ReferenceDefinition),
+                span,
+                state,
+                emit: EmitPlan::MarkdownOpaque,
+            });
+            continue;
+        }
+
+        if raw_sensitive_at(text) {
+            let start = i;
+            i = raw_sensitive_end(source, i, end_line);
+            let state = engine.state_for_node(&mut doc, true);
+            let span = Span::new(
+                source.lines[start].full.start(),
+                source.lines[i - 1].full.end(),
+            );
+            validate_markdown_format_target(source, &doc, state, span, false)?;
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Raw),
+                span,
+                state,
+                emit: EmitPlan::Copy,
+            });
+            continue;
+        }
+
+        if standalone_template_line_at(text, &config.markdown_standalone_template_delimiters) {
+            let state = engine.state_for_node(&mut doc, true);
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::Raw),
+                span: line.full.into(),
+                state,
+                emit: EmitPlan::Copy,
+            });
+            i += 1;
+            continue;
+        }
+
+        if let Some(fence) = code_fence_at(text) {
+            let Some(closing) = find_code_fence_closing(source, i + 1, end_line, fence) else {
+                let state = engine.state_for_node(&mut doc, true);
+                let span = Span::new(line.full.start(), source.lines[end_line - 1].full.end());
+                validate_markdown_format_target(source, &doc, state, span, false)?;
+                doc.push_node(Node {
+                    kind: NodeKind::Markdown(MarkdownNodeKind::Raw),
+                    span,
+                    state,
+                    emit: EmitPlan::Copy,
+                });
+                break;
+            };
+            let opening = line.full;
+            let closing_span = source.lines[closing].full;
+            let content = Span::new(opening.end(), source.lines[closing].full.start());
+            let language = code_fence_language(text);
+            let raw_format = code_fence_raw_format(text);
+            let code_cell_without_language = code_fence_code_cell_without_language(text);
+            let local_skip =
+                code_fence_local_skip(text) || quarto_fence_skip(source, i + 1, closing);
+            let language_has_formatter = language.as_deref().is_some_and(|language| {
+                crate::plugins::PluginRegistry::is_known_formatter(config, language)
+            });
+            let supported_opaque_language = language
+                .as_deref()
+                .is_some_and(code_fence_language_supported_opaque);
+            let no_language = code_fence_info(text).is_some_and(|info| info.is_empty());
+            let supported_language_behavior = matches!(
+                language.as_deref(),
+                Some("yaml" | "yml" | "markdown" | "md")
+            ) || no_language
+                || language_has_formatter
+                || supported_opaque_language
+                || raw_format
+                || code_cell_without_language;
+            let state = engine.state_for_node(&mut doc, true);
+            let state_value = doc.state(state).clone();
+            let nested_options = state_value.markdown_options(options);
+            let normalized_opening = (!local_skip)
+                .then(|| {
+                    normalized_code_fence_opening(
+                        source.line_full(i),
+                        supported_language_behavior,
+                        nested_options,
+                    )
+                    .map(String::into_boxed_str)
+                })
+                .flatten();
+            let span = Span::new(opening.start(), closing_span.end());
+            validate_markdown_format_target(
+                source,
+                &doc,
+                state,
+                span,
+                local_skip || supported_language_behavior,
+            )?;
+            let nested_config = config_for_directive_state(config, &state_value);
+            let nested = if local_skip {
+                None
+            } else {
+                match language.as_deref() {
+                    Some("yaml" | "yml") => Some(doc.push_nested(parse_nested_yaml(
+                        source,
+                        content,
+                        nested_options,
+                        &nested_config,
+                        mode,
+                    )?)),
+                    Some("markdown" | "md") => Some(doc.push_nested(parse_markdown_with_mode(
+                        source,
+                        content,
+                        nested_options,
+                        &nested_config,
+                        mode,
+                    )?)),
+                    _ => None,
+                }
+            };
+            let formatter_body = if code_fence_is_code_cell(text) {
+                code_cell_formatter_body(source, i + 1, closing).unwrap_or(content)
+            } else {
+                content
+            };
+            let emit = if nested.is_none() && !local_skip && language_has_formatter {
+                EmitPlan::ExternalPlugin {
+                    name: language.unwrap().into_boxed_str(),
+                    body: formatter_body,
+                    string_indent: None,
+                    normalized_opening,
+                    fence_safety: Some(fence.safety()),
+                }
+            } else {
+                EmitPlan::MarkdownCodeFence {
+                    opening: opening.into(),
+                    normalized_opening,
+                    closing: closing_span.into(),
+                    nested,
+                    safety: fence.safety(),
+                    supported: !local_skip && supported_language_behavior,
+                }
+            };
+            doc.push_node(Node {
+                kind: NodeKind::Markdown(MarkdownNodeKind::CodeFence),
+                span,
+                state,
+                emit,
+            });
+            i = closing + 1;
+            continue;
+        }
+
+        let start = i;
+        i += 1;
+        while i < end_line
+            && !paragraph_should_end_before(
+                source,
+                i,
+                &config.markdown_standalone_template_delimiters,
+            )
+        {
+            i += 1;
+        }
+        let span = Span::new(
+            source.lines[start].full.start(),
+            source.lines[i - 1].full.end(),
+        );
+        let state = engine.state_for_node(&mut doc, true);
+        push_markdown_format_node(
+            source,
+            &mut doc,
+            state,
+            MarkdownNodeKind::Paragraph,
+            span,
+            MarkdownBlockFormatKind::Paragraph,
+            options,
+        )?;
+    }
+
+    if let Some(message) = engine.pending_target_error() {
+        return Err(markdown_error_at(
+            source,
+            range.end.saturating_sub(1),
+            message,
+        ));
+    }
+
+    Ok(doc)
+}
+
+fn parse_nested_yaml(
+    source: &SourceBuffer,
+    range: Span,
+    options: FormatOptions,
+    config: &Config,
+    mode: MarkdownParseMode,
+) -> Result<Document> {
+    match mode {
+        MarkdownParseMode::Concrete => {
+            crate::core::yaml::parse_yaml(source, range, options, config)
+        }
+        MarkdownParseMode::SemanticOnly => {
+            crate::core::yaml::parse_yaml_for_formatting(source, range, options, config)
+        }
+        MarkdownParseMode::ConcreteValidation => {
+            crate::core::yaml::parse_yaml_for_concrete_validation(source, range, options, config)
+        }
+        MarkdownParseMode::SemanticOnlyValidation => {
+            crate::core::yaml::parse_yaml_for_validation(source, range, options, config, 0)
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum MarkdownBlockFormatKind {
+    Paragraph,
+    Table,
+    PandocTable,
+    List,
+    DefinitionList,
+    Blockquote,
+}
+
+pub(crate) fn apply_file_scope_delta_to_markdown_document(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    delta: &DirectiveDelta,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<()> {
+    apply_file_scope_delta_to_markdown_document_with_mode(
+        source,
+        doc,
+        delta,
+        options,
+        config,
+        MarkdownParseMode::SemanticOnly,
+    )
+}
+
+pub(crate) fn apply_file_scope_delta_to_markdown_document_for_validation(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    delta: &DirectiveDelta,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<()> {
+    apply_file_scope_delta_to_markdown_document_with_mode(
+        source,
+        doc,
+        delta,
+        options,
+        config,
+        MarkdownParseMode::SemanticOnlyValidation,
+    )
+}
+
+pub(crate) fn apply_file_scope_delta_to_markdown_document_for_concrete_validation(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    delta: &DirectiveDelta,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<()> {
+    apply_file_scope_delta_to_markdown_document_with_mode(
+        source,
+        doc,
+        delta,
+        options,
+        config,
+        MarkdownParseMode::ConcreteValidation,
+    )
+}
+
+fn apply_file_scope_delta_to_markdown_document_with_mode(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    delta: &DirectiveDelta,
+    options: FormatOptions,
+    config: &Config,
+    mode: MarkdownParseMode,
+) -> Result<()> {
+    let owned_source = doc.source.take();
+    doc.patch_all_states(delta.clone());
+    let result = patch_nested_documents_after_file_scope_delta(
+        owned_source.as_ref().unwrap_or(source),
+        doc,
+        delta,
+        options,
+        config,
+        mode,
+    );
+    doc.source = owned_source;
+    result
+}
+
+fn patch_nested_documents_after_file_scope_delta(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    delta: &DirectiveDelta,
+    options: FormatOptions,
+    config: &Config,
+    mode: MarkdownParseMode,
+) -> Result<()> {
+    for index in 0..doc.nodes.len() {
+        let state = doc.state(doc.nodes[index].state).clone();
+        match doc.nodes[index].emit.clone() {
+            EmitPlan::MarkdownFrontMatter { nested, .. } => {
+                let nested_config = config_for_directive_state(config, &state);
+                apply_file_scope_delta_to_nested_document(
+                    source,
+                    doc,
+                    nested,
+                    delta,
+                    state.markdown_options(options),
+                    &nested_config,
+                    mode,
+                )?;
+            }
+            EmitPlan::MarkdownCodeFence {
+                nested: Some(nested),
+                ..
+            } => {
+                let nested_config = config_for_directive_state(config, &state);
+                apply_file_scope_delta_to_nested_document(
+                    source,
+                    doc,
+                    nested,
+                    delta,
+                    state.markdown_options(options),
+                    &nested_config,
+                    mode,
+                )?;
+            }
+            EmitPlan::MarkdownDiv { nested, .. } => {
+                let nested_config = config_for_directive_state(config, &state);
+                apply_file_scope_delta_to_nested_document(
+                    source,
+                    doc,
+                    nested,
+                    delta,
+                    state.markdown_options(options),
+                    &nested_config,
+                    mode,
+                )?;
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+fn apply_file_scope_delta_to_nested_document(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    nested: usize,
+    delta: &DirectiveDelta,
+    options: FormatOptions,
+    config: &Config,
+    mode: MarkdownParseMode,
+) -> Result<()> {
+    match doc.nested[nested].kind {
+        DocumentKind::Markdown => apply_file_scope_delta_to_markdown_document_with_mode(
+            source,
+            &mut doc.nested[nested],
+            delta,
+            options,
+            config,
+            mode,
+        )?,
+        DocumentKind::Yaml => {
+            if mode.plans_yaml_emits() {
+                crate::core::yaml::apply_file_scope_delta_to_yaml_document(
+                    source,
+                    &mut doc.nested[nested],
+                    delta,
+                    options,
+                    config,
+                )?;
+            } else {
+                crate::core::yaml::apply_file_scope_delta_to_yaml_document_for_validation(
+                    source,
+                    &mut doc.nested[nested],
+                    delta,
+                    options,
+                    config,
+                )?;
+            }
+        }
+        DocumentKind::Python | DocumentKind::R => return Ok(()),
+    };
+    Ok(())
+}
+
+fn config_for_directive_state(config: &Config, state: &DirectiveState) -> Config {
+    let mut config = config.clone();
+    config.template_delimiters = state.template_delimiters.clone();
+    config
+}
+
+fn plan_markdown_heading(
+    source: &SourceBuffer,
+    span: Span,
+    marker: Span,
+    content: Span,
+    state: &DirectiveState,
+) -> EmitPlan {
+    if contains_markdown_template_span(source.slice(span), &state.template_delimiters) {
+        return EmitPlan::Copy;
+    }
+    EmitPlan::MarkdownHeading { marker, content }
+}
+
+fn plan_markdown_setext_heading(
+    source: &SourceBuffer,
+    span: Span,
+    content: Span,
+    depth: usize,
+    state: &DirectiveState,
+) -> EmitPlan {
+    if contains_markdown_template_span(source.slice(span), &state.template_delimiters) {
+        return EmitPlan::Copy;
+    }
+    EmitPlan::MarkdownSetextHeading { content, depth }
+}
+
+fn plan_markdown_thematic_break() -> EmitPlan {
+    EmitPlan::MarkdownThematicBreak
+}
+
+pub(crate) fn render_markdown_heading(
+    source: &SourceBuffer,
+    span: Span,
+    marker: Span,
+    content: Span,
+    options: FormatOptions,
+) -> String {
+    let mut text = source.slice(content).trim_ascii().to_owned();
+    if options.markdown_canonical {
+        text = crate::core::wrap::canonicalize_inline(&text);
+    }
+    text = crate::core::wrap::normalize_heading_content(&text);
+
+    let mut output = String::new();
+    output.push_str(source.slice(Span::new(span.start, marker.start)));
+    output.push_str(source.slice(marker));
+    if !text.is_empty() {
+        output.push(' ');
+        output.push_str(&text);
+    }
+    output.push_str(line_ending_for_span(source, span));
+    output
+}
+
+pub(crate) fn render_markdown_setext_heading(
+    source: &SourceBuffer,
+    span: Span,
+    content: Span,
+    depth: usize,
+    options: FormatOptions,
+) -> String {
+    let mut text = source.slice(content).trim_ascii().to_owned();
+    if options.markdown_canonical {
+        text = crate::core::wrap::canonicalize_inline(&text);
+    }
+    text = crate::core::wrap::normalize_heading_content(&text);
+
+    let mut output = String::new();
+    output.push_str(source.slice(Span::new(span.start, content.start)));
+    output.push_str(&"#".repeat(depth));
+    if !text.is_empty() {
+        output.push(' ');
+        output.push_str(&text);
+    }
+    output.push_str(line_ending_for_span(source, span));
+    output
+}
+
+pub(crate) fn render_markdown_thematic_break(
+    source: &SourceBuffer,
+    span: Span,
+    options: FormatOptions,
+) -> String {
+    let mut output = options.markdown_horizontal_rule.to_owned();
+    output.push_str(line_ending_for_span(source, span));
+    output
+}
+
+fn line_ending_for_span(source: &SourceBuffer, span: Span) -> &'static str {
+    let text = source.slice(span);
+    if text.ends_with("\r\n") {
+        "\r\n"
+    } else if text.ends_with('\n') {
+        "\n"
+    } else if text.ends_with('\r') {
+        "\r"
+    } else {
+        ""
+    }
+}
+
+fn markdown_error_at(
+    source: &SourceBuffer,
+    byte: usize,
+    message: impl Into<String>,
+) -> crate::diagnostic::YamarkError {
+    let (line, column) = source.line_column_at_byte(byte);
+    crate::diagnostic::YamarkError::at(message, line, column)
+}
+
+fn infer_markdown_directive_scope(
+    source: &SourceBuffer,
+    start: usize,
+    line: usize,
+    end: usize,
+    directive: Directive,
+) -> std::result::Result<Directive, &'static str> {
+    let Directive::Template { scope, delimiter } = directive else {
+        return Ok(directive);
+    };
+    if scope != Scope::Next || source.line_text(line).contains("scope=") {
+        return Ok(Directive::Template { scope, delimiter });
+    }
+    if directive_is_isolated(source, start, line, end) {
+        Ok(Directive::Template {
+            scope: Scope::FromHere,
+            delimiter,
+        })
+    } else if line + 1 < end && markdown_line_starts_target(source, line + 1, end) {
+        Ok(Directive::Template { scope, delimiter })
+    } else {
+        Err("fmt: template.delimiters needs explicit scope")
+    }
+}
+
+fn directive_is_isolated(source: &SourceBuffer, start: usize, line: usize, end: usize) -> bool {
+    let before_blank = line == start || line_is_blank(source, line - 1);
+    let after_blank = line + 1 >= end || line_is_blank(source, line + 1);
+    before_blank && after_blank
+}
+
+fn markdown_line_starts_target(source: &SourceBuffer, line: usize, end: usize) -> bool {
+    let text = line_without_bom(source, line);
+    !text.trim().is_empty()
+        && parse_markdown_html_directive(text).is_none()
+        && paired_html_block_start(text).is_none()
+        && (pandoc_table_at(source, line, end)
+            || definition_list_at(source, line, end)
+            || setext_heading_at(source, line, end).is_some()
+            || heading_ranges(source, line).is_some()
+            || thematic_break_at(text)
+            || quarto_div_opening(text).is_some()
+            || pandoc_grid_table_at(source, line, end)
+            || pandoc_multiline_table_end(source, line, end).is_some()
+            || pipe_table_at(source, line, end)
+            || list_item_at(text)
+            || blockquote_at(text)
+            || footnote_definition_at(text)
+            || code_fence_at(text).is_some()
+            || !raw_sensitive_at(text))
+}
+
+fn first_line_index(source: &SourceBuffer, range: Span) -> usize {
+    source
+        .lines
+        .partition_point(|line| line.full.end() <= range.start)
+}
+
+fn end_line_index(source: &SourceBuffer, range: Span) -> usize {
+    source
+        .lines
+        .partition_point(|line| line.full.start() < range.end)
+}
+
+fn markdown_on_directive_line(text: &str) -> bool {
+    matches!(parse_markdown_html_directive(text), Some(Directive::On))
+}
+
+fn markdown_disabled_region_end(source: &SourceBuffer, mut i: usize, end: usize) -> usize {
+    while i < end && !markdown_on_directive_line(source.line_text(i)) {
+        i += 1;
+    }
+    i
+}
+
+fn paragraph_should_end_before(
+    source: &SourceBuffer,
+    line: usize,
+    standalone_template_delimiters: &[TemplateDelimiter],
+) -> bool {
+    let text = line_without_bom(source, line);
+    if !line_may_start_markdown_block(source, line, text) {
+        return false;
+    }
+    text.trim().is_empty()
+        || parse_markdown_html_directive(text).is_some()
+        || pandoc_table_at(source, line, source.lines.len())
+        || definition_list_at(source, line, source.lines.len())
+        || paired_html_block_start(text).is_some()
+        || setext_heading_at(source, line, source.lines.len()).is_some()
+        || heading_ranges(source, line).is_some()
+        || thematic_break_at(text)
+        || quarto_div_opening(text).is_some()
+        || pandoc_grid_table_at(source, line, source.lines.len())
+        || pandoc_multiline_table_end(source, line, source.lines.len()).is_some()
+        || pipe_table_at(source, line, source.lines.len())
+        || list_item_at(text)
+        || blockquote_at(text)
+        || raw_sensitive_at(text)
+        || standalone_template_line_at(text, standalone_template_delimiters)
+        || code_fence_at(text).is_some()
+}
+
+fn standalone_template_line_at(text: &str, delimiters: &[TemplateDelimiter]) -> bool {
+    let trimmed = text.trim();
+    delimiters
+        .iter()
+        .any(|delimiter| standalone_template_line_matches(trimmed, delimiter))
+}
+
+fn standalone_template_line_matches(text: &str, delimiter: &TemplateDelimiter) -> bool {
+    if delimiter.open == "{" && delimiter.close == "}" {
+        return python_f_string_replacement_field_line(text);
+    }
+    text.starts_with(&delimiter.open)
+        && text.ends_with(&delimiter.close)
+        && text.len() > delimiter.open.len() + delimiter.close.len()
+}
+
+fn python_f_string_replacement_field_line(text: &str) -> bool {
+    if !text.starts_with('{') || text.starts_with("{{") || !text.ends_with('}') {
+        return false;
+    }
+    balanced_brace_end(text) == Some(text.len())
+}
+
+fn balanced_brace_end(text: &str) -> Option<usize> {
+    let mut depth = 0usize;
+    let mut index = 0usize;
+    while index < text.len() {
+        let ch = text[index..].chars().next()?;
+        match ch {
+            '{' => depth += 1,
+            '}' => {
+                depth = depth.checked_sub(1)?;
+                if depth == 0 {
+                    return Some(index + ch.len_utf8());
+                }
+            }
+            _ => {}
+        }
+        index += ch.len_utf8();
+    }
+    None
+}
+
+fn line_may_start_markdown_block(source: &SourceBuffer, line: usize, text: &str) -> bool {
+    let trimmed = text.trim_start_matches('\u{feff}').trim_start();
+    let indent = text.len() - text.trim_start().len();
+    let Some(first) = trimmed.as_bytes().first().copied() else {
+        return true;
+    };
+    if indent >= 4 || text.trim().is_empty() || list_item_at(text) {
+        return true;
+    }
+    if trimmed.starts_with("Table:") {
+        return true;
+    }
+    if source
+        .lines
+        .get(line + 1)
+        .is_some_and(|_| following_line_can_promote_paragraph(source.line_text(line + 1)))
+    {
+        return true;
+    }
+    matches!(
+        first,
+        b'<' | b'#'
+            | b'-'
+            | b'='
+            | b'*'
+            | b'_'
+            | b':'
+            | b'+'
+            | b'|'
+            | b'>'
+            | b'`'
+            | b'~'
+            | b'['
+            | b'\\'
+            | b'$'
+            | b'{'
+    )
+}
+
+fn following_line_can_promote_paragraph(text: &str) -> bool {
+    let trimmed = text.trim();
+    let marker = text.trim_start();
+    pandoc_table_separator(trimmed)
+        || (!trimmed.is_empty() && trimmed.chars().all(|ch| ch == '=' || ch == '-'))
+        || matches!(marker.as_bytes().first(), Some(b':' | b'~'))
+}
+
+/// Pandoc drops a byte order mark only at the start of the input; a later
+/// U+FEFF, including one at the start of container content, is text.
+fn bom_len(source: &SourceBuffer, line: usize) -> usize {
+    match source.bom {
+        Some(bom) if line == 0 => bom.len(),
+        _ => 0,
+    }
+}
+
+fn line_without_bom(source: &SourceBuffer, line: usize) -> &str {
+    &source.line_text(line)[bom_len(source, line)..]
+}
+
+fn line_is_blank(source: &SourceBuffer, line: usize) -> bool {
+    line_without_bom(source, line).trim().is_empty()
+}
+
+fn setext_heading_at(
+    source: &SourceBuffer,
+    line_index: usize,
+    end: usize,
+) -> Option<(Span, usize)> {
+    if line_index + 1 >= end {
+        return None;
+    }
+    let text = line_without_bom(source, line_index);
+    if text.trim().is_empty()
+        || parse_markdown_html_directive(text).is_some()
+        || heading_ranges(source, line_index).is_some()
+        || code_fence_at(text).is_some()
+        || list_item_at(text)
+    {
+        return None;
+    }
+    let underline = source.line_text(line_index + 1).trim();
+    let depth = if !underline.is_empty() && underline.chars().all(|ch| ch == '=') {
+        1
+    } else if !underline.is_empty() && underline.chars().all(|ch| ch == '-') {
+        2
+    } else {
+        return None;
+    };
+    let line = source.lines[line_index];
+    let body = source.line_text(line_index);
+    let bom = bom_len(source, line_index);
+    let start = bom
+        + body[bom..]
+            .bytes()
+            .take_while(|byte| byte.is_ascii_whitespace())
+            .count();
+    let end = body.trim_end().len();
+    Some((
+        Span::new(line.text.start() + start, line.text.start() + end),
+        depth,
+    ))
+}
+
+fn heading_ranges(source: &SourceBuffer, line_index: usize) -> Option<(Span, Span)> {
+    let line = source.lines[line_index];
+    let text = source.line_text(line_index);
+    let bytes = text.as_bytes();
+    let bom = bom_len(source, line_index);
+    let indent = bom
+        + bytes[bom..]
+            .iter()
+            .take_while(|byte| **byte == b' ')
+            .count();
+    if indent > 3 || indent >= bytes.len() || bytes[indent] != b'#' {
+        return None;
+    }
+    let mut depth = 0usize;
+    while indent + depth < bytes.len() && bytes[indent + depth] == b'#' {
+        depth += 1;
+    }
+    if depth == 0 || depth > 6 {
+        return None;
+    }
+    if indent + depth < bytes.len() && !matches!(bytes[indent + depth], b' ' | b'\t') {
+        return None;
+    }
+    let mut content_start = indent + depth;
+    while content_start < bytes.len() && matches!(bytes[content_start], b' ' | b'\t') {
+        content_start += 1;
+    }
+    let mut content_end = bytes.len();
+    while content_end > content_start && matches!(bytes[content_end - 1], b' ' | b'\t') {
+        content_end -= 1;
+    }
+    let mut hash_start = content_end;
+    while hash_start > content_start && bytes[hash_start - 1] == b'#' {
+        hash_start -= 1;
+    }
+    if hash_start < content_end {
+        if hash_start == content_start {
+            content_end = content_start;
+        } else if matches!(bytes[hash_start - 1], b' ' | b'\t') {
+            content_end = hash_start - 1;
+            while content_end > content_start && matches!(bytes[content_end - 1], b' ' | b'\t') {
+                content_end -= 1;
+            }
+        }
+    }
+    Some((
+        Span::new(
+            line.text.start() + indent,
+            line.text.start() + indent + depth,
+        ),
+        Span::new(
+            line.text.start() + content_start,
+            line.text.start() + content_end,
+        ),
+    ))
+}
+
+fn thematic_break_at(text: &str) -> bool {
+    let trimmed = text.trim();
+    let mut marker = None;
+    let mut count = 0usize;
+    for ch in trimmed.chars() {
+        if ch.is_whitespace() {
+            continue;
+        }
+        if !matches!(ch, '-' | '*' | '_') {
+            return false;
+        }
+        if let Some(marker) = marker {
+            if marker != ch {
+                return false;
+            }
+        } else {
+            marker = Some(ch);
+        }
+        count += 1;
+    }
+    count >= 3
+}
+
+fn quarto_div_opening(text: &str) -> Option<usize> {
+    let trimmed = text.trim_start();
+    let indent = text.len() - trimmed.len();
+    if indent > 3 || !trimmed.starts_with(":::") {
+        return None;
+    }
+    let marker_len = trimmed.bytes().take_while(|byte| *byte == b':').count();
+    let rest = trimmed[marker_len..].trim();
+    if rest.chars().all(|ch| ch == ':') {
+        return None;
+    }
+    Some(marker_len)
+}
+
+/// Returns the offset of the line closing a div whose opener precedes `lines`.
+fn find_quarto_div_closing<'a>(
+    lines: impl IntoIterator<Item = &'a str>,
+    marker_len: usize,
+) -> Option<usize> {
+    let mut depth = 1usize;
+    for (offset, text) in lines.into_iter().enumerate() {
+        if let Some(opening_len) = quarto_div_opening(text)
+            && opening_len >= marker_len
+        {
+            depth += 1;
+            continue;
+        }
+        let trimmed = text.trim();
+        if trimmed.len() >= marker_len && trimmed.chars().all(|ch| ch == ':') {
+            depth -= 1;
+            if depth == 0 {
+                return Some(offset);
+            }
+        }
+    }
+    None
+}
+
+fn pipe_table_at(source: &SourceBuffer, line: usize, end: usize) -> bool {
+    line + 1 < end
+        && source.line_text(line).trim_start().starts_with('|')
+        && pipe_table_delimiter(source.line_text(line + 1))
+}
+
+fn pandoc_grid_table_at(source: &SourceBuffer, line: usize, end: usize) -> bool {
+    let Some(columns) = grid_table_border(source.line_text(line).trim()) else {
+        return false;
+    };
+    pandoc_grid_table_next_border(source, line + 1, end, columns).is_some()
+}
+
+fn pandoc_grid_table_next_border(
+    source: &SourceBuffer,
+    mut line: usize,
+    end: usize,
+    columns: usize,
+) -> Option<usize> {
+    let mut saw_row = false;
+    while line < end {
+        let trimmed = source.line_text(line).trim();
+        if grid_table_border(trimmed).is_some_and(|found| found == columns) {
+            return saw_row.then_some(line);
+        }
+        if !source.line_text(line).trim_start().starts_with('|') {
+            return None;
+        }
+        saw_row = true;
+        line += 1;
+    }
+    None
+}
+
+fn pandoc_multiline_table_end(source: &SourceBuffer, line: usize, end: usize) -> Option<usize> {
+    if line + 2 >= end {
+        return None;
+    }
+    let first = source.line_text(line).trim();
+    if pandoc_multiline_outer_separator(first) && !pandoc_table_separator(first) {
+        return pandoc_continuous_bound_multiline_table_end(source, line, end);
+    }
+    if !pandoc_table_separator(first) {
+        return None;
+    }
+    let mut headerless_end = None;
+    let mut i = line + 1;
+    while i < end {
+        let trimmed = source.line_text(i).trim();
+        if pandoc_table_separator(trimmed) {
+            if headerless_end.is_some() || i + 1 == end || source.line_text(i + 1).trim().is_empty()
+            {
+                return Some(i + 1);
+            }
+            headerless_end = Some(i + 1);
+        }
+        i += 1;
+    }
+    // Pandoc prefers a headed multiline table when a third separator follows;
+    // its body may include blank lines and caption-looking text. Otherwise,
+    // the second separator closes a headerless table, even when a caption or
+    // another block follows it without a blank line.
+    // A later table can supply that third separator: stopping at intervening
+    // prose or headings would disagree with Pandoc's headed-table parse.
+    headerless_end
+}
+
+fn pandoc_continuous_bound_multiline_table_end(
+    source: &SourceBuffer,
+    line: usize,
+    end: usize,
+) -> Option<usize> {
+    let mut saw_header = false;
+    let mut saw_inner_separator = false;
+    let mut saw_body = false;
+    let mut i = line + 1;
+    while i < end {
+        let trimmed = source.line_text(i).trim();
+        if !saw_inner_separator {
+            if trimmed.is_empty() {
+                return None;
+            }
+            if pandoc_table_separator(trimmed) {
+                if !saw_header {
+                    return None;
+                }
+                saw_inner_separator = true;
+            } else if pandoc_multiline_outer_separator(trimmed) {
+                return None;
+            } else {
+                saw_header = true;
+            }
+        } else if pandoc_multiline_outer_separator(trimmed) {
+            return saw_body.then_some(i + 1);
+        } else if !trimmed.is_empty() {
+            saw_body = true;
+        }
+        i += 1;
+    }
+    None
+}
+
+fn pandoc_multiline_outer_separator(text: &str) -> bool {
+    text.len() >= 3 && text.chars().all(|ch| matches!(ch, '-' | '='))
+}
+
+fn grid_table_border(text: &str) -> Option<usize> {
+    let trimmed = text.trim();
+    if !trimmed.starts_with('+') || !trimmed.ends_with('+') {
+        return None;
+    }
+    let mut columns = 0usize;
+    for part in trimmed.split('+').skip(1) {
+        if part.is_empty() {
+            continue;
+        }
+        if !part.chars().all(|ch| matches!(ch, '-' | '=' | ':')) {
+            return None;
+        }
+        columns += 1;
+    }
+    (columns > 0).then_some(columns)
+}
+
+fn pipe_table_delimiter(text: &str) -> bool {
+    let trimmed = trim_optional_pipe_edges(text.trim());
+    if trimmed.is_empty() {
+        return false;
+    }
+    let mut saw_dash = false;
+    for ch in trimmed.chars() {
+        match ch {
+            '-' => saw_dash = true,
+            '|' | ':' | ' ' | '\t' => {}
+            _ => return false,
+        }
+    }
+    saw_dash
+}
+
+fn pipe_table_body_row(text: &str) -> bool {
+    let trimmed = text.trim();
+    !trimmed.is_empty() && trimmed.contains('|')
+}
+
+fn trim_optional_pipe_edges(mut text: &str) -> &str {
+    if let Some(rest) = text.strip_prefix('|') {
+        text = rest;
+    }
+    if let Some(rest) = text.strip_suffix('|') {
+        text = rest;
+    }
+    text.trim()
+}
+
+fn html_comment_at(text: &str) -> bool {
+    text.trim_start().starts_with("<!--")
+}
+
+fn html_comment_end(source: &SourceBuffer, line: usize, end: usize) -> usize {
+    if source.line_text(line).contains("-->") {
+        line + 1
+    } else {
+        find_until_contains(source, line + 1, end, "-->")
+    }
+}
+
+fn raw_sensitive_at(text: &str) -> bool {
+    let indent = text.bytes().take_while(|byte| *byte == b' ').count();
+    let trimmed = &text[indent..];
+    markdown_indented_code_at(text)
+        || display_math_delimiter(trimmed)
+        || trimmed.starts_with("\\[")
+        || trimmed.starts_with("\\begin{")
+        || trimmed.starts_with("{{<")
+        || trimmed.starts_with("{{%")
+        || trimmed.starts_with('|')
+        || pandoc_block_attribute_line(trimmed)
+        || trimmed.starts_with("Table:")
+        || trimmed.starts_with(':')
+        || trimmed.starts_with("<!--")
+        || trimmed.starts_with("<div")
+        || trimmed.starts_with("</div")
+        || crate::core::wrap::markdown_html_block_start_line(trimmed)
+        || multiline_html_tag_start(text)
+        || paired_html_block_start(text).is_some()
+        || link_definition_start(trimmed)
+        || trimmed.starts_with("#.")
+        || trimmed.starts_with('+')
+        || grid_table_separator(trimmed)
+}
+
+fn markdown_indented_code_at(text: &str) -> bool {
+    let mut column = 0usize;
+    for byte in text.bytes() {
+        match byte {
+            b' ' => column += 1,
+            b'\t' => column += 4 - column % 4,
+            _ => return false,
+        }
+        if column >= 4 {
+            return true;
+        }
+    }
+    false
+}
+
+fn shortcode_block_start(source: &SourceBuffer, line: usize) -> Option<usize> {
+    let text = source.line_text(line);
+    // A file-leading BOM is retained in the node's span, but is not indentation.
+    let content = &text[bom_len(source, line)..];
+    let trimmed = content.trim_start();
+    let indent = content.len() - trimmed.len();
+    (indent <= 3
+        && !markdown_indented_code_at(content)
+        && (trimmed.starts_with("{{<") || trimmed.starts_with("{{%")))
+    .then_some(source.lines[line].text.start() + text.len() - trimmed.len())
+}
+
+fn display_math_block_at(text: &str) -> bool {
+    let trimmed = text.trim_start();
+    let indent = text.len() - trimmed.len();
+    indent <= 3
+        && (display_math_delimiter(trimmed)
+            || trimmed.starts_with("\\[")
+            || trimmed.starts_with("\\begin{"))
+}
+
+fn pandoc_block_attribute_line(trimmed: &str) -> bool {
+    if !trimmed.starts_with('{') || !trimmed.ends_with('}') {
+        return false;
+    }
+    let inner = trimmed[1..trimmed.len() - 1].trim();
+    if inner.is_empty() {
+        return false;
+    }
+    let Some(tokens) = pandoc_attribute_tokens(inner) else {
+        return false;
+    };
+    !tokens.is_empty() && tokens.iter().all(|token| pandoc_attribute_token(token))
+}
+
+fn pandoc_attribute_tokens(inner: &str) -> Option<Vec<&str>> {
+    let mut tokens = Vec::new();
+    let mut start = None::<usize>;
+    let mut in_double_quote = false;
+    for (index, ch) in inner.char_indices() {
+        match ch {
+            '"' => {
+                if start.is_none() {
+                    start = Some(index);
+                }
+                in_double_quote = !in_double_quote;
+            }
+            ch if ch.is_whitespace() && !in_double_quote => {
+                if let Some(token_start) = start.take() {
+                    tokens.push(&inner[token_start..index]);
+                }
+            }
+            _ if start.is_none() => start = Some(index),
+            _ => {}
+        }
+    }
+    if in_double_quote {
+        return None;
+    }
+    if let Some(token_start) = start {
+        tokens.push(&inner[token_start..]);
+    }
+    Some(tokens)
+}
+
+fn pandoc_attribute_token(token: &str) -> bool {
+    if token == "-" {
+        return true;
+    }
+    if let Some(value) = token.strip_prefix('#').or_else(|| token.strip_prefix('.')) {
+        return !value.is_empty() && !value.contains(['{', '}', '"', '\'']);
+    }
+    let Some((key, value)) = token.split_once('=') else {
+        return false;
+    };
+    !key.is_empty()
+        && key
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '_' | '-' | ':'))
+        && !value.is_empty()
+        && !value.contains(['{', '}', '\''])
+}
+
+fn raw_sensitive_end(source: &SourceBuffer, line: usize, end: usize) -> usize {
+    let trimmed = source.line_text(line).trim_start();
+    if pandoc_table_at(source, line, end) {
+        let mut i = line + 1;
+        while i < end && !source.line_text(i).trim().is_empty() {
+            i += 1;
+        }
+        return i;
+    }
+    if let Some(tag) = paired_html_block_start(source.line_text(line)) {
+        return find_until_html_closing_tag(source, line + 1, end, &tag);
+    }
+    if multiline_html_tag_start(source.line_text(line)) {
+        return find_until_contains(source, line + 1, end, ">");
+    }
+    if display_math_delimiter(trimmed) {
+        if trimmed[2..].contains("$$") {
+            return line + 1;
+        }
+        return find_until_display_math_close(source, line + 1, end);
+    }
+    if trimmed.starts_with("\\[") {
+        return find_until_contains(source, line, end, "\\]");
+    }
+    if let Some(name) = trimmed
+        .strip_prefix("\\begin{")
+        .and_then(|rest| rest.split_once('}').map(|(name, _)| name.to_owned()))
+    {
+        let closing = format!("\\end{{{name}}}");
+        if trimmed.contains(&closing) {
+            return line + 1;
+        }
+        return find_until_contains(source, line + 1, end, &closing);
+    }
+    if trimmed.starts_with("<!--") && !trimmed.contains("-->") {
+        return find_until_contains(source, line + 1, end, "-->");
+    }
+    let mut i = line + 1;
+    while i < end {
+        let text = source.line_text(i);
+        if text.trim().is_empty() {
+            break;
+        }
+        if raw_continuation(source.line_text(line), text) {
+            i += 1;
+        } else {
+            break;
+        }
+    }
+    i.max(line + 1)
+}
+
+fn display_math_delimiter(trimmed: &str) -> bool {
+    trimmed.starts_with("$$")
+}
+
+fn find_until_display_math_close(source: &SourceBuffer, mut line: usize, end: usize) -> usize {
+    while line < end {
+        if display_math_delimiter(source.line_text(line).trim_start()) {
+            return line + 1;
+        }
+        line += 1;
+    }
+    end
+}
+
+fn raw_continuation(first: &str, candidate: &str) -> bool {
+    let first_indent = first.len() - first.trim_start().len();
+    let candidate_indent = candidate.len() - candidate.trim_start().len();
+    let first_trimmed = first.trim_start();
+    let candidate_trimmed = candidate.trim_start();
+    if first_trimmed.starts_with('|') {
+        return candidate_trimmed.starts_with('|');
+    }
+    if first_trimmed.starts_with('+') || grid_table_separator(first_trimmed) {
+        return candidate_trimmed.starts_with('+')
+            || candidate_trimmed.starts_with('|')
+            || grid_table_separator(candidate_trimmed);
+    }
+    if first_trimmed.starts_with("Table:") || first_trimmed.starts_with(':') {
+        return candidate.starts_with(' ') || candidate.starts_with('\t');
+    }
+    if link_definition_start(first_trimmed) {
+        return candidate.starts_with(' ') || candidate.starts_with('\t');
+    }
+    if pandoc_table_separator(first_trimmed) {
+        return !candidate_trimmed.is_empty();
+    }
+    first_indent >= 4 && candidate_indent >= 4
+}
+
+fn push_shortcode_token(
+    source: &SourceBuffer,
+    doc: &mut Document,
+    engine: &mut DirectiveEngine,
+    line: usize,
+    token_start: usize,
+    range: Span,
+) -> usize {
+    let token_end = shortcode_token_end(source, token_start, range.end);
+    let next_line = source.line_at_byte(token_end - 1) + 1;
+    let state = engine.state_for_node(doc, true);
+    doc.push_node(Node {
+        kind: NodeKind::Markdown(MarkdownNodeKind::Shortcode),
+        // The rest of the closing line stays outside the token. Advancing to
+        // the next line retains the existing mixed token/prose boundary.
+        span: Span::new(source.lines[line].full.start(), token_end),
+        state,
+        emit: EmitPlan::MarkdownOpaque,
+    });
+    next_line
+}
+
+/// Find one lexical token, bounded by the enclosing Markdown fragment. Names
+/// and braces in arguments have no structural meaning. An incomplete token
+/// consumes the remaining range so it cannot trigger repeated suffix scans.
+fn shortcode_token_end(source: &SourceBuffer, start: usize, end: usize) -> usize {
+    let text = &source.as_str()[start..end];
+    let closing = if text.starts_with("{{<") {
+        ">}}"
+    } else {
+        "%}}"
+    };
+    let mut quote = None;
+    let mut chars = text[3..].char_indices();
+    while let Some((offset, ch)) = chars.next() {
+        if let Some(delimiter) = quote {
+            if ch == '\\' && delimiter != '`' {
+                chars.next();
+            } else if ch == delimiter {
+                quote = None;
+            }
+        } else if matches!(ch, '\'' | '"' | '`') {
+            quote = Some(ch);
+        } else if text[3 + offset..].starts_with(closing) {
+            return start + 3 + offset + closing.len();
+        }
+    }
+    end
+}
+
+fn link_definition_start(trimmed: &str) -> bool {
+    crate::core::wrap::markdown_reference_definition_start(trimmed)
+}
+
+fn pandoc_table_at(source: &SourceBuffer, line: usize, end: usize) -> bool {
+    if line + 1 >= end {
+        return false;
+    }
+    let current = source.line_text(line);
+    let next = source.line_text(line + 1);
+    if current.trim().is_empty() || table_caption_at(current) {
+        return false;
+    }
+    pandoc_table_separator(next.trim())
+}
+
+fn pandoc_simple_table_end(source: &SourceBuffer, line: usize, end: usize) -> usize {
+    let mut i = line + 2;
+    while i < end {
+        let text = source.line_text(i);
+        if text.trim().is_empty() || table_caption_at(text) {
+            break;
+        }
+        i += 1;
+    }
+    i
+}
+
+fn table_caption_at(text: &str) -> bool {
+    let trimmed = text.trim_start();
+    trimmed.starts_with("Table:") || trimmed.starts_with(':')
+}
+
+fn pandoc_table_separator(text: &str) -> bool {
+    let columns = text.split_whitespace().collect::<Vec<_>>();
+    columns.len() >= 2
+        && columns.iter().all(|column| {
+            column.len() >= 3
+                && column.chars().all(|ch| matches!(ch, '-' | '=' | ':'))
+                && column.chars().any(|ch| matches!(ch, '-' | '='))
+        })
+}
+
+fn paired_html_block_start(text: &str) -> Option<String> {
+    let trimmed = text.trim_start();
+    if !trimmed.starts_with('<')
+        || trimmed.starts_with("</")
+        || trimmed.starts_with("<!--")
+        || trimmed.starts_with("<!")
+        || trimmed.starts_with("<?")
+        || crate::core::wrap::commonmark_autolink_span_end(trimmed, 0).is_some()
+    {
+        return None;
+    }
+    let mut chars = trimmed[1..].char_indices();
+    let (_, first) = chars.next()?;
+    if !first.is_ascii_alphabetic() {
+        return None;
+    }
+    let mut tag_end = 1 + first.len_utf8();
+    for (offset, ch) in chars {
+        if ch.is_ascii_alphanumeric() || ch == '-' {
+            tag_end = 1 + offset + ch.len_utf8();
+            continue;
+        }
+        break;
+    }
+    let tag = &trimmed[1..tag_end];
+    let rest = &trimmed[tag_end..];
+    if !rest.contains('>')
+        || rest.trim_end().ends_with("/>")
+        || contains_html_closing_tag(trimmed, tag)
+    {
+        return None;
+    }
+    Some(tag.to_owned())
+}
+
+fn multiline_html_tag_start(text: &str) -> bool {
+    let trimmed = text.trim_start();
+    if trimmed.contains('>') || !trimmed.starts_with('<') {
+        return false;
+    }
+    if trimmed.starts_with("<!--")
+        || trimmed.starts_with("<!")
+        || trimmed.starts_with("<?")
+        || crate::core::wrap::commonmark_autolink_span_end(trimmed, 0).is_some()
+    {
+        return false;
+    }
+    let mut name_start = '<'.len_utf8();
+    if trimmed.as_bytes().get(name_start) == Some(&b'/') {
+        name_start += '/'.len_utf8();
+    }
+    let Some(first) = trimmed[name_start..].chars().next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() {
+        return false;
+    }
+    let mut name_end = name_start;
+    while name_end < trimmed.len() {
+        let ch = trimmed[name_end..]
+            .chars()
+            .next()
+            .expect("name_end is on a char boundary");
+        if !(ch.is_ascii_alphanumeric() || ch == '-') {
+            break;
+        }
+        name_end += ch.len_utf8();
+    }
+    let after_name = &trimmed[name_end..];
+    !(after_name.starts_with([':', '@']))
+        && (after_name.is_empty()
+            || after_name.starts_with(char::is_whitespace)
+            || after_name.starts_with('/'))
+}
+
+fn find_until_html_closing_tag(
+    source: &SourceBuffer,
+    mut line: usize,
+    end: usize,
+    tag: &str,
+) -> usize {
+    while line < end {
+        if contains_html_closing_tag(source.line_text(line), tag) {
+            return line + 1;
+        }
+        line += 1;
+    }
+    end
+}
+
+fn contains_html_closing_tag(text: &str, tag: &str) -> bool {
+    let mut search = text;
+    while let Some(relative) = search.find("</") {
+        let candidate = &search[relative + 2..];
+        let name_len = candidate
+            .bytes()
+            .take_while(|byte| byte.is_ascii_alphanumeric() || *byte == b'-')
+            .count();
+        let name = &candidate[..name_len];
+        let rest = candidate[name_len..].trim_start();
+        if !name.is_empty() && name.eq_ignore_ascii_case(tag) && rest.starts_with('>') {
+            return true;
+        }
+        search = &candidate[name_len..];
+    }
+    false
+}
+
+fn grid_table_separator(text: &str) -> bool {
+    let trimmed = text.trim();
+    trimmed.len() >= 3
+        && trimmed
+            .chars()
+            .all(|ch| matches!(ch, '-' | '=' | ':' | ' ' | '\t'))
+}
+
+fn find_until_contains(source: &SourceBuffer, mut line: usize, end: usize, target: &str) -> usize {
+    while line < end {
+        if source.line_text(line).contains(target) {
+            return line + 1;
+        }
+        line += 1;
+    }
+    end
+}

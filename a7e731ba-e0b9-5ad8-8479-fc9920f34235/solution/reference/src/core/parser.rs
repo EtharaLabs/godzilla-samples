@@ -1,0 +1,287 @@
+use crate::config::Config;
+use crate::core::document::{
+    Document, DocumentEmitMode, DocumentKind, FileKind, FormatOptions, ParsedDocument,
+};
+use crate::core::emit::emit_prepared_tree;
+use crate::core::source::{MAX_SOURCE_SPAN_OFFSET, SourceBuffer, Span};
+use crate::diagnostic::{Result, YamarkError};
+use crate::plugins::PluginRegistry;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FormatTrace {
+    pub source_scans: usize,
+    pub parse_passes: usize,
+    pub source_lines: usize,
+    pub yaml_scanned_lines: usize,
+    pub yaml_semantic_nodes: usize,
+    pub planned_rendered_scalars: usize,
+    pub planned_rendered_flow_collections: usize,
+    pub planned_rendered_block_flow_collections: usize,
+    pub emitted_bytes: usize,
+    pub emitted_nodes: usize,
+}
+
+#[derive(Debug, Clone)]
+pub struct FormattedDocument {
+    pub output: String,
+    pub changed: bool,
+    pub trace: Option<FormatTrace>,
+    #[cfg(feature = "format-trace")]
+    pub(crate) diagnostics: Vec<crate::diagnostic::Diagnostic>,
+}
+
+pub fn parse_source(
+    source: SourceBuffer,
+    range: Span,
+    kind: DocumentKind,
+    options: FormatOptions,
+    config: &Config,
+) -> Result<ParsedDocument> {
+    validate_compact_source_range(range)?;
+    let document = match kind {
+        DocumentKind::Markdown => {
+            crate::core::markdown::parse_markdown(&source, range, options, config)
+        }
+        DocumentKind::Yaml => crate::core::yaml::parse_yaml(&source, range, options, config),
+        DocumentKind::Python => crate::core::source_lang::parse_source_language(
+            &source,
+            range,
+            crate::core::source_lang::SourceLanguage::Python,
+            options,
+            config,
+        ),
+        DocumentKind::R => crate::core::source_lang::parse_source_language(
+            &source,
+            range,
+            crate::core::source_lang::SourceLanguage::R,
+            options,
+            config,
+        ),
+    }?;
+    Ok(ParsedDocument::new(
+        source,
+        document,
+        DocumentEmitMode::Document,
+    ))
+}
+
+fn parse_source_for_formatting(
+    source: &SourceBuffer,
+    range: Span,
+    kind: DocumentKind,
+    options: FormatOptions,
+    config: &Config,
+    collect_trace: bool,
+) -> Result<Document> {
+    validate_compact_source_range(range)?;
+    match kind {
+        DocumentKind::Markdown => {
+            crate::core::markdown::parse_markdown_for_formatting(source, range, options, config)
+        }
+        DocumentKind::Yaml if collect_trace => {
+            crate::core::yaml::parse_yaml_for_formatting_with_trace(source, range, options, config)
+        }
+        DocumentKind::Yaml => {
+            crate::core::yaml::parse_yaml_for_formatting(source, range, options, config)
+        }
+        DocumentKind::Python => crate::core::source_lang::parse_source_language_for_formatting(
+            source,
+            range,
+            crate::core::source_lang::SourceLanguage::Python,
+            options,
+            config,
+        ),
+        DocumentKind::R => crate::core::source_lang::parse_source_language_for_formatting(
+            source,
+            range,
+            crate::core::source_lang::SourceLanguage::R,
+            options,
+            config,
+        ),
+    }
+}
+
+fn parse_source_for_validation(
+    source: &SourceBuffer,
+    range: Span,
+    kind: DocumentKind,
+    options: FormatOptions,
+    config: &Config,
+    yaml_node_capacity_hint: usize,
+) -> Result<Document> {
+    validate_compact_source_range(range)?;
+    match kind {
+        DocumentKind::Markdown => {
+            crate::core::markdown::parse_markdown_for_validation(source, range, options, config)
+        }
+        DocumentKind::Yaml => crate::core::yaml::parse_yaml_for_validation(
+            source,
+            range,
+            options,
+            config,
+            yaml_node_capacity_hint,
+        ),
+        DocumentKind::Python => crate::core::source_lang::parse_source_language_for_validation(
+            source,
+            range,
+            crate::core::source_lang::SourceLanguage::Python,
+            options,
+            config,
+        ),
+        DocumentKind::R => crate::core::source_lang::parse_source_language_for_validation(
+            source,
+            range,
+            crate::core::source_lang::SourceLanguage::R,
+            options,
+            config,
+        ),
+    }
+}
+
+pub(crate) fn validate_compact_source_range(range: Span) -> Result<()> {
+    if range.end <= MAX_SOURCE_SPAN_OFFSET {
+        return Ok(());
+    }
+    Err(YamarkError::new(format!(
+        "source input exceeds supported maximum of {MAX_SOURCE_SPAN_OFFSET} bytes"
+    )))
+}
+
+pub fn format_source(
+    path_kind: FileKind,
+    input: String,
+    options: FormatOptions,
+    config: &Config,
+    plugins: &PluginRegistry,
+) -> Result<String> {
+    Ok(format_source_report(path_kind, input, options, config, plugins)?.output)
+}
+
+pub fn format_source_report(
+    path_kind: FileKind,
+    input: String,
+    options: FormatOptions,
+    config: &Config,
+    plugins: &PluginRegistry,
+) -> Result<FormattedDocument> {
+    format_source_report_with_policy(path_kind, input, options, config, plugins, false, false)
+}
+
+pub fn format_source_report_with_trace(
+    path_kind: FileKind,
+    input: String,
+    options: FormatOptions,
+    config: &Config,
+    plugins: &PluginRegistry,
+) -> Result<FormattedDocument> {
+    format_source_report_with_policy(path_kind, input, options, config, plugins, true, false)
+}
+
+pub(crate) fn format_source_report_with_policy(
+    path_kind: FileKind,
+    input: String,
+    options: FormatOptions,
+    config: &Config,
+    plugins: &PluginRegistry,
+    collect_trace: bool,
+    verify_output: bool,
+) -> Result<FormattedDocument> {
+    let Some(kind) = DocumentKind::from_file_kind(path_kind) else {
+        return Err(YamarkError::new("unsupported file type"));
+    };
+    validate_compact_source_range(Span::new(0, input.len()))?;
+    let source = SourceBuffer::new(input);
+    let range = Span::new(0, source.as_str().len());
+    let document =
+        parse_source_for_formatting(&source, range, kind, options, config, collect_trace)?;
+    let input_trace = document.trace;
+    let source_lines = source.lines.len();
+    let mode = match kind {
+        DocumentKind::Yaml => DocumentEmitMode::Yaml,
+        DocumentKind::Markdown => DocumentEmitMode::Markdown,
+        _ => DocumentEmitMode::Document,
+    };
+    let prepared = ParsedDocument::new(source, document, mode).finalize(options);
+    #[cfg(feature = "format-trace")]
+    let diagnostics = if collect_trace {
+        crate::core::format_trace::markdown_decision_diagnostics(
+            prepared.source(),
+            prepared.tree().document(),
+        )
+    } else {
+        Vec::new()
+    };
+    let (mut output, yaml_emitted_nodes) =
+        emit_prepared_tree(prepared.source(), prepared.tree(), plugins)?;
+    let changed = output != prepared.source().as_str();
+    let mut output_parse_passes = 0;
+    if verify_output
+        && changed
+        && output_requires_yaml_validation(kind, prepared.tree().document(), &output)
+    {
+        let (source, document) = prepared.into_parts();
+        let before = crate::core::yaml_equivalence::capture_yaml_validation_snapshot(
+            source.into_string(),
+            document,
+        );
+        let yaml_node_capacity_hint = before.node_capacity_hint_for_root_yaml().unwrap_or(0);
+        let output_source = SourceBuffer::new(output);
+        {
+            let output_range = Span::new(0, output_source.as_str().len());
+            let output_document = parse_source_for_validation(
+                &output_source,
+                output_range,
+                kind,
+                options,
+                config,
+                yaml_node_capacity_hint,
+            )?;
+            crate::core::yaml_equivalence::validate_yaml_documents_equivalent(
+                &before,
+                &output_source,
+                &output_document,
+            )?;
+            output_parse_passes = output_document.trace.parse_passes;
+        }
+        output = output_source.into_string();
+    }
+    let trace = (kind == DocumentKind::Yaml && collect_trace).then_some(FormatTrace {
+        source_scans: input_trace.source_scans,
+        parse_passes: input_trace.parse_passes + output_parse_passes,
+        source_lines,
+        yaml_scanned_lines: input_trace.yaml_scanned_lines,
+        yaml_semantic_nodes: input_trace.yaml_semantic_nodes,
+        planned_rendered_scalars: input_trace.planned_rendered_scalars,
+        planned_rendered_flow_collections: input_trace.planned_rendered_flow_collections,
+        planned_rendered_block_flow_collections: input_trace
+            .planned_rendered_block_flow_collections,
+        emitted_bytes: output.len(),
+        emitted_nodes: yaml_emitted_nodes,
+    });
+    Ok(FormattedDocument {
+        output,
+        changed,
+        trace,
+        #[cfg(feature = "format-trace")]
+        diagnostics,
+    })
+}
+
+fn document_contains_yaml(document: &Document) -> bool {
+    document.kind == DocumentKind::Yaml || document.nested.iter().any(document_contains_yaml)
+}
+
+fn output_requires_yaml_validation(
+    kind: DocumentKind,
+    input_document: &Document,
+    output: &str,
+) -> bool {
+    document_contains_yaml(input_document)
+        || kind == DocumentKind::Markdown && output_starts_with_front_matter(output)
+}
+
+fn output_starts_with_front_matter(output: &str) -> bool {
+    let output = output.strip_prefix('\u{feff}').unwrap_or(output);
+    let line_end = output.find(['\r', '\n']).unwrap_or(output.len());
+    output[..line_end].trim_end_matches([' ', '\t']) == "---"
+}

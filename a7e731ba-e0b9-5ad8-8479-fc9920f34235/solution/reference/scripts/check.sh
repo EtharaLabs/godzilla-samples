@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+cargo fmt --check
+cargo clippy --all-targets --all-features -- -D warnings
+uv run --upgrade --isolated --no-project --with ruff --with py-yaml12 -- cargo test
+cargo test --features format-trace --test format_trace
+uv run --upgrade external-tests/run.py --serial
+(
+  cd editors/vscode
+  npm test
+)

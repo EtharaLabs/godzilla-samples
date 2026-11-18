@@ -1,0 +1,67 @@
+# CLI case files
+
+Each `.case` file is executed through the compiled `yamark` binary. The format is:
+
+```text
+-- args
+format --stdin-file-path input.md --wrap none
+-- stdin
+input text
+-- stdout
+expected stdout
+-- stderr
+expected stderr
+-- status
+0
+```
+
+The test harness intentionally avoids calling library internals. This keeps the public CLI contract readable and prevents implementation details from becoming part of the test API.
+
+Feature-specific Markdown decision transcripts live in `cases/format-trace/` and are run by `cargo test --features format-trace --test format_trace`. They use the same exact invocation/input/output/status sections; keeping them separate lets the ordinary transcript suite run without feature-dependent output. They check that retained preservation and unavailable layout plans are reported as skipped, including when the node has a nominal formatting emit variant.
+
+## Running selected cases
+
+Run the complete transcript suite with `cargo test --test cli_cases`. To run one case or a related group, set `YAMARK_CASE` for that command:
+
+```sh
+YAMARK_CASE=yaml_multiline_parent_properties.case cargo test --test cli_cases -- --nocapture
+YAMARK_CASE=yaml_multiline_ cargo test --test cli_cases -- --nocapture
+```
+
+The filter is a case-sensitive, literal substring of the `.case` filename, including its extension. It does not match the checkout path and does not interpret globs or regular expressions. Matches run in filename order. A nonempty filter that matches no cases fails, so a typo cannot report a successful empty run. Unset or empty `YAMARK_CASE` runs every case. Platform-specific cases keep their usual platform restrictions.
+
+In PowerShell, set `$env:YAMARK_CASE = 'yaml_multiline_'`, run `cargo test --test cli_cases -- --nocapture`, then clear it with `Remove-Item Env:YAMARK_CASE`. Keep the filter unset when running the complete validation gate. `--nocapture` shows how many transcripts were selected; Cargo's test-name filter alone cannot select an individual transcript because they share one test function.
+
+## Coverage
+
+The `yaml_multiline_plain_prose` and `yaml_multiline_quoted_prose` transcripts cover wrapping existing scalar continuation lines and formatting sibling collections while preserving comments. `yaml_multiline_scalar_comments` keeps trailing comments outside scalar values, `yaml_multiline_tagged_plain` checks decoding before explicit string-tag normalization, and `yaml_multiline_root_trivia` retains comments and document markers on root block scalars. `external-tests/cli/test_yaml_multiline_prose.py` checks independent YAML 1.2 value equality and second-pass byte idempotence across scalar positions, line endings, quotes, escapes, blank lines, and repeated spaces.
+
+`yaml_multiline_template_indent` keeps preserved template scalars aligned with their siblings, and `yaml_multiline_indented_root` checks literal conversion relative to the emitted root header. The external YAML tests cover source indentation, configured widths, nested mappings and sequences, template delimiters, skip directives, and independent value and idempotence checks.
+
+`yaml_late_template_policy` and `markdown_late_yaml_template_policy` apply file-scoped template delimiters after YAML has already been parsed, directly and inside a Markdown fence. They preserve template bytes, quotes, and parent headers while editable siblings still format. Templated Markdown scalars follow the same preservation policy as an early directive; other explicit Markdown targets still receive late canonicalization. `tests/yaml_policy_invalidation.rs` checks that early and late policies agree at different widths with LF, CRLF, and CR line endings.
+
+`yaml_layout_only_policies` and `markdown_yaml_layout_only_policies` check that late compact and Markdown options refresh emission plans while preserving template bytes and parent headers. `markdown_late_yaml_template_after_layout` checks that a subsequent template policy invalidates preservation decisions retained by an earlier layout-only refresh. The public policy tests also exercise enabling and disabling compactness, mixed layout/template directives in either order, nested YAML replanning under late Markdown options, and an empty file delta with nondefault effective options.
+
+The `markdown_nested_list_continuation_*` transcripts keep paragraphs after nested lists inside their outer items. These layouts use the existing list preservation behavior when they cannot be safely reflowed. The boundary case also checks that sibling markers and top-level paragraphs still delimit list items. `tests/nested_list_continuation.rs` checks line endings, wrap modes, and second passes through the CLI.
+
+The `markdown_list_shifted_sibling_lazy_continuation` and `markdown_list_empty_item_pandoc_continuation` transcripts preserve layouts whose partial rewrites change item membership. Empty-item indentation can parse differently in GFM and Pandoc; preserving these layouts keeps both interpretations intact.
+
+The `markdown_list_following_raw_blocks` and `markdown_list_child_raw_blocks` transcripts distinguish blocks outside a list from child blocks and lazy prose. They also preserve block-like lines inside multiline code spans and links.
+
+The `markdown_list_wide_marker_raw_boundary`, `markdown_list_child_headings`, and `markdown_list_mixed_region_boundary` transcripts cover marker spacing, child headings, and adjacent mixed list/raw regions. These ambiguous regions remain unchanged, including marker padding; following outside prose can still be formatted. `external-tests/corpus/test_scaling.py` checks that alternating lists and fences do not repeatedly scan the remaining document. `markdown_list_heading_literal_controls` keeps embedded formatting and inline prose wrapping active around heading-like code content. `markdown_container_inline_html` distinguishes inline tags inside list and blockquote paragraphs from raw HTML blocks that start a paragraph or interrupt one, preserving sentence wrapping where the tags remain inline.
+
+The `markdown_bom_*` transcripts read a first line holding only a byte order mark and spaces as blank before thematic breaks, paragraphs, and directives. `markdown_feff_content_setext` keeps U+FEFF later in the file and at the start of blockquote and footnote content as setext heading text.
+
+`markdown_shortcode_nested_skip_file.case` verifies that `fmt: skip file` preserves a nested Markdown fence/div body exactly, including trailing spaces in shortcode arguments and ordinary prose. The `markdown_preserved_*.case` transcripts cover explicit node/region preservation, nested fragments, the linewise `fmt: on` boundary, and unchanged automatic fallback cleanup. `tests/markdown_preservation.rs` supplements these transcripts with exact LF, CRLF, CR, mixed-line-ending, EOF-without-newline, and second-pass checks.
+
+`markdown_literal_crlf.case`, `markdown_literal_cr.case`, and `markdown_literal_mixed_endings.case` run `--diff` on byte-preserving fixtures in `tests/fixtures/`. The case parser and diff display use LF. The fixtures retain CRLF, bare CR, and mixed line endings, with Git attributes disabling checkout conversion. The transcripts show literal whitespace retention and surrounding formatting; `tests/multiline_literals.rs` checks the same fixtures' exact formatted bytes and second passes. `markdown_literal_line_endings_check.case` checks an already-formatted mixed-ending fixture, so a change to newline bytes alone fails even when it would be invisible in the diff display.
+
+The `external_formatter_*.case` transcripts cover formatters that remove only the final LF from their output, as Ruff does for notebook cells. The CRLF and CR-only fixtures in `tests/fixtures/` disable Git newline conversion and use `--check` to catch changes to newline bytes. The LF transcript also shows code formatting in Markdown, Quarto, and YAML blocks. A configured Python command simulates the formatter without depending on the installed Ruff version; `tests/external_formatter_line_endings.rs` checks exact output bytes and second passes for LF, CRLF, and CR-only inputs.
+
+`external_formatter_early_stdin_close.case` covers a successful formatter that closes stdin before reading it. The public CLI specifications repeat this with input larger than a pipe buffer and check that nonzero status, stderr, invalid UTF-8, and unsafe fence output still fail.
+
+Git integration transcripts can add a `-- git-fixture` JSON object with `config` and `files` mappings and an optional `cwd` relative to the repository root (default `.`). The harness creates a temporary repository, applies the local Git settings, writes and commits the supplied files, and runs the recorded invocation there. Output uses `{{repo}}` for that temporary repository's absolute path. An optional `-- git-status` section records the expected subsequent `git status --porcelain` output. `git_filter_join_crlf.case` verifies that joining the filter keeps a CRLF checkout clean when `core.autocrlf=true`. The LF and explicit `eol=lf` companion cases cover the corresponding compatibility boundaries.
+
+For Unix filename bytes that cannot be represented as UTF-8, `git-fixture` can also include a `unix-index-files` array. Each entry has `name_bytes` (an array of byte values) and `contents` (a string). The harness writes these files directly into Git's index and marks them `skip-worktree`, so the fixture does not depend on filesystem support for their names. Cases with this field run only on Unix. The `git_filter_*non_utf8*.case` transcripts cover unrelated filenames and committed Markdown validation; `tests/git_filter_paths.rs` checks the complete native-filename lifecycle on Linux, where the working tree can contain these names.
+
+The `git_filter_adopt_*.case` transcripts cover adoption with automatic CRLF conversion, LF checkouts, and explicit `eol` attributes overriding `core.autocrlf`. They record the staged status and use `-- git-index` and `-- git-worktree` JSON file mappings to check exact staged and checkout bytes. JSON newline escapes make the expected CRLF/LF distinction visible in the transcript.

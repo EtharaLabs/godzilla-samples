@@ -1,0 +1,369 @@
+use assert_cmd::Command;
+use yamark::config::Config;
+use yamark::core::document::{FileKind, FormatOptions};
+use yamark::core::parser::{format_source_report, format_source_report_with_trace};
+use yamark::plugins::PluginRegistry;
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_uses_finalized_fallback_decisions() {
+    // Feature-specific transcripts are kept below cases/format-trace so the
+    // ordinary CLI suite does not require feature-dependent expected output.
+    for case in [
+        include_str!("cases/format-trace/markdown_unavailable_layout.case"),
+        include_str!("cases/format-trace/markdown_retained_preservation.case"),
+        include_str!("cases/format-trace/markdown_preserved_nested_documents.case"),
+    ] {
+        let (args, rest) = case
+            .strip_prefix("-- args\n")
+            .unwrap()
+            .split_once("-- stdin\n")
+            .unwrap();
+        let (input, rest) = rest.split_once("-- stdout\n").unwrap();
+        let (stdout, rest) = rest.split_once("-- stderr\n").unwrap();
+        let (stderr, status) = rest.split_once("-- status\n").unwrap();
+        let output = Command::cargo_bin("yamark")
+            .unwrap()
+            .args(args.split_whitespace())
+            .write_stdin(input)
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(status.trim().parse().unwrap()));
+        assert_eq!(String::from_utf8(output.stdout).unwrap(), stdout);
+        assert_eq!(String::from_utf8(output.stderr).unwrap(), stderr);
+    }
+}
+
+#[test]
+fn yaml_trace_collection_is_opt_in_for_formatting() {
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let input = "name: value\n".to_owned();
+
+    let formatted = format_source_report(
+        FileKind::Yaml,
+        input.clone(),
+        FormatOptions::default(),
+        &config,
+        &plugins,
+    )
+    .unwrap();
+    assert!(formatted.trace.is_none());
+
+    let traced = format_source_report_with_trace(
+        FileKind::Yaml,
+        input,
+        FormatOptions::default(),
+        &config,
+        &plugins,
+    )
+    .unwrap();
+    let trace = traced.trace.unwrap();
+    assert_eq!(trace.planned_rendered_scalars, 2);
+}
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_reports_format_and_skip_decisions_when_feature_is_enabled() {
+    let input = "\
+#  Heading
+
+<div>
+raw
+</div>
+
+This paragraph is intentionally long enough to be considered for wrapping by the markdown formatter.
+";
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(
+        stderr.contains(
+            "input.md:1:1: note: markdown trace: formatted kind=Heading emit=MarkdownHeading"
+        ),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("input.md:3:1: note: markdown trace: skipped kind=Raw emit=Copy"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains(
+            "input.md:7:1: note: markdown trace: formatted kind=Paragraph emit=MarkdownParagraph"
+        ),
+        "{stderr}"
+    );
+}
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_marks_supported_rich_inline_table_and_raw_fence_features_formatted() {
+    let input = "\
+Press <kbd>Cmd</kbd> + <kbd>K</kbd> and use ~~old option~~ only for history.
+
+Read the [long guide](
+  https://example.com/guide
+) before continuing with the tutorial.
+
+| Include | Target |
+|---|---|
+| footer | {{< include _footer.md >}} |
+
+``` {=typst}
+#pagebreak()
+```
+
+1. Build a table:
+
+   | a | b |
+   |---|---|
+   | 1 | 2 |
+
+> | Term | Meaning |
+> |---|---|
+> | ML | Machine learning |
+
+::: {.callout-note}
+This paragraph is intentionally long enough to be considered for wrapping inside a supported div.
+:::
+
+{{< meta title >}}
+
+$$
+x = y
+$$
+
+[^note]: See [`library()` vs `require()`](https://yihui.org/en/2014/07/library-vs-require/) and `$x + y$`.
+
+[^long]: First paragraph of the footnote.
+
+    Second paragraph with [**strong label**](https://example.com).
+";
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(
+        stderr.contains(
+            "input.md:1:1: note: markdown trace: formatted kind=Paragraph emit=MarkdownParagraph"
+        ),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=GfmPipeTable emit=MarkdownTable"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=CodeFence emit=MarkdownCodeFence"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=List emit=MarkdownList"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=Blockquote emit=MarkdownBlockquote"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=QuartoDiv emit=MarkdownDiv"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=Shortcode emit=MarkdownOpaque"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=DisplayMath emit=MarkdownOpaque"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("markdown trace: formatted kind=FootnoteDefinition emit=MarkdownParagraph"),
+        "{stderr}"
+    );
+    assert!(!stderr.contains("markdown trace: skipped"), "{stderr}");
+}
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_marks_common_opaque_code_fences_formatted() {
+    let input = "\
+```
+literal output
+  preserve spacing
+```
+
+```rust
+fn main() {
+    println!(\"hello\");
+}
+```
+
+```console
+$ yamark format .
+```
+
+```mermaid
+flowchart LR
+  A --> B
+```
+";
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert_eq!(stdout, input);
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert_eq!(
+        stderr
+            .matches("markdown trace: formatted kind=CodeFence emit=MarkdownCodeFence")
+            .count(),
+        4,
+        "{stderr}"
+    );
+    assert!(!stderr.contains("markdown trace: skipped"), "{stderr}");
+}
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_marks_reference_definitions_formatted() {
+    let input = "\
+Read the [guide] before opening the [issue list][issues].
+
+[guide]: https://example.com/guide
+[issues]: https://example.com/issues
+";
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert_eq!(stdout, input);
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(
+        stderr.contains(
+            "input.md:1:1: note: markdown trace: formatted kind=Paragraph emit=MarkdownParagraph"
+        ),
+        "{stderr}"
+    );
+    assert_eq!(
+        stderr
+            .matches("markdown trace: formatted kind=ReferenceDefinition emit=MarkdownOpaque")
+            .count(),
+        2,
+        "{stderr}"
+    );
+    assert!(!stderr.contains("markdown trace: skipped"), "{stderr}");
+}
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_marks_alpha_and_strict_nested_ordered_lists_formatted() {
+    // A backslash-newline string opener strips the first line's indentation,
+    // turning the alphabetic siblings into the unsupported shifted layout.
+    let input = concat!(
+        "  a. License grant.\n",
+        "  b. Other rights.\n",
+        "\n",
+        "1. Construct an image `X` with diagonal edges.\n",
+        "    1. What happens if you apply the kernel `K` to the image?\n",
+        "    1. What happens if you transpose `X` before applying it?\n",
+        "1. Design some kernels manually.\n",
+    );
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap(),
+        input,
+        "supported list indentation must remain intact"
+    );
+    assert_eq!(
+        String::from_utf8(output.stderr).unwrap(),
+        concat!(
+            "input.md:1:1: note: markdown trace: formatted kind=List emit=MarkdownList\n",
+            "input.md:4:1: note: markdown trace: formatted kind=List emit=MarkdownList\n",
+        ),
+    );
+}
+
+#[cfg(feature = "format-trace")]
+#[test]
+fn markdown_trace_marks_shifted_alphabetic_siblings_preserved() {
+    let input = "a. License grant.\n  b. Other rights.\n";
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), input);
+    assert_eq!(
+        String::from_utf8(output.stderr).unwrap(),
+        "input.md:1:1: note: markdown trace: skipped kind=List emit=Copy reason=unsupported_markdown_construct_or_template\n",
+    );
+}
+
+#[cfg(not(feature = "format-trace"))]
+#[test]
+fn markdown_trace_is_not_present_without_format_trace_feature() {
+    let input = "# Heading\n\nparagraph\n";
+    let output = Command::cargo_bin("yamark")
+        .unwrap()
+        .args(["format", "--diagnostics", "--stdin-file-path", "input.md"])
+        .write_stdin(input)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(!stderr.contains("markdown trace:"), "{stderr}");
+}

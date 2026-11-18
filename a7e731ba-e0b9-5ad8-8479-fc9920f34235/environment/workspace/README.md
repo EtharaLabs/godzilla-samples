@@ -1,0 +1,76 @@
+# Yamark
+
+Yamark is a fast formatter for YAML and Markdown. It formats whole files and embedded content, keeping source readable and changes easy to review. Regions without a supported rewrite stay unchanged.
+
+For supported embedded code, Yamark can also call Ruff, Air, Prettier, or another configured formatter.
+
+See the [documentation](https://t-kalinowski.github.io/yamark/) for examples, configuration, editor integrations, and the full syntax reference.
+
+## Install
+
+With [uv](https://docs.astral.sh/uv/) installed, run Yamark directly from [PyPI](https://pypi.org/project/yamark/) without a separate install:
+
+```sh
+uvx yamark format config.yaml docs/
+```
+
+This formats the selected files in place. To install a persistent `yamark` command:
+
+```sh
+uv tool install yamark
+```
+
+## Usage
+
+The examples below use an installed `yamark` command. To keep running from PyPI without installing it, replace `yamark` with `uvx yamark`.
+
+Format one or more files or directories in place:
+
+```sh
+yamark format config.yaml docs/
+```
+
+Format the current directory:
+
+```sh
+yamark format
+```
+
+Check whether files are already formatted without writing changes:
+
+```sh
+yamark format --check docs/
+```
+
+Show a unified diff without writing changes:
+
+```sh
+yamark format --diff docs/
+```
+
+Format stdin for editor and CI integrations:
+
+```sh
+yamark format --stdin-file-path config.yaml < config.yaml
+```
+
+Convert JSON-family input from stdin to formatted YAML on stdout:
+
+```sh
+yamark to-yaml --stdin-file-path data.json5 < data.json5
+```
+
+The path is not read or written. Its suffix selects the exact JSON dialect. This is a conversion, not source formatting.
+
+Directory traversal skips hidden paths and respects `.gitignore`, `.ignore`, and global Git ignore files by default. Pass a hidden path explicitly to format it.
+
+While formatting is enabled, standalone `{{< ... >}}` and `{{% ... %}}` shortcode tokens are preserved, including multiline tokens and quoted arguments. Directive-looking text inside a recognized token is data. Yamark does not match shortcode names or interpret their bodies: Markdown between tokens formats normally. An unterminated token or quote preserves the rest of the enclosing Markdown document or fragment. This does not guarantee rendering equivalence for arbitrary Hugo or Jinja templates.
+
+To disable body formatting, surround the region with `<!-- fmt: off -->` and `<!-- fmt: on -->`. While formatting is disabled, directives follow the existing linewise policy: a recognized `fmt: on` line resumes formatting even if the surrounding text resembles a shortcode argument, code fence, HTML, or math block.
+
+Explicitly skipped Markdown retains its bytes, including trailing spaces and line endings: `<!-- fmt: skip -->` preserves the next selected node, `<!-- fmt: off -->` preserves the disabled region, and `<!-- fmt: skip file -->` preserves the enclosing Markdown document or fragment. This protection survives supported nesting in Markdown fences and divs; surrounding Markdown still formats.
+
+## Editor integrations
+
+The VS Code and Positron formatter extension lives in `editors/vscode/`. See the [editor guide][editor-docs] for installation and configuration.
+

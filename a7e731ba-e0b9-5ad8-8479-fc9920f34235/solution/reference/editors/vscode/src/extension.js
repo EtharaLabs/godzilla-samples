@@ -1,0 +1,23 @@
+const { watch } = require("node:fs");
+const vscode = require("vscode");
+const { createYamarkExtension, createChannelLogger } = require("./core");
+
+const channel = vscode.window.createOutputChannel("Yamark");
+const logger = createChannelLogger(channel);
+const extension = createYamarkExtension(vscode, {
+  logger,
+  watchPath: (sourcePath, onChange) =>
+    watch(sourcePath, { persistent: false }, onChange),
+});
+
+function activate(context) {
+  context.subscriptions.push(channel);
+  extension.activate(context);
+}
+
+function deactivate() {}
+
+module.exports = {
+  activate,
+  deactivate,
+};

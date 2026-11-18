@@ -1,0 +1,271 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Check tag matches package versions
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import tomllib
+          from pathlib import Path
+
+          tag = os.environ["GITHUB_REF_NAME"]
+          assert tag.startswith("v"), f"release tag must start with v: {tag}"
+          version = tag.removeprefix("v")
+          assert re.fullmatch(
+              r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)",
+              version,
+          ), f"release tag must be a stable version: {tag}"
+
+          versions = {
+              "Cargo.toml": tomllib.loads(Path("Cargo.toml").read_text())["package"]["version"],
+              "pyproject.toml": tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"],
+              "editors/vscode/package.json": json.loads(
+                  Path("editors/vscode/package.json").read_text()
+              )["version"],
+              "Cargo.lock": next(
+                  package["version"]
+                  for package in tomllib.loads(Path("Cargo.lock").read_text())["package"]
+                  if package["name"] == "yamark"
+              ),
+              "uv.lock": next(
+                  package["version"]
+                  for package in tomllib.loads(Path("uv.lock").read_text())["package"]
+                  if package["name"] == "yamark"
+              ),
+          }
+
+          mismatches = {name: value for name, value in versions.items() if value != version}
+          assert not mismatches, f"tag {tag} does not match package versions: {mismatches}"
+
+          release_notes = Path("RELEASE_NOTES.md").read_text()
+          assert release_notes.startswith(f"Yamark {version} "), (
+              f"RELEASE_NOTES.md must start with 'Yamark {version} '"
+          )
+          PY
+
+  build:
+    name: Build ${{ matrix.asset }}
+    needs: validate
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            asset: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            asset: aarch64-unknown-linux-gnu
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+            asset: x86_64-apple-darwin
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            asset: aarch64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            asset: x86_64-pc-windows-msvc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.98.1"
+          targets: ${{ matrix.target }}
+
+      - name: Build
+        run: cargo build --release --locked --bin yamark --target ${{ matrix.target }}
+
+      - name: Package Unix archive
+        if: runner.os != 'Windows'
+        run: |
+          bundle="yamark-${{ github.ref_name }}-${{ matrix.asset }}"
+          mkdir -p "dist" "$bundle"
+          cp "target/${{ matrix.target }}/release/yamark" "$bundle/"
+          cp README.md LICENSE "$bundle/"
+          tar -czf "dist/$bundle.tar.gz" "$bundle"
+
+      - name: Package Windows archive
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $bundle = "yamark-${{ github.ref_name }}-${{ matrix.asset }}"
+          New-Item -ItemType Directory -Path "dist", $bundle | Out-Null
+          Copy-Item "target/${{ matrix.target }}/release/yamark.exe" $bundle
+          Copy-Item "README.md", "LICENSE" $bundle
+          Compress-Archive -Path $bundle -DestinationPath "dist/$bundle.zip"
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: yamark-${{ github.ref_name }}-${{ matrix.asset }}
+          path: dist/*
+          if-no-files-found: error
+
+  wheels:
+    name: Build wheel ${{ matrix.asset }}
+    needs: validate
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            asset: x86_64-unknown-linux-gnu
+            manylinux: "2014"
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            asset: aarch64-unknown-linux-gnu
+            manylinux: "2014"
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+            asset: x86_64-apple-darwin
+            manylinux: off
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            asset: aarch64-apple-darwin
+            manylinux: off
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            asset: x86_64-pc-windows-msvc
+            manylinux: off
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Build wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          maturin-version: v1.15.0
+          rust-toolchain: "1.98.1"
+          target: ${{ matrix.target }}
+          manylinux: ${{ matrix.manylinux }}
+          args: --release --locked --compatibility pypi --out dist
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+
+      - name: Install wheel
+        run: uv tool install --no-index --find-links dist yamark
+
+      - name: Smoke test wheel
+        if: runner.os != 'Windows'
+        run: '"$(uv tool dir --bin)/yamark" --help'
+
+      - name: Smoke test wheel on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $yamark = Join-Path (uv tool dir --bin) "yamark.exe"
+          & $yamark --help
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: python-wheel-${{ matrix.asset }}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  sdist:
+    name: Build source distribution
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Build source distribution
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          maturin-version: v1.15.0
+          rust-toolchain: "1.98.1"
+          args: --out dist
+
+      - name: Upload source distribution
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: python-sdist
+          path: dist/*.tar.gz
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub release
+    needs: [build, wheels, sdist]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Download archives
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: yamark-${{ github.ref_name }}-*
+          path: dist
+          merge-multiple: true
+
+      - name: Generate checksums
+        working-directory: dist
+        run: sha256sum ./* > SHA256SUMS
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --title
+          "$GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: [release, wheels, sdist]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download Python distributions
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: python-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish Python distributions
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/

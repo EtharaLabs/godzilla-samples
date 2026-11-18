@@ -1,0 +1,1036 @@
+use std::alloc::{GlobalAlloc, Layout, System};
+use std::cell::Cell;
+use std::hint::black_box;
+use std::mem::size_of;
+use std::path::Path;
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+use yamark::config::Config;
+use yamark::core::document::{DocumentKind, FileKind, FormatOptions, MarkdownWrap};
+use yamark::core::parser::{format_source_report, parse_source};
+use yamark::core::source::{Line, SourceBuffer, SourceSpan, Span};
+use yamark::core::yaml_model::YamlAstNode;
+use yamark::plugins::PluginRegistry;
+use yamark::workspace::project_source_to_yaml;
+
+struct CountingAllocator;
+
+static ALLOCATIONS: AtomicUsize = AtomicUsize::new(0);
+static ALLOCATED_BYTES: AtomicUsize = AtomicUsize::new(0);
+static ALLOCATION_LOCK: Mutex<()> = Mutex::new(());
+
+thread_local! {
+    static COUNT_THREAD_ALLOCATIONS: Cell<bool> = const { Cell::new(false) };
+}
+
+#[global_allocator]
+static GLOBAL: CountingAllocator = CountingAllocator;
+
+#[test]
+fn root_flow_recognition_retains_the_parsed_nodes() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = format!("[{}]\n", vec!["[]"; 512].join(","));
+    let source = SourceBuffer::new(input);
+    let config = Config::default();
+    let range = Span::new(0, source.as_str().len());
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let document = parse_source(
+        source,
+        range,
+        DocumentKind::Yaml,
+        FormatOptions::default(),
+        &config,
+    );
+    set_count_thread_allocations(false);
+    assert_eq!(document.unwrap().yaml.as_ref().unwrap().nodes.len(), 513);
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 3 * 513 * size_of::<YamlAstNode>(),
+        "root flow parsing allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+unsafe impl GlobalAlloc for CountingAllocator {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        if count_thread_allocations() {
+            ALLOCATIONS.fetch_add(1, Ordering::Relaxed);
+            ALLOCATED_BYTES.fetch_add(layout.size(), Ordering::Relaxed);
+        }
+        unsafe { System.alloc(layout) }
+    }
+
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+        unsafe { System.dealloc(ptr, layout) }
+    }
+
+    unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+        if count_thread_allocations() {
+            ALLOCATIONS.fetch_add(1, Ordering::Relaxed);
+            ALLOCATED_BYTES.fetch_add(new_size.saturating_sub(layout.size()), Ordering::Relaxed);
+        }
+        unsafe { System.realloc(ptr, layout, new_size) }
+    }
+}
+
+fn set_count_thread_allocations(enabled: bool) {
+    COUNT_THREAD_ALLOCATIONS.with(|count| count.set(enabled));
+}
+
+fn count_thread_allocations() -> bool {
+    COUNT_THREAD_ALLOCATIONS.with(Cell::get)
+}
+
+#[test]
+fn yaml_ast_node_layout_stays_semantic_only() {
+    assert_eq!(
+        size_of::<SourceSpan>(),
+        8,
+        "SourceSpan is {} bytes",
+        size_of::<SourceSpan>()
+    );
+    assert_eq!(
+        size_of::<Option<SourceSpan>>(),
+        8,
+        "Option<SourceSpan> is {} bytes",
+        size_of::<Option<SourceSpan>>()
+    );
+    assert!(
+        size_of::<SourceSpan>() < size_of::<Span>(),
+        "SourceSpan is {} bytes; Span is {} bytes",
+        size_of::<SourceSpan>(),
+        size_of::<Span>()
+    );
+    assert!(
+        size_of::<YamlAstNode>() <= 144,
+        "YamlAstNode is {} bytes",
+        size_of::<YamlAstNode>()
+    );
+}
+
+#[test]
+fn source_line_layout_stays_compact() {
+    assert!(
+        size_of::<Line>() <= 24,
+        "Line is {} bytes",
+        size_of::<Line>()
+    );
+}
+
+#[test]
+fn plugin_registry_default_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    black_box(PluginRegistry::default());
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    for _ in 0..100 {
+        black_box(PluginRegistry::default());
+    }
+    set_count_thread_allocations(false);
+
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 150,
+        "default plugin registry setup allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn config_default_path_application_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let config = Config::default();
+    let path = Path::new("/tmp/yamark/default/config.yaml");
+    black_box(config.for_formatted_path(path));
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    for _ in 0..100 {
+        black_box(config.for_formatted_path(path));
+    }
+    set_count_thread_allocations(false);
+
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 1_900,
+        "default config path application allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_flow_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = flow_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 59_800,
+        "flow table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn markdown_showcase_like_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = markdown_showcase_like_input(120);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup = format_source_report(
+        FileKind::Markdown,
+        input.clone(),
+        options,
+        &config,
+        &plugins,
+    )
+    .unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Markdown, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 19_000,
+        "showcase-like Markdown formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_quoted_scalar_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = quoted_scalar_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 66_300,
+        "quoted scalar table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_quoted_scalar_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_quoted_scalar_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 89_500,
+        "escaped quoted scalar table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_plain_string_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_plain_string_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 89_800,
+        "escaped plain string table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_string_tag_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_string_tag_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 113_000,
+        "escaped string tag table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_core_tag_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_core_tag_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 77_600,
+        "escaped core tag table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_int_tag_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_int_tag_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 74_200,
+        "escaped int tag table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_float_tag_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_float_tag_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 47_200,
+        "escaped float tag table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_escaped_core_like_string_table_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = escaped_core_like_string_table_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert_eq!(formatted.output.lines().count(), 401);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 91_000,
+        "escaped core-like string table formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_json_like_flow_scalar_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = json_like_flow_scalar_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert!(formatted.output.contains("service-00000"));
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 11_000,
+        "JSON-like flow scalar formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_json_lines_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = json_lines_object_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert!(formatted.output.starts_with("---\n"));
+    assert_eq!(
+        formatted
+            .output
+            .lines()
+            .filter(|line| *line == "---")
+            .count(),
+        400
+    );
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 7_000,
+        "JSON Lines formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn strict_json_projection_keeps_allocated_bytes_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = json_like_flow_scalar_input(400);
+    let path = Path::new("/tmp/yamark-performance/input.json");
+    let options = FormatOptions::default();
+
+    let warmup = project_source_to_yaml(path, input.clone(), options, None).unwrap();
+    assert!(warmup.output.contains("service-00000"));
+
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let rendered = project_source_to_yaml(path, input, options, None);
+    set_count_thread_allocations(false);
+
+    let rendered = rendered.unwrap();
+    assert!(rendered.output.contains("service-00399"));
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 6_000_000,
+        "strict JSON projection allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn json5_raw_line_separator_offsets_stay_sparse() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = format!("{{value:'{}\u{2028}tail'}}\n", "a".repeat(200_000));
+    let path = Path::new("/tmp/yamark-performance/input.json5");
+    let options = FormatOptions::default();
+
+    let warmup = project_source_to_yaml(path, input.clone(), options, None).unwrap();
+    assert!(warmup.output.contains("\\Ltail"));
+
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let rendered = project_source_to_yaml(path, input, options, None);
+    set_count_thread_allocations(false);
+
+    let rendered = rendered.unwrap();
+    assert!(rendered.output.contains("\\Ltail"));
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 2_000_000,
+        "JSON5 raw-separator projection allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn json5_long_identifier_projection_keeps_allocated_bytes_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = format!("{{{}: 1}}\n", "a".repeat(200_000));
+    let path = Path::new("/tmp/yamark-performance/input.json5");
+    let options = FormatOptions::default();
+
+    let warmup = project_source_to_yaml(path, input.clone(), options, None).unwrap();
+    assert!(warmup.output.ends_with(": 1\n"));
+
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let projected = project_source_to_yaml(path, input, options, None);
+    set_count_thread_allocations(false);
+
+    let projected = projected.unwrap();
+    assert!(projected.output.ends_with(": 1\n"));
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 2_000_000,
+        "long JSON5 identifier projection allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn dense_jsonc_comment_line_breaks_keep_allocated_bytes_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = format!("{{/*{}*/\"a\": 1}}\n", "\u{2028}".repeat(50_000));
+    let path = Path::new("/tmp/yamark-performance/input.jsonc");
+    let options = FormatOptions::default();
+
+    let warmup = project_source_to_yaml(path, input.clone(), options, None).unwrap();
+    assert!(warmup.output.ends_with("a: 1\n"));
+
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let projected = project_source_to_yaml(path, input, options, None);
+    set_count_thread_allocations(false);
+
+    let projected = projected.unwrap();
+    assert!(projected.output.ends_with("a: 1\n"));
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 11_500_000,
+        "dense JSONC comment projection allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_block_plain_scalar_formatting_keeps_allocation_count_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = block_plain_scalar_input(400);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert!(formatted.output.contains("enabled: true"));
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 52_000,
+        "block plain scalar formatting allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_multiline_prose_keeps_allocations_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+    let expected = concat!(
+        "- lorem: >-\n",
+        "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod\n",
+        "    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim\n",
+        "    veniam, quis nostrud exercitation ullamco laboris.\n",
+        "  ipsum: [dolor, sit]\n",
+    )
+    .repeat(400);
+    let mut measurements = Vec::new();
+    for quote in ["", "\""] {
+        let input = format!(
+            "- lorem: {quote}Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.{quote}\n  ipsum: [dolor,sit]\n"
+        )
+        .repeat(400);
+        let warmup =
+            format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins)
+                .unwrap();
+        assert_eq!(warmup.output, expected);
+
+        ALLOCATIONS.store(0, Ordering::Relaxed);
+        ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+        set_count_thread_allocations(true);
+        let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+        set_count_thread_allocations(false);
+
+        let formatted = formatted.unwrap();
+        assert_eq!(formatted.output, expected);
+        let second =
+            format_source_report(FileKind::Yaml, formatted.output, options, &config, &plugins)
+                .unwrap();
+        assert_eq!(second.output, expected);
+        let allocations = ALLOCATIONS.load(Ordering::Relaxed);
+        let bytes = ALLOCATED_BYTES.load(Ordering::Relaxed);
+        measurements.push((quote, allocations, bytes));
+    }
+    assert!(
+        measurements
+            .iter()
+            .all(|(_, count, bytes)| *count <= 12_000 && *bytes <= 2_500_000),
+        "multiline prose allocation measurements: {measurements:?}"
+    );
+}
+
+#[test]
+fn yaml_markdown_scalars_keep_allocations_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+    let expected = concat!(
+        "- lorem: !md |\n",
+        "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. __Dolor__ sit\n",
+        "    amet. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n",
+        "  ipsum: [dolor, sit]\n",
+    )
+    .repeat(400);
+    let mut measurements = Vec::new();
+    for header in ["!md |\n", "!md\n    |\n"] {
+        let indent = if header.contains("    ") {
+            "      "
+        } else {
+            "    "
+        };
+        let input = format!(
+            "- lorem: {header}{indent}Lorem ipsum dolor sit amet, consectetur adipiscing elit. __Dolor__ sit amet.\n{indent}Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n  ipsum: [dolor,sit]\n"
+        )
+        .repeat(400);
+        let warmup =
+            format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins)
+                .unwrap();
+        assert_eq!(warmup.output, expected);
+
+        ALLOCATIONS.store(0, Ordering::Relaxed);
+        ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+        set_count_thread_allocations(true);
+        let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+        set_count_thread_allocations(false);
+
+        let formatted = formatted.unwrap();
+        assert_eq!(formatted.output, expected);
+        let second =
+            format_source_report(FileKind::Yaml, formatted.output, options, &config, &plugins)
+                .unwrap();
+        assert_eq!(second.output, expected);
+        measurements.push((
+            header,
+            ALLOCATIONS.load(Ordering::Relaxed),
+            ALLOCATED_BYTES.load(Ordering::Relaxed),
+        ));
+    }
+    assert!(
+        measurements
+            .iter()
+            .all(|(_, count, bytes)| *count <= 28_500 && *bytes <= 3_200_000),
+        "Markdown scalar allocation measurements: {measurements:?}"
+    );
+}
+
+#[test]
+fn yaml_markdown_parsing_defers_ordinary_wrap_storage() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = concat!(
+        "- lorem: !md |\n",
+        "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. __Dolor__ sit amet.\n",
+        "    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n",
+        "  ipsum: [dolor,sit]\n",
+    )
+    .repeat(400);
+    let range = Span::new(0, input.len());
+    let source = SourceBuffer::new(input);
+    let config = Config::default();
+    let options = FormatOptions::default();
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let parsed = parse_source(source, range, DocumentKind::Yaml, options, &config);
+    set_count_thread_allocations(false);
+    let bytes = ALLOCATED_BYTES.load(Ordering::Relaxed);
+    let allocations = ALLOCATIONS.load(Ordering::Relaxed);
+    let output = parsed
+        .unwrap()
+        .finalize(options)
+        .emit(&PluginRegistry::default())
+        .unwrap();
+    assert_eq!(
+        output,
+        concat!(
+            "- lorem: !md |\n",
+            "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. __Dolor__ sit\n",
+            "    amet. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n",
+            "  ipsum: [dolor, sit]\n",
+        )
+        .repeat(400)
+    );
+    assert!(
+        bytes <= 1_500_000,
+        "Markdown scalar parsing allocated {allocations} times and {bytes} bytes"
+    );
+}
+
+#[test]
+fn markdown_wrapping_reuses_line_storage() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = vec!["Lorem ipsum dolor sit amet."; 500].join(" ") + "\n";
+    let options = FormatOptions {
+        markdown_wrap: MarkdownWrap::Column(27),
+        ..FormatOptions::default()
+    };
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let expected = "Lorem ipsum dolor sit amet.\n".repeat(500);
+    let warmup = format_source_report(
+        FileKind::Markdown,
+        input.clone(),
+        options,
+        &config,
+        &plugins,
+    )
+    .unwrap();
+    assert_eq!(warmup.output, expected);
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Markdown, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+    assert_eq!(formatted.unwrap().output, expected);
+    assert!(
+        ALLOCATIONS.load(Ordering::Relaxed) <= 400,
+        "wrapped paragraph allocated {} times",
+        ALLOCATIONS.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_showcase_like_formatting_keeps_allocated_bytes_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = yaml_showcase_like_input(1_000);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert!(formatted.output.contains("benchmark comment 001000.01"));
+    // Default formatting does not allocate a second parsed document.
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 10_000_000,
+        "showcase-like YAML formatting allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+#[test]
+fn yaml_many_line_formatting_keeps_allocated_bytes_bounded() {
+    let _lock = ALLOCATION_LOCK.lock().unwrap();
+    let input = many_line_yaml_input(50_000);
+    let config = Config::default();
+    let plugins = PluginRegistry::default();
+    let options = FormatOptions::default();
+
+    let warmup =
+        format_source_report(FileKind::Yaml, input.clone(), options, &config, &plugins).unwrap();
+    assert!(warmup.changed);
+
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    set_count_thread_allocations(true);
+    let formatted = format_source_report(FileKind::Yaml, input, options, &config, &plugins);
+    set_count_thread_allocations(false);
+
+    let formatted = formatted.unwrap();
+    assert!(formatted.changed);
+    assert!(formatted.output.contains("item_49999"));
+    // Default formatting does not allocate a second parsed document.
+    assert!(
+        ALLOCATED_BYTES.load(Ordering::Relaxed) <= 120_000_000,
+        "many-line YAML formatting allocated {} bytes",
+        ALLOCATED_BYTES.load(Ordering::Relaxed)
+    );
+}
+
+fn flow_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: item_{index}, type: !!str \"boolean\", default: FALSE}}\n"
+        ));
+    }
+    input
+}
+
+fn many_line_yaml_input(rows: usize) -> String {
+    let mut input = String::new();
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- name: item_{index:05}\n  enabled: TRUE\n  count: 123\n"
+        ));
+    }
+    input
+}
+
+fn markdown_showcase_like_input(blocks: usize) -> String {
+    let mut input = String::from("# Showcase\n\n");
+    for index in 0..blocks {
+        input.push_str(&format!(
+            "This paragraph {index} carries enough prose to wrap across several lines and includes [a short link](https://example.com/short/{index:04}) plus [a long unwrappable reference](https://example.com/pathological/segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}) before the sentence ends.\n\n"
+        ));
+        if index % 4 == 0 {
+            input.push_str(&format!(
+                "- top item {index:04} carries lorem prose and [a long unwrappable reference](https://example.com/pathological/segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}).\n- top item {next:04} carries lorem prose and [a short reference](https://example.com/short/{next:04}).\n  - nested item {index:04} carries lorem prose and [a long unwrappable reference](https://example.com/pathological/segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}-segment-{index:04}).\n\n",
+                next = index + 1
+            ));
+        }
+    }
+    input
+}
+
+fn block_plain_scalar_input(rows: usize) -> String {
+    let mut input = String::from("settings:\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "  item_{index:03}:\n    name: worker-{index:03}\n    replicas: 3\n    enabled: TRUE\n    memory: 128Mi\n    region: us-east-{region}\n",
+            region = index % 4
+        ));
+    }
+    input
+}
+
+fn yaml_showcase_like_input(nodes: usize) -> String {
+    let mut input = String::new();
+    for index in 1..=nodes {
+        input.push_str(&format!("# benchmark comment {index:06}.01\n"));
+        input.push_str("- str:\n");
+        input
+            .push_str("  - Lorem ipsum dolor sit amet, vel accumsan vitae faucibus ultrices leo\n");
+        input.push_str("  - neque? Et cursus lacinia, ut, sit donec facilisi eu interdum. Dui\n");
+        input.push_str(
+            "  - ipsum, vitae ligula commodo convallis ac sed nunc. Ipsum at nec lacus\n",
+        );
+        input.push_str("  - eros suscipit vitae.\n");
+        input.push_str("  block_str: |\n");
+        input.push_str("    lorem\n");
+        input.push_str("     ipsum\n");
+        input.push_str("    dolor\n");
+        input.push_str("  bools:\n");
+        input.push_str("  - TRUE\n");
+        input.push_str("  - FALSE\n");
+        input.push_str("  ints:\n");
+        input.push_str("  - 123\n");
+        input.push_str("  - -123\n");
+        input.push_str("  floats:\n");
+        input.push_str("  - 123.456\n");
+        input.push_str("  - -123.456\n");
+        input.push_str("  \"null\": ~\n");
+    }
+    input
+}
+
+fn json_like_flow_scalar_input(rows: usize) -> String {
+    let mut input = String::from("[");
+    for index in 0..rows {
+        if index > 0 {
+            input.push(',');
+        }
+        input.push_str(&format!(
+            "{{\"id\":\"service-{index:05}\",\"enabled\":true,\"count\":123,\"ratio\":0.125,\"empty\":null,\"labels\":[\"alpha\",\"beta\",\"gamma\"],\"nested\":{{\"owner\":\"team-{index:03}\",\"mode\":\"safe\"}}}}"
+        ));
+    }
+    input.push_str("]\n");
+    input
+}
+
+fn json_lines_object_input(rows: usize) -> String {
+    let mut input = String::new();
+    for index in 0..rows {
+        input.push_str(&format!(
+            "{{\"id\":{index},\"enabled\":true,\"count\":123,\"ratio\":0.125,\"nested\":{{\"owner\":\"team-{index:03}\"}}}}\n"
+        ));
+    }
+    input
+}
+
+fn quoted_scalar_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: \"item_{index}\", label: \"alpha beta\", mode: \"safe\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_quoted_scalar_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: \"item\\x20{index}\", label: \"alpha\\x20beta\", mode: \"safe\\x20mode\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_plain_string_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: \"item\\x2d{index}\", label: \"alpha\\x2dbeta\", mode: \"safe\\x2dmode\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_string_tag_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: item_{index}, label: !!str \"alpha\\tbeta\", mode: !!str \"safe\\tmode\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_core_tag_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: item_{index}, flag: !!bool \"TR\\x55E\", empty: !!null \"Nu\\x6cl\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_int_tag_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: item_{index}, count: !!int \"\\x31_000\", delta: !!int \"\\x2d42\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_float_tag_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: item_{index}, ratio: !!float \"\\x33.14\", limit: !!float \"\\x31.0e\\x2d3\"}}\n"
+        ));
+    }
+    input
+}
+
+fn escaped_core_like_string_table_input(rows: usize) -> String {
+    let mut input = String::from("# fmt: table\n");
+    for index in 0..rows {
+        input.push_str(&format!(
+            "- {{name: item_{index}, flag: \"TR\\x55E\", mode: !!str \"TR\\x55E\", count: \"\\x31_000\", label: !!str \"\\x33.14\"}}\n"
+        ));
+    }
+    input
+}
