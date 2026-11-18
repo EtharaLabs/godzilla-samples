@@ -1,0 +1,125 @@
+$ wire_type {"name": "W"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `material` (copper, aluminium) is required for a new wire type
+$ wire_type {"name": "W", "material": "gold", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: `material` is one of copper, aluminium, not `gold`
+$ wire_type {"name": "W", "material": "copper"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `temperature` (°C) is required for a new wire type
+$ wire_type {"name": "W", "material": "copper", "temperature": 70}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `insulation` is required for a new wire type
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `sizes` [{section, ampacity}, …] is required for a new wire type
+$ wire_type {"name": "W", "material": "copper", "temperature": 300, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: `temperature` is °C above 0 and up to 250, not 300
+$ wire_type {"name": "W", "material": "copper", "temperature": 0, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: `temperature` is °C above 0 and up to 250, not 0
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": " ", "sizes": [{"section": 1, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: `insulation` is 1 to 256 characters
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": []}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: `sizes` holds 1 to 64 rows, not 0
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 0, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 1: `section` is mm² above 0 and up to 10000, not 0
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 20000, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 1: `section` is mm² above 0 and up to 10000, not 20000
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 0}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 1: `ampacity` is amperes above 0 and up to 100000, not 0
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 2, "ampacity": 10}, {"section": 1.5, "ampacity": 12}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 2: `section` 1.5 mm² must be larger than the row before's 2 mm²
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 2, "ampacity": 10}, {"section": 2, "ampacity": 12}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 2: `section` 2 mm² must be larger than the row before's 2 mm²
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 10}, {"section": 1.5, "ampacity": 9}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 2: `ampacity` 9 A is less than the row before's 10 A: a larger section carries at least as much
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1, "amps": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `sizes` must be a list of {section, ampacity, label?}: unknown field `amps`, expected one of `section`, `ampacity`, `label`
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `sizes` must be a list of {section, ampacity, label?}: missing field `ampacity`
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": "big"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `sizes` must be a list of {section, ampacity, label?}: invalid type: string "big", expected a sequence
+$ wire_type {"name": "W", "material": "copper", "temperature": "hot", "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 10}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `temperature` must be a number of °C, got "hot"
+$ wire_type {"name": "W", "rename": "V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: there's no wire type `W` to rename
+$ wire_type {"name": "W", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: there's no wire type `W`
+$ wire_type {"name": "Cu THW 75 °C", "rename": "Cu THHN 90 °C"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: there's already a wire type `Cu THHN 90 °C`
+$ wire_type {"name": "W", "size": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `size` isn't one of its parameters: name, material, temperature, insulation, note, sizes, rename, delete
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 10, "label": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: wire type `W`: row 1: `label` is up to 256 characters
+$ wire_type {"name": "W", "material": "copper", "temperature": 70, "insulation": "PVC", "sizes": [{"section": 1, "ampacity": 1}, {"section": 2, "ampacity": 2}, {"section": 3, "ampacity": 3}, {"section":
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire_type): wire_type: `sizes` holds up to 64 rows

@@ -1,0 +1,149 @@
+$ text {"at": [0, 0]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `text` is required
+
+$ text {"text": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `at` [x, y] is required
+
+$ text {"text": "x", "at": [0, 0], "size": 5}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: a note's size is its text type's: give `type` (`text_type` lists them, and makes one of a size)
+
+$ text {"text": "x", "at": [0, 0], "type": "Huge"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text 100003: there's no text type `Huge` (there are: 2.5mm, 3.5mm, 5mm)
+
+$ text {"text": "x", "at": [0, 0], "view": "Nowhere"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: no view named `Nowhere`
+
+$ text {"text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `text` must be text of at most 4000 characters, got "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx… (2061 more characters)
+
+$ text {"text": 42, "at": [0, 0]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `text` must be text of at most 4000 characters, got 42
+
+$ text {"text": "abc", "at": [0, 0], "override_format": true, "runs": [{"from": 1, "to": 9, "bold": true}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text 100003: run 0 is of characters 1 to 9; it needs some of the text's 3
+
+$ text {"text": "abcdef", "at": [0, 0], "override_format": true, "runs": [{"from": 0, "to": 3, "bold": true}, {"from": 2, "to": 4, "italic": true}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text 100003: run 1 starts at 2, inside the run before it; give them in order, apart
+
+$ text {"text": "abc", "at": [0, 0], "override_format": true, "runs": [{"from": 0, "to": 2}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text 100003: run 0 overrides nothing; give it `bold`, `italic` or `underline`
+
+$ text {"text": "abc", "at": [0, 0], "runs": [{"from": 0, "to": 2, "shout": true}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `runs`: unknown field `shout`, expected one of `from`, `to`, `bold`, `italic`, `underline`
+
+$ text {"text": "abc", "at": [0, 0], "angle": "steep"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `angle` must be a number in mm, got "steep"
+
+$ text {"text": "abc", "at": [0, 0], "colour": "red"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text): text: `colour` isn't one of its parameters: text, at, view, type, angle, leader, override_format, runs
+
+$ text_type {"name": "X", "size": 0}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: text type `X`: its size, 0 mm, isn't above 0 and at most 100
+
+$ text_type {"name": "X", "size": 101}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: text type `X`: its size, 101 mm, isn't above 0 and at most 100
+
+$ text_type {"name": "X", "width_factor": 0.05}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: text type `X`: its width factor, 0.05, isn't from 0.1 to 10
+
+$ text_type {"name": "X", "border_offset": 60}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: text type `X`: its border offset, 60 mm, isn't from 0 to 50
+
+$ text_type {"name": "X", "border_pen": 17}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: `border_pen`: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ text_type {"name": "X", "color": [1, 2]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not [1,2]
+
+$ text_type {"name": "X", "bold": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: `bold` must be true or false, got "yes"
+
+$ text_type {"name": "X", "like": "Nothing"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: there's no text type `Nothing` to start from
+
+$ text_type {"name": "3.5mm", "rename": "5mm"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: there's already a text type `5mm`
+
+$ text_type {"name": "2.5mm", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: note 100002 is of `2.5mm`; give it another type first
+
+$ text_type {"name": "Gone", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: there's no text type `Gone`
+
+$ text_type {"name": "X", "leading": 2}
+exit: 1
+--- stdout
+--- stderr
+line 2 (text_type): text_type: `leading` isn't one of its parameters: name, like, rename, delete, font, size, bold, italic, underline, width_factor, color, border, border_offset, border_pen

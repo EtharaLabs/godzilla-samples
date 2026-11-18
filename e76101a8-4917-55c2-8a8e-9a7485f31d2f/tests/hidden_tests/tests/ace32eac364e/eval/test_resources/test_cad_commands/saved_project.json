@@ -1,0 +1,86 @@
+{
+ "format": 17,
+ "cads": {
+  "plan": {
+   "source": "plan.dxf",
+   "path": "plan.dxf",
+   "dxf": "0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n6\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nTABLE\n2\nLAYER\n0\nLAYER\n2\nWALLS\n70\n0\n62\n1\n6\nContinuous\n0\nLAYER\n2\nFURN\n70\n0\n62\n-3\n6\nContinuous\n0\nLAYER\n2\nTEXT\n70\n0\n62\n7\n6\nContinuous\n0\nENDTAB\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n0\nLINE\n8\nWALLS\n10\n0\n20\n0\n11\n10\n21\n0\n0\nLINE\n8\nWALLS\n10\n10\n20\n0\n11\n10\n21\n6\n0\nLINE\n8\nWALLS\n10\n10\n20\n6\n11\n0\n21\n6\n0\nLINE\n8\nWALLS\n10\n0\n20\n6\n11\n0\n21\n0\n0\nLINE\n8\nFURN\n10\n1\n20\n1\n11\n2\n21\n1\n0\nTEXT\n8\nTEXT\n10\n1\n20\n5\n40\n0.25\n1\nKitchen\n0\nENDSEC\n0\nEOF\n"
+  }
+ },
+ "imports": {
+  "100000": {
+   "guid": "GUID-1",
+   "category": "level",
+   "name": "Level 1",
+   "elevation": 0.0,
+   "view_range": {
+    "top": null,
+    "cut": 1200.0,
+    "bottom": 0.0,
+    "depth": 0.0
+   },
+   "graphics": {
+    "layers": {
+     "GUID-2": [
+      "WALLS"
+     ]
+    }
+   }
+  },
+  "100001": {
+   "guid": "GUID-3",
+   "category": "level",
+   "name": "Level 2",
+   "elevation": 3000.0,
+   "view_range": {
+    "top": null,
+    "cut": 1200.0,
+    "bottom": 0.0,
+    "depth": 0.0
+   }
+  },
+  "100002": {
+   "guid": "GUID-4",
+   "category": "cadimport",
+   "cad": "GUID-2",
+   "level": "GUID-1",
+   "at": [
+    100.0,
+    200.0
+   ],
+   "origin": [
+    5.0,
+    3.0
+   ],
+   "scale": 1000.0,
+   "angle": 30.0,
+   "hidden": [
+    "FURN"
+   ],
+   "colors": "invert"
+  },
+  "100003": {
+   "guid": "GUID-5",
+   "category": "cadimport",
+   "cad": "GUID-2",
+   "level": "GUID-3",
+   "at": [
+    0.0,
+    0.0
+   ],
+   "origin": [
+    5.0,
+    3.0
+   ],
+   "scale": 2.0,
+   "view": "GUID-3"
+  }
+ },
+ "library": {
+  "999467": {
+   "kind": "cad",
+   "name": "plan",
+   "guid": "GUID-2"
+  }
+ }
+}

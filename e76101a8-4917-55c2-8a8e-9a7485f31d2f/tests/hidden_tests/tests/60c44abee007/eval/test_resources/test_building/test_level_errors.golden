@@ -1,0 +1,35 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 3000, "name": "Level 1"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (level): level 100002: another level is already named `Level 1`
+
+$ bimcraft-cli run --cmd 'level {"elevation": "high"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (level): level: `elevation` must be a number in mm, got "high"
+
+$ bimcraft-cli run --cmd 'level {"elevation": 1e12}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (level): level: `elevation` must be a number in mm, got 1000000000000.0
+
+$ bimcraft-cli run --cmd 'level {"elevation": 5000, "extent": [[9000,7000],[0,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (level): level 100002: its extent runs from its south-west corner to its north-east one
+
+$ bimcraft-cli run --cmd 'level {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (level): level: `elevation` in mm is required
+

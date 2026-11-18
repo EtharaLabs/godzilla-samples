@@ -1,0 +1,9 @@
+$ bimcraft-cli run odd.ifc --cmd 'elements {"category": "railing"}' --cmd 'elements {"category": "ramp"}'
+[exit 0]
+--- stdout
+{"elements":{"level":1,"railing":1,"ramp":1},"format":"IFC4","moved":null,"name":"Hand Made","path":"odd.ifc","skipped":["IFCSTAIR #283 'Odd Stair': its flights aren't all as wide, or their treads as deep"]}
+{"count":1,"elements":[{"category":"railing","guid":"<GUID-1>","height":1100.0,"id":100002,"level":"<GUID-2>","path":[[0.0,-25.0],[4000.0,-25.0]],"type":"Imported - 1100mm","type_guid":"<GUID-3>"}],"returned":1}
+{"count":1,"elements":[{"angle":0.0,"category":"ramp","end":[9212.012,6600.0],"guid":"<GUID-4>","height":667.0,"id":100001,"landings":[{"at":333.0,"turn":0.0}],"length":8012.01,"level":"<GUID-2>","runs":[[[0.0,6600.0],[4000.0,6600.0]],[[5200.0,6600.0],[9212.012,6600.0]]],"slope":8.325,"start":[0.0,6600.0],"top_level":null,"width":1200.0}],"returned":1}
+
+--- stderr
+

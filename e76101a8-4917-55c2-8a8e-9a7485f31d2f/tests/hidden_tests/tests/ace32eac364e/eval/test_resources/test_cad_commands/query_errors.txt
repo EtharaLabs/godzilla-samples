@@ -1,0 +1,36 @@
+### no_at
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_query): cad_query: `at` [x, y] is required
+### no_id
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_query): cad_query: `id`, a CAD import's id or GUID, is required
+### no_such_element
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_query): cad_query: no element 999
+### not_a_cad_import
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_query): cad_query: level 100000 isn't a CAD import
+### reach_negative
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_query): cad_query: `reach` is how far from `at` to look, mm, above 0, not -5
+### reach_zero
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_query): cad_query: `reach` is how far from `at` to look, mm, above 0, not 0

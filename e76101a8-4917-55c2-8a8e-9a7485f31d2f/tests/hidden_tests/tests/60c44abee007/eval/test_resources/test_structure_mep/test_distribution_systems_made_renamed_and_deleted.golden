@@ -1,0 +1,16 @@
+$ bimcraft-cli run --cmd 'voltage {"name": "115 V", "nominal": 115}' --cmd 'distribution_system {"name": "115 V mono", "phases": 1, "wires": 2, "l_n": "115 V", "ground": "TT"}' --cmd 'voltage {"name": "115 V", "rename": "117 V"}' --cmd 'distribution_system {"name": "115 V mono"}' --cmd 'distribution_system {"name": "115 V mono", "rename": "Mono", "l_g": "117 V"}' --cmd 'distribution_system {"name": "X", "phases": 2, "wires": 3, "l_l": "220 V", "l_n": "127 V", "ground": "IT"}' --cmd 'distribution_system {"name": "Delta", "phases": 3, "wires": 3, "l_l": "380 V"}' --cmd 'distribution_system {"name": "127/220 V", "l_g": ""}' --cmd 'distribution_system {"name": "230/400 V", "delete": true}' --cmd 'distribution_system {}'
+[exit 0]
+--- stdout
+{"name":"115 V","voltage":{"max":126.5,"min":103.5,"nominal":115.0}}
+{"distribution_system":{"ground":"TT","l_n":"115 V","phases":1,"wires":2},"name":"115 V mono"}
+{"name":"117 V","voltage":{"max":126.5,"min":103.5,"nominal":115.0}}
+{"distribution_system":{"ground":"TT","l_n":"117 V","phases":1,"wires":2},"name":"115 V mono"}
+{"distribution_system":{"ground":"TT","l_g":"117 V","l_n":"117 V","phases":1,"wires":2},"name":"Mono"}
+{"distribution_system":{"ground":"IT","l_l":"220 V","l_n":"127 V","phases":2,"wires":3},"name":"X"}
+{"distribution_system":{"l_l":"380 V","phases":3,"wires":3},"name":"Delta"}
+{"distribution_system":{"ground":"TN-S","l_l":"220 V","l_n":"127 V","phases":3,"wires":4},"name":"127/220 V"}
+{"deleted":"230/400 V"}
+{"distribution_systems":{"127/220 V":{"ground":"TN-S","l_l":"220 V","l_n":"127 V","phases":3,"wires":4},"220/380 V":{"ground":"TN-S","l_g":"220 V","l_l":"380 V","l_n":"220 V","phases":3,"wires":4},"277/480 V":{"l_g":"277 V","l_l":"480 V","l_n":"277 V","phases":3,"wires":4},"Delta":{"l_l":"380 V","phases":3,"wires":3},"Mono":{"ground":"TT","l_g":"117 V","l_n":"117 V","phases":1,"wires":2},"X":{"ground":"IT","l_l":"220 V","l_n":"127 V","phases":2,"wires":3}}}
+
+--- stderr
+

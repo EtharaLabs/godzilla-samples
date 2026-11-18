@@ -1,0 +1,135 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[{"from":"Top","material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","warnings":[]}
+{"id":100002}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":1,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-2","height":740.0,"id":100002,"level":"GUID-3","offset":0.0,"type":"1600 x 800","values":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}}],"returned":1}
+--- stderr
+=== modify {"id": 100002, "params": {"Height": 720}, "offset": 100} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-2","height":720.0,"id":100002,"level":"GUID-3","offset":100.0,"params":{"Height":720},"type":"1600 x 800","values":{"Depth":800.0,"Height":720.0,"Top":690.0,"Width":1600.0}}
+{"count":1,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-2","height":720.0,"id":100002,"level":"GUID-3","offset":100.0,"params":{"Height":720},"type":"1600 x 800","values":{"Depth":800.0,"Height":720.0,"Top":690.0,"Width":1600.0}}],"returned":1}
+--- stderr
+=== modify {"id": 100002, "params": {"Width": 5}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): component 100002: `Width` is a type parameter of `Work Desk`; change it in its type, with `family`
+=== modify {"id": 100002, "params": {"Height": "tall"}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): component 100002: parameter `Height` holds a number, not "tall"
+=== modify {"id": 100002, "params": {"Nope": 1}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): component 100002: `Nope` isn't a parameter of components; add it with `parameter`
+=== family {"name": "Work Desk", "types": {"1600 x 800": {"Width": 0}}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Work Desk`: type `1600 x 800`: form 1: its profile has no area: it needs three corners or more, or a circle
+=== family {"name": "Work Desk", "types": {"1600 x 800": {"Width": 1700}}} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1700}}},"name":"Work Desk","warnings":[]}
+{"count":1,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Work Desk","family_guid":"GUID-2","guid":"GUID-3","height":740.0,"id":100002,"level":"GUID-4","offset":0.0,"type":"1600 x 800","values":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1700.0}}],"returned":1}
+--- stderr
+=== family {"name": "Work Desk", "rename": "Writing desk"} | elements {"category": "component"} | component {"family": "Work Desk", "at": [0, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Writing desk","warnings":[]}
+{"count":1,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Writing desk","family_guid":"GUID-2","guid":"GUID-3","height":740.0,"id":100002,"level":"GUID-4","offset":0.0,"type":"1600 x 800","values":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}}],"returned":1}
+--- stderr
+line 1 (component): component: family `Work Desk` doesn't exist (there are: Air Terminal, Base Cabinet, Bathtub, Bed, Casement Window, Ceiling Luminaire, Chair, Data Outlet, Desk, Distribution Board, Double Door, Earthing Electrode, Elbow 90, Fixed Window, Floor Drain, Gate Valve, Inspection Box, Kitchen Sink, Outlet, Patch Panel, Rack, Recessed Luminaire, Shower, Single Door, Sliding Door, Sliding Window, Sofa, Switch, Table, Tee, Three-Phase Outlet, Voice Outlet, WC, Wardrobe, Washbasin, Writing desk)
+=== family {"name": "Work Desk", "delete": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: elements 100002 are of `Work Desk`; delete them first
+=== CM {"family": "Work Desk", "at": [0, 0], "mirrored": true, "offset": 50, "params": {"Height": 800}} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100003}
+{"count":2,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-2","height":740.0,"id":100002,"level":"GUID-3","offset":0.0,"type":"1600 x 800","values":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},{"angle":0.0,"at":[0.0,0.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-4","height":800.0,"id":100003,"level":"GUID-3","mirrored":true,"offset":50.0,"params":{"Height":800},"type":"1200 x 600","values":{"Depth":600.0,"Height":800.0,"Top":770.0,"Width":1200.0}}],"returned":2}
+--- stderr
+=== delete {"ids": [100002]} | family {"name": "Work Desk", "delete": true} | family {"name": "Work Desk"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":[100002]}
+{"deleted":"Work Desk","warnings":[]}
+--- stderr
+line 1 (family): family: there's no family `Work Desk`
+=== family {"name": "Work Desk", "types": {"1600 x 800": null}} | family {"name": "Work Desk"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): component 100002: type `1600 x 800` doesn't exist (there are: 1200 x 600)
+=== family {"name": "Work Desk", "rename": ""}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `rename` needs a name
+=== family {"name": "Work Desk", "rename": "Table"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: there's a family `Table` already
+=== component {"family": "Work Desk", "type": "9 x 9", "at": [0, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (component): component 100003: type `9 x 9` doesn't exist (there are: 1200 x 600, 1600 x 800)
+=== component {"family": "Work Desk"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (component): component: `at` [x, y] is required
+=== component {"at": [0, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (component): component: `family` is required; `inspect` lists the families
+=== component {"family": "Work Desk", "at": [0, 0], "params": [1]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (component): component: `params` is {parameter: value}, not [1]
+=== component {"family": "Work Desk", "at": [0, 0], "level": "Nowhere"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (component): component: no level or plan view named `Nowhere` (the levels are: Level 1, Level 2)
+=== component {"family": "Work Desk", "at": [0, 0], "params": {"Height": null}} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100003}
+{"count":2,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-2","height":740.0,"id":100002,"level":"GUID-3","offset":0.0,"type":"1600 x 800","values":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},{"angle":0.0,"at":[0.0,0.0],"category":"component","family":"Work Desk","family_guid":"GUID-1","guid":"GUID-4","height":740.0,"id":100003,"level":"GUID-3","offset":0.0,"type":"1200 x 600","values":{"Depth":600.0,"Height":740.0,"Top":710.0,"Width":1200.0}}],"returned":2}
+--- stderr

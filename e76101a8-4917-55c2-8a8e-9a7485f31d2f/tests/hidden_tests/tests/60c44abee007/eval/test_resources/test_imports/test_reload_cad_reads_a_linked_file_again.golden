@@ -1,0 +1,50 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "site.dxf", "link": true}' --cmd 'reload_cad {"cad": "site"}' --cmd 'save {"path": "other/p.bimcraft"}' --cmd 'reload_cad {"cad": "site"}' --cmd 'reload_cad {"cad": "site"}' --cmd 'elements {"category": "cadimport"}'
+[exit 0]
+--- stdout
+{"cad":"site","entities":1,"extents":[[-500.0,0.0],[500.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"site.dxf","unit":"mm"}
+{"cad":"site","changed":false}
+{"format":"bimcraft","path":"other/p.bimcraft"}
+{"cad":"site","changed":true,"entities":3}
+{"cad":"site","changed":false}
+{"count":1,"elements":[{"at":[0.0,0.0],"cad":"site","category":"cadimport","entities":3,"extents":[[-500.0,0.0],[500.0,1000.0]],"guid":"<GUID-1>","id":100002,"layers":1,"level":"<GUID-2>","linked":"site.dxf","origin":[500.0,0.0],"scale":1.0,"source":"site.dxf","unit":"mm"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "site.dxf", "name": "copy"}' --cmd 'reload_cad {"cad": "copy"}'
+[exit 1]
+--- stdout
+{"cad":"copy","entities":1,"extents":[[-500.0,0.0],[500.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"site.dxf","unit":"mm"}
+
+--- stderr
+line 1 (reload_cad): reload_cad: CAD drawing `copy` isn't linked; bring it in again with `import_cad` and `link`
+
+$ bimcraft-cli run --cmd 'reload_cad {"cad": "nothing"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (reload_cad): reload_cad: the project holds no CAD drawing named `nothing`
+
+$ bimcraft-cli run --cmd 'reload_cad {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (reload_cad): reload_cad: `cad`, the name of a linked CAD drawing, is required
+
+$ bimcraft-cli run other/p.bimcraft --cmd 'reload_cad {"cad": "site"}'
+[exit 1]
+--- stdout
+{"cads_not_reloaded":[{"cad":"site","error":"it draws nothing in model space"}],"name":"Project","path":"other/p.bimcraft"}
+
+--- stderr
+line 1 (reload_cad): reload_cad: site.dxf: it draws nothing in model space
+
+$ bimcraft-cli run other/p.bimcraft --cmd 'reload_cad {"cad": "site"}'
+[exit 1]
+--- stdout
+{"cads_not_reloaded":[{"cad":"site","error":"other/site.dxf: No such file or directory (os error 2)"}],"name":"Project","path":"other/p.bimcraft"}
+
+--- stderr
+line 1 (reload_cad): reload_cad: other/site.dxf: No such file or directory (os error 2)
+

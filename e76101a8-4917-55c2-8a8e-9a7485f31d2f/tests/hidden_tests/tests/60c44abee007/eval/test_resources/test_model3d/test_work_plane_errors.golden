@@ -1,0 +1,42 @@
+$ bimcraft-cli run --cmd 'work_plane {"points": [[0, 0, 0], [1000, 0, 0], [2000, 0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: the work plane's three points lie along a line: pick three that make a triangle
+
+$ bimcraft-cli run --cmd 'work_plane {"points": [[0, 0], [1, 0], [0, 1]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: `points` are three points [[x, y, z], [x, y, z], [x, y, z]] in mm, not [[0,0],[1,0],[0,1]]
+
+$ bimcraft-cli run --cmd 'work_plane {"surface": {"point": [0, 0, 0]}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: `surface` is {point: [x, y, z], normal: [x, y, z]}, a point of it in mm and the way it faces: missing field `normal`
+
+$ bimcraft-cli run --cmd 'work_plane {"plane": "xy"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: `plane` isn't one of its parameters: view, level, offset, points, surface
+
+$ bimcraft-cli run --cmd 'work_plane {"level": "Level 9"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'work_plane {"view": "Level 1"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: Level 1 isn't a 3D view; only a 3D view has a work plane to set
+

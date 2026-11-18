@@ -1,0 +1,8 @@
+$ bimcraft-cli run roof_rises.rvt --cmd 'elements {}'
+[exit 0]
+--- stdout
+{"elements":{"level":2,"roof":2},"format":"Revit 2024","moved":null,"name":"roof_rises","path":"roof_rises.rvt","skipped":["1 roof: it is a roof by face (over a mass, say), whose face is not read: it comes in as the footprint of its own box (ids 101)","1 roof: its box is 914.4 mm tall and its type 76.2 mm thick: it is sloped or stepped, and its slopes are not read: it comes in level (ids 100)"]}
+{"count":4,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3048.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"area_m2":18.58,"boundary":[[0.0,0.0],[6096.0,0.0],[6096.0,3048.0],[0.0,3048.0]],"category":"roof","guid":"<GUID-3>","id":100002,"level":"<GUID-1>","offset":3657.6,"outline":[[0.0,0.0],[6096.0,0.0],[6096.0,3048.0],[0.0,3048.0]],"overhang":0.0,"ridge":3657.6,"slope":0.0,"type":"Warm","type_guid":"<GUID-4>"},{"area_m2":18.58,"boundary":[[9144.0,0.0],[15240.0,0.0],[15240.0,3048.0],[9144.0,3048.0]],"category":"roof","guid":"<GUID-5>","id":100003,"level":"<GUID-1>","offset":3657.6,"outline":[[9144.0,0.0],[15240.0,0.0],[15240.0,3048.0],[9144.0,3048.0]],"overhang":0.0,"ridge":3657.6,"slope":0.0,"type":"Warm","type_guid":"<GUID-4>"}],"returned":4}
+
+--- stderr
+

@@ -1,0 +1,54 @@
+### hide_and_show
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: layer `FURN` is in `hide` and in `show`; give it in one
+### hide_not_a_list
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: `hide` is a list of layer names, of up to 10000, not "WALLS"
+### id_not_an_id
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: "abc" is not an element id or GUID
+### layer_not_a_name
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: `show` lists layers by name, not 1
+### no_id
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: `id`, a CAD import's id or GUID, is required
+### no_such_element
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: no element 999999
+### not_a_cad_import
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: level 100000 isn't a CAD import
+### unknown_layer
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: the drawing has no layer `NOPE` (it has: WALLS, FURN, TEXT)
+### unknown_view
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (cad_layers): cad_layers: no view named `Nope`

@@ -1,0 +1,47 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "room.pts"}' --cmd 'point_cloud {"cloud": "room", "at": [3000, 0], "angle": 90}' --cmd 'copy {"ids": [100003], "by": [0, 3000]}' --cmd 'move {"ids": [100002], "by": [-1000, 0]}' --cmd 'rotate {"ids": [100002], "about": [0, 0], "angle": 45}' --cmd 'elements {"category": "pointcloud"}' --cmd 'delete {"ids": [100002, 100003, 100004]}' --cmd 'library {"kind": "cloud"}' --cmd 'undo {}' --cmd 'library {"kind": "cloud"}'
+[exit 0]
+--- stdout
+{"cloud":"room","id":100002,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+{"cloud":"room","id":100003,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+{"ids":[100004]}
+{"moved":[100002]}
+{"rotated":[100002]}
+{"count":3,"elements":[{"angle":45.0,"at":[-707.107,-707.107],"category":"pointcloud","cloud":"room","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":250.0,"points":4,"source":"room.pts"},{"angle":90.0,"at":[3000.0,0.0],"category":"pointcloud","cloud":"room","guid":"<GUID-3>","id":100003,"level":"<GUID-2>","offset":250.0,"points":4,"source":"room.pts"},{"angle":90.0,"at":[3000.0,3000.0],"category":"pointcloud","cloud":"room","guid":"<GUID-4>","id":100004,"level":"<GUID-2>","offset":250.0,"points":4,"source":"room.pts"}],"returned":3}
+{"deleted":[100002,100003,100004]}
+{"count":0,"library":[],"parts":[]}
+{"count":1,"undone":"Delete"}
+{"count":1,"library":[{"guid":"<GUID-5>","id":999467,"kind":"cloud","name":"room"}],"parts":[]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "room.pts"}' --cmd 'mirror {"ids": [100002], "axis": [[0, 0], [0, 1000]]}'
+[exit 1]
+--- stdout
+{"cloud":"room","id":100002,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+
+--- stderr
+line 1 (mirror): mirror: point cloud 100002 can't be mirrored: a scan is what was measured; move it or turn it
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "room.pts"}' --cmd 'point_cloud {"path": "room.pts"}'
+[exit 1]
+--- stdout
+{"cloud":"room","id":100002,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+
+--- stderr
+line 1 (point_cloud): point_cloud: the project already holds a scan named `room`: place it again with `cloud`, or bring this file in under another `name`
+
+$ bimcraft-cli run --cmd 'point_cloud {"cloud": "room"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: the project holds no scan named `room` (it holds: none)
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "room.pts"}' --cmd 'point_cloud {"cloud": "nothing"}'
+[exit 1]
+--- stdout
+{"cloud":"room","id":100002,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+
+--- stderr
+line 1 (point_cloud): point_cloud: the project holds no scan named `nothing` (it holds: room)
+

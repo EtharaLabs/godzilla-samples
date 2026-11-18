@@ -1,0 +1,84 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "missing.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: missing.dxf: No such file or directory (os error 2)
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "drawing.txt"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: drawing.txt: a .txt file isn't a CAD drawing BIMCraft reads; it reads DXF
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "binary.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: binary.dxf: it's a binary DXF; save it as an ASCII DXF (any version) and bring that in
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "noents.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: noents.dxf: it isn't a DXF: there's no ENTITIES section
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "code.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: code.dxf: line 3: `abc` isn't a group code
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "ends.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: ends.dxf: line 9: the file ends after group code 10, with no value
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "nan.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: nan.dxf: line 18: `one` isn't a number
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "inf.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: inf.dxf: line 18: `inf` isn't a number a drawing can hold
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "huge.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: huge.dxf: line 18: 1e13 is past what a drawing holds (1000000000000)
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "noname.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: noname.dxf: line 4: a SECTION with no name
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "empty.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: empty.dxf: it draws nothing in model space
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "onlypaper.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: onlypaper.dxf: it draws nothing in model space
+

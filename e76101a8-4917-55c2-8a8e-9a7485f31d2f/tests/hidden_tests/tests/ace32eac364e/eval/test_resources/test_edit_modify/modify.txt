@@ -1,0 +1,125 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"area_m2":48.0,"id":100007,"number":"1"}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== modify {"id": 100002, "type": "Exterior - 300mm"} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-7","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-8","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"}],"returned":4}
+--- stderr
+=== modify {"ids": [100002, 100004], "type": "Exterior - 300mm"} | elements {"category": "wall"} | undo | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"modified":[100002,100004]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-7","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-8","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"}],"returned":4}
+{"count":1,"undone":"Modify"}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-7","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-8","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-6"}],"returned":4}
+--- stderr
+=== modify {"id": 100002, "top_level": null, "height": 2500, "level": "Level 1"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":2500.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"GUID-3"}
+--- stderr
+=== modify {"id": 100003, "location": "exterior-finish"} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"base_offset":0.0,"category":"wall","end":[7900.0,6000.0],"guid":"GUID-1","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","location":"exterior-finish","room_bounding":true,"start":[7900.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-5","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[7900.0,6000.0],"guid":"GUID-1","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","location":"exterior-finish","room_bounding":true,"start":[7900.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":4}
+--- stderr
+=== modify {"id": 100006, "mark": "D-1", "flip_hand": true} | elements {"category": "door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":true,"guid":"GUID-1","height":2100.0,"host":"GUID-2","id":100006,"level":"GUID-3","mark":"D-1","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-4","width":900.0}
+{"count":1,"elements":[{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":true,"guid":"GUID-1","height":2100.0,"host":"GUID-2","id":100006,"level":"GUID-3","mark":"D-1","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-4","width":900.0}],"returned":1}
+--- stderr
+=== modify {"id": 100007, "name": "Living", "number": "7"} | elements {"category": "room"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"area_m2":48.0,"category":"room","enclosed":true,"guid":"GUID-1","id":100007,"level":"GUID-2","limit_offset":-300.0,"name":"Living","number":"7","perimeter_m":28.0,"point":[4000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":129.6}
+{"count":1,"elements":[{"area_m2":48.0,"category":"room","enclosed":true,"guid":"GUID-1","id":100007,"level":"GUID-2","limit_offset":-300.0,"name":"Living","number":"7","perimeter_m":28.0,"point":[4000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":129.6}],"returned":1}
+--- stderr
+=== modify {"id": 100000, "view_range": {"cut": 1500}} | elements {"category": "level"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1500.0,"depth":0.0,"top":null}}
+{"count":2,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1500.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":2}
+--- stderr
+=== modify {"id": 100000, "elevation": -500, "name": "Ground"} | elements {"category": "level"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"category":"level","computation_height":1200.0,"elevation":-500.0,"guid":"GUID-1","id":100000,"name":"Ground","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}
+{"count":2,"elements":[{"category":"level","computation_height":1200.0,"elevation":-500.0,"guid":"GUID-1","id":100000,"name":"Ground","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":2}
+--- stderr
+=== modify {"id": 100002, "hieght": 2000}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: element 100002: unknown field `hieght`, expected one of `type`, `level`, `start`, `end`, `top_level`, `height`, `base_offset`, `top_offset`, `arc`, `location`, `attach_top`, `attach_base`, `room_bounding`, `params`
+=== modify {"id": 100002, "category": "floor"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: `category` can't change; delete the element and create another
+=== modify {"id": 100002, "category": "wall", "height": 2000}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}
+--- stderr
+=== modify {"id": 100002, "type": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): wall 100002: type `Nope` doesn't exist (there are: Exterior - 300mm, Generic - 200mm, Interior - 100mm)
+=== modify {"id": 100002, "level": "Level 9"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+=== modify {"id": 999999, "height": 1}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: no element 999999
+=== modify {"height": 1}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: `ids` [id, …] is required
+=== modify {"ids": "x", "height": 1}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: `ids` [id, …] is required
+=== modify {"id": 100002, "height": "tall"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: element 100002: invalid type: string "tall", expected f64
+=== modify {"id": 100002, "start": [8000, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): wall 100002: too short (0 mm)

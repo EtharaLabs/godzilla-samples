@@ -1,0 +1,16 @@
+exit: 1
+--- stdout
+{"cloud":"box","id":100002,"origin":[500002000.0,7000001500.0,11250.0],"points":4,"read":4}
+{"moved":[100002]}
+{"rotated":[100002]}
+{"ids":[100003]}
+{"angle":10.0,"at":[-500.0,1000.0],"category":"pointcloud","cloud":"box","guid":"GUID-1","id":100002,"level":"GUID-2","offset":100.0,"points":4,"source":"box.xyz"}
+{"count":2,"elements":[{"angle":10.0,"at":[-500.0,1000.0],"category":"pointcloud","cloud":"box","guid":"GUID-1","id":100002,"level":"GUID-2","offset":100.0,"points":4,"source":"box.xyz"},{"angle":90.0,"at":[-500.0,11000.0],"category":"pointcloud","cloud":"box","guid":"GUID-3","id":100003,"level":"GUID-4","offset":1250.0,"points":4,"source":"box.xyz"}],"returned":2}
+{"deleted":[100002]}
+{"cloud":"box","id":100004,"origin":[500002000.0,7000001500.0,11250.0],"points":4,"read":4}
+{"deleted":[100003,100004]}
+{"count":0,"elements":[],"returned":0}
+{"count":1,"undone":"Delete"}
+{"count":2,"elements":[{"angle":90.0,"at":[-500.0,11000.0],"category":"pointcloud","cloud":"box","guid":"GUID-3","id":100003,"level":"GUID-4","offset":1250.0,"points":4,"source":"box.xyz"},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"box","guid":"GUID-5","id":100004,"level":"GUID-4","offset":1250.0,"points":4,"source":"box.xyz"}],"returned":2}
+--- stderr
+line 1 (mirror): mirror: point cloud 100004 can't be mirrored: a scan is what was measured; move it or turn it

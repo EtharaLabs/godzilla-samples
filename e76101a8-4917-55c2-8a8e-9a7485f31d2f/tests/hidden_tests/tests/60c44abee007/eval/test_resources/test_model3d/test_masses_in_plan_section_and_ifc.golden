@@ -1,0 +1,26 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'mass {"boundary": [[12000,0],[18000,0],[18000,6000],[12000,6000]], "top": [[13000,1000],[17000,1000],[17000,5000],[13000,5000]], "height": 7000, "name": "Loft"}' --cmd 'section {"start": [-1000, 3000], "end": [20000, 3000], "name": "Cut"}' --cmd 'render {"view": "Cut", "width": 400, "height": 200, "path": "cut.png"}' --cmd 'render {"view": "Level 1", "width": 400, "height": 200, "path": "plan.png"}' --cmd 'save {"path": "masses.ifc"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+{"area_m2":36.0,"height":7000.0,"id":100005,"volume_m3":177.33}
+{"id":100006,"name":"Cut"}
+{"height":200,"kind":"section","path":"cut.png","view":"Cut","width":400}
+{"height":200,"kind":"plan","path":"plan.png","view":"Level 1","width":400}
+{"format":"IFC4","path":"masses.ifc"}
+
+--- stderr
+
+$ bimcraft-cli run masses.ifc --cmd 'elements {"category": "mass"}'
+[exit 0]
+--- stdout
+{"elements":{"level":4,"mass":2},"format":"IFC4","moved":null,"name":"Project","path":"masses.ifc","skipped":[]}
+{"count":2,"elements":[{"area_m2":80.0,"base_offset":0.0,"boundary":[[0.0,0.0],[10000.0,0.0],[10000.0,8000.0],[0.0,8000.0]],"category":"mass","gross_floor_area_m2":320.0,"guid":"<GUID-1>","height":9500.0,"id":100004,"level":"<GUID-2>","levels":[100000,100001,100002,100003],"name":"Block","top_level":null,"volume_m3":760.0},{"area_m2":36.0,"base_offset":0.0,"boundary":[[12000.0,0.0],[18000.0,0.0],[18000.0,6000.0],[12000.0,6000.0]],"category":"mass","gross_floor_area_m2":80.82,"guid":"<GUID-3>","height":7000.0,"id":100005,"level":"<GUID-2>","levels":[100000,100001,100002],"name":"Loft","top":[[13000.0,1000.0],[17000.0,1000.0],[17000.0,5000.0],[13000.0,5000.0]],"top_level":null,"volume_m3":177.33}],"returned":2}
+
+--- stderr
+
+=== file cut.png
+png 400x200 rgba pixels-sha256=c3808c64d465467721f4b0d9da6e918b3ecc68702702264c4f085547bec0e5b7
+=== file plan.png
+png 400x200 rgba pixels-sha256=d7ab7484be33660c3721f0176d0c935d2e60eb311edce436d8de9fc70fbe07b3

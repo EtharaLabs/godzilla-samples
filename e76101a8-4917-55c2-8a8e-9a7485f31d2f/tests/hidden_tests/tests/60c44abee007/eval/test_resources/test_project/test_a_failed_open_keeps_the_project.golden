@@ -1,0 +1,17 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]]}' --cmd 'open {"path": "missing.bimcraft"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (open): open: missing.bimcraft: No such file or directory (os error 2)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]]}' --script /dev/null --cmd 'level {"elevation": 4000}' --cmd 'elements {"category": "level"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"id":100003,"name":"Level 3"}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":4000.0,"guid":"<GUID-3>","id":100003,"name":"Level 3","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":3}
+
+--- stderr
+

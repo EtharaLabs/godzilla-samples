@@ -1,0 +1,105 @@
+$ bimcraft-cli run --cmd 'vent_size {"units": 10}'
+[exit 0]
+--- stdout
+{"dn":40.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 10, "wc": true}'
+[exit 0]
+--- stdout
+{"dn":50.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 30, "wc": true}'
+[exit 0]
+--- stdout
+{"dn":75.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 2, "trap_dn": 40}'
+[exit 0]
+--- stdout
+{"dn":40.0,"trap_to_vent_mm":1000.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 20, "stack_dn": 100, "length": 30000}'
+[exit 0]
+--- stdout
+{"dn":75.0,"longest_m":76.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 200, "stack_dn": 100, "length": 60000, "trap_dn": 50}'
+[exit 0]
+--- stdout
+{"dn":100.0,"longest_m":195.0,"trap_to_vent_mm":1200.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 600, "stack_dn": 150, "length": 90000, "trap_dn": 75}'
+[exit 0]
+--- stdout
+{"dn":150.0,"longest_m":238.0,"trap_to_vent_mm":1800.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 20, "trap_dn": 100}'
+[exit 0]
+--- stdout
+{"dn":75.0,"trap_to_vent_mm":2400.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 100, "wc": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: 100 UHC is more than the table gives a branch vent (Tabela 8)
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 20, "stack_dn": 99, "length": 3000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: `stack_dn` must be one of 40, 50, 75, 100, 150, 200, 250, 300, 400
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 20, "stack_dn": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: `length` (mm, from the foot to the open end) is required with `stack_dn`
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 20, "trap_dn": 60}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: `trap_dn` must be 40, 50, 75 or 100 (Tabela 1)
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: `units` (UHC of what it vents) is required
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 5000, "stack_dn": 75, "length": 3000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: no vent of the table (Tabela 2) is long enough for that, or the units pass its last row
+
+$ bimcraft-cli run --cmd 'vent_size {"units": 10, "foo": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (vent_size): vent_size: unknown parameter `foo`
+

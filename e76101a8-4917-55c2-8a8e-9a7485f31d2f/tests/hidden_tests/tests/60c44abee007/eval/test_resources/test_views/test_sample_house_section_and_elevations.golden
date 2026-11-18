@@ -1,0 +1,21 @@
+$ bimcraft-cli run --sample --cmd 'dimension_type {"name": "Diagonal - 2.5mm Arial", "font": "IBM Plex Sans"}' --cmd 'dimension_type {"name": "Arrow - 2.5mm Arial", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "2.5mm", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "3.5mm", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "5mm", "font": "IBM Plex Sans"}' --cmd 'render {"view": "Section 1", "path": "Section 1.png", "width": 400, "height": 300}' --cmd 'render {"view": "North", "path": "North.png", "width": 400, "height": 300}' --cmd 'render {"view": "South", "path": "South.png", "width": 400, "height": 300}' --cmd 'render {"view": "East", "path": "East.png", "width": 400, "height": 300}' --cmd 'render {"view": "West", "path": "West.png", "width": 400, "height": 300}'
+[exit 0]
+--- stdout
+{"name":"Diagonal - 2.5mm Arial","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"IBM Plex Sans","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"diagonal","tick_pen":7,"tick_size":2.0,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"name":"Arrow - 2.5mm Arial","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"IBM Plex Sans","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"arrow","tick_pen":7,"tick_size":2.5,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"name":"2.5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":2.5}}
+{"name":"3.5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":3.5}}
+{"name":"5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":5.0}}
+{"height":300,"kind":"section","path":"Section 1.png","view":"Section 1","width":400}
+{"height":300,"kind":"elevation","path":"North.png","view":"North","width":400}
+{"height":300,"kind":"elevation","path":"South.png","view":"South","width":400}
+{"height":300,"kind":"elevation","path":"East.png","view":"East","width":400}
+{"height":300,"kind":"elevation","path":"West.png","view":"West","width":400}
+
+--- stderr
+
+=== png Section 1.png: 400x300, 4 channels
+=== png North.png: 400x300, 4 channels
+=== png South.png: 400x300, 4 channels
+=== png East.png: 400x300, 4 channels
+=== png West.png: 400x300, 4 channels

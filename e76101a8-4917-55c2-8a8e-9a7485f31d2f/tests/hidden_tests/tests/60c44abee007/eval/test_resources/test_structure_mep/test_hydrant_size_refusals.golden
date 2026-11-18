@@ -1,0 +1,84 @@
+$ bimcraft-cli run --cmd 'hydrant_size {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` (1, 2, 3, 4-40, 4-65 or 5) or `column` and `area` is required
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `area` (m², built) is required with `column`
+
+$ bimcraft-cli run --cmd 'hydrant_size {"area": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `column` (1 to 5, of IT 22's Tabela 3) is required with `area`
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 2.5, "area": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `column` must be a whole number from 1 to 5
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 6, "area": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `column` must be a number from 1 to 5, got 6
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 1, "area": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `area` must be a number from 0.0 to 100000000, got 0
+
+$ bimcraft-cli run --cmd 'hydrant_size {"type": "2", "nominal": 65}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `nominal` needs the pipe's `inside` diameter (mm)
+
+$ bimcraft-cli run --cmd 'hydrant_size {"type": "6"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` must be one of 1, 2, 3, 4-40, 4-65, 5, got "6"
+
+$ bimcraft-cli run --cmd 'hydrant_size {"type": "2", "region": "RJ"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `region` must be SP: only IT 22/2025 of the Corpo de Bombeiros of São Paulo is covered, no other state's rule
+
+$ bimcraft-cli run --cmd 'hydrant_size {"type": "2", "hydrants": 1.5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `hydrants` must be a whole number from 1 to 1000
+
+$ bimcraft-cli run --cmd 'hydrant_size {"type": "2", "inside": 50, "material": "iron"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `material` must be one of steel, steel-wet, copper, pvc, pex, got "iron"
+
+$ bimcraft-cli run --cmd 'hydrant_size {"type": "2", "foo": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: unknown parameter `foo`
+

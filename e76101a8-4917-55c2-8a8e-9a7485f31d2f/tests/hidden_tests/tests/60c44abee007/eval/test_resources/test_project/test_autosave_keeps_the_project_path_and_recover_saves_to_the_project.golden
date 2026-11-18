@@ -1,0 +1,24 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]]}' --save house.bimcraft --cmd 'wall {"points": [[0,0],[0,4000]]}' --cmd 'autosave {"path": "house.bimcraft.autosave.bimcraft"}' --cmd 'undo {}' --cmd 'save {}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"format":"bimcraft","path":"house.bimcraft"}
+{"ids":[100003]}
+{"format":"bimcraft","path":"house.bimcraft.autosave.bimcraft"}
+{"count":1,"undone":"Wall"}
+{"format":"bimcraft","path":"house.bimcraft"}
+
+--- stderr
+
+saved: {"level": 2, "wall": 1}
+$ bimcraft-cli run --cmd 'recover {"path": "house.bimcraft.autosave.bimcraft", "project": "house.bimcraft"}' --cmd 'elements {"category": "wall"}' --cmd 'save {}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"house.bimcraft.autosave.bimcraft"}
+{"count":2,"elements":[{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[0.0,4000.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":2}
+{"format":"bimcraft","path":"house.bimcraft"}
+
+--- stderr
+
+after recovery: {"level": 2, "wall": 2}
+=== files: house.bimcraft, house.bimcraft.autosave.bimcraft

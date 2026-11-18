@@ -1,0 +1,35 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[1000,0],[2000,0],[3000,0],[4000,0]]}' --cmd 'wall {"points": [[0,5000],[3000,5000]], "level": "Level 2"}' --cmd 'elements {"category": "wall", "limit": 2}' --cmd 'elements {"category": "wall", "limit": 2, "offset": 3}' --cmd 'elements {"category": "wall", "offset": 10}' --cmd 'elements {"category": "wall", "level": "Level 2"}' --cmd 'elements {"level": 100001}' --cmd 'elements {"category": "walls", "level": "Level 1", "limit": 1, "offset": 1}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[1000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":1000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[2000.0,0.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":1000.0,"level":"<GUID-2>","room_bounding":true,"start":[1000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":2}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"<GUID-6>","height":3000.0,"id":100005,"length":1000.0,"level":"<GUID-2>","room_bounding":true,"start":[3000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[3000.0,5000.0],"guid":"<GUID-7>","height":3000.0,"id":100006,"length":3000.0,"level":"<GUID-3>","room_bounding":true,"start":[0.0,5000.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":2}
+{"count":5,"elements":[],"returned":0}
+{"count":1,"elements":[{"base_offset":0.0,"category":"wall","end":[3000.0,5000.0],"guid":"<GUID-7>","height":3000.0,"id":100006,"length":3000.0,"level":"<GUID-3>","room_bounding":true,"start":[0.0,5000.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":1}
+{"count":1,"elements":[{"base_offset":0.0,"category":"wall","end":[3000.0,5000.0],"guid":"<GUID-7>","height":3000.0,"id":100006,"length":3000.0,"level":"<GUID-3>","room_bounding":true,"start":[0.0,5000.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":1}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[2000.0,0.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":1000.0,"level":"<GUID-2>","room_bounding":true,"start":[1000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'elements {"level": "Level 9"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (elements): elements: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'elements {"category": "teapot"}'
+[exit 0]
+--- stdout
+{"count":0,"elements":[],"returned":0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'elements {"limit": -1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (elements): elements: `limit` must be a whole number, got -1
+

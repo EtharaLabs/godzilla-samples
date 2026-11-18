@@ -1,0 +1,61 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'render {"view": "Nowhere"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+
+--- stderr
+line 1 (render): render: no level or plan view named `Nowhere` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'render {"path": "plan.jpg"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+
+--- stderr
+line 1 (render): render: write a .png or .svg, not `.jpg`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'render {"view": "Section 1", "path": "s.svg"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+
+--- stderr
+line 1 (render): render: only plans make SVGs; save this view as .png, not as s.svg
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'render {"family": "Nope"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+
+--- stderr
+line 1 (render): render: there's no family `Nope`; `inspect` lists them
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'render {"family": "Sofa", "mode": "side"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+
+--- stderr
+line 1 (render): render: `mode` is 3d, plan or elevation, not `side`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'render {"family": "Sofa", "type": "9 x 9"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+
+--- stderr
+line 1 (render): render: family `Sofa` has no type `9 x 9` (there are: 1600 x 900, 2000 x 900)
+
+=== files: 

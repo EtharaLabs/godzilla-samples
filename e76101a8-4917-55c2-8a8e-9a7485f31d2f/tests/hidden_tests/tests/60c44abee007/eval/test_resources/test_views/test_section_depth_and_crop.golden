@@ -1,0 +1,21 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'door {"at": [3000, 2000]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'room {"point": [1500, 2000], "name": "Living"}' --cmd 'room {"point": [4500, 2000], "name": "Bed"}' --cmd 'floor {}' --cmd 'grid {"start": [0, -1000], "end": [0, 5000]}' --cmd 'grid {"start": [6000, -1000], "end": [6000, 5000]}' --cmd 'section {"start": [-1000, 1000], "end": [7000, 1000], "depth": 500, "name": "Shallow"}' --cmd 'crop {"view": "Shallow", "region": [[1000, -500], [5000, 3500]]}' --cmd 'scale {"view": "Shallow", "scale": 50}' --cmd 'render {"view": "Shallow", "path": "shallow.png", "width": 400, "height": 300}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"host":100002,"id":100007,"mark":"1","offset":1500.0}
+{"host":100006,"id":100008,"mark":"2","offset":2000.0}
+{"host":100003,"id":100009,"mark":"1","offset":2000.0}
+{"area_m2":12.0,"id":100010,"number":"1"}
+{"area_m2":12.0,"id":100011,"number":"2"}
+{"area_m2":24.0,"id":100012}
+{"id":100013,"name":"1"}
+{"id":100014,"name":"2"}
+{"id":100015,"name":"Shallow"}
+{"crop":[-500.0,3500.0],"view":100015}
+{"name":"Shallow","scale":50.0,"view":100015}
+{"height":300,"kind":"section","path":"shallow.png","view":"Shallow","width":400}
+
+--- stderr
+
+=== png shallow.png: 400x300, 4 channels

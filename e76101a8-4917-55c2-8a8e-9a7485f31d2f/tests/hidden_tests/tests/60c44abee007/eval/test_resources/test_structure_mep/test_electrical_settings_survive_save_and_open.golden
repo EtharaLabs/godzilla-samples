@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'voltage {"name": "24 V", "nominal": 24, "min": 21, "max": 27}' --cmd 'distribution_system {"name": "SELV", "phases": 1, "wires": 2, "l_n": "24 V", "ground": "IT"}' --cmd 'wire_type {"name": "Flex 24", "material": "copper", "temperature": 60, "insulation": "Silicone", "sizes": [{"section": 0.5, "ampacity": 3}, {"section": 1, "ampacity": 6, "label": "18 AWG"}]}' --save selv.bimcraft
+[exit 0]
+--- stdout
+{"name":"24 V","voltage":{"max":27.0,"min":21.0,"nominal":24.0}}
+{"distribution_system":{"ground":"IT","l_n":"24 V","phases":1,"wires":2},"name":"SELV"}
+{"name":"Flex 24","wire_type":{"insulation":"Silicone","material":"copper","sizes":[{"ampacity":3.0,"section":0.5},{"ampacity":6.0,"label":"18 AWG","section":1.0}],"temperature":60.0}}
+{"format":"bimcraft","path":"selv.bimcraft"}
+
+--- stderr
+
+exit 0
+{"distribution_systems": {"127/220 V": {"ground": "TN-S", "l_g": "127 V", "l_l": "220 V", "l_n": "127 V", "phases": 3, "wires": 4}, "220/380 V": {"ground": "TN-S", "l_g": "220 V", "l_l": "380 V", "l_n": "220 V", "phases": 3, "wires": 4}, "230/400 V": {"ground": "TN-S", "l_g": "230 V", "l_l": "400 V", "l_n": "230 V", "phases": 3, "wires": 4}, "277/480 V": {"l_g": "277 V", "l_l": "480 V", "l_n": "277 V", "phases": 3, "wires": 4}, "SELV": {"ground": "IT", "l_n": "24 V", "phases": 1, "wires": 2}}, "voltages": {"127 V": {"max": 139.7, "min": 114.3, "nominal": 127.0}, "220 V": {"max": 242.0, "min": 198.0, "nominal": 220.0}, "230 V": {"max": 253.0, "min": 207.0, "nominal": 230.0}, "24 V": {"max": 27.0, "min": 21.0, "nominal": 24.0}, "277 V": {"max": 304.7, "min": 249.3, "nominal": 277.0}, "380 V": {"max": 418.0, "min": 342.0, "nominal": 380.0}, "400 V": {"max": 440.0, "min": 360.0, "nominal": 400.0}, "480 V": {"max": 528.0, "min": 432.0, "nominal": 480.0}}}
+{"insulation": "Silicone", "material": "copper", "sizes": [{"ampacity": 3.0, "section": 0.5}, {"ampacity": 6.0, "label": "18 AWG", "section": 1.0}], "temperature": 60.0}
+["Cu PVC 70 °C", "Cu THHN 90 °C", "Cu THW 75 °C", "Cu XLPE/EPR 90 °C", "Flex 24"]

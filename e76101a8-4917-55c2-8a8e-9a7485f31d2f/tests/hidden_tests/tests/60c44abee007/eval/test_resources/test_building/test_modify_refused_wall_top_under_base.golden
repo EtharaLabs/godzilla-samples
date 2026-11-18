@@ -1,0 +1,8 @@
+$ bimcraft-cli run base.bimcraft --cmd 'modify {"id": 100006, "top_level": "Level 1"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (modify): wall 100006: its top (0 mm) must be above its base (0 mm); it comes out 0 mm tall, so raise its top constraint, top offset or height by more than 0 mm
+

@@ -1,0 +1,31 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "position": "origin", "layers": "all"}' --cmd 'cad_query {"id": 100002, "at": [5000, 30]}' --cmd 'cad_query {"id": 100002, "at": [5000, 1530]}' --cmd 'cad_query {"id": 100002, "at": [2354, 2354]}' --cmd 'cad_query {"id": 100002, "at": [150, 150]}' --cmd 'cad_query {"id": 100002, "at": [7000, 7040]}' --cmd 'cad_query {"id": 100002, "at": [3000, 3050]}' --cmd 'cad_query {"id": 100002, "at": [5000, 300], "reach": 50}' --cmd 'cad_query {"id": 100002, "at": [5000, 300], "reach": 400}' --cmd 'cad_query {"id": 100002, "at": [10900, 2500]}'
+[exit 0]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[0.0,0.0],[11246.278974,7000.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"color":[255,0,0],"distance":30.0,"found":true,"id":100002,"kind":"line","layer":"WALLS","linetype":"CONTINUOUS","weight":null}
+{"color":[0,255,0],"distance":29.96,"found":true,"id":100002,"kind":"circle","layer":"HIDDEN","linetype":"DASHED","weight":null}
+{"color":[51,102,153],"distance":0.63,"found":true,"id":100002,"kind":"arc","layer":"TRUE","linetype":"CONTINUOUS","weight":null}
+{"color":null,"distance":70.71,"found":true,"id":100002,"kind":"text","layer":"0","linetype":"CONTINUOUS","weight":null}
+{"color":[0,0,255],"distance":40.0,"found":true,"id":100002,"kind":"point","layer":"FROZEN","linetype":"CONTINUOUS","weight":null}
+{"color":[255,0,0],"distance":35.36,"found":true,"id":100002,"kind":"line","layer":"WALLS","linetype":"CONTINUOUS","weight":null}
+{"found":false,"id":100002}
+{"color":[255,0,0],"distance":300.0,"found":true,"id":100002,"kind":"line","layer":"WALLS","linetype":"CONTINUOUS","weight":null}
+{"found":false,"id":100002}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'cad_query {"id": 100002, "at": [0, 0], "reach": 0}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (cad_query): cad_query: `reach` is how far from `at` to look, mm, above 0, not 0
+
+$ bimcraft-cli run --cmd 'cad_query {"id": 100000, "at": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (cad_query): cad_query: level 100000 isn't a CAD import
+

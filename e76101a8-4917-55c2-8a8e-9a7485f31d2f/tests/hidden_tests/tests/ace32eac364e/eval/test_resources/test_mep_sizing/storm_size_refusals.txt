@@ -1,0 +1,80 @@
+$ storm_size {"area": 30}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `kind` (downpipe or horizontal) is required
+$ storm_size {"kind": "vertical"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `kind` must be one of downpipe, horizontal, got "vertical"
+$ storm_size {"kind": "downpipe", "flow": 10000, "gutter": 50, "length": 3000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: more than 150 mm inside is off the abacuses of NBR 10844's Figure 3
+$ storm_size {"kind": "downpipe", "flow": 100, "gutter": 40, "length": 3000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: the water depth in the gutter must be 50 to 100 mm: the abacuses stop there
+$ storm_size {"kind": "downpipe", "flow": 100, "gutter": 60, "length": 200}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: a downpipe shorter than 0.3 m is off the abacuses
+$ storm_size {"kind": "downpipe", "flow": 300, "gutter": 60}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `length` (the downpipe's, mm) is required
+$ storm_size {"kind": "downpipe", "flow": 300, "length": 3000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `gutter` (the water depth in the gutter, 50 to 100 mm) is required
+$ storm_size {"kind": "downpipe", "flow": 300, "area": 30, "gutter": 60, "length": 3000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `area` and `flow` are two ways to give the flow: give one
+$ storm_size {"kind": "downpipe", "flow": 300, "gutter": 60, "length": 3000, "slope": 0.01}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `slope` does not apply to a downpipe
+$ storm_size {"kind": "horizontal", "area": 400, "slope": 0.01}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `rainfall` (mm/h, from the standard's table for the place and return period) is required above 100 m²: the default 150 mm/h is for smaller roofs
+$ storm_size {"kind": "horizontal", "flow": 300, "slope": 0.001}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `slope` must be 0.5 % (0.005) at least, NBR 10844
+$ storm_size {"kind": "horizontal", "flow": 300}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `slope` (a fraction, 0.005 at least) is required
+$ storm_size {"kind": "horizontal", "flow": 300, "gutter": 60, "slope": 0.01}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `gutter` does not apply to a horizontal
+$ storm_size {"kind": "horizontal", "rainfall": 100, "flow": 300, "slope": 0.01}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `rainfall` and `flow` are two ways to give the flow: give one
+$ storm_size {"kind": "horizontal", "slope": 0.01}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: `area` (m², the roof that drains) or `flow` (L/min) is required
+$ storm_size {"kind": "horizontal", "flow": 300, "slope": 0.01, "diameter": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (storm_size): storm_size: unknown parameter `diameter`

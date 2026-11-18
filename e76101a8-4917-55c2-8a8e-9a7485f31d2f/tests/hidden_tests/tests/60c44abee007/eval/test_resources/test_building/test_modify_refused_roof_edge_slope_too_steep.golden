@@ -1,0 +1,8 @@
+$ bimcraft-cli run base.bimcraft --cmd 'modify {"id": 100011, "slopes": [10, 20, 30, 89]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (modify): roof 100011: edge 3's slope 89° isn't from 0° (the roof's slope) to 75°
+

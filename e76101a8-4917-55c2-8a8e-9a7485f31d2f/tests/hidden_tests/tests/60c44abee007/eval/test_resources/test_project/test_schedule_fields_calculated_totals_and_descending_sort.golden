@@ -1,0 +1,9 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "Paint", "category": "rooms", "fields": ["Name", "Perimeter", {"name": "Paint", "formula": "Perimeter * 2600 / 1000000", "kind": "area", "total": true, "heading": "Paint area"}, {"name": "Area", "total": true}, {"name": "Big", "formula": "Area > 15", "kind": "yesno"}, {"name": "Cost", "formula": "Area * 120", "kind": "number", "total": true}], "sort": [{"field": "Area", "descending": true}, "Name"]}' --cmd 'schedule {"name": "Paint"}'
+[exit 0]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Perimeter","Paint area (m²)","Area (m²)","Big","Cost"],"elements":[[100025],[100026],[100027],[100028]],"id":100074,"name":"Paint","rows":[["Living",20000.0,52.0,24.0,true,2880.0],["Kitchen",18000.0,46.8,18.0,true,2160.0],["Bedroom",15000.0,39.0,14.0,false,1680.0],["Study",15000.0,39.0,14.0,false,1680.0]],"totals":[null,null,176.8,70.0,null,8400.0]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Perimeter","Paint area (m²)","Area (m²)","Big","Cost"],"elements":[[100025],[100026],[100027],[100028]],"id":100074,"name":"Paint","rows":[["Living",20000.0,52.0,24.0,true,2880.0],["Kitchen",18000.0,46.8,18.0,true,2160.0],["Bedroom",15000.0,39.0,14.0,false,1680.0],["Study",15000.0,39.0,14.0,false,1680.0]],"totals":[null,null,176.8,70.0,null,8400.0]}
+
+--- stderr
+

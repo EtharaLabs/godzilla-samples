@@ -1,0 +1,96 @@
+=== setup
+exit: 0
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"id":100007}
+{"id":100008,"name":"S"}
+{"id":100009}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== join_polyline {"ids": [100002, 100003, 100004]} | elements {"category": "line"} | undo
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100002}
+{"count":5,"elements":[{"arcs":[0.0,0.0,90.0],"category":"line","guid":"GUID-1","id":100002,"length":3110.72,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Medium Lines","view":"GUID-2"},{"category":"line","end":[6000.0,0.0],"guid":"GUID-3","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[5000.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-4","id":100006,"length":1884.96,"level":"GUID-2","radius":300.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[0.0,0.0],"guid":"GUID-5","id":100007,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,1000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,500.0],"guid":"GUID-6","id":100009,"length":500.0,"level":null,"shape":"line","start":[1000.0,0.0],"style":"Thin Lines","view":"GUID-7"}],"returned":5}
+{"count":1,"undone":"Join into Polyline"}
+--- stderr
+=== PJ {"ids": [100002, 100003, 100004, 100007]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100002}
+{"count":4,"elements":[{"arcs":[0.0,0.0,90.0,0.0],"category":"line","closed":true,"guid":"GUID-1","id":100002,"length":4110.72,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Medium Lines","view":"GUID-2"},{"category":"line","end":[6000.0,0.0],"guid":"GUID-3","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[5000.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-4","id":100006,"length":1884.96,"level":"GUID-2","radius":300.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,500.0],"guid":"GUID-5","id":100009,"length":500.0,"level":null,"shape":"line","start":[1000.0,0.0],"style":"Thin Lines","view":"GUID-6"}],"returned":4}
+--- stderr
+=== join_polyline {"ids": [100002, 100003, 100004]} | explode {"id": 100002} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100002}
+{"ids":[100002,100010,100011]}
+{"count":7,"elements":[{"category":"line","end":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Medium Lines","view":"GUID-2"},{"category":"line","end":[6000.0,0.0],"guid":"GUID-3","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[5000.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-4","id":100006,"length":1884.96,"level":"GUID-2","radius":300.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[0.0,0.0],"guid":"GUID-5","id":100007,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,1000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,500.0],"guid":"GUID-6","id":100009,"length":500.0,"level":null,"shape":"line","start":[1000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-8","id":100010,"length":1000.0,"level":"GUID-2","shape":"line","start":[1000.0,0.0],"style":"Medium Lines","view":"GUID-2"},{"arc":90.0,"category":"line","end":[0.0,1000.0],"guid":"GUID-9","id":100011,"length":1110.72,"level":"GUID-2","shape":"arc","start":[1000.0,1000.0],"style":"Medium Lines","view":"GUID-2"}],"returned":7}
+--- stderr
+=== join_polyline {"ids": [100002, 100005]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (join_polyline): join_polyline: the lines don't make one chain, each end meeting the next within 1 mm
+=== join_polyline {"ids": [100002, 100006]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (join_polyline): join_polyline: detail line 100006 is a circle; only open lines, arcs and polylines join
+=== join_polyline {"ids": [100002]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (join_polyline): join_polyline: give two detail lines or more to join
+=== join_polyline {"ids": [100002, 100009]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (join_polyline): join_polyline: detail line 100009 is in another view than 100002; join lines of one view
+=== join_polyline {"ids": [100002, 100000]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (join_polyline): join_polyline: 100000 is not a detail line
+=== explode {"id": 100005}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (explode): explode: detail line 100005 is a line, already one piece
+=== EX {"id": 100006}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (EX): explode: detail line 100006 is a circle, already one piece
+=== explode {"id": 100000}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (explode): explode: 100000 is not a detail line
+=== explode {"id": 999}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (explode): explode: there's no such element
+=== explode {}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (explode): explode: `id`, a detail line, is required

@@ -1,0 +1,32 @@
+=== --cmd units --cmd units {"length": "mm"} --cmd undo
+exit: 1
+--- stdout
+{"length":"mm"}
+{"length":"mm"}
+--- stderr
+line 1 (undo): nothing to undo
+=== --cmd units {"length": "ft"} --cmd undo --cmd units --cmd redo --save u.bimcraft
+exit: 0
+--- stdout
+{"length":"ft"}
+{"count":1,"undone":"Project Units"}
+{"length":"mm"}
+{"count":1,"redone":"Project Units"}
+{"format":"bimcraft","path":"u.bimcraft"}
+--- stderr
+=== u.bimcraft --cmd units
+exit: 0
+--- stdout
+{"name":"Project","path":"u.bimcraft"}
+{"length":"ft"}
+--- stderr
+=== --cmd units {"length": "furlongs"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (units): units: `length` is mm, cm, m, in, ft or ft-in, not `furlongs`
+=== --cmd units {"length": 5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (units): units: `length` must be text of at most 256 characters, got 5

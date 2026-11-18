@@ -1,0 +1,128 @@
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Mine"}' --cmd 'line_pattern {"name": "Mine", "rename": "Ours"}' --cmd 'line_style {"name": "My Lines"}'
+[exit 0]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"Ours","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Ours","pen":2}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Mine", "delete": true}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: `Mine` is line style `My Lines`'s pattern; give it another first
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Gone", "delete": true}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: there's no line pattern `Gone`
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Gone"}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: there's no line pattern `Gone`; make one with `segments` (there are: Centre, Dash, Dash Dot, Dot, Hidden, Long Dash, Mine)
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Mine", "rename": "Dash"}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: there's already a line pattern `Dash`
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Solid", "segments": [{"dash": 2}]}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: Solid is a line with no pattern; name it another way
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Tiny", "segments": [{"dash": 0.01}]}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: line pattern `Tiny`: segment 1 is 0.01 mm; a segment is 0.05 to 100 mm on paper
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Huge", "segments": [{"dash": 200}]}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: line pattern `Huge`: segment 1 is 200 mm; a segment is 0.05 to 100 mm on paper
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "None", "segments": []}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: line pattern `None`: a pattern needs 1 to 32 segments
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Bad", "segments": [{"squiggle": 2}]}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: `segments` is [{"dash": mm} | {"space": mm} | "dot", …]: unknown variant `squiggle`, expected one of `dash`, `space`, `dot`, `dot_length`, `offset`, `wave`, `zigzag`, `text`
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Rails", "segments": [{"offset": {"length": 10, "count": 12, "distance": 1}}]}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: line pattern `Rails`: segment 1: offsets need 2–9 lines and positive spacing; waves need 0.1–100 cycles and positive amplitude; text needs 1–256 characters on one line and a size of 0.05–100 mm
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Wave", "segments": [{"wave": {"length": 10, "frequency": 500, "amplitude": 1}}]}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: line pattern `Wave`: segment 1: offsets need 2–9 lines and positive spacing; waves need 0.1–100 cycles and positive amplitude; text needs 1–256 characters on one line and a size of 0.05–100 mm
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Mine", "segments": [{"dash": 4}, {"space": 2}]}' --cmd 'line_style {"name": "My Lines", "pen": 2, "pattern": "Mine"}' --cmd 'line_pattern {"name": "Mine", "colour": 1}'
+[exit 1]
+--- stdout
+{"name":"Mine","segments":[{"dash":4.0},{"space":2.0}]}
+{"name":"My Lines","style":{"color":[0,0,0],"pattern":"Mine","pen":2}}
+
+--- stderr
+line 1 (line_pattern): line_pattern: `colour` isn't one of its parameters: name, segments, rename, delete
+
+$ bimcraft-cli run --cmd 'line_pattern {"name": "Spare", "segments": [{"dash": 3}, {"space": 3}]}' --cmd 'line_pattern {"name": "Spare", "delete": true}' --cmd 'line_pattern {}'
+[exit 0]
+--- stdout
+{"name":"Spare","segments":[{"dash":3.0},{"space":3.0}]}
+{"deleted":"Spare"}
+{"patterns":{"Centre":[{"dash":10.0},{"space":1.5},{"dash":2.0},{"space":1.5}],"Dash":[{"dash":3.0},{"space":1.5}],"Dash Dot":[{"dash":5.0},{"space":1.5},"dot",{"space":1.5}],"Dot":["dot",{"space":1.0}],"Hidden":[{"dash":1.5},{"space":1.0}],"Long Dash":[{"dash":8.0},{"space":2.0}]}}
+
+--- stderr
+

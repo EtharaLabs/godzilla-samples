@@ -1,0 +1,18 @@
+=== setup
+exit: 0
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005,"values":[3000.0]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== join_polyline {"ids": [100002, 100003]} | elements {} | undo | elements {"category": "dimension"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100002,"notes":["dimension 100005 measured a line that is joined in, was left with fewer than two references, and is deleted"]}
+{"count":4,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"line","guid":"GUID-3","id":100002,"length":2000.0,"level":"GUID-1","points":[[0.0,0.0],[1000.0,0.0],[2000.0,0.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-1"},{"category":"line","end":[2000.0,3000.0],"guid":"GUID-4","id":100004,"length":2000.0,"level":"GUID-1","shape":"line","start":[0.0,3000.0],"style":"Thin Lines","view":"GUID-1"}],"returned":4}
+{"count":1,"undone":"Join into Polyline"}
+{"count":1,"elements":[{"at":[1000.0,1500.0],"category":"dimension","guid":"GUID-5","id":100005,"kind":"aligned","labels":["3000"],"level":"GUID-1","refs":[{"face":"centre","id":"GUID-6"},{"face":"centre","id":"GUID-4"}],"type":"Diagonal - 2.5mm Arial","values":[3000.0]}],"returned":1}
+--- stderr

@@ -1,0 +1,11 @@
+$ bimcraft-cli run --cmd 'import_fill_patterns {"path": "edge.pat"}' --cmd 'fill_pattern {"name": "Drafted"}' --cmd 'fill_pattern {"name": "Good"}'
+[exit 0]
+--- stdout
+{"imported":["Drafted","Good"],"left_out":[{"name":"Dashy","why":"a family has more than 16 dashes"},{"name":"Crowd","why":"more than 256 line families"},{"name":"Spoilt","why":"`not numbers` isn't a line of numbers: angle, x, y, shift, offset and dashes"}],"left_out_count":3}
+{"name":"Drafted","pattern":{"lines":[{"angle":0.0,"spacing":4.0}],"target":"drafting"}}
+{"name":"Good","pattern":{"lines":[{"angle":90.0,"spacing":7.0}],"target":"drafting"}}
+
+--- stderr
+
+[exit 0] imported 2000: ['P0', 'P1'] … ['P1998', 'P1999']
+{"left_out": [{"name": "3 more", "why": "the file holds more than 2000 patterns; the rest weren't read"}], "left_out_count": 3}

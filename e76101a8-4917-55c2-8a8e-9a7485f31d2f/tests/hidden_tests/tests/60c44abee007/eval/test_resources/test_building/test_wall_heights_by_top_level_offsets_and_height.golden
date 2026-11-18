@@ -1,0 +1,12 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 7000}' --cmd 'wall {"points": [[0,0],[4000,0]], "top_level": "Level 3", "top_offset": -500}' --cmd 'wall {"points": [[0,1000],[4000,1000]], "height": 2400, "base_offset": 300}' --cmd 'wall {"points": [[0,2000],[4000,2000]], "level": "Level 2"}' --cmd 'wall {"points": [[0,3000],[4000,3000]], "top_level": "Level 2", "top_offset": 600}' --cmd 'elements {"category": "wall"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"ids":[100003]}
+{"ids":[100004]}
+{"ids":[100005]}
+{"ids":[100006]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"<GUID-1>","height":6500.0,"id":100003,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","top_offset":-500.0,"type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":300.0,"category":"wall","end":[4000.0,1000.0],"guid":"<GUID-5>","height":2400.0,"id":100004,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,1000.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[4000.0,2000.0],"guid":"<GUID-6>","height":4000.0,"id":100005,"length":4000.0,"level":"<GUID-7>","room_bounding":true,"start":[0.0,2000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[4000.0,3000.0],"guid":"<GUID-8>","height":3600.0,"id":100006,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,3000.0],"thickness":200.0,"top_level":"<GUID-7>","top_offset":600.0,"type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":4}
+
+--- stderr
+

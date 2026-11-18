@@ -1,0 +1,22 @@
+$ bimcraft-cli run broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 5: expected the DATA section
+
+$ bimcraft-cli convert broken.ifc out.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 5: expected the DATA section
+
+$ bimcraft-cli info broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 5: expected the DATA section
+
+out.bimcraft written: False

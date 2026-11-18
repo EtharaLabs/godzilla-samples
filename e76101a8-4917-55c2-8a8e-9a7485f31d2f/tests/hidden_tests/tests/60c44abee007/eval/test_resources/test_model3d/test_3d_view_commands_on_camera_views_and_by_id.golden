@@ -1,0 +1,99 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'camera {"view": "{3D}", "eye": [-6000, -6000, 4000], "target": [3000, 2000, 1000]}' --cmd 'camera {"eye": [12000, -3000, 1600], "target": [3000, 2000, 1500], "name": "East"}' --cmd 'perspective {"view": "East", "lens": 28}' --cmd 'perspective {"view": 100011, "on": false}' --cmd 'section_box {"view": "East", "min": [0, 0, 0], "max": [6000, 4000, 2000]}' --cmd 'graphic_display_options {"view": "East", "edges": false}' --cmd 'work_plane {"view": "East", "level": "Level 2"}' --cmd 'visual_style {"view": "East", "style": "hidden_line"}' --cmd 'dimension_3d {"view": "East", "refs": [{"at": [0, 0, 0]}, {"at": [0, 4000, 0]}], "at": [-500, 2000, 0]}' --cmd 'render {"view": 100011, "width": 320, "height": 200, "path": "east.png"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "default.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"eye":[-6000.0,-6000.0,4000.0],"id":100010,"lens":35.0,"name":"{3D}","perspective":true,"target":[3000.0,2000.0,1000.0],"view":100010}
+{"eye":[12000.0,-3000.0,1600.0],"id":100011,"lens":35.0,"name":"East","perspective":true,"target":[3000.0,2000.0,1500.0],"view":100011}
+{"lens":28.0,"on":true,"view":100011}
+{"lens":28.0,"on":false,"view":100011}
+{"max":[6000.0,4000.0,2000.0],"min":[0.0,0.0,0.0],"on":true,"view":100011}
+{"ambient_shadows":false,"edges":false,"silhouette":0,"view":100011}
+{"level":100001,"normal":[0.0,0.0,1.0],"offset":0.0,"origin":[0.0,0.0,3000.0],"points":null,"slope":0.0,"surface":null,"view":100011,"z":3000.0}
+{"style":"hidden_line","view":100011}
+{"id":100012,"length":4000.0,"view":100011}
+{"azimuth":-45.0,"elevation":30.0,"eye":[12000.0,-3000.0,1600.0],"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"east.png","target":[3000.0,2000.0,1500.0],"view":"East","width":320}
+{"azimuth":-138.366461,"elevation":13.989666,"eye":[-6000.0,-6000.0,4000.0],"eye_elevation":4000.0,"height":200,"kind":"3D view","lens":35.0,"path":"default.png","target":[3000.0,2000.0,1000.0],"view":"{3D}","width":320}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'perspective {}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "eye_elevation": 1e12}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"lens":35.0,"on":true,"view":100010}
+
+--- stderr
+line 1 (render): render: `eye_elevation` must be a number in mm, got 1000000000000.0
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'perspective {"view": "Level 1"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (perspective): perspective: Level 1 isn't a 3D view; only a 3D view is seen in perspective
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'dimension_3d {"view": "Level 1", "refs": [{"at": [0, 0, 0]}, {"at": [1, 0, 0]}], "at": [0, 0, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (dimension_3d): dimension_3d: Level 1 isn't a 3D view; a dimension of points and edges in space goes in a 3D view
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'dimension_3d {"refs": [{"at": [0, 0, 0]}, {"at": [1000, 0, 0]}]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (dimension_3d): dimension_3d: `at` [x, y, z] is required
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'dimension_3d {"refs": [{"at": [0, 0, 1e12]}, {"at": [1000, 0, 0]}], "at": [0, 0, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (dimension_3d): dimension_3d: a ref's points must be [x, y, z] in mm within ±1000000000, got {"at":[0,0,1000000000000.0]}
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'dimension_3d {"refs": [{"point": [0, 0, 0]}, {"at": [1000, 0, 0]}], "at": [0, 0, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (dimension_3d): dimension_3d: a ref is {at: [x, y, z], edge?}: unknown field `point`, expected `at` or `edge`
+
+=== file east.png
+png 320x200 rgba pixels-sha256=5e9c5df859266bf16a8299533afe6038b683a9f18ffe645c49918f83888ccb91
+=== file default.png
+png 320x200 rgba pixels-sha256=fd170271c108882486b03904cf2d388d3099e50976e8003f4d8c8326c1338b6e

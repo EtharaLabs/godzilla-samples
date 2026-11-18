@@ -1,0 +1,83 @@
+$ line_style {"name": "New"}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: there's no line style `New`; make one with `pen`
+
+$ line_style {"name": "New", "pen": 17}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: `pen`: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ line_style {"name": "New", "pen": "heavy"}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: `pen`: invalid type: string "heavy", expected f64
+
+$ line_style {"name": "New", "pen": 2, "color": [300, 0, 0]}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not [300,0,0]
+
+$ line_style {"name": "New", "pen": 2, "color": "#12345"}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not "#12345"
+
+$ line_style {"name": "New", "pen": 2, "pattern": "Wiggle"}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: line style `New`: there's no line pattern `Wiggle` (there are: Solid, Centre, Dash, Dash Dot, Dot, Hidden, Long Dash)
+
+$ line_style {"name": "New", "pen": 2, "pattern": 3}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: `pattern` is a line pattern's name, or "Solid", not 3
+
+$ line_style {"name": "Thin Lines", "rename": "Wide Lines"}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: there's already a line style `Wide Lines`
+
+$ line_style {"name": "Gone", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: there's no line style `Gone`
+
+$ line_style {"name": "Wide Lines", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: detail line 100003 is drawn in `Wide Lines`; give it another style first
+
+$ line_style {"name": "Medium Lines", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: view 100000 draws an edge in `Medium Lines` with Linework; take it off first
+
+$ line_style {"name": "Hidden Lines", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: filled region 100004 is bounded in `Hidden Lines`; give it another line style first
+
+$ line_style {"name": "Centre Lines", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: detail group `Axis` has a member drawn in `Centre Lines`; ungroup it and change that member first
+
+$ line_style {"name": "Thin Lines", "weight": 3}
+exit: 1
+--- stdout
+--- stderr
+line 7 (line_style): line_style: `weight` isn't one of its parameters: name, pen, color, pattern, rename, delete

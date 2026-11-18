@@ -1,0 +1,36 @@
+exit 0; stderr: 
+{"category": "floor", "name": "Slab var", "type": {"layers": [{"function": "finish", "material": "Screed", "thickness": 50.0, "variable": true}, {"function": "structure", "material": "Concrete", "thickness": 150.0}], "thickness": 200.0}}
+{"area_m2": 6.0, "id": 100002}
+{"area_m2": 6.0, "id": 100003}
+{"area_m2": 6.0, "id": 100004}
+{"drains": [{"at": [1500.0, 1000.0], "z": -18.1}], "faces": 4, "id": 100002, "top": [-18.1, 0.0]}
+{"drains": [{"at": [1500.0, 10000.0], "z": -18.1}], "faces": 4, "id": 100004, "top": [-18.1, 0.0]}
+{"count": 5, "hosts": 1, "ids": [100005, 100006, 100007, 100008, 100009], "notes": [], "removed": 0, "weight_kg": 5.82}
+{"count": 9, "hosts": 1, "ids": [100010, 100011, 100012, 100013, 100014, 100015, 100016, 100017, 100018], "notes": [], "removed": 0, "weight_kg": 8.77}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100005, "layer": "bottom x", "length": 2950.0, "path": [[25.0, 29.0, -171.0], [2975.0, 29.0, -171.0]], "weight_kg": 1.16}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100006, "layer": "bottom x", "length": 2950.0, "path": [[25.0, 514.5, -171.0], [2975.0, 514.5, -171.0]], "weight_kg": 1.16}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100007, "layer": "bottom x", "length": 2950.0, "path": [[25.0, 1000.0, -171.0], [2975.0, 1000.0, -171.0]], "weight_kg": 1.16}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100008, "layer": "bottom x", "length": 2950.0, "path": [[25.0, 1485.5, -171.0], [2975.0, 1485.5, -171.0]], "weight_kg": 1.16}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100009, "layer": "bottom x", "length": 2950.0, "path": [[25.0, 1971.0, -171.0], [2975.0, 1971.0, -171.0]], "weight_kg": 1.16}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100010, "layer": "bottom x", "length": 2995.51, "path": [[25.0, 5029.0, -169.23], [2975.0, 5029.0, 350.93]], "weight_kg": 1.18}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100011, "layer": "bottom x", "length": 2995.51, "path": [[25.0, 5676.33, -169.23], [2975.0, 5676.33, 350.93]], "weight_kg": 1.18}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100012, "layer": "bottom x", "length": 2995.51, "path": [[25.0, 6323.67, -169.23], [2975.0, 6323.67, 350.93]], "weight_kg": 1.18}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100013, "layer": "bottom x", "length": 2995.51, "path": [[25.0, 6971.0, -169.23], [2975.0, 6971.0, 350.93]], "weight_kg": 1.18}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100014, "layer": "top y", "length": 2050.0, "path": [[37.68, 5025.0, -73.57], [29.0, 5025.0, -24.33], [29.0, 6975.0, -24.33], [37.68, 6975.0, -73.57]], "weight_kg": 0.81}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100015, "layer": "top y", "length": 2050.0, "path": [[773.18, 5025.0, 56.11], [764.5, 5025.0, 105.35], [764.5, 6975.0, 105.35], [773.18, 6975.0, 56.11]], "weight_kg": 0.81}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100016, "layer": "top y", "length": 2050.0, "path": [[1508.68, 5025.0, 185.8], [1500.0, 5025.0, 235.04], [1500.0, 6975.0, 235.04], [1508.68, 6975.0, 185.8]], "weight_kg": 0.81}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100017, "layer": "top y", "length": 2050.0, "path": [[2244.18, 5025.0, 315.49], [2235.5, 5025.0, 364.73], [2235.5, 6975.0, 364.73], [2244.18, 6975.0, 315.49]], "weight_kg": 0.81}
+{"category": "rebar", "diameter": 8.0, "grade": "CA-50", "id": 100018, "layer": "top y", "length": 2050.0, "path": [[2979.68, 5025.0, 445.18], [2971.0, 5025.0, 494.42], [2971.0, 6975.0, 494.42], [2979.68, 6975.0, 445.18]], "weight_kg": 0.81}
+$ bimcraft-cli run --cmd 'type {"category": "floor", "name": "Slab var", "layers": [{"function": "finish", "material": "Screed", "thickness": 50, "variable": true}, {"function": "structure", "material": "Concrete", "thickness": 150}]}' --cmd 'floor {"boundary": [[0, 0], [3000, 0], [3000, 2000], [0, 2000]], "type": "Slab var"}' --cmd 'floor {"boundary": [[0, 5000], [3000, 5000], [3000, 7000], [0, 7000]], "slope": 10, "arrow": [[0, 5000], [3000, 5000]]}' --cmd 'floor {"boundary": [[0, 9000], [3000, 9000], [3000, 11000], [0, 11000]]}' --cmd 'falls {"id": 100002, "drains": [[1500, 1000]], "fall": 1}' --cmd 'falls {"id": 100004, "drains": [[1500, 10000]], "fall": 1}' --cmd 'reinforce {"host": 100004, "cover": 25, "bottom": {"x": {"diameter": 8, "spacing": 500}}}'
+[exit 1]
+--- stdout
+{"category":"floor","name":"Slab var","type":{"layers":[{"function":"finish","material":"Screed","thickness":50.0,"variable":true},{"function":"structure","material":"Concrete","thickness":150.0}],"thickness":200.0}}
+{"area_m2":6.0,"id":100002}
+{"area_m2":6.0,"id":100003}
+{"area_m2":6.0,"id":100004}
+{"drains":[{"at":[1500.0,1000.0],"z":-18.1}],"faces":4,"id":100002,"top":[-18.1,0.0]}
+{"drains":[{"at":[1500.0,10000.0],"z":-18.1}],"faces":4,"id":100004,"top":[-18.1,0.0]}
+
+--- stderr
+line 1 (reinforce): reinforce: a shaped floor's structure isn't level: give its type a variable layer over its structure (`type` with `variable: true` on its screed), or `reset_shape` it
+

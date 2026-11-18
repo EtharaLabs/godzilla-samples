@@ -1,0 +1,25 @@
+### bad_too_many_points.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_too_many_points.las: its points are cut short: 4294967295 of 26 bytes from byte 227 don't fit in 253 bytes
+### bad_points_past_the_end.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_points_past_the_end.las: its points are cut short: 1 of 26 bytes from byte 4294967295 don't fit in 253 bytes
+### bad_header_too_small.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_header_too_small.las: its header is cut short
+### bad_cut_short.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_cut_short.las: its header is cut short
+### bad_last_byte_missing.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_last_byte_missing.las: its points are cut short: 1 of 26 bytes from byte 227 don't fit in 252 bytes

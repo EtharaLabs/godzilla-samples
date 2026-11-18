@@ -1,0 +1,45 @@
+### bad_codec.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_codec.e57: scan 1: its points are packed by a codec BIMCraft doesn't know; E57 writes bit-packed ones
+### bad_count_past_the_section.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_count_past_the_section.e57: scan 1: it's cut short: its 900 points take 10800 bytes and its section holds 6880
+### bad_count_one_more.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_count_one_more.e57: scan 1: it's cut short: 1 of its 301 points are missing
+### bad_string_field.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_string_field.e57: scan 1: its field <cartesianX> is a String, which BIMCraft doesn't read
+### bad_no_points.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_points.e57: scan 1: it has no points
+### bad_not_compressed.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_not_compressed.e57: scan 1: its points aren't a CompressedVector
+### bad_no_count.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_count.e57: scan 1: it doesn't say how many points it has
+### bad_no_coordinates.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_coordinates.e57: scan 1: its points have neither cartesian nor spherical coordinates
+### bad_no_data.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_data.e57: scan 1: its points hold no data

@@ -1,0 +1,16 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'move {"ids": [100003], "by": [500, 0]}' --cmd 'move {"ids": [100002], "by": [-1000, 0], "end": "start"}' --cmd 'move {"ids": [100004], "by": [700, 0]}' --cmd 'move {"ids": [100003], "by": [0, 300], "end": "end"}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "door"}' --cmd 'elements {"category": "window"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"host":100003,"id":100005,"mark":"1","offset":2000.0}
+{"moved":[100003]}
+{"moved":[100002]}
+{"moved":[100004]}
+{"moved":[100003]}
+{"count":2,"elements":[{"base_offset":0.0,"category":"wall","end":[6500.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":7500.0,"level":"<GUID-2>","room_bounding":true,"start":[-1000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[6500.0,4300.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":4300.0,"level":"<GUID-2>","room_bounding":true,"start":[6500.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":2}
+{"count":1,"elements":[{"at":[2700.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-6>","height":2100.0,"host":"<GUID-1>","id":100004,"level":"<GUID-2>","mark":"1","offset":3700.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"<GUID-7>","width":900.0}],"returned":1}
+{"count":1,"elements":[{"at":[6500.0,2000.0],"category":"window","flip_facing":false,"flip_hand":false,"guid":"<GUID-8>","height":1500.0,"host":"<GUID-5>","id":100005,"level":"<GUID-2>","mark":"1","offset":2000.0,"sill":900.0,"type":"Fixed 1200 x 1500","type_guid":"<GUID-9>","width":1200.0}],"returned":1}
+
+--- stderr
+

@@ -1,0 +1,507 @@
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'mirror {"ids": [100002], "axis": [[0,0],[0,1]]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (mirror): mirror: `axis` is two different points [[x, y], [x, y]]
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'mirror {"ids": [100002]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (mirror): mirror: `axis` [[x, y], …] is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'rotate {"ids": [100002], "about": [0,0]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (rotate): rotate: `angle` in degrees, counter-clockwise, is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'move {"ids": [100002]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (move): move: `by` [x, y] is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'move {"ids": [100002], "by": [1,1], "end": "start"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (move): move: `end` moves an end of one wall; give `ids` one wall
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'move {"ids": [100002], "by": [1,1], "end": "middle"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (move): move: `end` is `start` or `end`, not `middle`
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'move {"ids": [999999], "by": [1,1]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (move): move: no element 999999
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'copy {"ids": [], "by": [1,1]}'
+[exit 0]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+{"ids":[]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'corner {"ids": [100002]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (corner): corner: `ids` takes two walls
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'corner {"ids": [100002, 100003]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (corner): corner: the lines don't meet, run on as far as need be: they're parallel, or an arc's circle misses the other
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'corner {"ids": [100002, 100005]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (corner): corner: detail lines 100002 and 100005 are in different views; trim lines of one view
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'corner {"ids": [100002, 100004], "keep": [[0,0]]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (corner): corner: `keep` is a point on each line, [[x, y], [x, y]]
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'trim_extend {"ids": [100002], "keep": [[0,0]]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (trim_extend): trim_extend: `boundary`, a line to trim or extend to, is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'trim_extend {"boundary": 100004, "ids": [100002], "keep": []}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (trim_extend): trim_extend: `keep` gives a point on each line to keep: 0 for 1 lines
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'trim_extend {"boundary": 100003, "ids": [100002], "keep": [[500,0]]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (trim_extend): trim_extend: detail line 100002 never meets 100003
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'trim_extend {"boundary": 100004, "ids": [100005], "keep": [[500,0]]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (trim_extend): trim_extend: detail line 100005 is in another view than 100004 is drawn in; trim it to a line of its own view
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'offset {"id": 100002, "distance": 0, "toward": [0,100]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (offset): offset: `distance` is more than 0 mm, not 0
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'offset {"id": 100002, "toward": [0,100]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (offset): offset: `distance`, mm, is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'offset {"id": 100006, "distance": 600, "toward": [0,5000]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (offset): offset: a circle can't be offset by 600 mm (it would turn inside out, or fold over itself)
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'offset {"id": 100007, "distance": 100, "toward": [0,100]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (offset): offset: 100007 is not a detail line
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'split {"id": 100002, "at": [500, 900]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (split): split: [500, 900] isn't on detail line 100002: it passes 900 mm from it
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'split {"id": 100002, "at": [0, 0]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (split): split: split between the line's ends
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'split {"id": 100002}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (split): split: `at` [x, y] is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'fillet {"ids": [100002, 100003], "radius": 100}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (fillet): fillet: the lines meet at an angle and are long enough for the arc; these are parallel, or too short for it, or it doesn't fit
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'fillet {"ids": [100002, 100004]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (fillet): fillet: `radius`, mm, is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'fillet {"ids": [100002, 100006], "radius": 100}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (fillet): fillet: detail line 100006 is a circle: Fillet Arc rounds two straight lines
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'fillet {"ids": [100002, 100004], "radius": 50000}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (fillet): fillet: the lines meet at an angle and are long enough for the arc; these are parallel, or too short for it, or it doesn't fit
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'fillet {"ids": [100002, 100005], "radius": 100}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (fillet): fillet: detail lines 100002 and 100005 are in different views
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'join_polyline {"ids": [100002]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (join_polyline): join_polyline: give two detail lines or more to join
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'join_polyline {"ids": [100002, 100003]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (join_polyline): join_polyline: the lines don't make one chain, each end meeting the next within 1 mm
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'join_polyline {"ids": [100002, 100006]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (join_polyline): join_polyline: detail line 100006 is a circle; only open lines, arcs and polylines join
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'join_polyline {"ids": [100002, 100005]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (join_polyline): join_polyline: detail line 100005 is in another view than 100002; join lines of one view
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'explode {"id": 100002}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (explode): explode: detail line 100002 is a line, already one piece
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'explode {"id": 100007}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (explode): explode: 100007 is not a detail line
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'vertex {"id": 100002, "at": [500, 500]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (vertex): vertex: [500, 500] isn't on detail line 100002: it is 500 mm from it
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'vertex {"id": 100006, "at": [0, 4500]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (vertex): vertex: detail line 100006 is a circle: only polylines and splines take a vertex, between their ends
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'vertex {"id": 100002, "at": [0, 0], "delete": true}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (vertex): vertex: detail line 100002 is a line: it has no vertex to spare
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'convert_spline {"id": 100002}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (convert_spline): convert_spline: detail line 100002 is a line, not a spline
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,1000],[1000,1000]]}' --cmd 'detail_line {"points": [[2000,-1000],[2000,1000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[0,1000]]}' --cmd 'detail_line {"centre": [0,5000], "radius": 500}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'convert_spline {}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"ids":[100007]}
+
+--- stderr
+line 1 (convert_spline): convert_spline: `id`, a detail line, is required
+

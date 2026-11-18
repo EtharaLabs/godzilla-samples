@@ -1,0 +1,80 @@
+$ drain_size {"units": 3}
+exit: 0
+--- stdout
+{"capacity":3.0,"dn":40.0,"minimum_dn":0.0,"units":3.0}
+--- stderr
+$ drain_size {"units": 3.5}
+exit: 0
+--- stdout
+{"capacity":6.0,"dn":50.0,"minimum_dn":0.0,"units":3.5}
+--- stderr
+$ drain_size {"units": 160}
+exit: 0
+--- stdout
+{"capacity":160.0,"dn":100.0,"minimum_dn":0.0,"units":160.0}
+--- stderr
+$ drain_size {"fixtures": {"wc": 1}}
+exit: 0
+--- stdout
+{"capacity":160.0,"dn":100.0,"minimum_dn":100.0,"units":6.0}
+--- stderr
+$ drain_size {"fixtures": {"wc": 1, "lav": 1}}
+exit: 0
+--- stdout
+{"capacity":160.0,"dn":100.0,"minimum_dn":100.0,"units":7.0}
+--- stderr
+$ drain_size {"fixtures": {"lav": 2, "shower": 1, "sink": 0}, "min_dn": 75}
+exit: 0
+--- stdout
+{"capacity":20.0,"dn":75.0,"minimum_dn":75.0,"units":4.0}
+--- stderr
+$ drain_size {"fixtures": {"sink": 1, "laundry": 1}, "units": 4}
+exit: 0
+--- stdout
+{"capacity":20.0,"dn":75.0,"minimum_dn":50.0,"units":10.0}
+--- stderr
+$ drain_size {"units": 50, "role": "main"}
+exit: 0
+--- stdout
+{"capacity":180.0,"dn":100.0,"minimum_dn":0.0,"units":50.0}
+--- stderr
+$ drain_size {"units": 150, "role": "main", "slope": 0.005}
+exit: 0
+--- stdout
+{"capacity":1400.0,"dn":200.0,"minimum_dn":0.0,"units":150.0}
+--- stderr
+$ drain_size {"units": 150, "role": "main", "slope": 0.02}
+exit: 0
+--- stdout
+{"capacity":216.0,"dn":100.0,"minimum_dn":0.0,"units":150.0}
+--- stderr
+$ drain_size {"units": 230, "role": "main", "slope": 0.03}
+exit: 0
+--- stdout
+{"capacity":840.0,"dn":150.0,"minimum_dn":0.0,"units":230.0}
+--- stderr
+$ drain_size {"units": 12000, "role": "main", "slope": 0.04}
+exit: 0
+--- stdout
+{"capacity":12000.0,"dn":400.0,"minimum_dn":0.0,"units":12000.0}
+--- stderr
+$ drain_size {"units": 300, "role": "stack", "floors": 5}
+exit: 0
+--- stdout
+{"capacity":500.0,"dn":100.0,"minimum_dn":0.0,"units":300.0}
+--- stderr
+$ drain_size {"units": 300, "role": "stack", "floors": 3}
+exit: 0
+--- stdout
+{"capacity":960.0,"dn":150.0,"minimum_dn":0.0,"units":300.0}
+--- stderr
+$ drain_size {"units": 300, "role": "stack", "floors": 4}
+exit: 0
+--- stdout
+{"capacity":500.0,"dn":100.0,"minimum_dn":0.0,"units":300.0}
+--- stderr
+$ drain_size {"units": 8, "role": "stack", "min_dn": 75}
+exit: 0
+--- stdout
+{"capacity":30.0,"dn":75.0,"minimum_dn":75.0,"units":8.0}
+--- stderr

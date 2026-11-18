@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'drain_size {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `units` (UHC) or `fixtures` is required
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `units` (UHC) or `fixtures` is required
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"bidet": 1}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `fixtures`: no fixture `bidet`, use wc, lav, sink, shower, laundry
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"wc": 1.5}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `fixtures`: `wc` must be a whole number from 0 to 10000, got 1.5
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"wc": -1}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `fixtures`: `wc` must be a whole number from 0 to 10000, got -1
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": [1]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `fixtures` must be an object {kind: count}, got [1]
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 5, "role": "riser"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `role` must be one of branch, main, stack, got "riser"
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 99999999}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: `units` must be a number from 0 to 10000000, got 99999999
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 100000, "role": "main", "slope": 0.005}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: 100000 UHC is more than the tables of this version list for this role and slope: the most is DN 400 at 7000 UHC (a blank in the standard's table means not allowed, not that the tables ended); split the load, or give a steeper `slope`
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 5000, "role": "branch"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: 5000 UHC is more than the tables of this version list for this role and slope: the most is DN 100 at 160 UHC (a blank in the standard's table means not allowed, not that the tables ended); split the load, or give a steeper `slope`
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 5, "pipes": 2}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (drain_size): drain_size: unknown parameter `pipes`
+

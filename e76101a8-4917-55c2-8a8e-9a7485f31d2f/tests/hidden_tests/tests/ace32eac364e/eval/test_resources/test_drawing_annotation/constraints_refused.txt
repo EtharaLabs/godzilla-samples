@@ -1,0 +1,26 @@
+$ dimension_constraint {"id": 100009, "equal": true}
+exit: 1
+--- stdout
+--- stderr
+line 13 (dimension_constraint): dimension 100009's constraints can't be kept: its locked segments differ in length, so they can't be equal
+
+$ modify {"id": 100003, "type": "Thick"}
+exit: 1
+--- stdout
+--- stderr
+line 13 (modify): dimension 100010's constraints can't be kept: what the command moved pulls its locked segments apart
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100006}], "at": [0, -3000]}
+dimension_constraint {"id": 100011, "locked": [0]}
+dimension_value {"id": 100011, "value": 1500}
+exit: 1
+--- stdout
+--- stderr
+line 15 (dimension_value): dimension 100011's constraints can't be kept: what the command moved pulls its locked segments apart
+
+$ move {"ids": [100005], "by": [300, 0]}
+elements {"category": "wall"}
+exit: 1
+--- stdout
+--- stderr
+line 13 (move): dimension 100009's constraints can't be kept: what the command moved pulls its locked segments apart

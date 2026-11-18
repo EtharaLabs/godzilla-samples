@@ -1,0 +1,28 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'move {"ids": [100002], "by": [1000, 2000]}' --cmd 'rotate {"ids": [100002], "about": [0, 0], "angle": 90}' --cmd 'copy {"ids": [100002], "by": [0, 20000]}' --cmd 'modify {"id": 100003, "scale": 2, "colors": "black", "level": "Level 2", "at": [5, 5], "angle": 10}' --cmd 'elements {"category": "cadimport"}'
+[exit 0]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"moved":[100002]}
+{"rotated":[100002]}
+{"ids":[100003]}
+{"angle":10.0,"at":[5.0,5.0],"cad":"plan","category":"cadimport","colors":"black","entities":8,"extents":[[-12285.95997,-8841.550121],[12295.95997,8851.550121]],"guid":"<GUID-1>","hidden":["FROZEN","HIDDEN"],"id":100003,"layers":5,"level":"<GUID-2>","origin":[5623.139487,3500.0],"scale":2.0,"source":"plan.dxf","unit":"mm"}
+{"count":2,"elements":[{"angle":90.0,"at":[-2000.0,1000.0],"cad":"plan","category":"cadimport","entities":8,"extents":[[-5500.0,-4623.139487],[1500.0,6623.139487]],"guid":"<GUID-3>","hidden":["FROZEN","HIDDEN"],"id":100002,"layers":5,"level":"<GUID-4>","origin":[5623.139487,3500.0],"scale":1.0,"source":"plan.dxf","unit":"mm"},{"angle":10.0,"at":[5.0,5.0],"cad":"plan","category":"cadimport","colors":"black","entities":8,"extents":[[-12285.95997,-8841.550121],[12295.95997,8851.550121]],"guid":"<GUID-1>","hidden":["FROZEN","HIDDEN"],"id":100003,"layers":5,"level":"<GUID-2>","origin":[5623.139487,3500.0],"scale":2.0,"source":"plan.dxf","unit":"mm"}],"returned":2}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'mirror {"ids": [100002], "axis": [[0, 0], [0, 1000]]}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (mirror): mirror: CAD import 100002 can't be mirrored; mirror it in the program that made the drawing, or turn it
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'modify {"id": 100002, "scale": -1}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (modify): cadimport 100002: a scale of -1 mm to the drawing's unit isn't one; give one from 0.000001 to 10000000
+

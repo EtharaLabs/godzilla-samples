@@ -1,0 +1,66 @@
+=== select_by_id {"text": "100002, 100000C1-00C1-4000-8000-0000000000C1;{100000c5-00c5-4000-8000-0000000000c5}\n0G00330CD0080000000033  nowhere 100099 100002 \"100007\""}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":[[-150.0,-117.925],[8167.925,6100.0]],"ids":[100002,100003,100006,100004,100007],"library":[],"missing":["nowhere","100099"],"plan":100000}
+--- stderr
+=== select_by_id {"text": "100000c100c1400080000000000000c1 100009"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":[[7844.025,-100.0],[8150.0,6100.0]],"ids":[100003,100009],"library":[],"missing":[],"plan":100000}
+--- stderr
+=== select_by_id {"text": "100010 100011"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":[[-1220.0,-1440.0],[1000.0,7440.0]],"ids":[100010,100011],"library":[],"missing":[],"plan":100000}
+--- stderr
+=== select_by_id {"text": "100012"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":null,"ids":[100012],"library":[],"missing":[],"plan":null}
+--- stderr
+=== select_by_id {"text": "100000"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":null,"ids":[100000],"library":[],"missing":[],"plan":null}
+--- stderr
+=== select_by_id {"text": ""}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":null,"ids":[],"library":[],"missing":[],"plan":null}
+--- stderr
+=== select_by_id {"text": "nope 1234"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":null,"ids":[],"library":[],"missing":["nope","1234"],"plan":null}
+--- stderr
+=== select_by_id {"text": "10000002-0002-4000-8000-000000000002 100002"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":[[-150.0,-100.0],[8150.0,105.975]],"ids":[100002],"library":[999951],"missing":[],"plan":100000}
+--- stderr
+=== select_by_id {"text": ["100002", 100003, "x"]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"extent":[[-150.0,-100.0],[8150.0,6100.0]],"ids":[100002,100003],"library":[],"missing":["x"],"plan":100000}
+--- stderr
+=== select_by_id {}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (select_by_id): select_by_id: `text`, the ids, GUIDs or IFC GlobalIds to find, is required
+=== select_by_id {"text": 5}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (select_by_id): select_by_id: `text`, the ids, GUIDs or IFC GlobalIds to find, is required

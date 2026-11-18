@@ -1,0 +1,40 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "cp1252.dxf"}' --cmd 'cad_layers {"id": 100002}'
+[exit 0]
+--- stdout
+{"cad":"cp1252","entities":1,"extents":[[-50.0,0.0],[50.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"cp1252.dxf","unit":"unitless (read as mm unless `units` says)"}
+{"cad":"cp1252","id":100002,"layers":[{"color":null,"linetype":"Continuous","name":"Paredes é ç","shown":true}]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "sjis.dxf"}' --cmd 'cad_layers {"id": 100002}'
+[exit 0]
+--- stdout
+{"cad":"sjis","entities":1,"extents":[[-50.0,0.0],[50.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"sjis.dxf","unit":"unitless (read as mm unless `units` says)"}
+{"cad":"sjis","id":100002,"layers":[{"color":null,"linetype":"Continuous","name":"壁","shown":true}]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "cp1251.dxf"}' --cmd 'cad_layers {"id": 100002}'
+[exit 0]
+--- stdout
+{"cad":"cp1251","entities":1,"extents":[[-50.0,0.0],[50.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"cp1251.dxf","unit":"unitless (read as mm unless `units` says)"}
+{"cad":"cp1251","id":100002,"layers":[{"color":null,"linetype":"Continuous","name":"Стены","shown":true}]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "dos.dxf"}' --cmd 'cad_layers {"id": 100002}'
+[exit 0]
+--- stdout
+{"cad":"dos","entities":1,"extents":[[-50.0,0.0],[50.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"dos.dxf","unit":"unitless (read as mm unless `units` says)"}
+{"cad":"dos","id":100002,"layers":[{"color":null,"linetype":"Continuous","name":"Mur ","shown":true}]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "bom.dxf"}' --cmd 'cad_layers {"id": 100002}'
+[exit 0]
+--- stdout
+{"cad":"bom","entities":1,"extents":[[-2.5,-2.5],[2.5,2.5]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"bom.dxf","unit":"unitless (read as mm unless `units` says)"}
+{"cad":"bom","id":100002,"layers":[{"color":null,"linetype":"Continuous","name":"Wände","shown":true}]}
+
+--- stderr
+

@@ -1,0 +1,11 @@
+{"name":"First","path":"a.bimcraft"}
+{"name":"Second","path":"b.bimcraft"}
+{"name": "Second", "counts": {"level": 3}, "path": "b.bimcraft"}
+$ bimcraft-cli run a.bimcraft missing.bimcraft --cmd 'inspect {}'
+[exit 1]
+--- stdout
+{"name":"First","path":"a.bimcraft"}
+
+--- stderr
+open: missing.bimcraft: No such file or directory (os error 2)
+

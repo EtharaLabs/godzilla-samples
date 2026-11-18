@@ -1,0 +1,60 @@
+### colors_unknown
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `colors` is preserve, invert or black, not pink
+### layers_list_of_numbers
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `layers` lists layers by name, not 1
+### layers_not_a_list
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `layers` is visible (those the file has on and thawed), all, or a list of the layers to show, not 5
+### layers_unknown_layer
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: the drawing has no layer `NOPE` (it has: WALLS, FURN, TEXT)
+### layers_word_unknown
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `layers` is visible (those the file has on and thawed), all, or a list of the layers to show, not "some"
+### scale_not_a_number
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `scale` must be a number in mm, got "big"
+### scale_too_big
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `scale` is mm to each of the drawing's units, from 0.000001 to 10000000, not 1000000000
+### scale_zero
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `scale` is mm to each of the drawing's units, from 0.000001 to 10000000, not 0
+### units_and_scale
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: give `units` or `scale`, not both
+### units_unknown
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `units` is auto, mm, cm, m, in or ft, not furlong

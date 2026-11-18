@@ -1,0 +1,91 @@
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 1, "area": 500}'
+[exit 0]
+--- stdout
+{"flow_lpm":200.0,"hose_dn_mm":25.0,"hose_length_m":30.0,"nozzle_head_mca":80.0,"reserve_m3":5.0,"system":"1","type":"1"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 1, "area": 2500}'
+[exit 0]
+--- stdout
+{"flow_lpm":200.0,"hose_dn_mm":25.0,"hose_length_m":30.0,"nozzle_head_mca":80.0,"reserve_m3":5.0,"system":"1","type":"1"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 1, "area": 2501}'
+[exit 0]
+--- stdout
+{"flow_lpm":200.0,"hose_dn_mm":25.0,"hose_length_m":30.0,"nozzle_head_mca":80.0,"reserve_m3":8.0,"system":"1","type":"1"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 2, "area": 20000}'
+[exit 0]
+--- stdout
+{"flow_lpm":300.0,"hose_dn_mm":40.0,"hose_length_m":30.0,"nozzle_head_mca":30.0,"reserve_m3":25.0,"system":"2","type":"2"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 3, "area": 5000}'
+[exit 0]
+--- stdout
+{"flow_lpm":400.0,"hose_dn_mm":40.0,"hose_length_m":30.0,"nozzle_head_mca":40.0,"reserve_m3":18.0,"system":"3","type":"3"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 3, "area": 60000}'
+[exit 0]
+--- stdout
+{"flow_lpm":400.0,"hose_dn_mm":40.0,"hose_length_m":30.0,"nozzle_head_mca":40.0,"reserve_m3":70.0,"system":"3","type":"3"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 4, "area": 2500}'
+[exit 0]
+--- stdout
+{"reserve_m3":28.0,"system":"4"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 4, "area": 3000, "type": "4-65", "inside": 80, "nominal": 80}'
+[exit 0]
+--- stdout
+{"flow_lpm":600.0,"head_loss_m_per_m":0.0898,"hose_dn_mm":65.0,"hose_length_m":30.0,"loss_mca":0.0,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":30.0,"nozzle_head_mca":30.0,"ok":true,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","reserve_m3":32.0,"size_ok":true,"speed_ms":1.99,"speed_ok":true,"system":"4","type":"4-65"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 5, "area": 50000}'
+[exit 0]
+--- stdout
+{"flow_lpm":1200.0,"hose_dn_mm":65.0,"hose_length_m":30.0,"nozzle_head_mca":60.0,"reserve_m3":120.0,"system":"5","type":"5"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 5, "area": 9000, "hydrants": 3}'
+[exit 0]
+--- stdout
+{"flow_lpm":1200.0,"hose_dn_mm":65.0,"hose_length_m":30.0,"nozzle_head_mca":60.0,"reserve_m3":64.0,"system":"5","type":"5"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 4, "area": 2501, "inside": 80}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: the system is type 4: give `type` as 4-40 or 4-65, by the nozzle
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 4, "area": 3000, "type": "3"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` 3 contradicts `column` 4 and `area`, which give type 4: give one, or make them agree
+
+$ bimcraft-cli run --cmd 'hydrant_size {"column": 1, "area": 500, "type": "5"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` 5 contradicts `column` 1 and `area`, which give type 1: give one, or make them agree
+

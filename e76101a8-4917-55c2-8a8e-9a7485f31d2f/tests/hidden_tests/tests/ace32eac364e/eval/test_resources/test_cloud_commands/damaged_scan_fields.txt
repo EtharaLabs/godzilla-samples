@@ -1,0 +1,42 @@
+### one_station_is_none
+exit: 0
+--- stdout
+{"name":"Project","path":"bad.bimcraft"}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"two","guid":"GUID-1","id":100002,"level":"GUID-2","offset":-0.0,"points":2,"source":"two.xyz"}],"returned":1}
+--- stderr
+### origin_too_far
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's origin [10000000000000.0, 0.0, 0.0] isn't one
+### read_fewer_than_kept
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud read from 1 points can't keep 2
+### stations_dont_add_up
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's stations hold all its points between them
+### too_many_stations
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud comes from up to 256 files, not 257
+### unknown_field
+exit: 0
+--- stdout
+{"left_out":["/clouds/two/extra"],"left_out_count":1,"name":"Project","path":"bad.bimcraft"}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"two","guid":"GUID-1","id":100002,"level":"GUID-2","offset":-0.0,"points":2,"source":"two.xyz"}],"returned":1}
+--- stderr
+### clouds_not_a_map
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: invalid type: sequence, expected a map of scans
+### clouds_null
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: invalid type: null, expected a map of scans

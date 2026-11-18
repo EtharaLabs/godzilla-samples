@@ -1,0 +1,101 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+{"ids":[100004]}
+{"host":100004,"id":100005,"mark":"1","offset":2000.0}
+{"id":100006,"name":"1"}
+{"id":100007}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== AL {"id": 100003, "reference": [[0, 0], [0, 4000]], "line": [[500, 6000], [500, 9000]], "lock": true} | elements {"category": "wall"} | move {"ids": [100002], "by": [300, 0]} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"aligned":100003,"angle":0.0,"by":[-500.0,0.0],"line":[[0.0,6000.0],[0.0,9000.0]],"lock":100008}
+{"count":3,"elements":[{"base_offset":0.0,"category":"wall","end":[0.0,4000.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,9000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":3000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[9000.0,0.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[3000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":3}
+{"moved":[100002]}
+{"count":3,"elements":[{"base_offset":0.0,"category":"wall","end":[300.0,4000.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[300.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[300.0,9000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":3000.0,"level":"GUID-2","room_bounding":true,"start":[300.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[9000.0,0.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[3000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":3}
+--- stderr
+=== align {"id": 100002, "reference": [[-1000, -2000], [-1000, 10000]], "line": [[0, 0], [0, 4000]]} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"aligned":100002,"angle":0.0,"by":[-1000.0,0.0],"line":[[-1000.0,0.0],[-1000.0,4000.0]],"lock":null}
+{"count":3,"elements":[{"base_offset":0.0,"category":"wall","end":[-1000.0,4000.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[-1000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[500.0,9000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":3000.0,"level":"GUID-2","room_bounding":true,"start":[500.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[9000.0,0.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[3000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":3}
+--- stderr
+=== align {"id": 100003, "reference": [[-1000, -2000], [-1000, 10000]], "line": [[500, 6000], [500, 9000]], "lock": true, "to": 100006} | elements {"category": "dimension"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"aligned":100003,"angle":0.0,"by":[-1500.0,0.0],"line":[[-1000.0,6000.0],[-1000.0,9000.0]],"lock":100008}
+{"count":1,"elements":[{"alignment":true,"at":[-1000.0,7500.0],"category":"dimension","guid":"GUID-1","id":100008,"kind":"aligned","labels":["0"],"level":"GUID-2","locked":[{"length":0.0,"segment":0}],"refs":[{"face":"centre","id":"GUID-3"},{"face":"centre","id":"GUID-4"}],"type":"Diagonal - 2.5mm Arial","values":[0.0]}],"returned":1}
+--- stderr
+=== align {"id": 100005, "reference": [[1500, -1000], [1500, 1000]], "line": [[5000, -100], [5000, 100]]} | elements {"category": "door"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): door 100005: 900 mm wide at offset -1500 doesn't fit wall 100004, 6000 mm long
+=== align {"id": 100005, "reference": [[4500, -1000], [4500, 1000]], "line": [[5000, -100], [5000, 100]]} | elements {"category": "door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"aligned":100005,"angle":0.0,"by":[-500.0,0.0],"line":[[4500.0,-100.0],[4500.0,100.0]],"lock":null}
+{"count":1,"elements":[{"at":[4500.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-1","height":2100.0,"host":"GUID-2","id":100005,"level":"GUID-3","mark":"1","offset":1500.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-4","width":900.0}],"returned":1}
+--- stderr
+=== align {"id": 100005, "reference": [[0, 500], [6000, 500]], "line": [[4000, 0], [6000, 0]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: a door or window can only slide along its host wall; align its jambs, or align the wall
+=== align {"id": 100002, "reference": [[0, 0], [0, 0]], "line": [[0, 0], [0, 4000]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: a reference or target line has no length
+=== align {"id": 100002, "reference": [[0, 0], [0, 4000]], "line": [[1, 1], [1, 1]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: a reference or target line has no length
+=== align {"id": 100002, "reference": [[0, 0]], "line": [[0, 0], [0, 4000]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: `reference` must contain two points
+=== align {"reference": [[0, 0], [0, 4000]], "line": [[0, 0], [0, 4000]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: `id` is required
+=== align {"id": 100007, "reference": [[0, 0], [0, 4000]], "line": [[20000, 0], [21000, 0]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: element 100007 has no straight alignment line in plan
+=== align {"id": 999999, "reference": [[0, 0], [0, 4000]], "line": [[0, 0], [0, 4000]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: no element 999999
+=== align {"id": 100003, "reference": [[7000, 0], [7000, 4000]], "line": [[500, 6000], [500, 9000]], "lock": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: nothing has a line along the reference to lock to: a wall's face or centre, a grid…
+=== align {"id": 100003, "reference": [[0, 0], [0, 4000]], "line": [[500, 6000], [500, 9000]], "lock": true, "to": 100004}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (align): align: element 100004 has no line along the reference to lock to

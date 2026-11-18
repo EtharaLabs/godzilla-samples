@@ -1,0 +1,8 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "X", "category": "rooms", "fields": [{"name": "C", "formula": "Name * 2"}]}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (schedule): schedule: calculated field `C`: `Name` is text, and a formula reads numbers
+

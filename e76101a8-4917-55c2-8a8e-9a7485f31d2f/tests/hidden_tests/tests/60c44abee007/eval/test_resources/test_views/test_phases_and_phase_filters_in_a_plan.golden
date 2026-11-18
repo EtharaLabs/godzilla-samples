@@ -1,0 +1,88 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'phase {}' --cmd 'phase {"name": "Stage 2", "after": "Existing"}' --cmd 'modify {"ids": [100002, 100003], "params": {"Phase Created": "Existing"}}' --cmd 'modify {"id": 100004, "params": {"Phase Created": "Existing", "Phase Demolished": "Stage 2"}}' --cmd 'graphics {"phase": "Stage 2", "phase_filter": "Show All"}' --cmd 'render {"path": "all.svg", "width": 400, "height": 300}' --cmd 'phase_filter {"name": "Only new", "existing": "not-displayed", "demolished": "not-displayed"}' --cmd 'graphics {"phase_filter": "Only new"}' --cmd 'render {"path": "new.svg", "width": 400, "height": 300}' --cmd 'phase_filter {"name": "Only new", "delete": true}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Existing","New Construction"]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Existing","Stage 2","New Construction"]}
+{"modified":[100002,100003]}
+{"base_offset":0.0,"category":"wall","end":[0.0,4000.0],"guid":"<GUID-1>","height":3000.0,"id":100004,"length":6000.0,"level":"<GUID-2>","params":{"Phase Created":"Existing","Phase Demolished":"Stage 2"},"room_bounding":true,"start":[6000.0,4000.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":"Stage 2","phase_filter":"Show All","scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"height":300,"kind":"plan","path":"all.svg","view":"Level 1","width":400}
+{"filter":{"demolished":"not-displayed","existing":"not-displayed","new":"by-category","temporary":"by-category"},"name":"Only new"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":"Stage 2","phase_filter":"Only new","scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"height":300,"kind":"plan","path":"new.svg","view":"Level 1","width":400}
+
+--- stderr
+line 1 (phase_filter): phase_filter: `Only new` is the phase filter of Level 1; give it another first
+
+=== svg all.svg
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<rect width="400" height="300" fill="#ffffff"/>
+<path d="M317.2 230.0 L311.6 224.4 L306.0 218.8 L94.0 218.8 L88.4 224.4 L82.8 230.0 Z M317.2 70.0 L311.6 75.6 L306.0 81.2 L306.0 218.8 L311.6 224.4 L317.2 230.0 Z M82.8 70.0 L88.4 75.6 L94.0 81.2 L306.0 81.2 L311.6 75.6 L317.2 70.0 Z M82.8 230.0 L88.4 224.4 L94.0 218.8 L94.0 81.2 L88.4 75.6 L82.8 70.0 Z M201.9 81.2 L198.1 81.2 L198.1 218.8 L201.9 218.8 Z" fill="#a8a8a8"/>
+<path d="M317.2 230.0 L311.6 224.4 L306.0 218.8 L94.0 218.8 L88.4 224.4 L82.8 230.0 Z" fill="#a8a8a8"/>
+<path d="M317.2 70.0 L311.6 75.6 L306.0 81.2 L306.0 218.8 L311.6 224.4 L317.2 230.0 Z" fill="#a8a8a8"/>
+<path d="M82.8 70.0 L88.4 75.6 L94.0 81.2 L306.0 81.2 L311.6 75.6 L317.2 70.0 Z" fill="#a8a8a8"/>
+<path d="M82.8 230.0 L88.4 224.4 L94.0 218.8 L94.0 81.2 L88.4 75.6 L82.8 70.0 Z" fill="#a8a8a8"/>
+<path d="M201.9 81.2 L198.1 81.2 L198.1 218.8 L201.9 218.8 Z" fill="#a8a8a8"/>
+<path d="M94.0 217.8 L94.0 218.8 L198.1 218.8 L198.1 217.8" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M201.9 217.8 L201.9 218.8 L306.0 218.8 L306.0 217.8" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M317.2 229.0 L317.2 230.0 L82.8 230.0 L82.8 229.0" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M305.0 218.8 L306.0 218.8 L306.0 81.2 L305.0 81.2" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M316.2 70.0 L317.2 70.0 L317.2 230.0 L316.2 230.0" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M306.0 82.2 L306.0 81.2 L201.9 81.2 L201.9 82.2" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M198.1 82.2 L198.1 81.2 L94.0 81.2 L94.0 82.2" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M82.8 71.0 L82.8 70.0 L317.2 70.0 L317.2 71.0" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M95.0 81.2 L94.0 81.2 L94.0 218.8 L95.0 218.8" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M83.8 230.0 L82.8 230.0 L82.8 70.0 L83.8 70.0" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M197.1 218.8 L198.1 218.8 L198.1 81.2 L197.1 81.2" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M202.9 81.2 L201.9 81.2 L201.9 218.8 L202.9 218.8" fill="none" stroke="#191919" stroke-width="1.3023256" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M90.2 222.6 L309.8 222.6 L306.0 218.8 L94.0 218.8 Z" fill="#d4d4d4"/>
+<path d="M88.4 224.4 L311.6 224.4 L309.8 222.6 L90.2 222.6 Z" fill="#d4d4d4"/>
+<path d="M82.8 230.0 L317.2 230.0 L316.8 229.6 L83.2 229.6 Z" fill="#d4d4d4"/>
+<path d="M90.2 222.6 L309.8 222.6" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M88.4 224.4 L311.6 224.4" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M83.2 229.6 L316.8 229.6" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M309.8 222.6 L309.8 77.4 L306.0 81.2 L306.0 218.8 Z" fill="#d4d4d4"/>
+<path d="M311.6 224.4 L311.6 75.6 L309.8 77.4 L309.8 222.6 Z" fill="#d4d4d4"/>
+<path d="M317.2 230.0 L317.2 70.0 L316.8 70.4 L316.8 229.6 Z" fill="#d4d4d4"/>
+<path d="M309.8 222.6 L309.8 77.4" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M311.6 224.4 L311.6 75.6" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M316.8 229.6 L316.8 70.4" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M309.8 77.4 L90.2 77.4 L94.0 81.2 L306.0 81.2 Z" fill="#d4d4d4"/>
+<path d="M311.6 75.6 L88.4 75.6 L90.2 77.4 L309.8 77.4 Z" fill="#d4d4d4"/>
+<path d="M317.2 70.0 L82.8 70.0 L83.2 70.4 L316.8 70.4 Z" fill="#d4d4d4"/>
+<path d="M309.8 77.4 L90.2 77.4" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M311.6 75.6 L88.4 75.6" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M316.8 70.4 L83.2 70.4" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M90.2 77.4 L90.2 222.6 L94.0 218.8 L94.0 81.2 Z" fill="#d4d4d4"/>
+<path d="M88.4 75.6 L88.4 224.4 L90.2 222.6 L90.2 77.4 Z" fill="#d4d4d4"/>
+<path d="M82.8 70.0 L82.8 230.0 L83.2 229.6 L83.2 70.4 Z" fill="#d4d4d4"/>
+<path d="M90.2 77.4 L90.2 222.6" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M88.4 75.6 L88.4 224.4" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M83.2 70.4 L83.2 229.6" fill="none" stroke="#191919" stroke-width="0.66976744" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M24.0 266.0 L24.0 282.0 L34.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M49.3 266.0 L38.7 266.0 L38.7 282.0 L49.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M38.7 274.0 L46.7 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M53.3 266.0 L58.7 282.0 L64.0 266.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M78.7 266.0 L68.0 266.0 L68.0 282.0 L78.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M68.0 274.0 L76.0 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.7 266.0 L82.7 282.0 L93.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.7 268.7 L117.3 266.0 L117.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.7 282.0 L120.0 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+=== svg new.svg
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<rect width="400" height="300" fill="#ffffff"/>
+<path d="M24.0 266.0 L24.0 282.0 L34.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M49.3 266.0 L38.7 266.0 L38.7 282.0 L49.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M38.7 274.0 L46.7 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M53.3 266.0 L58.7 282.0 L64.0 266.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M78.7 266.0 L68.0 266.0 L68.0 282.0 L78.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M68.0 274.0 L76.0 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.7 266.0 L82.7 282.0 L93.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.7 268.7 L117.3 266.0 L117.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.7 282.0 L120.0 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

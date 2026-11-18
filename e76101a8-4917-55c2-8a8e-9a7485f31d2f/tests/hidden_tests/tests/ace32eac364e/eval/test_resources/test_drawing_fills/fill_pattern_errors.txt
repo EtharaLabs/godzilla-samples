@@ -1,0 +1,119 @@
+$ fill_pattern {"name": "Nothing"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: there's no fill pattern `Nothing`; make one with `lines` (there are: Brick 225 x 75, Crosshatch, Diagonal Crosshatch, Diagonal Down, Diagonal Up, Horizontal, Sand, Solid fill, Tile 300, Vertical)
+
+$ fill_pattern {"name": "Tight", "lines": [{"angle": 0, "spacing": 0.001}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Tight` line 1: its lines are 0.05 to 100000 apart, not 0.001
+
+$ fill_pattern {"name": "Wide", "lines": [{"angle": 0, "spacing": 10000000.0}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Wide` line 1: its lines are 0.05 to 100000 apart, not 10000000
+
+$ fill_pattern {"name": "Far", "lines": [{"angle": 0, "spacing": 1, "origin": [2000000.0, 0]}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Far` line 1: its origin is within 100000 of the pattern's
+
+$ fill_pattern {"name": "Gaps", "lines": [{"angle": 0, "spacing": 1, "dashes": [-1, -2]}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Gaps` line 1: dashes need a dash (0 is a dot) and a space (a negative length) among them, and 0.05 or more in all
+
+$ fill_pattern {"name": "Solidly", "lines": [{"angle": 0, "spacing": 1, "dashes": [1, 2]}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Solidly` line 1: dashes need a dash (0 is a dot) and a space (a negative length) among them, and 0.05 or more in all
+
+$ fill_pattern {"name": "Many", "lines": [{"angle": 0, "spacing": 1}, {"angle": 1, "spacing": 1}, {"angle": 2, "spacing": 1}, {"angle": 3, "spacing": 1}, {"angle": 4, "spacing": 1}, {"angle": 5, "spacin
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Many`: 257 line families, more than 256
+
+$ fill_pattern {"name": "Odd", "lines": [{"angle": 0}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: `lines` is [{angle, spacing, origin?: [x, y], shift?, dashes?: [mm, -mm, …]}, …]: missing field `spacing`
+
+$ fill_pattern {"name": "Odd", "lines": [{"angle": 0, "spacing": 1, "colour": 2}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: `lines` is [{angle, spacing, origin?: [x, y], shift?, dashes?: [mm, -mm, …]}, …]: unknown field `colour`, expected one of `angle`, `origin`, `shift`, `spacing`, `dashes`
+
+$ fill_pattern {"name": "Odd", "target": "paper", "lines": []}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: `target` is drafting or model: unknown variant `paper`, expected `drafting` or `model`
+
+$ fill_pattern {"name": "Sand", "drawn": "big"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: `drawn` is a view's scale, a number, not "big"
+
+$ fill_pattern {"name": "Sand", "drawn": 0}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Sand`: the scale it was drawn at is a number above 0, at most 100000
+
+$ fill_pattern {"name": "Sand", "rename": "Crosshatch"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: there's already a fill pattern `Crosshatch`
+
+$ fill_pattern {"name": "Sand", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: filled region type `Sand` fills with `Sand`; give it another first
+
+$ fill_pattern {"name": "Tile 300", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: material `Tiled` shows `Tile 300`; give it another first
+
+$ fill_pattern {"name": "Gone", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: there's no fill pattern `Gone`
+
+$ fill_pattern {"name": "Sand", "scale": 2}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: `scale` isn't one of its parameters: name, target, lines, drawn, rename, delete
+
+$ fill_pattern {"name": "Slid", "lines": [{"angle": 0, "spacing": 1, "shift": 200000.0}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Slid` line 1: its angle, origin and shift are numbers, the shift within 100000
+
+$ fill_pattern {"name": "Busy", "lines": [{"angle": 0, "spacing": 1, "dashes": [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1]}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Busy` line 1: 17 dashes and spaces, more than 16
+
+$ fill_pattern {"name": "Huge", "lines": [{"angle": 0, "spacing": 1, "dashes": [200000.0, -1]}]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (fill_pattern): fill_pattern: fill pattern `Huge` line 1: a dash or a space is a length within 100000

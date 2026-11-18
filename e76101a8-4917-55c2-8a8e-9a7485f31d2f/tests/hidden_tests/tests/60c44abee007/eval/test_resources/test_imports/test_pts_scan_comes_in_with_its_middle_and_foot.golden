@@ -1,0 +1,47 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "room.pts"}' --cmd 'elements {"category": "pointcloud"}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"room","id":100002,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"room","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":250.0,"points":4,"source":"room.pts"}],"returned":1}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+=== p.bimcraft [clouds]
+{
+ "room": {
+  "colours": "eAH7z8DAAMYNDQ0AGvQEfg==",
+  "origin": [
+   500.0,
+   1000.0,
+   250.0
+  ],
+  "points": "eAFNiLENADAIw/xbexXvwVVMeEJEipwYOiHKyn7y7u/XsRlREQqp",
+  "read": 4,
+  "source": "room.pts"
+ }
+}
+$ bimcraft-cli run p.bimcraft --cmd 'elements {"category": "pointcloud"}' --cmd 'point_cloud {"cloud": "room", "at": [5000, 0]}' --save again.bimcraft
+[exit 0]
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"room","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":250.0,"points":4,"source":"room.pts"}],"returned":1}
+{"cloud":"room","id":100003,"origin":[500.0,1000.0,250.0],"points":4,"read":4}
+{"format":"bimcraft","path":"again.bimcraft"}
+
+--- stderr
+
+=== again.bimcraft [clouds]
+{
+ "room": {
+  "colours": "eAH7z8DAAMYNDQ0AGvQEfg==",
+  "origin": [
+   500.0,
+   1000.0,
+   250.0
+  ],
+  "points": "eAFNiLENADAIw/xbexXvwVVMeEJEipwYOiHKyn7y7u/XsRlREQqp",
+  "read": 4,
+  "source": "room.pts"
+ }
+}

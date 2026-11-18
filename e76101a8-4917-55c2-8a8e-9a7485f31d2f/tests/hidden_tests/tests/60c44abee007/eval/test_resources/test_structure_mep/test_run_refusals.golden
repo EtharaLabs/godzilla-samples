@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'pipe {"points": [[0, 0], [0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (pipe): pipe 100002: too short (0 mm)
+
+$ bimcraft-cli run --cmd 'pipe {"points": [[0, 0], [3000, 0]], "type": "PVC 999"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (pipe): pipe 100002: type `PVC 999` doesn't exist (there are: Copper 22, PVC 110, PVC 25, PVC 50)
+
+$ bimcraft-cli run --cmd 'pipe {"points": [[0, 0], [3000, 0]], "type": "Cat6"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (pipe): pipe 100002: type `Cat6` doesn't exist (there are: Copper 22, PVC 110, PVC 25, PVC 50)
+
+$ bimcraft-cli run --cmd 'pipe {"points": [[0, 0], [3000, 0]], "justify": "left"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (pipe): pipe: `justify` is top, centre or bottom, not `left`
+
+$ bimcraft-cli run --cmd 'conduit {"points": [[0, 0], [3000, 0]], "type": "PVC 50"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit): conduit 100002: type `PVC 50` doesn't exist (there are: PVC 20, PVC 25, PVC 32, Steel 25)
+
+$ bimcraft-cli run --cmd 'cable_tray {"points": [[0, 0], [3000, 0]], "type": "PVC 25"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (cable_tray): cabletray 100002: type `PVC 25` doesn't exist (there are: Perforated 100 x 50, Perforated 200 x 50, Perforated 300 x 100)
+
+$ bimcraft-cli run --cmd 'duct {"points": [[0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (duct): duct: `points` needs at least 2 points
+
+$ bimcraft-cli run --cmd 'wire {"points": [[0, 0], [3000, 0]], "type": "Wire 99"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire): wire 100002: type `Wire 99` doesn't exist (there are: Wire 2.5, Wire 4, Wire 6)
+
+$ bimcraft-cli run --cmd 'down_conductor {"points": [[0, 0], [3000, 0]], "type": "Copper 9"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (down_conductor): downconductor 100002: type `Copper 9` doesn't exist (there are: Copper 8, Flat 25 x 3, Steel 8)
+
+$ bimcraft-cli run --cmd 'ground_conductor {"points": [[0, 0], [3000, 0]], "type": "Flat 25 x 3"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (ground_conductor): groundconductor 100002: type `Flat 25 x 3` doesn't exist (there are: Copper 9, Steel 8)
+
+$ bimcraft-cli run --cmd 'cabling {"points": [[0, 0], [3000, 0]], "type": "Cat7"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (cabling): cable 100002: type `Cat7` doesn't exist (there are: Cat6, Cat6A, Optical 3)
+

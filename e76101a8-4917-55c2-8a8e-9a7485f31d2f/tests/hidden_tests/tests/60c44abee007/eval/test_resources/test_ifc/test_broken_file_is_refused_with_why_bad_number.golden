@@ -1,0 +1,22 @@
+$ bimcraft-cli run broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 11: `1.2.3e` is not a number
+
+$ bimcraft-cli convert broken.ifc out.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 11: `1.2.3e` is not a number
+
+$ bimcraft-cli info broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 11: `1.2.3e` is not a number
+
+out.bimcraft written: False

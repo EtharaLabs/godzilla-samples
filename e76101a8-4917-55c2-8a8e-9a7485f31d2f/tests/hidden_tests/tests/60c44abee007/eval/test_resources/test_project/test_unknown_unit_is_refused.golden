@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'units {"length": "furlong"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (units): units: `length` is mm, cm, m, in, ft or ft-in, not `furlong`
+
+$ bimcraft-cli run --cmd 'units {"length": 5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (units): units: `length` must be text of at most 256 characters, got 5
+

@@ -1,0 +1,40 @@
+=== family {"name": "F", "types": {"A": {}}, "parameters": [{"name": "Phase Created"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family: parameter `Phase Created`: a component holds its phase and its design option under that name; name it otherwise
+=== family {"name": "F", "types": {"A": {}}, "parameters": [{"name": "Design Option"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family: parameter `Design Option`: a component holds its phase and its design option under that name; name it otherwise
+=== family {"name": "F", "types": {"A": {}}, "parameters": [{"name": "Mass Face"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family: parameter `Mass Face`: a component holds nothing of a mass under that name; name it otherwise
+=== family {"path": "huge.json"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family: huge.json is too large (268435456 bytes)
+=== material {"name": "X", "texture": {"kind": "image", "path": "huge.png"}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (material): material: huge.png is too large (33554433 bytes)
+=== type {"category": "wall", "name": "Many", "layers": [{"thickness": 10}, {"thickness": 10}, {"thickness": 10}, {"thicknes
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): type: `layers` is a list of at most 32 layers
+=== type {"category": "wall", "name": "Bare", "thickness": 120, "layers": []}
+exit: 0
+--- stdout
+{"category":"wall","name":"Bare","type":{"thickness":120.0}}
+--- stderr
+=== type {"category": "wall", "name": "Bare", "layers": "thick"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): type: `layers` is a list of at most 32 layers

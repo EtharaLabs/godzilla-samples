@@ -1,0 +1,55 @@
+=== parameter {"name": "Height", "categories": ["wall"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (parameter): parameter `Height`: walls have a `Height` of their own; name it otherwise
+=== parameter {"name": "Width", "categories": ["component"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (parameter): parameter `Width`: family `Base Cabinet` has a parameter of that name; name it otherwise
+=== parameter {"name": "Paint", "categories": ["wall"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (parameter): parameter `Paint`: elements hold their phase, their design option, their paint and their mass under that name; name it otherwise
+=== parameter {"name": "Phase Created", "categories": ["wall"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (parameter): parameter `Phase Created`: elements hold their phase, their design option, their paint and their mass under that name; name it otherwise
+=== parameter {"name": "Lonely"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (parameter): parameter `Lonely`: it needs a category: one of wall, floor, ceiling, roof, door, window, room, column, component, stair, ramp, railing, mass, structuralcolumn, footing, beam, stripfooting, pipe, duct, conduit, cabletray, wire, downconductor, groundconductor, cable
+=== parameter {"name": "9 lives", "categories": ["wall"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (parameter): parameter `9 lives`: a name starts with a letter and holds letters, digits, `_` and spaces, up to 256
+=== type {"category": "beam", "name": "B", "width": 100, "depth": 200, "material": "Unobtainium"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): beam type `B`: material `Unobtainium` isn't in the library; add it with `material`
+=== type {"category": "railing", "name": "R", "height": 900, "spacing": 10}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): railing type `R`: spacing 10 mm; balusters stand 50 mm apart or more, or 0 for none
+=== type {"category": "ceiling", "name": "C", "thickness": 20, "grid": 50}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): ceiling type `C`: grid 50 mm; its tiles are 100 mm or wider, or 0 for none
+=== type {"category": "door", "name": "D", "width": 0, "height": 2000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): door type `D` width must be above zero, got 0
+=== type {"category": "column", "name": "C", "width": -1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): column type `C` width must be above zero, got -1

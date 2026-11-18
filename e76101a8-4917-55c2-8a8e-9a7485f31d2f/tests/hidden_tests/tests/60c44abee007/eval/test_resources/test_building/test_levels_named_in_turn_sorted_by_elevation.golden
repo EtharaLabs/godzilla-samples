@@ -1,0 +1,11 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": -1200, "name": "Basement"}' --cmd 'level {"elevation": 9000}' --cmd 'level {"elevation": 4500, "name": "Mezzanine", "extent": [[-1000,-1000],[9000,7000]]}' --cmd 'elements {"category": "level"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Basement"}
+{"id":100004,"name":"Level 5"}
+{"id":100005,"name":"Mezzanine"}
+{"count":6,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":6000.0,"guid":"<GUID-3>","id":100002,"name":"Level 3","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":-1200.0,"guid":"<GUID-4>","id":100003,"name":"Basement","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":9000.0,"guid":"<GUID-5>","id":100004,"name":"Level 5","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":4500.0,"extent":[[-1000.0,-1000.0],[9000.0,7000.0]],"guid":"<GUID-6>","id":100005,"name":"Mezzanine","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":6}
+
+--- stderr
+

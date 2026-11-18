@@ -1,0 +1,49 @@
+$ bimcraft-cli run --cmd 'floor {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor: no walls enclose an area on Level 1; give `boundary`
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,4000],[4000,0],[0,4000]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor: its boundary isn't a simple outline: edge 0 and edge 2 intersect at [2000, 2000]; give a simple `boundary` or `sketch`
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,0],[4000,4000]], "openings": [[[5000,5000],[6000,5000],[6000,6000]]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor 100002: opening 0 isn't inside its outline
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor 100002: a boundary needs 3 to 10000 points
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,0],[4000,4000]], "type": "Marble"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor 100002: type `Marble` doesn't exist (there are: Generic - 200mm)
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,0],[4000,4000]], "sketch": [[[0,0],[1,1]]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor: give the outline as `sketch` or `boundary` (with `openings`), not both
+
+$ bimcraft-cli run --cmd 'floor {"sketch": [[[0,0],[4000,0]],[[4000,0],[4000,3000]]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor: the sketch isn't one outline: line 0 ends at [0, 0] without meeting another: the loop is open; line 1 ends at [4000, 3000] without meeting another: the loop is open
+

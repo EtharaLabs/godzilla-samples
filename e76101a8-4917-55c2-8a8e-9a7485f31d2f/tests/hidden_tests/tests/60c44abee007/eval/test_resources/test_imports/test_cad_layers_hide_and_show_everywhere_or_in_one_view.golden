@@ -1,0 +1,54 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'cad_layers {"id": 100002, "hide": ["WALLS"], "show": ["HIDDEN"]}' --cmd 'cad_layers {"id": 100002, "view": "Level 1", "hide": ["TRUE", "0"]}' --cmd 'cad_layers {"id": 100002, "view": "Level 1", "show": ["0"]}' --cmd 'cad_layers {"id": 100002}' --cmd 'graphics {"view": "Level 1"}' --save plan.svg
+[exit 0]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":false},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":true},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":true}]}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true,"shown_in_view":false},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":false,"shown_in_view":false},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":true,"shown_in_view":true},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false,"shown_in_view":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":true,"shown_in_view":false}]}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true,"shown_in_view":true},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":false,"shown_in_view":false},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":true,"shown_in_view":true},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false,"shown_in_view":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":true,"shown_in_view":false}]}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":false},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":true},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":true}]}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{"plan":["TRUE"]},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"format":"svg","path":"plan.svg"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'cad_layers {"id": 100002, "hide": ["WALLS"], "show": ["WALLS"]}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (cad_layers): cad_layers: layer `WALLS` is in `hide` and in `show`; give it in one
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'cad_layers {"id": 100002, "hide": ["NOPE"]}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (cad_layers): cad_layers: the drawing has no layer `NOPE` (it has: 0, WALLS, HIDDEN, FROZEN, TRUE)
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'cad_layers {"id": 100001}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (cad_layers): cad_layers: level 100001 isn't a CAD import
+
+$ bimcraft-cli run --cmd 'cad_layers {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (cad_layers): cad_layers: `id`, a CAD import's id or GUID, is required
+
+$ bimcraft-cli run --cmd 'cad_layers {"id": 999}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (cad_layers): cad_layers: no element 999
+
+=== file plan.svg
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000"><rect width="1600" height="1000" fill="#ffffff"/><path d="M838.5 602.0 L838.0 592.0 L836.5 582.1 L834.1 572.4 L830.7 563.0 L826.4 553.9 L821.3 545.3 L815.3 537.3 L808.6 529.9 L801.1 523.2 L793.1 517.2 L784.5 512.0 L775.5 507.8 L766.0 504.4 L756.3 502.0 L746.4 500.5 L736.4 500.0 L726.4 500.5 L716.5 502.0 L706.8 504.4 L697.4 507.8 L688.3 512.0 L679.7 517.2 L671.7 523.2 L664.3 529.9 L657.5 537.3 L651.6 545.3 L646.4 553.9 L642.1 563.0 L638.8 572.4 L636.3 582.1 L634.9 592.0 L634.4 602.0 L634.9 612.0 L636.3 621.9 L638.8 631.7 L642.1 641.1 L646.4 650.1 L651.6 658.7 L657.5 666.8 L664.3 674.2 L671.7 680.9 L679.7 686.9 L688.3 692.0 L697.4 696.3 L706.8 699.7 L716.5 702.1 L726.4 703.6 L736.4 704.1 L746.4 703.6 L756.3 702.1 L766.0 699.7 L775.5 696.3 L784.5 692.0 L793.1 686.9 L801.1 680.9 L808.6 674.2 L815.3 666.8 L821.3 658.7 L826.4 650.1 L830.7 641.1 L834.1 631.7 L836.5 621.9 L838.0 612.0 Z" fill="none" stroke="#00ff00" stroke-width="1.0204082" stroke-linecap="round" stroke-linejoin="miter"/><path d="M236.4 846.9 L236.4 821.4 L249.2 821.4 L253.4 825.7 L253.4 829.9 L249.2 834.2 L236.4 834.2" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M244.9 834.2 L253.4 846.9" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M264.1 846.9 L259.8 842.7 L259.8 825.7 L264.1 821.4 L272.6 821.4 L276.8 825.7 L276.8 842.7 L272.6 846.9 L264.1 846.9" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M287.4 846.9 L283.2 842.7 L283.2 825.7 L287.4 821.4 L295.9 821.4 L300.2 825.7 L300.2 842.7 L295.9 846.9 L287.4 846.9" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M306.6 846.9 L306.6 821.4 L315.1 834.2 L323.6 821.4 L323.6 846.9" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M359.7 821.4 L364.0 821.4 L366.1 823.6 L366.1 827.8 L364.0 829.9 L359.7 829.9 L357.6 827.8 L357.6 823.6 L359.7 821.4" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M404.4 825.7 L408.6 821.4 L408.6 846.9" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M404.4 846.9 L412.9 846.9" fill="none" stroke="#191919" stroke-width="2.5510204" stroke-linecap="round" stroke-linejoin="round"/><path d="M24.0 966.0 L24.0 982.0 L34.7 982.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M49.3 966.0 L38.7 966.0 L38.7 982.0 L49.3 982.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M38.7 974.0 L46.7 974.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M53.3 966.0 L58.7 982.0 L64.0 966.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M78.7 966.0 L68.0 966.0 L68.0 982.0 L78.7 982.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M68.0 974.0 L76.0 974.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M82.7 966.0 L82.7 982.0 L93.3 982.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M114.7 968.7 L117.3 966.0 L117.3 982.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M114.7 982.0 L120.0 982.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+

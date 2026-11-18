@@ -1,0 +1,12 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]]}' --save one.bimcraft --cmd 'wall {"points": [[0,0],[0,4000]]}' --save two.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"format":"bimcraft","path":"one.bimcraft"}
+{"ids":[100003]}
+{"format":"bimcraft","path":"two.bimcraft"}
+
+--- stderr
+
+one.bimcraft: {"level": 2, "wall": 1} history=[]
+two.bimcraft: {"level": 2, "wall": 2} history=[]

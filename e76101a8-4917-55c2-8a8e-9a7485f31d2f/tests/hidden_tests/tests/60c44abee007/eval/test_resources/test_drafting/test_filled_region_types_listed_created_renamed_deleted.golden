@@ -1,0 +1,30 @@
+$ bimcraft-cli run --cmd 'filled_region_type {}' --cmd 'filled_region_type {"name": "Blank"}' --cmd 'filled_region_type {"name": "Blank", "foreground": "Diagonal Up", "foreground_color": [0, 128, 0]}' --cmd 'filled_region_type {"name": "Blank", "background": "Solid fill", "background_color": "#eeeeee", "masking": true}' --cmd 'filled_region_type {"name": "Blank", "foreground": null}' --cmd 'filled_region {"sketch": [[[0,0],[1000,0]],[[1000,0],[1000,1000]],[[1000,1000],[0,1000]],[[0,1000],[0,0]]], "type": "Blank"}' --cmd 'filled_region_type {"name": "Blank", "rename": "Grey Mask"}' --cmd 'elements {"category": "region"}'
+[exit 0]
+--- stdout
+{"types":{"Brick":{"background_color":[0,0,0],"foreground":"Brick 225 x 75","foreground_color":[0,0,0]},"Crosshatch":{"background_color":[0,0,0],"foreground":"Crosshatch","foreground_color":[0,0,0]},"Diagonal Up":{"background_color":[0,0,0],"foreground":"Diagonal Up","foreground_color":[0,0,0]},"Masking":{"background_color":[0,0,0],"foreground_color":[0,0,0],"masking":true},"Sand":{"background_color":[0,0,0],"foreground":"Sand","foreground_color":[0,0,0]},"Solid Black":{"background_color":[0,0,0],"foreground":"Solid fill","foreground_color":[0,0,0]}}}
+{"name":"Blank","type":{"background_color":[0,0,0],"foreground_color":[0,0,0]}}
+{"name":"Blank","type":{"background_color":[0,0,0],"foreground":"Diagonal Up","foreground_color":[0,128,0]}}
+{"name":"Blank","type":{"background":"Solid fill","background_color":[238,238,238],"foreground":"Diagonal Up","foreground_color":[0,128,0],"masking":true}}
+{"name":"Blank","type":{"background":"Solid fill","background_color":[238,238,238],"foreground_color":[0,128,0],"masking":true}}
+{"area_m2":1.0,"id":100002}
+{"name":"Grey Mask","type":{"background":"Solid fill","background_color":[238,238,238],"foreground_color":[0,128,0],"masking":true}}
+{"count":1,"elements":[{"area_m2":1.0,"category":"region","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","line_style":"Thin Lines","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"sketch":[{"end":[1000.0,0.0],"guid":"<GUID-3>","id":999466,"start":[0.0,0.0]},{"end":[1000.0,1000.0],"guid":"<GUID-4>","id":999465,"start":[1000.0,0.0]},{"end":[0.0,1000.0],"guid":"<GUID-5>","id":999464,"start":[1000.0,1000.0]},{"end":[0.0,0.0],"guid":"<GUID-6>","id":999463,"start":[0.0,1000.0]}],"type":"Grey Mask","view":"<GUID-2>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[1000,0]],[[1000,0],[1000,1000]],[[1000,1000],[0,1000]],[[0,1000],[0,0]]], "type": "Sand"}' --cmd 'filled_region_type {"name": "Sand", "delete": true}'
+[exit 1]
+--- stdout
+{"area_m2":1.0,"id":100002}
+
+--- stderr
+line 1 (filled_region_type): filled_region_type: filled region 100002 is of `Sand`; give it another type first
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "Sand", "delete": true}' --cmd 'filled_region_type {}'
+[exit 0]
+--- stdout
+{"deleted":"Sand"}
+{"types":{"Brick":{"background_color":[0,0,0],"foreground":"Brick 225 x 75","foreground_color":[0,0,0]},"Crosshatch":{"background_color":[0,0,0],"foreground":"Crosshatch","foreground_color":[0,0,0]},"Diagonal Up":{"background_color":[0,0,0],"foreground":"Diagonal Up","foreground_color":[0,0,0]},"Masking":{"background_color":[0,0,0],"foreground_color":[0,0,0],"masking":true},"Solid Black":{"background_color":[0,0,0],"foreground":"Solid fill","foreground_color":[0,0,0]}}}
+
+--- stderr
+

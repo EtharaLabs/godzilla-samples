@@ -1,0 +1,92 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[{"axis":[[0.0,0.0],[0.0,400.0]],"from":0.0,"material":"Metal","plane":"xz","profile":[[0.0,0.0],[200.0,0.0],[100.0,400.0],[0.0,400.0]],"to":360.0},{"from":-50.0,"plane":"yz","profile":[[0.0,0.0],[100.0,0.0],[100.0,100.0],[0.0,100.0]],"to":50.0},{"circle":{"centre":[0.0,0.0],"radius":300.0},"from":400.0,"plane":"xy","to":420.0,"visible":"1 > 0"},{"circle":{"centre":[0.0,0.0],"radius":100.0},"from":390.0,"plane":"xy","to":430.0,"void":true},{"from":0.0,"mesh":[[[0.0,0.0,0.0],[100.0,0.0,0.0],[0.0,100.0,0.0]]],"plane":"xy","to":0.0}],"parameters":[],"types":{"A":{}}},"name":"Lamp","warnings":[]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== family {"name": "Lamp"} | component {"family": "Lamp", "at": [500, 500]} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"axis":[[0.0,0.0],[0.0,400.0]],"from":0.0,"guid":"GUID-1","id":999465,"material":"Metal","plane":"xz","profile":[[0.0,0.0],[200.0,0.0],[100.0,400.0],[0.0,400.0]],"to":360.0},{"from":-50.0,"guid":"GUID-2","id":999464,"plane":"yz","profile":[[0.0,0.0],[100.0,0.0],[100.0,100.0],[0.0,100.0]],"to":50.0},{"circle":{"centre":[0.0,0.0],"radius":300.0},"from":400.0,"guid":"GUID-3","id":999463,"plane":"xy","to":420.0,"visible":"1 > 0"},{"circle":{"centre":[0.0,0.0],"radius":100.0},"from":390.0,"guid":"GUID-4","id":999462,"plane":"xy","to":430.0,"void":true},{"from":0.0,"guid":"GUID-5","id":999461,"mesh":[[[0.0,0.0,0.0],[100.0,0.0,0.0],[0.0,100.0,0.0]]],"plane":"xy","to":0.0}],"parameters":[],"types":{"A":{}}},"name":"Lamp","values":{"A":{}},"warnings":[]}
+{"id":100002}
+{"count":1,"elements":[{"angle":0.0,"at":[500.0,500.0],"category":"component","family":"Lamp","family_guid":"GUID-6","guid":"GUID-7","height":420.0,"id":100002,"level":"GUID-8","offset":0.0,"type":"A","values":{}}],"returned":1}
+--- stderr
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"plane": "xz", "profile": [[0, 0], [200, 0], [100, 400]], "axis": [[0, 0], [0, 400]], "from": 0, "to": 400}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: turns more than all the way round: from 0 to 400 degrees, 360 at most
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"plane": "xz", "profile": [[-100, 0], [200, 0], [100, 400]], "axis": [[0, 0], [0, 400]], "to": 90}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: its profile crosses its axis: draw it to one side of it
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"plane": "xz", "profile": [[0, 0], [200, 0], [100, 400]], "axis": [[0, 0], [0, 0]], "to": 90}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: its axis starts and ends at one point: it needs a direction
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"profile": [[0, 0], [0, 100], [0, 200]], "axis": [[0, 0], [0, 400]], "plane": "xz", "to": 90}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: its profile has no area: it needs three corners or more, or a circle
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"profile": [[0, 0], [100, 100], [100, 0], [0, 100]], "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: its profile has no area: it needs three corners or more, or a circle
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "from": 100, "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: sweeps nothing: from 100 to 100
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: form 1: it takes a `profile`, a `circle` or a `mesh`, one of them
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"circle": {"centre": [0, 0], "radius": 0}, "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: its circle's radius is 0; it needs one above zero
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"circle": {"centre": [0, 0], "radius": 10}, "profile": [[0, 0], [1, 0], [1, 1]], "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: form 1: it takes a `profile`, a `circle` or a `mesh`, one of them
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"mesh": [[[0, 0, 0], [100, 0, 0], [0, 100, 0]]], "axis": [[0, 0], [0, 1]]}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: form 1: a `mesh` is as it is; an `axis` turns a `profile` or a `circle`
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "to": 100, "plane": "zz"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `forms`: unknown variant `zz`, expected one of `xy`, `xz`, `yz`
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "to": 1e+300}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `A`: form 1: 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is not a usable number
+=== family {"name": "Bad", "types": {"A": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "to": 100, "colour": 1}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `forms`: unknown field `colour`, expected one of `id`, `guid`, `plane`, `profile`, `circle`, `from`, `to`, `axis`, `void`, `material`, `visible`, `mesh`

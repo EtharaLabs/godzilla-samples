@@ -1,0 +1,140 @@
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 25, "ampacity": 89}, {"section": 16, "ampacity": 68}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: row 2: `section` 16 mm² must be larger than the row before's 25 mm²
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 1, "ampacity": 20}, {"section": 2, "ampacity": 10}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: row 2: `ampacity` 10 A is less than the row before's 20 A: a larger section carries at least as much
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 10, "ampacity": 50}, {"section": 10, "ampacity": 50}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: row 2: `section` 10 mm² must be larger than the row before's 10 mm²
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": -1, "ampacity": 10}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: row 1: `section` is mm² above 0 and up to 10000, not -1
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 1, "ampacity": 0}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: row 1: `ampacity` is amperes above 0 and up to 100000, not 0
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": []}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: `sizes` holds 1 to 64 rows, not 0
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 1, "ampacity": 10, "x": 1}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `sizes` must be a list of {section, ampacity, label?}: unknown field `x`, expected one of `section`, `ampacity`, `label`
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "material": "gold"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: `material` is one of copper, aluminium, not `gold`
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "temperature": 500}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: `temperature` is °C above 0 and up to 250, not 500
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "insulation": ""}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: `insulation` is 1 to 256 characters
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "note": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `note` must be text of at most 256 characters, got "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 1, "ampacity": 10, "label": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: wire type `Cu PVC 70 °C`: row 1: `label` is up to 256 characters
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "rename": "Cu THHN 90 °C"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: there's already a wire type `Cu THHN 90 °C`
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "W"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `material` (copper, aluminium) is required for a new wire type
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "W", "material": "copper"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `temperature` (°C) is required for a new wire type
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "W", "material": "copper", "temperature": 70}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `insulation` is required for a new wire type
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "W", "material": "copper", "temperature": 60, "insulation": "Rubber"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `sizes` [{section, ampacity}, …] is required for a new wire type
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "nope", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: there's no wire type `nope`
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "nope", "rename": "yes"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: there's no wire type `nope` to rename
+
+$ bimcraft-cli run --cmd 'wire_type {"name": "Cu PVC 70 °C", "sizes": [{"section": 1, "ampacity": 10}, {"section": 2, "ampacity": 11}, {"section": 3, "ampacity": 12}, {"section": 4, "ampacity": 13}, {"section": 5, "ampacity": 14}, {"section": 6, "ampacity": 15}, {"section": 7, "ampacity": 16}, {"section": 8, "ampacity": 17}, {"section": 9, "ampacity": 18}, {"section": 10, "ampacity": 19}, {"section": 11, "ampacity": 20}, {"section": 12, "ampacity": 21}, {"section": 13, "ampacity": 22}, {"section": 14, "ampacity": 23}, {"section": 15, "ampacity": 24}, {"section": 16, "ampacity": 25}, {"section": 17, "ampacity": 26}, {"section": 18, "ampacity": 27}, {"section": 19, "ampacity": 28}, {"section": 20, "ampacity": 29}, {"section": 21, "ampacity": 30}, {"section": 22, "ampacity": 31}, {"section": 23, "ampacity": 32}, {"section": 24, "ampacity": 33}, {"section": 25, "ampacity": 34}, {"section": 26, "ampacity": 35}, {"section": 27, "ampacity": 36}, {"section": 28, "ampacity": 37}, {"section": 29, "ampacity": 38}, {"section": 30, "ampacity": 39}, {"section": 31, "ampacity": 40}, {"section": 32, "ampacity": 41}, {"section": 33, "ampacity": 42}, {"section": 34, "ampacity": 43}, {"section": 35, "ampacity": 44}, {"section": 36, "ampacity": 45}, {"section": 37, "ampacity": 46}, {"section": 38, "ampacity": 47}, {"section": 39, "ampacity": 48}, {"section": 40, "ampacity": 49}, {"section": 41, "ampacity": 50}, {"section": 42, "ampacity": 51}, {"section": 43, "ampacity": 52}, {"section": 44, "ampacity": 53}, {"section": 45, "ampacity": 54}, {"section": 46, "ampacity": 55}, {"section": 47, "ampacity": 56}, {"section": 48, "ampacity": 57}, {"section": 49, "ampacity": 58}, {"section": 50, "ampacity": 59}, {"section": 51, "ampacity": 60}, {"section": 52, "ampacity": 61}, {"section": 53, "ampacity": 62}, {"section": 54, "ampacity": 63}, {"section": 55, "ampacity": 64}, {"section": 56, "ampacity": 65}, {"section": 57, "ampacity": 66}, {"section": 58, "ampacity": 67}, {"section": 59, "ampacity": 68}, {"section": 60, "ampacity": 69}, {"section": 61, "ampacity": 70}, {"section": 62, "ampacity": 71}, {"section": 63, "ampacity": 72}, {"section": 64, "ampacity": 73}, {"section": 65, "ampacity": 74}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wire_type): wire_type: `sizes` holds up to 64 rows
+

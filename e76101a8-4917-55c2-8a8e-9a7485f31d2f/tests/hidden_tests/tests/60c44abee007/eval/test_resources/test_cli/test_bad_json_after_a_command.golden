@@ -1,0 +1,21 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[1000,0]]'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1: bad JSON after `wall`: EOF while parsing an object at line 1 column 27
+
+$ bimcraft-cli run --cmd 'wall {points: 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1: bad JSON after `wall`: key must be a string at line 1 column 2
+
+$ bimcraft-cli run --cmd 'wall [1, 2]'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall: `points` [[x, y], …] is required
+

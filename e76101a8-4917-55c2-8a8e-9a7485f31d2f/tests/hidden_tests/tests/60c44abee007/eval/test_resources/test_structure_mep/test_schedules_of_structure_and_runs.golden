@@ -1,0 +1,29 @@
+$ bimcraft-cli run --cmd 'column {"at": [0, 0]}' --cmd 'structural_column {"at": [3000, 0], "type": "Concrete Round 400"}' --cmd 'footing {"at": [0, 0]}' --cmd 'beam {"points": [[0, 0], [3000, 0], [3000, 3000]], "level": "Level 2", "system": "Frame A"}' --cmd 'beam {"points": [[0, 3000], [3000, 3000]], "level": "Level 2", "type": "Beam 150 x 400", "system": "Frame B"}' --cmd 'strip_footing {"points": [[0, 0], [0, 3000]]}' --cmd 'pipe {"points": [[0, 500], [3000, 500]], "offset": 300, "system": "Esgoto", "type": "PVC 110"}' --cmd 'pipe {"points": [[0, 800], [2000, 800]], "offset": 300, "system": "Água fria", "type": "PVC 25"}' --cmd 'schedule {"name": "C", "category": "columns"}' --cmd 'schedule {"name": "SC", "category": "structural columns"}' --cmd 'schedule {"name": "F", "category": "footings"}' --cmd 'schedule {"name": "B", "category": "beams", "fields": ["Type", "System", {"name": "Length", "total": true}, "Count"], "sort": ["Type"], "grouped": true}' --cmd 'schedule {"name": "B2", "category": "beams", "fields": ["Id", "System", "Length"], "filters": [{"field": "System", "op": "equals", "value": "Frame A"}]}' --cmd 'schedule {"name": "SF", "category": "strip footings"}' --cmd 'schedule {"name": "P", "category": "pipes", "sort": [{"field": "Length", "descending": true}]}' --cmd 'schedule {"name": "M", "category": "multicategory", "fields": ["Category", "Type", "Level", "Count", "Width", "Length", "Material"], "sort": ["Category", "Type"]}' --cmd 'schedule {"name": "B", "path": "beams.csv"}'
+[exit 0]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"ids":[100005,100006]}
+{"ids":[100007]}
+{"ids":[100008]}
+{"ids":[100009]}
+{"ids":[100010]}
+{"available":["Id","Type","Level","Width","Depth","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"column","columns":["Id","Type","Level","Width","Depth","Height"],"elements":[[100002]],"id":100011,"name":"C","rows":[[100002.0,"Rectangular 400 x 400","Level 1",400.0,400.0,3000.0]]}
+{"available":["Id","Type","Level","Width","Depth","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"structuralcolumn","columns":["Id","Type","Level","Width","Depth","Height"],"elements":[[100003]],"id":100012,"name":"SC","rows":[[100003.0,"Concrete Round 400","Level 1",400.0,400.0,3000.0]]}
+{"available":["Id","Type","Level","Width","Depth","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"footing","columns":["Id","Type","Level","Width","Depth","Thickness"],"elements":[[100004]],"id":100013,"name":"F","rows":[[100004.0,"Footing 1200 x 1200","Level 1",1200.0,1200.0,400.0]]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"beam","columns":["Type","System","Length","Count"],"elements":[[100007],[100005,100006]],"id":100014,"name":"B","rows":[["Beam 150 x 400","Frame B",3000.0,1.0],["Beam 200 x 500","Frame A",6000.0,2.0]],"totals":[null,null,9000.0,null]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"beam","columns":["Id","System","Length"],"elements":[[100005],[100006]],"id":100015,"name":"B2","rows":[[100005.0,"Frame A",3000.0],[100006.0,"Frame A",3000.0]]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"stripfooting","columns":["Id","Type","Level","Length","Width","Depth"],"elements":[[100008]],"id":100016,"name":"SF","rows":[[100008.0,"Strip 600 x 300","Level 1",3000.0,600.0,300.0]]}
+{"available":["Id","Type","Level","System","Length","Diameter","Count","Phase Created","Phase Demolished","Design Option"],"category":"pipe","columns":["Id","Type","Level","System","Length","Diameter"],"elements":[[100009],[100010]],"id":100017,"name":"P","rows":[[100009.0,"PVC 110","Level 1","Esgoto",3000.0,110.0],[100010.0,"PVC 25","Level 1","Água fria",2000.0,25.0]]}
+{"available":["Category","Family","Type","Level","Count","Width","Height","Length","Thickness","Area","Material","Id","Mark","Name","Phase Created","Phase Demolished","Design Option"],"categories":["door","window","wall","floor","ceiling","roof","column","structuralcolumn","footing","beam","rebar","stripfooting","pipe","conduit","cabletray","duct","cable","downconductor","groundconductor","wire","component","stair","ramp","railing"],"category":"multicategory","columns":["Category","Type","Level","Count","Width","Length","Material"],"elements":[[100007],[100005],[100006],[100002],[100004],[100009],[100010],[100008],[100003]],"id":100018,"name":"M","rows":[["beam","Beam 150 x 400","Level 2",1.0,150.0,3000.0,"Concrete"],["beam","Beam 200 x 500","Level 2",1.0,200.0,3000.0,"Concrete"],["beam","Beam 200 x 500","Level 2",1.0,200.0,3000.0,"Concrete"],["column","Rectangular 400 x 400","Level 1",1.0,400.0,null,null],["footing","Footing 1200 x 1200","Level 1",1.0,1200.0,null,null],["pipe","PVC 110","Level 1",1.0,null,3000.0,"PVC"],["pipe","PVC 25","Level 1",1.0,null,2000.0,"PVC"],["stripfooting","Strip 600 x 300","Level 1",1.0,600.0,3000.0,"Concrete"],["structuralcolumn","Concrete Round 400","Level 1",1.0,400.0,null,null]]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"beam","columns":["Type","System","Length","Count"],"elements":[[100007],[100005,100006]],"id":100014,"name":"B","rows":[["Beam 150 x 400","Frame B",3000.0,1.0],["Beam 200 x 500","Frame A",6000.0,2.0]],"totals":[null,null,9000.0,null]}
+
+--- stderr
+
+=== file beams.csv
+Type,System,Length,Count
+Beam 150 x 400,Frame B,3000.0,1.0
+Beam 200 x 500,Frame A,6000.0,2.0
+,,9000.0,
+

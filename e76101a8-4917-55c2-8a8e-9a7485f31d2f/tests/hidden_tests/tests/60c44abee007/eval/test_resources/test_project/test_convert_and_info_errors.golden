@@ -1,0 +1,22 @@
+$ bimcraft-cli convert missing.bimcraft out.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: missing.bimcraft: No such file or directory (os error 2)
+
+$ bimcraft-cli convert p.bimcraft no/such/dir/out.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+save: no/such/dir/out.bimcraft: No such file or directory (os error 2) at path "<WORKDIR>/no/such/dir/.tmp<RANDOM>"
+
+$ bimcraft-cli info missing.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: missing.ifc: No such file or directory (os error 2)
+
+=== files: p.bimcraft

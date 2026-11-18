@@ -1,0 +1,60 @@
+$ vent_size {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: `units` (UHC of what it vents) is required
+$ vent_size {"units": 37}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: 37 UHC is more than the table gives a branch vent (Tabela 8)
+$ vent_size {"units": 61, "wc": true}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: 61 UHC is more than the table gives a branch vent (Tabela 8)
+$ vent_size {"units": 5, "stack_dn": 40, "length": 47000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: no vent of the table (Tabela 2) is long enough for that, or the units pass its last row
+$ vent_size {"units": 600, "stack_dn": 100, "length": 1000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: no vent of the table (Tabela 2) is long enough for that, or the units pass its last row
+$ vent_size {"units": 10, "stack_dn": 400, "length": 1000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: no vent of the table (Tabela 2) is long enough for that, or the units pass its last row
+$ vent_size {"units": 10, "stack_dn": 90, "length": 1000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: `stack_dn` must be one of 40, 50, 75, 100, 150, 200, 250, 300, 400
+$ vent_size {"units": 10, "stack_dn": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: `length` (mm, from the foot to the open end) is required with `stack_dn`
+$ vent_size {"units": 10, "stack_dn": 100, "length": -1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: `length` must be a number from 0 to 1000000000, got -1
+$ vent_size {"units": 10, "trap_dn": 60}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: `trap_dn` must be 40, 50, 75 or 100 (Tabela 1)
+$ vent_size {"units": 10, "wc": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: `wc` must be true or false, got "yes"
+$ vent_size {"units": 10, "role": "branch"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (vent_size): vent_size: unknown parameter `role`

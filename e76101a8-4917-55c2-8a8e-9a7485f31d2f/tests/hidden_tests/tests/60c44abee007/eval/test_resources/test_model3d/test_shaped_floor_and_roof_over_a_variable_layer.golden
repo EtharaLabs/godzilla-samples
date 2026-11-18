@@ -1,0 +1,669 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'type {"category": "floor", "name": "Screed on Slab", "layers": [{"function": "finish", "material": "Ceramic tile", "thickness": 10}, {"material": "Screed", "thickness": 60, "variable": true}, {"function": "structure", "material": "Concrete", "thickness": 150}]}' --cmd 'type {"category": "roof", "name": "Insulated Flat", "layers": [{"material": "Membrane", "thickness": 10}, {"material": "Insulation", "thickness": 100, "variable": true}, {"function": "structure", "material": "Concrete", "thickness": 200}]}' --cmd 'floor {"type": "Screed on Slab"}' --cmd 'roof {"type": "Insulated Flat", "overhang": 0, "slope": 0}' --cmd 'edit_shape {"id": 100006, "points": [{"at": [3000, 2000], "z": -40}]}' --cmd 'add_point {"id": 100007, "at": [3000, 2000], "z": 80}' --cmd 'elements {"category": "floor"}' --cmd 'elements {"category": "roof"}' --cmd 'section {"start": [-500, 2000], "end": [6500, 2000]}' --cmd 'render {"view": "Section 1", "width": 400, "height": 200, "path": "section.png"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "elevation": 10, "path": "slab3d.png"}' --cmd 'save {"path": "slabs.glb"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"category":"floor","name":"Screed on Slab","type":{"layers":[{"function":"finish","material":"Ceramic tile","thickness":10.0},{"function":"structure","material":"Screed","thickness":60.0,"variable":true},{"function":"structure","material":"Concrete","thickness":150.0}],"thickness":220.0}}
+{"category":"roof","name":"Insulated Flat","type":{"layers":[{"function":"structure","material":"Membrane","thickness":10.0},{"function":"structure","material":"Insulation","thickness":100.0,"variable":true},{"function":"structure","material":"Concrete","thickness":200.0}],"thickness":310.0}}
+{"area_m2":24.0,"id":100006}
+{"id":100007}
+{"faces":4,"id":100006,"top":[-40.0,0.0]}
+{"faces":4,"id":100007,"top":[3310.0,3390.0]}
+{"count":1,"elements":[{"area_m2":24.0,"boundary":[[6000.0,4000.0],[0.0,4000.0],[0.0,0.0],[6000.0,0.0]],"category":"floor","guid":"<GUID-1>","id":100006,"level":"<GUID-2>","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"shape":{"points":[{"at":[3000.0,2000.0],"guid":"<GUID-3>","id":999459,"z":-40.0}]},"thickness":220.0,"top":[-40.0,0.0],"type":"Screed on Slab","type_guid":"<GUID-4>","volume_m3":4.96}],"returned":1}
+{"count":1,"elements":[{"area_m2":26.04,"boundary":[[-100.0,-100.0],[6100.0,-100.0],[6100.0,4100.0],[-100.0,4100.0]],"category":"roof","guid":"<GUID-5>","id":100007,"level":"<GUID-6>","offset":0.0,"outline":[[-100.0,-100.0],[6100.0,-100.0],[6100.0,4100.0],[-100.0,4100.0]],"overhang":0.0,"ridge":3080.0,"shape":{"points":[{"at":[3000.0,2000.0],"guid":"<GUID-7>","id":999458,"z":80.0}]},"slope":0.0,"type":"Insulated Flat","type_guid":"<GUID-8>"}],"returned":1}
+{"id":100008,"name":"Section 1"}
+{"height":200,"kind":"section","path":"section.png","view":"Section 1","width":400}
+{"azimuth":-45.0,"elevation":10.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"slab3d.png","target":null,"view":"{3D}","width":320}
+{"elements":6,"format":"glTF 2.0","path":"slabs.glb","triangles":272}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'type {"category": "floor", "name": "Screed on Slab", "layers": [{"material": "Screed", "thickness": 60, "variable": true}, {"function": "structure", "material": "Concrete", "thickness": 150}]}' --cmd 'floor {"type": "Screed on Slab"}' --cmd 'add_point {"id": 100006, "at": [3000, 2000], "z": -100}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"category":"floor","name":"Screed on Slab","type":{"layers":[{"function":"structure","material":"Screed","thickness":60.0,"variable":true},{"function":"structure","material":"Concrete","thickness":150.0}],"thickness":210.0}}
+{"area_m2":24.0,"id":100006}
+
+--- stderr
+line 1 (add_point): floor 100006: at the shape point at (3000, 2000) the variable layer would be -40 mm: raise the point by 40 mm, or thicken the variable layer
+
+$ bimcraft-cli run --cmd 'type {"category": "floor", "name": "Two Variable", "layers": [{"material": "Screed", "thickness": 60, "variable": true}, {"material": "Concrete", "thickness": 150, "variable": true}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): floor type `Two Variable`: 2 variable layers; a type has one variable layer at most
+
+=== file section.png
+png 400x200 rgba pixels-sha256=de2cb83d353dd789bd2bfcaeffb91c22319e95f191e2323b7b2aa0c72e2c1b22
+=== file slab3d.png
+png 320x200 rgba pixels-sha256=8f4c45f705f63a34a4deef445c80d8b99395c79eb893cd38979c466c5b8dd25e
+=== file slabs.glb
+{
+ "accessors": [
+  {
+   "bufferView": 0,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 32,
+   "max": [
+    6.1,
+    3.0,
+    0.1
+   ],
+   "min": [
+    -0.1,
+    0.0,
+    -0.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 32,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 0,
+   "componentType": 5125,
+   "count": 60,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 384,
+   "componentType": 5126,
+   "count": 32,
+   "max": [
+    6.1,
+    3.0,
+    0.1
+   ],
+   "min": [
+    5.9,
+    0.0,
+    -4.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 384,
+   "componentType": 5126,
+   "count": 32,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 240,
+   "componentType": 5125,
+   "count": 60,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 768,
+   "componentType": 5126,
+   "count": 32,
+   "max": [
+    6.1,
+    3.0,
+    -3.9
+   ],
+   "min": [
+    -0.1,
+    0.0,
+    -4.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 768,
+   "componentType": 5126,
+   "count": 32,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 480,
+   "componentType": 5125,
+   "count": 60,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 1152,
+   "componentType": 5126,
+   "count": 32,
+   "max": [
+    0.1,
+    3.0,
+    0.1
+   ],
+   "min": [
+    -0.1,
+    0.0,
+    -4.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 1152,
+   "componentType": 5126,
+   "count": 32,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 720,
+   "componentType": 5125,
+   "count": 60,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 1536,
+   "componentType": 5126,
+   "count": 50,
+   "max": [
+    6.0,
+    -0.07,
+    0.0
+   ],
+   "min": [
+    0.0,
+    -0.22,
+    -4.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 1536,
+   "componentType": 5126,
+   "count": 50,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 960,
+   "componentType": 5125,
+   "count": 96,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 2136,
+   "componentType": 5126,
+   "count": 57,
+   "max": [
+    6.0,
+    -0.01,
+    0.0
+   ],
+   "min": [
+    0.0,
+    -0.07,
+    -4.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 2136,
+   "componentType": 5126,
+   "count": 57,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 1344,
+   "componentType": 5125,
+   "count": 96,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 2820,
+   "componentType": 5126,
+   "count": 64,
+   "max": [
+    6.0,
+    0.0,
+    0.0
+   ],
+   "min": [
+    0.0,
+    -0.05,
+    -4.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 2820,
+   "componentType": 5126,
+   "count": 64,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 1728,
+   "componentType": 5125,
+   "count": 96,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 3588,
+   "componentType": 5126,
+   "count": 64,
+   "max": [
+    6.1,
+    3.39,
+    0.1
+   ],
+   "min": [
+    -0.1,
+    3.3,
+    -4.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 3588,
+   "componentType": 5126,
+   "count": 64,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 2112,
+   "componentType": 5125,
+   "count": 96,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 4356,
+   "componentType": 5126,
+   "count": 50,
+   "max": [
+    6.1,
+    3.2,
+    0.1
+   ],
+   "min": [
+    -0.1,
+    3.0,
+    -4.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 4356,
+   "componentType": 5126,
+   "count": 50,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 2496,
+   "componentType": 5125,
+   "count": 96,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 4956,
+   "componentType": 5126,
+   "count": 57,
+   "max": [
+    6.1,
+    3.38,
+    0.1
+   ],
+   "min": [
+    -0.1,
+    3.2,
+    -4.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 4956,
+   "componentType": 5126,
+   "count": 57,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 2880,
+   "componentType": 5125,
+   "count": 96,
+   "type": "SCALAR"
+  }
+ ],
+ "asset": {
+  "extras": {
+   "source": "the default 3D view",
+   "units": "metres",
+   "up": "+Y, BIMCraft's +Z"
+  },
+  "generator": "BIMCraft 0.10.0",
+  "version": "2.0"
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 5640,
+   "byteOffset": 0,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 5640,
+   "byteOffset": 5640,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3264,
+   "byteOffset": 11280,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 14544
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "#ecece8",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.838799,
+     0.838799,
+     0.806952,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#bcbcb6",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.502886,
+     0.502886,
+     0.467784,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#cec8bc",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.617207,
+     0.57758,
+     0.502886,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#dedcd2",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.730461,
+     0.715694,
+     0.64448,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#46464a",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.061246,
+     0.061246,
+     0.068478,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#e8d68c",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.806952,
+     0.672443,
+     0.262251,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "100002",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 1,
+      "POSITION": 0
+     },
+     "indices": 2,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100003",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 4,
+      "POSITION": 3
+     },
+     "indices": 5,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100004",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 7,
+      "POSITION": 6
+     },
+     "indices": 8,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100005",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 10,
+      "POSITION": 9
+     },
+     "indices": 11,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100006",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 13,
+      "POSITION": 12
+     },
+     "indices": 14,
+     "material": 1,
+     "mode": 4
+    },
+    {
+     "attributes": {
+      "NORMAL": 16,
+      "POSITION": 15
+     },
+     "indices": 17,
+     "material": 2,
+     "mode": 4
+    },
+    {
+     "attributes": {
+      "NORMAL": 19,
+      "POSITION": 18
+     },
+     "indices": 20,
+     "material": 3,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100007",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 22,
+      "POSITION": 21
+     },
+     "indices": 23,
+     "material": 4,
+     "mode": 4
+    },
+    {
+     "attributes": {
+      "NORMAL": 25,
+      "POSITION": 24
+     },
+     "indices": 26,
+     "material": 1,
+     "mode": 4
+    },
+    {
+     "attributes": {
+      "NORMAL": 28,
+      "POSITION": 27
+     },
+     "indices": 29,
+     "material": 5,
+     "mode": 4
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "extras": {
+    "category": "wall",
+    "guid": "<GUID-9>",
+    "id": 100002
+   },
+   "mesh": 0,
+   "name": "100002"
+  },
+  {
+   "extras": {
+    "category": "wall",
+    "guid": "<GUID-10>",
+    "id": 100003
+   },
+   "mesh": 1,
+   "name": "100003"
+  },
+  {
+   "extras": {
+    "category": "wall",
+    "guid": "<GUID-11>",
+    "id": 100004
+   },
+   "mesh": 2,
+   "name": "100004"
+  },
+  {
+   "extras": {
+    "category": "wall",
+    "guid": "<GUID-12>",
+    "id": 100005
+   },
+   "mesh": 3,
+   "name": "100005"
+  },
+  {
+   "extras": {
+    "category": "floor",
+    "guid": "<GUID-1>",
+    "id": 100006
+   },
+   "mesh": 4,
+   "name": "100006"
+  },
+  {
+   "extras": {
+    "category": "roof",
+    "guid": "<GUID-5>",
+    "id": 100007
+   },
+   "mesh": 5,
+   "name": "100007"
+  }
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  }
+ ]
+}
+bin-sha256=423e11cee29311e81c7c64d8be7a0ab19a810ec055b80c135e1724fb881947a7

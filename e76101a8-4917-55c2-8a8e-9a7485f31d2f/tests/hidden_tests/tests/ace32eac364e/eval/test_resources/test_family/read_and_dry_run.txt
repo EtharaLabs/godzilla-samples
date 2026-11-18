@@ -1,0 +1,75 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[{"from":"Top","material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","warnings":[]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== family {}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"families":[{"category":"airterminal","forms":2,"name":"Air Terminal","symbols":0,"types":3},{"category":"casework","forms":3,"name":"Base Cabinet","symbols":0,"types":3},{"category":"plumbing","forms":5,"name":"Bathtub","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Bed","symbols":0,"types":3},{"category":"window","forms":10,"name":"Casement Window","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Ceiling Luminaire","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Chair","symbols":0,"types":1},{"category":"dataoutlet","forms":3,"name":"Data Outlet","symbols":0,"types":2},{"category":"furniture","forms":4,"name":"Desk","symbols":0,"types":2},{"category":"equipment","forms":2,"name":"Distribution Board","symbols":0,"types":3},{"category":"door","forms":9,"name":"Double Door","symbols":4,"types":3},{"category":"earthing","forms":1,"name":"Earthing Electrode","symbols":0,"types":2},{"category":"pipefitting","forms":2,"name":"Elbow 90","symbols":0,"types":3},{"category":"window","forms":5,"name":"Fixed Window","symbols":0,"types":3},{"category":"drain","forms":5,"name":"Floor Drain","symbols":0,"types":2},{"category":"pipeaccessory","forms":4,"name":"Gate Valve","symbols":0,"types":2},{"category":"inspectionbox","forms":2,"name":"Inspection Box","symbols":0,"types":2},{"category":"plumbing","forms":9,"name":"Kitchen Sink","symbols":0,"types":2},{"category":"outlet","forms":2,"name":"Outlet","symbols":0,"types":3},{"category":"patchpanel","forms":1,"name":"Patch Panel","symbols":0,"types":2},{"category":"rack","forms":2,"name":"Rack","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Recessed Luminaire","symbols":0,"types":2},{"category":"plumbing","forms":5,"name":"Shower","symbols":0,"types":2},{"category":"door","forms":6,"name":"Single Door","symbols":2,"types":3},{"category":"door","forms":6,"name":"Sliding Door","symbols":2,"types":3},{"category":"window","forms":14,"name":"Sliding Window","symbols":2,"types":3},{"category":"furniture","forms":4,"name":"Sofa","symbols":0,"types":2},{"category":"switch","forms":2,"name":"Switch","symbols":0,"types":2},{"category":"furniture","forms":5,"name":"Table","symbols":0,"types":3},{"category":"pipefitting","forms":2,"name":"Tee","symbols":0,"types":3},{"category":"outlet","forms":2,"name":"Three-Phase Outlet","symbols":0,"types":2},{"category":"voiceoutlet","forms":2,"name":"Voice Outlet","symbols":0,"types":2},{"category":"plumbing","forms":3,"name":"WC","symbols":0,"types":1},{"category":"casework","forms":2,"name":"Wardrobe","symbols":0,"types":2},{"category":"plumbing","forms":2,"name":"Washbasin","symbols":0,"types":2},{"category":"furniture","forms":1,"name":"Work Desk","symbols":0,"types":2}]}
+--- stderr
+=== family {"name": "Work Desk"} | undo
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","values":{"1200 x 600":{"Depth":600.0,"Height":740.0,"Top":710.0,"Width":1200.0},"1600 x 800":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},"warnings":[]}
+--- stderr
+line 1 (undo): nothing to undo
+=== family {"name": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: there's no family `Nope`
+=== family {"name": "Work Desk", "dry_run": true}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"changes":{"deleted":false,"forms":{"deleted":[],"patched":[],"replaced":0},"parameters":{"added":[],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":[],"changed":[],"removed":[]}},"dry_run":true,"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","ok":true,"values":{"1200 x 600":{"Depth":600.0,"Height":740.0,"Top":710.0,"Width":1200.0},"1600 x 800":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},"warnings":[]}
+--- stderr
+=== family {"name": "Work Desk", "dry_run": true, "parameters": [{"name": "Width", "value": 1200}, {"name": "Depth", "value": 600}, {"name": "Height", "instance": true, "value": 740}, {"name": "Top", "formula": "Height - 30"}, {"name": "Shelf", "value": 300}], "types": {"1600 x 800": {"Depth": 900}, "1800 x 900": {"Width": 1800, "Depth": 900}}} | family {"name": "Work Desk"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"changes":{"deleted":false,"forms":{"deleted":[],"patched":[],"replaced":0},"parameters":{"added":["Shelf"],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":["1800 x 900"],"changed":["1600 x 800"],"removed":[]}},"dry_run":true,"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null},{"kind":"length","name":"Shelf","value":300}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":900,"Width":1600},"1800 x 900":{"Depth":900,"Width":1800}}},"name":"Work Desk","ok":true,"values":{"1200 x 600":{"Depth":600.0,"Height":740.0,"Shelf":300.0,"Top":710.0,"Width":1200.0},"1600 x 800":{"Depth":900.0,"Height":740.0,"Shelf":300.0,"Top":710.0,"Width":1600.0},"1800 x 900":{"Depth":900.0,"Height":740.0,"Shelf":300.0,"Top":710.0,"Width":1800.0}},"warnings":[]}
+{"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","values":{"1200 x 600":{"Depth":600.0,"Height":740.0,"Top":710.0,"Width":1200.0},"1600 x 800":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},"warnings":[]}
+--- stderr
+=== family {"name": "Work Desk", "dry_run": true, "types": {"1800 x 900": {"Width": 0}}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Work Desk`: type `1800 x 900`: form 1: its profile has no area: it needs three corners or more, or a circle
+=== family {"name": "Work Desk", "dry_run": true, "rename": "Bureau"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"changes":{"deleted":false,"forms":{"deleted":[],"patched":[],"replaced":0},"parameters":{"added":[],"changed":[],"removed":[]},"rename":"Bureau","symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":[],"changed":[],"removed":[]}},"dry_run":true,"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Bureau","ok":true,"values":{"1200 x 600":{"Depth":600.0,"Height":740.0,"Top":710.0,"Width":1200.0},"1600 x 800":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},"warnings":[]}
+--- stderr
+=== family {"name": "Work Desk", "dry_run": true, "delete": true} | family {"name": "Work Desk"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"changes":{"deleted":true,"forms":{"deleted":[],"patched":[],"replaced":0},"parameters":{"added":[],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":[],"changed":[],"removed":[]}},"dry_run":true,"name":"Work Desk","ok":true,"warnings":[]}
+{"family":{"category":"furniture","forms":[{"from":"Top","guid":"GUID-1","id":999460,"material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","values":{"1200 x 600":{"Depth":600.0,"Height":740.0,"Top":710.0,"Width":1200.0},"1600 x 800":{"Depth":800.0,"Height":740.0,"Top":710.0,"Width":1600.0}},"warnings":[]}
+--- stderr
+=== family {"delete": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `name` is required: the family's
+=== family {"rename": "X"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `name` is required: the family's
+=== family {"name": "Nope", "delete": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: there's no family `Nope`

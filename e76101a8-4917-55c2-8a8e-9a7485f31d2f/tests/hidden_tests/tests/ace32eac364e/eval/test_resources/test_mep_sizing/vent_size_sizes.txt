@@ -1,0 +1,50 @@
+$ vent_size {"units": 12}
+exit: 0
+--- stdout
+{"dn":40.0}
+--- stderr
+$ vent_size {"units": 13}
+exit: 0
+--- stdout
+{"dn":50.0}
+--- stderr
+$ vent_size {"units": 36}
+exit: 0
+--- stdout
+{"dn":75.0}
+--- stderr
+$ vent_size {"units": 17, "wc": true}
+exit: 0
+--- stdout
+{"dn":50.0}
+--- stderr
+$ vent_size {"units": 30, "wc": true, "trap_dn": 40}
+exit: 0
+--- stdout
+{"dn":75.0,"trap_to_vent_mm":1000.0}
+--- stderr
+$ vent_size {"units": 100, "stack_dn": 100, "length": 50000}
+exit: 0
+--- stdout
+{"dn":75.0,"longest_m":61.0}
+--- stderr
+$ vent_size {"units": 100, "stack_dn": 100, "length": 50000, "trap_dn": 75}
+exit: 0
+--- stdout
+{"dn":75.0,"longest_m":61.0,"trap_to_vent_mm":1800.0}
+--- stderr
+$ vent_size {"units": 5, "stack_dn": 40, "length": 46000}
+exit: 0
+--- stdout
+{"dn":40.0,"longest_m":46.0}
+--- stderr
+$ vent_size {"units": 20000, "stack_dn": 300, "length": 100000, "trap_dn": 100}
+exit: 0
+--- stdout
+{"dn":300.0,"longest_m":186.0,"trap_to_vent_mm":2400.0}
+--- stderr
+$ vent_size {"units": 2900, "stack_dn": 150, "length": 0}
+exit: 0
+--- stdout
+{"dn":75.0,"longest_m":6.0}
+--- stderr

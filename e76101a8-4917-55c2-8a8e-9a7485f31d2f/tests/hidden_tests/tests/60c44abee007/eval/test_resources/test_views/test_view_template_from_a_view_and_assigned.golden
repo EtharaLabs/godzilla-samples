@@ -1,0 +1,57 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'door {"at": [3000, 2000]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'room {"point": [1500, 2000], "name": "Living"}' --cmd 'room {"point": [4500, 2000], "name": "Bed"}' --cmd 'floor {}' --cmd 'grid {"start": [0, -1000], "end": [0, 5000]}' --cmd 'grid {"start": [6000, -1000], "end": [6000, 5000]}' --cmd 'graphics {"hide": ["grids"], "categories": {"walls": {"cut": {"fill": [90, 90, 160]}}}}' --cmd 'scale {"view": "Level 1", "scale": 50}' --cmd 'template {"name": "Presentation", "from": "Level 1"}' --cmd 'graphics {"view": "Level 2", "template": "Presentation"}' --save model.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"host":100002,"id":100007,"mark":"1","offset":1500.0}
+{"host":100006,"id":100008,"mark":"2","offset":2000.0}
+{"host":100003,"id":100009,"mark":"1","offset":2000.0}
+{"area_m2":12.0,"id":100010,"number":"1"}
+{"area_m2":12.0,"id":100011,"number":"2"}
+{"area_m2":24.0,"id":100012}
+{"id":100013,"name":"1"}
+{"id":100014,"name":"2"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":["grid"],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"name":"Level 1","scale":50.0,"view":100000}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","filters":[],"hidden":["grid"],"kind":"plan","layers":{},"name":"Presentation","options":{},"phase":null,"phase_filter":null,"scale":50.0,"view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null},"views":[],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controlled":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","elements":{},"filters":[],"hidden":["grid"],"hidden_elements":[],"layers":{},"name":"Level 2","options":{},"phase":null,"phase_filter":null,"scale":50.0,"template":"Presentation","view":100001,"visual_style":"shaded"}
+{"format":"bimcraft","path":"model.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run model.bimcraft --cmd 'scale {"view": "Level 2", "scale": 200}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"model.bimcraft"}
+
+--- stderr
+line 1 (scale): scale: its scale follow view template `Presentation`; change the template, or `template: null` to stop following it
+
+$ bimcraft-cli run model.bimcraft --cmd 'template {"name": "Presentation", "rename": "Pres"}' --cmd 'graphics {"view": "Level 2"}' --cmd 'render {"view": "Level 2", "path": "follower.svg", "width": 400, "height": 300}' --cmd 'template {"name": "Pres"}' --cmd 'template {"name": "Pres", "controls": ["categories"]}' --cmd 'scale {"view": "Level 2", "scale": 200}' --cmd 'template {"name": "Pres", "delete": true}' --cmd 'graphics {"view": "Level 2"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"model.bimcraft"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","filters":[],"hidden":["grid"],"kind":"plan","layers":{},"name":"Pres","options":{},"phase":null,"phase_filter":null,"scale":50.0,"view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null},"views":[100001],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controlled":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","elements":{},"filters":[],"hidden":["grid"],"hidden_elements":[],"layers":{},"name":"Level 2","options":{},"phase":null,"phase_filter":null,"scale":50.0,"template":"Pres","view":100001,"visual_style":"shaded"}
+{"height":300,"kind":"plan","path":"follower.svg","view":"Level 2","width":400}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","filters":[],"hidden":["grid"],"kind":"plan","layers":{},"name":"Pres","options":{},"phase":null,"phase_filter":null,"scale":50.0,"view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null},"views":[100001],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"grid":{"hidden":true},"wall":{"cut":{"fill":[90,90,160]}}},"controls":["categories"],"detail":"fine","filters":[],"hidden":["grid"],"kind":"plan","layers":{},"name":"Pres","options":{},"phase":null,"phase_filter":null,"scale":50.0,"view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null},"views":[100001],"visual_style":"shaded"}
+{"name":"Level 2","scale":200.0,"view":100001}
+{"deleted":true,"name":"Pres"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 2","options":{},"phase":null,"phase_filter":null,"scale":200.0,"template":null,"view":100001,"visual_style":"shaded"}
+
+--- stderr
+
+=== svg follower.svg
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<rect width="400" height="300" fill="#ffffff"/>
+<path d="M24.0 266.0 L24.0 282.0 L34.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M49.3 266.0 L38.7 266.0 L38.7 282.0 L49.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M38.7 274.0 L46.7 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M53.3 266.0 L58.7 282.0 L64.0 266.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M78.7 266.0 L68.0 266.0 L68.0 282.0 L78.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M68.0 274.0 L76.0 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.7 266.0 L82.7 282.0 L93.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M112.0 268.7 L114.7 266.0 L120.0 266.0 L122.7 268.7 L122.7 271.3 L112.0 282.0 L122.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

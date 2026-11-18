@@ -1,0 +1,42 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"host":100003,"id":100007,"mark":"1","offset":3000.0}
+{"area_m2":48.0,"id":100008}
+{"area_m2":45.24,"id":100009}
+{"id":100010}
+{"id":100011}
+{"id":100012}
+{"id":100013}
+{"ids":[100014]}
+{"ids":[100015]}
+{"ids":[100016]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== rename_type {"category": "floor", "type": "Generic - 200mm", "name": "Generic - 200mm (renamed)"} | rename_type {"category": "door", "type": "Single 900 x 2100", "name": "Single 900 x 2100 (renamed)"} | rename_type {"category": "window", "type": "Fixed 1200 x 1500", "name": "Fixed 1200 x 1500 (renamed)"} | rename_type {"category": "column", "type": "Rectangular 400 x 400", "name": "Rectangular 400 x 400 (renamed)"} | rename_type {"category": "structuralcolumn", "type": "Concrete 300 x 300", "name": "Concrete 300 x 300 (renamed)"} | rename_type {"category": "footing", "type": "Footing 1200 x 1200", "name": "Footing 1200 x 1200 (renamed)"} | rename_type {"category": "roof", "type": "Generic - 300mm", "name": "Generic - 300mm (renamed)"} | rename_type {"category": "ceiling", "type": "Generic - 20mm", "name": "Generic - 20mm (renamed)"} | rename_type {"category": "railing", "type": "Railing - 1000mm", "name": "Railing - 1000mm (renamed)"} | rename_type {"category": "beam", "type": "Beam 200 x 500", "name": "Beam 200 x 500 (renamed)"} | rename_type {"category": "pipe", "type": "PVC 110", "name": "PVC 110 (renamed)"} | rename_type {"category": "duct", "type": "Round 300", "name": "Round 300 (renamed)"} | elements {} | library {"name": "PVC 110 (renamed)"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"renamed":{"from":"Generic - 200mm","kind":"floor type","to":"Generic - 200mm (renamed)"}}
+{"renamed":{"from":"Single 900 x 2100","kind":"door type","to":"Single 900 x 2100 (renamed)"}}
+{"renamed":{"from":"Fixed 1200 x 1500","kind":"window type","to":"Fixed 1200 x 1500 (renamed)"}}
+{"renamed":{"from":"Rectangular 400 x 400","kind":"column type","to":"Rectangular 400 x 400 (renamed)"}}
+{"renamed":{"from":"Concrete 300 x 300","kind":"structuralcolumn type","to":"Concrete 300 x 300 (renamed)"}}
+{"renamed":{"from":"Footing 1200 x 1200","kind":"footing type","to":"Footing 1200 x 1200 (renamed)"}}
+{"renamed":{"from":"Generic - 300mm","kind":"roof type","to":"Generic - 300mm (renamed)"}}
+{"renamed":{"from":"Generic - 20mm","kind":"ceiling type","to":"Generic - 20mm (renamed)"}}
+{"renamed":{"from":"Railing - 1000mm","kind":"railing type","to":"Railing - 1000mm (renamed)"}}
+{"renamed":{"from":"Beam 200 x 500","kind":"beam type","to":"Beam 200 x 500 (renamed)"}}
+{"renamed":{"from":"PVC 110","kind":"pipe type","to":"PVC 110 (renamed)"}}
+{"renamed":{"from":"Round 300","kind":"duct type","to":"Round 300 (renamed)"}}
+{"count":17,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-3","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-1","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-1","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-8","height":2100.0,"host":"GUID-3","id":100006,"level":"GUID-1","mark":"1","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100 (renamed)","type_guid":"GUID-9","width":900.0},{"at":[8000.0,3000.0],"category":"window","flip_facing":false,"flip_hand":false,"guid":"GUID-10","height":1500.0,"host":"GUID-5","id":100007,"level":"GUID-1","mark":"1","offset":3000.0,"sill":900.0,"type":"Fixed 1200 x 1500 (renamed)","type_guid":"GUID-11","width":1200.0},{"area_m2":48.0,"boundary":[[8000.0,6000.0],[0.0,6000.0],[0.0,0.0],[8000.0,0.0]],"category":"floor","guid":"GUID-12","id":100008,"level":"GUID-1","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[0.0,0.0],"type":"Generic - 200mm (renamed)","type_guid":"GUID-13","volume_m3":9.6},{"area_m2":45.24,"boundary":[[100.0,100.0],[7900.0,100.0],[7900.0,5900.0],[100.0,5900.0]],"category":"ceiling","grid":0.0,"guid":"GUID-14","id":100009,"level":"GUID-1","offset":2600.0,"thickness":20.0,"type":"Generic - 20mm (renamed)","type_guid":"GUID-15"},{"angle":0.0,"at":[2000.0,2000.0],"base_offset":0.0,"category":"column","depth":400.0,"guid":"GUID-16","height":3000.0,"id":100010,"level":"GUID-1","room_bounding":true,"round":false,"top_level":"GUID-2","type":"Rectangular 400 x 400 (renamed)","type_guid":"GUID-17","width":400.0},{"angle":0.0,"at":[3000.0,2000.0],"base_offset":0.0,"category":"structuralcolumn","depth":300.0,"guid":"GUID-18","height":3000.0,"id":100011,"level":"GUID-1","room_bounding":true,"round":false,"top_level":"GUID-2","type":"Concrete 300 x 300 (renamed)","type_guid":"GUID-19","width":300.0},{"angle":0.0,"at":[4000.0,2000.0],"base_offset":-400.0,"category":"footing","depth":1200.0,"guid":"GUID-20","height":400.0,"id":100012,"level":"GUID-1","round":false,"top_level":null,"type":"Footing 1200 x 1200 (renamed)","type_guid":"GUID-21","width":1200.0},{"area_m2":48.0,"boundary":[[0.0,0.0],[8000.0,0.0],[8000.0,6000.0],[0.0,6000.0]],"category":"roof","guid":"GUID-22","id":100013,"level":"GUID-2","offset":0.0,"outline":[[0.0,0.0],[8000.0,0.0],[8000.0,6000.0],[0.0,6000.0]],"overhang":0.0,"ridge":3000.0,"slope":0.0,"type":"Generic - 300mm (renamed)","type_guid":"GUID-23"},{"category":"railing","guid":"GUID-24","height":1000.0,"id":100014,"level":"GUID-1","path":[[1000.0,5000.0],[3000.0,5000.0]],"type":"Railing - 1000mm (renamed)","type_guid":"GUID-25"},{"axis":[[1000.0,3000.0,-250.0],[5000.0,3000.0,-250.0]],"category":"beam","depth":500.0,"end":[5000.0,3000.0],"guid":"GUID-26","id":100015,"justify":"top","length":4000.0,"level":"GUID-1","offset":0.0,"round":false,"start":[1000.0,3000.0],"type":"Beam 200 x 500 (renamed)","type_guid":"GUID-27","width":200.0},{"axis":[[1000.0,4000.0,0.0],[5000.0,4000.0,0.0]],"category":"pipe","depth":50.0,"end":[5000.0,4000.0],"guid":"GUID-28","id":100016,"justify":"centre","length":4000.0,"level":"GUID-1","offset":0.0,"round":true,"start":[1000.0,4000.0],"type":"PVC 50","type_guid":"GUID-29","width":50.0}],"returned":17}
+{"count":1,"library":[{"guid":"GUID-30","id":999958,"kind":"type:pipe","name":"PVC 110 (renamed)"}],"parts":[]}
+--- stderr
+=== rename_type {"category": "floor", "type": "Generic - 200mm", "name": "  "}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (rename_type): rename_type: `name` is required: the type's new name

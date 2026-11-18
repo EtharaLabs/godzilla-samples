@@ -1,0 +1,35 @@
+$ bimcraft-cli run --cmd 'render {"family": "Nope"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (render): render: there's no family `Nope`; `inspect` lists them
+
+$ bimcraft-cli run --cmd 'render {"family": "Table", "type": "9 x 9"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (render): render: family `Table` has no type `9 x 9` (there are: 1200 x 800, 1600 x 900, 2000 x 1000)
+
+$ bimcraft-cli run --cmd 'render {"family": "Table", "mode": "section"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (render): render: `mode` is 3d, plan or elevation, not `section`
+
+$ bimcraft-cli run --cmd 'render {"family": "Single Door", "wall_thickness": -5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (render): render: `wall_thickness` must be mm above zero and up to 1000000000, got -5
+
+$ bimcraft-cli run --cmd 'render {"mode": "3d"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (render): render: `family` is required: the family to draw
+

@@ -1,0 +1,21 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "stray.dxf"}'
+[exit 0]
+--- stdout
+{"cad":"stray","entities":61,"extents":[[-2950.0,-250.0],[2950.0,250.0]],"far":1,"id":100002,"layers":2,"left_out":{},"scale":1.0,"source":"stray.dxf","unit":"mm","warning":"1 of its entities lie far from the rest of the drawing: they're drawn where they are, and left out of its extents. Delete them in the program that made the drawing, or hide their layers"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "survey.dxf", "position": "origin"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): cadimport 100002: the drawing, placed, x: 7000000000 is not a usable number; place it nearer the origin (`position`: center), or at another `scale`
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "survey.dxf"}'
+[exit 0]
+--- stdout
+{"cad":"survey","entities":2,"extents":[[-2500.0,-1500.0],[2500.0,1500.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"survey.dxf","unit":"mm"}
+
+--- stderr
+

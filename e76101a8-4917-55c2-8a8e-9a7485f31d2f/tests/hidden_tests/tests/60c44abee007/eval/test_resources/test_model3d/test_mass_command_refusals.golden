@@ -1,0 +1,73 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,8000],[10000,8000],[10000,0],[0,0]], "top": [[1000,7000],[9000,7000],[9000,1000],[1000,1000]], "height": 5000}' --cmd 'elements {"category": "mass"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":5000.0,"id":100004,"volume_m3":316.67}
+{"count":1,"elements":[{"area_m2":80.0,"base_offset":0.0,"boundary":[[0.0,0.0],[10000.0,0.0],[10000.0,8000.0],[0.0,8000.0]],"category":"mass","gross_floor_area_m2":139.84,"guid":"<GUID-1>","height":5000.0,"id":100004,"level":"<GUID-2>","levels":[100000,100001],"name":"Mass","top":[[1000.0,1000.0],[9000.0,1000.0],[9000.0,7000.0],[1000.0,7000.0]],"top_level":null,"volume_m3":316.67}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'mass {"boundary": [[0,0],[1000,0],[1000,1000]], "top": [[0,0],[1000,0],[1000,1000]], "lean": [10, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (mass): mass: give `top`, an outline, or `lean`, how far the top moves sideways, not both
+
+$ bimcraft-cli run --cmd 'mass_floors {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (mass_floors): mass_floors: no mass; make one with `mass`
+
+$ bimcraft-cli run --cmd 'show_mass {"show": "yes"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (show_mass): show_mass: `show` must be true or false, got "yes"
+
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'wall_by_face {"mass": 100004, "faces": 2}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+
+--- stderr
+line 1 (wall_by_face): wall_by_face: `faces` must be a list of edge numbers, got 2
+
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[4000,0],[4000,4000],[0,4000]], "top": [[0,0],[4000,0],[4000,3000],[0,3000]], "height": 3000}' --cmd 'wall_by_face {"mass": 100004, "faces": [0, 2]}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":16.0,"height":3000.0,"id":100004,"volume_m3":42.0}
+
+--- stderr
+line 1 (wall_by_face): wall_by_face: face 2 leans, and a wall stands plumb
+
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'wall_by_face {"mass": 100004, "faces": [0]}' --cmd 'update_by_face {"mass": 100004, "ids": [100005]}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+{"ids":[100005]}
+
+--- stderr
+line 1 (update_by_face): update_by_face: give `ids` or `mass`, not both
+
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'wall {"points": [[0, 0], [1000, 0]]}' --cmd 'update_by_face {"ids": [100005]}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+{"ids":[100005]}
+
+--- stderr
+line 1 (update_by_face): update_by_face: 100005 isn't made by face; `wall_by_face`, `floor_by_face` and `roof_by_face` make them
+

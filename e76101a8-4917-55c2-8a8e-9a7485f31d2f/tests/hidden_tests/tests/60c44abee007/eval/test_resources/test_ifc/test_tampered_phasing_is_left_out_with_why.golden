@@ -1,0 +1,25 @@
+$ bimcraft-cli run tampered.ifc --cmd 'elements {"category": "wall", "limit": 1}' --cmd 'phase {}'
+[exit 0]
+--- stdout
+{"elements":{"door":1,"level":2,"wall":4},"format":"IFC4","moved":null,"name":"Project","path":"tampered.ifc","skipped":["the project's design option sets: key must be a string at line 1 column 2","2 phase or design option values: not ones the project has"]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":8000.0,"level":"<GUID-2>","params":{"Phase Demolished":"Demolition"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":1}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true},"new":{"halftone":true}},"phases":["Existing","Demolition","New Construction"]}
+
+--- stderr
+
+$ bimcraft-cli run early.ifc --cmd 'elements {"category": "wall", "limit": 1}'
+[exit 0]
+--- stdout
+{"elements":{"door":1,"level":2,"wall":4},"format":"IFC4","moved":null,"name":"Project","path":"early.ifc","skipped":["1 Phase Demolished values: before the phase the element is made in"]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":8000.0,"level":"<GUID-2>","params":{"Phase Created":"New Construction"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-5>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run names.ifc --cmd 'phase {}'
+[exit 0]
+--- stdout
+{"elements":{"door":1,"level":2,"wall":4},"format":"IFC4","moved":null,"name":"Project","path":"names.ifc","skipped":["the project's phases: it isn't a list of names","1 phase or design option values: not ones the project has"]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true},"new":{"halftone":true}},"phases":["Existing","New Construction"]}
+
+--- stderr
+

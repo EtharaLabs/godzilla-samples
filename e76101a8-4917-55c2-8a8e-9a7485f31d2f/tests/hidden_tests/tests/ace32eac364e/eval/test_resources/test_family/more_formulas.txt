@@ -1,0 +1,63 @@
+=== family {"name": "Calc", "types": {"T": {}}, "parameters": [{"name": "A", "value": 2500.0}, {"name": "B", "formula": "1.5e2 + 2E-1 - A / 1e3"}, {"name": "C", "kind": "yesno", "formula": "A >= 2500"}, {
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[],"parameters":[{"kind":"length","name":"A","value":2500.0},{"formula":"1.5e2 + 2E-1 - A / 1e3","kind":"length","name":"B","value":null},{"formula":"A >= 2500","kind":"yesno","name":"C","value":null},{"kind":"yesno","name":"D","value":true},{"kind":"material","name":"M","value":null}],"types":{"T":{}}},"name":"Calc","warnings":[]}
+--- stderr
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "max()"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `max()`: `max` doesn't take 0 values
+family `Bad`: type `T`: parameter `A`: formula `max()`: `max` takes one value or more
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "min(1 2)"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `min(1 2)`: `min(` needs a `,` or a `)` (character 7)
+family `Bad`: type `T`: parameter `A`: formula `min(1 2)`: `min(` needs a `,` or a `)` (character 7)
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "1 + )"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `1 + )`: `)` can't start a value there (character 5)
+family `Bad`: type `T`: parameter `A`: formula `1 + )`: `)` can't start a value there (character 5)
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: its formula is longer than 1024 characters
+=== family {"name": "Bad", "types": {"": {}}, "parameters": [{"name": "A"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: type ``: a type needs a name, up to 256 characters
+=== family {"name": "Bad", "types": {"T": {"M": "Unobtainium"}}, "parameters": [{"name": "M", "kind": "material"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: type `T`: material `Unobtainium` isn't in the library; add it with `material`
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "M", "kind": "material"}, {"name": "L", "formula": "M * 2"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: type `T`: parameter `L`: formula `M * 2`: `M` is a material, not a number
+=== family {"name": "Bad", "types": {"T": {}}, "forms": [{"profile": [[0, 0], [300, 0], [300, 100], [100, -100]], "to": 100}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: type `T`: form 1: its profile crosses itself
+=== family {"name": "Bad", "types": {"T": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "to": "1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: form 1: a formula of it is longer than 1024 characters
+=== family {"name": "Bad", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 230, "load_va": [100, 200]}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: connector 1: a load per phase is a list of one for each pole (1) on a `power-unbalanced` connector; a balanced one takes a single load
+=== family {"name": "Bad", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 230, "classification": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+exit: 1
+--- stdout
+--- stderr
+line 1 (family): family `Bad`: connector 1: its classification is longer than 256 characters

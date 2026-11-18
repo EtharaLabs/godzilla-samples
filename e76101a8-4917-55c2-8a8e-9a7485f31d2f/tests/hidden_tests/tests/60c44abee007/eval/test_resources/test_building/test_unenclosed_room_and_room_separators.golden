@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]]}' --cmd 'room {"point": [3000, 2000]}' --cmd 'elements {"category": "room"}' --cmd 'room_separator {"points": [[0,0],[0,4000]]}' --cmd 'elements {"category": "room"}' --cmd 'room_separator {"points": [[3000,0],[3000,4000]]}' --cmd 'elements {"category": "room"}' --cmd 'elements {"category": "roomseparator"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004]}
+{"area_m2":0.0,"id":100005,"number":"1","warning":"[3000, 2000] isn't enclosed by walls or room separation lines on Level 1: the room is placed unbounded, a 1000 mm square, until they close round it"}
+{"count":1,"elements":[{"area_m2":0.0,"category":"room","enclosed":false,"guid":"<GUID-1>","id":100005,"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":0.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":0.0}],"returned":1}
+{"ids":[100006]}
+{"count":1,"elements":[{"area_m2":24.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100005,"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":20.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":64.8}],"returned":1}
+{"ids":[100007]}
+{"count":1,"elements":[{"area_m2":12.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100005,"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":14.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":32.4}],"returned":1}
+{"count":2,"elements":[{"category":"roomseparator","end":[0.0,4000.0],"guid":"<GUID-4>","id":100006,"length":4000.0,"level":"<GUID-2>","start":[0.0,0.0]},{"category":"roomseparator","end":[3000.0,4000.0],"guid":"<GUID-5>","id":100007,"length":4000.0,"level":"<GUID-2>","start":[3000.0,0.0]}],"returned":2}
+
+--- stderr
+

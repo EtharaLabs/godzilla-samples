@@ -1,0 +1,70 @@
+$ bimcraft-cli run --cmd 'column {"at": [0, 0], "height": -5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (column): column 100002 height must be above zero, got -5
+
+$ bimcraft-cli run --cmd 'column {"at": [0, 0], "top_level": "Level 1"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (column): column 100002: its top must be above its base
+
+$ bimcraft-cli run --cmd 'column {"at": [0, 0], "type": "Concrete 300 x 300"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (column): column 100002: type `Concrete 300 x 300` doesn't exist (there are: Rectangular 400 x 400, Round 300)
+
+$ bimcraft-cli run --cmd 'column {"at": [0, 0], "level": "Basement"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (column): column: no level or plan view named `Basement` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'column {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (column): column: `at` [x, y] is required
+
+$ bimcraft-cli run --cmd 'structural_column {"at": [0, 0], "type": "Round 300"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (structural_column): structuralcolumn 100002: type `Round 300` doesn't exist (there are: Concrete 200 x 500, Concrete 300 x 300, Concrete Round 400)
+
+$ bimcraft-cli run --cmd 'structural_column {"at": [0, 0], "height": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (structural_column): structuralcolumn 100002 height must be above zero, got 0
+
+$ bimcraft-cli run --cmd 'footing {"at": [0, 0], "thickness": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (footing): footing: `thickness` must be above zero, got 0
+
+$ bimcraft-cli run --cmd 'footing {"at": [0, 0], "type": "Rectangular 400 x 400"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (footing): footing 100002: type `Rectangular 400 x 400` doesn't exist (there are: Footing 1200 x 1200, Footing 1500 x 1500)
+
+$ bimcraft-cli run --cmd 'footing {"thickness": 400}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (footing): footing: `at` [x, y] is required
+

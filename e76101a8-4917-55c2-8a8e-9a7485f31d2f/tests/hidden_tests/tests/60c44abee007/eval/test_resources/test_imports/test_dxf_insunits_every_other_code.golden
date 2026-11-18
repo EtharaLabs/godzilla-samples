@@ -1,0 +1,136 @@
+--- $INSUNITS 3
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 3"}'
+[exit 0]
+--- stdout
+{"cad":"code 3","entities":1,"extents":[[-80467200.0,-40233600.0],[80467200.0,40233600.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1609344.0,"source":"d.dxf","unit":"miles"}
+
+--- stderr
+
+--- $INSUNITS 4
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 4"}'
+[exit 0]
+--- stdout
+{"cad":"code 4","entities":1,"extents":[[-50.0,-25.0],[50.0,25.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"d.dxf","unit":"mm"}
+
+--- stderr
+
+--- $INSUNITS 6
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 6"}'
+[exit 0]
+--- stdout
+{"cad":"code 6","entities":1,"extents":[[-50000.0,-25000.0],[50000.0,25000.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1000.0,"source":"d.dxf","unit":"m"}
+
+--- stderr
+
+--- $INSUNITS 7
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 7"}'
+[exit 0]
+--- stdout
+{"cad":"code 7","entities":1,"extents":[[-50000000.0,-25000000.0],[50000000.0,25000000.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1000000.0,"source":"d.dxf","unit":"km"}
+
+--- stderr
+
+--- $INSUNITS 8
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 8"}'
+[exit 0]
+--- stdout
+{"cad":"code 8","entities":1,"extents":[[-0.00127,-0.000635],[0.00127,0.000635]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":0.0000254,"source":"d.dxf","unit":"microinches"}
+
+--- stderr
+
+--- $INSUNITS 9
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 9"}'
+[exit 0]
+--- stdout
+{"cad":"code 9","entities":1,"extents":[[-1.27,-0.635],[1.27,0.635]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":0.0254,"source":"d.dxf","unit":"mils"}
+
+--- stderr
+
+--- $INSUNITS 10
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 10"}'
+[exit 0]
+--- stdout
+{"cad":"code 10","entities":1,"extents":[[-45720.0,-22860.0],[45720.0,22860.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":914.4,"source":"d.dxf","unit":"yards"}
+
+--- stderr
+
+--- $INSUNITS 11
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 11"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): cadimport 100002: a scale of 0.0000001 mm to the drawing's unit isn't one; give one from 0.000001 to 10000000
+
+--- $INSUNITS 12
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 12"}'
+[exit 0]
+--- stdout
+{"cad":"code 12","entities":1,"extents":[[-5e-05,-2.5e-05],[5e-05,2.5e-05]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1e-6,"source":"d.dxf","unit":"nanometres"}
+
+--- stderr
+
+--- $INSUNITS 13
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 13"}'
+[exit 0]
+--- stdout
+{"cad":"code 13","entities":1,"extents":[[-0.05,-0.025],[0.05,0.025]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":0.001,"source":"d.dxf","unit":"microns"}
+
+--- stderr
+
+--- $INSUNITS 15
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 15"}'
+[exit 0]
+--- stdout
+{"cad":"code 15","entities":1,"extents":[[-500000.0,-250000.0],[500000.0,250000.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":10000.0,"source":"d.dxf","unit":"decametres"}
+
+--- stderr
+
+--- $INSUNITS 16
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 16"}'
+[exit 0]
+--- stdout
+{"cad":"code 16","entities":1,"extents":[[-5000000.0,-2500000.0],[5000000.0,2500000.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":100000.0,"source":"d.dxf","unit":"hectometres"}
+
+--- stderr
+
+--- $INSUNITS 17
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 17"}'
+[exit 0]
+--- stdout
+{"cad":"code 17","entities":1,"extents":[[-50.0,-25.0],[50.0,25.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"d.dxf","unit":"unitless (read as mm unless `units` says)"}
+
+--- stderr
+
+--- $INSUNITS 19
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 19"}'
+[exit 0]
+--- stdout
+{"cad":"code 19","entities":1,"extents":[[-50.0,-25.0],[50.0,25.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"d.dxf","unit":"light years (read as mm unless `units` says)"}
+
+--- stderr
+
+--- $INSUNITS 20
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 20"}'
+[exit 0]
+--- stdout
+{"cad":"code 20","entities":1,"extents":[[-50.0,-25.0],[50.0,25.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"d.dxf","unit":"parsecs (read as mm unless `units` says)"}
+
+--- stderr
+
+--- $INSUNITS 22
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 22"}'
+[exit 0]
+--- stdout
+{"cad":"code 22","entities":1,"extents":[[-50.0,-25.0],[50.0,25.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"d.dxf","unit":"unitless (read as mm unless `units` says)"}
+
+--- stderr
+
+--- $INSUNITS 99
+$ bimcraft-cli run --cmd 'import_cad {"path": "d.dxf", "name": "code 99"}'
+[exit 0]
+--- stdout
+{"cad":"code 99","entities":1,"extents":[[-50.0,-25.0],[50.0,25.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"d.dxf","unit":"unitless (read as mm unless `units` says)"}
+
+--- stderr
+

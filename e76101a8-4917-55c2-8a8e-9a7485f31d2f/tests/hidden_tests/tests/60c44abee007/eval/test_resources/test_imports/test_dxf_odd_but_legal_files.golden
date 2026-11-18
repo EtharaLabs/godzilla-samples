@@ -1,0 +1,11 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "odd.dxf"}' --cmd 'cad_layers {"id": 100002}' --save odd.svg
+[exit 0]
+--- stdout
+{"cad":"odd","entities":20,"extents":[[-1600.0,-4600.0],[1600.0,4600.0]],"far":0,"id":100002,"layers":6,"left_out":{"empty":5,"past what a drawing holds":1},"scale":1.0,"source":"odd.dxf","unit":"mm"}
+{"cad":"odd","id":100002,"layers":[{"color":[255,0,255],"linetype":"Continuous","name":"BYL","shown":true},{"color":null,"linetype":"Continuous","name":"L","shown":true},{"color":null,"linetype":"Continuous","name":"T","shown":true},{"color":null,"linetype":"Continuous","name":"BL","shown":true},{"color":null,"linetype":"Continuous","name":"LATIN","shown":true},{"color":null,"linetype":"Continuous","name":"H","shown":true}]}
+{"format":"svg","path":"odd.svg"}
+
+--- stderr
+
+=== file odd.svg
+normalised: 27550 bytes, sha256=bae9878dccf853107c9faa7763d96eb1fb6b8cc2eee12945fa3c10bd527b0ae6

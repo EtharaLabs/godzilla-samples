@@ -1,0 +1,56 @@
+=== setup
+exit: 0
+--- stdout
+{"cad":"a","entities":1,"extents":[[-500.0,0.0],[500.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"a.dxf","unit":"unitless (read as mm unless `units` says)"}
+{"cloud":"s","id":100003,"origin":[500.0,500.0,0.0],"points":3,"read":3}
+{"id":100004,"number":"A101"}
+{"at":[215.0,168.5],"id":100005}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Id","Type","Level","Length","Height","Thickness"],"elements":[],"id":100006,"name":"W","rows":[]}
+{"annotations":0,"id":100007,"level":100000,"name":"Level 1 Copy 1"}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== mirror {"ids": [100002], "axis": [[0, 0], [1000, 0]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (mirror): mirror: CAD import 100002 can't be mirrored; mirror it in the program that made the drawing, or turn it
+=== mirror {"ids": [100003], "axis": [[0, 0], [1000, 0]], "copy": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (mirror): mirror: point cloud 100003 can't be mirrored: a scan is what was measured; move it or turn it
+=== move {"ids": [100004], "by": [10, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: sheet 100004 has no place in plan; move the views on it
+=== move {"ids": [100005], "by": [10, 0]} | elements {"category": "viewport"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"moved":[100005]}
+{"count":1,"elements":[{"at":[225.0,168.5],"category":"viewport","guid":"GUID-1","id":100005,"scale":100.0,"sheet":"GUID-2","size":[34.0,24.0],"title":"Level 1","view":"GUID-3"}],"returned":1}
+--- stderr
+=== move {"ids": [100006], "by": [10, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: schedule 100006 has no place in plan; move its viewport on its sheet
+=== copy {"ids": [100007], "by": [10, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (copy): copy: planview 100007 has no place in plan; move its viewport on its sheet
+=== rotate {"ids": [100002, 100003], "about": [0, 0], "angle": 90} | elements {"category": "cadimport"} | elements {"category": "pointcloud"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"rotated":[100002,100003]}
+{"count":1,"elements":[{"angle":90.0,"at":[0.0,0.0],"cad":"a","category":"cadimport","entities":1,"extents":[[<~0>,-500.0],[<~0>,500.0]],"guid":"GUID-1","id":100002,"layers":1,"level":"GUID-2","origin":[500.0,0.0],"scale":1.0,"source":"a.dxf","unit":"unitless"}],"returned":1}
+{"count":1,"elements":[{"angle":90.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"s","guid":"GUID-3","id":100003,"level":"GUID-2","offset":-0.0,"points":3,"source":"s.pts"}],"returned":1}
+--- stderr

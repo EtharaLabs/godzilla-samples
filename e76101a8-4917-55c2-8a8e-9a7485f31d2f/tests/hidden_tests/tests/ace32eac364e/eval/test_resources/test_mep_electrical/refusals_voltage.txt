@@ -1,0 +1,75 @@
+$ voltage {"name": "127 V", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: voltage `127 V` is one distribution system `127/220 V` supplies: change or delete that first
+$ voltage {"name": "99 V", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: there's no voltage `99 V`
+$ voltage {"name": "x", "rename": "y"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: there's no voltage `x` to rename
+$ voltage {"name": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: `nominal` (volts) is required for a new voltage
+$ voltage {"name": "x", "nominal": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: voltage `x`: `nominal` is volts above 0 and up to 100000, not 0
+$ voltage {"name": "x", "nominal": 200000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: voltage `x`: `nominal` is volts above 0 and up to 100000, not 200000
+$ voltage {"name": "x", "nominal": 100, "min": 120}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: voltage `x`: `min` is volts above 0 and not above the nominal 100 V, not 120
+$ voltage {"name": "x", "nominal": 100, "max": 90}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: voltage `x`: `max` is volts up to 100000 and not under the nominal 100 V, not 90
+$ voltage {"name": "x", "nominal": 100, "min": -1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: voltage `x`: `min` is volts above 0 and not above the nominal 100 V, not -1
+$ voltage {"name": "x", "nominal": "a"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: `nominal` must be a number of volts, got "a"
+$ voltage {"name": "x", "nominal": 100, "colour": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: `colour` isn't one of its parameters: name, nominal, min, max, rename, delete
+$ voltage {"name": "220 V", "rename": "127 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: there's already a voltage `127 V`
+$ voltage {"name": 5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: `name` must be text of at most 256 characters, got 5
+$ voltage {"name": "x", "nominal": 100, "delete": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: `delete` must be true or false, got "yes"
+$ voltage {"name": "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+exit: 1
+--- stdout
+--- stderr
+line 1 (voltage): voltage: `name` must be text of at most 256 characters, got "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"

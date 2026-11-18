@@ -1,0 +1,18 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[0,4000]]}' --cmd 'wall {"points": [[3000,0],[3000,4000]]}' --cmd 'wall {"points": [[7000,0],[7000,4000]]}' --cmd 'dimension {"refs": [{"id": 100002}, {"id": 100003}, {"id": 100004}], "at": [3500, -800]}' --cmd 'dimension_constraint {"id": 100005, "equal": true}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "dimension"}' --cmd 'dimension_constraint {"id": 100005, "equal": false, "locked": [0]}' --cmd 'move {"ids": [100002], "by": [-500, 0]}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "dimension"}' --cmd 'dimension_constraint {"id": 100005, "locked": [5]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+{"ids":[100004]}
+{"id":100005,"values":[3000.0,4000.0]}
+{"equal":true,"id":100005,"locked":[]}
+{"count":3,"elements":[{"base_offset":0.0,"category":"wall","end":[0.0,4000.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[3500.0,4000.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[3500.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[7000.0,4000.0],"guid":"<GUID-6>","height":3000.0,"id":100004,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[7000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":3}
+{"count":1,"elements":[{"at":[3500.0,-800.0],"category":"dimension","equal":true,"equality":true,"guid":"<GUID-7>","id":100005,"kind":"aligned","labels":["EQ","EQ"],"level":"<GUID-2>","refs":[{"face":"centre","id":"<GUID-1>"},{"face":"centre","id":"<GUID-5>"},{"face":"centre","id":"<GUID-6>"}],"type":"Diagonal - 2.5mm Arial","values":[3500.0,3500.0]}],"returned":1}
+{"equal":false,"id":100005,"locked":[0]}
+{"moved":[100002]}
+{"count":3,"elements":[{"base_offset":0.0,"category":"wall","end":[-500.0,4000.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[-500.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[3000.0,4000.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[3000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[7000.0,4000.0],"guid":"<GUID-6>","height":3000.0,"id":100004,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[7000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":3}
+{"count":1,"elements":[{"at":[3500.0,-800.0],"category":"dimension","guid":"<GUID-7>","id":100005,"kind":"aligned","labels":["3500","4000"],"level":"<GUID-2>","locked":[{"length":3500.0,"segment":0}],"refs":[{"face":"centre","id":"<GUID-1>"},{"face":"centre","id":"<GUID-5>"},{"face":"centre","id":"<GUID-6>"}],"type":"Diagonal - 2.5mm Arial","values":[3500.0,4000.0]}],"returned":1}
+
+--- stderr
+line 1 (dimension_constraint): dimension_constraint: dimension 100005 has segments 0 to 1, not 5
+

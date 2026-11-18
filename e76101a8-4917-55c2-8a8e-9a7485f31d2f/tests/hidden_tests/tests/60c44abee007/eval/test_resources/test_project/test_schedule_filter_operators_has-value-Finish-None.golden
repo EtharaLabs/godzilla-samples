@@ -1,0 +1,12 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'parameter {"name": "Finish", "categories": ["room"]}' --cmd 'parameter {"name": "Accessible", "kind": "yesno", "categories": ["room"]}' --cmd 'modify {"id": 100025, "params": {"Finish": "Oak", "Accessible": true}}' --cmd 'modify {"id": 100027, "params": {"Finish": "Tile", "Accessible": false}}' --cmd 'schedule {"name": "Filtered", "category": "rooms", "fields": ["Name", "Area", "Perimeter", "Finish", "Accessible"], "filters": [{"field": "Finish", "op": "has-value"}]}'
+[exit 0]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+{"name":"Finish","parameter":{"categories":["room"],"kind":"text"}}
+{"name":"Accessible","parameter":{"categories":["room"],"kind":"yesno"}}
+{"area_m2":24.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100025,"level":"<GUID-2>","limit_offset":-300.0,"name":"Living","number":"1","params":{"Accessible":true,"Finish":"Oak"},"perimeter_m":20.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":64.8}
+{"area_m2":14.0,"category":"room","enclosed":true,"guid":"<GUID-4>","id":100027,"level":"<GUID-2>","limit_offset":-300.0,"name":"Bedroom","number":"3","params":{"Accessible":false,"Finish":"Tile"},"perimeter_m":15.0,"point":[8400.0,4200.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":37.8}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option","Accessible","Finish"],"category":"room","columns":["Name","Area (m²)","Perimeter","Finish","Accessible"],"elements":[[100027],[100025]],"id":100074,"name":"Filtered","rows":[["Bedroom",14.0,15000.0,"Tile",false],["Living",24.0,20000.0,"Oak",true]]}
+
+--- stderr
+

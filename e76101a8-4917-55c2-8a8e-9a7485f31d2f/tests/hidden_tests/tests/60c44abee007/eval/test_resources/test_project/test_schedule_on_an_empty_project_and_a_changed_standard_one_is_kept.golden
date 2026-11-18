@@ -1,0 +1,19 @@
+$ bimcraft-cli run --cmd 'schedule {"category": "rooms"}' --cmd 'schedule {"category": "doors", "fields": ["Mark", "Count"]}' --cmd 'schedule {"name": "Door Schedule"}' --cmd 'elements {"category": "schedule"}' --cmd 'save {"path": "p.bimcraft"}'
+[exit 0]
+--- stdout
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[],"id":null,"name":"Room Schedule","rows":[]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Mark","Count"],"elements":[],"id":100002,"name":"Door Schedule","rows":[]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Mark","Count"],"elements":[],"id":100002,"name":"Door Schedule","rows":[]}
+{"count":1,"elements":[{"category":"schedule","fields":[{"name":"Mark"},{"name":"Count"}],"guid":"<GUID-1>","id":100002,"name":"Door Schedule","of":"door"}],"returned":1}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run p.bimcraft --cmd 'schedule {"name": "door schedule"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Mark","Count"],"elements":[],"id":100002,"name":"Door Schedule","rows":[]}
+
+--- stderr
+

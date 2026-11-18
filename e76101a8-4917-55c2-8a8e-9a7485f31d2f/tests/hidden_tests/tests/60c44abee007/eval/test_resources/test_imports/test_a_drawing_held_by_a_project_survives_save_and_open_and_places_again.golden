@@ -1,0 +1,38 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "colors": "invert"}' --cmd 'cad_layers {"id": 100002, "hide": ["TRUE"]}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":true},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":false},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":false}]}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run p.bimcraft --cmd 'cad_layers {"id": 100002}' --cmd 'import_cad {"cad": "plan", "at": [0, 15000], "angle": 180}' --cmd 'elements {"category": "cadimport"}' --cmd 'delete {"ids": [100002, 100003]}' --cmd 'import_cad {"cad": "plan"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":true},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":false},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":false}]}
+{"cad":"plan","entities":8,"extents":[[-5623.139487,11500.0],[5623.139487,18500.0]],"far":0,"id":100003,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"count":2,"elements":[{"at":[0.0,0.0],"cad":"plan","category":"cadimport","colors":"invert","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"guid":"<GUID-1>","hidden":["FROZEN","HIDDEN","TRUE"],"id":100002,"layers":5,"level":"<GUID-2>","origin":[5623.139487,3500.0],"scale":1.0,"source":"plan.dxf","unit":"mm"},{"angle":180.0,"at":[0.0,15000.0],"cad":"plan","category":"cadimport","entities":8,"extents":[[-5623.139487,11500.0],[5623.139487,18500.0]],"guid":"<GUID-3>","hidden":["FROZEN","HIDDEN"],"id":100003,"layers":5,"level":"<GUID-2>","origin":[5623.139487,3500.0],"scale":1.0,"source":"plan.dxf","unit":"mm"}],"returned":2}
+{"deleted":[100002,100003]}
+
+--- stderr
+line 1 (import_cad): import_cad: the project holds no CAD drawing named `plan` (it holds: none)
+
+$ bimcraft-cli run p.bimcraft --cmd 'delete {"ids": [100002]}' --cmd 'undo {}' --cmd 'import_cad {"cad": "plan", "name": "ignored"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":[100002]}
+{"count":1,"undone":"Delete"}
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100003,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+
+=== p.bimcraft [cads]
+{
+ "plan": {
+  "dxf": "eAFtU8Fu2zAMvb+vyGE9dqAkO26OiqzAQgU7sJV12aUY0AG7DD3s/4E9SU7WtA0CiRIfHx9JWbB4l8I0QmPwtvczdvhine2/0VSwTonu8l0Yl9MY0oJO0EDgx56hNLiuBMnuo194VQwyxnQ+ep7rrtHbZfB9ZhAY9D///v71snl+5h+dxrZFZxjVCFSLZgcleb1vycBsJKXBNXqCoj1ToKDumh7qEmw1OmzhpjGF8TSdspoL5MnGWOQXmLqFGYa3QpoLegh978eqlaz3hvhV//+sh3n6UUGk02iJ+TR1mk/+SvVOYKMFxmwftqKY/looDXaWN1xTHdA+Tu4xV1QMPNCp4QYb5srNfgnIJjBCH2WG0RfYO49SaEWgFVEmLwIXZsfGZk5WK7n3mv0gW97ySBhQpr6Pj4WzHCiOHFxXiZ59T6E8gliT165/FKCEvxsJ8ek4xfNN2E741jgZlfUIqKYoW2OFqRsN+dpm9/WSpUm+KPhyeFPeUMdKPcVDRtYnqAUKCe3sWF4ZGEG6iMxMLJ8gBrF1hLUKFCdI/nsiXnJCKsgS80YoeaEwv77+2dzdvWwUg/gN+TnDa1Muw2Mes+Ype6P4wFmYzqmaloHHKYw5bn1vDOjWgLILTH+w7tNZvxmTnw74B7/hvXA=",
+  "source": "plan.dxf"
+ }
+}

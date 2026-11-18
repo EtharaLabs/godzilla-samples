@@ -1,0 +1,40 @@
+### bad_laz.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_laz.las: its points are compressed (LAZ): decompress it to LAS first (laszip or PDAL)
+### bad_short_records.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_short_records.las: its point records are 10 bytes; point format 2 needs 26
+### bad_format_11.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_format_11.las: its point format 11 isn't one LAS has (0 to 10)
+### bad_zero_scale.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_zero_scale.las: its scale along x is 0
+### bad_nan_offset.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_nan_offset.las: its offset along y is NaN
+### bad_version_2.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_version_2.las: it's LAS 2.2; BIMCraft reads 1.0 to 1.4
+### bad_version_1_5.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_version_1_5.las: it's LAS 1.5; BIMCraft reads 1.0 to 1.4
+### bad_not_las.las
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_not_las.las: it isn't a LAS file: it doesn't start with LASF

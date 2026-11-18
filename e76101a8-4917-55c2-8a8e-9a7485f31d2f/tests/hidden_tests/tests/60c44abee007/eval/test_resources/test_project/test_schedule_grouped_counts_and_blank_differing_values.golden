@@ -1,0 +1,10 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "Doors by type", "category": "doors", "fields": ["Type", "Width", "Count", "Mark", "Family"], "sort": ["Type"], "grouped": true}' --cmd 'schedule {"name": "Doors by type", "grouped": false}' --cmd 'schedule {"name": "Wall types", "category": "walls", "fields": ["Type", {"name": "Length", "total": true}, "Count"], "sort": ["Type"], "grouped": true}'
+[exit 0]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Type","Width","Count","Mark","Family"],"elements":[[100016],[100014],[100015,100017]],"id":100074,"name":"Doors by type","rows":[["800 x 2100",800.0,1.0,"3","Single Door"],["900 x 2100",900.0,1.0,"1","Single Door"],["Single 800 x 2100",800.0,2.0,null,null]]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Type","Width","Count","Mark","Family"],"elements":[[100016],[100014],[100015],[100017]],"id":100074,"name":"Doors by type","rows":[["800 x 2100",800.0,1.0,"3","Single Door"],["900 x 2100",900.0,1.0,"1","Single Door"],["Single 800 x 2100",800.0,1.0,"2",null],["Single 800 x 2100",800.0,1.0,"4",null]]}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Type","Length","Count"],"elements":[[100007,100008,100009,100010],[100011,100012,100013]],"id":100075,"name":"Wall types","rows":[["Exterior - 300mm",34000.0,4.0],["Interior - 100mm",17000.0,3.0]],"totals":[null,51000.0,null]}
+
+--- stderr
+

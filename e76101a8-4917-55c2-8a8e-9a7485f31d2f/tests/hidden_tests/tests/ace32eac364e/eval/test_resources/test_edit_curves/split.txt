@@ -1,0 +1,84 @@
+=== setup
+exit: 0
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006}
+{"id":100007}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== split {"id": 100002, "at": [1000, 30]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100002,100008]}
+{"count":7,"elements":[{"category":"line","end":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[2500.0,-1000.0],[4000.0,1500.0],[5000.0,0.0]],"guid":"GUID-3","id":100003,"length":6007.48,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1500.0,1200.0],[3000.0,-800.0],[4200.0,900.0],[6000.0,0.0]],"guid":"GUID-4","id":100004,"length":8860.16,"level":"GUID-2","shape":"fitted spline","style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-5","id":100005,"length":6283.19,"level":"GUID-2","radius":1000.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"angle":30.0,"category":"line","centre":[0.0,0.0],"guid":"GUID-6","id":100006,"length":9205.15,"level":"GUID-2","radii":[2000.0,800.0],"shape":"ellipse","style":"Thin Lines","view":"GUID-2"},{"category":"line","closed":true,"guid":"GUID-7","id":100007,"length":4000.0,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[4000.0,0.0],"guid":"GUID-8","id":100008,"length":3000.0,"level":"GUID-2","shape":"line","start":[1000.0,0.0],"style":"Thin Lines","view":"GUID-2"}],"returned":7}
+--- stderr
+=== SL {"id": 100003, "at": [2500, 300]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100003,100008]}
+{"count":7,"elements":[{"category":"line","end":[4000.0,0.0],"guid":"GUID-1","id":100002,"length":4000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[1753.63946176,492.721076479],[2507.27892352,373.819224413],[2510.91841385,373.276932762]],"guid":"GUID-3","id":100003,"knots":[0.0,0.0,0.0,0.0,0.5,0.50242630784,0.50242630784,0.50242630784,0.50242630784],"length":3162.79,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1500.0,1200.0],[3000.0,-800.0],[4200.0,900.0],[6000.0,0.0]],"guid":"GUID-4","id":100004,"length":8860.16,"level":"GUID-2","shape":"fitted spline","style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-5","id":100005,"length":6283.19,"level":"GUID-2","radius":1000.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"angle":30.0,"category":"line","centre":[0.0,0.0],"guid":"GUID-6","id":100006,"length":9205.15,"level":"GUID-2","radii":[2000.0,800.0],"shape":"ellipse","style":"Thin Lines","view":"GUID-2"},{"category":"line","closed":true,"guid":"GUID-7","id":100007,"length":4000.0,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[2510.91841385,373.276932762],[3257.28481049,262.066782534],[4004.85261568,1492.72107648],[5000.0,0.0]],"guid":"GUID-8","id":100008,"knots":[0.50242630784,0.50242630784,0.50242630784,0.50242630784,1.0,1.0,1.0,1.0],"length":2844.69,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"}],"returned":7}
+--- stderr
+=== split {"id": 100004, "at": [2200, 200]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100004,100008]}
+{"count":7,"elements":[{"category":"line","end":[4000.0,0.0],"guid":"GUID-1","id":100002,"length":4000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[2500.0,-1000.0],[4000.0,1500.0],[5000.0,0.0]],"guid":"GUID-3","id":100003,"length":6007.48,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"},{"category":"line","end_tangent":[0.464869845403,-0.88537903004],"fit":[[0.0,0.0],[145.867782035,194.896913138],[194.433165381,259.108735827],[368.774539494,483.762212455],[397.729485772,519.861160185],[426.648242217,555.483266069],[455.528160793,590.593639239],[589.7097847,746.650615271],[618.319603547,778.202120022],[646.872930947,809.00928628],[713.262797817,877.802032615],[741.608695687,905.87608097],[760.468365354,924.096749047],[779.297043185,941.909064757],[798.093944577,959.302690064],[816.858284927,976.267286935],[835.589279632,992.792517334],[854.286144088,1008.86804323],[872.948093691,1024.48352658],[891.574343839,1039.62862936],[910.164109928,1054.29301352],[993.345529914,1114.05666092],[1011.72060889,1125.89230037],[1030.05410389,1137.18002397],[1048.3452303,1147.90949371],[1066.59320352,1158.07037155],[1084.79723895,1167.65231944],[1157.15831068,1199.98405094],[1175.1308881,1206.51627862],[1184.09898382,1209.54267929],[1201.9982989,1215.10959299],[1210.9293221,1217.64752151],[1228.75360948,1222.22586065],[1290.73184745,1232.89042281],[1325.85454175,1235.11803338],[1343.33330939,1235.14376052],[1378.12176263,1232.96736834],[1438.44272202,1221.79541686],[1447.00037207,1219.41373316],[1464.06996903,1214.04817525],[1500.0,1200.0],[1514.90620764,1193.04413459],[1523.32389361,1188.82232688],[1540.11227499,1179.77402707],[1548.48306691,1174.95191849],[1565.17809444,1164.72274275],[1647.73465088,1102.44755001],[1664.06494789,1087.88938714],[1680.33580746,1072.67109566],[1696.54761559,1056.81020963],[1712.70075827,1040.32426314],[1728.7956215,1023.23079025],[1800.51164728,939.262155261],[1816.29287317,919.140708663],[1832.01832858,898.525707119],[1847.6883995,877.434684698],[1863.30347192,855.885175472],[1878.86393185,833.89471351],[1894.37016526,811.480832881],[1909.82255817,788.661067656],[1925.22149656,765.452951906],[2016.5141978,619.030804272],[2039.04863318,580.783255944],[2061.47017806,541.997258021],[2083.78013516,502.731987988],[2105.97980722,463.046623333],[2236.93480682,219.426387543]],"guid":"GUID-4","id":100004,"length":3281.11,"level":"GUID-2","shape":"fitted spline","style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-5","id":100005,"length":6283.19,"level":"GUID-2","radius":1000.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"angle":30.0,"category":"line","centre":[0.0,0.0],"guid":"GUID-6","id":100006,"length":9205.15,"level":"GUID-2","radii":[2000.0,800.0],"shape":"ellipse","style":"Thin Lines","view":"GUID-2"},{"category":"line","closed":true,"guid":"GUID-7","id":100007,"length":4000.0,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[2236.93480682,219.426387543],[2376.14504056,-47.0802672676],[2499.22217934,-275.461969464],[2523.46569117,-318.390525818],[2619.27400792,-477.584465286],[2736.5779857,-640.843983497],[2794.28623661,-703.961447488],[2805.7568271,-714.902296337],[2851.4115721,-752.636752864],[2862.7697414,-760.500113421],[2919.24135918,-789.765206204],[2930.47377921,-793.519656361],[2952.87893542,-798.829158106],[2975.20636288,-801.122103282],[3000.0,-800.0],[3008.55669816,-798.686999484],[3019.63787864,-796.280302149],[3030.70314388,-793.092232807],[3041.75381709,-789.137509145],[3052.79122149,-784.430848846],[3151.74909648,-710.662175565],[3162.72659004,-699.245621581],[3173.70537023,-687.239025496],[3250.70400805,-587.907959609],[3261.74071733,-571.710863374],[3272.79062224,-555.056184204],[3350.62058509,-426.897393336],[3373.05190171,-387.001257563],[3463.94014019,-216.17788582],[3580.96105856,13.8080823356],[3740.79782923,317.389966631],[3857.95671607,515.066402105],[3871.3535109,535.835179725],[3884.83098569,556.310938347],[3898.39046366,576.478960285],[3912.03326804,596.324527855],[4038.78652733,757.995771392],[4053.33537298,773.807322605],[4067.98210047,789.134524915],[4157.99208469,870.102221453],[4173.36103534,881.626886262],[4188.83845361,892.549460688],[4200.0,900.0],[4267.8661601,937.895752856],[4332.99800329,963.354482142],[4349.53642635,968.271926168],[4450.82240824,986.132144263],[4520.21782854,987.436965438],[4537.78984605,986.498916589],[4555.44877946,985.06847402],[4573.19345423,983.152291702],[4591.02269581,980.757023603],[4608.93532968,977.889323692],[4626.93018128,974.555845939],[4718.09659655,951.13467846],[4736.56008927,945.146267006],[4905.92039759,873.185037603],[4925.07099572,863.30405418],[4944.28384442,853.070410391],[4963.55776916,842.490760205],[4982.89159539,831.571757591],[5002.28414858,820.320056519],[5021.73425419,808.742310956],[5139.57771444,732.801525573],[5400.65908317,535.666471243],[5441.40097177,502.07755645],[5708.89532425,268.611830417],[6000.0,0.0]],"guid":"GUID-8","id":100008,"length":5579.19,"level":"GUID-2","shape":"fitted spline","start_tangent":[0.464869845403,-0.88537903004],"style":"Thin Lines","view":"GUID-2"}],"returned":7}
+--- stderr
+=== split {"id": 100005, "at": [0, 1000]} | split {"id": 100005, "at": [0, -1000]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100005],"opened":true}
+{"ids":[100005,100008]}
+{"count":7,"elements":[{"category":"line","end":[4000.0,0.0],"guid":"GUID-1","id":100002,"length":4000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[2500.0,-1000.0],[4000.0,1500.0],[5000.0,0.0]],"guid":"GUID-3","id":100003,"length":6007.48,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1500.0,1200.0],[3000.0,-800.0],[4200.0,900.0],[6000.0,0.0]],"guid":"GUID-4","id":100004,"length":8860.16,"level":"GUID-2","shape":"fitted spline","style":"Thin Lines","view":"GUID-2"},{"arc":180.0,"category":"line","end":[<~0>,-1000.0],"guid":"GUID-5","id":100005,"length":3141.59,"level":"GUID-2","shape":"arc","start":[<~0>,1000.0],"style":"Thin Lines","view":"GUID-2"},{"angle":30.0,"category":"line","centre":[0.0,0.0],"guid":"GUID-6","id":100006,"length":9205.15,"level":"GUID-2","radii":[2000.0,800.0],"shape":"ellipse","style":"Thin Lines","view":"GUID-2"},{"category":"line","closed":true,"guid":"GUID-7","id":100007,"length":4000.0,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-2"},{"arc":180.0,"category":"line","end":[<~0>,1000.0],"guid":"GUID-8","id":100008,"length":3141.59,"level":"GUID-2","shape":"arc","start":[<~0>,-1000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":7}
+--- stderr
+=== split {"id": 100006, "at": [1700, 1000]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100006],"opened":true}
+{"count":6,"elements":[{"category":"line","end":[4000.0,0.0],"guid":"GUID-1","id":100002,"length":4000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[2500.0,-1000.0],[4000.0,1500.0],[5000.0,0.0]],"guid":"GUID-3","id":100003,"length":6007.48,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1500.0,1200.0],[3000.0,-800.0],[4200.0,900.0],[6000.0,0.0]],"guid":"GUID-4","id":100004,"length":8860.16,"level":"GUID-2","shape":"fitted spline","style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-5","id":100005,"length":6283.19,"level":"GUID-2","radius":1000.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"angle":30.0,"category":"line","centre":[0.0,0.0],"guid":"GUID-6","id":100006,"length":9205.15,"level":"GUID-2","radii":[2000.0,800.0],"shape":"partial ellipse","span":[1.26327206606,361.263272066],"style":"Thin Lines","view":"GUID-2"},{"category":"line","closed":true,"guid":"GUID-7","id":100007,"length":4000.0,"level":"GUID-2","points":[[0.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-2"}],"returned":6}
+--- stderr
+=== split {"id": 100007, "at": [500, 0]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100007],"opened":true}
+{"count":6,"elements":[{"category":"line","end":[4000.0,0.0],"guid":"GUID-1","id":100002,"length":4000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[2500.0,-1000.0],[4000.0,1500.0],[5000.0,0.0]],"guid":"GUID-3","id":100003,"length":6007.48,"level":"GUID-2","shape":"spline","style":"Wide Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1500.0,1200.0],[3000.0,-800.0],[4200.0,900.0],[6000.0,0.0]],"guid":"GUID-4","id":100004,"length":8860.16,"level":"GUID-2","shape":"fitted spline","style":"Thin Lines","view":"GUID-2"},{"category":"line","centre":[0.0,0.0],"guid":"GUID-5","id":100005,"length":6283.19,"level":"GUID-2","radius":1000.0,"shape":"circle","style":"Thin Lines","view":"GUID-2"},{"angle":30.0,"category":"line","centre":[0.0,0.0],"guid":"GUID-6","id":100006,"length":9205.15,"level":"GUID-2","radii":[2000.0,800.0],"shape":"ellipse","style":"Thin Lines","view":"GUID-2"},{"category":"line","guid":"GUID-7","id":100007,"length":4000.0,"level":"GUID-2","points":[[500.0,0.0],[1000.0,0.0],[1000.0,1000.0],[0.0,1000.0],[0.0,0.0],[500.0,0.0]],"shape":"polyline","style":"Thin Lines","view":"GUID-2"}],"returned":6}
+--- stderr
+=== split {"id": 100002, "at": [9000, 9000]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (split): split: [9000, 9000] isn't on detail line 100002: it passes 10295.63 mm from it
+=== split {"id": 100002, "at": [0, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (split): split: split between the line's ends
+=== split {"id": 100002}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (split): split: `at` [x, y] is required
+=== split {"at": [0, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (split): split: `id`, a wall or a detail line, is required
+=== split {"id": 100000, "at": [0, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (split): split: 100000 is not a wall

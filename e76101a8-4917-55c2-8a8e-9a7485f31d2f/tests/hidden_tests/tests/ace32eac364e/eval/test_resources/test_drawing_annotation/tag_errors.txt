@@ -1,0 +1,35 @@
+$ tag {}
+exit: 1
+--- stdout
+--- stderr
+line 9 (tag): tag: nothing to tag: Level 1 has no door and window without a tag
+
+$ tag {"category": "column"}
+exit: 1
+--- stdout
+--- stderr
+line 9 (tag): tag: nothing to tag: Level 1 has no column without a tag
+
+$ tag {"ids": [100008], "label": "Area"}
+exit: 1
+--- stdout
+--- stderr
+line 9 (tag): tag 100015: window GUID-1 has no field `Area`; its fields are: Mark, Type, Width, Height, Sill, Level, Wall, Family, Operation, Count, Phase Created, Phase Demolished, Design Option
+
+$ tag {"ids": [999999]}
+exit: 1
+--- stdout
+--- stderr
+line 9 (tag): tag: no element 999999
+
+$ tag {"ids": [100002], "offset": "up"}
+exit: 1
+--- stdout
+--- stderr
+line 9 (tag): tag: `offset` must be a point [x, y] in mm, got "up"
+
+$ tag {"ids": [100002], "level": "Level 9"}
+exit: 1
+--- stdout
+--- stderr
+line 9 (tag): tag: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)

@@ -1,0 +1,23 @@
+$ standard {"set": "din"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (standard): standard: `set` is nbr, iso, ansi, eu or jis, not `din`
+
+$ standard {"set": "iso", "adapt_all": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (standard): standard: `adapt_all` is true or false, not "yes"
+
+$ standard {"set": "iso", "adapt_units": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (standard): standard: `adapt_units` is true or false, not 1
+
+$ standard {"set": 5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (standard): standard: `set` must be text of at most 256 characters, got 5

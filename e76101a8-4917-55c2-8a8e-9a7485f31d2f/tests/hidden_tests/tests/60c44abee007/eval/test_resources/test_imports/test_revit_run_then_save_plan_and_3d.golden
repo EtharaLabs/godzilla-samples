@@ -1,0 +1,16 @@
+$ bimcraft-cli run house2024.rvt --cmd 'render {"view": "{3D}", "path": "3d.png", "width": 480, "height": 320}' --save plan.svg --save plan.png
+[exit 0]
+--- stdout
+{"elements":{"cabletray":1,"ceiling":1,"column":1,"component":3,"door":1,"duct":2,"floor":1,"level":2,"pipe":2,"roof":1,"room":1,"structuralcolumn":1,"wall":4,"window":1},"format":"Revit 2024","moved":null,"name":"house2024","path":"house2024.rvt","skipped":["3 Structural Rebar left out, the importer has no reader for this category (ids 440, 441, 442)","1 Site: Pads left out, the importer has no reader for this category (ids 445)","1 cable tray: its system, type name and material are not read, and it is not turned about its line (ids 422)","1 category -2008123 element: comes in as a box of its record's box, in a family named by its category's id: its category has no name here, and its shape, its type and its connectors are not read (ids 433)","2 columns: comes in as the rectangle of its box: the shape of its section is not read (ids 400, 401)","2 ducts: its system, type name and material are not read, and it is not turned about its line (ids 420, 421)","2 pipes: its diameter is the outside diameter its box gives; its system, type name and material are not read (ids 410, 411)","1 pipe fitting: comes in as a box of its record's box: its shape, its type and its connectors are not read (ids 430)","1 plumbing fixture: comes in as a box of its record's box: its shape, its type and its connectors are not read (ids 431)","1 generic model left out, it has no volume: a flat symbol has no body to import (ids 432)"]}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":320,"kind":"3D view","lens":null,"path":"3d.png","target":null,"view":"{3D}","width":480}
+{"format":"svg","path":"plan.svg"}
+{"format":"png","path":"plan.png"}
+
+--- stderr
+
+=== file plan.svg
+normalised: 274940 bytes, sha256=aa191437b6eb81b8ba549a7b728ae39ea8a5f753c938f2b263176f09d5603672
+=== file plan.png
+png 1600x1000 rgba pixels-sha256=a977b0489e3e6e30ab15b353fbcd62f0d3b1da07bbdf0ac218fd09e799907f04
+=== file 3d.png
+png 480x320 rgba pixels-sha256=b65e8818bec4410de0b115736881778cce07b542056fe07a113734dc54d41af0

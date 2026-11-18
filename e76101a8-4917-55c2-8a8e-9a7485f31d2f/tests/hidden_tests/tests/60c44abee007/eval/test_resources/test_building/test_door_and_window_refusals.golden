@@ -1,0 +1,65 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"at": [3000, 2000]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (door): door: no wall at [3000, 2000] on Level 1
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"wall": 100002, "offset": 1000}
+door {"wall": 100002, "offset": 1500}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 2 (door): door 100003 and door 100004 overlap in wall <GUID-1>
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"at": [5900, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (door): door 100003: 900 mm wide at offset 5900 doesn't fit wall 100002, 6000 mm long
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'window {"at": [3000, 0], "sill": 2500}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (window): window 100003: sill 2500 + height 1500 doesn't fit wall 100002's height
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"at": [3000, 0], "family": "Casement Window"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (door): door: there's no door family `Casement Window` (there are: Double Door, Single Door, Sliding Door)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"at": [3000, 0], "type": "Revolving"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (door): door 100003: type `Revolving` doesn't exist (there are: Single 800 x 2100, Single 900 x 2100)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'window {"at": [3000, 0], "family": "Sofa"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (window): window: there's no window family `Sofa` (there are: Casement Window, Fixed Window, Sliding Window)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"wall": 100099}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (door): door: 100099 is not a wall
+

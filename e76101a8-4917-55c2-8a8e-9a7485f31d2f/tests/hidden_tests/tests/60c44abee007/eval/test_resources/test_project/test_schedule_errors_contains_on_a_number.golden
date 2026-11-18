@@ -1,0 +1,8 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "X", "category": "rooms", "filters": [{"field": "Area", "op": "contains", "value": "2"}]}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (schedule): schedule: filter on `Area`: it holds an area, and only text contains, begins or ends
+

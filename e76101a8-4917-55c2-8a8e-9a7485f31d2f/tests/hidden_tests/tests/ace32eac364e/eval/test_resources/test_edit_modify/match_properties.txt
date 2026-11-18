@@ -1,0 +1,62 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"plane":"xy","profile":[[0.0,0.0],[500.0,0.0],[500.0,500.0],[0.0,500.0]],"to":500.0}],"parameters":[],"types":{"A":{},"B":{}}},"name":"Box","warnings":[]}
+{"id":100007}
+{"id":100008}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== MA {"from": 100002, "ids": [100003, 100004, 100006, 100002]} | elements {"category": "wall"} | undo
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"modified":[100003,100004],"skipped":[100006]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":300.0,"top_level":"GUID-3","type":"Exterior - 300mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-8"}],"returned":4}
+{"count":1,"undone":"Match Properties"}
+--- stderr
+=== match_properties {"from": 100007, "ids": [100008]} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"modified":[100008],"skipped":[]}
+{"count":2,"elements":[{"angle":0.0,"at":[1000.0,1000.0],"category":"component","family":"Box","family_guid":"GUID-1","guid":"GUID-2","height":500.0,"id":100007,"level":"GUID-3","offset":0.0,"type":"A","values":{}},{"angle":0.0,"at":[3000.0,3000.0],"category":"component","family":"Box","family_guid":"GUID-1","guid":"GUID-4","height":500.0,"id":100008,"level":"GUID-3","offset":0.0,"type":"A","values":{}}],"returned":2}
+--- stderr
+=== match_properties {"ids": [100003]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (match_properties): match_properties: `from` (an element id or GUID) is required
+=== match_properties {"from": 9999999, "ids": [100003]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (match_properties): match_properties: no element 9999999
+=== match_properties {"from": 100002}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (match_properties): match_properties: `ids` [id, …] is required
+=== match_properties {"from": 100002, "ids": []}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (match_properties): match_properties: none of the elements is in the category of element 100002 (wall)
+=== match_properties {"from": 100002, "ids": [100006]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (match_properties): match_properties: none of the elements is in the category of element 100002 (wall)
+=== match_properties {"from": 100000, "ids": [100001]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (match_properties): match_properties: element 100000 has no type

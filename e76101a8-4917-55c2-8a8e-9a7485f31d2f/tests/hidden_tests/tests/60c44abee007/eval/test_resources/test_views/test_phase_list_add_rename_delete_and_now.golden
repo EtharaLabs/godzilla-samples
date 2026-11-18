@@ -1,0 +1,67 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'phase {}' --cmd 'phase {"name": "Demolition", "before": "New Construction"}' --cmd 'phase {"name": "Fit-out"}' --cmd 'phase {"name": "Survey", "before": "Existing"}' --cmd 'modify {"id": 100002, "params": {"Phase Created": "Existing", "Phase Demolished": "Demolition"}}' --cmd 'graphics {"phase": "Demolition"}' --cmd 'filter {"name": "Going", "categories": ["walls"], "rules": [{"field": "Phase Demolished", "op": "equals", "value": "Demolition"}]}' --cmd 'phase {"name": "Demolition", "rename": "Strip-out"}' --cmd 'elements {"category": "wall", "limit": 1}' --cmd 'graphics {}' --cmd 'filter {"name": "Going"}' --cmd 'phase {"now": "Fit-out"}' --cmd 'wall {"points": [[0,6000],[4000,6000]]}' --cmd 'elements {"category": "wall", "offset": 4}' --cmd 'phase {"overrides": {"new": {"projection": {"color": [0, 160, 0]}, "halftone": true}, "existing": null}}' --cmd 'phase {"name": "Strip-out", "delete": true, "into": "New Construction"}' --cmd 'elements {"category": "wall", "limit": 1}' --cmd 'phase {"now": null}' --save phased.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Existing","New Construction"]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Existing","Demolition","New Construction"]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Existing","Demolition","New Construction","Fit-out"]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Survey","Existing","Demolition","New Construction","Fit-out"]}
+{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","params":{"Phase Created":"Existing","Phase Demolished":"Demolition"},"room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":"Demolition","phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"categories":["wall"],"matches":[100002],"name":"Going","rules":[{"field":"Phase Demolished","op":"equals","value":"Demolition"}]}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Survey","Existing","Strip-out","New Construction","Fit-out"]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","params":{"Phase Created":"Existing","Phase Demolished":"Strip-out"},"room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}],"returned":1}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":"Strip-out","phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"categories":["wall"],"matches":[100002],"name":"Going","rules":[{"field":"Phase Demolished","op":"equals","value":"Strip-out"}]}
+{"now":"Fit-out","overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Survey","Existing","Strip-out","New Construction","Fit-out"]}
+{"ids":[100007]}
+{"count":6,"elements":[{"base_offset":0.0,"category":"wall","end":[3000.0,4000.0],"guid":"<GUID-5>","height":3000.0,"id":100006,"length":4000.0,"level":"<GUID-2>","params":{"Phase Created":"Existing"},"room_bounding":true,"start":[3000.0,0.0],"thickness":100.0,"top_level":"<GUID-3>","type":"Interior - 100mm","type_guid":"<GUID-6>"},{"base_offset":0.0,"category":"wall","end":[4000.0,6000.0],"guid":"<GUID-7>","height":3000.0,"id":100007,"length":4000.0,"level":"<GUID-2>","params":{"Phase Created":"Fit-out"},"room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-8>"}],"returned":2}
+{"now":"Fit-out","overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"new":{"halftone":true,"projection":{"color":[0,160,0]}}},"phases":["Survey","Existing","Strip-out","New Construction","Fit-out"]}
+{"now":"Fit-out","overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"new":{"halftone":true,"projection":{"color":[0,160,0]}}},"phases":["Survey","Existing","New Construction","Fit-out"]}
+{"count":6,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","params":{"Phase Created":"Existing","Phase Demolished":"New Construction"},"room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}],"returned":1}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"new":{"halftone":true,"projection":{"color":[0,160,0]}}},"phases":["Survey","Existing","New Construction","Fit-out"]}
+{"format":"bimcraft","path":"phased.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run phased.bimcraft --cmd 'phase {"name": "Existing", "delete": true}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"phased.bimcraft"}
+
+--- stderr
+line 1 (phase): phase: `Existing` is in use: say `into` which phase takes its elements and views
+
+$ bimcraft-cli run phased.bimcraft --cmd 'phase {"name": "Fit-out", "rename": "Existing"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"phased.bimcraft"}
+
+--- stderr
+line 1 (phase): phase: there's a phase `Existing` already
+
+$ bimcraft-cli run phased.bimcraft --cmd 'phase {"name": "Late", "after": "Nowhere"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"phased.bimcraft"}
+
+--- stderr
+line 1 (phase): phase: no phase `Nowhere` (there are: Survey, Existing, New Construction, Fit-out)
+
+$ bimcraft-cli run phased.bimcraft --cmd 'phase {"now": "Nowhere"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"phased.bimcraft"}
+
+--- stderr
+line 1 (phase): phase: no phase `Nowhere` (there are: Survey, Existing, New Construction, Fit-out)
+
+$ bimcraft-cli run phased.bimcraft --cmd 'modify {"id": 100003, "params": {"Phase Created": "Fit-out", "Phase Demolished": "Existing"}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"phased.bimcraft"}
+
+--- stderr
+line 1 (modify): wall 100003: it can't be demolished in a phase before the one it was made in
+

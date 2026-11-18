@@ -1,0 +1,8 @@
+$ bimcraft-cli run roof_attached.rvt --cmd 'elements {}'
+[exit 0]
+--- stdout
+{"elements":{"level":2,"roof":1,"wall":2},"format":"Revit 2024","moved":null,"name":"roof_attached","path":"roof_attached.rvt","skipped":["1 wall: its top follows the roof it names: it comes in cut by the roof's underside (ids 110)","2 walls: its type has no layers (a curtain wall or a storefront): it comes in as the plane its own box gives, and the panels and mullions are not read (ids 110, 111)"]}
+{"count":5,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3048.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"attach_top":"<GUID-3>","base_offset":0.0,"category":"wall","end":[6096.0,304.8],"guid":"<GUID-4>","height":2743.2,"id":100002,"length":6096.0,"level":"<GUID-1>","room_bounding":true,"start":[0.0,304.8],"thickness":243.84,"top_level":null,"type":"Imported - 243.84mm","type_guid":"<GUID-5>"},{"base_offset":0.0,"category":"wall","end":[6096.0,1524.0],"guid":"<GUID-6>","height":3048.0,"id":100003,"length":6096.0,"level":"<GUID-1>","room_bounding":true,"start":[0.0,1524.0],"thickness":243.84,"top_level":null,"type":"Imported - 243.84mm","type_guid":"<GUID-5>"},{"area_m2":18.58,"boundary":[[0.0,0.0],[6096.0,0.0],[6096.0,3048.0],[0.0,3048.0]],"category":"roof","guid":"<GUID-3>","id":100004,"level":"<GUID-1>","offset":2743.2,"outline":[[0.0,0.0],[6096.0,0.0],[6096.0,3048.0],[0.0,3048.0]],"overhang":0.0,"ridge":2743.2,"slope":0.0,"type":"Warm","type_guid":"<GUID-7>"}],"returned":5}
+
+--- stderr
+

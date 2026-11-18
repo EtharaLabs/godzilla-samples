@@ -1,0 +1,280 @@
+$ bimcraft-cli run --cmd 'point_cloud {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: give `path`, a scan file (PTS, XYZ, PLY, LAS or E57) to bring in, or `cloud`, the name of a scan the project holds
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "ok.xyz", "cloud": "x"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: give `path`, a scan file to bring in, or `cloud`, a scan the project holds; not both
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": []}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: `path` is a scan file, or a list of the files of one scan's stations, not an empty list
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": [1]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: `path` lists files by their paths, not 1
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": 5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: `path` is a scan file, or a list of the files of one scan's stations, not 5
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "ok.xyz", "units": "yards"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: `units` is one of mm, cm, m, in, ft, not yards
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "ok.xyz", "origin": "corner"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: `origin` is centre (its middle on `at`, its foot on the level) or file (where its file puts it), not corner
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "ok.xyz", "spacing": -1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: ok.xyz: a spacing of -1 mm isn't one
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "ok.xyz", "name": " "}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: a scan needs a `name`
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "missing.xyz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: missing.xyz: No such file or directory (os error 2)
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "far.xyz", "origin": "file"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: the scan's middle lies at [2000000500.0, 0.0, 0.0] mm in its file, past the 1000000000 mm a model reaches: place it by its `centre`
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "scan.laz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: scan.laz: LAZ is compressed LAS, which BIMCraft doesn't read: decompress it to LAS first (laszip or PDAL)
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "scan.rcp"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: scan.rcp: ReCap's RCP and RCS are closed formats: export the scan from ReCap as E57, LAS or PTS
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "scan.obj"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: scan.obj: a .obj file isn't a point cloud BIMCraft reads: PTS, XYZ, PLY, LAS or E57
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "empty.xyz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: empty.xyz: it holds no points
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "word.xyz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: word.xyz: line 1: zero isn't a number
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "nan.xyz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: nan.xyz: line 1: NaN isn't a number BIMCraft can place
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "five.xyz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: five.xyz: line 1: 5 columns; a point is x y z, then an intensity, a colour (r g b), or both
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "binary.pts"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: binary.pts: line 1 isn't text
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "noply.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: noply.ply: it isn't a PLY file: it doesn't start with ply
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "noend.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: noend.ply: its header has no end_header
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "noformat.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: noformat.ply: its header has no format
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "form.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: form.ply: its format is utf8: PLY is ascii, binary_little_endian or binary_big_endian
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "type.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: type.ply: property x is of type quad, which PLY doesn't have
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "novertex.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: novertex.ply: it has no vertex element
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "noz.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: noz.ply: its vertices have no z
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "list.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: list.ply: its vertices hold a list, which a point can't
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "cut.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: cut.ply: it's cut short: 1 vertices of 3
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "cutbin.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: cutbin.ply: it's cut short: 3 vertices don't fit in it
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "orphan.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: orphan.ply: a property before any element
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "count.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: count.ply: element vertex many: not a count
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "bad.ply"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: bad.ply: its header says "what is this", which isn't PLY
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "nolasf.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: nolasf.las: it isn't a LAS file: it doesn't start with LASF
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "shortlas.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: shortlas.las: its header is cut short
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "las20.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: las20.las: it's LAS 2.0; BIMCraft reads 1.0 to 1.4
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "zeroscale.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: zeroscale.las: its scale along x is 0
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "cutlas.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: cutlas.las: its points are cut short: 3 of 28 bytes from byte 227 don't fit in 301 bytes
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "wide.xyz"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: wide.xyz: it's 30000000 mm wide along x; up to 20000000 mm
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "laz.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: laz.las: its points are compressed (LAZ): decompress it to LAS first (laszip or PDAL)
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "fmt.las"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: fmt.las: its point format 11 isn't one LAS has (0 to 10)
+

@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 2}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `diameter` 2 mm isn't between 3 and 100 mm
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 101}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `diameter` 101 mm isn't between 3 and 100 mm
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0]], "diameter": 10}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `points` needs at least 2 points
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0], [100, 0]], "diameter": 10}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `points`: [0,0] is not a point [x, y, z] in mm
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 10, "count": 1001, "step": [10, 0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `count` is 1 to 1000 bars, and the bars' points together up to 10000
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 10, "count": 3}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `step` [dx, dy, dz] is required for more than one bar
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 10, "host": 100000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar 100002: level 100000 is no host for bars; a beam, a column, a footing or a floor is
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 10, "host": 999}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: no element 999
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `diameter` in mm is required
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [0, 0, 0]], "diameter": 10}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: the bar is too short: its points are all in one place
+
+$ bimcraft-cli run --cmd 'rebar {"points": [[0, 0, 0], [100, 0, 0]], "diameter": 10, "grade": ""}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (rebar): rebar: `grade` can't be blank
+

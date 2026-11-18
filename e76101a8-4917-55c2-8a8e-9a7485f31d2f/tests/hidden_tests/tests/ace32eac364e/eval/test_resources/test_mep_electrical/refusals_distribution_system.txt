@@ -1,0 +1,100 @@
+$ distribution_system {"name": "X", "phases": 4, "wires": 4, "l_l": "220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `phases` is 1, 2 or 3, not 4
+$ distribution_system {"name": "X", "phases": 0, "wires": 2, "l_n": "220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `phases` is 1, 2 or 3, not 0
+$ distribution_system {"name": "X", "phases": 3, "wires": 2, "l_l": "220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `wires` counts the line conductors and the neutral, not the protective one: 3 to 4 for 3 phases, not 2
+$ distribution_system {"name": "X", "phases": 3, "wires": 5, "l_l": "220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `wires` counts the line conductors and the neutral, not the protective one: 3 to 4 for 3 phases, not 5
+$ distribution_system {"name": "X", "phases": 1, "wires": 3, "l_n": "220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `wires` counts the line conductors and the neutral, not the protective one: 2 to 2 for 1 phase, not 3
+$ distribution_system {"name": "X", "phases": 1, "wires": 2}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: it supplies no voltage; give `l_l`, `l_n` or `l_g`
+$ distribution_system {"name": "X", "phases": 2, "wires": 2, "l_n": "127 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `l_l`, the voltage between lines, is required for 2 phases
+$ distribution_system {"name": "X", "phases": 3, "wires": 4, "l_l": "999 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `l_l` names voltage `999 V`, which the project doesn't have (there are: 127 V, 220 V, 230 V, 277 V, 380 V, 400 V, 480 V)
+$ distribution_system {"name": "X", "phases": 1, "wires": 2, "l_g": "12 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `l_g` names voltage `12 V`, which the project doesn't have (there are: 127 V, 220 V, 230 V, 277 V, 380 V, 400 V, 480 V)
+$ distribution_system {"name": "X", "phases": 3, "wires": 4, "l_l": "220 V", "l_n": "220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: with 3 phases `l_l` `220 V` (220 V) should be about 1.73 times `l_n` `220 V` (220 V)
+$ distribution_system {"name": "X", "phases": 3, "wires": 3, "l_l": "220 V", "ground": "TN"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `X`: `ground` is the earthing, one of TN-S, TN-C, TN-C-S, TT, IT, not `TN`
+$ distribution_system {"name": "X", "wires": 3}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: `phases` (1, 2 or 3) is required for a new distribution system
+$ distribution_system {"name": "X", "phases": 3}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: `wires` (the line conductors and the neutral) is required for a new distribution system
+$ distribution_system {"name": "X", "phases": 300, "wires": 3}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: `phases` must be a whole number from 0 to 255, got 300
+$ distribution_system {"name": "X", "phases": 1.5, "wires": 3}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: `phases` must be a whole number from 0 to 255, got 1.5
+$ distribution_system {"name": "X", "rename": "Y"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: there's no distribution system `X` to rename
+$ distribution_system {"name": "X", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: there's no distribution system `X`
+$ distribution_system {"name": "230/400 V", "rename": "127/220 V"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: there's already a distribution system `127/220 V`
+$ distribution_system {"name": "230/400 V", "l_l": ""}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: distribution system `230/400 V`: `l_l`, the voltage between lines, is required for 3 phases
+$ distribution_system {"name": "X", "voltage": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (distribution_system): distribution_system: `voltage` isn't one of its parameters: name, phases, wires, l_l, l_n, l_g, ground, rename, delete

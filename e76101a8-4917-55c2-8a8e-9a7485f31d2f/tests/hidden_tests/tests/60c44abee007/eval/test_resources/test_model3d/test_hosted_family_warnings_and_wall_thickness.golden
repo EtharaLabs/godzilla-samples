@@ -1,0 +1,38 @@
+$ bimcraft-cli run --cmd 'family {"name": "Odd Door", "category": "door", "operation": "sliding", "parameters": [{"name": "Width", "kind": "length", "value": 1000}, {"name": "Height", "kind": "length", "value": 2200}, {"name": "Leaf", "kind": "length", "formula": "Wall Thickness / 4"}, {"name": "Glazed", "kind": "yesno", "value": false}], "types": {"1000 x 2200": {}, "1200 x 2400": {"Width": 1200, "Height": 2400, "Glazed": true}}, "forms": [{"plane": "xz", "profile": [[3000, 0], [3500, 0], [3500, 500], [3000, 500]], "from": -10, "to": 10}, {"plane": "xz", "profile": [[-100, 0], [100, 0], [100, 100], [-100, 100]], "from": -400, "to": 400}], "symbols": []}' --cmd 'family {"name": "Odd Door"}'
+[exit 0]
+--- stdout
+{"family":{"category":"door","forms":[{"from":-10.0,"plane":"xz","profile":[[3000.0,0.0],[3500.0,0.0],[3500.0,500.0],[3000.0,500.0]],"to":10.0},{"from":-400.0,"plane":"xz","profile":[[-100.0,0.0],[100.0,0.0],[100.0,100.0],[-100.0,100.0]],"to":400.0}],"operation":"sliding","parameters":[{"kind":"length","name":"Width","value":1000},{"kind":"length","name":"Height","value":2200},{"formula":"Wall Thickness / 4","kind":"length","name":"Leaf","value":null},{"kind":"yesno","name":"Glazed","value":false}],"types":{"1000 x 2200":{},"1200 x 2400":{"Glazed":true,"Height":2400,"Width":1200}}},"name":"Odd Door","warnings":["its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing","form 1: it lies wholly outside the opening (x 3000…3500 mm, z 0…500 mm) (in type `1000 x 2200`, `1200 x 2400`)","form 2: it is 800 mm thick across the wall where the wall is 200 mm (in type `1000 x 2200`, `1200 x 2400`)"]}
+{"family":{"category":"door","forms":[{"from":-10.0,"guid":"<GUID-1>","id":999460,"plane":"xz","profile":[[3000.0,0.0],[3500.0,0.0],[3500.0,500.0],[3000.0,500.0]],"to":10.0},{"from":-400.0,"guid":"<GUID-2>","id":999459,"plane":"xz","profile":[[-100.0,0.0],[100.0,0.0],[100.0,100.0],[-100.0,100.0]],"to":400.0}],"operation":"sliding","parameters":[{"kind":"length","name":"Width","value":1000},{"kind":"length","name":"Height","value":2200},{"formula":"Wall Thickness / 4","kind":"length","name":"Leaf","value":null},{"kind":"yesno","name":"Glazed","value":false}],"types":{"1000 x 2200":{},"1200 x 2400":{"Glazed":true,"Height":2400,"Width":1200}}},"name":"Odd Door","values":{"1000 x 2200":{"Glazed":0.0,"Height":2200.0,"Leaf":50.0,"Wall Thickness":200.0,"Width":1000.0},"1200 x 2400":{"Glazed":1.0,"Height":2400.0,"Leaf":50.0,"Wall Thickness":200.0,"Width":1200.0}},"warnings":["its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing","form 1: it lies wholly outside the opening (x 3000…3500 mm, z 0…500 mm) (in type `1000 x 2200`, `1200 x 2400`)","form 2: it is 800 mm thick across the wall where the wall is 200 mm (in type `1000 x 2200`, `1200 x 2400`)"]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'family {"name": "Wally", "category": "door", "operation": "sliding", "parameters": [{"name": "Width", "kind": "length", "value": 1000}, {"name": "Height", "kind": "length", "value": 2200}, {"name": "Leaf", "kind": "length", "formula": "Wall Thickness / 4"}, {"name": "Glazed", "kind": "yesno", "value": false}, {"name": "Wall Thickness", "kind": "length", "value": 10}], "types": {"1000 x 2200": {}, "1200 x 2400": {"Width": 1200, "Height": 2400, "Glazed": true}}, "forms": [{"plane": "xz", "profile": [["-Width / 2", 0], ["Width / 2", 0], ["Width / 2", "Height"], ["-Width / 2", "Height"]], "from": "-Leaf / 2", "to": "Leaf / 2", "material": "Timber"}, {"plane": "xz", "profile": [[-200, 1200], [200, 1200], [200, 1800], [-200, 1800]], "from": -30, "to": 30, "material": "Glass", "visible": "Glazed"}], "symbols": [{"line": [["-Width / 2", 0], ["-Width / 2", "-Width"]]}, {"arc": {"centre": ["-Width / 2", 0], "radius": "Width", "from": 270, "to": 360}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Wally`: `Wall Thickness` is the wall's, which a door or a window reads; name the parameter otherwise
+
+$ bimcraft-cli run --cmd 'family {"name": "Shelf", "parameters": [{"name": "D", "kind": "length", "formula": "Wall Thickness"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Shelf`: parameter `D`: formula `Wall Thickness` reads `Wall Thickness`, which isn't one of its parameters
+family `Shelf`: type `T`: parameter `D`: formula `Wall Thickness`: `Wall Thickness` isn't one of its parameters
+
+$ bimcraft-cli run --cmd 'family {"name": "Gap", "category": "window", "parameters": [{"name": "Width", "kind": "number", "value": 1}, {"name": "Height", "kind": "length", "value": 1}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Gap`: a door or window family needs a length parameter `Width`: the size of the opening it makes
+family `Gap`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+
+$ bimcraft-cli run --cmd 'family {"name": "Table", "category": "door"}'
+[exit 0]
+--- stdout
+{"family":{"category":"door","forms":[{"from":"Height - Thickness","guid":"<GUID-3>","id":999486,"material":"Material","plane":"xy","profile":[["-(Width / 2)","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-(Width / 2)","Depth / 2"]],"to":"Height"},{"from":0.0,"guid":"<GUID-4>","id":999485,"material":"Material","plane":"xy","profile":[["(Width) / 2 - 50 - Leg Width","(Depth) / 2 - 50 - Leg Width"],["(Width) / 2 - 50","(Depth) / 2 - 50 - Leg Width"],["(Width) / 2 - 50","(Depth) / 2 - 50"],["(Width) / 2 - 50 - Leg Width","(Depth) / 2 - 50"]],"to":"Height - Thickness"},{"from":0.0,"guid":"<GUID-5>","id":999484,"material":"Material","plane":"xy","profile":[["(Width) / 2 - 50 - Leg Width","-(Depth) / 2 + 50"],["(Width) / 2 - 50","-(Depth) / 2 + 50"],["(Width) / 2 - 50","-(Depth) / 2 + 50 + Leg Width"],["(Width) / 2 - 50 - Leg Width","-(Depth) / 2 + 50 + Leg Width"]],"to":"Height - Thickness"},{"from":0.0,"guid":"<GUID-6>","id":999483,"material":"Material","plane":"xy","profile":[["-(Width) / 2 + 50","(Depth) / 2 - 50 - Leg Width"],["-(Width) / 2 + 50 + Leg Width","(Depth) / 2 - 50 - Leg Width"],["-(Width) / 2 + 50 + Leg Width","(Depth) / 2 - 50"],["-(Width) / 2 + 50","(Depth) / 2 - 50"]],"to":"Height - Thickness"},{"from":0.0,"guid":"<GUID-7>","id":999482,"material":"Material","plane":"xy","profile":[["-(Width) / 2 + 50","-(Depth) / 2 + 50"],["-(Width) / 2 + 50 + Leg Width","-(Depth) / 2 + 50"],["-(Width) / 2 + 50 + Leg Width","-(Depth) / 2 + 50 + Leg Width"],["-(Width) / 2 + 50","-(Depth) / 2 + 50 + Leg Width"]],"to":"Height - Thickness"}],"parameters":[{"kind":"length","name":"Width","value":1600.0},{"kind":"length","name":"Depth","value":900.0},{"kind":"length","name":"Height","value":750.0},{"kind":"length","name":"Thickness","value":40.0},{"kind":"length","name":"Leg Width","value":60.0},{"kind":"material","name":"Material","value":"Timber"}],"types":{"1200 x 800":{"Depth":800,"Width":1200},"1600 x 900":{},"2000 x 1000":{"Depth":1000,"Width":2000}}},"name":"Table","warnings":["its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing","form 1: it is 1000 mm thick across the wall where the wall is 200 mm (in type `2000 x 1000`)","form 1: it is 800 mm thick across the wall where the wall is 200 mm (in type `1200 x 800`)","form 1: it is 900 mm thick across the wall where the wall is 200 mm (in type `1600 x 900`)"]}
+
+--- stderr
+

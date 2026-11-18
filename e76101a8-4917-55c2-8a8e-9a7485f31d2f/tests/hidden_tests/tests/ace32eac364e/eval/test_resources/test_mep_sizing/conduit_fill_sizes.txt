@@ -1,0 +1,60 @@
+$ conduit_fill {"section": 2.5}
+exit: 0
+--- stdout
+{"circuits":1,"conductors":3,"fill_percent":null,"inside_mm":null,"limit_percent":null,"ok":null,"sections_mm2":[2.5,2.5,2.5],"size":null,"smallest":"1/2\"","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 2.5, "size": "3/4\""}
+exit: 0
+--- stdout
+{"circuits":1,"conductors":3,"fill_percent":8.1,"inside_mm":21.6,"limit_percent":40.0,"ok":true,"sections_mm2":[2.5,2.5,2.5],"size":"3/4\"","smallest":"1/2\"","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 25, "phases": "3FN", "size": "1/2\""}
+exit: 0
+--- stdout
+{"circuits":1,"conductors":5,"fill_percent":128.2,"inside_mm":16.4,"limit_percent":40.0,"ok":false,"sections_mm2":[25.0,25.0,25.0,25.0,16.0],"size":"1/2\"","smallest":"1.1/4\"","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 4, "phases": "FN", "size": "1/2\"", "circuits": 2}
+exit: 0
+--- stdout
+{"circuits":2,"conductors":6,"fill_percent":36.6,"inside_mm":16.4,"limit_percent":40.0,"ok":true,"sections_mm2":[4.0,4.0,4.0],"size":"1/2\"","smallest":"1/2\"","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 10, "phases": "3FN", "circuits": 3, "family": "steel-heavy"}
+exit: 0
+--- stdout
+{"circuits":3,"conductors":15,"fill_percent":null,"inside_mm":null,"limit_percent":null,"ok":null,"sections_mm2":[10.0,10.0,10.0,10.0,10.0],"size":null,"smallest":"1.1/2\"","source":{"document":"Catálogo Elecon (Eletrodutos)","inside":"outside less twice the wall","maker":"Elecon Eletroduto eletrolítico pesado, NBR 13057","page":"5 (wall and outside diameter, minimum and maximum)","url":"https://elecon.com.br/wp-content/uploads/2017/10/catalogo.pdf"}}
+--- stderr
+$ conduit_fill {"section": 120, "phases": "3FN", "reduced_neutral": true, "family": "steel-rir", "size": "4\""}
+exit: 0
+--- stdout
+{"circuits":1,"conductors":5,"fill_percent":11.2,"inside_mm":105.8,"limit_percent":40.0,"ok":true,"sections_mm2":[120.0,120.0,120.0,70.0,70.0],"size":"4\"","smallest":"2.1/2\"","source":{"document":"Catálogo Elecon (Eletrodutos)","inside":"outside less twice the wall","maker":"Elecon Eletroduto RIR galvanizado a fogo, NBR 5597 (rosca NPT)","page":"7 (outside diameter and wall)","url":"https://elecon.com.br/wp-content/uploads/2017/10/catalogo.pdf"}}
+--- stderr
+$ conduit_fill {"section": 240, "phases": "3FN", "circuits": 2, "family": "pvc-solder"}
+exit: 0
+--- stdout
+{"circuits":2,"conductors":10,"fill_percent":null,"inside_mm":null,"limit_percent":null,"ok":null,"sections_mm2":[240.0,240.0,240.0,240.0,120.0],"size":null,"smallest":null,"source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido soldável","page":"6 (diameter B and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 1.5, "phases": "FF", "family": "pvc-solder", "size": "DN20"}
+exit: 0
+--- stdout
+{"circuits":1,"conductors":3,"fill_percent":9.3,"inside_mm":16.8,"limit_percent":40.0,"ok":true,"sections_mm2":[1.5,1.5,1.5],"size":"DN20","smallest":"DN20","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido soldável","page":"6 (diameter B and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 35, "phases": "3F", "circuits": 2.5, "family": "steel-rir"}
+exit: 0
+--- stdout
+{"circuits":3,"conductors":12,"fill_percent":null,"inside_mm":null,"limit_percent":null,"ok":null,"sections_mm2":[35.0,35.0,35.0,16.0],"size":null,"smallest":"2\"","source":{"document":"Catálogo Elecon (Eletrodutos)","inside":"outside less twice the wall","maker":"Elecon Eletroduto RIR galvanizado a fogo, NBR 5597 (rosca NPT)","page":"7 (outside diameter and wall)","url":"https://elecon.com.br/wp-content/uploads/2017/10/catalogo.pdf"}}
+--- stderr
+$ conduit_fill {"section": 0.5, "phases": "3F", "circuits": 1000}
+exit: 0
+--- stdout
+{"circuits":1000,"conductors":4000,"fill_percent":null,"inside_mm":null,"limit_percent":null,"ok":null,"sections_mm2":[0.5,0.5,0.5,0.5],"size":null,"smallest":null,"source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 300}
+exit: 0
+--- stdout
+{"conductors":3,"pending":"the catalogue has no outside diameter for a cable of 300 mm²","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr
+$ conduit_fill {"section": 3}
+exit: 0
+--- stdout
+{"conductors":3,"pending":"the catalogue has no outside diameter for a cable of 3 mm²","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+--- stderr

@@ -1,0 +1,71 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {"id": 100004, "style": "Hidden Lines", "end": [2000, 7000]}' --cmd 'modify {"id": 100002, "type": "Interior - 100mm", "top_offset": -200}' --cmd 'modify {"id": 100002, "end": [8000, 0]}' --cmd 'modify {"id": 100003, "offset": 5000, "mark": "D1"}' --cmd 'wall {"points": [[0,3000],[6000,3000]]}' --cmd 'modify {"ids": [100002, 100005], "base_offset": 100}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "door"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004}
+{"category":"line","end":[2000.0,7000.0],"guid":"<GUID-1>","id":100004,"length":2236.07,"level":"<GUID-2>","shape":"line","start":[0.0,6000.0],"style":"Hidden Lines","view":"<GUID-2>"}
+{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-3>","height":2800.0,"id":100002,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":100.0,"top_level":"<GUID-4>","top_offset":-200.0,"type":"Interior - 100mm","type_guid":"<GUID-5>"}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-3>","height":2800.0,"id":100002,"length":8000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":100.0,"top_level":"<GUID-4>","top_offset":-200.0,"type":"Interior - 100mm","type_guid":"<GUID-5>"}
+{"at":[5000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-6>","height":2100.0,"host":"<GUID-3>","id":100003,"level":"<GUID-2>","mark":"D1","offset":5000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"<GUID-7>","width":900.0}
+{"ids":[100005]}
+{"modified":[100002,100005]}
+{"count":2,"elements":[{"base_offset":100.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-3>","height":2700.0,"id":100002,"length":8000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":100.0,"top_level":"<GUID-4>","top_offset":-200.0,"type":"Interior - 100mm","type_guid":"<GUID-5>"},{"base_offset":100.0,"category":"wall","end":[6000.0,3000.0],"guid":"<GUID-8>","height":2900.0,"id":100005,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,3000.0],"thickness":200.0,"top_level":"<GUID-4>","type":"Generic - 200mm","type_guid":"<GUID-9>"}],"returned":2}
+{"count":1,"elements":[{"at":[5000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-6>","height":2100.0,"host":"<GUID-3>","id":100003,"level":"<GUID-2>","mark":"D1","offset":5000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"<GUID-7>","width":900.0}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {"id": 100002, "bogus": 1}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (modify): modify: element 100002: unknown field `bogus`, expected one of `type`, `level`, `start`, `end`, `top_level`, `height`, `base_offset`, `top_offset`, `arc`, `location`, `attach_top`, `attach_base`, `room_bounding`, `params`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {"id": 100003, "points": [[0,0],[500,500],[1000,0]]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (modify): modify: element 100003: `points` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` and `end_tangent`)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {"id": 100003, "style": "Nope"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (modify): line 100003: there's no line style `Nope` (there are: Centre Lines, Hairline, Hidden Lines, Medium Lines, Overhead Lines, Thin Lines, Wide Lines)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {"id": 100002, "type": "Nope"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (modify): wall 100002: type `Nope` doesn't exist (there are: Exterior - 300mm, Generic - 200mm, Interior - 100mm)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (modify): modify: `ids` [id, …] is required
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'modify {"id": 999999, "height": 1}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (modify): modify: no element 999999
+

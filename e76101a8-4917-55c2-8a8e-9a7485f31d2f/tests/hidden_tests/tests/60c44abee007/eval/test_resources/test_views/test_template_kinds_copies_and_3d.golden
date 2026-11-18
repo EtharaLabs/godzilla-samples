@@ -1,0 +1,42 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'template {"name": "Sections", "from": "Section 1", "detail": "coarse"}' --cmd 'template {"name": "Sections B", "like": "Sections"}' --cmd 'template {"name": "Shaded 3D", "kind": "3d", "visual_style": "hidden_line"}' --cmd 'graphics {"view": "Section 1", "template": "Sections B"}' --cmd 'detail {"view": "Section 1"}' --cmd 'template {"name": "Sections B", "rename": "Sect"}' --cmd 'template {"name": "Shaded 3D"}' --save t.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"id":100007,"name":"Section 1"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"coarse","filters":[],"hidden":[],"kind":"section","layers":{},"name":"Sections","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":null,"views":[],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"coarse","filters":[],"hidden":[],"kind":"section","layers":{},"name":"Sections B","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":null,"views":[],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","filters":[],"hidden":[],"kind":"3d","layers":{},"name":"Shaded 3D","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":null,"views":[],"visual_style":"hidden_line"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"coarse","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Section 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":"Sections B","view":100007,"visual_style":"shaded"}
+{"detail":"coarse","name":"Section 1","view":100007}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"coarse","filters":[],"hidden":[],"kind":"section","layers":{},"name":"Sect","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":null,"views":[100007],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controls":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","filters":[],"hidden":[],"kind":"3d","layers":{},"name":"Shaded 3D","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":null,"views":[],"visual_style":"hidden_line"}
+{"format":"bimcraft","path":"t.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run t.bimcraft --cmd 'graphics {"view": "Level 1", "template": "Sect"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"t.bimcraft"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"coarse","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":"Sect","view":100000,"visual_style":"shaded"}
+
+--- stderr
+
+$ bimcraft-cli run t.bimcraft --cmd 'graphics {"view": "Level 1", "template": "Shaded 3D"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"t.bimcraft"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":["categories","filters","range","phase","options","scale","detail","style","background_grid"],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":"Shaded 3D","view":100000,"visual_style":"hidden_line"}
+
+--- stderr
+
+$ bimcraft-cli run t.bimcraft --cmd 'template {"name": "Sect", "delete": true}' --cmd 'graphics {"view": "Section 1"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"t.bimcraft"}
+{"deleted":true,"name":"Sect"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Section 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100007,"visual_style":"shaded"}
+
+--- stderr
+

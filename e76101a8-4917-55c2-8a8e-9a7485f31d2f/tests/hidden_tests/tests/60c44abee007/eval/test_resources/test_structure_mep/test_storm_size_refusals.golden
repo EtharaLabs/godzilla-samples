@@ -1,0 +1,119 @@
+$ bimcraft-cli run --cmd 'storm_size {"area": 50}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `kind` (downpipe or horizontal) is required
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "vertical", "area": 50}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `kind` must be one of downpipe, horizontal, got "vertical"
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 20000, "gutter": 50, "length": 2000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: more than 150 mm inside is off the abacuses of NBR 10844's Figure 3
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 200, "gutter": 40, "length": 2000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: the water depth in the gutter must be 50 to 100 mm: the abacuses stop there
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 200, "gutter": 60, "length": 200}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: a downpipe shorter than 0.3 m is off the abacuses
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 200, "length": 2000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `gutter` (the water depth in the gutter, 50 to 100 mm) is required
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 200, "gutter": 60}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `length` (the downpipe's, mm) is required
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 200, "gutter": 60, "length": 2000, "slope": 0.01}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `slope` does not apply to a downpipe
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 200, "gutter": 60, "length": 2000, "outlet": "pipe"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `outlet` must be one of edge, funnel, got "pipe"
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900, "slope": 0.004}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `slope` must be 0.5 % (0.005) at least, NBR 10844
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `slope` (a fraction, 0.005 at least) is required
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900, "slope": 0.01, "gutter": 50}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `gutter` does not apply to a horizontal
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900, "area": 10, "slope": 0.01}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `area` and `flow` are two ways to give the flow: give one
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900, "rainfall": 100, "slope": 0.01}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `rainfall` and `flow` are two ways to give the flow: give one
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "area": 500, "slope": 0.01}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `rainfall` (mm/h, from the standard's table for the place and return period) is required above 100 m²: the default 150 mm/h is for smaller roofs
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "slope": 0.01}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: `area` (m², the roof that drains) or `flow` (L/min) is required
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900, "slope": 0.01, "foo": 2}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (storm_size): storm_size: unknown parameter `foo`
+

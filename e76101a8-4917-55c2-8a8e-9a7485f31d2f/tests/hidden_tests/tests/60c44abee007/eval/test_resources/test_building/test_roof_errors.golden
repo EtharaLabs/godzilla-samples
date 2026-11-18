@@ -1,0 +1,46 @@
+$ bimcraft-cli run --cmd 'roof {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (roof): roof: no walls enclose an area on Level 1; give `boundary`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}
+roof {"slope": 80}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 2 (roof): roof 100006: slope 80° isn't from 0° (flat) to 75°
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}
+roof {"slope": 30, "gables": [9]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 2 (roof): roof 100006: gable edge 9 isn't one of its 4 edges (0 to 3)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}
+roof {"slope": 30, "slopes": [10, 10]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 2 (roof): roof 100006: `slopes` has 2 numbers for its 4 edges (one for each, the courtyards' after the boundary's; 0 for the roof's slope), or leave it empty
+
+$ bimcraft-cli run --cmd 'roof {"boundary": [[0,0],[4000,0],[4000,4000],[0,4000]], "courtyards": [[[5000,5000],[6000,5000],[6000,6000]]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (roof): roof 100002: courtyard 0 isn't inside its outline
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}
+roof {"level": "Level 1"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 2 (roof): roof: Level 1 has no level below to roof over; give `boundary`
+

@@ -1,0 +1,40 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "site.dxf", "link": true}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cad":"site","entities":1,"extents":[[-1000.0,0.0],[1000.0,0.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1.0,"source":"site.dxf","unit":"mm"}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run proj/p.bimcraft --cmd 'elements {"category": "cadimport"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"proj/p.bimcraft"}
+{"count":1,"elements":[{"at":[0.0,0.0],"cad":"site","category":"cadimport","entities":1,"extents":[[-1000.0,0.0],[1000.0,0.0]],"guid":"<GUID-1>","id":100002,"layers":1,"level":"<GUID-2>","linked":"site.dxf","origin":[1000.0,0.0],"scale":1.0,"source":"site.dxf","unit":"mm"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run proj/p.bimcraft --cmd 'elements {"category": "cadimport"}' --save proj/again.bimcraft
+[exit 0]
+--- stdout
+{"name":"Project","path":"proj/p.bimcraft"}
+{"count":1,"elements":[{"at":[0.0,0.0],"cad":"site","category":"cadimport","entities":2,"extents":[[-1000.0,0.0],[1000.0,3000.0]],"guid":"<GUID-1>","id":100002,"layers":1,"level":"<GUID-2>","linked":"site.dxf","origin":[1000.0,0.0],"scale":1.0,"source":"site.dxf","unit":"mm"}],"returned":1}
+{"format":"bimcraft","path":"proj/again.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run proj/again.bimcraft --cmd 'elements {"category": "cadimport"}'
+[exit 0]
+--- stdout
+{"cads_not_reloaded":[{"cad":"site","error":"proj/site.dxf: No such file or directory (os error 2)"}],"name":"Project","path":"proj/again.bimcraft"}
+{"count":1,"elements":[{"at":[0.0,0.0],"cad":"site","category":"cadimport","entities":2,"extents":[[-1000.0,0.0],[1000.0,3000.0]],"guid":"<GUID-1>","id":100002,"layers":1,"level":"<GUID-2>","linked":"site.dxf","origin":[1000.0,0.0],"scale":1.0,"source":"site.dxf","unit":"mm"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "proj/site.dxf", "link": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: proj/site.dxf: No such file or directory (os error 2)
+

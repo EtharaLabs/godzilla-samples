@@ -1,0 +1,20 @@
+$ bimcraft-cli run --cmd 'material {"name": "Teal", "color": "#118899", "cut": "diagonal", "surface": "grid", "transparency": 25, "texture": {"kind": "tile", "size": [300, 300], "angle": 45, "offset": [10, 20]}}' --cmd 'material {"name": "Teal", "color": [10, 20, 30], "texture": null}' --cmd 'material {"name": "Teal", "rename": "Sea"}' --cmd 'type {"category": "wall", "name": "Sea Wall", "layers": [{"function": "structure", "material": "Sea", "thickness": 200}]}' --cmd 'material {"name": "Sea", "delete": true}'
+[exit 1]
+--- stdout
+{"material":{"color":[17,136,153],"cut":"diagonal","surface":"grid","texture":{"angle":45.0,"kind":"tile","offset":[10.0,20.0],"size":[300.0,300.0]},"transparency":25},"name":"Teal"}
+{"material":{"color":[10,20,30],"cut":"diagonal","surface":"grid","transparency":25},"name":"Teal"}
+{"material":{"color":[10,20,30],"cut":"diagonal","surface":"grid","transparency":25},"name":"Sea"}
+{"category":"wall","name":"Sea Wall","type":{"layers":[{"function":"structure","material":"Sea","thickness":200.0}],"thickness":200.0}}
+
+--- stderr
+line 1 (material): material: `Sea` is in wall type `Sea Wall`'s layers; take it out of them first
+
+$ bimcraft-cli run --cmd 'material {"name": "Gone", "color": "#ffffff"}' --cmd 'material {"name": "Gone", "delete": true}' --cmd 'library {"kind": "material"}'
+[exit 0]
+--- stdout
+{"material":{"color":[255,255,255],"cut":"none","surface":"none"},"name":"Gone"}
+{"deleted":"Gone"}
+{"count":17,"library":[{"guid":"<GUID-1>","id":999935,"kind":"material","name":"Timber"},{"guid":"<GUID-2>","id":999936,"kind":"material","name":"Screed"},{"guid":"<GUID-3>","id":999937,"kind":"material","name":"Roof tiles"},{"guid":"<GUID-4>","id":999938,"kind":"material","name":"Porcelain"},{"guid":"<GUID-5>","id":999939,"kind":"material","name":"Plaster"},{"guid":"<GUID-6>","id":999940,"kind":"material","name":"PVC"},{"guid":"<GUID-7>","id":999941,"kind":"material","name":"Metal"},{"guid":"<GUID-8>","id":999942,"kind":"material","name":"Membrane"},{"guid":"<GUID-9>","id":999943,"kind":"material","name":"Insulation"},{"guid":"<GUID-10>","id":999944,"kind":"material","name":"Gypsum board"},{"guid":"<GUID-11>","id":999945,"kind":"material","name":"Glass"},{"guid":"<GUID-12>","id":999946,"kind":"material","name":"Fabric"},{"guid":"<GUID-13>","id":999947,"kind":"material","name":"Copper"},{"guid":"<GUID-14>","id":999948,"kind":"material","name":"Concrete block"},{"guid":"<GUID-15>","id":999949,"kind":"material","name":"Concrete"},{"guid":"<GUID-16>","id":999950,"kind":"material","name":"Ceramic tile"},{"guid":"<GUID-17>","id":999951,"kind":"material","name":"Brick"}],"parts":[]}
+
+--- stderr
+

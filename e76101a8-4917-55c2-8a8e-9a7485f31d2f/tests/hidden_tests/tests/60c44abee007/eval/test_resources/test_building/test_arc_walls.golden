@@ -1,0 +1,11 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "arc": 90}' --cmd 'wall {"points": [[0,1000],[4000,1000]], "arc": -180}' --cmd 'wall {"points": [[10000,0],[14000,0],[10000,0]], "arc": 180, "closed": true}' --cmd 'elements {"category": "wall"}' --cmd 'render {"path": "plan.svg"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+
+--- stderr
+line 1 (wall): wall 100006: too short (0 mm)
+
+=== file plan.svg
+(missing)

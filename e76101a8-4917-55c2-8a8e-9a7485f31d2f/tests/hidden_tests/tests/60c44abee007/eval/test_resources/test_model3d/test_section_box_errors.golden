@@ -1,0 +1,31 @@
+$ bimcraft-cli run --cmd 'section_box {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (section_box): section_box: there's nothing in the project to fit a section box round: give its `min` and `max`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'section_box {"min": [0, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (section_box): section_box: `min`, a corner of the section box, is [x, y, z] in mm, not [0,0]
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'section_box {"on": 1}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (section_box): section_box: `on` must be true or false, got 1
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'section_box {"view": "Level 2"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (section_box): section_box: Level 2 isn't a 3D view; only a 3D view has a section box
+

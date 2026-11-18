@@ -1,0 +1,15 @@
+$ bimcraft-cli run --cmd 'material {"name": "Checks", "color": "#ffffff", "texture": {"kind": "image", "path": "checker.png", "size": [500, 500]}}' --cmd 'type {"category": "wall", "name": "Checked", "layers": [{"function": "structure", "material": "Checks", "thickness": 200}]}' --cmd 'wall {"points": [[0, 0], [6000, 0], [6000, 4000]], "type": "Checked"}' --cmd 'library {"kind": "material", "name": "Checks"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "textured.png"}' --save tex.bimcraft
+[exit 0]
+--- stdout
+{"material":{"color":[255,255,255],"cut":"none","surface":"none","texture":{"image":"img-7380a5aa11db37b0","kind":"image","size":[500.0,500.0]}},"name":"Checks"}
+{"category":"wall","name":"Checked","type":{"layers":[{"function":"structure","material":"Checks","thickness":200.0}],"thickness":200.0}}
+{"ids":[100002,100003]}
+{"count":1,"library":[{"guid":"<GUID-1>","id":999467,"kind":"material","name":"Checks"}],"parts":[]}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"textured.png","target":null,"view":"{3D}","width":320}
+{"format":"bimcraft","path":"tex.bimcraft"}
+
+--- stderr
+
+{"Checks": {"color": [255, 255, 255], "cut": "none", "surface": "none", "texture": {"image": "img-7380a5aa11db37b0", "kind": "image", "size": [500.0, 500.0]}}, "images": {"img-7380a5aa11db37b0": {"name": "checker", "size": [16, 16]}}}
+=== file textured.png
+png 320x200 rgba pixels-sha256=24f2ffcb49ddd2a2bde9d0919e023bbf5226d042dcd0e5804cc4e09784ab6dfc

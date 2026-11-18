@@ -1,0 +1,13 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8130,0],[8130,6000],[0,6000]], "closed": true}' --cmd 'dimension {"refs": [[0, 3000], [8130, 3000]], "at": [4000, -1000]}' --cmd 'dimension {"refs": [[4000, 0], [4000, 6000]], "at": [-1000, 3000]}' --cmd 'units {"length": "in"}' --cmd 'scale {"view": "Level 1"}' --cmd 'render {"view": "Level 1", "path": "plan.svg"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006,"values":[8130.0]}
+{"id":100007,"values":[6000.0]}
+{"length":"in"}
+{"name":"Level 1","scale":96.0,"view":100000}
+{"height":1000,"kind":"plan","path":"plan.svg","view":"Level 1","width":1600}
+
+--- stderr
+
+=== file plan.svg: 18221 normalised characters, sha256=aa09c7fd55736ae3307abd94ed955fd6c8ef82af168a83da719036736644e1e1

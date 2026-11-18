@@ -1,0 +1,14 @@
+exit: 1
+--- stdout
+{"ids":[100002]}
+{"category":"conduit","name":"PVC 20","type":{"depth":21.3,"material":"PVC","round":true,"width":21.3}}
+{"category":"cabletray","name":"Ladder 400 x 100","type":{"depth":100.0,"material":"Metal","round":false,"width":400.0}}
+{"ids":[100003]}
+{"category":"downconductor","name":"Flat 30 x 4","type":{"depth":4.0,"material":"Copper","round":false,"width":30.0}}
+{"category":"cable","name":"Coax","type":{"depth":7.0,"material":"PVC","round":true,"width":7.0}}
+{"ids":[100004]}
+{"count":1,"elements":[{"axis":[[0.0,0.0,0.0],[3000.0,0.0,0.0]],"category":"conduit","depth":21.3,"end":[3000.0,0.0],"guid":"GUID-1","id":100002,"justify":"centre","length":3000.0,"level":"GUID-2","offset":0.0,"round":true,"start":[0.0,0.0],"type":"PVC 20","type_guid":"GUID-3","width":21.3}],"returned":1}
+{"count":1,"elements":[{"axis":[[0.0,2000.0,0.0],[3000.0,2000.0,0.0]],"category":"cable","depth":7.0,"end":[3000.0,2000.0],"guid":"GUID-4","id":100004,"justify":"centre","length":3000.0,"level":"GUID-2","offset":0.0,"round":true,"start":[0.0,2000.0],"type":"Coax","type_guid":"GUID-5","width":7.0}],"returned":1}
+{"count":4,"library":[{"guid":"GUID-6","id":999467,"kind":"type:cabletray","name":"Ladder 400 x 100"},{"guid":"GUID-7","id":999972,"kind":"type:cabletray","name":"Perforated 300 x 100"},{"guid":"GUID-8","id":999973,"kind":"type:cabletray","name":"Perforated 200 x 50"},{"guid":"GUID-9","id":999974,"kind":"type:cabletray","name":"Perforated 100 x 50"}],"parts":[]}
+--- stderr
+line 1 (type): pipe type `Odd`: material `Unobtainium` isn't in the library; add it with `material`

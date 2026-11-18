@@ -1,0 +1,66 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "diffuse.ply"}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"diffuse","id":100002,"origin":[500.0,500.0,500.0],"points":2,"read":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+=== p.bimcraft [clouds]
+{
+ "diffuse": {
+  "colours": "eAH738DA4PAfAAn/Ar8=",
+  "origin": [
+   500.0,
+   500.0,
+   500.0
+  ],
+  "points": "eAFjYPh1GAk7A9lgDABxLgjv",
+  "read": 2,
+  "source": "diffuse.ply"
+ }
+}
+$ bimcraft-cli run --cmd 'point_cloud {"path": "intensity.ply"}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"intensity","id":100002,"origin":[500.0,500.0,0.0],"points":3,"read":3}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+=== p.bimcraft [clouds]
+{
+ "intensity": {
+  "colours": "eAFjYGBoaGj4//8/AA2DBH4=",
+  "origin": [
+   500.0,
+   500.0,
+   0.0
+  ],
+  "points": "eAFjYPh1GIIZgOCXMxIbJA7kMzAAAL8qCW8=",
+  "read": 3,
+  "source": "intensity.ply"
+ }
+}
+$ bimcraft-cli run --cmd 'point_cloud {"path": "binary.ply"}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"binary","id":100002,"origin":[0.0,1000.0,0.0],"points":2,"read":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+=== p.bimcraft [clouds]
+{
+ "binary": {
+  "colours": "eAHjEpHTMLIBAAI2ANM=",
+  "origin": [
+   0.0,
+   1000.0,
+   0.0
+  ],
+  "points": "eAFjYKhyAeMG66NA+ggYN1i7AgBGjgZ5",
+  "read": 2,
+  "source": "binary.ply"
+ }
+}

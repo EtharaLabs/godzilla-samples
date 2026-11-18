@@ -1,0 +1,15 @@
+$ bimcraft-cli run --cmd 'voltage {}' --cmd 'voltage {"name": "110 V", "nominal": 110}' --cmd 'voltage {"name": "24 V", "nominal": 24, "min": 20, "max": 28}' --cmd 'voltage {"name": "110 V", "rename": "115 V", "nominal": 115}' --cmd 'voltage {"name": "24 V", "delete": true}' --cmd 'voltage {"name": "127 V", "rename": "127 V AC"}' --cmd 'voltage {}' --cmd 'distribution_system {}' --cmd 'library {"kind": "voltage"}'
+[exit 0]
+--- stdout
+{"voltages":{"127 V":{"max":139.7,"min":114.3,"nominal":127.0},"220 V":{"max":242.0,"min":198.0,"nominal":220.0},"230 V":{"max":253.0,"min":207.0,"nominal":230.0},"277 V":{"max":304.7,"min":249.3,"nominal":277.0},"380 V":{"max":418.0,"min":342.0,"nominal":380.0},"400 V":{"max":440.0,"min":360.0,"nominal":400.0},"480 V":{"max":528.0,"min":432.0,"nominal":480.0}}}
+{"name":"110 V","voltage":{"max":121.0,"min":99.0,"nominal":110.0}}
+{"name":"24 V","voltage":{"max":28.0,"min":20.0,"nominal":24.0}}
+{"name":"115 V","voltage":{"max":121.0,"min":99.0,"nominal":115.0}}
+{"deleted":"24 V"}
+{"name":"127 V AC","voltage":{"max":139.7,"min":114.3,"nominal":127.0}}
+{"voltages":{"115 V":{"max":121.0,"min":99.0,"nominal":115.0},"127 V AC":{"max":139.7,"min":114.3,"nominal":127.0},"220 V":{"max":242.0,"min":198.0,"nominal":220.0},"230 V":{"max":253.0,"min":207.0,"nominal":230.0},"277 V":{"max":304.7,"min":249.3,"nominal":277.0},"380 V":{"max":418.0,"min":342.0,"nominal":380.0},"400 V":{"max":440.0,"min":360.0,"nominal":400.0},"480 V":{"max":528.0,"min":432.0,"nominal":480.0}}}
+{"distribution_systems":{"127/220 V":{"ground":"TN-S","l_g":"127 V AC","l_l":"220 V","l_n":"127 V AC","phases":3,"wires":4},"220/380 V":{"ground":"TN-S","l_g":"220 V","l_l":"380 V","l_n":"220 V","phases":3,"wires":4},"230/400 V":{"ground":"TN-S","l_g":"230 V","l_l":"400 V","l_n":"230 V","phases":3,"wires":4},"277/480 V":{"l_g":"277 V","l_l":"480 V","l_n":"277 V","phases":3,"wires":4}}}
+{"count":8,"library":[{"guid":"<GUID-1>","id":999467,"kind":"voltage","name":"115 V"},{"guid":"<GUID-2>","id":999637,"kind":"voltage","name":"480 V"},{"guid":"<GUID-3>","id":999638,"kind":"voltage","name":"400 V"},{"guid":"<GUID-4>","id":999639,"kind":"voltage","name":"380 V"},{"guid":"<GUID-5>","id":999640,"kind":"voltage","name":"277 V"},{"guid":"<GUID-6>","id":999641,"kind":"voltage","name":"230 V"},{"guid":"<GUID-7>","id":999642,"kind":"voltage","name":"220 V"},{"guid":"<GUID-8>","id":999643,"kind":"voltage","name":"127 V AC"}],"parts":[]}
+
+--- stderr
+

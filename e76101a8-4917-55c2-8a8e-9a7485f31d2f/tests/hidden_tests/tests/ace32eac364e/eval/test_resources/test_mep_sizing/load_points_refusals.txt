@@ -1,0 +1,65 @@
+$ load_points {"rooms": [{"name": "A", "area": 5}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `area` (m²) and `perimeter` (mm) are required
+$ load_points {"rooms": [{"name": "A", "perimeter": 5000}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `area` (m²) and `perimeter` (mm) are required
+$ load_points {"rooms": [{"name": "A", "area": 5, "perimeter": 9000, "kind": "garage"}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): rooms[0]: load_points: `kind` must be one of bath, kitchen, service, dry, veranda, other, got "garage"
+$ load_points {"rooms": [{"name": "A", "area": 5, "perimeter": 9000, "points": -1}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `points` must be a whole number from 0 to 1000, got -1
+$ load_points {"rooms": [{"name": "A", "area": 5, "perimeter": 9000, "points": 1001}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `points` must be a whole number from 0 to 1000, got 1001
+$ load_points {"rooms": [{"name": "A", "area": 5, "perimeter": 9000, "colour": 1}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: rooms[0]: unknown parameter `colour`
+$ load_points {"rooms": [{"name": "A", "area": -5, "perimeter": 9000}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): rooms[0]: load_points: `area` must be a number from 0 to 1000000, got -5
+$ load_points {"rooms": [{"name": 7, "area": 5, "perimeter": 9000}]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): rooms[0]: load_points: `name` must be text of at most 256 characters, got 7
+$ load_points {"rooms": [3]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: rooms[0] must be an object
+$ load_points {"rooms": {}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: `rooms` must be a list of at most 5000 rooms, got {}
+$ load_points {"floors": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: `floors` isn't one of its parameters: rooms, alternative
+$ load_points {"alternative": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: `alternative` must be true or false, got 1
+$ load_points 5
+exit: 1
+--- stdout
+--- stderr
+line 1 (load_points): load_points: params must be an object

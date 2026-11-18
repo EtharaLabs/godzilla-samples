@@ -1,0 +1,134 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"category":"wall","name":"Spare","type":{"thickness":120.0}}
+{"id":100006}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== delete_type {"category": "wall", "type": "Spare"} | library {"kind": "type:wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":{"kind":"wall type","name":"Spare"}}
+{"count":3,"library":[{"guid":"GUID-1","id":999997,"kind":"type:wall","name":"Interior - 100mm"},{"guid":"GUID-2","id":999998,"kind":"type:wall","name":"Generic - 200mm"},{"guid":"GUID-3","id":999999,"kind":"type:wall","name":"Exterior - 300mm"}],"parts":[]}
+--- stderr
+=== delete_type {"category": "wall", "type": "Generic - 200mm"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: wall type `Generic - 200mm` is used 4 times: change or delete what uses it first
+=== delete_type {"category": "floor", "type": "Generic - 200mm"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: `Generic - 200mm` is the last floor type: a floor needs one; make another first
+=== delete_type {"category": "wall", "type": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: there is no wall type `Nope` (there are: Exterior - 300mm, Generic - 200mm, Interior - 100mm, Spare)
+=== delete_type {"family": "Table", "type": "1200 x 800"} | family {"name": "Table"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":{"kind":"family type","name":"Table: 1200 x 800"}}
+{"family":{"category":"furniture","forms":[{"from":"Height - Thickness","guid":"GUID-1","id":999486,"material":"Material","plane":"xy","profile":[["-(Width / 2)","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-(Width / 2)","Depth / 2"]],"to":"Height"},{"from":0.0,"guid":"GUID-2","id":999485,"material":"Material","plane":"xy","profile":[["(Width) / 2 - 50 - Leg Width","(Depth) / 2 - 50 - Leg Width"],["(Width) / 2 - 50","(Depth) / 2 - 50 - Leg Width"],["(Width) / 2 - 50","(Depth) / 2 - 50"],["(Width) / 2 - 50 - Leg Width","(Depth) / 2 - 50"]],"to":"Height - Thickness"},{"from":0.0,"guid":"GUID-3","id":999484,"material":"Material","plane":"xy","profile":[["(Width) / 2 - 50 - Leg Width","-(Depth) / 2 + 50"],["(Width) / 2 - 50","-(Depth) / 2 + 50"],["(Width) / 2 - 50","-(Depth) / 2 + 50 + Leg Width"],["(Width) / 2 - 50 - Leg Width","-(Depth) / 2 + 50 + Leg Width"]],"to":"Height - Thickness"},{"from":0.0,"guid":"GUID-4","id":999483,"material":"Material","plane":"xy","profile":[["-(Width) / 2 + 50","(Depth) / 2 - 50 - Leg Width"],["-(Width) / 2 + 50 + Leg Width","(Depth) / 2 - 50 - Leg Width"],["-(Width) / 2 + 50 + Leg Width","(Depth) / 2 - 50"],["-(Width) / 2 + 50","(Depth) / 2 - 50"]],"to":"Height - Thickness"},{"from":0.0,"guid":"GUID-5","id":999482,"material":"Material","plane":"xy","profile":[["-(Width) / 2 + 50","-(Depth) / 2 + 50"],["-(Width) / 2 + 50 + Leg Width","-(Depth) / 2 + 50"],["-(Width) / 2 + 50 + Leg Width","-(Depth) / 2 + 50 + Leg Width"],["-(Width) / 2 + 50","-(Depth) / 2 + 50 + Leg Width"]],"to":"Height - Thickness"}],"parameters":[{"kind":"length","name":"Width","value":1600.0},{"kind":"length","name":"Depth","value":900.0},{"kind":"length","name":"Height","value":750.0},{"kind":"length","name":"Thickness","value":40.0},{"kind":"length","name":"Leg Width","value":60.0},{"kind":"material","name":"Material","value":"Timber"}],"types":{"1600 x 900":{},"2000 x 1000":{"Depth":1000,"Width":2000}}},"name":"Table","values":{"1600 x 900":{"Depth":900.0,"Height":750.0,"Leg Width":60.0,"Material":"Timber","Thickness":40.0,"Width":1600.0},"2000 x 1000":{"Depth":1000.0,"Height":750.0,"Leg Width":60.0,"Material":"Timber","Thickness":40.0,"Width":2000.0}},"warnings":[]}
+--- stderr
+=== delete_type {"family": "Table", "type": "1600 x 900"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: family type `Table: 1600 x 900` is used 1 time: change or delete what uses it first
+=== delete_type {"family": "Table"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: family `Table` is used 1 time: change or delete what uses it first
+=== delete_type {"family": "Bed"} | family {"name": "Bed"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":{"kind":"family","name":"Bed"}}
+--- stderr
+line 1 (family): family: there's no family `Bed`
+=== delete_type {"family": "WC", "type": "400 x 650"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: `WC: 400 x 650` is its family's last type: delete the family
+=== delete_type {"family": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: there is no family `Nope` (there are: Air Terminal, Base Cabinet, Bathtub, Bed, Casement Window, Ceiling Luminaire, Chair, Data Outlet, Desk, Distribution Board, Double Door, Earthing Electrode, Elbow 90, Fixed Window, Floor Drain, Gate Valve, Inspection Box, Kitchen Sink, Outlet, Patch Panel, Rack, Recessed Luminaire, Shower, Single Door, Sliding Door, Sliding Window, Sofa, Switch, Table, Tee, Three-Phase Outlet, Voice Outlet, WC, Wardrobe, Washbasin)
+=== delete_type {"family": "Table", "type": "9 x 9"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: family `Table` has no type `9 x 9` (there are: 1200 x 800, 1600 x 900, 2000 x 1000)
+=== delete_type {"type": "Spare"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (delete_type): delete_type: give `category` and `type`, or `family`, or `family` and `type`
+=== rename_type {"category": "wall", "type": "Generic - 200mm", "name": "Plain 200"} | elements {"category": "wall"} | library {"kind": "type:wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"renamed":{"from":"Generic - 200mm","kind":"wall type","to":"Plain 200"}}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Plain 200","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Plain 200","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Plain 200","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Plain 200","type_guid":"GUID-4"}],"returned":4}
+{"count":4,"library":[{"guid":"GUID-8","id":999467,"kind":"type:wall","name":"Spare"},{"guid":"GUID-9","id":999997,"kind":"type:wall","name":"Interior - 100mm"},{"guid":"GUID-4","id":999998,"kind":"type:wall","name":"Plain 200"},{"guid":"GUID-10","id":999999,"kind":"type:wall","name":"Exterior - 300mm"}],"parts":[]}
+--- stderr
+=== rename_type {"family": "Table", "type": "1600 x 900", "name": "Large"} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"renamed":{"from":"1600 x 900","kind":"family type","to":"Large"}}
+{"count":1,"elements":[{"angle":0.0,"at":[1000.0,1000.0],"category":"component","family":"Table","family_guid":"GUID-1","guid":"GUID-2","height":750.0,"id":100006,"level":"GUID-3","offset":0.0,"type":"Large","values":{"Depth":900.0,"Height":750.0,"Leg Width":60.0,"Material":"Timber","Thickness":40.0,"Width":1600.0}}],"returned":1}
+--- stderr
+=== rename_type {"category": "wall", "type": "Spare", "name": "Spare"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"renamed":{"from":"Spare","kind":"wall type","to":"Spare"}}
+--- stderr
+=== rename_type {"category": "wall", "type": "Spare", "name": "Generic - 200mm"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (rename_type): rename_type: there's already a wall type `Generic - 200mm`
+=== rename_type {"family": "Table", "type": "1600 x 900", "name": "1200 x 800"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (rename_type): rename_type: there's already a family type `1200 x 800`
+=== rename_type {"category": "wall", "type": "Spare"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (rename_type): rename_type: `name` is required: the type's new name
+=== rename_type {"category": "wall", "type": "Spare", "name": "X", "colour": 1}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (rename_type): rename_type: `colour` isn't one of its parameters: category, family, type, name
+=== rename_type {"category": "door", "type": "Nope", "name": "X"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (rename_type): rename_type: there is no door type `Nope` (there are: Single 800 x 2100, Single 900 x 2100)

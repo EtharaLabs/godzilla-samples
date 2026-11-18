@@ -1,0 +1,53 @@
+$ import_fill_patterns {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_fill_patterns): import_fill_patterns: give `path`, a PAT file, or its `text`
+
+$ import_fill_patterns {"text": "*A\n0,0,0,0,1\n", "path": "a.pat"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_fill_patterns): import_fill_patterns: give `path`, a PAT file, or its `text`
+
+$ import_fill_patterns {"text": 42}
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_fill_patterns): import_fill_patterns: `text` must be the text of a PAT file
+
+$ import_fill_patterns {"path": "missing.pat"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_fill_patterns): import_fill_patterns: missing.pat: No such file or directory (os error 2)
+
+$ import_fill_patterns {"text": "", "merge": true}
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_fill_patterns): import_fill_patterns: `merge` isn't one of its parameters: path, text, replace
+
+$ export_fill_patterns {"names": ["Sand", "Plaid"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (export_fill_patterns): export_fill_patterns: there's no fill pattern `Plaid`
+
+$ export_fill_patterns {"names": "Sand"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (export_fill_patterns): export_fill_patterns: `names` is [name, …]: invalid type: string "Sand", expected a sequence
+
+$ export_fill_patterns {"path": "nodir/out.pat"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (export_fill_patterns): export_fill_patterns: nodir/out.pat: No such file or directory (os error 2) at path "<TMP>"
+
+$ export_fill_patterns {"format": "pat"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (export_fill_patterns): export_fill_patterns: `format` isn't one of its parameters: path, names

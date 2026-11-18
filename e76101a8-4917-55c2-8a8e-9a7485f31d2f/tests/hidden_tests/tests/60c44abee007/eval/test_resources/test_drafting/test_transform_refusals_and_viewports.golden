@@ -1,0 +1,175 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'move {"ids": [100000], "by": [1, 1]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (move): move: level 100000 has no place in plan; change its elevation, or add a level
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'move {"ids": [100007], "by": [1, 1]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (move): move: sheet 100007 has no place in plan; move the views on it
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'rotate {"ids": [100003], "about": [0,0], "angle": 30}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (rotate): rotate: door 100003 turns and mirrors only with its wall; select the wall too
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'mirror {"ids": [100003], "axis": [[0,0],[0,1000]]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (mirror): mirror: door 100003 turns and mirrors only with its wall; select the wall too
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'move {"ids": [100003], "by": [100, 100]}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+{"moved":[100003]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'rotate {"ids": [100005], "about": [0,0], "angle": 30}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (rotate): rotate: railing 100005 goes only with its stair or ramp; select that too
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'copy {"ids": [100005], "by": [0, 5000]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (copy): copy: railing 100005 goes only with its stair or ramp; select that too
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'copy {"ids": [100003], "by": [500, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (copy): door 100003 and door 100010 overlap in wall <GUID-1>
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'copy {"ids": [100008], "by": [10, 10]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (copy): viewport 100010: Level 1 is on sheet A1 already; a view goes on one sheet
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'copy {"ids": [100000], "by": [10, 10]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+
+--- stderr
+line 1 (copy): copy: level 100000 has no place in plan; change its elevation, or add a level
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'move {"ids": [100008], "by": [10, 20]}
+elements {"category": "viewport"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+{"moved":[100008]}
+{"count":1,"elements":[{"at":[225.0,188.5],"category":"viewport","guid":"<GUID-2>","id":100008,"scale":100.0,"sheet":"<GUID-3>","size":[104.0,79.8],"title":"Level 1","view":"<GUID-4>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'rotate {"ids": [100009], "about": [0,0], "angle": 90}
+elements {"category": "view3d"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+{"rotated":[100009]}
+{"count":1,"elements":[{"azimuth":-45.0,"camera":{"eye":[10000.0,10000.0,1600.0],"target":[0.0,0.0,1000.0]},"category":"view3d","elevation":30.0,"guid":"<GUID-5>","id":100009,"name":"Cam","perspective":{"lens":35.0,"on":true}}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'stair {"start": [6000, 1000], "angle": 90, "railings": true}' --cmd 'sheet {"number": "A1"}' --cmd 'place {"sheet": "A1", "view": "Level 1"}' --cmd 'camera {"eye": [10000, -10000, 1600], "target": [0, 0, 1000], "name": "Cam"}' --cmd 'mirror {"ids": [100009], "axis": [[0,0],[1000,0]]}
+elements {"category": "view3d"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2000.0}
+{"id":100004,"length":4480.0,"railings":[100005,100006],"risers":17}
+{"id":100007,"number":"A1"}
+{"at":[215.0,168.5],"id":100008}
+{"eye":[10000.0,-10000.0,1600.0],"id":100009,"lens":35.0,"name":"Cam","perspective":true,"target":[0.0,0.0,1000.0],"view":100009}
+{"mirrored":[100009]}
+{"count":1,"elements":[{"azimuth":-45.0,"camera":{"eye":[10000.0,10000.0,1600.0],"target":[0.0,0.0,1000.0]},"category":"view3d","elevation":30.0,"guid":"<GUID-6>","id":100009,"name":"Cam","perspective":{"lens":35.0,"on":true}}],"returned":1}
+
+--- stderr
+

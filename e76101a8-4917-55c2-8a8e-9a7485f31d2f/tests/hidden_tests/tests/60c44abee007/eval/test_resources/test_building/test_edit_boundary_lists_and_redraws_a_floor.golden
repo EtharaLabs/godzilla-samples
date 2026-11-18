@@ -1,0 +1,27 @@
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,0],[4000,3000],[0,3000]]}' --cmd 'edit_boundary {"id": 100002}'
+[exit 0]
+--- stdout
+{"area_m2":12.0,"id":100002}
+{"id":100002,"sketch":[{"end":[4000.0,0.0],"start":[0.0,0.0]},{"end":[4000.0,3000.0],"start":[4000.0,0.0]},{"end":[0.0,3000.0],"start":[4000.0,3000.0]},{"end":[0.0,0.0],"start":[0.0,3000.0]}]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[4000,0],[4000,3000],[0,3000]]}' --cmd 'edit_boundary {"id": 100002, "sketch": [[[0,0],[6000,0]],[[6000,0],[6000,3000]],[[6000,3000],[0,3000]],[[0,3000],[0,0]]]}' --cmd 'elements {"category": "floor"}' --cmd 'edit_boundary {"id": 100002}' --cmd 'edit_boundary {"id": 100002, "sketch": [[[0,0],[6000,0]],[[6000,0],[6000,3000]]]}'
+[exit 1]
+--- stdout
+{"area_m2":12.0,"id":100002}
+{"area_m2":18.0,"id":100002}
+{"count":1,"elements":[{"area_m2":18.0,"boundary":[[0.0,0.0],[6000.0,0.0],[6000.0,3000.0],[0.0,3000.0]],"category":"floor","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"sketch":[{"end":[6000.0,0.0],"guid":"<GUID-3>","id":999467,"start":[0.0,0.0]},{"end":[6000.0,3000.0],"guid":"<GUID-4>","id":999466,"start":[6000.0,0.0]},{"end":[0.0,3000.0],"guid":"<GUID-5>","id":999465,"start":[6000.0,3000.0]},{"end":[0.0,0.0],"guid":"<GUID-6>","id":999464,"start":[0.0,3000.0]}],"thickness":200.0,"top":[0.0,0.0],"type":"Generic - 200mm","type_guid":"<GUID-7>","volume_m3":3.6}],"returned":1}
+{"id":100002,"sketch":[{"end":[6000.0,0.0],"guid":"<GUID-3>","id":999467,"start":[0.0,0.0]},{"end":[6000.0,3000.0],"guid":"<GUID-4>","id":999466,"start":[6000.0,0.0]},{"end":[0.0,3000.0],"guid":"<GUID-5>","id":999465,"start":[6000.0,3000.0]},{"end":[0.0,0.0],"guid":"<GUID-6>","id":999464,"start":[0.0,3000.0]}]}
+
+--- stderr
+line 1 (edit_boundary): edit_boundary: the sketch isn't one outline: line 0 ends at [0, 0] without meeting another: the loop is open; line 1 ends at [6000, 3000] without meeting another: the loop is open
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'edit_boundary {"id": 100002}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (edit_boundary): edit_boundary: 100002 isn't a floor, a ceiling, a roof's footprint, a shaft or a filled region
+

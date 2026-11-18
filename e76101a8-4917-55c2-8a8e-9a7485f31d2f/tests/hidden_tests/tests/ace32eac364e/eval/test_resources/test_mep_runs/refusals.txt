@@ -1,0 +1,85 @@
+$ pipe {"points": [[0, 0], [0, 0]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (pipe): pipe 100002: too short (0 mm)
+$ duct {"points": [[0, 0], [0.5, 0]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (duct): duct 100002: too short (0.5 mm)
+$ conduit {"points": [[0, 0]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit): conduit: `points` needs at least 2 points
+$ cable_tray {"points": [[0, 0], [3000, 0]], "type": "Nope"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (cable_tray): cabletray 100002: type `Nope` doesn't exist (there are: Perforated 100 x 50, Perforated 200 x 50, Perforated 300 x 100)
+$ wire {"points": [[0, 0], [3000, 0]], "type": "PVC 25"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire): wire 100002: type `PVC 25` doesn't exist (there are: Wire 2.5, Wire 4, Wire 6)
+$ cabling {"points": [[0, 0], [3000, 0]], "justify": "sideways"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (cabling): cabling: `justify` is top, centre or bottom, not `sideways`
+$ down_conductor {"points": [[0, 0], [3000, 0]], "offset": 1e300}
+exit: 1
+--- stdout
+--- stderr
+line 1 (down_conductor): down_conductor: `offset` must be a number in mm, got 1e+300
+$ ground_conductor {"points": [[0, 0], [3000, 0]], "end_offset": "low"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (ground_conductor): ground_conductor: `end_offset` must be a number in mm, got "low"
+$ pipe {"points": [[0, 0], [1000, 0], [2000, 0]], "end_offset": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (pipe): pipe: `end_offset` is the height of one run's end: give 2 points
+$ pipe {"points": [[0, 0], [3000, 0, 5]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (pipe): pipe: `points`: [3000,0,5] is not a point [x, y] in mm
+$ pipe {"points": [[0, 0], [2e9, 0]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (pipe): pipe: `points`: [2000000000.0,0] is not a point [x, y] in mm
+$ pipe {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (pipe): pipe: `points` [[x, y], …] is required
+$ pipe {"points": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (pipe): pipe: `points` [[x, y], …] is required
+$ duct {"points": [[0, 0], [3000, 0]], "level": "Level 9"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (duct): duct: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+$ conduit {"points": [[0, 0], [3000, 0]], "closed": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit): conduit: `closed` must be true or false, got "yes"
+$ wire {"points": [[0, 0], [3000, 0]], "system": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+exit: 1
+--- stdout
+--- stderr
+line 1 (wire): wire: `system` must be text of at most 256 characters, got "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+$ cable_tray {"points": [[0, 0], [3000, 0]], "system": 5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (cable_tray): cable_tray: `system` must be text of at most 256 characters, got 5

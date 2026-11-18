@@ -1,0 +1,113 @@
+$ bimcraft-cli run --cmd 'line_style {}' --cmd 'line_style {"name": "Red", "pen": 5, "color": "#c80000"}' --cmd 'line_style {"name": "Red", "pattern": "Dash"}' --cmd 'line_style {"name": "Red", "pen": 7}' --cmd 'line_style {"name": "Red", "pattern": "Solid"}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Red", "rename": "Crimson"}' --cmd 'elements {"category": "line"}'
+[exit 0]
+--- stdout
+{"styles":{"Centre Lines":{"color":[0,0,0],"pattern":"Centre","pen":2},"Hairline":{"color":[0,0,0],"pen":0},"Hidden Lines":{"color":[0,0,0],"pattern":"Hidden","pen":2},"Medium Lines":{"color":[0,0,0],"pen":4},"Overhead Lines":{"color":[0,0,0],"pattern":"Dash","pen":2},"Thin Lines":{"color":[0,0,0],"pen":1},"Wide Lines":{"color":[0,0,0],"pen":10}}}
+{"name":"Red","style":{"color":[200,0,0],"pen":5}}
+{"name":"Red","style":{"color":[200,0,0],"pattern":"Dash","pen":5}}
+{"name":"Red","style":{"color":[200,0,0],"pattern":"Dash","pen":7}}
+{"name":"Red","style":{"color":[200,0,0],"pen":7}}
+{"id":100002}
+{"name":"Crimson","style":{"color":[200,0,0],"pen":7}}
+{"count":1,"elements":[{"category":"line","end":[2000.0,0.0],"guid":"<GUID-1>","id":100002,"length":2000.0,"level":"<GUID-2>","shape":"line","start":[0.0,0.0],"style":"Crimson","view":"<GUID-2>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Red", "delete": true}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: detail line 100002 is drawn in `Red`; give it another style first
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Nope", "delete": true}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: there's no line style `Nope`
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Blue"}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: there's no line style `Blue`; make one with `pen`
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Blue", "pen": 17}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: `pen`: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Blue", "pen": 2, "color": "blue"}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not "blue"
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Blue", "pen": 2, "color": [300, 0, 0]}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not [300,0,0]
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Blue", "pen": 2, "pattern": "Nope"}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: line style `Blue`: there's no line pattern `Nope` (there are: Solid, Centre, Dash, Dash Dot, Dot, Hidden, Long Dash)
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Blue", "pen": 2, "pattern": 5}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: `pattern` is a line pattern's name, or "Solid", not 5
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Red", "rename": "Thin Lines"}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: there's already a line style `Thin Lines`
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Red", "pen": 5}' --cmd 'detail_line {"points": [[0,0],[2000,0]], "style": "Red"}' --cmd 'line_style {"name": "Red", "weight": 2}'
+[exit 1]
+--- stdout
+{"name":"Red","style":{"color":[0,0,0],"pen":5}}
+{"id":100002}
+
+--- stderr
+line 1 (line_style): line_style: `weight` isn't one of its parameters: name, pen, color, pattern, rename, delete
+
+$ bimcraft-cli run --cmd 'line_style {"name": "Spare", "pen": 1}' --cmd 'line_style {"name": "Spare", "delete": true}' --cmd 'line_style {"name": "Spare"}'
+[exit 1]
+--- stdout
+{"name":"Spare","style":{"color":[0,0,0],"pen":1}}
+{"deleted":"Spare"}
+
+--- stderr
+line 1 (line_style): line_style: there's no line style `Spare`; make one with `pen`
+

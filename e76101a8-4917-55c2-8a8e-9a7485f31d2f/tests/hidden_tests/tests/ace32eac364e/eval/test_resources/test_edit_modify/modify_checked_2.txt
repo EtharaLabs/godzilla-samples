@@ -1,0 +1,109 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"id":100008}
+{"id":100009}
+{"id":100010}
+{"ids":[100011]}
+{"ids":[100012]}
+{"id":100013,"length":4480.0,"railings":[100014,100015],"risers":17}
+{"ids":[100016]}
+{"area_m2":48.0,"id":100017}
+{"area_m2":45.24,"id":100018}
+{"id":100019}
+{"area_m2":4.0,"height":3000.0,"id":100020,"volume_m3":12.0}
+{"ids":[100021]}
+{"area_m2":27.75,"id":100022,"number":"1"}
+{"id":100023}
+{"elevation":0.0,"host":100017,"id":100024}
+{"area_m2":0.09,"id":100025}
+{"id":100026}
+{"id":100027,"name":"Tick"}
+{"count":5,"id":100028}
+{"id":100029,"name":"Section 1"}
+{"id":100030,"name":"South"}
+{"id":100031,"values":[6000.0]}
+{"ids":[100032]}
+{"eye":[-5000.0,-5000.0,1600.0],"id":100033,"lens":35.0,"name":"Camera 1","perspective":true,"target":[4000.0,3000.0,1000.0],"view":100033}
+{"id":100034,"name":"1"}
+{"id":100035,"length":6000.0,"railings":[100036,100037]}
+{"id":100038}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== modify {"id": 100000, "extent": [[0, 0], [5000, 5000]]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"category":"level","computation_height":1200.0,"elevation":0.0,"extent":[[0.0,0.0],[5000.0,5000.0]],"guid":"GUID-1","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}
+--- stderr
+=== modify {"id": 100007, "sill": 2500}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): window 100007: sill 2500 + height 1500 doesn't fit wall 100003's height
+=== modify {"id": 100013, "top_level": "Level 1"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): stair 100013: 0 risers; a stair takes 2 to 200, so check its height and its riser (180 mm)
+=== modify {"id": 100017, "slope": 80}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): floor 100017: slope 80° isn't between -75° and 75°
+=== modify {"id": 100020, "top_level": "Level 1", "height": null}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): modify: element 100020: invalid type: null, expected f64
+=== modify {"id": 100024, "host": null}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): spot 100024: a spot elevation in a plan reads an element's top; give `host`
+=== modify {"id": 100028, "spacing": 1, "end": [9000000, -2000]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): repeatingdetail 100028: it would repeat more than 2000 times; space it wider or draw it shorter
+=== modify {"id": 100029, "depth": -5}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): section 100029 depth must be above zero, got -5
+=== modify {"id": 100031, "orient": "horizontal"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): dimension 100031: only a linear dimension has an `orient`; this one is Aligned
+=== modify {"id": 100034, "name": ""}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"category":"grid","end":[-1000.0,7000.0],"guid":"GUID-1","id":100034,"name":"","start":[-1000.0,-1000.0]}
+--- stderr
+=== modify {"id": 100006, "type": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): door 100006: type `Nope` doesn't exist (there are: Single 800 x 2100, Single 900 x 2100)
+=== schedule {"name": "W", "category": "walls"} | schedule {"name": "V", "category": "walls"} | modify {"id": 100040, "name": "W"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Id","Type","Level","Length","Height","Thickness"],"elements":[[100002],[100003],[100004],[100005]],"id":100039,"name":"W","rows":[[100002.0,"Generic - 200mm","Level 1",8000.0,3000.0,200.0],[100003.0,"Generic - 200mm","Level 1",6000.0,3000.0,200.0],[100004.0,"Generic - 200mm","Level 1",8000.0,3000.0,200.0],[100005.0,"Generic - 200mm","Level 1",6000.0,3000.0,200.0]]}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Id","Type","Level","Length","Height","Thickness"],"elements":[[100002],[100003],[100004],[100005]],"id":100040,"name":"V","rows":[[100002.0,"Generic - 200mm","Level 1",8000.0,3000.0,200.0],[100003.0,"Generic - 200mm","Level 1",6000.0,3000.0,200.0],[100004.0,"Generic - 200mm","Level 1",8000.0,3000.0,200.0],[100005.0,"Generic - 200mm","Level 1",6000.0,3000.0,200.0]]}
+--- stderr
+line 1 (modify): schedule 100040: another view is already named `W`

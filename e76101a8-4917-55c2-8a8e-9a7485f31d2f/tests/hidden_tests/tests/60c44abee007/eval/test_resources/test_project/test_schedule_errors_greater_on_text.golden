@@ -1,0 +1,8 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "X", "category": "rooms", "filters": [{"field": "Name", "op": "greater", "value": 3}]}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (schedule): schedule: filter on `Name`: it compares text, not 3
+

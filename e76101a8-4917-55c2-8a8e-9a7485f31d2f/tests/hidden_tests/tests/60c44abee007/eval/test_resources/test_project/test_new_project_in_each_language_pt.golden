@@ -1,0 +1,15 @@
+$ bimcraft-cli run --cmd 'new {"name": "Casa", "language": "pt"}' --cmd 'level {"elevation": 6000}' --cmd 'wall {"points": [[0,0],[4000,0],[4000,3000],[0,3000]], "closed": true}' --cmd 'room {"point": [2000, 1500]}' --cmd 'section {"start": [-1000, 1500], "end": [5000, 1500]}' --cmd 'sheet {}' --cmd 'schedule {"category": "levels"}' --cmd 'schedule {"category": "rooms"}' --cmd 'elements {"category": "level"}'
+[exit 0]
+--- stdout
+{"language":"pt","name":"Casa"}
+{"id":100002,"name":"Nível 3"}
+{"ids":[100003,100004,100005,100006]}
+{"area_m2":12.0,"id":100007,"number":"1"}
+{"id":100008,"name":"Corte 1"}
+{"id":100009,"number":"A101"}
+{"available":["Elevation","Name","Count"],"category":"level","columns":["Elevation","Name"],"elements":[[100000],[100001],[100002]],"id":null,"name":"Tabela de níveis","rows":[[0.0,"Nível 1"],[3000.0,"Nível 2"],[6000.0,"Nível 3"]]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[[100007]],"id":null,"name":"Tabela de ambientes","rows":[["1","Ambiente","Nível 1",12.0,14000.0]]}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Nível 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Nível 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":6000.0,"guid":"<GUID-3>","id":100002,"name":"Nível 3","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":3}
+
+--- stderr
+

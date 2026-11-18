@@ -1,0 +1,18 @@
+$ bimcraft-cli run --cmd 'new {"name": "Café 🏠 «Ω»"}' --cmd 'level {"elevation": 3500, "name": "Térreo ✓"}' --save 'my house é.bimcraft'
+[exit 0]
+--- stdout
+{"language":"en","name":"Café 🏠 «Ω»"}
+{"id":100002,"name":"Térreo ✓"}
+{"format":"bimcraft","path":"my house é.bimcraft"}
+
+--- stderr
+
+{"name": "Café 🏠 «Ω»", "levels": [{"elevation": 0.0, "id": 100000, "name": "Level 1"}, {"elevation": 3000.0, "id": 100001, "name": "Level 2"}, {"elevation": 3500.0, "id": 100002, "name": "Térreo ✓"}], "path": "my house é.bimcraft"}
+$ bimcraft-cli run 'my house é.bimcraft' --cmd 'elements {"category": "level"}'
+[exit 0]
+--- stdout
+{"name":"Café 🏠 «Ω»","path":"my house é.bimcraft"}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3500.0,"guid":"<GUID-3>","id":100002,"name":"Térreo ✓","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":3}
+
+--- stderr
+

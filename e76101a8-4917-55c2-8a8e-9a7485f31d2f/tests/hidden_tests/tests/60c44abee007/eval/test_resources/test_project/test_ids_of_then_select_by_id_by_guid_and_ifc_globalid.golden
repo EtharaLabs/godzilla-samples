@@ -1,0 +1,31 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'ids_of {"ids": [100007, 100014, 100025, 100054]}'
+[exit 0]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+{"elements":[{"category":"wall","guid":"<GUID-1>","id":100007,"ifc":"<GID-1>","name":"Exterior - 300mm"},{"category":"door","guid":"<GUID-2>","id":100014,"ifc":"<GID-2>","name":"900 x 2100"},{"category":"room","guid":"<GUID-3>","id":100025,"ifc":"<GID-3>","name":"Living"},{"category":"schedule","guid":"<GUID-4>","id":100054,"ifc":"<GID-4>","name":"Room Schedule"}]}
+
+--- stderr
+
+select_by_id of: wall GUID, {DOOR GUID IN CAPITALS}; room IFC GlobalId, wall GUID without dashes, 100007 999999 12345678 nonsense
+[exit 0]
+{"name":"Sample House","path":"sample.bimcraft"}
+{"extent":[[-150.0,-178.65],[3682.5,7150.0]],"ids":[100007,100014,100025],"library":[999999],"missing":["12345678","nonsense"],"plan":100000}
+
+$ bimcraft-cli run sample.bimcraft --cmd 'select_by_id {"text": ["100018", 100019]}' --cmd 'select_by_id {"text": "100021; 100014"}' --cmd 'select_by_id {"text": ""}' --cmd 'select_by_id {}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+{"extent":[[2400.0,-178.65],[4900.0,7178.65]],"ids":[100018,100019],"library":[],"missing":[],"plan":100000}
+{"extent":[[1550.0,-178.65],[10178.65,5550.0]],"ids":[100021,100014],"library":[],"missing":[],"plan":100000}
+{"extent":null,"ids":[],"library":[],"missing":[],"plan":null}
+
+--- stderr
+line 1 (select_by_id): select_by_id: `text`, the ids, GUIDs or IFC GlobalIds to find, is required
+
+$ bimcraft-cli run --cmd 'ids_of {"ids": [100000, 999999]}'
+[exit 0]
+--- stdout
+{"elements":[{"category":"level","guid":"<GUID-5>","id":100000,"ifc":"<GID-5>","name":"Level 1"},{"category":"wall type","guid":"<GUID-6>","id":999999,"ifc":"<GID-6>","name":"Exterior - 300mm"}]}
+
+--- stderr
+

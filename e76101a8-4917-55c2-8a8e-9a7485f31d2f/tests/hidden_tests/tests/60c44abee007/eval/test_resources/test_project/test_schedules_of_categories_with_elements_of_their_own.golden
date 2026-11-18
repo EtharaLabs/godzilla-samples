@@ -1,0 +1,22 @@
+$ bimcraft-cli run --cmd 'column {"at": [0, 0]}' --cmd 'column {"at": [4000, 0], "type": "Round 300"}' --cmd 'structural_column {"at": [0, 4000]}' --cmd 'footing {"at": [0, 0]}' --cmd 'beam {"points": [[0, 0], [4000, 0], [4000, 4000]], "offset": 3000}' --cmd 'pipe {"points": [[0, 1000], [6000, 1000]], "offset": 500, "end_offset": 400}' --cmd 'stair {"start": [8000, 0], "end": [8000, 4000], "railings": true}' --cmd 'ramp {"start": [12000, 0], "height": 600}' --cmd 'schedule {"category": "columns"}' --cmd 'schedule {"category": "structural columns"}' --cmd 'schedule {"category": "footings"}' --cmd 'schedule {"category": "beams"}' --cmd 'schedule {"category": "pipes"}' --cmd 'schedule {"category": "stairs"}' --cmd 'schedule {"category": "ramps"}' --cmd 'schedule {"category": "railings"}'
+[exit 0]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"ids":[100006,100007]}
+{"ids":[100008]}
+{"id":100009,"length":4480.0,"railings":[100010,100011],"risers":17}
+{"id":100012,"length":7200.0,"railings":[]}
+{"available":["Id","Type","Level","Width","Depth","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"column","columns":["Id","Type","Level","Width","Depth","Height"],"elements":[[100002],[100003]],"id":null,"name":"","rows":[[100002.0,"Rectangular 400 x 400","Level 1",400.0,400.0,3000.0],[100003.0,"Round 300","Level 1",300.0,300.0,3000.0]]}
+{"available":["Id","Type","Level","Width","Depth","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"structuralcolumn","columns":["Id","Type","Level","Width","Depth","Height"],"elements":[[100004]],"id":null,"name":"","rows":[[100004.0,"Concrete 300 x 300","Level 1",300.0,300.0,3000.0]]}
+{"available":["Id","Type","Level","Width","Depth","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"footing","columns":["Id","Type","Level","Width","Depth","Thickness"],"elements":[[100005]],"id":null,"name":"","rows":[[100005.0,"Footing 1200 x 1200","Level 1",1200.0,1200.0,400.0]]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"beam","columns":["Id","Type","Level","Length","Width","Depth"],"elements":[[100006],[100007]],"id":null,"name":"","rows":[[100006.0,"Beam 200 x 500","Level 1",4000.0,200.0,500.0],[100007.0,"Beam 200 x 500","Level 1",4000.0,200.0,500.0]]}
+{"available":["Id","Type","Level","System","Length","Diameter","Count","Phase Created","Phase Demolished","Design Option"],"category":"pipe","columns":["Id","Type","Level","System","Length","Diameter"],"elements":[[100008]],"id":null,"name":"","rows":[[100008.0,"PVC 50","Level 1",null,6000.83,50.0]]}
+{"available":["Id","Level","Width","Height","Risers","Riser Height","Tread","Length","Count","Phase Created","Phase Demolished","Design Option"],"category":"stair","columns":["Id","Level","Width","Height","Risers","Riser Height","Tread"],"elements":[[100009]],"id":null,"name":"","rows":[[100009.0,"Level 1",1000.0,3000.0,17.0,176.47,280.0]]}
+{"available":["Id","Level","Width","Height","Length","Slope","Count","Phase Created","Phase Demolished","Design Option"],"category":"ramp","columns":["Id","Level","Width","Height","Length","Slope"],"elements":[[100012]],"id":null,"name":"","rows":[[100012.0,"Level 1",1200.0,600.0,7200.0,8.333333]]}
+{"available":["Id","Type","Level","Length","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"railing","columns":["Id","Type","Level","Length","Height"],"elements":[[100010],[100011]],"id":null,"name":"","rows":[[100010.0,"Railing - 1000mm","Level 1",4480.0,1000.0],[100011.0,"Railing - 1000mm","Level 1",4480.0,1000.0]]}
+
+--- stderr
+

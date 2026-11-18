@@ -1,0 +1,63 @@
+$ bimcraft-cli run --cmd 'material {"name": "X", "color": "#12345"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not "#12345"
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "color": [300, 0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not [300,0,0]
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "cut": "polka"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: `cut`: "polka" isn't a pattern: one of none, solid, diagonal, crosshatch, horizontal, vertical, grid, brick, concrete, insulation, or a fill pattern of the project's
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "marble"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: texture `kind`: "marble" isn't one of brick, block, boards, concrete, plaster, tile, roof, fabric, metal, insulation, image
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "transparency": 101}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: `transparency` is a whole percent, 0 to 100, not 101
+
+$ bimcraft-cli run --cmd 'material {"name": "Brick", "rename": "Concrete"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: the library already has `Concrete`
+
+$ bimcraft-cli run --cmd 'material {"name": "Brick", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: `Brick` is in wall type `Exterior - 300mm`'s layers; take it out of them first
+
+$ bimcraft-cli run --cmd 'material {"name": "Nope", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: the library has no `Nope`
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "image", "path": "missing.png"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: missing.png: No such file or directory (os error 2)
+

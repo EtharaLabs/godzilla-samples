@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "work.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: work.dxf: its blocks place more than 4000000 entities; up to that many
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "shapes.dxf"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: shapes.dxf: it draws more than 1000000 shapes; up to that many
+

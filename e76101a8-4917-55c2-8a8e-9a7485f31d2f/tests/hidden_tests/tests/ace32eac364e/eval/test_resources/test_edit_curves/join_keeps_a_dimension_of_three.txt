@@ -1,0 +1,17 @@
+=== setup
+exit: 0
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"id":100006,"values":[2000.0,2000.0]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== join_polyline {"ids": [100002, 100003]} | elements {"category": "dimension"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"id":100002,"notes":["dimension 100006 measured a line that is joined in: it lost that reference"]}
+{"count":1,"elements":[{"at":[1000.0,3000.0],"category":"dimension","guid":"GUID-1","id":100006,"kind":"aligned","labels":["2000"],"level":"GUID-2","refs":[{"face":"centre","id":"GUID-3"},{"face":"centre","id":"GUID-4"}],"type":"Diagonal - 2.5mm Arial","values":[2000.0]}],"returned":1}
+--- stderr

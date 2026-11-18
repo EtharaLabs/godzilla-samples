@@ -1,0 +1,131 @@
+$ dimension {"refs": [{"id": 100002}, {"id": 100003}], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: wall 100003 isn't parallel to wall 100002; a dimension measures between parallel walls and grids
+
+$ dimension {"refs": [{"id": 100002}], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: a dimension measures between 2 to 10000 references
+
+$ dimension {"at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: `refs` [ref, …] is required
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: `at` [x, y] is required
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}], "at": [0, -1000], "kind": "slanted"}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: `kind` is aligned, linear, angular, radial, diameter or arc_length, not `slanted`
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}], "at": [0, -1000], "kind": "linear", "orient": "diagonal"}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: `orient` is horizontal or vertical, not `diagonal`
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}], "at": [0, -1000], "orient": "vertical"}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: only a linear dimension has an `orient`; this one is Aligned
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100005}], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: it measures to wall 100005's centre line twice
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}], "at": [0, -1000], "type": "Fancy"}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: there's no dimension type `Fancy` (there are: Arrow - 2.5mm Arial, Diagonal - 2.5mm Arial)
+
+$ dimension {"refs": [[3000, 9000], [6000, 2000]], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: no wall face, wall centre line, wall end, door, window or grid line at [3000, 9000] on Level 1
+
+$ dimension {"refs": [{"endpoint": [3000, 9000]}, {"id": 100003}], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: no end of a wall, a wall face, a door, a window, a grid or a detail line at [3000, 9000] on Level 1
+
+$ dimension {"refs": [{"id": 100005, "face": "middle"}, {"id": 100003}], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: {"face":"middle","id":100005} is not a reference {id, face?} or a point [x, y]: unknown variant `middle`, expected one of `center`, `centre`, `left`, `right`, `start`, `end`
+
+$ dimension {"refs": [{"id": 999999}, {"id": 100003}], "at": [0, -1000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: element 999999 doesn't exist
+
+$ dimension {"kind": "angular", "refs": [{"id": 100005}, {"id": 100003}], "at": [3000, 2000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: wall 100003 is parallel to wall 100005; an angle is between lines that meet
+
+$ dimension {"kind": "angular", "refs": [{"id": 100005}, {"id": 100002}, {"id": 100003}], "at": [3000, 2000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: an angular dimension measures between two lines
+
+$ dimension {"kind": "radial", "refs": [[3000, 2000]], "at": [3000, 2000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: no round column's, curved wall's, circle's or arc's edge at [3000, 2000] on Level 1
+
+$ dimension {"kind": "radial", "refs": [{"id": 100003}], "at": [3000, 2000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: wall GUID-1 is straight; a radial dimension measures round columns and curved walls
+
+$ dimension {"kind": "arc_length", "refs": [[3000, 2000]], "at": [3000, 2000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: no curved wall or arc at [3000, 2000] on Level 1
+
+$ dimension {"kind": "linear", "orient": "horizontal", "refs": [{"id": 100002}, {"id": 100004}], "at": [3000, 9000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: wall 100002 isn't square to a horizontal dimension; measure to its ends, or make the dimension aligned
+
+$ dimension {"refs": [{"id": 100002, "point": "start"}, {"id": 100005, "point": "end"}], "at": [-500, 2000]}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: its points are all in one place, so it has no way to run
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}], "at": [0, -1000], "level": "Level 9"}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+
+$ dimension {"refs": [{"id": 100005}, {"id": 100003}], "at": [0, -1000], "prefix": "a\nb"}
+exit: 1
+--- stdout
+--- stderr
+line 5 (dimension): dimension 100009: its prefix is up to 200 characters on one line

@@ -1,0 +1,47 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'perspective {"lens": 50}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "p50.png"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "eye_elevation": 1600, "path": "eye.png"}' --cmd 'perspective {"on": false}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "parallel.png"}' --cmd 'perspective {}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"lens":50.0,"on":true,"view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":27917.362064,"height":200,"kind":"3D view","lens":50.0,"path":"p50.png","target":null,"view":"{3D}","width":320}
+{"azimuth":-45.0,"elevation":-1.020868,"eye":null,"eye_elevation":1600.0,"height":200,"kind":"3D view","lens":50.0,"path":"eye.png","target":null,"view":"{3D}","width":320}
+{"lens":50.0,"on":false,"view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"parallel.png","target":null,"view":"{3D}","width":320}
+{"lens":50.0,"on":true,"view":100010}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "eye_elevation": 1600}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (render): render: a parallel 3D view has no eye to raise: turn it to perspective first (`perspective`)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'perspective {"on": "yes"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+
+--- stderr
+line 1 (perspective): perspective: `on` must be true or false, got "yes"
+
+=== file p50.png
+png 320x200 rgba pixels-sha256=75bfdf658761e092a1e60ff078bf774884f1dc4a1866547bb2503314919eafcf
+=== file eye.png
+png 320x200 rgba pixels-sha256=3e27a061223617c21fe601c993b7ceac5ea38494413f83b99ec245dd5756cbb0
+=== file parallel.png
+png 320x200 rgba pixels-sha256=89f671f558af50b4cec294c4a19bfc5488c4b90be884cfb93783ecbf44d05ca4

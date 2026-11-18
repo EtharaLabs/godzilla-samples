@@ -1,0 +1,21 @@
+exit: 0
+--- stdout
+{"cloud":"east","id":100002,"origin":[4000.0,0.0,1000.0],"points":4,"read":4}
+{"cloud":"thinned","id":100003,"origin":[4000.0,0.0,1000.0],"points":3,"read":4}
+{"cloud":"alone","id":100004,"origin":[6000.0,0.0,1000.0],"points":2,"read":2}
+{"count":3,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"east","guid":"GUID-1","id":100002,"level":"GUID-2","offset":1000.0,"points":4,"source":"east.xyz","stations":[{"points":2,"source":"east.xyz"},{"points":2,"source":"west.xyz"}]},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"thinned","guid":"GUID-3","id":100003,"level":"GUID-2","offset":1000.0,"points":3,"source":"east.xyz","stations":[{"points":2,"source":"east.xyz"},{"points":1,"source":"west.xyz"}]},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"alone","guid":"GUID-4","id":100004,"level":"GUID-2","offset":1000.0,"points":2,"source":"west.xyz"}],"returned":3}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+--- scans
+scan alone: source=west.xyz origin=[6000.0, 0.0, 1000.0] read=2 kept=2 stations=[]
+  -2000.0 0.0 -1000.0
+  2000.0 0.0 1000.0
+scan east: source=east.xyz origin=[4000.0, 0.0, 1000.0] read=4 kept=4 stations=[{"source": "east.xyz", "points": 2}, {"source": "west.xyz", "points": 2}]
+  -4000.0 0.0 -1000.0 rgb=[255, 0, 0]
+  0.0 0.0 -1000.0 rgb=[255, 0, 0]
+  0.0 0.0 -1000.0 rgb=[160, 160, 160]
+  4000.0 0.0 1000.0 rgb=[160, 160, 160]
+scan thinned: source=east.xyz origin=[4000.0, 0.0, 1000.0] read=4 kept=3 stations=[{"source": "east.xyz", "points": 2}, {"source": "west.xyz", "points": 1}]
+  -4000.0 0.0 -1000.0 rgb=[255, 0, 0]
+  0.0 0.0 -1000.0 rgb=[255, 0, 0]
+  4000.0 0.0 1000.0 rgb=[160, 160, 160]

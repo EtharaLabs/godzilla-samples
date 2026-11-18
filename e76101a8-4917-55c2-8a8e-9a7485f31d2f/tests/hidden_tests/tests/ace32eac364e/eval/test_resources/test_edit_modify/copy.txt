@@ -1,0 +1,49 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"area_m2":48.0,"id":100007,"number":"1"}
+{"id":100008,"name":"1"}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== CO {"ids": [100002], "by": [0, -2000]} | elements {"category": "wall"} | elements {"category": "door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100009,100010]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,-2000.0],"guid":"GUID-8","height":3000.0,"id":100009,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,-2000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":5}
+{"count":2,"elements":[{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-9","height":2100.0,"host":"GUID-1","id":100006,"level":"GUID-2","mark":"1","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-10","width":900.0},{"at":[2000.0,-2000.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-11","height":2100.0,"host":"GUID-8","id":100010,"level":"GUID-2","mark":"2","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-10","width":900.0}],"returned":2}
+--- stderr
+=== copy {"ids": [100007], "by": [100, 100]} | elements {"category": "room"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100009]}
+{"count":2,"elements":[{"area_m2":48.0,"category":"room","enclosed":true,"guid":"GUID-1","id":100007,"level":"GUID-2","limit_offset":-300.0,"name":"Hall","number":"1","perimeter_m":28.0,"point":[4000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":129.6},{"area_m2":0.0,"category":"room","enclosed":false,"guid":"GUID-4","id":100009,"level":"GUID-2","limit_offset":-300.0,"name":"Hall","number":"2","perimeter_m":0.0,"point":[4100.0,3100.0],"shares_space_with":100007,"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":0.0}],"returned":2}
+--- stderr
+=== copy {"ids": [100008], "by": [1000, 0]} | elements {"category": "grid"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100009]}
+{"count":2,"elements":[{"category":"grid","end":[0.0,7000.0],"guid":"GUID-1","id":100008,"name":"1","start":[0.0,-1000.0]},{"category":"grid","end":[1000.0,7000.0],"guid":"GUID-2","id":100009,"name":"2","start":[1000.0,-1000.0]}],"returned":2}
+--- stderr
+=== copy {"ids": [100000], "by": [10, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (copy): copy: level 100000 has no place in plan; change its elevation, or add a level
+=== copy {"ids": [100006], "by": [300, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (copy): door 100006 and door 100009 overlap in wall GUID-1
+=== copy {"ids": [100002]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (copy): copy: `by` [x, y] is required

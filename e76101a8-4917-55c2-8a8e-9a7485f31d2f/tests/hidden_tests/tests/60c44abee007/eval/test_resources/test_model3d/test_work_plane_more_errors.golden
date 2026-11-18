@@ -1,0 +1,44 @@
+$ bimcraft-cli run --cmd 'work_plane {"level": "Level 1", "points": [[0, 0, 0], [1000, 0, 0], [0, 1000, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: a work plane is on a `level`, through three `points` or on a `surface`: only one of them
+
+$ bimcraft-cli run --cmd 'work_plane {"surface": {"point": [0, 0, 0], "normal": [0, 0, 0]}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: the work plane's surface `normal` is the way it faces, [x, y, z], and can't be [0, 0, 0]
+
+$ bimcraft-cli run --cmd 'work_plane {"surface": {"point": [1e12, 0, 0], "normal": [0, 0, 1]}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: the work plane's surface point isn't a place in the project
+
+$ bimcraft-cli run --cmd 'work_plane {"points": [[0, 0, 0], [1e12, 0, 0], [0, 1000, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: a point of the work plane isn't a place in the project
+
+$ bimcraft-cli run --cmd 'work_plane {"level": "Level 1", "offset": 1e12}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (work_plane): work_plane: `offset` must be a number in mm, got 1000000000000.0
+
+$ bimcraft-cli run --cmd 'work_plane {"level": "Level 2"}' --cmd 'delete {"ids": [100001]}' --cmd 'work_plane {}'
+[exit 0]
+--- stdout
+{"level":100001,"normal":[0.0,0.0,1.0],"offset":0.0,"origin":[0.0,0.0,3000.0],"points":null,"slope":0.0,"surface":null,"view":100002,"z":3000.0}
+{"deleted":[100001]}
+{"level":100000,"normal":[0.0,0.0,1.0],"offset":0.0,"origin":[0.0,0.0,0.0],"points":null,"slope":0.0,"surface":null,"view":100002,"z":0.0}
+
+--- stderr
+

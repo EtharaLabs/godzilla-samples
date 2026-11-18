@@ -1,0 +1,60 @@
+$ hydrant_size {"column": 5, "area": 60000}
+exit: 0
+--- stdout
+{"flow_lpm":1200.0,"hose_dn_mm":65.0,"hose_length_m":30.0,"nozzle_head_mca":60.0,"reserve_m3":180.0,"system":"5","type":"5"}
+--- stderr
+$ hydrant_size {"column": 4, "area": 2500}
+exit: 0
+--- stdout
+{"reserve_m3":28.0,"system":"4"}
+--- stderr
+$ hydrant_size {"column": 4, "area": 2500.5}
+exit: 0
+--- stdout
+{"reserve_m3":32.0,"system":"4"}
+--- stderr
+$ hydrant_size {"column": 5, "area": 5000}
+exit: 0
+--- stdout
+{"reserve_m3":48.0,"system":"4"}
+--- stderr
+$ hydrant_size {"column": 5, "area": 5001}
+exit: 0
+--- stdout
+{"flow_lpm":1200.0,"hose_dn_mm":65.0,"hose_length_m":30.0,"nozzle_head_mca":60.0,"reserve_m3":64.0,"system":"5","type":"5"}
+--- stderr
+$ hydrant_size {"column": 1, "area": 100, "inside": 27, "length": 20000}
+exit: 0
+--- stdout
+{"flow_lpm":200.0,"head_loss_m_per_m":2.33302,"hose_dn_mm":25.0,"hose_length_m":30.0,"loss_mca":46.66,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":126.66,"nozzle_head_mca":80.0,"ok":false,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","reserve_m3":5.0,"speed_ms":5.82,"speed_ok":false,"system":"1","type":"1"}
+--- stderr
+$ hydrant_size {"column": 4, "area": 2500, "type": "4-65", "inside": 66.9, "length": 80000, "rise": 15000, "nominal": 65, "material": "steel-wet"}
+exit: 0
+--- stdout
+{"flow_lpm":600.0,"head_loss_m_per_m":0.15312,"hose_dn_mm":65.0,"hose_length_m":30.0,"loss_mca":12.25,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":57.25,"nozzle_head_mca":30.0,"ok":true,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","reserve_m3":28.0,"size_ok":true,"speed_ms":2.84,"speed_ok":true,"system":"4","type":"4-65"}
+--- stderr
+$ hydrant_size {"type": "1", "hydrants": 1, "inside": 27, "nominal": 25, "length": 30000, "material": "pvc"}
+exit: 0
+--- stdout
+{"flow_lpm":100.0,"head_loss_m_per_m":0.30566,"hose_dn_mm":25.0,"hose_length_m":30.0,"loss_mca":9.17,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":89.17,"nozzle_head_mca":80.0,"ok":false,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","size_ok":false,"speed_ms":2.91,"speed_ok":true,"type":"1"}
+--- stderr
+$ hydrant_size {"type": "5", "hydrants": 4, "inside": 52.5, "length": 10000, "rise": -3000}
+exit: 0
+--- stdout
+{"flow_lpm":1200.0,"head_loss_m_per_m":2.51805,"hose_dn_mm":65.0,"hose_length_m":30.0,"loss_mca":25.18,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":82.18,"nozzle_head_mca":60.0,"ok":false,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","speed_ms":9.24,"speed_ok":false,"type":"5"}
+--- stderr
+$ hydrant_size {"type": "2", "inside": 53, "nominal": 50, "material": "copper", "region": "SP"}
+exit: 0
+--- stdout
+{"flow_lpm":300.0,"head_loss_m_per_m":0.08739,"hose_dn_mm":40.0,"hose_length_m":30.0,"loss_mca":0.0,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":30.0,"nozzle_head_mca":30.0,"ok":true,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","size_ok":true,"speed_ms":2.27,"speed_ok":true,"type":"2"}
+--- stderr
+$ hydrant_size {"type": "3", "inside": 66.9, "nominal": 50, "material": "pex"}
+exit: 0
+--- stdout
+{"flow_lpm":400.0,"head_loss_m_per_m":0.04786,"hose_dn_mm":40.0,"hose_length_m":30.0,"loss_mca":0.0,"need_covers":"nozzle head + head loss of the straight pipe + rise: not the hose, the fittings or the pressure at the source","need_mca":40.0,"nozzle_head_mca":40.0,"ok":false,"ok_covers":"nozzle head within 100 mca, speed within 5 m/s and the pipe's size only: it is not a verdict on the design","size_ok":false,"speed_ms":1.9,"speed_ok":true,"type":"3"}
+--- stderr
+$ hydrant_size {"type": "4-40"}
+exit: 0
+--- stdout
+{"flow_lpm":600.0,"hose_dn_mm":40.0,"hose_length_m":30.0,"nozzle_head_mca":65.0,"type":"4-40"}
+--- stderr

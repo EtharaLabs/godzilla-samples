@@ -1,0 +1,72 @@
+=== elements {"category": "walls", "limit": 2}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":300.0,"top_level":"GUID-3","type":"Thick","type_guid":"GUID-6"}],"returned":2}
+--- stderr
+=== elements {"category": "Wall", "offset": 3}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-1","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":300.0,"top_level":"GUID-3","type":"Thick","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"GUID-5","height":2500.0,"id":100009,"length":4000.0,"level":"GUID-3","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"GUID-6"}],"returned":2}
+--- stderr
+=== elements {"category": "wall", "level": "Level 2"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":1,"elements":[{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"GUID-1","height":2500.0,"id":100009,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"GUID-3"}],"returned":1}
+--- stderr
+=== elements {"level": 100001}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":1,"elements":[{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"GUID-1","height":2500.0,"id":100009,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"GUID-3"}],"returned":1}
+--- stderr
+=== elements {"category": "door", "level": "Level 1"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":1,"elements":[{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-1","height":2100.0,"host":"GUID-2","id":100006,"level":"GUID-3","mark":"D7","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-4","width":900.0}],"returned":1}
+--- stderr
+=== elements {"limit": 0}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":13,"elements":[],"returned":0}
+--- stderr
+=== elements {"offset": 100}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":13,"elements":[],"returned":0}
+--- stderr
+=== elements {"category": "spaceship"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":0,"elements":[],"returned":0}
+--- stderr
+=== elements {"limit": -1}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (elements): elements: `limit` must be a whole number, got -1
+=== elements {"limit": "all"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (elements): elements: `limit` must be a whole number, got "all"
+=== elements {"level": "Level 9"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (elements): elements: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+=== elements {"category": 3}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (elements): elements: `category` must be text of at most 256 characters, got 3

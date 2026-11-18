@@ -1,0 +1,108 @@
+$ dimension_type {"name": "X", "tick": "star"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: unknown variant `star`, expected one of `diagonal`, `arrow`, `open_arrow`, `dot`, `none`
+
+$ dimension_type {"name": "X", "string": "chain"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: unknown variant `chain`, expected one of `continuous`, `baseline`, `ordinate`
+
+$ dimension_type {"name": "X", "text_size": 0}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension type `X`: its text size, 0 mm, isn't above 0 and at most 100
+
+$ dimension_type {"name": "X", "width_factor": 20}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension type `X`: its width factor, 20, isn't from 0.1 to 10
+
+$ dimension_type {"name": "X", "tick_size": 60}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension type `X`: its tick size, 60 mm on paper, isn't from 0 to 50
+
+$ dimension_type {"name": "X", "witness_gap": -1}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension type `X`: its witness line gap, -1 mm on paper, isn't from 0 to 50
+
+$ dimension_type {"name": "X", "decimals": 7}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension type `X`: it rounds to at most 6 places, not 7
+
+$ dimension_type {"name": "X", "units": "furlongs"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: unknown variant `furlongs`, expected one of `mm`, `cm`, `m`, `in`, `ft`, `ft-in`
+
+$ dimension_type {"name": "X", "line_pen": 20}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 20
+
+$ dimension_type {"name": "X", "color": "teal"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: `color` is "#rrggbb" or [r, g, b], each 0 to 255, not "teal"
+
+$ dimension_type {"name": "X", "equality_text": "E\nQ"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension type `X`: its equality text is up to 200 characters on one line
+
+$ dimension_type {"name": "X", "sparkle": true}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: unknown field `sparkle`, expected one of `string`, `tick`, `tick_size`, `line_pen`, `tick_pen`, `color`, `line_extension`, `witness`, `witness_length`, `witness_gap`, `witness_extension`, `baseline_spacing`, `centre_mark`, `font`, `text_size`, `bold`, `italic`, `underline`, `width_factor`, `text_offset`, `background`, `read`, `units`, `decimals`, `radius_symbol`, `diameter_symbol`, `equality_text`
+
+$ dimension_type {"name": "X", "like": "Nothing"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: there's no dimension type `Nothing` to start from
+
+$ dimension_type {"name": "Arrow - 2.5mm Arial", "rename": "Diagonal - 2.5mm Arial"}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: there's already a dimension type `Diagonal - 2.5mm Arial`
+
+$ dimension_type {"name": "Diagonal - 2.5mm Arial", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: dimension 100009 is of `Diagonal - 2.5mm Arial`; give it another type first
+
+$ dimension_type {"name": "Gone", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 6 (dimension_type): dimension_type: there's no dimension type `Gone`
+
+$ dimension_type {"name": "Spare", "like": "Arrow - 2.5mm Arial"}
+dimension_type {"name": "Spare", "delete": true}
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100004,"id":100007,"mark":"1","offset":3000.0}
+{"id":100008,"name":"1"}
+{"id":100009,"values":[6000.0]}
+{"name":"Spare","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"Arial","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"arrow","tick_pen":7,"tick_size":2.5,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"deleted":"Spare"}
+--- stderr

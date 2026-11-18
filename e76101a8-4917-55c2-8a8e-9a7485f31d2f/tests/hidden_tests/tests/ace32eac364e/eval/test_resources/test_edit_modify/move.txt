@@ -1,0 +1,90 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"area_m2":24.0,"id":100007,"number":"1"}
+{"host":100002,"id":100008,"mark":"1","offset":2000.0}
+{"host":100003,"id":100009,"mark":"1","offset":1500.0}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== MV {"ids": [100003], "by": [1000, 0]} | elements {"category": "wall"} | elements {"category": "room"} | elements {"category": "door"} | elements {"category": "window"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"moved":[100003]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[9000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":9000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[9000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[9000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":9000.0,"level":"GUID-2","room_bounding":true,"start":[9000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[9000.0,3000.0],"guid":"GUID-8","height":3000.0,"id":100006,"length":9000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,3000.0],"thickness":100.0,"top_level":"GUID-3","type":"Interior - 100mm","type_guid":"GUID-9"}],"returned":5}
+{"count":1,"elements":[{"area_m2":27.0,"category":"room","enclosed":true,"guid":"GUID-10","id":100007,"level":"GUID-2","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":24.0,"point":[4000.0,1500.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":72.9}],"returned":1}
+{"count":1,"elements":[{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-11","height":2100.0,"host":"GUID-1","id":100008,"level":"GUID-2","mark":"1","offset":2000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-12","width":900.0}],"returned":1}
+{"count":1,"elements":[{"at":[9000.0,1500.0],"category":"window","flip_facing":false,"flip_hand":false,"guid":"GUID-13","height":1500.0,"host":"GUID-5","id":100009,"level":"GUID-2","mark":"1","offset":1500.0,"sill":900.0,"type":"Fixed 1200 x 1500","type_guid":"GUID-14","width":1200.0}],"returned":1}
+--- stderr
+=== move {"ids": [100002], "by": [-1000, 0], "end": "start"} | elements {"category": "wall"} | elements {"category": "door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"moved":[100002]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":9000.0,"level":"GUID-2","room_bounding":true,"start":[-1000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[-1000.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6082.76253,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,3000.0],"guid":"GUID-8","height":3000.0,"id":100006,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,3000.0],"thickness":100.0,"top_level":"GUID-3","type":"Interior - 100mm","type_guid":"GUID-9"}],"returned":5}
+{"count":1,"elements":[{"at":[2000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-10","height":2100.0,"host":"GUID-1","id":100008,"level":"GUID-2","mark":"1","offset":3000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-11","width":900.0}],"returned":1}
+--- stderr
+=== move {"ids": [100008], "by": [1500, 700]} | elements {"category": "door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"moved":[100008]}
+{"count":1,"elements":[{"at":[3500.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-1","height":2100.0,"host":"GUID-2","id":100008,"level":"GUID-3","mark":"1","offset":3500.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-4","width":900.0}],"returned":1}
+--- stderr
+=== move {"ids": [100000], "by": [10, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: level 100000 has no place in plan; change its elevation, or add a level
+=== move {"ids": [100002], "by": [1e300, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `by` must be a point [x, y] in mm, got [1e+300,0]
+=== move {"ids": [100002]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `by` [x, y] is required
+=== move {"ids": [100002, 100003], "by": [10, 0], "end": "end"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `end` moves an end of one wall; give `ids` one wall
+=== move {"ids": [100002], "by": [10, 0], "end": "middle"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `end` is `start` or `end`, not `middle`
+=== move {"ids": [100008], "by": [10, 0], "end": "start"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `end` moves an end of one wall; give `ids` one wall
+=== move {"by": [10, 0]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `ids` [id, …] is required
+=== move {"ids": [100002], "by": [10]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (move): move: `by` must be a point [x, y] in mm, got [10]
+=== move {"ids": [100002, 100002], "by": [0, -500]} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"moved":[100002]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,-500.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,-500.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6500.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,-500.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,-500.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6500.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,3000.0],"guid":"GUID-8","height":3000.0,"id":100006,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,3000.0],"thickness":100.0,"top_level":"GUID-3","type":"Interior - 100mm","type_guid":"GUID-9"}],"returned":5}
+--- stderr

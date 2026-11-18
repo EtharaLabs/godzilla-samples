@@ -1,0 +1,22 @@
+reinforce {"host": 100002, "cover": 30}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: nothing to reinforce with: give `bottom` or `top` bars, or a `stirrup`
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16, "colour": 1}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `bottom`: unknown field `colour`, expected one of `count`, `diameter`, `hook`, `bent`
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 4, "diameter": 16, "bent": {"count": 2, "angle": 80}}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `bent` angle 80 degrees isn't between 15 and 75
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16}, "check": "ACI 318"}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `check` "ACI 318" isn't one this knows: it is "NBR 6118"
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16}, "grade": ""}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a `grade` can't be blank
+reinforce {"host": 100007, "cover": 30, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a wall can't be armed: a beam, a column, a footing or a floor can
+reinforce {"host": 100004, "cover": 30, "bars": {"diameter": 12.5, "count": 6}, "ties": {"diameter": 5}, "stirrup": {"diameter": 5, "spacing": 150}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a round column has no ties: they go across a rectangular section
+reinforce {"host": 100003, "cover": 30}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: nothing to reinforce with: give `bars` or a `stirrup`
+reinforce {"host": 100005, "cover": 30, "mesh": {"x": {"diameter": 10, "spacing": 100}}, "bottom": {"count": 2, "diameter": 10}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `bottom` isn't a parameter of a footing; it takes cover, grade, clearance and mesh
+reinforce {"hosts": [100002, 100007], "cover": 30, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a wall can't be armed: a beam, a column, a footing or a floor can (for the wall 100007)
+reinforce {"cover": 30}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `host` (an element) or `hosts` (a list of them) is required

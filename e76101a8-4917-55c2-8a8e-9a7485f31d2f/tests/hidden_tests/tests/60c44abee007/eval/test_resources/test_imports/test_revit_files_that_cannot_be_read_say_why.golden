@@ -1,0 +1,64 @@
+$ bimcraft-cli info fake.rvt
+[exit 1]
+--- stdout
+
+--- stderr
+fake.rvt: not a Revit file: it starts with 74 68 69 73 20 69 73 20, not the Compound File signature D0 CF 11 E0 A1 B1 1A E1 that Revit files start with
+
+$ bimcraft-cli run fake.rvt
+[exit 1]
+--- stdout
+
+--- stderr
+fake.rvt: not a Revit file: it starts with 74 68 69 73 20 69 73 20, not the Compound File signature D0 CF 11 E0 A1 B1 1A E1 that Revit files start with
+
+$ bimcraft-cli convert fake.rvt out.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+fake.rvt: not a Revit file: it starts with 74 68 69 73 20 69 73 20, not the Compound File signature D0 CF 11 E0 A1 B1 1A E1 that Revit files start with
+
+$ bimcraft-cli info fake.rte
+[exit 1]
+--- stdout
+
+--- stderr
+fake.rte: not a Revit file: it starts with 6E 6F 74 20 61 20 74 65, not the Compound File signature D0 CF 11 E0 A1 B1 1A E1 that Revit files start with
+
+$ bimcraft-cli info FAKE.RFA
+[exit 1]
+--- stdout
+
+--- stderr
+FAKE.RFA: not a Revit file: it starts with 75 70 70 65 72 20 63 61, not the Compound File signature D0 CF 11 E0 A1 B1 1A E1 that Revit files start with
+
+$ bimcraft-cli run chair.rfa
+[exit 1]
+--- stdout
+
+--- stderr
+chair.rfa: the file has no stream named Formats/Latest
+
+$ bimcraft-cli convert chair.rfa chair.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+chair.rfa: the file has no stream named Formats/Latest
+
+$ bimcraft-cli info missing.rvt
+[exit 1]
+--- stdout
+
+--- stderr
+missing.rvt: missing.rvt: No such file or directory (os error 2)
+
+$ bimcraft-cli run --sample missing.rvt
+[exit 1]
+--- stdout
+
+--- stderr
+missing.rvt: missing.rvt: No such file or directory (os error 2)
+
+=== files: FAKE.RFA, chair.rfa, fake.rte, fake.rvt

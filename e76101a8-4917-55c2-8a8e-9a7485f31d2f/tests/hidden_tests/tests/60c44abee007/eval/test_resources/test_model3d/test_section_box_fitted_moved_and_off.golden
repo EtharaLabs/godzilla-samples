@@ -1,0 +1,21 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'section_box {}' --cmd 'section_box {"max": [3000, 5000, 2000]}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "boxed.png"}' --cmd 'section_box {"on": false}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "unboxed.png"}' --cmd 'section_box {"on": true, "min": [1000, -1000, -100], "max": [5000, 2000, 6000]}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"max":[6750.0,4750.0,4887.71324],"min":[-750.0,-750.0,-500.0],"on":true,"view":100010}
+{"max":[3000.0,5000.0,2000.0],"min":[-750.0,-750.0,-500.0],"on":true,"view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"boxed.png","target":null,"view":"{3D}","width":320}
+{"max":[3000.0,5000.0,2000.0],"min":[-750.0,-750.0,-500.0],"on":false,"view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"unboxed.png","target":null,"view":"{3D}","width":320}
+{"max":[5000.0,2000.0,6000.0],"min":[1000.0,-1000.0,-100.0],"on":true,"view":100010}
+
+--- stderr
+
+=== file boxed.png
+png 320x200 rgba pixels-sha256=7324c2f552a381bb08aa69f425cc7afeb757a39aa2a411b1e36c9ce7da615c0e
+=== file unboxed.png
+png 320x200 rgba pixels-sha256=89f671f558af50b4cec294c4a19bfc5488c4b90be884cfb93783ecbf44d05ca4

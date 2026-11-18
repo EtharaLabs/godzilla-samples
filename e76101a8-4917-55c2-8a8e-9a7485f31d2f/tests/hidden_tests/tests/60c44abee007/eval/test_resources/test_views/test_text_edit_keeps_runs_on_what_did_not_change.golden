@@ -1,0 +1,12 @@
+$ bimcraft-cli run --cmd 'text {"text": "Hello world", "at": [0, 0], "override_format": true, "runs": [{"from": 0, "to": 5, "bold": true}, {"from": 6, "to": 11, "italic": true}]}' --cmd 'modify {"id": 100002, "text": "Hello big world"}' --cmd 'elements {"category": "text"}' --cmd 'modify {"id": 100002, "text": "Hi"}' --cmd 'elements {"category": "text"}' --cmd 'text {"text": "x", "at": [0, 0], "override_format": true, "runs": [{"from": 0, "to": 9, "bold": true}]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"angle":0.0,"at":[0.0,0.0],"category":"text","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","override_format":true,"runs":[{"bold":true,"from":0,"to":5},{"from":10,"italic":true,"to":15}],"size":2.5,"text":"Hello big world","type":"2.5mm","view":"<GUID-2>"}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"text","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","override_format":true,"runs":[{"bold":true,"from":0,"to":5},{"from":10,"italic":true,"to":15}],"size":2.5,"text":"Hello big world","type":"2.5mm","view":"<GUID-2>"}],"returned":1}
+{"angle":0.0,"at":[0.0,0.0],"category":"text","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","override_format":true,"runs":[{"bold":true,"from":0,"to":2}],"size":2.5,"text":"Hi","type":"2.5mm","view":"<GUID-2>"}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"text","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","override_format":true,"runs":[{"bold":true,"from":0,"to":2}],"size":2.5,"text":"Hi","type":"2.5mm","view":"<GUID-2>"}],"returned":1}
+
+--- stderr
+line 1 (text): text 100003: run 0 is of characters 0 to 9; it needs some of the text's 1
+

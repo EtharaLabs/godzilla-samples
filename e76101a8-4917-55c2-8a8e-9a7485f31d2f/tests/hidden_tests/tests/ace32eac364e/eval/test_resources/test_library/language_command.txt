@@ -1,0 +1,41 @@
+=== --cmd new {"name": "Casa", "language": "pt"} --cmd language --cmd wall {"points": [[0, 0], [8000, 0], [8000, 6000], [0, 6000]], "closed": true} --cmd room {"point": [4000, 3000]} --cmd language {"code": "en"} --cmd level {"elevation": 6000} --cmd room {"point": [4000, 3000]} --cmd elements {"category": "room"} --cmd undo --cmd undo --cmd undo --cmd language
+exit: 0
+--- stdout
+{"language":"pt","name":"Casa"}
+{"language":"pt"}
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":48.0,"id":100006,"number":"1"}
+{"language":"en"}
+{"id":100007,"name":"Level 3"}
+{"area_m2":0.0,"id":100008,"number":"2","warning":"room 100006 is already in this space; two rooms can't share one, so this one is placed unbounded: move it, delete one of them, or part them with a room separation line"}
+{"count":2,"elements":[{"area_m2":48.0,"category":"room","enclosed":true,"guid":"GUID-1","id":100006,"level":"GUID-2","limit_offset":-300.0,"name":"Ambiente","number":"1","perimeter_m":28.0,"point":[4000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":129.6},{"area_m2":0.0,"category":"room","enclosed":false,"guid":"GUID-4","id":100008,"level":"GUID-2","limit_offset":-300.0,"name":"Room","number":"2","perimeter_m":0.0,"point":[4000.0,3000.0],"shares_space_with":100006,"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":0.0}],"returned":2}
+{"count":1,"undone":"Room"}
+{"count":1,"undone":"Level"}
+{"count":1,"undone":"Project Language"}
+{"language":"pt"}
+--- stderr
+=== --cmd language {"code": "Deutsch"} --cmd language {"code": "pt-BR"} --cmd language {"code": "CZ"} --cmd language {"code": "nl_BE"} --cmd language {"code": "vlaams"} --cmd language {"code": "it"}
+exit: 0
+--- stdout
+{"language":"de"}
+{"language":"pt"}
+{"language":"cs"}
+{"language":"nl"}
+{"language":"nl"}
+{"language":"it"}
+--- stderr
+=== --cmd language {"code": "klingon"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (language): language: `klingon` is no language here; use en, pt, es or sv
+=== --cmd new {"language": "vi"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (new): new: `vi` is no language here; use en, pt, es or sv
+=== --cmd new {"name": "X", "language": 3}
+exit: 1
+--- stdout
+--- stderr
+line 1 (new): new: `language` must be text of at most 256 characters, got 3

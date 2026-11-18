@@ -1,0 +1,18 @@
+exit: 0
+--- stdout
+{"cloud":"diffuse","id":100002,"origin":[500.0,500.0,500.0],"points":2,"read":2}
+{"cloud":"intensity","id":100003,"origin":[1000.0,1000.0,1000.0],"points":2,"read":2}
+{"cloud":"normals","id":100004,"origin":[50000.0,-1000.0,3500.0],"points":3,"read":3}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+--- scans
+scan diffuse: source=diffuse.ply origin=[500.0, 500.0, 500.0] read=2 kept=2 stations=[]
+  -500.0 -500.0 -500.0 rgb=[255, 0, 128]
+  500.0 500.0 500.0 rgb=[0, 255, 0]
+scan intensity: source=intensity.ply origin=[1000.0, 1000.0, 1000.0] read=2 kept=2 stations=[]
+  -1000.0 -1000.0 -1000.0 rgb=[0, 0, 0]
+  1000.0 1000.0 1000.0 rgb=[255, 255, 255]
+scan normals: source=normals.ply origin=[50000.0, -1000.0, 3500.0] read=3 kept=3 stations=[]
+  -50000.0 1000.0 -3500.0 rgb=[255, 0, 0]
+  -48500.0 -1000.0 -250.0 rgb=[10, 20, 30]
+  50000.0 1000.0 3500.0 rgb=[0, 0, 255]

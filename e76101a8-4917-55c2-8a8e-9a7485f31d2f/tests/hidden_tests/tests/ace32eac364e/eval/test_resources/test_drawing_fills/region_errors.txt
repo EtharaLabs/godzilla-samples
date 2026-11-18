@@ -1,0 +1,95 @@
+$ filled_region_type {"name": "Bad", "foreground": "Plaid"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: filled region type `Bad`: there's no fill pattern `Plaid` (there are: Brick 225 x 75, Crosshatch, Diagonal Crosshatch, Diagonal Down, Diagonal Up, Horizontal, Sand, Solid fill, Tile 300, Vertical)
+
+$ filled_region_type {"name": "Bad", "background": 3}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: `background` is a fill pattern's name, or null for none, not 3
+
+$ filled_region_type {"name": "Bad", "foreground_color": "blue"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: `foreground_color` is "#rrggbb" or [r, g, b], each 0 to 255, not "blue"
+
+$ filled_region_type {"name": "Bad", "masking": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: `masking` must be true or false, got "yes"
+
+$ filled_region_type {"name": "Sand", "rename": "Brick"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: there's already a filled region type `Brick`
+
+$ filled_region_type {"name": "Crosshatch", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: filled region 100002 is of `Crosshatch`; give it another type first
+
+$ filled_region_type {"name": "Gone", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: there's no filled region type `Gone`
+
+$ filled_region_type {"name": "Sand", "pattern": "Sand"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region_type): filled_region_type: `pattern` isn't one of its parameters: name, foreground, foreground_color, background, background_color, masking, rename, delete
+
+$ filled_region {}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): filled_region: `sketch`, its outlines' lines, is required
+
+$ filled_region {"sketch": [[[0, 0], [1000, 0]], [[1000, 0], [1000, 1000]]]}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): filled_region: the sketch doesn't close into loops: line 0 ends at [0, 0] without meeting another: the loop is open; line 1 ends at [1000, 1000] without meeting another: the loop is open
+
+$ filled_region {"sketch": [[[0, 0], [10, 0]], [[10, 0], [10, 10]], [[10, 10], [0, 10]], [[0, 10], [0, 0]]], "type": "Plaid"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): region 100003: there's no filled region type `Plaid` (there are: Brick, Crosshatch, Diagonal Up, Masking, Sand, Solid Black)
+
+$ filled_region {"sketch": [[[0, 0], [10, 0]], [[10, 0], [10, 10]], [[10, 10], [0, 10]], [[0, 10], [0, 0]]], "line_style": "Faint"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): region 100003: there's no line style `Faint`
+
+$ filled_region {"sketch": [[[0, 0], [10, 0]], [[10, 0], [10, 10]], [[10, 10], [0, 10]], [[0, 10], [0, 0]]], "line_style": 4}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): filled_region: `line_style` is a line style's name, or null for invisible lines, not 4
+
+$ filled_region {"sketch": [[[0, 0], [10, 0]], [[10, 0], [10, 10]], [[10, 10], [0, 10]], [[0, 10], [0, 0]]], "view": "Nowhere"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): filled_region: no view named `Nowhere`
+
+$ filled_region {"sketch": [[[0, 0], [10, 0]], [[10, 0], [10, 10]], [[10, 10], [0, 10]], [[0, 10], [0, 0]]], "colour": "red"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): filled_region: `colour` isn't one of its parameters: sketch, view, level, type, line_style
+
+$ filled_region {"sketch": "a square"}
+exit: 1
+--- stdout
+--- stderr
+line 2 (filled_region): filled_region: `sketch` is a list of lines, each [[x,y],[x,y]], an arc [[x,y],[x,y],[x,y]] (its ends, then a point it passes through) or an object: `id?` and a curve's fields, `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` and `end_tangent`): invalid type: string "a square", expected a sequence

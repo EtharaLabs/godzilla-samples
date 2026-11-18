@@ -1,0 +1,13 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'door {"wall": 100003, "offset": 2000, "type": "Single 900 x 2100"}' --cmd 'door {"at": [4500, 4000], "family": "Double Door", "type": "1500 x 2100", "mark": "D-7"}' --cmd 'window {"at": [4500, 0]}' --cmd 'window {"at": [0, 2000], "type": "Fixed 600 x 900"}' --cmd 'window {"at": [6000, 1000], "family": "Casement Window", "sill": 1000}' --cmd 'door {"at": [1500, 4000], "flip_facing": true, "flip_hand": true}' --cmd 'elements {"category": "door"}' --cmd 'elements {"category": "window"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":1500.0}
+{"host":100003,"id":100007,"mark":"2","offset":2000.0}
+{"host":100004,"id":100008,"mark":"D-7","offset":1500.0}
+{"host":100002,"id":100009,"mark":"1","offset":4500.0}
+{"host":100005,"id":100010,"mark":"2","offset":2000.0}
+
+--- stderr
+line 1 (window): window 100011 and door 100007 overlap in wall <GUID-1>
+

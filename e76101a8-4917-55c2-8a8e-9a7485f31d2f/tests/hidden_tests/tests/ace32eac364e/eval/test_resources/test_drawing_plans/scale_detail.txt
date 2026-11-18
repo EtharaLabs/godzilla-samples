@@ -1,0 +1,90 @@
+exit: 0
+--- stdout
+{"ids":[100002]}
+{"id":100003,"name":"S"}
+{"id":100004,"number":"A101"}
+{"name":"Level 1","scale":100.0,"view":100000}
+{"name":"S","scale":25.0,"view":100003}
+{"name":"S","scale":25.0,"view":100003}
+{"detail":"fine","name":"Level 2","view":100001}
+{"detail":"coarse","name":"S","view":100003}
+{"detail":"coarse","name":"S","view":100003}
+{"length":"ft-in"}
+{"name":"Level 2","scale":96.0,"view":100001}
+{"name":"Level 2","scale":48.0,"view":100001}
+--- stderr
+
+$ scale {"view": "Level 1", "scale": null}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: `scale` is the n of 1 : n, from 1 to 100000, not null: a view always has a scale (1 : 100, or 1/8" = 1'-0" in feet and inches, until it is given one)
+
+$ scale {"view": "Level 1", "scale": 0}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: `scale` is the n of 1 : n, from 1 to 100000, not 0
+
+$ scale {"view": "Level 1", "scale": 200000}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: `scale` is the n of 1 : n, from 1 to 100000, not 200000
+
+$ scale {"view": "Level 1", "scale": "1:50"}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: `scale` is the n of 1 : n, from 1 to 100000, not "1:50"
+
+$ scale {"view": "Nowhere", "scale": 50}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: no view named `Nowhere`
+
+$ scale {"view": "A101", "scale": 50}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: no view named `A101`
+
+$ scale {"scale": 50}
+exit: 0
+--- stdout
+{"ids":[100002]}
+{"id":100003,"name":"S"}
+{"id":100004,"number":"A101"}
+{"name":"Level 1","scale":50.0,"view":100000}
+--- stderr
+
+$ scale {"view": "{3D}", "scale": 50}
+exit: 1
+--- stdout
+--- stderr
+line 4 (scale): scale: no view named `{3D}`
+
+$ detail {"view": "Level 1", "detail": "extreme"}
+exit: 1
+--- stdout
+--- stderr
+line 4 (detail): detail: `detail` is coarse, medium or fine, not "extreme"
+
+$ detail {"view": "Level 1", "detail": 3}
+exit: 1
+--- stdout
+--- stderr
+line 4 (detail): detail: `detail` is coarse, medium or fine, not 3
+
+$ detail {"view": "A101", "detail": "fine"}
+exit: 1
+--- stdout
+--- stderr
+line 4 (detail): detail: no view named `A101`
+
+$ detail {"view": "Nowhere"}
+exit: 1
+--- stdout
+--- stderr
+line 4 (detail): detail: no view named `Nowhere`

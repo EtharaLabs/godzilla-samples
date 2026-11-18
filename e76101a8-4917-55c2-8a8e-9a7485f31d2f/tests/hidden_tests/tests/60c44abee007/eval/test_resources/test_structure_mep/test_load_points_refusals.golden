@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "area": 7}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `area` (m²) and `perimeter` (mm) are required
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "perimeter": 7000}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `area` (m²) and `perimeter` (mm) are required
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "area": 7, "perimeter": 100, "kind": "garage"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): rooms[0]: load_points: `kind` must be one of bath, kitchen, service, dry, veranda, other, got "garage"
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "area": 7, "perimeter": 100, "points": -1}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `points` must be a whole number from 0 to 1000, got -1
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "area": 7, "perimeter": 100, "points": 2.5}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: rooms[0]: `points` must be a whole number from 0 to 1000, got 2.5
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "area": 7, "perimeter": 100, "colour": 1}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: rooms[0]: unknown parameter `colour`
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "X", "area": -7, "perimeter": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): rooms[0]: load_points: `area` must be a number from 0 to 1000000, got -7
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": "none"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: `rooms` must be a list of at most 5000 rooms, got "none"
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [5]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: rooms[0] must be an object
+
+$ bimcraft-cli run --cmd 'load_points {"foo": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: `foo` isn't one of its parameters: rooms, alternative
+
+$ bimcraft-cli run --cmd 'load_points {"alternative": "yes"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (load_points): load_points: `alternative` must be true or false, got "yes"
+

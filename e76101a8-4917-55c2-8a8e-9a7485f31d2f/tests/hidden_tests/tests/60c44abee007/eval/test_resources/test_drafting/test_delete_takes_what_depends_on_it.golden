@@ -1,0 +1,36 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'wall {"points": [[0,2000],[6000,2000]]}' --cmd 'door {"at": [2000, 2000]}' --cmd 'window {"at": [4000, 2000]}' --cmd 'tag {}' --cmd 'dimension {"refs": [{"id": 100002}, {"id": 100003}], "at": [1000, 1000]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[1000,1000]]}' --cmd 'text {"view": "S1", "text": "Note", "at": [100, 100]}' --cmd 'delete {"ids": [100004]}' --cmd 'delete {"ids": [100003]}' --cmd 'delete {"ids": [100009]}' --cmd 'delete {"ids": []}' --cmd 'elements {}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+{"host":100003,"id":100004,"mark":"1","offset":2000.0}
+{"host":100003,"id":100005,"mark":"1","offset":4000.0}
+{"ids":[100006,100007]}
+{"id":100008,"values":[2000.0]}
+{"id":100009,"name":"S1"}
+{"id":100010}
+{"id":100011}
+{"deleted":[100004,100006]}
+{"deleted":[100003,100005,100007,100008]}
+{"deleted":[100009,100010,100011]}
+{"deleted":[]}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-3>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-1>","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-2>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":3}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'delete {"ids": [123]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (delete): delete: no element 123
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'delete {}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (delete): delete: `ids` [id, …] is required
+

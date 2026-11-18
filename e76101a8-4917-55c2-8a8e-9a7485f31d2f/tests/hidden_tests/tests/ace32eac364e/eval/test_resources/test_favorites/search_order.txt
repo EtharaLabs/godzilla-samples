@@ -1,0 +1,80 @@
+=== favorite {} {}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"<HOME>/.config/bimcraft/favorites.json"}
+--- stderr
+=== favorite {"action": "list"} {"XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"cfg/bimcraft/favorites.json"}
+--- stderr
+=== favorite {} {"BIMCRAFT_FAVORITES": "favs/mine.json", "XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"favs/mine.json"}
+--- stderr
+=== favorite {} {"BIMCRAFT_FAVORITES": "", "XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"cfg/bimcraft/favorites.json"}
+--- stderr
+=== favorite {} {"XDG_CONFIG_HOME": ""}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"<HOME>/.config/bimcraft/favorites.json"}
+--- stderr
+=== favorite {} {"HOME": "", "XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"cfg/bimcraft/favorites.json"}
+--- stderr
+=== favorite {} {"HOME": ""}
+exit: 1
+--- stdout
+--- stderr
+line 1 (favorite): favorite: there's no folder to keep favorites in here: give `path`
+=== favorite {} {"BIMCRAFT_FAVORITES": "", "HOME": "", "XDG_CONFIG_HOME": ""}
+exit: 1
+--- stdout
+--- stderr
+line 1 (favorite): favorite: there's no folder to keep favorites in here: give `path`
+=== favorite {"path": "given.json"} {"BIMCRAFT_FAVORITES": "favs/mine.json", "XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"given.json"}
+--- stderr
+=== favorite {"path": "given.json"} {"HOME": ""}
+exit: 0
+--- stdout
+{"families":[],"materials":[],"path":"given.json"}
+--- stderr
+=== favorite {"action": "save", "name": "Brick"} {"BIMCRAFT_FAVORITES": "favs/mine.json", "XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"kind":"material","path":"favs/mine.json","saved":"Brick"}
+--- stderr
+=== favorite {"action": "save", "name": "Timber"} {"XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"kind":"material","path":"cfg/bimcraft/favorites.json","saved":"Timber"}
+--- stderr
+=== favorite {"action": "save", "name": "Glass"} {}
+exit: 0
+--- stdout
+{"kind":"material","path":"<HOME>/.config/bimcraft/favorites.json","saved":"Glass"}
+--- stderr
+=== favorite {} {"BIMCRAFT_FAVORITES": "favs/mine.json"}
+exit: 0
+--- stdout
+{"families":[],"materials":[{"color":[178,92,70],"name":"Brick","texture":"brick"}],"path":"favs/mine.json"}
+--- stderr
+=== favorite {} {"XDG_CONFIG_HOME": "cfg"}
+exit: 0
+--- stdout
+{"families":[],"materials":[{"color":[196,154,102],"name":"Timber","texture":"boards"}],"path":"cfg/bimcraft/favorites.json"}
+--- stderr
+=== favorite {} {}
+exit: 0
+--- stdout
+{"families":[],"materials":[{"color":[166,200,228],"name":"Glass","texture":null}],"path":"<HOME>/.config/bimcraft/favorites.json"}
+--- stderr

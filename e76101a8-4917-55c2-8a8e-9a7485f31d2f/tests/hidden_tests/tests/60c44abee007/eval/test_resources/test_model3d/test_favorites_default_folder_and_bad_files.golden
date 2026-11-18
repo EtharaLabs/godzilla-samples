@@ -1,0 +1,39 @@
+[exit 0]
+{"kind":"material","path":"cfg/bimcraft/favorites.json","saved":"Brick"}
+{"families":[],"materials":[{"color":[178,92,70],"name":"Brick","texture":"brick"}],"path":"cfg/bimcraft/favorites.json"}
+
+[exit 0]
+{"kind":"family","path":"<HOME>/.config/bimcraft/favorites.json","saved":"Desk"}
+{"families":[{"category":"furniture","name":"Desk","types":["1200 x 600","1400 x 700"]}],"materials":[],"path":"<HOME>/.config/bimcraft/favorites.json"}
+
+$ bimcraft-cli run --cmd 'favorite {"path": "bad.json"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (favorite): favorite: bad.json: material ``: a name is up to 256 characters, and not empty
+
+$ bimcraft-cli run --cmd 'favorite {"path": "junk.json"}'
+[exit 0]
+--- stdout
+{"families":[],"materials":[],"path":"junk.json"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'favorite {"action": "delete", "kind": "family", "name": "Nope", "path": "fresh.json"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (favorite): favorite: there's no favorite family `Nope`
+
+$ bimcraft-cli run --cmd 'favorite {"action": "save", "kind": "chair", "name": "Desk", "path": "fresh.json"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (favorite): favorite: `kind` is material or family, not `chair`
+
+=== files: bad.json, cfg/bimcraft/favorites.json, junk.json
+=== file cfg/bimcraft/favorites.json
+normalised: 358 bytes, sha256=2566f3795baa77fab35adadaacf59249a3ada81d3ce9d202f4de2354164dc6b3

@@ -1,0 +1,72 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100002, "at": [2500,3000], "style": "Wide Lines"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (linework): linework: element 100002 draws no edge within 200 mm of [2500, 3000] in that view
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100002, "at": [2500,100], "style": "Nope"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (linework): linework: there's no line style `Nope` (there are: Centre Lines, Hairline, Hidden Lines, Medium Lines, Overhead Lines, Thin Lines, Wide Lines)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100002, "at": [2500,100]}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (linework): linework: give `style`, a line style, or `invisible: true`; `remove: true` takes Linework off
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100002, "at": [2500,100], "style": "Wide Lines", "invisible": true}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+{"from":[0.0,100.0],"to":[5000.0,100.0]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100003, "at": [500,2000], "style": "Wide Lines"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+{"from":[0.0,2000.0],"to":[1000.0,2000.0]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 999, "at": [500,2000], "style": "Wide Lines"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (linework): linework: no element 999
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100002, "at": [2500,100], "remove": true}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+{"removed":0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[5000,0]]}' --cmd 'detail_line {"points": [[0,2000],[1000,2000]]}' --cmd 'linework {"id": 100002, "at": [2500,100], "style": "Wide Lines", "view": "Nope"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+
+--- stderr
+line 1 (linework): linework: no view named `Nope`
+

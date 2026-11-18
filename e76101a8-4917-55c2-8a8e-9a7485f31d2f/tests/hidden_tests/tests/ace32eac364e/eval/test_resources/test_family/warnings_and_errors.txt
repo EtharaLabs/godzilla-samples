@@ -1,0 +1,59 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"door","forms":[{"from":0.0,"plane":"xy","profile":[["-Width / 2","-40"],["Width / 2","-40"],["Width / 2","40"],["-Width / 2",40.0]],"to":"Height"},{"from":0.0,"plane":"xy","profile":[[3000.0,3000.0],[3200.0,3000.0],[3200.0,3200.0],[3000.0,3200.0]],"to":100.0,"void":true},{"from":5000.0,"plane":"xy","profile":[[0.0,0.0],[200.0,0.0],[200.0,200.0],[0.0,200.0]],"to":5200.0},{"from":0.0,"plane":"xy","profile":[[-100.0,-400.0],[100.0,-400.0],[100.0,400.0],[-100.0,400.0]],"to":100.0}],"parameters":[{"kind":"length","name":"Width","value":900},{"kind":"length","name":"Height","value":2100}],"types":{"900 x 2100":{}}},"name":"Odd Door","warnings":["its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing","form 2: its void passes through no solid form listed before it; it cuts nothing (in type `900 x 2100`)","form 3: it lies wholly outside the opening (x 0…200 mm, z 5000…5200 mm) (in type `900 x 2100`)","form 4: it is 800 mm thick across the wall where the wall is 200 mm (in type `900 x 2100`)"]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== family {"name": "Odd Door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"door","forms":[{"from":0.0,"guid":"GUID-1","id":999463,"plane":"xy","profile":[["-Width / 2","-40"],["Width / 2","-40"],["Width / 2","40"],["-Width / 2",40.0]],"to":"Height"},{"from":0.0,"guid":"GUID-2","id":999462,"plane":"xy","profile":[[3000.0,3000.0],[3200.0,3000.0],[3200.0,3200.0],[3000.0,3200.0]],"to":100.0,"void":true},{"from":5000.0,"guid":"GUID-3","id":999461,"plane":"xy","profile":[[0.0,0.0],[200.0,0.0],[200.0,200.0],[0.0,200.0]],"to":5200.0},{"from":0.0,"guid":"GUID-4","id":999460,"plane":"xy","profile":[[-100.0,-400.0],[100.0,-400.0],[100.0,400.0],[-100.0,400.0]],"to":100.0}],"parameters":[{"kind":"length","name":"Width","value":900},{"kind":"length","name":"Height","value":2100}],"types":{"900 x 2100":{}}},"name":"Odd Door","values":{"900 x 2100":{"Height":2100.0,"Wall Thickness":200.0,"Width":900.0}},"warnings":["its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing","form 2: its void passes through no solid form listed before it; it cuts nothing (in type `900 x 2100`)","form 3: it lies wholly outside the opening (x 0…200 mm, z 5000…5200 mm) (in type `900 x 2100`)","form 4: it is 800 mm thick across the wall where the wall is 200 mm (in type `900 x 2100`)"]}
+--- stderr
+=== family {"name": "Odd Door", "parameters": [{"name": "Width", "value": 900}, {"name": "Height", "value": 2100}, {"name": "A", "formula": "Width + Nowhere"}, {"name": "B", "formula": "Height / -"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Odd Door`: parameter `A`: formula `Width + Nowhere` reads `Nowhere`, which isn't one of its parameters
+family `Odd Door`: parameter `B`: formula `Height / -`: something's missing at its end (character 11)
+family `Odd Door`: type `900 x 2100`: parameter `A`: formula `Width + Nowhere`: `Nowhere` isn't one of its parameters
+family `Odd Door`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+=== family {"name": "Odd Door", "forms": [{"profile": [[0, 0], [1, 0]], "to": 100}, {"void": true, "profile": [[3000, 3000], [3200, 3000], [3200, 3200], [3000, 3200]], "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Odd Door`: type `900 x 2100`: form 1: its profile has no area: it needs three corners or more, or a circle
+family `Odd Door`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+family `Odd Door`: warning: form 2: its void passes through no solid form listed before it; it cuts nothing (in type `900 x 2100`)
+=== family {"name": "Odd Door", "parameters": [{"name": "Width", "value": 900}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Odd Door`: form 1: formula `Height` reads `Height`, which isn't one of its parameters
+family `Odd Door`: a door or window family needs a length parameter `Height`: the size of the opening it makes
+family `Odd Door`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+family `Odd Door`: warning: form 2: its void passes through no solid form listed before it; it cuts nothing (in type `900 x 2100`)
+family `Odd Door`: warning: form 4: it is 800 mm thick across the wall where the wall is 200 mm (in type `900 x 2100`)
+=== family {"name": "Odd Door", "parameters": [{"name": "Width", "value": 900}, {"name": "Height", "value": 2100}, {"name": "Wall Thickness", "value": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Odd Door`: `Wall Thickness` is the wall's, which a door or a window reads; name the parameter otherwise
+family `Odd Door`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+family `Odd Door`: warning: form 2: its void passes through no solid form listed before it; it cuts nothing (in type `900 x 2100`)
+family `Odd Door`: warning: form 3: it lies wholly outside the opening (x 0…200 mm, z 5000…5200 mm) (in type `900 x 2100`)
+family `Odd Door`: warning: form 4: it is 800 mm thick across the wall where the wall is 200 mm (in type `900 x 2100`)
+=== family {"name": "Odd Door", "parameters": [{"name": "Width", "value": 900}, {"name": "Height", "kind": "number", "value": 2100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Odd Door`: a door or window family needs a length parameter `Height`: the size of the opening it makes
+family `Odd Door`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+family `Odd Door`: warning: form 2: its void passes through no solid form listed before it; it cuts nothing (in type `900 x 2100`)
+family `Odd Door`: warning: form 3: it lies wholly outside the opening (x 0…200 mm, z 5000…5200 mm) (in type `900 x 2100`)
+family `Odd Door`: warning: form 4: it is 800 mm thick across the wall where the wall is 200 mm (in type `900 x 2100`)

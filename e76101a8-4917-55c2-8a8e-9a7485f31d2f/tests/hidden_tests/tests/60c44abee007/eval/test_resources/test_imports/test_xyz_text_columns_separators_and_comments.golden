@@ -1,0 +1,34 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "a.xyz", "units": "mm"}' --cmd 'point_cloud {"path": "b.txt", "name": "six columns", "at": [10000, 0]}' --cmd 'elements {"category": "pointcloud"}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"a","id":100002,"origin":[500.0,500.0,250.0],"points":3,"read":3}
+{"cloud":"six columns","id":100003,"origin":[1000.0,1500.0,500.0],"points":3,"read":3}
+{"count":2,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"a","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":250.0,"points":3,"source":"a.xyz"},{"angle":0.0,"at":[10000.0,0.0],"category":"pointcloud","cloud":"six columns","guid":"<GUID-3>","id":100003,"level":"<GUID-2>","offset":500.0,"points":3,"source":"b.txt"}],"returned":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+=== p.bimcraft [clouds]
+{
+ "a": {
+  "origin": [
+   500.0,
+   500.0,
+   250.0
+  ],
+  "points": "eAFjYPh1GIKrQLQzEhvKr3IGAPBjDKY=",
+  "read": 3,
+  "source": "a.xyz"
+ },
+ "six columns": {
+  "colours": "eAH7//8/AwMDIyMjABf3AwE=",
+  "origin": [
+   1000.0,
+   1500.0,
+   500.0
+  ],
+  "points": "eAFjYKg6wtCw+wgDw6/DQLYLEhsk7gIUdwYA9AsNbw==",
+  "read": 3,
+  "source": "b.txt"
+ }
+}

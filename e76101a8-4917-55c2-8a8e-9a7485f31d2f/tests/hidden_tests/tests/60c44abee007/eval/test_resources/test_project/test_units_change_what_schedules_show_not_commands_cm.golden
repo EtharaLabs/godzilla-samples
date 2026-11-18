@@ -1,0 +1,33 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0],[8000,6000],[0,6000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[5000,0],[5000,6000]], "type": "Interior - 100mm"}' --cmd 'door {"at": [2000, 0]}' --cmd 'door {"at": [5000, 3000], "type": "Single 800 x 2100"}' --cmd 'window {"at": [8000, 3000]}' --cmd 'window {"at": [2500, 6000], "sill": 1100}' --cmd 'room {"point": [2500, 3000], "name": "Living"}' --cmd 'room {"point": [6500, 3000], "name": "Bedroom"}' --cmd 'floor {}' --cmd 'units {"length": "cm"}' --cmd 'units {}' --cmd 'schedule {"category": "walls", "path": "walls.csv"}' --cmd 'schedule {"category": "rooms", "path": "rooms.csv"}' --cmd 'elements {"category": "wall", "limit": 1}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"host":100002,"id":100007,"mark":"1","offset":2000.0}
+{"host":100006,"id":100008,"mark":"2","offset":3000.0}
+{"host":100003,"id":100009,"mark":"1","offset":3000.0}
+{"host":100004,"id":100010,"mark":"2","offset":5500.0}
+{"area_m2":30.0,"id":100011,"number":"1"}
+{"area_m2":18.0,"id":100012,"number":"2"}
+{"area_m2":48.0,"id":100013}
+{"length":"cm"}
+{"length":"cm"}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Id","Type","Level","Length","Height","Thickness"],"elements":[[100002],[100003],[100004],[100005],[100006]],"id":null,"name":"Wall Schedule","rows":[[100002.0,"Exterior - 300mm","Level 1",8000.0,3000.0,300.0],[100003.0,"Exterior - 300mm","Level 1",6000.0,3000.0,300.0],[100004.0,"Exterior - 300mm","Level 1",8000.0,3000.0,300.0],[100005.0,"Exterior - 300mm","Level 1",6000.0,3000.0,300.0],[100006.0,"Interior - 100mm","Level 1",6000.0,3000.0,100.0]]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[[100011],[100012]],"id":null,"name":"Room Schedule","rows":[["1","Living","Level 1",30.0,22000.0],["2","Bedroom","Level 1",18.0,18000.0]]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":8000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}],"returned":1}
+
+--- stderr
+
+=== file walls.csv
+Id,Type,Level,Length,Height,Thickness
+100002.0,Exterior - 300mm,Level 1,8000.0,3000.0,300.0
+100003.0,Exterior - 300mm,Level 1,6000.0,3000.0,300.0
+100004.0,Exterior - 300mm,Level 1,8000.0,3000.0,300.0
+100005.0,Exterior - 300mm,Level 1,6000.0,3000.0,300.0
+100006.0,Interior - 100mm,Level 1,6000.0,3000.0,100.0
+
+=== file rooms.csv
+Number,Name,Level,Area (m²),Perimeter
+1,Living,Level 1,30.0,22000.0
+2,Bedroom,Level 1,18.0,18000.0
+

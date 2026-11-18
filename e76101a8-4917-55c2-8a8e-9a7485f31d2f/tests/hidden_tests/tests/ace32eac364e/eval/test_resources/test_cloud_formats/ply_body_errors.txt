@@ -1,0 +1,40 @@
+### binary_too_many.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: binary_too_many.ply: it's cut short: 99999999999 vertices don't fit in it
+### cut_short.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: cut_short.ply: it's cut short: 1 vertices of 5
+### cut_short_before.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: cut_short_before.ply: it's cut short in its camera elements
+### no_vertex.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: no_vertex.ply: it has no vertex element
+### too_few_values.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: too_few_values.ply: vertex 1 has too few values
+### word_for_number.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: word_for_number.ply: vertex 1: a isn't a number
+### bad_list_first.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_list_first.ply: its face elements, before its vertices, hold a list, which BIMCraft can't step over
+### bad_cut.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_cut.ply: it's cut short: 3 vertices don't fit in it

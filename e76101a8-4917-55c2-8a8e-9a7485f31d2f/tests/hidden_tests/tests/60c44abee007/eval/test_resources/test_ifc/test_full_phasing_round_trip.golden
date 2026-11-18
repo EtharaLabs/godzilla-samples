@@ -1,0 +1,11 @@
+$ bimcraft-cli run p.ifc --cmd 'elements {"category": "wall"}' --cmd 'phase {}' --cmd 'phase_filter {"name": "Mine"}' --cmd 'option {"set": "Kitchen"}'
+[exit 0]
+--- stdout
+{"elements":{"door":1,"level":2,"wall":4},"format":"IFC4","moved":null,"name":"Project","path":"p.ifc","skipped":[]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":8000.0,"level":"<GUID-2>","params":{"Phase Created":"Existing","Phase Demolished":"Demolition"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":6000.0,"level":"<GUID-2>","params":{"Design Option":"Kitchen: Closed"},"room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"<GUID-6>","height":3000.0,"id":100004,"length":8000.0,"level":"<GUID-2>","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"<GUID-7>","height":3000.0,"id":100005,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":4}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true},"new":{"halftone":true}},"phases":["Existing","Demolition","New Construction"]}
+{"filter":{"demolished":"by-category","existing":"by-category","new":"overridden","temporary":"by-category"},"name":"Mine"}
+{"now":null,"options":["Open","Closed"],"primary":"Open","set":"Kitchen"}
+
+--- stderr
+

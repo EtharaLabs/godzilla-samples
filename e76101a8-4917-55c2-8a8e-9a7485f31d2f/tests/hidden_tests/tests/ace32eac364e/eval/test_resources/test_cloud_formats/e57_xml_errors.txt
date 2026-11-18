@@ -1,0 +1,40 @@
+### bad_broken_xml.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_broken_xml.e57: its XML is broken: <data3D> is closed by </data4D>
+### bad_xml_unclosed_cdata.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_unclosed_cdata.e57: its XML is broken: <formatName> is closed by </name>
+### bad_xml_unclosed_comment.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_unclosed_comment.e57: its XML is broken: a comment isn't closed
+### bad_xml_closes_nothing.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_closes_nothing.e57: its XML is broken: </extra> closes nothing
+### bad_xml_tag_not_closed.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_tag_not_closed.e57: its XML is broken: a tag isn't closed
+### bad_xml_empty_tag.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_empty_tag.e57: its XML is broken: < >
+### bad_xml_not_closed.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_not_closed.e57: its XML is broken: <e57Root> isn't closed
+### bad_xml_too_deep.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_xml_too_deep.e57: its XML nests deeper than 64

@@ -1,0 +1,23 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'mass_floors {}' --cmd 'MF {}' --cmd 'modify {"id": 100004, "height": 5000}' --cmd 'mass_floors {"mass": 100004, "type": "Generic - 200mm"}' --cmd 'schedule {"name": "Mass Floors", "category": "massfloors"}' --cmd 'mass_floors {"mass": 100004, "prune": true}' --cmd 'elements {"category": "floor"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+{"ids":[100005,100006,100007,100008],"made":[100005,100006,100007,100008],"removed":[],"stale":[],"updated":[]}
+{"ids":[100005,100006,100007,100008],"made":[],"removed":[],"stale":[],"updated":[]}
+{"area_m2":80.0,"base_offset":0.0,"boundary":[[0.0,0.0],[10000.0,0.0],[10000.0,8000.0],[0.0,8000.0]],"category":"mass","gross_floor_area_m2":160.0,"guid":"<GUID-1>","height":5000.0,"id":100004,"level":"<GUID-2>","levels":[100000,100001],"name":"Block","top_level":null,"volume_m3":400.0}
+{"ids":[100005,100006],"made":[],"removed":[],"stale":[100007,100008],"updated":[]}
+{"available":["Mass","Level","Area","Perimeter","Volume","Count"],"category":"massfloor","columns":["Mass","Level","Area (m²)","Perimeter","Volume"],"elements":[[100004],[100004]],"id":100009,"name":"Mass Floors","rows":[["Block","Level 1",80.0,36000.0,240.0],["Block","Level 2",80.0,36000.0,160.0]]}
+{"ids":[100005,100006],"made":[],"removed":[100007,100008],"stale":[],"updated":[]}
+{"count":2,"elements":[{"area_m2":80.0,"boundary":[[0.0,0.0],[10000.0,0.0],[10000.0,8000.0],[0.0,8000.0]],"category":"floor","guid":"<GUID-3>","id":100005,"level":"<GUID-2>","params":{"Mass Floor":{"level":"<GUID-2>","mass":"<GUID-1>"}},"pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[0.0,0.0],"type":"Generic - 200mm","type_guid":"<GUID-4>","volume_m3":16.0},{"area_m2":80.0,"boundary":[[0.0,0.0],[10000.0,0.0],[10000.0,8000.0],[0.0,8000.0]],"category":"floor","guid":"<GUID-5>","id":100006,"level":"<GUID-6>","params":{"Mass Floor":{"level":"<GUID-6>","mass":"<GUID-1>"}},"pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[3000.0,3000.0],"type":"Generic - 200mm","type_guid":"<GUID-4>","volume_m3":16.0}],"returned":2}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'mass_floors {"mass": 100000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (mass_floors): mass_floors: 100000 isn't a mass
+

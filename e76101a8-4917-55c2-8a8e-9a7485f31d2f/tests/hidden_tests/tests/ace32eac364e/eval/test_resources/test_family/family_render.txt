@@ -1,0 +1,52 @@
+=== render {"family": "Table", "path": "f.png", "width": 200, "height": 150}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"family":"Table","height":150,"kind":"family 3d preview","lens":null,"mode":"3d","path":"f.png","target":null,"type":"1200 x 800","view":"Table","width":200}
+{"count":0,"elements":[],"returned":0}
+{"count":1,"undone":"Wall"}
+--- stderr
+line 1 (undo): nothing to undo
+=== render {"family": "Single Door", "type": "800 x 2100", "mode": "plan", "path": "d.png", "wall_thickness": 300}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"family":"Single Door","height":1000,"kind":"family plan preview","mode":"plan","path":"d.png","type":"800 x 2100","view":"Single Door","width":1600}
+{"count":0,"elements":[],"returned":0}
+{"count":1,"undone":"Wall"}
+--- stderr
+line 1 (undo): nothing to undo
+=== render {"family": "Table", "mode": "elevation", "path": "e.png"}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"azimuth":90.0,"elevation":0.0,"eye":null,"eye_elevation":null,"family":"Table","height":1000,"kind":"family elevation preview","lens":null,"mode":"elevation","path":"e.png","target":null,"type":"1200 x 800","view":"Table","width":1600}
+{"count":0,"elements":[],"returned":0}
+{"count":1,"undone":"Wall"}
+--- stderr
+line 1 (undo): nothing to undo
+=== render {"family": "Nope"}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+--- stderr
+line 1 (render): render: there's no family `Nope`; `inspect` lists them
+=== render {"family": "Table", "type": "9"}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+--- stderr
+line 1 (render): render: family `Table` has no type `9` (there are: 1200 x 800, 1600 x 900, 2000 x 1000)
+=== render {"family": "Table", "mode": "side"}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+--- stderr
+line 1 (render): render: `mode` is 3d, plan or elevation, not `side`
+=== render {"family": "Single Door", "wall_thickness": -5}
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+--- stderr
+line 1 (render): render: `wall_thickness` must be mm above zero and up to 1000000000, got -5
+sizes: [('d.png', (1600, 1000)), ('e.png', (1600, 1000)), ('f.png', (200, 150))]

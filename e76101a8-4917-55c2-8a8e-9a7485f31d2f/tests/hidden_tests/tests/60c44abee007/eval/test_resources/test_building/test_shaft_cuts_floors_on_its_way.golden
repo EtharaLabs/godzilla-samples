@@ -1,0 +1,20 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'floor {}' --cmd 'floor {"level": "Level 2", "boundary": [[0,0],[6000,0],[6000,4000],[0,4000]]}' --cmd 'shaft {"boundary": [[1000,1000],[2000,1000],[2000,2000],[1000,2000]], "top_level": "Level 2", "height": 500}' --cmd 'elements {"category": "shaft"}' --cmd 'elements {"category": "floor"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006}
+{"area_m2":24.0,"id":100007}
+{"id":100008}
+{"count":1,"elements":[{"area_m2":1.0,"base_offset":0.0,"boundary":[[1000.0,1000.0],[2000.0,1000.0],[2000.0,2000.0],[1000.0,2000.0]],"category":"shaft","guid":"<GUID-1>","height":3000.0,"id":100008,"level":"<GUID-2>","top_level":"<GUID-3>"}],"returned":1}
+{"count":2,"elements":[{"area_m2":24.0,"boundary":[[6000.0,4000.0],[0.0,4000.0],[0.0,0.0],[6000.0,0.0]],"category":"floor","guid":"<GUID-4>","id":100006,"level":"<GUID-2>","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[0.0,0.0],"type":"Generic - 200mm","type_guid":"<GUID-5>","volume_m3":4.8},{"area_m2":23.0,"boundary":[[0.0,0.0],[6000.0,0.0],[6000.0,4000.0],[0.0,4000.0]],"category":"floor","guid":"<GUID-6>","id":100007,"level":"<GUID-3>","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[3000.0,3000.0],"type":"Generic - 200mm","type_guid":"<GUID-5>","volume_m3":4.6}],"returned":2}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'shaft {"boundary": [[1000,1000],[2000,1000],[2000,2000],[1000,2000]], "height": 0}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (shaft): shaft 100006 height must be above zero, got 0
+

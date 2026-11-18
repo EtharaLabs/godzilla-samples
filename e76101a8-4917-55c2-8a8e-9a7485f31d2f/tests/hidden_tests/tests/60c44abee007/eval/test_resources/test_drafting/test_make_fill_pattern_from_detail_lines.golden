@@ -1,0 +1,87 @@
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'detail_line {"points": [[0,0],[300,300]]}' --cmd 'detail_line {"points": [[150,0],[150,300]]}' --cmd 'detail_line {"points": [[-500,-500],[-400,-500]]}' --cmd 'make_fill_pattern {"ids": [100002, 100003, 100004, 100005], "from": [0,0], "to": [300,300], "name": "Tile Made"}' --cmd 'make_fill_pattern {"ids": [100002, 100003, 100004], "from": [0,0], "to": [300,300], "name": "Tile Paper", "target": "drafting"}' --cmd 'fill_pattern {"name": "Tile Paper", "target": "model"}' --cmd 'fill_pattern {"name": "Tile Paper", "target": "drafting"}' --cmd 'fill_pattern {"name": "Tile Paper", "drawn": 50}' --cmd 'fill_pattern {"name": "Tile Paper", "target": "model"}' --cmd 'fill_pattern {"name": "Tile Paper", "drawn": null}'
+[exit 0]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"name":"Tile Made","pattern":{"drawn":100.0,"lines":[{"angle":0.0,"spacing":300.0},{"angle":45.0,"shift":212.132034,"spacing":212.132034},{"angle":90.0,"origin":[150.0,0.0],"spacing":300.0}],"target":"model"}}
+{"name":"Tile Paper","pattern":{"drawn":100.0,"lines":[{"angle":0.0,"spacing":3.0},{"angle":45.0,"shift":2.12132,"spacing":2.12132},{"angle":90.0,"origin":[1.5,0.0],"spacing":3.0}],"target":"drafting"}}
+{"name":"Tile Paper","pattern":{"drawn":100.0,"lines":[{"angle":0.0,"spacing":300.0},{"angle":45.0,"shift":212.132034,"spacing":212.132034},{"angle":90.0,"origin":[150.0,0.0],"spacing":300.0}],"target":"model"}}
+{"name":"Tile Paper","pattern":{"drawn":100.0,"lines":[{"angle":0.0,"spacing":3.0},{"angle":45.0,"shift":2.12132,"spacing":2.12132},{"angle":90.0,"origin":[1.5,0.0],"spacing":3.0}],"target":"drafting"}}
+{"name":"Tile Paper","pattern":{"drawn":50.0,"lines":[{"angle":0.0,"spacing":3.0},{"angle":45.0,"shift":2.12132,"spacing":2.12132},{"angle":90.0,"origin":[1.5,0.0],"spacing":3.0}],"target":"drafting"}}
+{"name":"Tile Paper","pattern":{"drawn":50.0,"lines":[{"angle":0.0,"spacing":150.0},{"angle":45.0,"shift":106.066017,"spacing":106.066017},{"angle":90.0,"origin":[75.0,0.0],"spacing":150.0}],"target":"model"}}
+{"name":"Tile Paper","pattern":{"lines":[{"angle":0.0,"spacing":150.0},{"angle":45.0,"shift":106.066017,"spacing":106.066017},{"angle":90.0,"origin":[75.0,0.0],"spacing":150.0}],"target":"model"}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100002], "from": [0,0], "to": [300,300], "name": "Brick 225 x 75"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: there's already a fill pattern `Brick 225 x 75`
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100002], "from": [0,0], "to": [300,300]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: `name` the new pattern's is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100002], "from": [0,0], "to": [0,300], "name": "X"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: the tile is 0.000 by 300.000; each side is 0.05 to 100000
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100002, 100004], "from": [0,0], "to": [300,300], "name": "X"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: the lines are in different views; a pattern's lines are all in one
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100003], "from": [0,0], "to": [300,300], "name": "X"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: section 100003 is not a detail line; a pattern is made of detail lines
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100002], "from": [1000,1000], "to": [1300,1300], "name": "X"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: no line lies inside the tile: pick lines that cross the rectangle between its corners
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[300,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'detail_line {"view": "S1", "points": [[0,0],[300,0]]}' --cmd 'make_fill_pattern {"ids": [100002], "from": [0,0], "to": [300,300], "name": "X", "target": "paper"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003,"name":"S1"}
+{"id":100004}
+
+--- stderr
+line 1 (make_fill_pattern): make_fill_pattern: `target` is drafting or model: unknown variant `paper`, expected `drafting` or `model`
+

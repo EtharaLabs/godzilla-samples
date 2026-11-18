@@ -1,0 +1,54 @@
+exit: 0
+--- stdout
+{"elements":{"level":3,"wall":9},"format":"IFC4","moved":null,"name":"Walls","path":"x.ifc","skipped":["IFCWALL #224 'Ghost': it has no body BIMCraft can read","IFCWALL #239 'Sheet': it has no length or thickness BIMCraft can read"]}
+{"count":12,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Ground","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"Upper","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":6000.0,"guid":"GUID-3","id":100002,"name":"Roof","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"GUID-4","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-2","type":"Imported - 200mm","type_guid":"GUID-5"},{"base_offset":0.0,"category":"wall","end":[6000.0,4000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":4000.0,"level":"GUID-1","room_bounding":true,"start":[6000.0,0.0],"thickness":200.0,"top_level":"GUID-2","type":"Basic Wall:Generic 200","type_guid":"GUID-7"},{"base_offset":0.0,"category":"wall","end":[3000.0,4000.0],"guid":"GUID-8","height":3000.0,"id":100005,"length":4000.0,"level":"GUID-1","room_bounding":true,"start":[3000.0,0.0],"thickness":100.0,"top_level":"GUID-2","type":"Imported - 100mm","type_guid":"GUID-9"},{"base_offset":0.0,"category":"wall","end":[6000.0,4000.0],"guid":"GUID-10","height":3000.0,"id":100006,"length":6000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,4000.0],"thickness":200.0,"top_level":"GUID-2","type":"Imported - 200mm","type_guid":"GUID-5"},{"base_offset":0.0,"category":"wall","end":[6000.0,8000.0],"guid":"GUID-11","height":3000.0,"id":100007,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,8000.0],"thickness":200.0,"top_level":"GUID-3","type":"Imported - 200mm","type_guid":"GUID-5"},{"base_offset":0.0,"category":"wall","end":[3000.0,-3000.0],"guid":"GUID-12","height":2800.0,"id":100008,"length":3000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,-3000.0],"thickness":150.0,"top_level":null,"type":"Basic Wall:Generic 200 (2)","type_guid":"GUID-13"},{"base_offset":0.0,"category":"wall","end":[-4000.0,4000.0],"guid":"GUID-14","height":2800.0,"id":100009,"length":4000.0,"level":"GUID-1","room_bounding":true,"start":[-4000.0,0.0],"thickness":250.0,"top_level":null,"type":"Brick 250","type_guid":"GUID-15"},{"base_offset":0.0,"category":"wall","end":[-8000.0,4000.0],"guid":"GUID-16","height":2700.0,"id":100010,"length":4000.0,"level":"GUID-1","room_bounding":true,"start":[-8000.0,0.0],"thickness":200.0,"top_level":null,"type":"Imported - 200mm","type_guid":"GUID-5"},{"base_offset":0.0,"category":"wall","end":[-12000.0,4000.0],"guid":"GUID-17","height":2700.0,"id":100011,"length":4000.0,"level":"GUID-1","room_bounding":true,"start":[-12000.0,0.0],"thickness":300.0,"top_level":null,"type":"Imported - 300mm","type_guid":"GUID-18"}],"returned":12}
+{"elements":[{"category":"wall","guid":"GUID-4","id":100003,"ifc":"2O2Fr$t4X7Zf8NOew3FLOH","name":"Imported - 200mm"},{"category":"wall","guid":"GUID-6","id":100004,"ifc":"1kTvXnbbzCWw8lcMd1dR4o","name":"Basic Wall:Generic 200"}]}
+{"extent":[[0.0,-100.001],[6100.0,4100.0]],"ids":[100003,100004],"library":[],"missing":[],"plan":100000}
+--- stderr
+--- inspect, less a new project's
+{
+ "counts": {
+  "level": 3,
+  "wall": 9
+ },
+ "levels": [
+  {
+   "elevation": 0.0,
+   "id": 100000,
+   "name": "Ground"
+  },
+  {
+   "elevation": 3000.0,
+   "id": 100001,
+   "name": "Upper"
+  },
+  {
+   "elevation": 6000.0,
+   "id": 100002,
+   "name": "Roof"
+  }
+ ],
+ "name": "Walls",
+ "types": {
+  "wall": {
+   "Basic Wall:Generic 200": {
+    "thickness": 200.0
+   },
+   "Basic Wall:Generic 200 (2)": {
+    "thickness": 150.0
+   },
+   "Brick 250": {
+    "thickness": 250.0
+   },
+   "Imported - 100mm": {
+    "thickness": 100.0
+   },
+   "Imported - 200mm": {
+    "thickness": 200.0
+   },
+   "Imported - 300mm": {
+    "thickness": 300.0
+   }
+  }
+ }
+}

@@ -1,0 +1,11 @@
+house.bimcraft --cmd autosave {"path": "house.bimcraft"}
+-> exit 1: {"name":"Project","path":"house.bimcraft"}
+line 1 (autosave): autosave: the recovery file must differ from the saved project
+--cmd autosave {}
+-> exit 1: line 1 (autosave): autosave: `path` is required
+--cmd autosave {"path": 5}
+-> exit 1: line 1 (autosave): autosave: `path` must be text of at most 256 characters, got 5
+--cmd autosave {"path": null}
+-> exit 1: line 1 (autosave): autosave: `path` is required
+--cmd autosave {"path": "nodir/x.autosave.bimcraft"}
+-> exit 1: line 1 (autosave): autosave: nodir/x.autosave.bimcraft: No such file or directory (os error 2) at path "<TMP>"

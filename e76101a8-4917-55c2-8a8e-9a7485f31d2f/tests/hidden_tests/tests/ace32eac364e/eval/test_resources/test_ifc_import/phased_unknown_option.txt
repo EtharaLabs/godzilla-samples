@@ -1,0 +1,44 @@
+exit: 0
+--- stdout
+{"elements":{"level":2,"wall":4},"format":"IFC4","moved":null,"name":"Project","path":"x.ifc","skipped":["1 phase or design option values: not ones the project has"]}
+{"count":6,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-3","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-1","params":{"Phase Created":"New Construction"},"room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-1","params":{"Phase Created":"Demolition","Phase Demolished":"New Construction"},"room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-1","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-2","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":6}
+--- stderr
+--- inspect, less a new project's
+{
+ "counts": {
+  "wall": 4
+ },
+ "option_sets": {
+  "Facade": {
+   "options": [
+    "Brick",
+    "Glass"
+   ],
+   "primary": "Brick"
+  }
+ },
+ "phase_filters": {
+  "Renovation": {
+   "demolished": "by-category",
+   "existing": "by-category",
+   "new": "overridden",
+   "temporary": "not-displayed"
+  }
+ },
+ "phase_overrides": {
+  "new": {
+   "cut": {
+    "color": [
+     0,
+     0,
+     200
+    ]
+   }
+  }
+ },
+ "phases": [
+  "Existing",
+  "Demolition",
+  "New Construction"
+ ]
+}

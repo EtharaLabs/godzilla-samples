@@ -1,0 +1,35 @@
+### points_not_base64
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's data isn't base64
+### points_not_zlib
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's data isn't zlib: corrupt deflate stream
+### points_cut_short
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's points are cut short
+### no_points
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud holds 1 to 5000000 points, not 0
+### point_not_a_number
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's point lies NaN mm from its middle, past 20000000
+### point_too_far
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud's point lies 1000000000 mm from its middle, past 20000000
+### colours_too_few
+exit: 1
+--- stdout
+--- stderr
+open: bad.bimcraft is not a BIMCraft project: a cloud has a colour for each point or none

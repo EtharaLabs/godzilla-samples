@@ -1,0 +1,12 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'room {"point": [3000, 2000], "frozen": true}' --cmd 'move {"ids": [100003], "by": [2000, 0]}' --cmd 'elements {"category": "room"}' --cmd 'modify {"id": 100006, "frozen": false}' --cmd 'elements {"category": "room"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006,"number":"1"}
+{"moved":[100003]}
+{"count":1,"elements":[{"area_m2":24.0,"category":"room","enclosed":true,"frozen":true,"guid":"<GUID-1>","id":100006,"kept":{"centre":{"holes":[],"outer":[[0.0,0.0],[6000.0,0.0],[6000.0,4000.0],[0.0,4000.0]]},"finish":{"holes":[],"outer":[[150.0,150.0],[5850.0,150.0],[5850.0,3850.0],[150.0,3850.0]]}},"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":20.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":64.8}],"returned":1}
+{"area_m2":24.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100006,"kept":{"centre":{"holes":[],"outer":[[0.0,0.0],[6000.0,0.0],[6000.0,4000.0],[0.0,4000.0]]},"finish":{"holes":[],"outer":[[150.0,150.0],[5850.0,150.0],[5850.0,3850.0],[150.0,3850.0]]}},"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":20.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":64.8}
+{"count":1,"elements":[{"area_m2":32.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100006,"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"1","perimeter_m":24.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":86.4}],"returned":1}
+
+--- stderr
+

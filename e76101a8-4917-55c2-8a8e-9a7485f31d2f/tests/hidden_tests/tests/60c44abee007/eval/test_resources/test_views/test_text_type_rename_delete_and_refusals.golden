@@ -1,0 +1,45 @@
+$ bimcraft-cli run --cmd 'text_type {"name": "Big", "size": 7, "font": "IBM Plex Sans"}' --cmd 'text {"text": "Hello", "at": [0, 0], "type": "Big"}' --cmd 'text_type {"name": "Big", "rename": "Huge"}' --cmd 'elements {"category": "text"}' --cmd 'text_type {"name": "Spare", "like": "Huge"}' --cmd 'text_type {"name": "Spare", "delete": true}' --save notes.bimcraft
+[exit 0]
+--- stdout
+{"name":"Big","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":7.0}}
+{"id":100002}
+{"name":"Huge","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":7.0}}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"text","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","size":7.0,"text":"Hello","type":"Huge","view":"<GUID-2>"}],"returned":1}
+{"name":"Spare","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":7.0}}
+{"deleted":"Spare"}
+{"format":"bimcraft","path":"notes.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run notes.bimcraft --cmd 'text_type {"name": "Huge", "delete": true}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"notes.bimcraft"}
+
+--- stderr
+line 1 (text_type): text_type: note 100002 is of `Huge`; give it another type first
+
+$ bimcraft-cli run notes.bimcraft --cmd 'text {"text": "x", "at": [0, 0], "type": "Nope"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"notes.bimcraft"}
+
+--- stderr
+line 1 (text): text 100003: there's no text type `Nope` (there are: 2.5mm, 3.5mm, 5mm, Huge)
+
+$ bimcraft-cli run notes.bimcraft --cmd 'text {"text": "", "at": [0, 0]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"notes.bimcraft"}
+
+--- stderr
+line 1 (text): text 100003: a text note needs text
+
+$ bimcraft-cli run notes.bimcraft --cmd 'text_type {"name": "X", "size": -1}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"notes.bimcraft"}
+
+--- stderr
+line 1 (text_type): text_type: text type `X`: its size, -1 mm, isn't above 0 and at most 100
+

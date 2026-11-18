@@ -1,0 +1,49 @@
+$ bimcraft-cli run --cmd 'type {"category": "beam", "name": "B", "width": 0, "depth": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): beam type `B` width must be above zero, got 0
+
+$ bimcraft-cli run --cmd 'type {"category": "beam", "name": "B", "width": 100, "depth": 100, "material": "Gold"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): beam type `B`: material `Gold` isn't in the library; add it with `material`
+
+$ bimcraft-cli run --cmd 'type {"category": "duct", "name": "D", "width": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): type: a new duct type needs `depth`
+
+$ bimcraft-cli run --cmd 'type {"category": "pipe", "name": "P"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): type: a new pipe type needs `width`
+
+$ bimcraft-cli run --cmd 'type {"category": "footing", "name": "F", "width": -1, "depth": 100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): footing type `F` width must be above zero, got -1
+
+$ bimcraft-cli run --cmd 'type {"category": "spaceship", "name": "S"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): type: `spaceship` has no types; use wall, floor, ceiling, door, window, column, structural column, footing, beam, strip footing, pipe, conduit, cable tray, wire, down conductor, earthing conductor, cable, roof or railing
+
+$ bimcraft-cli run --cmd 'type {"category": "railing", "name": "R", "height": -900}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (type): railing type `R` height must be above zero, got -900
+

@@ -1,0 +1,11 @@
+$ bimcraft-cli run props2.ifc --cmd 'elements {"category": "column"}' --cmd 'elements {"category": "beam"}' --cmd 'elements {"category": "component"}' --cmd 'library {"kind": "parameter"}'
+[exit 0]
+--- stdout
+{"elements":{"beam":1,"column":1,"component":1,"level":1},"format":"IFC4","moved":null,"name":"Hand Made","path":"props2.ifc","skipped":["Width on components: a family of the project has a parameter of that name, so it is not a project parameter too"]}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"base_offset":0.0,"category":"column","depth":300.0,"guid":"<GUID-1>","height":3000.0,"id":100001,"level":"<GUID-2>","params":{"Bars":8.0,"Checked":true,"Code":"X-1","Cover":30.0,"Mark":"P1","Ratio":0.25},"room_bounding":true,"round":false,"top_level":null,"type":"Imported 300 x 300","type_guid":"<GUID-3>","width":300.0}],"returned":1}
+{"count":1,"elements":[{"axis":[[0.0,0.0,2700.0],[5000.0,0.0,2700.0]],"category":"beam","depth":500.0,"end":[5000.0,0.0],"guid":"<GUID-4>","id":100002,"justify":"centre","length":5000.0,"level":"<GUID-2>","offset":2700.0,"params":{"Bars":8.0,"Checked":true,"Code":"X-1","Cover":30.0,"Ratio":0.25},"round":false,"start":[0.0,0.0],"type":"Concrete 20x50","type_guid":"<GUID-5>","width":200.0}],"returned":1}
+{"count":1,"elements":[{"angle":0.0,"at":[2000.0,2000.0],"category":"component","family":"Stool","family_guid":"<GUID-6>","guid":"<GUID-7>","height":450.0,"id":100003,"level":"<GUID-2>","offset":0.0,"params":{"Maker":"Acme"},"type":"Low","values":{}}],"returned":1}
+{"count":7,"library":[{"guid":"<GUID-8>","id":999890,"kind":"parameter","name":"Ratio"},{"guid":"<GUID-9>","id":999891,"kind":"parameter","name":"Mark"},{"guid":"<GUID-10>","id":999892,"kind":"parameter","name":"Maker"},{"guid":"<GUID-11>","id":999893,"kind":"parameter","name":"Cover"},{"guid":"<GUID-12>","id":999894,"kind":"parameter","name":"Code"},{"guid":"<GUID-13>","id":999895,"kind":"parameter","name":"Checked"},{"guid":"<GUID-14>","id":999896,"kind":"parameter","name":"Bars"}],"parts":[]}
+
+--- stderr
+

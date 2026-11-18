@@ -1,0 +1,165 @@
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'create_group {"ids": [100007]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (create_group): create_group: wall 100007 can't be in a detail group: it holds detail lines, filled regions and text notes
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'create_group {"ids": [100005, 100008]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (create_group): create_group: the elements are in different views; a group's members are all in one
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'create_group {"ids": [100005], "name": "G"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (create_group): create_group: there's already a detail group `G`
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'create_group {"ids": []}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (create_group): create_group: `ids`: the detail lines, filled regions and text notes to group
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'detail_group {"type": "Nope", "at": [0,0]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (detail_group): detail_group: there's no detail group `Nope` (there are: G, H)
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'detail_group {"at": [0,0]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (detail_group): detail_group: `type`, the detail group to place, is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'repeating_detail {"type": "G", "start": [0,0], "end": [1000,0]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (repeating_detail): repeating_detail: `spacing`, mm from one group to the next, is required
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'ungroup {"id": 100007}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (ungroup): ungroup: element 100007 isn't a detail group
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'group_type {"name": "G", "rename": "H"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (group_type): group_type: there's already a detail group `H`
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'group_type {"name": "Nope"}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (group_type): group_type: there's no detail group `Nope`
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'detail_line {"points": [[0,0],[0,500]], "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[200,100],[800,100]],[[800,100],[800,400]],[[800,400],[200,400]],[[200,400],[200,100]]], "type": "Sand"}' --cmd 'text {"text": "Tie", "at": [100, 600]}' --cmd 'create_group {"ids": [100002, 100003], "name": "G"}' --cmd 'wall {"points": [[0,-3000],[3000,-3000]]}' --cmd 'detail_line {"view": "Level 2", "points": [[0,0],[100,0]]}' --cmd 'create_group {"ids": [100004], "name": "H"}' --cmd 'group_type {"name": "G", "delete": true}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"area_m2":0.18,"id":100004}
+{"id":100005}
+{"id":100006,"name":"G"}
+{"ids":[100007]}
+{"id":100008}
+{"id":100009,"name":"H"}
+
+--- stderr
+line 1 (group_type): group_type: detail group 100006 is of `G`; delete or ungroup it first
+

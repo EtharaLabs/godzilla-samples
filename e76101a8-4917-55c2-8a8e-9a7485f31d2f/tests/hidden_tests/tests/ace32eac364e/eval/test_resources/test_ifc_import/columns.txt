@@ -1,0 +1,104 @@
+exit: 0
+--- stdout
+{"elements":{"column":10,"footing":1,"level":2,"structuralcolumn":1},"format":"IFC4","moved":null,"name":"Columns","path":"x.ifc","skipped":["IFCCOLUMN #124 'Ghost': it has no body BIMCraft can read"]}
+{"count":14,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Ground","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"GUID-2","id":100001,"name":"First","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"angle":30.0,"at":[0.0,0.0],"base_offset":0.0,"category":"column","depth":300.0,"guid":"GUID-3","height":3000.0,"id":100002,"level":"GUID-1","params":{"Mark":"Turned"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 400 x 300","type_guid":"GUID-4","width":400.0},{"angle":0.0,"at":[2000.0,0.0],"base_offset":0.0,"category":"column","depth":300.0,"guid":"GUID-5","height":3000.0,"id":100003,"level":"GUID-1","params":{"Mark":"Round"},"room_bounding":true,"round":true,"top_level":"GUID-2","type":"Imported Round 300","type_guid":"GUID-6","width":300.0},{"angle":0.0,"at":[4000.0,0.0],"base_offset":0.0,"category":"column","depth":200.0,"guid":"GUID-7","height":3000.0,"id":100004,"level":"GUID-1","params":{"Mark":"Tube"},"room_bounding":true,"round":true,"top_level":"GUID-2","type":"Imported Round 200","type_guid":"GUID-8","width":200.0},{"angle":90.0,"at":[6000.0,0.0],"base_offset":0.0,"category":"column","depth":200.0,"guid":"GUID-9","height":3000.0,"id":100005,"level":"GUID-1","params":{"Mark":"Steel I"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 300 x 200","type_guid":"GUID-10","width":300.0},{"angle":90.0,"at":[8000.0,0.0],"base_offset":0.0,"category":"column","depth":100.0,"guid":"GUID-11","height":3000.0,"id":100006,"level":"GUID-1","params":{"Mark":"Angle"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 150 x 100","type_guid":"GUID-12","width":150.0},{"angle":90.0,"at":[10000.0,0.0],"base_offset":0.0,"category":"column","depth":80.0,"guid":"GUID-13","height":3000.0,"id":100007,"level":"GUID-1","params":{"Mark":"Channel"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 250 x 80","type_guid":"GUID-14","width":250.0},{"angle":176.233867,"at":[12000.0,0.0],"base_offset":0.0,"category":"column","depth":199.57,"guid":"GUID-15","height":3000.0,"id":100008,"level":"GUID-1","params":{"Mark":"Oval"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 399.14 x 199.57","type_guid":"GUID-16","width":399.14},{"angle":0.0,"at":[14000.0,0.0],"base_offset":0.0,"category":"column","depth":200.0,"guid":"GUID-17","height":3000.0,"id":100009,"level":"GUID-1","params":{"Mark":"Doubled"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 200 x 200","type_guid":"GUID-18","width":200.0},{"angle":0.0,"at":[16000.0,0.0],"base_offset":0.0,"category":"column","depth":500.0,"guid":"GUID-19","height":3000.0,"id":100010,"level":"GUID-1","params":{"Mark":"Rounded"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 500 x 500","type_guid":"GUID-20","width":500.0},{"angle":90.0,"at":[0.0,4000.0],"base_offset":0.0,"category":"structuralcolumn","depth":200.0,"guid":"GUID-21","height":3000.0,"id":100011,"level":"GUID-1","params":{"Mark":"P1"},"room_bounding":true,"round":false,"top_level":"GUID-2","type":"Imported 500 x 200","type_guid":"GUID-22","width":500.0},{"angle":0.0,"at":[2000.0,4000.0],"base_offset":0.0,"category":"column","depth":300.0,"guid":"GUID-23","height":2500.0,"id":100012,"level":"GUID-1","params":{"Mark":"Typed"},"room_bounding":true,"round":false,"top_level":null,"type":"Square 300","type_guid":"GUID-24","width":300.0},{"angle":0.0,"at":[0.0,8000.0],"base_offset":0.0,"category":"footing","depth":1000.0,"guid":"GUID-25","height":400.0,"id":100013,"level":"GUID-1","params":{"Mark":"Pad"},"round":false,"top_level":null,"type":"Imported 1200 x 1000","type_guid":"GUID-26","width":1200.0}],"returned":14}
+--- stderr
+--- inspect, less a new project's
+{
+ "counts": {
+  "column": 10,
+  "footing": 1,
+  "structuralcolumn": 1
+ },
+ "levels": [
+  {
+   "elevation": 0.0,
+   "id": 100000,
+   "name": "Ground"
+  },
+  {
+   "elevation": 3000.0,
+   "id": 100001,
+   "name": "First"
+  }
+ ],
+ "name": "Columns",
+ "parameters": {
+  "Mark": {
+   "categories": [
+    "column",
+    "footing",
+    "structuralcolumn"
+   ],
+   "kind": "text"
+  }
+ },
+ "types": {
+  "column": {
+   "Imported 150 x 100": {
+    "depth": 100.0,
+    "round": false,
+    "width": 150.0
+   },
+   "Imported 200 x 200": {
+    "depth": 200.0,
+    "round": false,
+    "width": 200.0
+   },
+   "Imported 250 x 80": {
+    "depth": 80.0,
+    "round": false,
+    "width": 250.0
+   },
+   "Imported 300 x 200": {
+    "depth": 200.0,
+    "round": false,
+    "width": 300.0
+   },
+   "Imported 399.14 x 199.57": {
+    "depth": 199.57,
+    "round": false,
+    "width": 399.14
+   },
+   "Imported 400 x 300": {
+    "depth": 300.0,
+    "round": false,
+    "width": 400.0
+   },
+   "Imported 500 x 500": {
+    "depth": 500.0,
+    "round": false,
+    "width": 500.0
+   },
+   "Imported Round 200": {
+    "depth": 200.0,
+    "round": true,
+    "width": 200.0
+   },
+   "Imported Round 300": {
+    "depth": 300.0,
+    "round": true,
+    "width": 300.0
+   },
+   "Square 300": {
+    "depth": 300.0,
+    "round": false,
+    "width": 300.0
+   }
+  },
+  "footing": {
+   "Imported 1200 x 1000": {
+    "depth": 1000.0,
+    "round": false,
+    "width": 1200.0
+   }
+  },
+  "structural_column": {
+   "Imported 500 x 200": {
+    "depth": 200.0,
+    "round": false,
+    "width": 500.0
+   }
+  }
+ }
+}

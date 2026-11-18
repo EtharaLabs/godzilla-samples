@@ -1,0 +1,66 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "ascii.ply"}' --save ascii.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"ascii","id":100002,"origin":[1000.0,500.0,250.0],"points":3,"read":3}
+{"format":"bimcraft","path":"ascii.bimcraft"}
+
+--- stderr
+
+=== ascii.bimcraft [clouds]
+{
+ "ascii": {
+  "colours": "eAH7z8DAAMYADvoC/g==",
+  "origin": [
+   1000.0,
+   500.0,
+   250.0
+  ],
+  "points": "eAFjYKg6wsDw6zCQBmEXNLYzUNwZAMsiCqk=",
+  "read": 3,
+  "source": "ascii.ply"
+ }
+}
+$ bimcraft-cli run --cmd 'point_cloud {"path": "binary_little_endian.ply"}' --save binary_little_endian.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"binary_little_endian","id":100002,"origin":[1000.0,500.0,250.0],"points":3,"read":3}
+{"format":"bimcraft","path":"binary_little_endian.bimcraft"}
+
+--- stderr
+
+=== binary_little_endian.bimcraft [clouds]
+{
+ "binary_little_endian": {
+  "colours": "eAH7z8DAAMYADvoC/g==",
+  "origin": [
+   1000.0,
+   500.0,
+   250.0
+  ],
+  "points": "eAFjYKg6wsDw6zCQBmEXNLYzUNwZAMsiCqk=",
+  "read": 3,
+  "source": "binary_little_endian.ply"
+ }
+}
+$ bimcraft-cli run --cmd 'point_cloud {"path": "binary_big_endian.ply"}' --save binary_big_endian.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"binary_big_endian","id":100002,"origin":[1000.0,500.0,250.0],"points":3,"read":3}
+{"format":"bimcraft","path":"binary_big_endian.bimcraft"}
+
+--- stderr
+
+=== binary_big_endian.bimcraft [clouds]
+{
+ "binary_big_endian": {
+  "colours": "eAH7z8DAAMYADvoC/g==",
+  "origin": [
+   1000.0,
+   500.0,
+   250.0
+  ],
+  "points": "eAFjYKg6wsDw6zCQBmEXNLYzUNwZAMsiCqk=",
+  "read": 3,
+  "source": "binary_big_endian.ply"
+ }
+}

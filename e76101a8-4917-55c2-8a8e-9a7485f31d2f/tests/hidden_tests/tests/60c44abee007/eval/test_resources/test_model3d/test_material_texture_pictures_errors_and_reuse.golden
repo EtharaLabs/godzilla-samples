@@ -1,0 +1,59 @@
+{"Wide": {"color": [200, 200, 200], "cut": "none", "surface": "none", "texture": {"image": "img-f00ebe6c90eb67e8", "kind": "image", "size": [1000.0, 3.636364]}}, "images": {"img-1cc98bf2f7ccf4b4": {"name": "small", "size": [4, 4]}, "img-f00ebe6c90eb67e8": {"name": "wide", "size": [550, 2]}}}
+$ bimcraft-cli run pics.bimcraft --cmd 'material {"name": "Again", "texture": {"kind": "image", "image": "img-1cc98bf2f7ccf4b4"}}' --cmd 'library {"kind": "material", "name": "Again"}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"pics.bimcraft"}
+{"material":{"color":[200,200,200],"cut":"none","surface":"none","texture":{"image":"img-1cc98bf2f7ccf4b4","kind":"image","size":[1000.0,1000.0]}},"name":"Again"}
+{"count":1,"library":[{"guid":"<GUID-1>","id":999463,"kind":"material","name":"Again"}],"parts":[]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "image", "path": "text.png"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: text.png: it's neither a PNG nor a JPEG
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "image", "path": "short.png"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: short.png: it's cut short
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "image", "path": "broken.png"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: broken.png: it isn't a PNG BIMCraft can read: unexpected end of file
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "brick", "size": [0.001, 100]}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: texture: a tile of it is 0.001 by 100 mm; each side is 1 to 1000000 mm
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "brick", "image": "img-0000"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: only a texture of kind `image` takes a `path` or an `image`
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "image", "image": "img-0000"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: texture: it's of picture `img-0000`, which the project doesn't hold (it has: )
+
+$ bimcraft-cli run --cmd 'material {"name": "X", "texture": {"kind": "image"}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (material): material: a texture of a picture needs its file, `path`, or one of the project's, `image`
+

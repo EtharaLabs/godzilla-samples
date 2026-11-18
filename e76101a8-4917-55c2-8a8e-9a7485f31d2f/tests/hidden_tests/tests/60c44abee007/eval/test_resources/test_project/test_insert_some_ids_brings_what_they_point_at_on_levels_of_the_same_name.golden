@@ -1,0 +1,32 @@
+$ bimcraft-cli run --cmd 'new {"name": "Source"}' --cmd 'material {"name": "Cork", "color": "#a07850", "cut": "diagonal"}' --cmd 'type {"category": "wall", "name": "Cork Wall", "layers": [{"function": "structure", "material": "Cork", "thickness": 150}]}' --cmd 'wall {"points": [[0,0],[4000,0]], "type": "Cork Wall"}' --cmd 'line_style {"name": "Red Lines", "pen": 3, "color": "#ff0000", "pattern": "Dash Dot"}' --cmd 'detail_line {"points": [[0,1000],[3000,1000]], "style": "Red Lines"}' --cmd 'phase {"name": "Phase 0", "before": "Existing"}' --cmd 'modify {"id": 100002, "params": {"Phase Created": "Phase 0"}}' --cmd 'family {"name": "Crate", "parameters": [{"name": "Cost", "kind": "number", "instance": true, "value": 5}, {"name": "Finish", "kind": "material", "value": "Cork"}], "types": {"Small": {}}, "forms": [{"profile": [[0, 0], [500, 0], [500, 500], [0, 500]], "to": 500, "material": "Finish"}]}' --cmd 'component {"family": "Crate", "at": [1000, 2000]}' --cmd 'grid {"start": [0,-1000], "end": [0, 5000]}' --cmd 'sheet {}' --cmd 'section {"start": [-1000, 500], "end": [5000, 500]}' --cmd 'save {"path": "src.bimcraft"}'
+[exit 0]
+--- stdout
+{"language":"en","name":"Source"}
+{"material":{"color":[160,120,80],"cut":"diagonal","surface":"none"},"name":"Cork"}
+{"category":"wall","name":"Cork Wall","type":{"layers":[{"function":"structure","material":"Cork","thickness":150.0}],"thickness":150.0}}
+{"ids":[100002]}
+{"name":"Red Lines","style":{"color":[255,0,0],"pattern":"Dash Dot","pen":3}}
+{"id":100003}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Phase 0","Existing","New Construction"]}
+{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":4000.0,"level":"<GUID-2>","params":{"Phase Created":"Phase 0"},"room_bounding":true,"start":[0.0,0.0],"thickness":150.0,"top_level":"<GUID-3>","type":"Cork Wall","type_guid":"<GUID-4>"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"material":"Finish","plane":"xy","profile":[[0.0,0.0],[500.0,0.0],[500.0,500.0],[0.0,500.0]],"to":500.0}],"parameters":[{"instance":true,"kind":"number","name":"Cost","value":5},{"kind":"material","name":"Finish","value":"Cork"}],"types":{"Small":{}}},"name":"Crate","warnings":[]}
+{"id":100004}
+{"id":100005,"name":"1"}
+{"id":100006,"number":"A101"}
+{"id":100007,"name":"Section 1"}
+{"format":"bimcraft","path":"src.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'level {"elevation": 4000, "name": "Upper"}' --cmd 'insert {"path": "src.bimcraft", "ids": [100004]}' --cmd 'insert {"path": "src.bimcraft", "ids": [100002, 100003]}' --cmd 'elements {"category": "level"}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "line"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Upper"}
+{"copies":[],"ids":{"100004":100004},"left_out":[],"library":["family: Crate","line style: Red Lines","wall type: Cork Wall","material: Cork"]}
+{"copies":[],"ids":{"100002":100005,"100003":100003},"left_out":["element 100005: `Phase Created` Phase 0 isn't a phase of this project"],"library":[]}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-5>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-6>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":4000.0,"guid":"<GUID-7>","id":100002,"name":"Upper","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":3}
+{"count":1,"elements":[{"base_offset":0.0,"category":"wall","end":[4000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100005,"length":4000.0,"level":"<GUID-5>","room_bounding":true,"start":[0.0,0.0],"thickness":150.0,"top_level":"<GUID-6>","type":"Cork Wall","type_guid":"<GUID-4>"}],"returned":1}
+{"count":1,"elements":[{"category":"line","end":[3000.0,1000.0],"guid":"<GUID-8>","id":100003,"length":3000.0,"level":"<GUID-5>","shape":"line","start":[0.0,1000.0],"style":"Red Lines","view":"<GUID-5>"}],"returned":1}
+
+--- stderr
+

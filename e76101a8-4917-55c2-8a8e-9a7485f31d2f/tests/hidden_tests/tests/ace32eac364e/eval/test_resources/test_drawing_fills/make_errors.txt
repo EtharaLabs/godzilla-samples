@@ -1,0 +1,59 @@
+$ make_fill_pattern {"from": [0, 0], "to": [1000, 1000], "name": "X"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: `ids` [id, …] is required
+
+$ make_fill_pattern {"ids": [100002], "from": [0, 0], "to": [1000, 1000]}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: `name` the new pattern's is required
+
+$ make_fill_pattern {"ids": [100002], "from": [0, 0], "to": [1000, 1000], "name": "Sand"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: there's already a fill pattern `Sand`
+
+$ make_fill_pattern {"ids": [100002], "from": [0, 0], "to": [1000, 0.01], "name": "X"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: the tile is 1000.000 by 0.010; each side is 0.05 to 100000
+
+$ make_fill_pattern {"ids": [100003], "from": [0, 0], "to": [1000, 1000], "name": "X"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: wall 100003 is not a detail line; a pattern is made of detail lines
+
+$ make_fill_pattern {"ids": [100002], "from": [0, 0], "to": [1000, 1000], "name": "X", "target": "paper"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: `target` is drafting or model: unknown variant `paper`, expected `drafting` or `model`
+
+$ make_fill_pattern {"ids": [123456], "from": [0, 0], "to": [1000, 1000], "name": "X"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: no element 123456
+
+$ make_fill_pattern {"ids": [100002], "to": [1000, 1000], "name": "X"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: `from` [x, y] is required
+
+$ make_fill_pattern {"ids": [100002], "from": [0, 0], "to": [1000, 1000], "name": "X", "scale": 1}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: `scale` isn't one of its parameters: ids, from, to, name, target
+
+$ make_fill_pattern {"ids": [100002], "from": [5000, 5000], "to": [6000, 6000], "name": "X"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (make_fill_pattern): make_fill_pattern: no line lies inside the tile: pick lines that cross the rectangle between its corners

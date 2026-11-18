@@ -1,0 +1,70 @@
+$ bimcraft-cli run --cmd 'undo {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (undo): nothing to undo
+
+$ bimcraft-cli run --cmd 'redo {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (redo): nothing to redo
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'undo {"count": 0}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (undo): `count` must be from 1 to 1, the steps there are to undo
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'undo {"count": 2}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (undo): `count` must be from 1 to 1, the steps there are to undo
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'undo {"count": -1}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (undo): undo: `count` must be a whole number, got -1
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'undo {"count": "x"}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (undo): undo: `count` must be a whole number, got "x"
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'redo {"count": 1.5}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (redo): redo: `count` must be a whole number, got 1.5
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'undo {"steps": 1}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (undo): undo: unknown parameter `steps`
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,0],[1000,0]]}' --cmd 'redo {}'
+[exit 1]
+--- stdout
+{"id":100002}
+
+--- stderr
+line 1 (redo): nothing to redo
+

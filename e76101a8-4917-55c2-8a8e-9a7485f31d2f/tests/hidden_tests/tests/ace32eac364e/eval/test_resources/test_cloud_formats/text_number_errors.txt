@@ -1,0 +1,30 @@
+### n.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: n.xyz: line 1: zero isn't a number
+### nan.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: nan.xyz: line 2: nan isn't a number BIMCraft can place
+### inf.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: inf.xyz: line 1: 1e400 isn't a number BIMCraft can place
+### huge.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: huge.xyz: point 1 isn't a number along x
+### far.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: far.xyz: point 1 lies 99999999999999991611392 mm from the file's origin, farther than 1000000000000 mm
+### wide.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: wide.xyz: it's 30000000 mm wide along x; up to 20000000 mm

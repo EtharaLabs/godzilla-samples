@@ -1,0 +1,63 @@
+$ bimcraft-cli run --cmd 'family {"name": "Tag", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"line": [[0, 0], [100, 0]]}, {"text": {"at": [0, 50], "height": 50, "value": "T{N}"}}, {"dot": {"centre": [0, 0], "radius": 10}}]}' --cmd 'family {"name": "Tag", "symbol": {"id": 999464, "line": [[0, 0], [0, 100]], "visible": "N > 1"}}' --cmd 'family {"name": "Tag", "delete_symbol": [999464], "dry_run": true}' --cmd 'family {"name": "Tag", "delete": true, "dry_run": true}' --cmd 'family {"name": "Tag", "save": "tag.json", "dry_run": true}' --cmd 'family {"name": "Tag"}'
+[exit 0]
+--- stdout
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"N","value":2}],"symbols":[{"line":[[0.0,0.0],[100.0,0.0]]},{"text":{"at":[0.0,50.0],"height":50.0,"value":"T{N}"}},{"dot":{"centre":[0.0,0.0],"radius":10.0}}],"types":{"Standard":{}}},"name":"Tag","warnings":[]}
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"N","value":2}],"symbols":[{"guid":"<GUID-1>","id":999464,"line":[[0.0,0.0],[0.0,100.0]],"visible":"N > 1"},{"guid":"<GUID-2>","id":999463,"text":{"at":[0.0,50.0],"height":50.0,"value":"T{N}"}},{"dot":{"centre":[0.0,0.0],"radius":10.0},"guid":"<GUID-3>","id":999462}],"types":{"Standard":{}}},"name":"Tag","warnings":[]}
+{"changes":{"deleted":false,"forms":{"deleted":[],"patched":[],"replaced":0},"parameters":{"added":[],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[999464],"patched":[],"replaced":0},"types":{"added":[],"changed":[],"removed":[]}},"dry_run":true,"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"N","value":2}],"symbols":[{"guid":"<GUID-2>","id":999463,"text":{"at":[0.0,50.0],"height":50.0,"value":"T{N}"}},{"dot":{"centre":[0.0,0.0],"radius":10.0},"guid":"<GUID-3>","id":999462}],"types":{"Standard":{}}},"name":"Tag","ok":true,"values":{"Standard":{"N":2.0}},"warnings":[]}
+{"changes":{"deleted":true,"forms":{"deleted":[],"patched":[],"replaced":0},"parameters":{"added":[],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":[],"changed":[],"removed":[]}},"dry_run":true,"name":"Tag","ok":true,"warnings":[]}
+{"dry_run":true,"name":"Tag","ok":true,"path":"tag.json","saved":false}
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"N","value":2}],"symbols":[{"guid":"<GUID-1>","id":999464,"line":[[0.0,0.0],[0.0,100.0]],"visible":"N > 1"},{"guid":"<GUID-2>","id":999463,"text":{"at":[0.0,50.0],"height":50.0,"value":"T{N}"}},{"dot":{"centre":[0.0,0.0],"radius":10.0},"guid":"<GUID-3>","id":999462}],"types":{"Standard":{}}},"name":"Tag","values":{"Standard":{"N":2.0}},"warnings":[]}
+
+--- stderr
+
+(a symbol's GUID is made anew in every project: 36 characters)
+$ bimcraft-cli run --cmd 'family {"name": "S0", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"text": {"at": [0, 0], "height": 50, "value": "{N"}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `S0`: symbol 1: its text has a `{` with no `}` to close it
+
+$ bimcraft-cli run --cmd 'family {"name": "S1", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"text": {"at": [0, 0], "height": 50, "value": "  "}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `S1`: type `Standard`: symbol 1: its text is empty; give it a `value` with something to letter
+
+$ bimcraft-cli run --cmd 'family {"name": "S2", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"text": {"at": [0, 0], "height": 0, "value": "A"}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `S2`: type `Standard`: symbol 1: its text has height 0; it needs a height above zero
+
+$ bimcraft-cli run --cmd 'family {"name": "S3", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"arc": {"centre": [0, 0], "radius": 0, "to": 90}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `S3`: type `Standard`: symbol 1: its arc has radius 0 and runs from 0 to 90 degrees; it needs a radius above zero and up to a full turn
+
+$ bimcraft-cli run --cmd 'family {"name": "S4", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"line": [[0, 0]]}]}'
+[exit 0]
+--- stdout
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"N","value":2}],"symbols":[{"line":[[0.0,0.0]]}],"types":{"Standard":{}}},"name":"S4","warnings":[]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'family {"name": "S5", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"line": [[0, 0], [1, 1]], "dot": {"centre": [0, 0], "radius": 1}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `S5`: type `Standard`: symbol 1: it takes a `line` of up to 64 points, an `arc`, a `text` or a `dot`, one of them
+
+$ bimcraft-cli run --cmd 'family {"name": "Tag", "category": "generic", "parameters": [{"name": "N", "kind": "number", "value": 2}], "types": {"Standard": {}}, "symbols": [{"line": [[0, 0], [100, 0]]}, {"text": {"at": [0, 50], "height": 50, "value": "T{N}"}}, {"dot": {"centre": [0, 0], "radius": 10}}]}' --cmd 'family {"name": "Tag", "delete_symbol": [123]}'
+[exit 1]
+--- stdout
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"N","value":2}],"symbols":[{"line":[[0.0,0.0],[100.0,0.0]]},{"text":{"at":[0.0,50.0],"height":50.0,"value":"T{N}"}},{"dot":{"centre":[0.0,0.0],"radius":10.0}}],"types":{"Standard":{}}},"name":"Tag","warnings":[]}
+
+--- stderr
+line 1 (family): family: symbol 123 is not of family "Tag"
+

@@ -1,0 +1,42 @@
+exit: 0
+--- stdout
+{"cloud":"points","id":100002,"origin":[500.0,1000.0,1500.0],"points":2,"read":2}
+{"cloud":"unit","id":100003,"origin":[500.0,0.0,0.0],"points":2,"read":2}
+{"cloud":"eight","id":100004,"origin":[500.0,0.0,0.0],"points":2,"read":2}
+{"cloud":"mixed_columns","id":100005,"origin":[2000.0,0.0,0.0],"points":5,"read":5}
+{"cloud":"deep","id":100006,"origin":[500.0,500.0,500.0],"points":2,"read":2}
+{"cloud":"mixed","id":100007,"origin":[3500.0,4000.0,4500.0],"points":4,"read":4}
+{"cloud":"utm","id":100008,"origin":[502000002.5,7001500003.5,32004.5],"points":2,"read":2}
+{"cloud":"UP","id":100009,"origin":[250.0,250.0,250.0],"points":2,"read":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+--- scans
+scan UP: source=UP.XYZ origin=[250.0, 250.0, 250.0] read=2 kept=2 stations=[]
+  -250.0 -250.0 -250.0
+  250.0 250.0 250.0
+scan deep: source=deep.xyz origin=[500.0, 500.0, 500.0] read=2 kept=2 stations=[]
+  -500.0 -500.0 -500.0 rgb=[255, 0, 128]
+  500.0 500.0 500.0 rgb=[0, 255, 0]
+scan eight: source=eight.xyz origin=[500.0, 0.0, 0.0] read=2 kept=2 stations=[]
+  -500.0 0.0 0.0 rgb=[255, 0, 1]
+  500.0 0.0 0.0 rgb=[10, 20, 30]
+scan mixed: source=mixed.xyz origin=[3500.0, 4000.0, 4500.0] read=4 kept=4 stations=[]
+  -3500.0 -4000.0 -4500.0
+  -2500.0 -2000.0 -1500.0
+  500.0 1000.0 1500.0
+  3500.0 4000.0 4500.0
+scan mixed_columns: source=mixed_columns.xyz origin=[2000.0, 0.0, 0.0] read=5 kept=5 stations=[]
+  -2000.0 0.0 0.0 rgb=[160, 160, 160]
+  -1000.0 0.0 0.0 rgb=[0, 0, 0]
+  0.0 0.0 0.0 rgb=[255, 0, 0]
+  1000.0 0.0 0.0 rgb=[0, 255, 0]
+  2000.0 0.0 0.0 rgb=[255, 255, 255]
+scan points: source=points.txt origin=[500.0, 1000.0, 1500.0] read=2 kept=2 stations=[]
+  -500.0 -1000.0 -1500.0
+  500.0 1000.0 1500.0
+scan unit: source=unit.xyz origin=[500.0, 0.0, 0.0] read=2 kept=2 stations=[]
+  -500.0 0.0 0.0 rgb=[255, 0, 128]
+  500.0 0.0 0.0 rgb=[64, 191, 255]
+scan utm: source=utm.xyz origin=[502000002.5, 7001500003.5, 32004.5] read=2 kept=2 stations=[]
+  -2000001.5 -1500001.5 -20001.5
+  2000001.5 1500001.5 20001.5

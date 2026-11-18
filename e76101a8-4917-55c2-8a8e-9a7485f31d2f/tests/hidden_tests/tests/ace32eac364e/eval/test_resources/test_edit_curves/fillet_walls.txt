@@ -1,0 +1,58 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+{"host":100002,"id":100004,"mark":"1","offset":3000.0}
+{"host":100003,"id":100005,"mark":"2","offset":500.0}
+{"ids":[100006]}
+{"ids":[100007]}
+{"ids":[100008]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== fillet {"ids": [100002, 100003], "radius": 1500}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (fillet): fillet: door 100005 is in the part of wall 100003 the fillet cuts away; move it along the wall first
+=== delete {"ids": [100005]} | fillet {"ids": [100002, 100003], "radius": 1500} | elements {"category": "wall"} | elements {"category": "door"} | undo
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":[100005]}
+{"id":100009,"ids":[100002,100003]}
+{"count":6,"elements":[{"base_offset":0.0,"category":"wall","end":[-6000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":4500.0,"level":"GUID-2","room_bounding":true,"start":[-1500.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":4500.0,"level":"GUID-2","room_bounding":true,"start":[0.0,1500.0],"thickness":100.0,"top_level":"GUID-3","type":"Interior - 100mm","type_guid":"GUID-6"},{"arc":90.0,"base_offset":0.0,"category":"wall","end":[14000.0,0.0],"guid":"GUID-7","height":3000.0,"id":100006,"length":4442.882938,"level":"GUID-2","radius":2828.43,"room_bounding":true,"start":[10000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[24000.0,0.0],"guid":"GUID-8","height":3000.0,"id":100007,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[20000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[24000.0,1000.0],"guid":"GUID-9","height":3000.0,"id":100008,"length":4000.0,"level":"GUID-2","room_bounding":true,"start":[20000.0,1000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"arc":90.0,"base_offset":0.0,"category":"wall","end":[0.0,1500.0],"guid":"GUID-10","height":3000.0,"id":100009,"length":2356.19449,"level":"GUID-2","radius":1500.0,"room_bounding":true,"start":[-1500.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":6}
+{"count":1,"elements":[{"at":[-3000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-11","height":2100.0,"host":"GUID-1","id":100004,"level":"GUID-2","mark":"1","offset":1500.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"GUID-12","width":900.0}],"returned":1}
+{"count":1,"undone":"Fillet Arc"}
+--- stderr
+=== fillet {"ids": [100002, 100006], "radius": 100}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (fillet): fillet: it rounds two straight walls; a curved one changes by its ends or its `arc`
+=== fillet {"ids": [100007, 100008], "radius": 100}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (fillet): fillet: the walls are straight, meet at an angle and are long enough for the arc; these aren't, or it doesn't fit
+=== fillet {"ids": [100002, 100003], "radius": 1e300}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (fillet): fillet: `radius` must be a number in mm, got 1e+300
+=== fillet {"ids": [100002, 100003]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (fillet): fillet: `radius`, mm, is required
+=== fillet {"ids": [100002, 100003, 100007], "radius": 100}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (fillet): fillet: `ids` is two detail lines

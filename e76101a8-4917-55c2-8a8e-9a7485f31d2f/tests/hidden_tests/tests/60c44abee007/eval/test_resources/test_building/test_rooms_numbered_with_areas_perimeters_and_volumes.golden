@@ -1,0 +1,12 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'room {"point": [1500, 2000], "name": "Living"}' --cmd 'room {"point": [4500, 2000]}' --cmd 'room {"point": [1500, 1000], "name": "Again"}' --cmd 'elements {"category": "room"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"area_m2":12.0,"id":100007,"number":"1"}
+{"area_m2":12.0,"id":100008,"number":"2"}
+{"area_m2":0.0,"id":100009,"number":"3","warning":"room 100007 is already in this space; two rooms can't share one, so this one is placed unbounded: move it, delete one of them, or part them with a room separation line"}
+{"count":3,"elements":[{"area_m2":12.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100007,"level":"<GUID-2>","limit_offset":-300.0,"name":"Living","number":"1","perimeter_m":14.0,"point":[1500.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":32.4},{"area_m2":12.0,"category":"room","enclosed":true,"guid":"<GUID-4>","id":100008,"level":"<GUID-2>","limit_offset":-300.0,"name":"Room","number":"2","perimeter_m":14.0,"point":[4500.0,2000.0],"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":32.4},{"area_m2":0.0,"category":"room","enclosed":false,"guid":"<GUID-5>","id":100009,"level":"<GUID-2>","limit_offset":-300.0,"name":"Again","number":"3","perimeter_m":0.0,"point":[1500.0,1000.0],"shares_space_with":100007,"top_level":"<GUID-3>","unbounded_height":2700.0,"volume_m3":0.0}],"returned":3}
+
+--- stderr
+

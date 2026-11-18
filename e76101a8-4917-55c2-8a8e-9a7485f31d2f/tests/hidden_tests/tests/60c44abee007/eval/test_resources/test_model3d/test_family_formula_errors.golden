@@ -1,0 +1,123 @@
+$ bimcraft-cli run --cmd 'family {"name": "Bad0", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "X + 1"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad0`: type `T`: parameter `X`: formula `X + 1`: `X`'s formula comes back to itself
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad1", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "if(1, 2)"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad1`: parameter `X`: formula `if(1, 2)`: `if` doesn't take 2 values
+family `Bad1`: type `T`: parameter `X`: formula `if(1, 2)`: `if` takes a condition and two values, not 2 values
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad2", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "frob(2)"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad2`: parameter `X`: formula `frob(2)`: `frob` isn't a function: there are if, and, or, not, min, max, abs, sqrt, round, roundup, rounddown, sin, cos, tan, asin, acos, atan, exp, ln, log and pi()
+family `Bad2`: type `T`: parameter `X`: formula `frob(2)`: `frob` isn't a function: there are if, and, or, not, min, max, abs, sqrt, round, roundup, rounddown, sin, cos, tan, asin, acos, atan, exp, ln, log and pi()
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad3", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "(1 + 2"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad3`: parameter `X`: formula `(1 + 2`: a `(` isn't closed (character 7)
+family `Bad3`: type `T`: parameter `X`: formula `(1 + 2`: a `(` isn't closed (character 7)
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad4", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "1 + 2)"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad4`: parameter `X`: formula `1 + 2)`: `)` follows where it should end (character 6)
+family `Bad4`: type `T`: parameter `X`: formula `1 + 2)`: `)` follows where it should end (character 6)
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad5", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": " "}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad5`: parameter `X`: a formula is empty
+family `Bad5`: type `T`: parameter `X`: a formula is empty
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad6", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "Mat * 2"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad6`: type `T`: parameter `X`: formula `Mat * 2`: `Mat` is a material, not a number
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad7", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "1 / 0"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad7`: type `T`: parameter `X`: formula `1 / 0`: it comes to inf, which isn't a number
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad8", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "min()"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad8`: parameter `X`: formula `min()`: `min` doesn't take 0 values
+family `Bad8`: type `T`: parameter `X`: formula `min()`: `min` takes one value or more
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad9", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "sqrt(1, 2)"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad9`: parameter `X`: formula `sqrt(1, 2)`: `sqrt` doesn't take 2 values
+family `Bad9`: type `T`: parameter `X`: formula `sqrt(1, 2)`: `sqrt` takes one value, not 2
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad10", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "max(1 2)"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad10`: parameter `X`: formula `max(1 2)`: `max(` needs a `,` or a `)` (character 7)
+family `Bad10`: type `T`: parameter `X`: formula `max(1 2)`: `max(` needs a `,` or a `)` (character 7)
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad11", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "pi(3)"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad11`: parameter `X`: formula `pi(3)`: `pi` doesn't take 1 values
+family `Bad11`: type `T`: parameter `X`: formula `pi(3)`: `pi` isn't a function: there are if, and, or, not, min, max, abs, sqrt, round, roundup, rounddown, sin, cos, tan, asin, acos, atan, exp, ln, log and pi()
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad12", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "2 * * 3"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad12`: parameter `X`: formula `2 * * 3`: `*` can't start a value there (character 5)
+family `Bad12`: type `T`: parameter `X`: formula `2 * * 3`: `*` can't start a value there (character 5)
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad13", "parameters": [{"name": "Mat", "kind": "material", "value": "Timber"}, {"name": "X", "kind": "number", "formula": "@"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad13`: parameter `X`: formula `@`: `@` can't start a value there (character 1)
+family `Bad13`: type `T`: parameter `X`: formula `@`: `@` can't start a value there (character 1)
+
+$ bimcraft-cli run --cmd 'family {"name": "Mat", "parameters": [{"name": "M", "kind": "material", "formula": "1"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Mat`: parameter `M`: a material takes no formula
+
+$ bimcraft-cli run --cmd 'family {"name": "Name", "parameters": [{"name": "1st", "kind": "length"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Name`: parameter `1st`: a name starts with a letter and holds letters, digits, `_` and spaces, up to 256
+

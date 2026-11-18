@@ -1,0 +1,52 @@
+exit: 0
+pipe error=False: {
+  "ids": [
+    100002
+  ]
+}
+pipe error=True: pipe 100004: too short (0 mm)
+elements error=False: {
+  "count": 1,
+  "elements": [
+    {
+      "axis": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          3000.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "category": "pipe",
+      "depth": 50.0,
+      "end": [
+        3000.0,
+        0.0
+      ],
+      "guid": "GUID-1",
+      "id": 100002,
+      "justify": "centre",
+      "length": 3000.0,
+      "level": "GUID-2",
+      "offset": 0.0,
+      "round": true,
+      "start": [
+        0.0,
+        0.0
+      ],
+      "type": "PVC 50",
+      "type_guid": "GUID-3",
+      "width": 50.0
+    }
+  ],
+  "returned": 1
+}
+undo error=False: {
+  "count": 1,
+  "undone": "Pipe"
+}
+undo error=True: nothing to undo

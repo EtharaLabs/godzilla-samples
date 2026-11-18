@@ -1,0 +1,32 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]], "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[0,2000],[6000,2000]]}' --cmd 'door {"at": [2000, 2000]}' --cmd 'door {"at": [4000, 0], "type": "Single 800 x 2100"}' --cmd 'detail_line {"points": [[0,5000],[1000,5000]]}' --cmd 'match_properties {"from": 100002, "ids": [100003, 100004, 100006]}' --cmd 'match_properties {"from": 100005, "ids": [100004]}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "door"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+{"host":100003,"id":100004,"mark":"1","offset":2000.0}
+{"host":100002,"id":100005,"mark":"2","offset":4000.0}
+{"id":100006}
+{"modified":[100003],"skipped":[100004,100006]}
+{"modified":[100004],"skipped":[]}
+{"count":2,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[6000.0,2000.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,2000.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}],"returned":2}
+{"count":2,"elements":[{"at":[2000.0,2000.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-6>","height":2100.0,"host":"<GUID-5>","id":100004,"level":"<GUID-2>","mark":"1","offset":2000.0,"sill":0.0,"type":"Single 800 x 2100","type_guid":"<GUID-7>","width":800.0},{"at":[4000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-8>","height":2100.0,"host":"<GUID-1>","id":100005,"level":"<GUID-2>","mark":"2","offset":4000.0,"sill":0.0,"type":"Single 800 x 2100","type_guid":"<GUID-7>","width":800.0}],"returned":2}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'detail_line {"points": [[0,5000],[1000,5000]]}' --cmd 'detail_line {"points": [[0,6000],[1000,6000]]}' --cmd 'match_properties {"from": 100002, "ids": [100003]}'
+[exit 1]
+--- stdout
+{"id":100002}
+{"id":100003}
+
+--- stderr
+line 1 (match_properties): match_properties: element 100002 has no type
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'match_properties {"from": 100002}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (match_properties): match_properties: `ids` [id, …] is required
+

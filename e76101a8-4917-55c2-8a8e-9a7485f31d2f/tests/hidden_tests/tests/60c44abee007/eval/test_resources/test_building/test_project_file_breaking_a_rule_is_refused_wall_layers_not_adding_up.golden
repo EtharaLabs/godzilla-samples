@@ -1,0 +1,14 @@
+$ bimcraft-cli info edited.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: edited.bimcraft: wall type `Exterior - 300mm`: its layers add up to 300 mm, not its thickness, 320 mm
+
+$ bimcraft-cli run edited.bimcraft --cmd 'inspect {}'
+[exit 1]
+--- stdout
+
+--- stderr
+open: edited.bimcraft: wall type `Exterior - 300mm`: its layers add up to 300 mm, not its thickness, 320 mm
+

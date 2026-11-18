@@ -1,0 +1,130 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"host":100003,"id":100007,"mark":"1","offset":3000.0}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== elements {"category": "door"} | elements {"category": "window"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":1,"elements":[{"at":[2000.0,0.0],"category":"door","family":"Single Door","family_guid":"GUID-1","flip_facing":false,"flip_hand":false,"guid":"GUID-2","height":2100.0,"host":"GUID-3","id":100006,"level":"GUID-4","mark":"1","offset":2000.0,"operation":"swing","sill":0.0,"type":"800 x 2100","values":{"Frame Material":"Timber","Frame Width":50.0,"Height":2100.0,"Leaf Material":"Timber","Leaf Thickness":40.0,"Wall Thickness":200.0,"Width":800.0},"width":800.0}],"returned":1}
+{"count":1,"elements":[{"at":[8000.0,3000.0],"category":"window","family":"Fixed Window","family_guid":"GUID-5","flip_facing":false,"flip_hand":false,"guid":"GUID-6","height":900.0,"host":"GUID-7","id":100007,"level":"GUID-4","mark":"1","offset":3000.0,"operation":"fixed","sill":1100.0,"type":"600 x 900","values":{"Frame Depth":90.0,"Frame Material":"Timber","Frame Width":50.0,"Height":900.0,"Sill Height":1100.0,"Wall Thickness":200.0,"Width":600.0},"width":600.0}],"returned":1}
+--- stderr
+=== family {"name": "Single Door", "operation": "sliding"} | elements {"category": "door"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"door","forms":[{"from":"0","guid":"GUID-1","id":999525,"material":"Frame Material","plane":"xy","profile":[["-Width / 2","-Wall Thickness / 2"],["-Width / 2 + Frame Width","-Wall Thickness / 2"],["-Width / 2 + Frame Width","Wall Thickness / 2"],["-Width / 2","Wall Thickness / 2"]],"to":"Height - Frame Width"},{"from":"0","guid":"GUID-2","id":999524,"material":"Frame Material","plane":"xy","profile":[["Width / 2 - Frame Width","-Wall Thickness / 2"],["Width / 2","-Wall Thickness / 2"],["Width / 2","Wall Thickness / 2"],["Width / 2 - Frame Width","Wall Thickness / 2"]],"to":"Height - Frame Width"},{"from":"Height - Frame Width","guid":"GUID-3","id":999523,"material":"Frame Material","plane":"xy","profile":[["-Width / 2","-Wall Thickness / 2"],["Width / 2","-Wall Thickness / 2"],["Width / 2","Wall Thickness / 2"],["-Width / 2","Wall Thickness / 2"]],"to":"Height"},{"from":"0","guid":"GUID-4","id":999522,"material":"Leaf Material","plane":"xy","profile":[["-Width / 2 + Frame Width","-Leaf Thickness / 2"],["Width / 2 - Frame Width","-Leaf Thickness / 2"],["Width / 2 - Frame Width","Leaf Thickness / 2"],["-Width / 2 + Frame Width","Leaf Thickness / 2"]],"to":"Height - Frame Width"},{"from":"1000","guid":"GUID-5","id":999521,"material":"Metal","plane":"xy","profile":[["Width / 2 - Frame Width - 120","Leaf Thickness / 2"],["Width / 2 - Frame Width - 40","Leaf Thickness / 2"],["Width / 2 - Frame Width - 40","Leaf Thickness / 2 + 55"],["Width / 2 - Frame Width - 120","Leaf Thickness / 2 + 55"]],"to":"1030"},{"from":"1000","guid":"GUID-6","id":999520,"material":"Metal","plane":"xy","profile":[["Width / 2 - Frame Width - 120","-Leaf Thickness / 2 - 55"],["Width / 2 - Frame Width - 40","-Leaf Thickness / 2 - 55"],["Width / 2 - Frame Width - 40","-Leaf Thickness / 2"],["Width / 2 - Frame Width - 120","-Leaf Thickness / 2"]],"to":"1030"}],"operation":"sliding","parameters":[{"kind":"length","name":"Width","value":900.0},{"kind":"length","name":"Height","value":2100.0},{"kind":"length","name":"Frame Width","value":50.0},{"kind":"length","name":"Leaf Thickness","value":40.0},{"kind":"material","name":"Frame Material","value":"Timber"},{"kind":"material","name":"Leaf Material","value":"Timber"}],"symbols":[{"guid":"GUID-7","id":999519,"line":[["-Width / 2 + Frame Width","Wall Thickness / 2"],["-Width / 2 + Frame Width","Wall Thickness / 2 + Width - 2 * Frame Width"]]},{"arc":{"centre":["-Width / 2 + Frame Width","Wall Thickness / 2"],"from":0.0,"radius":"Width - 2 * Frame Width","to":90.0},"guid":"GUID-8","id":999518}],"types":{"1000 x 2100":{"Height":2100.0,"Width":1000.0},"800 x 2100":{"Height":2100.0,"Width":800.0},"900 x 2100":{"Height":2100.0,"Width":900.0}}},"name":"Single Door","warnings":[]}
+{"count":1,"elements":[{"at":[2000.0,0.0],"category":"door","family":"Single Door","family_guid":"GUID-9","flip_facing":false,"flip_hand":false,"guid":"GUID-10","height":2100.0,"host":"GUID-11","id":100006,"level":"GUID-12","mark":"1","offset":2000.0,"operation":"sliding","sill":0.0,"type":"800 x 2100","values":{"Frame Material":"Timber","Frame Width":50.0,"Height":2100.0,"Leaf Material":"Timber","Leaf Thickness":40.0,"Wall Thickness":200.0,"Width":800.0},"width":800.0}],"returned":1}
+--- stderr
+=== family {"name": "Single Door", "operation": "rolling"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `operation` is one of swing, double-swing, sliding, double-sliding, folding, fixed, not `rolling`
+=== door {"at": [5000, 0], "family": "Single Door", "type": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (door): door: type `Nope` doesn't exist (there are: 1000 x 2100, 800 x 2100, 900 x 2100)
+=== door {"at": [5000, 0], "family": "Table"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (door): door: there's no door family `Table` (there are: Double Door, Single Door, Sliding Door)
+=== window {"at": [0, 3000], "family": "Casement Window"} | elements {"category": "window"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"host":100005,"id":100008,"mark":"2","offset":3000.0}
+{"count":2,"elements":[{"at":[8000.0,3000.0],"category":"window","family":"Fixed Window","family_guid":"GUID-1","flip_facing":false,"flip_hand":false,"guid":"GUID-2","height":900.0,"host":"GUID-3","id":100007,"level":"GUID-4","mark":"1","offset":3000.0,"operation":"fixed","sill":1100.0,"type":"600 x 900","values":{"Frame Depth":90.0,"Frame Material":"Timber","Frame Width":50.0,"Height":900.0,"Sill Height":1100.0,"Wall Thickness":200.0,"Width":600.0},"width":600.0},{"at":[0.0,3000.0],"category":"window","family":"Casement Window","family_guid":"GUID-5","flip_facing":false,"flip_hand":false,"guid":"GUID-6","height":1500.0,"host":"GUID-7","id":100008,"level":"GUID-4","mark":"2","offset":3000.0,"operation":"double-swing","sill":900.0,"type":"1200 x 1500","values":{"Frame Depth":90.0,"Frame Material":"Timber","Frame Width":50.0,"Height":1500.0,"Sill Height":900.0,"Wall Thickness":200.0,"Width":1200.0},"width":1200.0}],"returned":2}
+--- stderr
+=== family {"name": "Plug", "category": "outlet", "parameters": [{"name": "Load", "kind": "number", "value": 100}], "types": {"A": {}, "B": {"Load": 600}}, "connectors": [{"kind": "power", "system": "power-balanced", "poles": 1, "voltage": 127, "load_va": "Load", "power_factor": 0.9, "classification": "general"}]} | component {"family": "Plug", "type": "B", "at": [1000, 1000]} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"outlet","connectors":[{"classification":"general","kind":"power","load_va":"Load","poles":1,"power_factor":0.9,"system":"power-balanced","voltage":127.0}],"forms":[],"parameters":[{"kind":"number","name":"Load","value":100}],"types":{"A":{},"B":{"Load":600}}},"name":"Plug","warnings":[]}
+{"id":100008}
+{"count":1,"elements":[{"angle":0.0,"at":[1000.0,1000.0],"category":"component","connectors":[{"classification":"general","guid":"GUID-1","id":999463,"kind":"power","load_va":600.0,"load_va_by_phase":[600.0],"poles":1,"power_factor":0.9,"system":"power-balanced","voltage":127.0}],"family":"Plug","family_guid":"GUID-2","guid":"GUID-3","height":0.0,"id":100008,"level":"GUID-4","offset":0.0,"type":"B","values":{"Load":600.0}}],"returned":1}
+--- stderr
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "power-balanced"}, {"kind": "power", "system": "power-balanced"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: it has two power connectors: keep one, a device draws its load through one
+=== family {"name": "Plug", "category": "switch", "types": {"A": {}}, "connectors": [{"kind": "switch", "system": "switch", "load_va": 10}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: type `A`: connector 1: a switch carries no load; leave `load_va` out
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "switch"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: connector 1: a power connector's system is `power-balanced` or `power-unbalanced`, not `switch`
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "switch", "system": "power-balanced"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: connector 1: a switch connector's system is `switch`
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "poles": 4}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: connector 1: poles are 1, 2 or 3, not 4
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 0}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: type `A`: connector 1: its voltage is 0 V; it takes more than 0 and up to 100000
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 230, "power_factor": 1.5}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: type `A`: connector 1: its power factor is 1.5; it takes more than 0 and up to 1
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 230, "load_va": -1}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Plug`: type `A`: connector 1: its load is -1 VA; it takes 0 up to 1000000000
+=== family {"name": "Plug", "category": "outlet", "types": {"A": {}}, "connectors": [{"kind": "power", "system": "power-unbalanced", "poles": 3, "voltage": 230, "load_va": [100, 200, 300]}]} | component {"family": "Plug", "at": [1000, 1000]} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"outlet","connectors":[{"kind":"power","load_va":[100.0,200.0,300.0],"poles":3,"power_factor":1.0,"system":"power-unbalanced","voltage":230.0}],"forms":[],"parameters":[],"types":{"A":{}}},"name":"Plug","warnings":[]}
+{"id":100008}
+{"count":1,"elements":[{"angle":0.0,"at":[1000.0,1000.0],"category":"component","connectors":[{"classification":"","guid":"GUID-1","id":999465,"kind":"power","load_va":600.0,"load_va_by_phase":[100.0,200.0,300.0],"poles":3,"power_factor":1.0,"system":"power-unbalanced","voltage":230.0}],"family":"Plug","family_guid":"GUID-2","guid":"GUID-3","height":0.0,"id":100008,"level":"GUID-4","offset":0.0,"type":"A","values":{}}],"returned":1}
+--- stderr
+=== family {"name": "Basin", "category": "plumbing", "kind": "wc", "types": {"A": {}}} | family {"name": "Basin", "kind": ""}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"plumbing","forms":[],"kind":"wc","parameters":[],"types":{"A":{}}},"name":"Basin","warnings":[]}
+{"family":{"category":"plumbing","forms":[],"parameters":[],"types":{"A":{}}},"name":"Basin","warnings":[]}
+--- stderr
+=== family {"name": "Basin", "category": "plumbing", "kind": "jacuzzi", "types": {"A": {}}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Basin`: `kind` is one of wc, lav, sink, laundry, shower, bath, bidet, urinal, not `jacuzzi`
+=== family {"name": "Basin", "category": "furniture", "kind": "wc", "types": {"A": {}}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Basin`: `kind` `wc`: a family of this category has no kinds; leave `kind` out

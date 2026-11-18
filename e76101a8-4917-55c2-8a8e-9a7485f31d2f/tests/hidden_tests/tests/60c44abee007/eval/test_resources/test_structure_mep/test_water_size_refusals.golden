@@ -1,0 +1,84 @@
+$ bimcraft-cli run --cmd 'water_size {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `flow` (L/s) or `fixtures` is required
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 50}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: no DN of PVC soldável (20 to 110) keeps the speed within 3 m/s at that flow
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "fixtures": {"wc": 1}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: give `flow` or `fixtures`, not both
+
+$ bimcraft-cli run --cmd 'water_size {"fixtures": {"wc": 1, "bath": 1}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `fixtures`: no fixture `bath`, use wc, lav, sink, shower, laundry
+
+$ bimcraft-cli run --cmd 'water_size {"fixtures": {"wc": -1}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `fixtures`: `wc` must be a whole number from 0 to 10000, got -1
+
+$ bimcraft-cli run --cmd 'water_size {"fixtures": 3}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `fixtures` must be an object {kind: count}, got 3
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "dn": 22}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `dn` must be one of 20, 25, 32, 40, 50, 60, 75, 85, 110 (PVC soldável)
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "fittings": {"valve": 1}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `fittings`: no fitting `valve`, use elbow90, elbow45, tee_through, tee_side, gate, globe, check
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "fittings": {"elbow90": 0.5}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `fittings`: `elbow90` must be a whole number from 0 to 10000, got 0.5
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "fittings": [1]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `fittings` must be an object {fitting: count}, got [1]
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "method": "peak"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: `method` must be one of weights, sum, got "peak"
+
+$ bimcraft-cli run --cmd 'water_size {"flow": 0.3, "colour": "blue"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (water_size): water_size: unknown parameter `colour`
+

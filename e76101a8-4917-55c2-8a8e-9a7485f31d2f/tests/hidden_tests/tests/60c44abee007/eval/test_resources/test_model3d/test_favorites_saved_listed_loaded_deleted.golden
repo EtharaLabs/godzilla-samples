@@ -1,0 +1,250 @@
+$ bimcraft-cli run --cmd 'material {"name": "Teal", "color": "#118899", "texture": {"kind": "tile", "size": [300, 300]}}' --cmd 'favorite {"action": "save", "kind": "material", "name": "Teal", "path": "fav.json"}' --cmd 'favorite {"action": "save", "kind": "family", "name": "Table", "as": "My Table", "path": "fav.json"}' --cmd 'favorite {"path": "fav.json"}' --cmd 'favorite {"action": "load", "kind": "material", "name": "Teal", "as": "Teal 2", "path": "fav.json"}' --cmd 'favorite {"action": "load", "kind": "material", "name": "Teal", "replace": true, "path": "fav.json"}' --cmd 'favorite {"action": "load", "kind": "family", "name": "My Table", "path": "fav.json"}' --cmd 'favorite {"action": "delete", "kind": "material", "name": "Teal", "path": "fav.json"}' --cmd 'favorite {"action": "list", "path": "fav.json"}'
+[exit 0]
+--- stdout
+{"material":{"color":[17,136,153],"cut":"none","surface":"none","texture":{"kind":"tile","size":[300.0,300.0]}},"name":"Teal"}
+{"kind":"material","path":"fav.json","saved":"Teal"}
+{"kind":"family","path":"fav.json","saved":"My Table"}
+{"families":[{"category":"furniture","name":"My Table","types":["1200 x 800","1600 x 900","2000 x 1000"]}],"materials":[{"color":[17,136,153],"name":"Teal","texture":"tile"}],"path":"fav.json"}
+{"kind":"material","loaded":"Teal 2"}
+{"kind":"material","loaded":"Teal"}
+{"kind":"family","loaded":"My Table"}
+{"deleted":"Teal","kind":"material"}
+{"families":[{"category":"furniture","name":"My Table","types":["1200 x 800","1600 x 900","2000 x 1000"]}],"materials":[],"path":"fav.json"}
+
+--- stderr
+
+=== file fav.json
+{
+  "version": 1,
+  "materials": {},
+  "families": {
+    "My Table": {
+      "family": {
+        "category": "furniture",
+        "parameters": [
+          {
+            "name": "Width",
+            "kind": "length",
+            "value": 1600.0
+          },
+          {
+            "name": "Depth",
+            "kind": "length",
+            "value": 900.0
+          },
+          {
+            "name": "Height",
+            "kind": "length",
+            "value": 750.0
+          },
+          {
+            "name": "Thickness",
+            "kind": "length",
+            "value": 40.0
+          },
+          {
+            "name": "Leg Width",
+            "kind": "length",
+            "value": 60.0
+          },
+          {
+            "name": "Material",
+            "kind": "material",
+            "value": "Timber"
+          }
+        ],
+        "types": {
+          "1200 x 800": {
+            "Depth": 800,
+            "Width": 1200
+          },
+          "1600 x 900": {},
+          "2000 x 1000": {
+            "Depth": 1000,
+            "Width": 2000
+          }
+        },
+        "forms": [
+          {
+            "id": 999486,
+            "guid": "<GUID-1>",
+            "plane": "xy",
+            "profile": [
+              [
+                "-(Width / 2)",
+                "-Depth / 2"
+              ],
+              [
+                "Width / 2",
+                "-Depth / 2"
+              ],
+              [
+                "Width / 2",
+                "Depth / 2"
+              ],
+              [
+                "-(Width / 2)",
+                "Depth / 2"
+              ]
+            ],
+            "from": "Height - Thickness",
+            "to": "Height",
+            "material": "Material"
+          },
+          {
+            "id": 999485,
+            "guid": "<GUID-2>",
+            "plane": "xy",
+            "profile": [
+              [
+                "(Width) / 2 - 50 - Leg Width",
+                "(Depth) / 2 - 50 - Leg Width"
+              ],
+              [
+                "(Width) / 2 - 50",
+                "(Depth) / 2 - 50 - Leg Width"
+              ],
+              [
+                "(Width) / 2 - 50",
+                "(Depth) / 2 - 50"
+              ],
+              [
+                "(Width) / 2 - 50 - Leg Width",
+                "(Depth) / 2 - 50"
+              ]
+            ],
+            "from": 0.0,
+            "to": "Height - Thickness",
+            "material": "Material"
+          },
+          {
+            "id": 999484,
+            "guid": "<GUID-3>",
+            "plane": "xy",
+            "profile": [
+              [
+                "(Width) / 2 - 50 - Leg Width",
+                "-(Depth) / 2 + 50"
+              ],
+              [
+                "(Width) / 2 - 50",
+                "-(Depth) / 2 + 50"
+              ],
+              [
+                "(Width) / 2 - 50",
+                "-(Depth) / 2 + 50 + Leg Width"
+              ],
+              [
+                "(Width) / 2 - 50 - Leg Width",
+                "-(Depth) / 2 + 50 + Leg Width"
+              ]
+            ],
+            "from": 0.0,
+            "to": "Height - Thickness",
+            "material": "Material"
+          },
+          {
+            "id": 999483,
+            "guid": "<GUID-4>",
+            "plane": "xy",
+            "profile": [
+              [
+                "-(Width) / 2 + 50",
+                "(Depth) / 2 - 50 - Leg Width"
+              ],
+              [
+                "-(Width) / 2 + 50 + Leg Width",
+                "(Depth) / 2 - 50 - Leg Width"
+              ],
+              [
+                "-(Width) / 2 + 50 + Leg Width",
+                "(Depth) / 2 - 50"
+              ],
+              [
+                "-(Width) / 2 + 50",
+                "(Depth) / 2 - 50"
+              ]
+            ],
+            "from": 0.0,
+            "to": "Height - Thickness",
+            "material": "Material"
+          },
+          {
+            "id": 999482,
+            "guid": "<GUID-5>",
+            "plane": "xy",
+            "profile": [
+              [
+                "-(Width) / 2 + 50",
+                "-(Depth) / 2 + 50"
+              ],
+              [
+                "-(Width) / 2 + 50 + Leg Width",
+                "-(Depth) / 2 + 50"
+              ],
+              [
+                "-(Width) / 2 + 50 + Leg Width",
+                "-(Depth) / 2 + 50 + Leg Width"
+              ],
+              [
+                "-(Width) / 2 + 50",
+                "-(Depth) / 2 + 50 + Leg Width"
+              ]
+            ],
+            "from": 0.0,
+            "to": "Height - Thickness",
+            "material": "Material"
+          }
+        ]
+      },
+      "materials": {
+        "Timber": {
+          "material": {
+            "color": [
+              196,
+              154,
+              102
+            ],
+            "cut": "diagonal",
+            "surface": "horizontal",
+            "texture": {
+              "kind": "boards",
+              "size": [
+                1200.0,
+                1120.0
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+$ bimcraft-cli run --cmd 'favorite {"action": "load", "kind": "material", "name": "Teal", "path": "fav.json"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (favorite): favorite: there's no favorite material `Teal`
+
+$ bimcraft-cli run --cmd 'favorite {"action": "save", "kind": "material", "name": "Nope", "path": "fav.json"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (favorite): favorite: the library has no `Nope`
+
+$ bimcraft-cli run --cmd 'favorite {"action": "frobnicate", "path": "fav.json"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (favorite): favorite: `action` is list, save, load or delete, not `frobnicate`
+
+$ bimcraft-cli run --cmd 'favorite {"path": "none.json"}'
+[exit 0]
+--- stdout
+{"families":[],"materials":[],"path":"none.json"}
+
+--- stderr
+

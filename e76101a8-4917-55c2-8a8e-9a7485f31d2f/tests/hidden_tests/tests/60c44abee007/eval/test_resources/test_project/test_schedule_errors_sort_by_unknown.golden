@@ -1,0 +1,8 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "X", "category": "rooms", "sort": ["Nope"]}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (schedule): schedule: sorting: `Nope` isn't a field of rooms; there are: Number, Name, Level, Area, Perimeter, Count, Unbounded Height, Volume, Phase Created, Phase Demolished, Design Option
+

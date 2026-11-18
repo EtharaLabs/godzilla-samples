@@ -1,0 +1,22 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'dimension_type {"name": "Dot 3D", "like": "Diagonal - 2.5mm Arial", "tick": "dot", "font": "BIMCraft Lettering"}' --cmd 'dimension_3d {"refs": [{"at": [0, 0, 0], "edge": [[0, 0, 0], [0, 0, 3000]]}, {"at": [6000, 0, 1500]}], "at": [3000, -900, 0], "type": "Dot 3D"}' --cmd 'dimension_3d {"refs": [{"at": [6000, 0, 0]}, {"at": [6000, 4000, 0]}], "at": [7000, 2000, 0], "type": "Arrow - 2.5mm Arial"}' --cmd 'sheet {"number": "A101", "name": "Axonometric", "size": "A4"}' --cmd 'place {"sheet": "A101", "view": "{3D}", "azimuth": -60, "elevation": 35}' --cmd 'render {"view": "A101", "path": "sheet.png"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "dims.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"name":"Dot 3D","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"BIMCraft Lettering","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"dot","tick_pen":7,"tick_size":2.0,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"id":100011,"length":6000.0,"view":100010}
+{"id":100012,"length":4000.0,"view":100010}
+{"id":100013,"number":"A101"}
+{"at":[155.0,125.0],"id":100014}
+{"height":1050,"kind":"sheet","path":"sheet.png","view":"A101","width":1485}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"dims.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+
+=== file sheet.png
+png 1485x1050 rgba pixels-sha256=ba1c030bea6a12cf93538e8e8ea2b05e9dadfb94f8bb512159c9f820ab3ddb66
+=== file dims.png
+png 320x200 rgba pixels-sha256=b3e3232d2618c1ab7d83fe483461d80ae32a56dcda653e5c8aaa411f9157b44f

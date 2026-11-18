@@ -1,0 +1,8 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --script bad.txt --cmd 'inspect {}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+
+--- stderr
+line 4 (door): door: no wall at [9000, 9000] on Level 1
+

@@ -1,0 +1,56 @@
+$ bimcraft-cli run --cmd 'conduit_fill {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `section` (mm²) is required
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `section` (mm²) is required
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 2.5, "family": "copper"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `family` must be one of pvc-thread, pvc-solder, steel-heavy, steel-rir, got "copper"
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 2.5, "size": "9\""}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `size` must be one of 1/2", 3/4", 1", 1.1/4", 1.1/2", 2", 2.1/2", 3", 4"
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 2.5, "family": "steel-rir", "size": "1/3\""}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `size` must be one of 1/2", 3/4", 1", 1.1/4", 1.1/2", 2", 2.1/2", 3", 4", 5", 6"
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 2.5, "colour": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: unknown parameter `colour`
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 2.5, "circuits": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `circuits` must be a number from 1 to 1000, got 0
+
+$ bimcraft-cli run --cmd 'conduit_fill {"section": 2.5, "phases": "1F"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (conduit_fill): conduit_fill: `phases` must be one of FN, FF, 3F, 3FN, got "1F"
+

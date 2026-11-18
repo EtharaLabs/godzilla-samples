@@ -1,0 +1,47 @@
+$ render {"view": "Nowhere"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): render: no level or plan view named `Nowhere` (the levels are: Level 1, Level 2)
+
+$ render {"view": "Level 1", "path": "plan.pdf"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): render: write a .png or .svg, not `.pdf`
+
+$ render {"view": "S", "path": "s.svg"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): render: only plans make SVGs; save this view as .png, not as s.svg
+
+$ render {"view": 123456}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): render: `view`: 123456 is not a level or a plan view
+
+$ render {"view": "Level 1", "width": "wide"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): render: `width` must be a whole number, got "wide"
+
+$ render {"view": "Level 1", "ceiling": "yes"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): render: `ceiling` must be true or false, got "yes"
+
+$ render {"view": "Level 1", "path": "nodir/plan.svg"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): nodir/plan.svg: No such file or directory (os error 2)
+
+$ render {"view": "Level 1", "path": "nodir/plan.png"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (render): nodir/plan.png: No such file or directory (os error 2)

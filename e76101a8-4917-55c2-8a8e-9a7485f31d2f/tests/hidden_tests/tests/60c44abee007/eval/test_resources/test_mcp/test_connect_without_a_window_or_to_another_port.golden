@@ -1,0 +1,21 @@
+$ bimcraft-cli mcp --connect
+[exit 1]
+--- stdout
+
+--- stderr
+bimcraft-cli mcp: <HOME>/.config/bimcraft/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+
+$ bimcraft-cli mcp --connect 2
+[exit 1]
+--- stdout
+
+--- stderr
+bimcraft-cli mcp: <HOME>/.config/bimcraft/bridge.json has the token of the window on port 1, not 2: start that window with `--control 2` again, or connect without a port
+
+$ bimcraft-cli mcp --connect --read-only
+[exit 1]
+--- stdout
+
+--- stderr
+bimcraft-cli mcp: <HOME>/.config/bimcraft/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+

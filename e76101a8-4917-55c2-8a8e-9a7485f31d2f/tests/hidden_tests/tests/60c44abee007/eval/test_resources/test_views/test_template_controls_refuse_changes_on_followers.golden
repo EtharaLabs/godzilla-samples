@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'template {"name": "Plans", "kind": "plan", "hide": ["rooms"], "detail": "medium", "controls": ["categories", "filters", "range", "phase", "detail", "options"]}' --cmd 'graphics {"view": "Level 1", "template": "Plans"}' --cmd 'scale {"view": "Level 1", "scale": 20}' --cmd 'template {"name": "Plans", "view_range": {"cut": 900}}' --cmd 'template {"name": "Plans"}' --save followed.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"room":{"hidden":true}},"controls":["categories","filters","range","phase","options","detail"],"detail":"medium","filters":[],"hidden":["room"],"kind":"plan","layers":{},"name":"Plans","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":null,"views":[],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"room":{"hidden":true}},"controlled":["categories","filters","range","phase","options","detail"],"detail":"medium","elements":{},"filters":[],"hidden":["room"],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":"Plans","view":100000,"visual_style":"shaded"}
+{"name":"Level 1","scale":20.0,"view":100000}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"room":{"hidden":true}},"controls":["categories","filters","range","phase","options","detail"],"detail":"medium","filters":[],"hidden":["room"],"kind":"plan","layers":{},"name":"Plans","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":{"bottom":0.0,"cut":900.0,"depth":0.0,"top":null},"views":[100000],"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"room":{"hidden":true}},"controls":["categories","filters","range","phase","options","detail"],"detail":"medium","filters":[],"hidden":["room"],"kind":"plan","layers":{},"name":"Plans","options":{},"phase":null,"phase_filter":null,"scale":null,"view_range":{"bottom":0.0,"cut":900.0,"depth":0.0,"top":null},"views":[100000],"visual_style":"shaded"}
+{"format":"bimcraft","path":"followed.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run followed.bimcraft --cmd 'graphics {"hide": ["walls"]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: its categories follow view template `Plans`; change the template, or `template: null` to stop following it
+
+$ bimcraft-cli run followed.bimcraft --cmd 'detail {"view": "Level 1", "detail": "fine"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (detail): detail: its detail level follow view template `Plans`; change the template, or `template: null` to stop following it
+
+$ bimcraft-cli run followed.bimcraft --cmd 'graphics {"phase": "Existing"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: its phase and phase filter follow view template `Plans`; change the template, or `template: null` to stop following it
+
+$ bimcraft-cli run followed.bimcraft --cmd 'modify {"id": 100000, "view_range": {"cut": 1500}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (modify): modify: element 100000: its view range follow view template `Plans`; change the template, or unfollow it (`template: null`)
+
+$ bimcraft-cli run followed.bimcraft --cmd 'template {"name": "Plans", "from": "Nowhere"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (template): template: no view named `Nowhere`
+
+$ bimcraft-cli run followed.bimcraft --cmd 'template {"name": "Plans", "controls": ["colour"]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (template): template: `controls` is a list of what it controls: "categories", "filters", "range", "phase", "options", "scale", "detail", "style", "background_grid": unknown variant `colour`, expected one of `categories`, `filters`, `range`, `phase`, `options`, `scale`, `detail`, `style`, `background_grid`
+
+$ bimcraft-cli run followed.bimcraft --cmd 'template {"name": "Copy", "like": "Nope"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+
+--- stderr
+line 1 (template): template: there's no view template `Nope` to start from (there are: Electrical Ceiling, Electrical Lighting, Electrical Power, Plans)
+
+$ bimcraft-cli run followed.bimcraft --cmd 'graphics {"view": "Level 1", "template": null}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"followed.bimcraft"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":20.0,"template":null,"view":100000,"visual_style":"shaded"}
+
+--- stderr
+

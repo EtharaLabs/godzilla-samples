@@ -1,0 +1,14 @@
+exit: 0
+--- stdout
+{"cloud":"box","id":100002,"origin":[500002000.0,7000001500.0,11250.0],"points":4,"read":4}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"box","guid":"GUID-1","id":100002,"level":"GUID-2","offset":1250.0,"points":4,"source":"box.xyz"}],"returned":1}
+{"cloud":"box","id":100003,"origin":[500002000.0,7000001500.0,11250.0],"points":4,"read":4}
+{"count":2,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"box","guid":"GUID-1","id":100002,"level":"GUID-2","offset":1250.0,"points":4,"source":"box.xyz"},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"box","guid":"GUID-3","id":100003,"level":"GUID-4","offset":1250.0,"points":4,"source":"box.xyz"}],"returned":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+--- scans
+scan box: source=box.xyz origin=[500002000.0, 7000001500.0, 11250.0] read=4 kept=4 stations=[]
+  -2000.0 -1500.0 -1250.0 rgb=[255, 0, 0]
+  2000.0 -1500.0 -1250.0 rgb=[0, 255, 0]
+  2000.0 1500.0 -1250.0 rgb=[0, 0, 255]
+  -2000.0 1500.0 1250.0 rgb=[255, 255, 255]

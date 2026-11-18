@@ -1,0 +1,140 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0, 0], [6000, 0]]}' --cmd 'point_cloud {"path": "scan.xyz", "at": [3000, 2000], "angle": 30}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "cloud.png"}' --cmd 'section_box {"min": [0, -500, -100], "max": [3200, 4000, 3000]}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "cloud-cut.png"}' --cmd 'save {"path": "cloud.glb"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"cloud":"scan","id":100003,"origin":[1450.0,1450.0,150.0],"points":900,"read":900}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"cloud.png","target":null,"view":"{3D}","width":320}
+{"max":[3200.0,4000.0,3000.0],"min":[0.0,-500.0,-100.0],"on":true,"view":100004}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"cloud-cut.png","target":null,"view":"{3D}","width":320}
+{"elements":1,"format":"glTF 2.0","path":"cloud.glb","triangles":12}
+
+--- stderr
+
+=== file cloud.png
+png 320x200 rgba pixels-sha256=dcbd6b6a236b955d8e5e964f334352b7d3c9769fafb3ed3114458a90f2ab422f
+=== file cloud-cut.png
+png 320x200 rgba pixels-sha256=7076330d9db206a17e37542a152bdcfa36bbc01ba5feffec69dfd33881dc509b
+=== file cloud.glb
+{
+ "accessors": [
+  {
+   "bufferView": 0,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 24,
+   "max": [
+    6.0,
+    3.0,
+    0.1
+   ],
+   "min": [
+    0.0,
+    0.0,
+    -0.1
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 0,
+   "componentType": 5125,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "asset": {
+  "extras": {
+   "source": "the default 3D view",
+   "units": "metres",
+   "up": "+Y, BIMCraft's +Z"
+  },
+  "generator": "BIMCraft 0.10.0",
+  "version": "2.0"
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 288,
+   "byteOffset": 0,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 288,
+   "byteOffset": 288,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 576,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 720
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "#ecece8",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.838799,
+     0.838799,
+     0.806952,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "100002",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 1,
+      "POSITION": 0
+     },
+     "indices": 2,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "extras": {
+    "category": "wall",
+    "guid": "<GUID-1>",
+    "id": 100002
+   },
+   "mesh": 0,
+   "name": "100002"
+  }
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ]
+}
+bin-sha256=e3637d39d837762d25344fb3fc7051cda5cc2e749fdbac7fc7b6532de845dcd4

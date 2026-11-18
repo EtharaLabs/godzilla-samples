@@ -1,0 +1,19 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'floor {}' --cmd 'roof {"slope": 30}' --cmd 'wall {"points": [[1000,1000],[1000,3000]], "attach_top": 100007, "attach_base": 100006}' --cmd 'elements {"category": "wall"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006}
+{"id":100007}
+{"ids":[100008]}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[6000.0,4000.0],"guid":"<GUID-5>","height":3000.0,"id":100003,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[6000.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[0.0,4000.0],"guid":"<GUID-6>","height":3000.0,"id":100004,"length":6000.0,"level":"<GUID-2>","room_bounding":true,"start":[6000.0,4000.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"<GUID-7>","height":3000.0,"id":100005,"length":4000.0,"level":"<GUID-2>","room_bounding":true,"start":[0.0,4000.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"attach_base":"<GUID-8>","attach_top":"<GUID-9>","base_offset":0.0,"category":"wall","end":[1000.0,3000.0],"guid":"<GUID-10>","height":3721.69,"id":100008,"length":2000.0,"level":"<GUID-2>","room_bounding":true,"start":[1000.0,1000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-11>"}],"returned":5}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[1000,1000],[1000,3000]], "attach_top": 100002}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (wall): wall 100006: attach_top 100002 isn't a roof or a floor
+

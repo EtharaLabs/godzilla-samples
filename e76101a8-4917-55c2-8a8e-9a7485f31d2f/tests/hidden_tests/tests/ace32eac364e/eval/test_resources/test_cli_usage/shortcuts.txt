@@ -1,0 +1,174 @@
+$ lk {"zzz": 1}
+exit 1
+line 1 (lk): link: `path` is required
+$ ll {"zzz": 1}
+exit 1
+line 1 (ll): level: `elevation` in mm is required
+$ gr {"zzz": 1}
+exit 1
+line 1 (gr): grid: `start` [x, y] is required
+$ wa {"zzz": 1}
+exit 1
+line 1 (wa): wall: `points` [[x, y], …] is required
+$ dr {"zzz": 1}
+exit 1
+line 1 (dr): door: give `at` [x, y] on a wall, or `wall` with `offset`
+$ wn {"zzz": 1}
+exit 1
+line 1 (wn): window: give `at` [x, y] on a wall, or `wall` with `offset`
+$ ms {"zzz": 1}
+exit 1
+line 1 (ms): mass: `boundary` [[x, y], …] is required
+$ mf {"zzz": 1}
+exit 1
+line 1 (mf): mass_floors: no mass; make one with `mass`
+$ wb {"zzz": 1}
+exit 1
+line 1 (wb): wall_by_face: `mass`, the id of a mass, is required
+$ fb {"zzz": 1}
+exit 1
+line 1 (fb): floor_by_face: `mass`, the id of a mass, is required
+$ rb {"zzz": 1}
+exit 1
+line 1 (rb): roof_by_face: `mass`, the id of a mass, is required
+$ uf {"zzz": 1}
+exit 1
+line 1 (uf): update_by_face: nothing is made by face: `wall_by_face`, `floor_by_face` and `roof_by_face` make walls, floors and roofs that follow a mass
+$ mh {"zzz": 1}
+exit 0
+{"hidden":["mass"],"name":"Level 1","shown":false,"view":100000}
+$ rm {"zzz": 1}
+exit 1
+line 1 (rm): room: `point` [x, y] is required
+$ cl {"zzz": 1}
+exit 1
+line 1 (cl): column: `at` [x, y] is required
+$ cl {"zzz": 1}
+exit 1
+line 1 (cl): column: `at` [x, y] is required
+$ fi {"zzz": 1}
+exit 1
+line 1 (fi): footing: `at` [x, y] is required
+$ bm {"zzz": 1}
+exit 1
+line 1 (bm): beam: `points` [[x, y], …] is required
+$ fw {"zzz": 1}
+exit 1
+line 1 (fw): strip_footing: `points` [[x, y], …] is required
+$ pi {"zzz": 1}
+exit 1
+line 1 (pi): pipe: `points` [[x, y], …] is required
+$ du {"zzz": 1}
+exit 1
+line 1 (du): duct: `points` [[x, y], …] is required
+$ cn {"zzz": 1}
+exit 1
+line 1 (cn): conduit: `points` [[x, y], …] is required
+$ ct {"zzz": 1}
+exit 1
+line 1 (ct): cable_tray: `points` [[x, y], …] is required
+$ ew {"zzz": 1}
+exit 1
+line 1 (ew): wire: `points` [[x, y], …] is required
+$ dc {"zzz": 1}
+exit 1
+line 1 (dc): down_conductor: `points` [[x, y], …] is required
+$ gc {"zzz": 1}
+exit 1
+line 1 (gc): ground_conductor: `points` [[x, y], …] is required
+$ cb {"zzz": 1}
+exit 1
+line 1 (cb): cabling: `points` [[x, y], …] is required
+$ di {"zzz": 1}
+exit 1
+line 1 (di): dimension: `at` [x, y] is required
+$ tx {"zzz": 1}
+exit 1
+line 1 (tx): text: `zzz` isn't one of its parameters: text, at, view, type, angle, leader, override_format, runs
+$ el {"zzz": 1}
+exit 1
+line 1 (el): spot: `at` [x, y] is required
+$ tg {"zzz": 1}
+exit 1
+line 1 (tg): tag: nothing to tag: Level 1 has no door and window without a tag
+$ cr {"zzz": 1}
+exit 1
+line 1 (cr): section: `start` [x, y] is required
+$ dp {"zzz": 1}
+exit 0
+{"annotations":0,"id":100002,"level":100000,"name":"Level 1 Copy 1"}
+$ pt {"zzz": 1}
+exit 1
+line 1 (pt): paint: `ids` [id, …] is required
+$ cm {"zzz": 1}
+exit 1
+line 1 (cm): component: `family` is required; `inspect` lists the families
+$ ma {"zzz": 1}
+exit 1
+line 1 (ma): match_properties: `from` (an element id or GUID) is required
+$ al {"zzz": 1}
+exit 1
+line 1 (al): align: `id` is required
+$ mv {"zzz": 1}
+exit 1
+line 1 (mv): move: `ids` [id, …] is required
+$ co {"zzz": 1}
+exit 1
+line 1 (co): copy: `ids` [id, …] is required
+$ ro {"zzz": 1}
+exit 1
+line 1 (ro): rotate: `ids` [id, …] is required
+$ mm {"zzz": 1}
+exit 1
+line 1 (mm): mirror: `ids` [id, …] is required
+$ dm {"zzz": 1}
+exit 1
+line 1 (dm): mirror: `ids` [id, …] is required
+$ tr {"zzz": 1}
+exit 1
+line 1 (tr): corner: `ids` [id, …] is required
+$ of {"zzz": 1}
+exit 1
+line 1 (of): offset: `id`, a detail line, is required
+$ sl {"zzz": 1}
+exit 1
+line 1 (sl): split: `id`, a wall or a detail line, is required
+$ pj {"zzz": 1}
+exit 1
+line 1 (pj): join_polyline: `ids` [id, …] is required
+$ fl {"zzz": 1}
+exit 1
+line 1 (fl): fillet: `ids` [id, …] is required
+$ ex {"zzz": 1}
+exit 1
+line 1 (ex): explode: `id`, a detail line, is required
+$ de {"zzz": 1}
+exit 1
+line 1 (de): delete: `ids` [id, …] is required
+$ lw {"zzz": 1}
+exit 1
+line 1 (lw): linework: `zzz` isn't one of its parameters: view, level, id, at, style, invisible, remove
+$ fr {"zzz": 1}
+exit 1
+line 1 (fr): filled_region: `zzz` isn't one of its parameters: sketch, view, level, type, line_style
+$ gp {"zzz": 1}
+exit 1
+line 1 (gp): create_group: `zzz` isn't one of its parameters: ids, name
+$ ug {"zzz": 1}
+exit 1
+line 1 (ug): ungroup: `zzz` isn't one of its parameters: id
+$ dl {"zzz": 1}
+exit 1
+line 1 (dl): detail_line: `zzz` isn't one of its parameters: view, level, style, insulation, centre_mark, cloud, revision, start, end, through, arc, points, arcs, closed, centre, radius, radii, angle, span, control, knots, fit, start_tangent, end_tangent
+$ pu {"zzz": 1}
+exit 0
+{"count":63,"dry_run":false,"removed":[{"kind":"beam type","name":"Beam 150 x 400"},{"kind":"beam type","name":"Steel Tube 150"},{"kind":"cable type","name":"Cat6A"},{"kind":"cable type","name":"Optical 3"},{"kind":"cabletray type","name":"Perforated 200 x 50"},{"kind":"cabletray type","name":"Perforated 300 x 100"},{"kind":"ceiling type","name":"Tile 600 x 600"},{"kind":"column type","name":"Round 300"},{"kind":"conduit type","name":"PVC 20"},{"kind":"conduit type","name":"PVC 32"},{"kind":"conduit type","name":"Steel 25"},{"kind":"door type","name":"Single 800 x 2100"},{"kind":"downconductor type","name":"Copper 8"},{"kind":"downconductor type","name":"Flat 25 x 3"},{"kind":"duct type","name":"Rectangular 600 x 400"},{"kind":"duct type","name":"Round 300"},{"kind":"footing type","name":"Footing 1500 x 1500"},{"kind":"groundconductor type","name":"Steel 8"},{"kind":"pipe type","name":"Copper 22"},{"kind":"pipe type","name":"PVC 110"},{"kind":"pipe type","name":"PVC 25"},{"kind":"structuralcolumn type","name":"Concrete 200 x 500"},{"kind":"structuralcolumn type","name":"Concrete Round 400"},{"kind":"wall type","name":"Exterior - 300mm"},{"kind":"wall type","name":"Interior - 100mm"},{"kind":"window type","name":"Fixed 600 x 900"},{"kind":"wire type","name":"Wire 4"},{"kind":"wire type","name":"Wire 6"},{"kind":"family","name":"Air Terminal"},{"kind":"family","name":"Base Cabinet"},{"kind":"family","name":"Bathtub"},{"kind":"family","name":"Bed"},{"kind":"family","name":"Casement Window"},{"kind":"family","name":"Ceiling Luminaire"},{"kind":"family","name":"Chair"},{"kind":"family","name":"Data Outlet"},{"kind":"family","name":"Desk"},{"kind":"family","name":"Distribution Board"},{"kind":"family","name":"Double Door"},{"kind":"family","name":"Earthing Electrode"},{"kind":"family","name":"Elbow 90"},{"kind":"family","name":"Fixed Window"},{"kind":"family","name":"Floor Drain"},{"kind":"family","name":"Gate Valve"},{"kind":"family","name":"Inspection Box"},{"kind":"family","name":"Kitchen Sink"},{"kind":"family","name":"Outlet"},{"kind":"family","name":"Patch Panel"},{"kind":"family","name":"Rack"},{"kind":"family","name":"Recessed Luminaire"},{"kind":"family","name":"Shower"},{"kind":"family","name":"Single Door"},{"kind":"family","name":"Sliding Door"},{"kind":"family","name":"Sliding Window"},{"kind":"family","name":"Sofa"},{"kind":"family","name":"Switch"},{"kind":"family","name":"Table"},{"kind":"family","name":"Tee"},{"kind":"family","name":"Three-Phase Outlet"},{"kind":"family","name":"Voice Outlet"},{"kind":"family","name":"WC"},{"kind":"family","name":"Wardrobe"},{"kind":"family","name":"Washbasin"}]}
+$ un {"zzz": 1}
+exit 0
+{"length":"mm"}
+$ gd {"zzz": 1}
+exit 0
+{"ambient_shadows":false,"edges":true,"silhouette":0,"view":null}
+$ me {"zzz": 1}
+exit 1
+line 1 (me): measure: `from` [x, y] is required

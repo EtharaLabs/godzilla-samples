@@ -1,0 +1,38 @@
+exit: 0
+--- stdout
+{"elements":{"level":2,"railing":3,"ramp":1,"stair":3},"format":"IFC4","moved":null,"name":"Circulation","path":"x.ifc","skipped":["IFCSTAIR #465 'Odd': its flights aren't all as wide, or their treads as deep","IFCSTAIR #738 'Ghost': it has no body BIMCraft can read","IFCRAMP #843 'Flat': its top is level","IFCRAMP #847 'Steep': its flights aren't all as wide, or as steep","IFCRAILING #985 'Wide': it has no axis for BIMCraft to follow, and it isn't straight","IFCRAILING #994 'Flat': its railing height cannot be measured from its body"]}
+{"count":9,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 0","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":1050.0,"guid":"GUID-2","id":100001,"name":"Above","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"angle":0.0,"category":"stair","end":[1400.0,500.0],"guid":"GUID-3","height":1050.0,"id":100002,"length":1400.0,"level":"GUID-1","riser":175.0,"riser_height":175.0,"risers":6,"runs":[[[0.0,500.0],[1400.0,500.0]]],"start":[0.0,500.0],"top_level":"GUID-2","tread":280.0,"width":1000.0},{"angle":90.0,"category":"stair","end":[10000.0,3000.0],"guid":"GUID-4","height":400.0,"id":100003,"length":3000.0,"level":"GUID-1","riser":200.0,"riser_height":200.0,"risers":2,"runs":[[[10000.0,0.0],[10000.0,3000.0]]],"start":[10000.0,0.0],"top_level":null,"tread":3000.0,"width":1000.0},{"angle":90.0,"category":"stair","end":[5500.0,1400.0],"guid":"GUID-5","height":1050.0,"id":100004,"length":1400.0,"level":"GUID-1","riser":175.0,"riser_height":175.0,"risers":6,"runs":[[[5500.0,0.0],[5500.0,1400.0]]],"start":[5500.0,0.0],"top_level":"GUID-2","tread":280.0,"width":1000.0},{"angle":0.0,"category":"ramp","end":[26000.0,600.0],"guid":"GUID-6","height":500.0,"id":100005,"length":6000.0,"level":"GUID-1","runs":[[[20000.0,600.0],[26000.0,600.0]]],"slope":8.333333,"start":[20000.0,600.0],"top_level":null,"width":1200.0},{"category":"railing","guid":"GUID-7","height":1000.0,"id":100006,"level":"GUID-1","path":[[0.0,-2000.0],[4000.0,-2000.0],[4000.0,-5000.0]],"type":"Imported - 1000mm","type_guid":"GUID-8"},{"base_offset":100.0,"category":"railing","guid":"GUID-9","height":900.0,"id":100007,"level":"GUID-1","path":[[0.0,-8000.0],[3000.0,-8000.0]],"type":"Imported - 900mm","type_guid":"GUID-10"},{"base_offset":200.0,"category":"railing","guid":"GUID-11","height":1000.0,"id":100008,"level":"GUID-1","path":[[0.0,-14000.0],[3000.0,-14000.0]],"type":"Railing - 1000mm","type_guid":"GUID-12"}],"returned":9}
+--- stderr
+--- inspect, less a new project's
+{
+ "counts": {
+  "railing": 3,
+  "ramp": 1,
+  "stair": 3
+ },
+ "levels": [
+  {
+   "elevation": 0.0,
+   "id": 100000,
+   "name": "Level 0"
+  },
+  {
+   "elevation": 1050.0,
+   "id": 100001,
+   "name": "Above"
+  }
+ ],
+ "name": "Circulation",
+ "types": {
+  "railing": {
+   "Imported - 1000mm": {
+    "height": 1000.0,
+    "spacing": 0.0
+   },
+   "Imported - 900mm": {
+    "height": 900.0,
+    "spacing": 0.0
+   }
+  }
+ }
+}

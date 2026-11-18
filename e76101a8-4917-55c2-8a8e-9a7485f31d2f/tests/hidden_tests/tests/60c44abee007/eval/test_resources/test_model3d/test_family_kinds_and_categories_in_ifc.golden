@@ -1,0 +1,36 @@
+$ bimcraft-cli run --cmd 'family {"name": "WC", "kind": "wc"}' --cmd 'family {"name": "Floor Drain", "kind": "floor_waste"}' --cmd 'family {"name": "Elbow 90", "kind": "bend"}' --cmd 'family {"name": "Table", "kind": "wc"}'
+[exit 1]
+--- stdout
+{"family":{"category":"plumbing","forms":[{"from":380.0,"guid":"<GUID-1>","id":999474,"material":"Porcelain","plane":"xy","profile":[[-200.0,-180.0],[200.0,-180.0],[200.0,0.0],[-200.0,0.0]],"to":800.0},{"from":0.0,"guid":"<GUID-2>","id":999473,"material":"Porcelain","plane":"xy","profile":[[-160.0,-380.0],[160.0,-380.0],[160.0,-150.0],[-160.0,-150.0]],"to":400.0},{"circle":{"centre":[0.0,-470.0],"radius":180.0},"from":0.0,"guid":"<GUID-3>","id":999472,"material":"Porcelain","plane":"xy","to":400.0}],"kind":"wc","parameters":[],"types":{"400 x 650":{}}},"name":"WC","warnings":[]}
+{"family":{"category":"drain","forms":[{"from":-50.0,"guid":"<GUID-4>","id":999559,"material":"Metal","plane":"xy","profile":[["-(Width) / 2","-(Width) / 2"],["Width / 2","-(Width) / 2"],["Width / 2","Width / 2"],["-(Width) / 2","Width / 2"]],"to":0.0},{"circle":{"centre":[0.0,0.0],"radius":"(Width) / 2 - 20"},"from":-30.0,"guid":"<GUID-5>","id":999558,"plane":"xy","to":0.0,"void":true},{"from":-10.0,"guid":"<GUID-6>","id":999557,"material":"Metal","plane":"xy","profile":[["-(Width) / 2 + 20",-24.0],["Width / 2 - 20",-24.0],["Width / 2 - 20",-16.0],["-(Width) / 2 + 20",-16.0]],"to":0.0},{"from":-10.0,"guid":"<GUID-7>","id":999556,"material":"Metal","plane":"xy","profile":[["-(Width) / 2 + 20",-4.0],["Width / 2 - 20",-4.0],["Width / 2 - 20",4.0],["-(Width) / 2 + 20",4.0]],"to":0.0},{"from":-10.0,"guid":"<GUID-8>","id":999555,"material":"Metal","plane":"xy","profile":[["-(Width) / 2 + 20",16.0],["Width / 2 - 20",16.0],["Width / 2 - 20",24.0],["-(Width) / 2 + 20",24.0]],"to":0.0}],"kind":"floor_waste","parameters":[{"kind":"length","name":"Width","value":150.0}],"types":{"100 x 100":{"Width":100},"150 x 150":{}}},"name":"Floor Drain","warnings":[]}
+{"family":{"category":"pipefitting","forms":[{"circle":{"centre":[0.0,0.0],"radius":"Diameter / 2"},"from":"-(Diameter * 1.5 + 30)","guid":"<GUID-9>","id":999566,"material":"Material","plane":"yz","to":"Diameter / 2"},{"circle":{"centre":[0.0,0.0],"radius":"Diameter / 2"},"from":"-(Diameter / 2)","guid":"<GUID-10>","id":999565,"material":"Material","plane":"xz","to":"Diameter * 1.5 + 30"}],"kind":"bend","parameters":[{"kind":"length","name":"Diameter","value":50.0},{"kind":"material","name":"Material","value":"PVC"}],"types":{"110":{"Diameter":110.0},"25":{"Diameter":25.0},"50":{"Diameter":50.0}}},"name":"Elbow 90","warnings":[]}
+
+--- stderr
+line 1 (family): family `Table`: `kind` `wc`: a family of this category has no kinds; leave `kind` out
+
+IFCSANITARYTERMINAL('<GID-1>',$,'WC:400 x 650',$,'WC:400 x 650',#,#,'100002',.TOILETPAN.);
+IFCWASTETERMINAL('<GID-2>',$,'Floor Drain:100 x 100',$,'Floor Drain:100 x 100',#,#,'100003',.FLOORWASTE.);
+IFCPIPEFITTING('<GID-3>',$,'Elbow 90:110',$,'Elbow 90:110',#,#,'100004',.BEND.);
+IFCFURNITURE('<GID-4>',$,'Table:1200 x 800',$,'Table:1200 x 800',#,#,'100005',.NOTDEFINED.);
+IFCFURNITURE('<GID-5>',$,'Base Cabinet:1200 x 600',$,'Base Cabinet:1200 x 600',#,#,'100006',.NOTDEFINED.);
+IFCBUILDINGELEMENTPROXY('<GID-6>',$,'Rack:600 x 1000',$,'Rack',#,#,'100007',.USERDEFINED.);
+IFCOUTLET('<GID-7>',$,'Outlet:High 2100',$,'Outlet:High 2100',#,#,'100008',.POWEROUTLET.);
+IFCSWITCHINGDEVICE('<GID-8>',$,'Switch:Low 300',$,'Switch:Low 300',#,#,'100009',.TOGGLESWITCH.);
+IFCELECTRICDISTRIBUTIONBOARD('<GID-9>',$,'Distribution Board:12 circuits',$,'Distribution Board:12 circuits',#,#,'100010',.DISTRIBUTIONBOARD.);
+IFCBUILDINGELEMENTPROXY('<GID-10>',$,'Air Terminal:1000',$,'LightningTerminal',#,#,'100011',.USERDEFINED.);
+IFCBUILDINGELEMENTPROXY('<GID-11>',$,'Earthing Electrode:2400',$,'EarthingRod',#,#,'100012',.USERDEFINED.);
+IFCBUILDINGELEMENTPROXY('<GID-12>',$,'Inspection Box:250',$,'InspectionBox',#,#,'100013',.USERDEFINED.);
+IFCVALVE('<GID-13>',$,'Gate Valve:25',$,'Gate Valve:25',#,#,'100014',.NOTDEFINED.);
+IFCLIGHTFIXTURE('<GID-14>',$,'Recessed Luminaire:1200 x 300',$,'Recessed Luminaire:1200 x 300',#,#,'100015',.NOTDEFINED.);
+IFCOUTLET('<GID-15>',$,'Data Outlet:Low 300',$,'Data Outlet:Low 300',#,#,'100016',.DATAOUTLET.);
+IFCOUTLET('<GID-16>',$,'Voice Outlet:Low 300',$,'Voice Outlet:Low 300',#,#,'100017',.TELEPHONEOUTLET.);
+IFCCOMMUNICATIONSAPPLIANCE('<GID-17>',$,'Patch Panel:24 ports',$,'Patch Panel:24 ports',#,#,'100018',.NETWORKAPPLIANCE.);
+$ bimcraft-cli convert fixtures.ifc back.bimcraft
+[exit 0]
+--- stdout
+{"format":"bimcraft","path":"back.bimcraft"}
+
+--- stderr
+
+{"families":[{"category":"airterminal","forms":1,"name":"Air Terminal","symbols":0,"types":1},{"category":"furniture","forms":2,"name":"Base Cabinet","symbols":0,"types":1},{"category":"plumbing","forms":5,"name":"Bathtub","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Bed","symbols":0,"types":3},{"category":"window","forms":10,"name":"Casement Window","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Ceiling Luminaire","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Chair","symbols":0,"types":1},{"category":"dataoutlet","forms":1,"name":"Data Outlet","symbols":0,"types":1},{"category":"furniture","forms":4,"name":"Desk","symbols":0,"types":2},{"category":"equipment","forms":1,"name":"Distribution Board","symbols":0,"types":1},{"category":"door","forms":9,"name":"Double Door","symbols":4,"types":3},{"category":"earthing","forms":1,"name":"Earthing Electrode","symbols":0,"types":1},{"category":"pipefitting","forms":1,"name":"Elbow 90","symbols":0,"types":1},{"category":"window","forms":5,"name":"Fixed Window","symbols":0,"types":3},{"category":"drain","forms":1,"name":"Floor Drain","symbols":0,"types":1},{"category":"pipeaccessory","forms":1,"name":"Gate Valve","symbols":0,"types":1},{"category":"inspectionbox","forms":1,"name":"Inspection Box","symbols":0,"types":1},{"category":"plumbing","forms":9,"name":"Kitchen Sink","symbols":0,"types":2},{"category":"outlet","forms":1,"name":"Outlet","symbols":0,"types":1},{"category":"patchpanel","forms":1,"name":"Patch Panel","symbols":0,"types":1},{"category":"rack","forms":2,"name":"Rack","symbols":0,"types":1},{"category":"lighting","forms":2,"name":"Recessed Luminaire","symbols":0,"types":1},{"category":"plumbing","forms":5,"name":"Shower","symbols":0,"types":2},{"category":"door","forms":6,"name":"Single Door","symbols":2,"types":3},{"category":"door","forms":6,"name":"Sliding Door","symbols":2,"types":3},{"category":"window","forms":14,"name":"Sliding Window","symbols":2,"types":3},{"category":"furniture","forms":4,"name":"Sofa","symbols":0,"types":2},{"category":"switch","forms":1,"name":"Switch","symbols":0,"types":1},{"category":"furniture","forms":1,"name":"Table","symbols":0,"types":1},{"category":"pipefitting","forms":2,"name":"Tee","symbols":0,"types":3},{"category":"outlet","forms":2,"name":"Three-Phase Outlet","symbols":0,"types":2},{"category":"voiceoutlet","forms":1,"name":"Voice Outlet","symbols":0,"types":1},{"category":"plumbing","forms":1,"name":"WC","symbols":0,"types":1},{"category":"casework","forms":2,"name":"Wardrobe","symbols":0,"types":2},{"category":"plumbing","forms":2,"name":"Washbasin","symbols":0,"types":2}]}
+{"category": "plumbing", "kind": "wc"}

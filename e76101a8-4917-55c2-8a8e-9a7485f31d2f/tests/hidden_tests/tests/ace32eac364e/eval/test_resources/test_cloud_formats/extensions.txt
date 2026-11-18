@@ -1,0 +1,30 @@
+### scan.laz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: scan.laz: LAZ is compressed LAS, which BIMCraft doesn't read: decompress it to LAS first (laszip or PDAL)
+### scan.rcp
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: scan.rcp: ReCap's RCP and RCS are closed formats: export the scan from ReCap as E57, LAS or PTS
+### scan.rcs
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: scan.rcs: ReCap's RCP and RCS are closed formats: export the scan from ReCap as E57, LAS or PTS
+### plan.dwg
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: plan.dwg: a .dwg file isn't a point cloud BIMCraft reads: PTS, XYZ, PLY, LAS or E57
+### noext
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: noext: a . file isn't a point cloud BIMCraft reads: PTS, XYZ, PLY, LAS or E57
+### missing.xyz
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: missing.xyz: No such file or directory (os error 2)

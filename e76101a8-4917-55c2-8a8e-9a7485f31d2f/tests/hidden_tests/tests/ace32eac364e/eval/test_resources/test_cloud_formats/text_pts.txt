@@ -1,0 +1,19 @@
+exit: 0
+--- stdout
+{"cloud":"scan","id":100002,"origin":[500.0,500.0,250.0],"points":3,"read":3}
+{"cloud":"grey","id":100003,"origin":[1000.0,0.0,0.0],"points":3,"read":3}
+{"cloud":"flat","id":100004,"origin":[500.0,500.0,500.0],"points":2,"read":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+--- scans
+scan flat: source=flat.pts origin=[500.0, 500.0, 500.0] read=2 kept=2 stations=[]
+  -500.0 -500.0 -500.0 rgb=[160, 160, 160]
+  500.0 500.0 500.0 rgb=[160, 160, 160]
+scan grey: source=grey.pts origin=[1000.0, 0.0, 0.0] read=3 kept=3 stations=[]
+  -1000.0 0.0 0.0 rgb=[0, 0, 0]
+  0.0 0.0 0.0 rgb=[128, 128, 128]
+  1000.0 0.0 0.0 rgb=[255, 255, 255]
+scan scan: source=scan.pts origin=[500.0, 500.0, 250.0] read=3 kept=3 stations=[]
+  -500.0 -500.0 -250.0 rgb=[255, 0, 0]
+  500.0 -500.0 -250.0 rgb=[0, 255, 0]
+  -500.0 500.0 250.0 rgb=[0, 0, 255]

@@ -1,0 +1,86 @@
+$ bimcraft-cli run b64.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: b64.bimcraft is not a BIMCraft project: a cloud's data isn't base64
+
+$ bimcraft-cli run zlib.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: zlib.bimcraft is not a BIMCraft project: a cloud's data isn't zlib: corrupt deflate stream
+
+$ bimcraft-cli run cut.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: cut.bimcraft is not a BIMCraft project: a cloud's points are cut short
+
+$ bimcraft-cli run colours.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: colours.bimcraft is not a BIMCraft project: a cloud has a colour for each point or none
+
+$ bimcraft-cli run nan.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: nan.bimcraft is not a BIMCraft project: a cloud's point lies NaN mm from its middle, past 20000000
+
+$ bimcraft-cli run origin.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: origin.bimcraft is not a BIMCraft project: a cloud's origin [1e30, 0.0, 0.0] isn't one
+
+$ bimcraft-cli run none.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: none.bimcraft is not a BIMCraft project: a cloud holds 1 to 5000000 points, not 0
+
+$ bimcraft-cli run read.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: read.bimcraft is not a BIMCraft project: a cloud read from 1 points can't keep 4
+
+$ bimcraft-cli run cadb64.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: cadb64.bimcraft is not a BIMCraft project: a CAD drawing's data isn't base64
+
+$ bimcraft-cli run cadzlib.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: cadzlib.bimcraft is not a BIMCraft project: a CAD drawing's data isn't zlib: corrupt deflate stream
+
+$ bimcraft-cli run caddxf.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: caddxf.bimcraft is not a BIMCraft project: CAD drawing `plan.dxf`: it isn't a DXF: there's no ENTITIES section
+
+$ bimcraft-cli run unplaced.bimcraft --cmd 'library {"kind": "cloud"}' --cmd 'elements {}'
+[exit 0]
+--- stdout
+{"name":"Project","path":"unplaced.bimcraft"}
+{"count":0,"library":[],"parts":[]}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"at":[0.0,0.0],"cad":"plan","category":"cadimport","entities":1,"extents":[[-500.0,0.0],[500.0,0.0]],"guid":"<GUID-3>","id":100003,"layers":1,"level":"<GUID-1>","origin":[500.0,0.0],"scale":1.0,"source":"plan.dxf","unit":"mm"}],"returned":3}
+
+--- stderr
+

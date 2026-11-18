@@ -1,0 +1,20 @@
+=== favorite {"path": "huge.json"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (favorite): favorite: huge.json is too large (268435456 bytes)
+=== favorite {"path": "folder.json"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (favorite): favorite: folder.json: Is a directory (os error 21)
+=== favorite {"action": "save", "name": "Brick", "path": "plain/favorites.json"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (favorite): favorite: plain/favorites.json: Not a directory (os error 20)
+=== favorite {"action": "save", "name": "Brick", "path": "folder.json"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (favorite): favorite: folder.json: Is a directory (os error 21)

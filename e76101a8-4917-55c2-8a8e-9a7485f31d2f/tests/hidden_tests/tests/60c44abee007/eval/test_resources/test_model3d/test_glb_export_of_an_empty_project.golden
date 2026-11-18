@@ -1,0 +1,17 @@
+$ bimcraft-cli run --save empty.glb
+[exit 1]
+--- stdout
+
+--- stderr
+save: the default 3D view shows nothing to export: draw something, or show again what Visibility/Graphics hides there
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0, 0], [4000, 0]]}' --cmd 'graphics {"view": "{3D}", "hide": ["walls"]}' --save hidden.glb
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"wall":{"hidden":true}},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":["wall"],"hidden_elements":[],"layers":{},"name":"{3D}","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100003,"visual_style":"shaded"}
+
+--- stderr
+save: the default 3D view shows nothing to export: draw something, or show again what Visibility/Graphics hides there
+
+=== files: 

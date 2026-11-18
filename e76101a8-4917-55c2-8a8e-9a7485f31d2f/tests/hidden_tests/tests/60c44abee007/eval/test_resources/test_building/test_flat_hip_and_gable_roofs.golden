@@ -1,0 +1,18 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'roof {"slope": 30, "overhang": 500}' --cmd 'elements {"category": "roof"}' --cmd 'delete {"ids": [100006]}' --cmd 'roof {"slope": 35, "gables": [1, 3]}' --cmd 'elements {"category": "roof"}' --cmd 'delete {"ids": [100007]}' --cmd 'roof {"slope": 25, "slopes": [0, 45, 0, 0]}' --cmd 'elements {"category": "roof"}' --cmd 'delete {"ids": [100008]}' --cmd 'roof {"offset": 300}' --cmd 'elements {"category": "roof"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006}
+{"count":1,"elements":[{"area_m2":38.69,"boundary":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"category":"roof","guid":"<GUID-1>","id":100006,"level":"<GUID-2>","offset":0.0,"outline":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"overhang":500.0,"ridge":4241.3,"slope":30.0,"type":"Generic - 300mm","type_guid":"<GUID-3>"}],"returned":1}
+{"deleted":[100006]}
+{"id":100007}
+{"count":1,"elements":[{"area_m2":38.69,"boundary":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"category":"roof","gables":[1,3],"guid":"<GUID-4>","id":100007,"level":"<GUID-2>","offset":0.0,"outline":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"overhang":500.0,"ridge":4505.45,"slope":35.0,"type":"Generic - 300mm","type_guid":"<GUID-3>"}],"returned":1}
+{"deleted":[100007]}
+{"id":100008}
+{"count":1,"elements":[{"area_m2":38.69,"boundary":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"category":"roof","guid":"<GUID-5>","id":100008,"level":"<GUID-2>","offset":0.0,"outline":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"overhang":500.0,"ridge":4002.56,"slope":25.0,"slopes":[0.0,45.0,0.0,0.0],"type":"Generic - 300mm","type_guid":"<GUID-3>"}],"returned":1}
+{"deleted":[100008]}
+{"id":100009}
+{"count":1,"elements":[{"area_m2":38.69,"boundary":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"category":"roof","guid":"<GUID-6>","id":100009,"level":"<GUID-2>","offset":300.0,"outline":[[-650.0,-650.0],[6650.0,-650.0],[6650.0,4650.0],[-650.0,4650.0]],"overhang":500.0,"ridge":4541.3,"slope":30.0,"type":"Generic - 300mm","type_guid":"<GUID-3>"}],"returned":1}
+
+--- stderr
+

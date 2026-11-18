@@ -1,0 +1,20 @@
+$ bimcraft-cli run --cmd 'roof {"level": "Level 2", "boundary": [[0,0],[8000,0],[8000,6000],[0,6000]], "slope": 30, "gables": [1]}' --cmd 'roof {"level": "Level 2", "boundary": [[12000,0],[24000,0],[24000,12000],[12000,12000]], "courtyards": [[[16000,4000],[16000,8000],[20000,8000],[20000,4000]]], "slope": 25, "overhang": 0}' --cmd 'roof {"level": "Level 2", "extrusion": {"line": [[0,20000],[8000,20000]], "profile": [[0,0],[4000,2000],[8000,0]], "to": 6000}}' --cmd 'roof {"level": "Level 2", "boundary": [[30000,0],[36000,0],[36000,6000],[30000,6000]], "slope": 0, "overhang": 0}' --cmd 'add_point {"id": 100005, "at": [33000, 3000], "offset": 200}' --save roofs.ifc
+[exit 0]
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"faces":4,"id":100005,"top":[3300.0,3500.0]}
+{"format":"IFC4","path":"roofs.ifc"}
+
+--- stderr
+
+$ bimcraft-cli run roofs.ifc --cmd 'elements {"category": "roof"}'
+[exit 0]
+--- stdout
+{"elements":{"level":2,"roof":4},"format":"IFC4","moved":null,"name":"Project","path":"roofs.ifc","skipped":[]}
+{"count":4,"elements":[{"area_m2":48.0,"boundary":[[0.0,0.0],[8000.0,0.0],[8000.0,6000.0],[0.0,6000.0]],"category":"roof","gables":[1],"guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":0.0,"outline":[[0.0,0.0],[8000.0,0.0],[8000.0,6000.0],[0.0,6000.0]],"overhang":0.0,"ridge":4732.05,"slope":30.0,"type":"Generic - 300mm","type_guid":"<GUID-3>"},{"area_m2":128.0,"boundary":[[12000.0,0.0],[24000.0,0.0],[24000.0,12000.0],[12000.0,12000.0]],"category":"roof","courtyards":[[[16000.0,4000.0],[16000.0,8000.0],[20000.0,8000.0],[20000.0,4000.0]]],"guid":"<GUID-4>","id":100003,"level":"<GUID-2>","offset":0.0,"outline":[[12000.0,0.0],[24000.0,0.0],[24000.0,12000.0],[12000.0,12000.0]],"overhang":0.0,"ridge":3932.62,"slope":25.0,"type":"Generic - 300mm","type_guid":"<GUID-3>"},{"area_m2":48.0,"boundary":[[0.0,20000.0],[8000.0,20000.0],[8000.0,26000.0],[0.0,26000.0]],"category":"roof","gables":[0,2],"guid":"<GUID-5>","id":100004,"level":"<GUID-2>","offset":0.0,"outline":[[0.0,20000.0],[8000.0,20000.0],[8000.0,26000.0],[0.0,26000.0]],"overhang":0.0,"ridge":5000.43,"slope":26.57,"type":"Generic - 300mm","type_guid":"<GUID-3>"},{"area_m2":36.0,"boundary":[[30000.0,0.0],[36000.0,0.0],[36000.0,6000.0],[30000.0,6000.0]],"category":"roof","guid":"<GUID-6>","id":100005,"level":"<GUID-2>","offset":0.0,"outline":[[30000.0,0.0],[36000.0,0.0],[36000.0,6000.0],[30000.0,6000.0]],"overhang":0.067,"ridge":3199.78,"slope":3.81,"type":"Generic - 300mm (2)","type_guid":"<GUID-7>"}],"returned":4}
+
+--- stderr
+

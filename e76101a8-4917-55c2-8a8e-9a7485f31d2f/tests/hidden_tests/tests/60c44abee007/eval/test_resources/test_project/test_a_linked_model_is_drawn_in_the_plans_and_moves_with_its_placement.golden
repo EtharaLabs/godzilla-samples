@@ -1,0 +1,32 @@
+$ bimcraft-cli run --cmd 'new {"name": "Other"}' --cmd 'level {"elevation": 6000, "name": "Roof"}' --cmd 'wall {"points": [[0,0],[3000,0],[3000,3000]], "type": "Exterior - 300mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'wall {"points": [[0,0],[0,2000]], "level": "Roof"}' --cmd 'parameter {"name": "Fire Rating", "categories": ["wall"]}' --cmd 'type {"category": "wall", "name": "Thick 450", "thickness": 450}' --cmd 'wall {"points": [[0,5000],[3000,5000]], "type": "Thick 450"}' --cmd 'save {"path": "other.bimcraft"}'
+[exit 0]
+--- stdout
+{"language":"en","name":"Other"}
+{"id":100002,"name":"Roof"}
+{"ids":[100003,100004]}
+{"host":100003,"id":100005,"mark":"1","offset":1500.0}
+{"ids":[100006]}
+{"name":"Fire Rating","parameter":{"categories":["wall"],"kind":"text"}}
+{"category":"wall","name":"Thick 450","type":{"thickness":450.0}}
+{"ids":[100007]}
+{"format":"bimcraft","path":"other.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[-3000,-3000],[-3000,3000]]}' --cmd 'render {"view": "Level 1", "path": "before.svg"}' --cmd 'link {"path": "other.bimcraft", "at": [2000, 1000], "angle": 30}' --cmd 'render {"view": "Level 1", "path": "after.svg"}' --cmd 'modify {"id": 100003, "at": [0, 0], "angle": 0}' --cmd 'render {"view": "Level 1", "path": "moved.svg"}' --cmd 'elements {"category": "link"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"height":1000,"kind":"plan","path":"before.svg","view":"Level 1","width":1600}
+{"elements":8,"id":100003,"name":"other"}
+{"height":1000,"kind":"plan","path":"after.svg","view":"Level 1","width":1600}
+{"at":[0.0,0.0],"category":"link","elements":8,"guid":"<GUID-1>","id":100003,"loaded":true,"name":"other","path":"other.bimcraft"}
+{"height":1000,"kind":"plan","path":"moved.svg","view":"Level 1","width":1600}
+{"count":1,"elements":[{"at":[0.0,0.0],"category":"link","elements":8,"guid":"<GUID-1>","id":100003,"loaded":true,"name":"other","path":"other.bimcraft"}],"returned":1}
+
+--- stderr
+
+=== file before.svg: 1744 normalised characters, sha256=46bae280a86b5a6a840cd7884865444315c97775bb5641cf13dd855498a804cc
+=== file after.svg: 17199 normalised characters, sha256=c8a2baef4c3c7c91c6185df39de1ee842ef62d5730fa9db794cfacebeb95efd5
+=== file moved.svg: 18970 normalised characters, sha256=2370226a5b450da972765019634e89aa5f99525add986264216a5b92d596f34d
+plan unchanged by the link: False

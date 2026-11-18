@@ -1,0 +1,22 @@
+$ bimcraft-cli run broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: this STEP file is in no schema, not IFC
+
+$ bimcraft-cli convert broken.ifc out.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: this STEP file is in no schema, not IFC
+
+$ bimcraft-cli info broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: this STEP file is in no schema, not IFC
+
+out.bimcraft written: False

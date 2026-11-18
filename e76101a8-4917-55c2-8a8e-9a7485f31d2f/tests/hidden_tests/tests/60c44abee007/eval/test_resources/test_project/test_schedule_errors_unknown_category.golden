@@ -1,0 +1,8 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "X", "category": "teapots"}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (schedule): schedule: `teapots` isn't a category schedules are of; there are: room, door, window, wall, floor, ceiling, roof, column, structuralcolumn, footing, beam, rebar, stripfooting, pipe, conduit, cabletray, duct, cable, downconductor, groundconductor, wire, component, stair, ramp, railing, mass, massfloor, level, multicategory
+

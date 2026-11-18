@@ -1,0 +1,127 @@
+$ bimcraft-cli run --cmd 'stair {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair: `start` [x, y] is required
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "end": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair: `end` must be away from `start`: it says which way the stair climbs
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "riser": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair 100002 riser must be above zero, got 0
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "width": -1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair 100002 width must be above zero, got -1
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "height": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair 100002 height must be above zero, got 0
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "landings": [{"at": 30}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair 100002: a landing after 30 risers leaves a run of fewer than 2 risers; each run needs 2 or more
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "landings": [{"at": 0}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair 100002: a landing after 0 risers leaves a run of fewer than 2 risers; each run needs 2 or more
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "landings": [{"at": 5, "turn": 45}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair 100002: a landing turns 0 (straight on), 90 or -90 (left or right), or 180 or -180 (back beside the run, to its left or its right), not 45
+
+$ bimcraft-cli run --cmd 'ramp {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (ramp): ramp: `start` [x, y] is required
+
+$ bimcraft-cli run --cmd 'ramp {"start": [0, 0], "angle": 0, "slope": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (ramp): ramp 100002: slope 0% isn't from 1% to 50%
+
+$ bimcraft-cli run --cmd 'ramp {"start": [0, 0], "angle": 0, "slope": 60}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (ramp): ramp 100002: slope 60% isn't from 1% to 50%
+
+$ bimcraft-cli run --cmd 'ramp {"start": [0, 0], "angle": 0, "height": 500, "landings": [{"at": 900}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (ramp): ramp 100002: a landing 900 mm up isn't below its top, 500 mm up
+
+$ bimcraft-cli run --cmd 'railing {"host": 100000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (railing): railing: no stair or ramp 100000
+
+$ bimcraft-cli run --cmd 'railing {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (railing): railing: `path` [[x, y], …] is required
+
+$ bimcraft-cli run --cmd 'railing {"path": [[0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (railing): railing 100002: a path needs 2 to 10000 points
+
+$ bimcraft-cli run --cmd 'railing {"path": [[0, 0], [1000, 0]], "type": "Glass"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (railing): railing 100002: type `Glass` doesn't exist (there are: Railing - 1000mm)
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0}' --cmd 'railing {"host": 100002, "side": "middle"}'
+[exit 1]
+--- stdout
+{"id":100002,"length":4480.0,"railings":[],"risers":17}
+
+--- stderr
+line 1 (railing): railing: `side` is left or right, going up, not `middle`
+
+$ bimcraft-cli run --cmd 'stair {"start": [0, 0], "angle": 0, "landings": {"at": 5}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (stair): stair: `landings` is a list of at most 100 landings [{at, turn?}, …]
+

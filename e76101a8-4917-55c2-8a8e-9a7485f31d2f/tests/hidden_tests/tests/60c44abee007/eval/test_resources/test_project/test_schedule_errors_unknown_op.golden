@@ -1,0 +1,8 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'schedule {"name": "X", "category": "rooms", "filters": [{"field": "Name", "op": "like", "value": "x"}]}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (schedule): schedule: `filters`: unknown variant `like`, expected one of `equals`, `not-equals`, `greater`, `greater-or-equal`, `less`, `less-or-equal`, `contains`, `not-contains`, `begins-with`, `not-begins-with`, `ends-with`, `not-ends-with`, `has-value`, `has-no-value`
+

@@ -1,0 +1,187 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'split {"id": 100002, "at": [2000, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (split): split: door 100004 is in the way; split elsewhere
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'split {"id": 100002, "at": [2000, 900]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (split): split: [2000, 900] isn't on wall 100002
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'split {"id": 100002, "at": [0, 0]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (split): split: split between the wall's ends
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'split {"id": 100004, "at": [1000, 2000]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (split): split: 100004 is not a wall
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'split {"at": [1000, 2000]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (split): split: `id`, a wall or a detail line, is required
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'corner {"ids": [100002, 100004]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (corner): corner: `ids` takes two walls
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'corner {"ids": [100002, 100005]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (corner): corner: the walls are parallel: they never meet
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'corner {"ids": [100002, 100003], "keep": [[1000,0]]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (corner): corner: `keep` is a point on each wall, [[x, y], [x, y]]
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'corner {"ids": [100002, 100006]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (corner): corner: it trims and extends straight walls; a curved one changes by its ends or its `arc`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'fillet {"ids": [100002, 100003], "radius": 3800}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (fillet): fillet: door 100004 is in the part of wall 100002 the fillet cuts away; move it along the wall first
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'fillet {"ids": [100002, 100003], "radius": 0}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (fillet): fillet: `radius` is more than 1 mm, not 0
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'fillet {"ids": [100002, 100005], "radius": 100}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (fillet): fillet: the walls are straight, meet at an angle and are long enough for the arc; these aren't, or it doesn't fit
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'fillet {"ids": [100002, 100006], "radius": 100}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (fillet): fillet: it rounds two straight walls; a curved one changes by its ends or its `arc`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'fillet {"ids": [100002, 100003]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (fillet): fillet: `radius`, mm, is required
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'fillet {"ids": [100002], "radius": 100}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (fillet): fillet: `ids` is two detail lines
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'move {"ids": [100002, 100003], "by": [1,1], "end": "start"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+
+--- stderr
+line 1 (move): move: `end` moves an end of one wall; give `ids` one wall
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000]]}' --cmd 'door {"at": [2000, 0]}' --cmd 'wall {"points": [[0,2000],[3000,2000]]}' --cmd 'wall {"points": [[0,6000],[4000,6000]], "arc": 90}' --cmd 'move {"ids": [100004], "by": [0, 500]}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003]}
+{"host":100002,"id":100004,"mark":"1","offset":2000.0}
+{"ids":[100005]}
+{"ids":[100006]}
+{"moved":[100004]}
+
+--- stderr
+

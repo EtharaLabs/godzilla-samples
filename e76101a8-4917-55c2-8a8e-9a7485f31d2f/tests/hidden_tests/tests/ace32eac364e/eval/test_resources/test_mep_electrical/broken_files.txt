@@ -1,0 +1,18 @@
+== lost_voltage
+exit: 1
+open: lost_voltage.bimcraft: distribution system `230/400 V`: `l_n` names voltage `999 V`, which the project doesn't have (there are: 127 V, 220 V, 230 V, 277 V, 380 V, 400 V, 480 V)
+== band
+exit: 1
+open: band.bimcraft: voltage `230 V`: `min` is volts above 0 and not above the nominal 230 V, not 300
+== shrinking
+exit: 1
+open: shrinking.bimcraft: wire type `Cu PVC 70 °C`: row 4: `ampacity` 1 A is less than the row before's 14 A: a larger section carries at least as much
+== blank
+exit: 1
+open: blank.bimcraft: voltage `  `: its name is 1 to 256 characters
+== many
+exit: 1
+open: many.bimcraft: the project has 66 voltages; it holds up to 64
+== long_note
+exit: 1
+open: long_note.bimcraft: wire type `Cu PVC 70 °C`: `note` is up to 256 characters

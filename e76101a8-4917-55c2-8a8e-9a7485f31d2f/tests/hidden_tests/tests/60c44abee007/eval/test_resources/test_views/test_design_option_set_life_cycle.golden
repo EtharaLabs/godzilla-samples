@@ -1,0 +1,62 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'option {"set": "Stair", "options": ["Straight", "L-shaped", "Spiral"]}' --cmd 'option {"set": "Stair", "now": "Stair: L-shaped"}' --cmd 'wall {"points": [[1000,1000],[1000,3000]]}' --cmd 'option {"set": "Stair", "now": null}' --cmd 'wall {"points": [[2000,1000],[2000,3000]]}' --cmd 'graphics {"options": {"Stair": "L-shaped"}}' --cmd 'option {"set": "Stair", "option": "L-shaped", "rename": "Dog-leg"}' --cmd 'option {"set": "Stair", "rename": "Stairs"}' --cmd 'graphics {}' --cmd 'elements {"category": "wall", "offset": 4}' --cmd 'option {"set": "Stairs", "options": ["Straight", "Dog-leg"]}' --cmd 'option {"set": "Roof", "options": ["Flat", "Pitched"]}' --cmd 'option {"set": "Stairs", "delete": true}' --cmd 'elements {"category": "wall", "offset": 4}' --save options.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"now":null,"options":["Straight","L-shaped","Spiral"],"primary":"Straight","set":"Stair"}
+{"now":"Stair: L-shaped","options":["Straight","L-shaped","Spiral"],"primary":"Straight","set":"Stair"}
+{"ids":[100006]}
+{"now":null,"options":["Straight","L-shaped","Spiral"],"primary":"Straight","set":"Stair"}
+{"ids":[100007]}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{"Stair":"L-shaped"},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"now":null,"options":["Straight","Dog-leg","Spiral"],"primary":"Straight","set":"Stair"}
+{"options":["Straight","Dog-leg","Spiral"],"primary":"Straight","set":"Stairs"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{"Stairs":"Dog-leg"},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"count":6,"elements":[{"base_offset":0.0,"category":"wall","end":[1000.0,3000.0],"guid":"<GUID-1>","height":3000.0,"id":100006,"length":2000.0,"level":"<GUID-2>","params":{"Design Option":"Stairs: Dog-leg"},"room_bounding":true,"start":[1000.0,1000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[2000.0,3000.0],"guid":"<GUID-5>","height":3000.0,"id":100007,"length":2000.0,"level":"<GUID-2>","room_bounding":true,"start":[2000.0,1000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":2}
+{"now":null,"options":["Straight","Dog-leg"],"primary":"Straight","set":"Stairs"}
+{"now":null,"options":["Flat","Pitched"],"primary":"Flat","set":"Roof"}
+{"deleted":[100006],"set":"Stairs"}
+{"count":5,"elements":[{"base_offset":0.0,"category":"wall","end":[2000.0,3000.0],"guid":"<GUID-5>","height":3000.0,"id":100007,"length":2000.0,"level":"<GUID-2>","room_bounding":true,"start":[2000.0,1000.0],"thickness":200.0,"top_level":"<GUID-3>","type":"Generic - 200mm","type_guid":"<GUID-4>"}],"returned":1}
+{"format":"bimcraft","path":"options.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run options.bimcraft --cmd 'option {"set": "A: B", "options": ["x"]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"options.bimcraft"}
+
+--- stderr
+line 1 (option): option: set `A: B`: a name has no colon in it
+
+$ bimcraft-cli run options.bimcraft --cmd 'option {"set": "Roof", "options": ["Flat", "Flat"]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"options.bimcraft"}
+
+--- stderr
+line 1 (option): option: set `Roof` has option `Flat` twice
+
+$ bimcraft-cli run options.bimcraft --cmd 'option {"set": "Nope", "accept": true}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"options.bimcraft"}
+
+--- stderr
+line 1 (option): option: no design option set `Nope` (there are: Roof)
+
+$ bimcraft-cli run options.bimcraft --cmd 'option {"set": "Roof", "now": "Roof: Domed"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"options.bimcraft"}
+
+--- stderr
+line 1 (option): option: `now` is `set: option`, one the project has; `Roof: Domed` isn't
+
+$ bimcraft-cli run options.bimcraft --cmd 'graphics {"options": {"Roof": "Domed"}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"options.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: design option set `Roof` has no option `Domed` (there are: Flat, Pitched)
+

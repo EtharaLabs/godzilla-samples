@@ -1,0 +1,137 @@
+$ create_group {}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: `ids` [id, …] is required
+
+$ create_group {"ids": []}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: `ids`: the detail lines, filled regions and text notes to group
+
+$ create_group {"ids": [100002, 100007]}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: wall 100007 can't be in a detail group: it holds detail lines, filled regions and text notes
+
+$ create_group {"ids": [100002, 100008]}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: the elements are in different views; a group's members are all in one
+
+$ create_group {"ids": [100002], "name": "Angle"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: there's already a detail group `Angle`
+
+$ create_group {"ids": [999999]}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: no element 999999
+
+$ create_group {"ids": [100002], "label": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (create_group): create_group: `label` isn't one of its parameters: ids, name
+
+$ detail_group {}
+exit: 1
+--- stdout
+--- stderr
+line 8 (detail_group): detail_group: `type`, the detail group to place, is required
+
+$ detail_group {"type": "Nothing", "at": [0, 0]}
+exit: 1
+--- stdout
+--- stderr
+line 8 (detail_group): detail_group: there's no detail group `Nothing` (there are: Angle, Other)
+
+$ detail_group {"type": "Angle"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (detail_group): detail_group: `at` [x, y] is required
+
+$ detail_group {"type": "Angle", "at": [0, 0], "view": "Nowhere"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (detail_group): detail_group: no view named `Nowhere`
+
+$ detail_group {"type": "Angle", "at": [0, 0], "scale": 2}
+exit: 1
+--- stdout
+--- stderr
+line 8 (detail_group): detail_group: `scale` isn't one of its parameters: type, at, angle, mirrored, view, level
+
+$ repeating_detail {"type": "Angle", "start": [0, 0], "end": [1000, 0]}
+exit: 1
+--- stdout
+--- stderr
+line 8 (repeating_detail): repeating_detail: `spacing`, mm from one group to the next, is required
+
+$ repeating_detail {"type": "Angle", "start": [0, 0], "end": [1000, 0], "spacing": 0.5}
+exit: 1
+--- stdout
+--- stderr
+line 8 (repeating_detail): repeatingdetail 100009: spacing 0.5 mm isn't from 1 mm to 1000000000
+
+$ repeating_detail {"type": "Angle", "start": [0, 0], "end": [100000, 0], "spacing": 10}
+exit: 1
+--- stdout
+--- stderr
+line 8 (repeating_detail): repeatingdetail 100009: it would repeat more than 2000 times; space it wider or draw it shorter
+
+$ repeating_detail {"type": "Nothing", "start": [0, 0], "end": [1000, 0], "spacing": 100}
+exit: 1
+--- stdout
+--- stderr
+line 8 (repeating_detail): repeatingdetail 100009: there's no detail group `Nothing` (there are: Angle, Other)
+
+$ repeating_detail {"start": [0, 0], "end": [1000, 0], "spacing": 100}
+exit: 1
+--- stdout
+--- stderr
+line 8 (repeating_detail): repeating_detail: `type`, the detail group to repeat, is required
+
+$ ungroup {"id": 100002}
+exit: 1
+--- stdout
+--- stderr
+line 8 (ungroup): ungroup: element 100002 isn't a detail group
+
+$ ungroup {}
+exit: 1
+--- stdout
+--- stderr
+line 8 (ungroup): ungroup: null is not an element id or GUID
+
+$ group_type {"name": "Nothing"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (group_type): group_type: there's no detail group `Nothing`
+
+$ group_type {"name": "Angle", "delete": true}
+exit: 1
+--- stdout
+--- stderr
+line 8 (group_type): group_type: detail group 100004 is of `Angle`; delete or ungroup it first
+
+$ group_type {"name": "Angle", "rename": "Other"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (group_type): group_type: there's already a detail group `Other`
+
+$ group_type {"name": "Angle", "colour": "red"}
+exit: 1
+--- stdout
+--- stderr
+line 8 (group_type): group_type: `colour` isn't one of its parameters: name, rename, delete

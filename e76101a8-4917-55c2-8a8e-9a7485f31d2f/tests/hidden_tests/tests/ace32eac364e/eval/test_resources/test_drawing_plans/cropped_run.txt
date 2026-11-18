@@ -1,0 +1,19 @@
+exit: 0
+--- stdout
+{"material":{"color":[200,200,200],"cut":"diagonal","surface":"grid"},"name":"Diag"}
+{"material":{"color":[200,200,200],"cut":"horizontal","surface":"none"},"name":"Hor"}
+{"material":{"color":[200,200,200],"cut":"vertical","surface":"none"},"name":"Ver"}
+{"material":{"color":[200,200,200],"cut":"crosshatch","surface":"none"},"name":"Cross"}
+{"material":{"color":[200,200,200],"cut":"none","cut_pattern":"Diagonal Crosshatch","surface":"none"},"name":"Hatch"}
+{"category":"wall","name":"Five","type":{"layers":[{"function":"finish","material":"Diag","thickness":100.0},{"function":"substrate","material":"Hor","thickness":100.0},{"function":"structure","material":"Ver","thickness":100.0},{"function":"thermal","material":"Cross","thickness":100.0},{"function":"membrane","material":"Hatch","thickness":100.0}],"thickness":500.0}}
+{"category":"floor","name":"Gridded","type":{"layers":[{"function":"finish","material":"Diag","thickness":20.0},{"function":"structure","material":"Concrete","thickness":200.0}],"thickness":220.0}}
+{"category":"ceiling","name":"Tiles 600","type":{"grid":600.0,"thickness":20.0}}
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006}
+{"area_m2":19.25,"id":100007}
+{"crop":[[-500.0,-500.0],[3000.0,2000.0]],"view":100000}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{"wall":{"cut":{"background":{"color":[255,255,200],"pattern":"Solid fill"},"foreground":{"color":[0,0,255],"pattern":"Sand"}}}},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"format":"svg","path":"cropped.svg"}
+{"crop":null,"view":100000}
+{"format":"svg","path":"uncropped.svg"}
+--- stderr

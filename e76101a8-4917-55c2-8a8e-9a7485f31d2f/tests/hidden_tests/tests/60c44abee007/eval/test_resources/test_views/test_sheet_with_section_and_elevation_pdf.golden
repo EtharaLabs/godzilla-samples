@@ -1,0 +1,36 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'door {"at": [3000, 2000]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'room {"point": [1500, 2000], "name": "Living"}' --cmd 'room {"point": [4500, 2000], "name": "Bed"}' --cmd 'floor {}' --cmd 'grid {"start": [0, -1000], "end": [0, 5000]}' --cmd 'grid {"start": [6000, -1000], "end": [6000, 5000]}' --cmd 'dimension_type {"name": "Diagonal - 2.5mm Arial", "font": "IBM Plex Sans"}' --cmd 'dimension_type {"name": "Arrow - 2.5mm Arial", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "2.5mm", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "3.5mm", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "5mm", "font": "IBM Plex Sans"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'elevation {"facing": "south"}' --cmd 'sheet {"name": "Sections", "size": "A3"}' --cmd 'place {"sheet": "A101", "view": "Section 1", "at": [120, 200], "scale": 50}' --cmd 'place {"sheet": "A101", "view": "South", "at": [300, 200]}' --cmd 'render {"view": "A101", "path": "a101.pdf"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"host":100002,"id":100007,"mark":"1","offset":1500.0}
+{"host":100006,"id":100008,"mark":"2","offset":2000.0}
+{"host":100003,"id":100009,"mark":"1","offset":2000.0}
+{"area_m2":12.0,"id":100010,"number":"1"}
+{"area_m2":12.0,"id":100011,"number":"2"}
+{"area_m2":24.0,"id":100012}
+{"id":100013,"name":"1"}
+{"id":100014,"name":"2"}
+{"name":"Diagonal - 2.5mm Arial","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"IBM Plex Sans","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"diagonal","tick_pen":7,"tick_size":2.0,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"name":"Arrow - 2.5mm Arial","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"IBM Plex Sans","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"arrow","tick_pen":7,"tick_size":2.5,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"name":"2.5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":2.5}}
+{"name":"3.5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":3.5}}
+{"name":"5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":5.0}}
+{"id":100015,"name":"Section 1"}
+{"id":100016,"name":"South"}
+{"id":100017,"number":"A101"}
+{"at":[120.0,200.0],"id":100018}
+{"at":[300.0,200.0],"id":100019}
+{"kind":"sheet","path":"a101.pdf","view":"A101"}
+
+--- stderr
+
+=== pdf a101.pdf: %PDF-1.4
+obj 3: << /Type /Page /Parent 2 0 R /MediaBox [0 0 1190.551 841.890] /Resources << /XObject << /Im0 5 0 R /Im1 6 0 R >> >> /Contents 4 0 R >>
+obj 4: << /Length * /Filter /FlateDecode >> stream[40690] sha256=1435cf2baa26bf0e080a2c326d43c63c8a8ee150e18813eba4b8f001668bace9
+obj 5: << /Type /XObject /Subtype /Image /Width 1024 /Height 560 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode /Length * >>
+=== image a101.pdf image 0: 1024x560
+obj 6: << /Type /XObject /Subtype /Image /Width 609 /Height 340 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode /Length * >>
+=== image a101.pdf image 1: 609x340
+obj 1: << /Type /Catalog /Pages 2 0 R >>
+obj 2: << /Type /Pages /Kids [3 0 R] /Count 1 >>

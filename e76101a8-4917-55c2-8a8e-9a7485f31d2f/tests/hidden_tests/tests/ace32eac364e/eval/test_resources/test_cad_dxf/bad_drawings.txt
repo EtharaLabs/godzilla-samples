@@ -1,0 +1,25 @@
+### draws_nothing
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: it draws nothing in model space
+### empty_file
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: it isn't a DXF: there's no ENTITIES section
+### no_entities_section
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: it isn't a DXF: there's no ENTITIES section
+### only_paper_space
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: it draws nothing in model space
+### section_with_no_name
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 4: a SECTION with no name

@@ -1,0 +1,203 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'mass {"boundary": [[12000,0],[16000,0],[16000,4000],[12000,4000]], "top": [[13000,1000],[15000,1000],[15000,3000],[13000,3000]], "height": 5000}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "masses.png"}' --cmd 'save {"path": "masses.glb"}' --cmd 'show_mass {}' --cmd 'MH {}' --cmd 'show_mass {"view": "Level 2", "show": false}' --cmd 'show_mass {"view": "{3D}", "show": false}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "hidden.png"}' --cmd 'save {"path": "hidden.glb"}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+{"area_m2":16.0,"height":5000.0,"id":100005,"volume_m3":46.67}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"masses.png","target":null,"view":"{3D}","width":320}
+{"elements":2,"format":"glTF 2.0","path":"masses.glb","triangles":24}
+{"hidden":["mass"],"name":"Level 1","shown":false,"view":100000}
+{"hidden":[],"name":"Level 1","shown":true,"view":100000}
+{"hidden":["mass"],"name":"Level 2","shown":false,"view":100001}
+{"hidden":["mass"],"name":"{3D}","shown":false,"view":100006}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"hidden.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+line 1 (save): save: the default 3D view shows nothing to export: draw something, or show again what Visibility/Graphics hides there
+
+=== file masses.png
+png 320x200 rgba pixels-sha256=ea13a0827fbe3d233c937c27ff459e06079109a6dde7e2835432367a59b1d6d2
+=== file hidden.png
+png 320x200 rgba pixels-sha256=5944a40906d480580cba158a31b605d1ec8eb464119ce68aa082560695fdff6d
+=== file masses.glb
+{
+ "accessors": [
+  {
+   "bufferView": 0,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 24,
+   "max": [
+    10.0,
+    9.5,
+    0.0
+   ],
+   "min": [
+    0.0,
+    0.0,
+    -8.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 0,
+   "componentType": 5125,
+   "count": 36,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 288,
+   "componentType": 5126,
+   "count": 24,
+   "max": [
+    16.0,
+    5.0,
+    0.0
+   ],
+   "min": [
+    12.0,
+    0.0,
+    -4.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 288,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 144,
+   "componentType": 5125,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "asset": {
+  "extras": {
+   "source": "the default 3D view",
+   "units": "metres",
+   "up": "+Y, BIMCraft's +Z"
+  },
+  "generator": "BIMCraft 0.10.0",
+  "version": "2.0"
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 576,
+   "byteOffset": 0,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 576,
+   "byteOffset": 576,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 288,
+   "byteOffset": 1152,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 1440
+  }
+ ],
+ "materials": [
+  {
+   "alphaMode": "BLEND",
+   "doubleSided": true,
+   "name": "#9ebee0 60% clear",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.341914,
+     0.514918,
+     0.745404,
+     0.4
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "100004",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 1,
+      "POSITION": 0
+     },
+     "indices": 2,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100005",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 4,
+      "POSITION": 3
+     },
+     "indices": 5,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "extras": {
+    "category": "mass",
+    "guid": "<GUID-1>",
+    "id": 100004
+   },
+   "mesh": 0,
+   "name": "100004"
+  },
+  {
+   "extras": {
+    "category": "mass",
+    "guid": "<GUID-2>",
+    "id": 100005
+   },
+   "mesh": 1,
+   "name": "100005"
+  }
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1
+   ]
+  }
+ ]
+}
+bin-sha256=ae2510a0785e84e9ae805e8ff9001f4124e3e6589823df895dbaa82452413b5c
+=== files: hidden.png, masses.glb, masses.png

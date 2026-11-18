@@ -1,0 +1,27 @@
+$ bimcraft-cli run --cmd 'render {"family": "Single Door", "type": "900 x 2100", "wall_thickness": 100, "width": 320, "height": 200, "path": "thin.png"}' --cmd 'render {"family": "Single Door", "type": "900 x 2100", "wall_thickness": 400, "width": 320, "height": 200, "path": "thick.png"}' --cmd 'render {"family": "Casement Window", "mode": "elevation", "width": 320, "height": 200, "path": "win.png"}'
+[exit 0]
+--- stdout
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"family":"Single Door","height":200,"kind":"family 3d preview","lens":null,"mode":"3d","path":"thin.png","target":null,"type":"900 x 2100","view":"Single Door","width":320}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"family":"Single Door","height":200,"kind":"family 3d preview","lens":null,"mode":"3d","path":"thick.png","target":null,"type":"900 x 2100","view":"Single Door","width":320}
+{"azimuth":90.0,"elevation":0.0,"eye":null,"eye_elevation":null,"family":"Casement Window","height":200,"kind":"family elevation preview","lens":null,"mode":"elevation","path":"win.png","target":null,"type":"1200 x 1500","view":"Casement Window","width":320}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0, 0], [5000, 0]]}' --cmd 'door {"at": [2500, 0], "family": "Double Door", "type": "1500 x 2100", "flip_facing": true}' --cmd 'elements {"category": "door"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "door3d.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":2500.0}
+{"count":1,"elements":[{"at":[2500.0,0.0],"category":"door","family":"Double Door","family_guid":"<GUID-1>","flip_facing":true,"flip_hand":false,"guid":"<GUID-2>","height":2100.0,"host":"<GUID-3>","id":100003,"level":"<GUID-4>","mark":"1","offset":2500.0,"operation":"double-swing","sill":0.0,"type":"1500 x 2100","values":{"Frame Material":"Timber","Frame Width":50.0,"Height":2100.0,"Leaf Material":"Timber","Leaf Thickness":40.0,"Wall Thickness":200.0,"Width":1500.0},"width":1500.0}],"returned":1}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"door3d.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+
+=== file thin.png
+png 320x200 rgba pixels-sha256=4831cdf38d0ac13c78a548ddd3a23af8fad9b91a4b84124cf884c9c060ba73d3
+=== file thick.png
+png 320x200 rgba pixels-sha256=66f6f1bee0dd30d74194c3a129caf4c823058a097c651604387cd6bf71dd17b3
+=== file win.png
+png 320x200 rgba pixels-sha256=0a81a9cad7dce0c8e1eaba71c81c57a32a522cca0256a61a7e748ba9f785986a
+=== file door3d.png
+png 320x200 rgba pixels-sha256=d2a1eb1fdbd1d3b97dba3fae009632509137ba8aced823b82d47a1082344807d

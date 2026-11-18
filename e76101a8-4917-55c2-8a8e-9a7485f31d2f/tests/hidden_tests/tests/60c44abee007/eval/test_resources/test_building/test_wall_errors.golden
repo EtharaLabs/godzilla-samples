@@ -1,0 +1,63 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall: `points` needs at least 2 points
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[0,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall 100002: too short (0 mm)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "height": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall 100002 height must be above zero, got 0
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "top_level": "Level 1", "top_offset": -100}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall 100002: its top (-100 mm) must be above its base (0 mm); it comes out -100 mm tall, so raise its top constraint, top offset or height by more than 100 mm
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "type": "Glass Curtain"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall 100002: type `Glass Curtain` doesn't exist (there are: Exterior - 300mm, Generic - 200mm, Interior - 100mm)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "location": "middle"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall: `location` is one of centre, core-centre, exterior-finish, interior-finish, exterior-core, interior-core, not `middle`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "level": "Roof"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall: no level or plan view named `Roof` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]], "arc": 360}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall 100002: arc 360° isn't between -360° and 360°, reaching no farther than 1000 km
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[1e10,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (wall): wall: `points`: [10000000000.0,0] is not a point [x, y] in mm
+

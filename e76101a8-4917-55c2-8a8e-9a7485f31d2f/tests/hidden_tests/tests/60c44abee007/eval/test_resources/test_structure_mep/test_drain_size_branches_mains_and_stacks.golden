@@ -1,0 +1,105 @@
+$ bimcraft-cli run --cmd 'drain_size {"units": 5}'
+[exit 0]
+--- stdout
+{"capacity":6.0,"dn":50.0,"minimum_dn":0.0,"units":5.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 30}'
+[exit 0]
+--- stdout
+{"capacity":160.0,"dn":100.0,"minimum_dn":0.0,"units":30.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"wc": 1, "lav": 1, "shower": 1}}'
+[exit 0]
+--- stdout
+{"capacity":160.0,"dn":100.0,"minimum_dn":100.0,"units":9.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"lav": 2, "sink": 1}}'
+[exit 0]
+--- stdout
+{"capacity":6.0,"dn":50.0,"minimum_dn":50.0,"units":5.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"wc": 0, "lav": 1}}'
+[exit 0]
+--- stdout
+{"capacity":3.0,"dn":40.0,"minimum_dn":40.0,"units":1.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"fixtures": {"laundry": 2, "shower": 3}}'
+[exit 0]
+--- stdout
+{"capacity":20.0,"dn":75.0,"minimum_dn":40.0,"units":12.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 40, "role": "main"}'
+[exit 0]
+--- stdout
+{"capacity":180.0,"dn":100.0,"minimum_dn":0.0,"units":40.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 40, "role": "main", "slope": 0.005}'
+[exit 0]
+--- stdout
+{"capacity":1400.0,"dn":200.0,"minimum_dn":0.0,"units":40.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 2000, "role": "main", "slope": 0.04}'
+[exit 0]
+--- stdout
+{"capacity":2300.0,"dn":200.0,"minimum_dn":0.0,"units":2000.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 500, "role": "main", "slope": 0.02}'
+[exit 0]
+--- stdout
+{"capacity":840.0,"dn":150.0,"minimum_dn":0.0,"units":500.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 300, "role": "stack", "floors": 2}'
+[exit 0]
+--- stdout
+{"capacity":960.0,"dn":150.0,"minimum_dn":0.0,"units":300.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 300, "role": "stack", "floors": 5}'
+[exit 0]
+--- stdout
+{"capacity":500.0,"dn":100.0,"minimum_dn":0.0,"units":300.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 30, "role": "stack"}'
+[exit 0]
+--- stdout
+{"capacity":30.0,"dn":75.0,"minimum_dn":0.0,"units":30.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 3, "min_dn": 75}'
+[exit 0]
+--- stdout
+{"capacity":20.0,"dn":75.0,"minimum_dn":75.0,"units":3.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'drain_size {"units": 10, "fixtures": {"wc": 2}}'
+[exit 0]
+--- stdout
+{"capacity":160.0,"dn":100.0,"minimum_dn":100.0,"units":22.0}
+
+--- stderr
+

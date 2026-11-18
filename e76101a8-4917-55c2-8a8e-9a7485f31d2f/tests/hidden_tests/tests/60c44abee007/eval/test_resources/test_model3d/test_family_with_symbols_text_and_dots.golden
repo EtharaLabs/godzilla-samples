@@ -1,0 +1,26 @@
+$ bimcraft-cli run --cmd 'family {"name": "Marker", "category": "generic", "parameters": [{"name": "Code", "kind": "number", "value": 7}], "types": {"Standard": {}}, "symbols": [{"line": [[-300, -300], [300, -300], [300, 300], [-300, 300], [-300, -300]]}, {"arc": {"centre": [0, 0], "radius": 250, "from": 0, "to": 270}}, {"text": {"at": [0, 0], "height": 120, "value": "N{Code}", "align": "center"}}, {"dot": {"centre": [200, 200], "radius": 40}}]}' --cmd 'render {"family": "Marker", "mode": "plan", "width": 320, "height": 200, "path": "marker.png"}' --cmd 'component {"family": "Marker", "at": [1000, 1000], "angle": 45}' --cmd 'family {"name": "Marker"}'
+[exit 0]
+--- stdout
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"Code","value":7}],"symbols":[{"line":[[-300.0,-300.0],[300.0,-300.0],[300.0,300.0],[-300.0,300.0],[-300.0,-300.0]]},{"arc":{"centre":[0.0,0.0],"from":0.0,"radius":250.0,"to":270.0}},{"text":{"align":"center","at":[0.0,0.0],"height":120.0,"value":"N{Code}"}},{"dot":{"centre":[200.0,200.0],"radius":40.0}}],"types":{"Standard":{}}},"name":"Marker","warnings":[]}
+{"family":"Marker","height":200,"kind":"family plan preview","mode":"plan","path":"marker.png","type":"Standard","view":"Marker","width":320}
+{"id":100002}
+{"family":{"category":"generic","forms":[],"parameters":[{"kind":"number","name":"Code","value":7}],"symbols":[{"guid":"<GUID-1>","id":999464,"line":[[-300.0,-300.0],[300.0,-300.0],[300.0,300.0],[-300.0,300.0],[-300.0,-300.0]]},{"arc":{"centre":[0.0,0.0],"from":0.0,"radius":250.0,"to":270.0},"guid":"<GUID-2>","id":999463},{"guid":"<GUID-3>","id":999462,"text":{"align":"center","at":[0.0,0.0],"height":120.0,"value":"N{Code}"}},{"dot":{"centre":[200.0,200.0],"radius":40.0},"guid":"<GUID-4>","id":999461}],"types":{"Standard":{}}},"name":"Marker","values":{"Standard":{"Code":7.0}},"warnings":[]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad", "types": {"Standard": {}}, "symbols": [{"text": {"at": [0, 0], "height": 100, "value": "{Missing}"}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad`: symbol 1: its text reads `{Missing}`, which isn't one of the family's parameters
+
+$ bimcraft-cli run --cmd 'family {"name": "Bad", "types": {"Standard": {}}, "symbols": [{"dot": {"centre": [0, 0], "radius": 0}}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `Bad`: type `Standard`: symbol 1: its dot has radius 0; it needs a radius above zero
+
+=== file marker.png
+png 320x200 rgba pixels-sha256=ad62baadc19e1a428158ac761219b0a79832f11c81010119ccd13c080410b53c

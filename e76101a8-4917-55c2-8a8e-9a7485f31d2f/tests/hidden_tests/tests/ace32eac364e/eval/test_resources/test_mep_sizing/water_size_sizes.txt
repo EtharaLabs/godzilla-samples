@@ -1,0 +1,45 @@
+$ water_size {"fixtures": {"wc": 2, "lav": 2, "shower": 2, "sink": 1, "laundry": 1}}
+exit: 0
+--- stdout
+{"dn":20.0,"end_kpa":null,"equivalent_length_m":0.0,"flow_lps":0.553,"head_loss_m_per_m":0.39351,"inside_mm":17.0,"loss_kpa":0.0,"ok":true,"ok_covers":"the speed alone: no pressure was given","speed_ms":2.44}
+--- stderr
+$ water_size {"fixtures": {"wc": 2, "lav": 2, "shower": 2, "sink": 1, "laundry": 1}, "method": "sum", "length": 12000, "fittings": {"elbow90": 4, "tee_side": 1, "gate": 1}, "pressure": 80, "rise": 3000}
+exit: 0
+--- stdout
+{"dn":32.0,"end_kpa":4.19,"equivalent_length_m":21.4,"flow_lps":1.5,"head_loss_m_per_m":0.22092,"inside_mm":27.8,"loss_kpa":46.38,"ok":false,"ok_covers":"the speed and the pressure left at the end","speed_ms":2.47}
+--- stderr
+$ water_size {"flow": 0.5, "dn": 20, "length": 5000, "pressure": 30, "rise": 2500}
+exit: 0
+--- stdout
+{"dn":20.0,"end_kpa":-10.65,"equivalent_length_m":5.0,"flow_lps":0.5,"head_loss_m_per_m":0.32869,"inside_mm":17.0,"loss_kpa":16.12,"ok":false,"ok_covers":"the speed and the pressure left at the end","speed_ms":2.2}
+--- stderr
+$ water_size {"flow": 0.5, "dn": 25, "length": 5000, "pressure": 60, "rise": -1000}
+exit: 0
+--- stdout
+{"dn":25.0,"end_kpa":64.68,"equivalent_length_m":5.0,"flow_lps":0.5,"head_loss_m_per_m":0.10451,"inside_mm":21.6,"loss_kpa":5.13,"ok":true,"ok_covers":"the speed and the pressure left at the end","speed_ms":1.36}
+--- stderr
+$ water_size {"flow": 0.01, "dn": 110, "length": 1000}
+exit: 0
+--- stdout
+{"dn":110.0,"end_kpa":null,"equivalent_length_m":1.0,"flow_lps":0.01,"head_loss_m_per_m":0.0,"inside_mm":97.8,"loss_kpa":0.0,"ok":true,"ok_covers":"the speed alone: no pressure was given","speed_ms":0.0}
+--- stderr
+$ water_size {"fixtures": {"lav": 1, "wc": 0}}
+exit: 0
+--- stdout
+{"dn":20.0,"end_kpa":null,"equivalent_length_m":0.0,"flow_lps":0.15,"head_loss_m_per_m":0.03945,"inside_mm":17.0,"loss_kpa":0.0,"ok":true,"ok_covers":"the speed alone: no pressure was given","speed_ms":0.66}
+--- stderr
+$ water_size {"flow": 3}
+exit: 0
+--- stdout
+{"dn":50.0,"end_kpa":null,"equivalent_length_m":0.0,"flow_lps":3.0,"head_loss_m_per_m":0.08439,"inside_mm":44.0,"loss_kpa":0.0,"ok":true,"ok_covers":"the speed alone: no pressure was given","speed_ms":1.97}
+--- stderr
+$ water_size {"flow": 1, "dn": 50, "length": 2000, "fittings": {"elbow90": 1, "elbow45": 1, "tee_through": 1, "tee_side": 1, "gate": 1, "globe": 1, "check": 1}}
+exit: 0
+--- stdout
+{"dn":50.0,"end_kpa":null,"equivalent_length_m":59.3,"flow_lps":1.0,"head_loss_m_per_m":0.01192,"inside_mm":44.0,"loss_kpa":6.94,"ok":true,"ok_covers":"the speed alone: no pressure was given","speed_ms":0.66}
+--- stderr
+$ water_size {"flow": 20}
+exit: 0
+--- stdout
+{"dn":110.0,"end_kpa":null,"equivalent_length_m":0.0,"flow_lps":20.0,"head_loss_m_per_m":0.05547,"inside_mm":97.8,"loss_kpa":0.0,"ok":true,"ok_covers":"the speed alone: no pressure was given","speed_ms":2.66}
+--- stderr

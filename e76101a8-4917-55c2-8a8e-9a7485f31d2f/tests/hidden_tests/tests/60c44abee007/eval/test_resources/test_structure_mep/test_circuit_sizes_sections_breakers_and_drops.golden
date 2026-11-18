@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'circuit {"load": 2000}'
+[exit 0]
+--- stdout
+{"breaker_a":16.0,"carries_a":24.0,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":15.75,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 1200, "use": "lighting"}'
+[exit 0]
+--- stdout
+{"breaker_a":10.0,"carries_a":17.5,"chosen":null,"conductors":"1 × 1.5 + N 1.5 + PE 1.5 mm²","current_a":9.45,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":1.5,"section_mm2":1.5,"volts":127.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 1200, "use": "lighting", "length": 50000}'
+[exit 0]
+--- stdout
+{"breaker_a":10.0,"carries_a":41.0,"chosen":null,"conductors":"1 × 6 + N 6 + PE 6 mm²","current_a":9.45,"drop_percent":2.94,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":1.5,"section_mm2":6.0,"volts":127.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 5000, "apparent": true, "phases": "FF"}'
+[exit 0]
+--- stdout
+{"breaker_a":25.0,"carries_a":32.0,"chosen":null,"conductors":"2 × 4 + PE 4 mm²","current_a":22.73,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":4.0,"volts":220.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 9000, "phases": "FF", "system": "220/380", "length": 30000}'
+[exit 0]
+--- stdout
+{"breaker_a":25.0,"carries_a":32.0,"chosen":null,"conductors":"2 × 4 + PE 4 mm²","current_a":23.68,"drop_percent":2.21,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":4.0,"volts":380.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 30000, "phases": "3F", "system": "230/400"}'
+[exit 0]
+--- stdout
+{"breaker_a":50.0,"carries_a":50.0,"chosen":null,"conductors":"3 × 10 + PE 10 mm²","current_a":43.3,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":10.0,"volts":400.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 3000, "section": 6, "breaker": 32, "length": 20000}'
+[exit 0]
+--- stdout
+{"breaker_a":32.0,"carries_a":41.0,"chosen":{"breaker_a":32.0,"breaker_ok":true,"carries_a":41.0,"carries_ok":true,"drop_ok":true,"drop_percent":2.94,"minimum_section_ok":true,"section_mm2":6.0},"conductors":"1 × 6 + N 6 + PE 6 mm²","current_a":23.62,"drop_percent":2.94,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":false,"minimum_section_mm2":2.5,"section_mm2":6.0,"volts":127.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 3000, "length": 200000, "drop_limit": 2}'
+[exit 0]
+--- stdout
+{"breaker_a":25.0,"carries_a":232.0,"chosen":null,"conductors":"1 × 95 + N 95 + PE 50 mm²","current_a":23.62,"drop_percent":1.83,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":95.0,"volts":127.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 200000, "phases": "3FN", "reduced_neutral": true, "system": "220/380", "length": 100000, "method": "3", "power_factor": 0.8}'
+[exit 0]
+--- stdout
+{"breaker_a":400.0,"carries_a":426.0,"chosen":null,"conductors":"3 × 300 + N 150 + PE 150 mm²","current_a":379.84,"drop_percent":2.1,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":300.0,"volts":380.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 60000, "phases": "3FN", "reduced_neutral": true, "demand": 0.7, "power_factor": 0.92}'
+[exit 0]
+--- stdout
+{"breaker_a":125.0,"carries_a":134.0,"chosen":null,"conductors":"3 × 50 + N 25 + PE 25 mm²","current_a":119.81,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":50.0,"volts":220.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'circuit {"load": 20000, "phases": "3FN", "method": "61A", "grouped": 3, "spacing": 250, "soil": 2, "ambient": 25, "insulation": "epr", "conductor": "rigid", "section": 10, "breaker": 40, "reduced_neutral": true, "power_factor": 0.85, "demand": 0.8}'
+[exit 0]
+--- stdout
+{"breaker_a":50.0,"carries_a":63.71,"chosen":{"breaker_a":40.0,"breaker_ok":false,"carries_a":49.19,"carries_ok":false,"drop_ok":null,"drop_percent":null,"minimum_section_ok":true,"section_mm2":10.0},"conductors":"3 × 16 + N 16 + PE 16 mm²","current_a":49.4,"drop_percent":null,"factors":{"grouping":0.8,"soil":1.05,"temperature":0.96},"grew":true,"minimum_section_mm2":2.5,"section_mm2":16.0,"volts":220.0}
+
+--- stderr
+

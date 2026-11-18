@@ -1,0 +1,126 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "not.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: not.e57: it isn't an E57 file: it doesn't start with ASTM-E57
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "short.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: short.e57: its header is cut short
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "half.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: half.e57: it's cut short: byte 6984 is past its 4096 bytes
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "v2.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: v2.e57: it's E57 version 2; BIMCraft reads version 1
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "codec.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: codec.e57: scan 1: its points are packed by a codec BIMCraft doesn't know; E57 writes bit-packed ones
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "count.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: count.e57: scan 1: it's cut short: its 900 points take 10800 bytes and its section holds 6880
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "missing.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: missing.e57: scan 1: it's cut short: 1 of its 301 points are missing
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "xml.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: xml.e57: its XML is broken: <data3X> is closed by </data3D>
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "string.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: string.e57: scan 1: its field <cartesianX> is a String, which BIMCraft doesn't read
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "empty.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: empty.e57: it holds no points
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "nopoints.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: nopoints.e57: scan 1: it has no points
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "notvector.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: notvector.e57: scan 1: its points aren't a CompressedVector
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "nooffset.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: nooffset.e57: scan 1: it doesn't say where its points are
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "nocount.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: nocount.e57: scan 1: it doesn't say how many points it has
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "noproto.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: noproto.e57: scan 1: its points have no prototype
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "nocoords.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: nocoords.e57: scan 1: its points have neither cartesian nor spherical coordinates
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "badpose.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: badpose.e57: scan 1: its pose's rotation isn't a rotation
+
+$ bimcraft-cli run --cmd 'point_cloud {"path": "badtype.e57"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (point_cloud): point_cloud: badtype.e57: scan 1: its field <cartesianX> is a Mystery, which BIMCraft doesn't read
+

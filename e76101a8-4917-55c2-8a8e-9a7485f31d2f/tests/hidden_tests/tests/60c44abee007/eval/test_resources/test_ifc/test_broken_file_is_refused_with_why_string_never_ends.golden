@@ -1,0 +1,22 @@
+$ bimcraft-cli run broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 10: a string doesn't end
+
+$ bimcraft-cli convert broken.ifc out.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 10: a string doesn't end
+
+$ bimcraft-cli info broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: line 10: a string doesn't end
+
+out.bimcraft written: False

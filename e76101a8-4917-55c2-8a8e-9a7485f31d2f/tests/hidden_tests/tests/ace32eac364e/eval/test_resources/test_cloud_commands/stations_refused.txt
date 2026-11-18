@@ -1,0 +1,8 @@
+[] -> exit 1: line 1 (point_cloud): point_cloud: `path` is a scan file, or a list of the files of one scan's stations, not an empty list
+["east.xyz", 3] -> exit 1: line 1 (point_cloud): point_cloud: `path` lists files by their paths, not 3
+[257 files] -> exit 1: line 1 (point_cloud): point_cloud: a scan comes from up to 256 files, not 257
+["east.xyz", "missing.xyz"] -> exit 1: line 1 (point_cloud): point_cloud: missing.xyz: No such file or directory (os error 2)
+["east.xyz", "x.laz"] -> exit 1: line 1 (point_cloud): point_cloud: x.laz: LAZ is compressed LAS, which BIMCraft doesn't read: decompress it to LAS first (laszip or PDAL)
+5 -> exit 1: line 1 (point_cloud): point_cloud: `path` is a scan file, or a list of the files of one scan's stations, not 5
+{"a": 1} -> exit 1: line 1 (point_cloud): point_cloud: `path` is a scan file, or a list of the files of one scan's stations, not {"a":1}
+["east.xyz", "far.xyz"] -> exit 1: line 1 (point_cloud): point_cloud: together they're 30001000 mm wide along x; up to 20000000 mm

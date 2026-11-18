@@ -1,0 +1,16 @@
+$ bimcraft-cli run --cmd 'link {"path": "w23.ifc", "at": [10000, 0], "angle": 90}' --cmd 'elements {}' --cmd 'reload {}'
+[exit 0]
+--- stdout
+{"elements":4,"id":100002,"name":"w23"}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"angle":90.0,"at":[10000.0,0.0],"category":"link","elements":4,"guid":"<GUID-3>","id":100002,"loaded":true,"name":"w23","path":"w23.ifc"}],"returned":3}
+{"failed":[],"reloaded":["w23"]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'link {"path": "gone.ifc"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (link): link: gone.ifc: No such file or directory (os error 2)
+

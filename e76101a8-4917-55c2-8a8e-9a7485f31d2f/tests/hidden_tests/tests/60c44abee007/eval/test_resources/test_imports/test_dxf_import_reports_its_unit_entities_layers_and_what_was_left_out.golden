@@ -1,0 +1,9 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'cad_layers {"id": 100002}' --cmd 'elements {"category": "cadimport"}'
+[exit 0]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"cad":"plan","id":100002,"layers":[{"color":null,"linetype":"CONTINUOUS","name":"0","shown":true},{"color":[255,0,0],"linetype":"CONTINUOUS","name":"WALLS","shown":true},{"color":[0,255,0],"linetype":"DASHED","name":"HIDDEN","shown":false},{"color":[0,0,255],"linetype":"CONTINUOUS","name":"FROZEN","shown":false},{"color":[51,102,153],"linetype":"CONTINUOUS","name":"TRUE","shown":true}]}
+{"count":1,"elements":[{"at":[0.0,0.0],"cad":"plan","category":"cadimport","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"guid":"<GUID-1>","hidden":["FROZEN","HIDDEN"],"id":100002,"layers":5,"level":"<GUID-2>","origin":[5623.139487,3500.0],"scale":1.0,"source":"plan.dxf","unit":"mm"}],"returned":1}
+
+--- stderr
+

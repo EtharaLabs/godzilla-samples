@@ -1,0 +1,9 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[4000,0]]}' --cmd 'level {"elevation": 3500, "name": "Mezzanine"}' --cmd 'door {"at": [100000, 0]}' --cmd 'level {"elevation": 9000}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+{"id":100003,"name":"Mezzanine"}
+
+--- stderr
+line 1 (door): door: no wall at [100000, 0] on Level 1
+

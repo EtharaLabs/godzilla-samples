@@ -1,0 +1,18 @@
+reinforce {"host": 100002, "cover": {"top": 30, "bottom": 30, "sides": 95}, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the section is too narrow for the bottom bars of 16 mm with that cover and stirrup
+reinforce {"host": 100002, "cover": {"top": 220, "bottom": 220, "sides": 30}, "bottom": {"count": 2, "diameter": 25}, "top": {"count": 2, "diameter": 25}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the bars at the top and the bottom meet: 10.0 mm between them, less than the 25 mm clearance
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 3, "diameter": 12.5, "bent": {"count": 2}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: `bent` count 2 must be 1 to 1: the two bars at the corners stay straight to hold the stirrups, and the bottom row has 3
+reinforce {"host": 100010, "cover": 150, "bars": {"diameter": 12.5, "x": 2, "y": 2}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the section is too narrow for that cover and stirrup
+reinforce {"host": 100004, "cover": 20, "stirrup": {"diameter": 20, "spacing": 100}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the column is too short for a stirrup inside that cover
+reinforce {"host": 100005, "cover": 30, "bars": {"diameter": 20, "count": 40}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: 40 bars of 20 mm leave 5.1 mm between them round the circle, less than the 20 mm clearance: use fewer or thinner bars
+reinforce {"host": 100006, "cover": 50, "mesh": {"x": {"diameter": 10, "spacing": 25}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: mesh x bars of 10 mm each 24.8 mm leave 14.8 mm between them, less than the 20 mm clearance: widen the spacing
+reinforce {"host": 100008, "cover": {"top": 30, "bottom": 190, "sides": 30}, "bottom": {"x": {"diameter": 10, "spacing": 100}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the mesh doesn't fit the floor's 200 mm thickness between the covers
+reinforce {"host": 100008, "cover": 30, "bottom": {"x": {"diameter": 10, "spacing": 3}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: `bottom x` spacing 3 mm must be more than the 10 mm diameter, and up to 1000000000

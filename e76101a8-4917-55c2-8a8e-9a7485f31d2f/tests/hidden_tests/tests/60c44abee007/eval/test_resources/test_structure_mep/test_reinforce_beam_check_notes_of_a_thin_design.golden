@@ -1,0 +1,20 @@
+$ bimcraft-cli run --cmd 'type {"category": "beam", "name": "Beam 200 x 700", "width": 200, "depth": 700, "material": "Concrete"}' --cmd 'beam {"points": [[0, 0], [6000, 0]], "level": "Level 2", "type": "Beam 200 x 700"}' --cmd 'reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 8}, "stirrup": {"diameter": 4.2, "spacing": 400}, "check": "NBR 6118"}'
+[exit 0]
+--- stdout
+{"category":"beam","name":"Beam 200 x 700","type":{"depth":700.0,"material":"Concrete","round":false,"width":200.0}}
+{"ids":[100002]}
+{"count":18,"hosts":1,"ids":[100003,100004,100005,100006,100007,100008,100009,100010,100011,100012,100013,100014,100015,100016,100017,100018,100019,100020],"notes":["NBR 6118 17.3.5.2: the bottom bars are 0.072 % of the section, under the 0.15 % Table 17.3 gives up to C30","NBR 6118 17.3.5.2.3: a beam over 600 mm deep wants skin bars of 0.10 % of the section on each face, and these have -0.000 %","NBR 6118 17.4.1.1: stirrups of 4.2 mm are under the 5 mm least","NBR 6118 17.4.1.1: stirrups 396 mm apart, over min(0.6 d, 300) = 300 mm (0.3 d and 200 mm where shear is high)"],"removed":0,"weight_kg":7.373}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [6000, 0]], "level": "Level 2", "type": "Beam 200 x 500"}' --cmd 'parameter {"name": "Cobrimento", "kind": "length", "categories": ["beam"]}' --cmd 'modify {"id": 100002, "params": {"Cobrimento": 35}}' --cmd 'reinforce {"host": 100002, "bottom": {"count": 2, "diameter": 10}}' --cmd 'elements {"category": "rebar"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"name":"Cobrimento","parameter":{"categories":["beam"],"kind":"length"}}
+{"axis":[[0.0,0.0,2750.0],[6000.0,0.0,2750.0]],"category":"beam","depth":500.0,"end":[6000.0,0.0],"guid":"<GUID-1>","id":100002,"justify":"top","length":6000.0,"level":"<GUID-2>","offset":0.0,"params":{"Cobrimento":35},"round":false,"start":[0.0,0.0],"type":"Beam 200 x 500","type_guid":"<GUID-3>","width":200.0}
+{"count":2,"hosts":1,"ids":[100003,100004],"notes":[],"removed":0,"weight_kg":7.312}
+{"count":2,"elements":[{"category":"rebar","diameter":10.0,"grade":"CA-50","guid":"<GUID-4>","host":"<GUID-1>","id":100003,"layer":"bottom","length":5930.0,"level":"<GUID-2>","path":[[35.0,-60.0,-460.0],[5965.0,-60.0,-460.0]],"weight_kg":3.656},{"category":"rebar","diameter":10.0,"grade":"CA-50","guid":"<GUID-5>","host":"<GUID-1>","id":100004,"layer":"bottom","length":5930.0,"level":"<GUID-2>","path":[[35.0,60.0,-460.0],[5965.0,60.0,-460.0]],"weight_kg":3.656}],"returned":2}
+
+--- stderr
+

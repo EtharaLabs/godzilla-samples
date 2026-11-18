@@ -1,0 +1,22 @@
+reinforce {"host": 100002}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: no cover for the top: give `cover` in mm (a number, or top, bottom and sides), or give the host a Cobrimento parameter
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 20, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: 20 bottom bars of 16 mm leave -9.5 mm between them, less than the 20 mm clearance: use fewer or thinner bars
+reinforce {"host": 100002, "cover": 300, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: the section is too narrow or too shallow for that cover and stirrup
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16, "hook": 800}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a bottom hook of 800 mm doesn't fit inside the stirrup, which is 440.0 mm deep from the bars
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16}, "check": "NBR 6118", "fck": 5}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `fck` is the concrete's strength in MPa, 10 to 100
+reinforce {"host": 100008, "cover": 30, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a round beam isn't reinforced yet; a rectangular one is
+reinforce {"host": 100004, "cover": 30, "bars": {"diameter": 12.5, "x": 2, "y": 2}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a round column takes `count` bars round its circle, not `x` and `y`
+reinforce {"host": 100003, "cover": 30, "bars": {"diameter": 12.5, "x": 1, "y": 2}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `bars x` is 1 bars along a face; it is 2 (the corners) to 1000
+reinforce {"host": 100005, "cover": 30}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: nothing to reinforce with: give a `mesh` with `x` or `y` bars
+reinforce {"host": 100006, "cover": 90, "bottom": {"x": {"diameter": 10, "spacing": 100}}, "top": {"x": {"diameter": 10, "spacing": 100}}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: the meshes at the top and the bottom meet: 0.0 mm between them, less than the 20 mm clearance
+reinforce {"host": 100002, "preset": "Nope", "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: there's no reinforcement preset `Nope`

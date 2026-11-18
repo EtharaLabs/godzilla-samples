@@ -1,0 +1,158 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[{"from":0.0,"material":"H","plane":"xy","profile":[[0.0,0.0],["A",0.0],["A",500.0],[0.0,500.0]],"to":"B * 100"}],"parameters":[{"kind":"length","name":"A","value":1000},{"formula":"if(A > 600, 4, 2)","kind":"length","name":"B","value":null},{"formula":"min(A, 300) + max(1, 2) * abs(-3) - sqrt(16) / 2 ^ 2","kind":"length","name":"C","value":null},{"formula":"round(A / 3) + roundup(1.2) + rounddown(1.8)","kind":"length","name":"D","value":null},{"kind":"angle","name":"E","value":30},{"formula":"sin(E) * 1000 + cos(60) * 1000 + tan(45)","kind":"length","name":"F","value":null},{"formula":"and(A > 1, or(B = 4, not(A < 0)))","kind":"yesno","name":"G","value":null},{"kind":"material","name":"H","value":"Timber"},{"instance":true,"kind":"number","name":"I","value":2}],"types":{"T":{"A":2000},"U":{}}},"name":"Calc","warnings":[]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== family {"name": "Calc"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"guid":"GUID-1","id":999455,"material":"H","plane":"xy","profile":[[0.0,0.0],["A",0.0],["A",500.0],[0.0,500.0]],"to":"B * 100"}],"parameters":[{"kind":"length","name":"A","value":1000},{"formula":"if(A > 600, 4, 2)","kind":"length","name":"B","value":null},{"formula":"min(A, 300) + max(1, 2) * abs(-3) - sqrt(16) / 2 ^ 2","kind":"length","name":"C","value":null},{"formula":"round(A / 3) + roundup(1.2) + rounddown(1.8)","kind":"length","name":"D","value":null},{"kind":"angle","name":"E","value":30},{"formula":"sin(E) * 1000 + cos(60) * 1000 + tan(45)","kind":"length","name":"F","value":null},{"formula":"and(A > 1, or(B = 4, not(A < 0)))","kind":"yesno","name":"G","value":null},{"kind":"material","name":"H","value":"Timber"},{"instance":true,"kind":"number","name":"I","value":2}],"types":{"T":{"A":2000},"U":{}}},"name":"Calc","values":{"T":{"A":2000.0,"B":4.0,"C":305.0,"D":670.0,"E":30.0,"F":1001.0,"G":1.0,"H":"Timber","I":2.0},"U":{"A":1000.0,"B":4.0,"C":305.0,"D":336.0,"E":30.0,"F":1001.0,"G":1.0,"H":"Timber","I":2.0}},"warnings":[]}
+--- stderr
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "B + 1"}, {"name": "B", "formula": "A + 1"}], "forms": [{"profile": [[0, 0], ["A", 0], ["A", 500], [0, 500]], "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `T`: parameter `A`: formula `B + 1`: parameter `B`: formula `A + 1`: `A`'s formula comes back to itself
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "foo(1)"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `foo(1)`: `foo` isn't a function: there are if, and, or, not, min, max, abs, sqrt, round, roundup, rounddown, sin, cos, tan, asin, acos, atan, exp, ln, log and pi()
+family `Bad`: type `T`: parameter `A`: formula `foo(1)`: `foo` isn't a function: there are if, and, or, not, min, max, abs, sqrt, round, roundup, rounddown, sin, cos, tan, asin, acos, atan, exp, ln, log and pi()
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "sqrt(1, 2)"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `sqrt(1, 2)`: `sqrt` doesn't take 2 values
+family `Bad`: type `T`: parameter `A`: formula `sqrt(1, 2)`: `sqrt` takes one value, not 2
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "if(1, 2)"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `if(1, 2)`: `if` doesn't take 2 values
+family `Bad`: type `T`: parameter `A`: formula `if(1, 2)`: `if` takes a condition and two values, not 2 values
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "1 +"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `1 +`: something's missing at its end (character 4)
+family `Bad`: type `T`: parameter `A`: formula `1 +`: something's missing at its end (character 4)
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "(1 + 2"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `(1 + 2`: a `(` isn't closed (character 7)
+family `Bad`: type `T`: parameter `A`: formula `(1 + 2`: a `(` isn't closed (character 7)
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "1 2"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: formula `1 2`: `2` follows where it should end (character 3)
+family `Bad`: type `T`: parameter `A`: formula `1 2`: `2` follows where it should end (character 3)
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": ""}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A`: a formula is empty
+family `Bad`: type `T`: parameter `A`: a formula is empty
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "formula": "1 / 0"}], "forms": [{"profile": [[0, 0], ["A", 0], ["A", 500], [0, 500]], "to": 100}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `T`: parameter `A`: formula `1 / 0`: it comes to inf, which isn't a number
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "M", "kind": "material", "formula": "1"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `M`: a material takes no formula
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "M", "kind": "material", "value": "Unobtainium"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `M`: material `Unobtainium` isn't in the library; add it with `material`
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "1st"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `1st`: a name starts with a letter and holds letters, digits, `_` and spaces, up to 256
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A"}, {"name": "A"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `A` is named twice
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "Paint"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: parameter `Paint`: an element holds its paint under that name; name it otherwise
+=== family {"name": "Bad", "types": {"T": {"Z": 1}}, "parameters": [{"name": "A"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `T`: `Z` isn't one of its parameters
+=== family {"name": "Bad", "types": {"T": {"I": 1}}, "parameters": [{"name": "I", "instance": true}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `T`: `I` is an instance parameter; each component sets its own
+=== family {"name": "Bad", "types": {"T": {"F": 1}}, "parameters": [{"name": "F", "formula": "2"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: type `T`: `F` is worked out by its formula
+=== family {"name": "Bad", "types": {}, "parameters": [{"name": "A"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: it needs a type: add one to `types`
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "A", "kind": "colour"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `parameters`: unknown variant `colour`, expected one of `length`, `number`, `angle`, `yesno`, `material`
+=== family {"name": "Bad", "types": {"T": {}}, "category": "spaceship"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `category`: unknown variant `spaceship`, expected one of `furniture`, `casework`, `plumbing`, `drain`, `pipefitting`, `pipeaccessory`, `equipment`, `outlet`, `switch`, `airterminal`, `earthing`, `inspectionbox`, `lighting`, `generic`, `dataoutlet`, `voiceoutlet`, `patchpanel`, `rack`, `door`, `window`
+=== family {"name": "Bad", "types": {"T": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "to": "A * 2"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: form 1: formula `A * 2` reads `A`, which isn't one of its parameters
+family `Bad`: type `T`: form 1: formula `A * 2`: `A` isn't one of its parameters
+=== family {"name": "Bad", "types": {"T": {}}, "forms": [{"profile": [[0, 0], [100, 0], [100, 100]], "to": 100, "material": "Nope"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: form 1: material `Nope` isn't in the library; add it with `material`
+=== family {"name": "Bad", "types": {"T": {}}, "parameters": [{"name": "Y", "kind": "yesno", "value": "maybe"}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Bad`: parameter `Y` holds yes or no, not "maybe"

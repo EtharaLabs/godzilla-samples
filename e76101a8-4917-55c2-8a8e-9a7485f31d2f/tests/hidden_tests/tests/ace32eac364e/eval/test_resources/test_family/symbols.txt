@@ -1,0 +1,125 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"lighting","forms":[{"from":0.0,"plane":"xy","profile":[[300.0,300.0],[400.0,300.0],[400.0,400.0],[300.0,400.0]],"to":100.0}],"parameters":[{"instance":true,"kind":"yesno","name":"Show","value":1},{"instance":true,"kind":"number","name":"Circuit","value":3}],"symbols":[{"line":[[0.0,0.0],[100.0,0.0]]},{"arc":{"centre":[0.0,0.0],"from":0.0,"radius":50.0,"to":180.0},"visible":"Show"},{"text":{"at":[0.0,-150.0],"height":60.0,"value":"C{Circuit}"}},{"dot":{"centre":[200.0,100.0],"radius":20.0}}],"types":{"A":{}}},"name":"Socket","warnings":[]}
+{"id":100002}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== family {"name": "Socket"} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"lighting","forms":[{"from":0.0,"guid":"GUID-1","id":999463,"plane":"xy","profile":[[300.0,300.0],[400.0,300.0],[400.0,400.0],[300.0,400.0]],"to":100.0}],"parameters":[{"instance":true,"kind":"yesno","name":"Show","value":1},{"instance":true,"kind":"number","name":"Circuit","value":3}],"symbols":[{"guid":"GUID-2","id":999462,"line":[[0.0,0.0],[100.0,0.0]]},{"arc":{"centre":[0.0,0.0],"from":0.0,"radius":50.0,"to":180.0},"guid":"GUID-3","id":999461,"visible":"Show"},{"guid":"GUID-4","id":999460,"text":{"at":[0.0,-150.0],"height":60.0,"value":"C{Circuit}"}},{"dot":{"centre":[200.0,100.0],"radius":20.0},"guid":"GUID-5","id":999459}],"types":{"A":{}}},"name":"Socket","values":{"A":{"Circuit":3.0,"Show":1.0}},"warnings":[]}
+{"count":1,"elements":[{"angle":0.0,"at":[1000.0,1000.0],"category":"component","family":"Socket","family_guid":"GUID-6","guid":"GUID-7","height":100.0,"id":100002,"level":"GUID-8","offset":0.0,"params":{"Circuit":12},"type":"A","values":{"Circuit":12.0,"Show":1.0}}],"returned":1}
+--- stderr
+=== family {"name": "Socket", "symbol": {"id": 999459, "dot": {"centre": [0, 0], "radius": 5}}} | library {"kind": "symbol", "name": "Socket"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"lighting","forms":[{"from":0.0,"guid":"GUID-1","id":999463,"plane":"xy","profile":[[300.0,300.0],[400.0,300.0],[400.0,400.0],[300.0,400.0]],"to":100.0}],"parameters":[{"instance":true,"kind":"yesno","name":"Show","value":1},{"instance":true,"kind":"number","name":"Circuit","value":3}],"symbols":[{"guid":"GUID-2","id":999462,"line":[[0.0,0.0],[100.0,0.0]]},{"arc":{"centre":[0.0,0.0],"from":0.0,"radius":50.0,"to":180.0},"guid":"GUID-3","id":999461,"visible":"Show"},{"guid":"GUID-4","id":999460,"text":{"at":[0.0,-150.0],"height":60.0,"value":"C{Circuit}"}},{"dot":{"centre":[0.0,0.0],"radius":5.0},"guid":"GUID-5","id":999459}],"types":{"A":{}}},"name":"Socket","warnings":[]}
+{"count":0,"library":[],"parts":[{"guid":"GUID-5","id":999459,"index":3,"kind":"symbol","of":"family Socket"},{"guid":"GUID-4","id":999460,"index":2,"kind":"symbol","of":"family Socket"},{"guid":"GUID-3","id":999461,"index":1,"kind":"symbol","of":"family Socket"},{"guid":"GUID-2","id":999462,"index":0,"kind":"symbol","of":"family Socket"}]}
+--- stderr
+=== family {"name": "Socket", "delete_symbol": [999461, 999460]} | library {"kind": "symbol", "name": "Socket"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"lighting","forms":[{"from":0.0,"guid":"GUID-1","id":999463,"plane":"xy","profile":[[300.0,300.0],[400.0,300.0],[400.0,400.0],[300.0,400.0]],"to":100.0}],"parameters":[{"instance":true,"kind":"yesno","name":"Show","value":1},{"instance":true,"kind":"number","name":"Circuit","value":3}],"symbols":[{"guid":"GUID-2","id":999462,"line":[[0.0,0.0],[100.0,0.0]]},{"dot":{"centre":[200.0,100.0],"radius":20.0},"guid":"GUID-3","id":999459}],"types":{"A":{}}},"name":"Socket","warnings":[]}
+{"count":0,"library":[],"parts":[{"guid":"GUID-3","id":999459,"index":1,"kind":"symbol","of":"family Socket"},{"guid":"GUID-2","id":999462,"index":0,"kind":"symbol","of":"family Socket"}]}
+--- stderr
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 60, "value": "  "}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: its text is empty; give it a `value` with something to letter
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 0, "value": "A"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: its text has height 0; it needs a height above zero
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": -4, "value": "A"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: its text has height -4; it needs a height above zero
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": "sqrt(0 - 1)", "value": "A"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: formula `sqrt(0 - 1)`: it comes to NaN, which isn't a number
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 60, "value": "{Nope}"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: symbol 1: its text reads `{Nope}`, which isn't one of the family's parameters
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 60, "value": "{Circuit"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: symbol 1: its text has a `{` with no `}` to close it
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 60, "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: its text is longer than 256 characters
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 60, "value": "A", "align": "up"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `symbols`: unknown variant `up`, expected one of `left`, `center`, `right`
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"text": {"at": [0, 0], "height": 60, "value": "A", "size": 1}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `symbols`: unknown field `size`, expected one of `at`, `height`, `value`, `align`
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"dot": {"centre": [0, 0], "radius": 0}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: its dot has radius 0; it needs a radius above zero
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"dot": {"centre": [0, 0], "radius": 1e+300}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is not a usable number
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"dot": {"centre": [0, 0], "radius": 1}, "text": {"at": [0, 0], "height": 5, "value": "A"}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: it takes a `line` of up to 64 points, an `arc`, a `text` or a `dot`, one of them
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: it takes a `line` of up to 64 points, an `arc`, a `text` or a `dot`, one of them
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"arc": {"centre": [0, 0], "radius": 50, "from": 0, "to": 400}}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: type `A`: symbol 1: its arc has radius 50 and runs from 0 to 400 degrees; it needs a radius above zero and up to a full turn
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"line": [[0, 0], ["Nope", 0]]}]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Socket`: symbol 1: formula `Nope` reads `Nope`, which isn't one of its parameters
+family `Socket`: type `A`: symbol 1: formula `Nope`: `Nope` isn't one of its parameters
+=== family {"name": "Socket", "category": "lighting", "parameters": [{"name": "Show", "kind": "yesno", "value": 1, "instance": true}, {"name": "Circuit", "kind": "number", "value": 3, "instance": true}], "types": {"A": {}}, "forms": [{"profile": [[300, 300], [400, 300], [400, 400], [300, 400]], "to": 100}], "symbols": [{"line": [[0, 0]], "visible": "Show"}]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"lighting","forms":[{"from":0.0,"guid":"GUID-1","id":999463,"plane":"xy","profile":[[300.0,300.0],[400.0,300.0],[400.0,400.0],[300.0,400.0]],"to":100.0}],"parameters":[{"instance":true,"kind":"yesno","name":"Show","value":1},{"instance":true,"kind":"number","name":"Circuit","value":3}],"symbols":[{"guid":"GUID-2","id":999462,"line":[[0.0,0.0]],"visible":"Show"}],"types":{"A":{}}},"name":"Socket","warnings":[]}
+--- stderr

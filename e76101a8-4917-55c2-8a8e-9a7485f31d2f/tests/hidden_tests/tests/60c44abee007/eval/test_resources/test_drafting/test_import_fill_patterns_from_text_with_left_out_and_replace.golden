@@ -1,0 +1,19 @@
+$ bimcraft-cli run --cmd 'import_fill_patterns {"text": "\ufeff;%UNITS=MM\n;%VERSION=3.0\n; a comment line\n*Running Bond, bricks laid in courses\n;%TYPE=MODEL\n0, 0,0, 0,75\n90, 0,0, 75,115, 75,-75\n*Hatch45\n45, 0,0, 0,2.5 ; trailing comment\n*Dots\n0, 0,0, 0.5,1, 0,-1\n*Empty\n*Flat\n0, 0,0, 0,0\n*Nothing\n0, 0,0, 0,5, -1,-2\n*Words\n0, zero, 0, 0, 5\n*Hatch45\n45, 0,0, 0,3\n*Crosshatch\n0, 0,0, 0,9\n90, 0,0, 0,9\n"}' --cmd 'fill_pattern {"name": "Running Bond"}' --cmd 'fill_pattern {"name": "Hatch45"}' --cmd 'fill_pattern {"name": "Dots"}' --cmd 'fill_pattern {"name": "Crosshatch"}'
+[exit 0]
+--- stdout
+{"imported":["Running Bond","Hatch45","Dots"],"left_out":[{"name":"Crosshatch","why":"the project has a pattern of that name"},{"name":"Empty","why":"it has no lines"},{"name":"Flat","why":"a family's lines lie on each other: its offset is 0"},{"name":"Nothing","why":"a family's dashes are all spaces: it draws nothing"},{"name":"Words","why":"`0, zero, 0, 0, 5` isn't a line of numbers: angle, x, y, shift, offset and dashes"},{"name":"Hatch45","why":"the file has it twice"}],"left_out_count":6}
+{"name":"Running Bond","pattern":{"lines":[{"angle":0.0,"spacing":75.0},{"angle":90.0,"dashes":[75.0,-75.0],"shift":75.0,"spacing":115.0}],"target":"model"}}
+{"name":"Hatch45","pattern":{"lines":[{"angle":45.0,"spacing":2.5}],"target":"drafting"}}
+{"name":"Dots","pattern":{"lines":[{"angle":0.0,"dashes":[0.0,-1.0],"shift":0.5,"spacing":1.0}],"target":"drafting"}}
+{"name":"Crosshatch","pattern":{"lines":[{"angle":0.0,"spacing":2.0},{"angle":90.0,"spacing":2.0}],"target":"drafting"}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'import_fill_patterns {"text": "\ufeff;%UNITS=MM\n;%VERSION=3.0\n; a comment line\n*Running Bond, bricks laid in courses\n;%TYPE=MODEL\n0, 0,0, 0,75\n90, 0,0, 75,115, 75,-75\n*Hatch45\n45, 0,0, 0,2.5 ; trailing comment\n*Dots\n0, 0,0, 0.5,1, 0,-1\n*Empty\n*Flat\n0, 0,0, 0,0\n*Nothing\n0, 0,0, 0,5, -1,-2\n*Words\n0, zero, 0, 0, 5\n*Hatch45\n45, 0,0, 0,3\n*Crosshatch\n0, 0,0, 0,9\n90, 0,0, 0,9\n", "replace": true}' --cmd 'fill_pattern {"name": "Crosshatch"}'
+[exit 0]
+--- stdout
+{"imported":["Running Bond","Hatch45","Dots","Crosshatch"],"left_out":[{"name":"Empty","why":"it has no lines"},{"name":"Flat","why":"a family's lines lie on each other: its offset is 0"},{"name":"Nothing","why":"a family's dashes are all spaces: it draws nothing"},{"name":"Words","why":"`0, zero, 0, 0, 5` isn't a line of numbers: angle, x, y, shift, offset and dashes"},{"name":"Hatch45","why":"the file has it twice"}],"left_out_count":5}
+{"name":"Crosshatch","pattern":{"lines":[{"angle":0.0,"spacing":9.0},{"angle":90.0,"spacing":9.0}],"target":"drafting"}}
+
+--- stderr
+

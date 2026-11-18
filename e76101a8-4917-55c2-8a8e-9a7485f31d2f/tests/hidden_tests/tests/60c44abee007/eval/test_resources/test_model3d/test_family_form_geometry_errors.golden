@@ -1,0 +1,84 @@
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F0", "forms": [{"plane": "xy", "profile": [[0, 0], [100, 0], [100, 100], [0, 100]], "from": 100, "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F0`: type `T`: form 1: sweeps nothing: from 100 to 100
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F1", "forms": [{"plane": "xy", "profile": [[0, 0], [100, 0], [200, 0]], "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F1`: type `T`: form 1: its profile has no area: it needs three corners or more, or a circle
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F2", "forms": [{"plane": "xy", "profile": [[0, 0], [300, 300], [300, 0], [0, 100]], "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F2`: type `T`: form 1: its profile crosses itself
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F3", "forms": [{"plane": "xy", "circle": {"centre": [0, 0], "radius": "R - 100"}, "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F3`: type `T`: form 1: its circle's radius is 0; it needs one above zero
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F4", "forms": [{"plane": "xz", "profile": [[10, 0], [100, 0], [100, 100]], "axis": [[0, 0], [0, 100]], "from": 0, "to": 400}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F4`: type `T`: form 1: turns more than all the way round: from 0 to 400 degrees, 360 at most
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F5", "forms": [{"plane": "xz", "profile": [[10, 0], [100, 0], [100, 100]], "axis": [[0, 0], [0, 0]], "to": 90}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F5`: type `T`: form 1: its axis starts and ends at one point: it needs a direction
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F6", "forms": [{"plane": "xz", "profile": [[-50, 0], [100, 0], [100, 100]], "axis": [[0, 0], [0, 100]], "to": 90}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F6`: type `T`: form 1: its profile crosses its axis: draw it to one side of it
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F7", "forms": [{"plane": "xz", "profile": [[0, 0], [0, 50], [0, 100]], "axis": [[0, 0], [0, 100]], "to": 90}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F7`: type `T`: form 1: its profile has no area: it needs three corners or more, or a circle
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F8", "forms": [{"plane": "xy", "profile": [[0, 0], [100, 0], [100, 100], [0, 100]], "to": 100, "visible": "Nope"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F8`: form 1: formula `Nope` reads `Nope`, which isn't one of its parameters
+family `F8`: type `T`: form 1: formula `Nope`: `Nope` isn't one of its parameters
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "F9", "forms": [{"plane": "xy", "circle": {"centre": [0, 0], "radius": 10}, "profile": [[0, 0], [100, 0], [100, 100], [0, 100]], "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F9`: form 1: it takes a `profile`, a `circle` or a `mesh`, one of them
+
+$ bimcraft-cli run --cmd 'family {"parameters": [{"name": "R", "kind": "length", "value": 100}], "types": {"T": {}}, "name": "Shade", "forms": [{"plane": "xz", "profile": [[100, 0], [300, 0], [200, 400], [100, 400]], "axis": [[0, 0], [0, 400]], "from": 0, "to": 135, "material": "Fabric"}, {"plane": "yz", "profile": [[0, 500], [100, 500], [100, 600]], "axis": [[0, 500], [100, 500]], "from": 0, "to": 360}]}' --cmd 'render {"family": "Shade", "mode": "plan", "width": 320, "height": 200, "path": "shade-plan.png"}' --cmd 'render {"family": "Shade", "width": 320, "height": 200, "path": "shade.png"}'
+[exit 0]
+--- stdout
+{"family":{"category":"furniture","forms":[{"axis":[[0.0,0.0],[0.0,400.0]],"from":0.0,"material":"Fabric","plane":"xz","profile":[[100.0,0.0],[300.0,0.0],[200.0,400.0],[100.0,400.0]],"to":135.0},{"axis":[[0.0,500.0],[100.0,500.0]],"from":0.0,"plane":"yz","profile":[[0.0,500.0],[100.0,500.0],[100.0,600.0]],"to":360.0}],"parameters":[{"kind":"length","name":"R","value":100}],"types":{"T":{}}},"name":"Shade","warnings":[]}
+{"family":"Shade","height":200,"kind":"family plan preview","mode":"plan","path":"shade-plan.png","type":"T","view":"Shade","width":320}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"family":"Shade","height":200,"kind":"family 3d preview","lens":null,"mode":"3d","path":"shade.png","target":null,"type":"T","view":"Shade","width":320}
+
+--- stderr
+
+=== file shade-plan.png
+png 320x200 rgba pixels-sha256=681305905211494a6b802947f311661da70172620fd6ca3ee8a5befdac21aeed
+=== file shade.png
+png 320x200 rgba pixels-sha256=61793210d7cdacc3bcd52fdeab53cd2b82acb866a0d912181d5d04950a67db54

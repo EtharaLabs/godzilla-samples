@@ -1,0 +1,73 @@
+$ bimcraft-cli run --cmd 'family {"name": "Heater", "category": "outlet", "parameters": [{"name": "Power", "kind": "number", "value": 1500}], "types": {"Small": {"Power": 1000}, "Big": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "poles": 1, "voltage": 220, "load_va": "Power * 1.1", "power_factor": 0.9, "classification": "heating"}]}' --cmd 'component {"family": "Heater", "type": "Small", "at": [0, 0]}' --cmd 'elements {"category": "component"}' --cmd 'family {"name": "Heater"}'
+[exit 0]
+--- stdout
+{"family":{"category":"outlet","connectors":[{"classification":"heating","kind":"power","load_va":"Power * 1.1","poles":1,"power_factor":0.9,"system":"power-balanced","voltage":220.0}],"forms":[],"parameters":[{"kind":"number","name":"Power","value":1500}],"types":{"Big":{},"Small":{"Power":1000}}},"name":"Heater","warnings":[]}
+{"id":100002}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"component","connectors":[{"classification":"heating","guid":"<GUID-1>","id":999463,"kind":"power","load_va":1100.0,"load_va_by_phase":[1100.0],"poles":1,"power_factor":0.9,"system":"power-balanced","voltage":220.0}],"family":"Heater","family_guid":"<GUID-2>","guid":"<GUID-3>","height":0.0,"id":100002,"level":"<GUID-4>","offset":0.0,"type":"Small","values":{"Power":1000.0}}],"returned":1}
+{"family":{"category":"outlet","connectors":[{"classification":"heating","guid":"<GUID-1>","id":999463,"kind":"power","load_va":"Power * 1.1","poles":1,"power_factor":0.9,"system":"power-balanced","voltage":220.0}],"forms":[],"parameters":[{"kind":"number","name":"Power","value":1500}],"types":{"Big":{},"Small":{"Power":1000}}},"name":"Heater","values":{"Big":{"Power":1500.0},"Small":{"Power":1000.0}},"warnings":[]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'family {"name": "C0", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced"}, {"kind": "power", "system": "power-balanced"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C0`: it has two power connectors: keep one, a device draws its load through one
+
+$ bimcraft-cli run --cmd 'family {"name": "C1", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "switch", "system": "switch", "load_va": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C1`: type `T`: connector 1: a switch carries no load; leave `load_va` out
+
+$ bimcraft-cli run --cmd 'family {"name": "C2", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "switch"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C2`: connector 1: a power connector's system is `power-balanced` or `power-unbalanced`, not `switch`
+
+$ bimcraft-cli run --cmd 'family {"name": "C3", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "switch", "system": "power-balanced"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C3`: connector 1: a switch connector's system is `switch`
+
+$ bimcraft-cli run --cmd 'family {"name": "C4", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "poles": 4}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C4`: connector 1: poles are 1, 2 or 3, not 4
+
+$ bimcraft-cli run --cmd 'family {"name": "C5", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 0}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C5`: type `T`: connector 1: its voltage is 0 V; it takes more than 0 and up to 100000
+
+$ bimcraft-cli run --cmd 'family {"name": "C6", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 220, "power_factor": 1.5}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C6`: type `T`: connector 1: its power factor is 1.5; it takes more than 0 and up to 1
+
+$ bimcraft-cli run --cmd 'family {"name": "C7", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-balanced", "voltage": 220, "load_va": -5}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C7`: type `T`: connector 1: its load is -5 VA; it takes 0 up to 1000000000
+
+$ bimcraft-cli run --cmd 'family {"name": "C8", "category": "outlet", "types": {"T": {}}, "connectors": [{"kind": "power", "system": "power-unbalanced", "poles": 3, "load_va": [100, 200]}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C8`: connector 1: a load per phase is a list of one for each pole (3) on a `power-unbalanced` connector; a balanced one takes a single load
+

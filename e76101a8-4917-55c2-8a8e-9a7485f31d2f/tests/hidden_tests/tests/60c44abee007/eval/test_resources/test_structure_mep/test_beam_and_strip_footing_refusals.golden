@@ -1,0 +1,77 @@
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [100, 0]], "offset": 0, "end_offset": 3000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam 100002: it slopes 88.1°, more than the 75° a beam may; what stands is a column
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [0, 0]], "offset": 0, "end_offset": 3000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam 100002: its ends are one over the other; a beam runs along, and what stands is a column
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam 100002: too short (0 mm)
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam: `points` needs at least 2 points
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [5000, 0]], "type": "Beam 999"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam 100002: type `Beam 999` doesn't exist (there are: Beam 150 x 400, Beam 200 x 500, Steel Tube 150)
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [5000, 0]], "justify": "middle"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam: `justify` is top, centre or bottom, not `middle`
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [5000, 0], [5000, 5000]], "end_offset": 300}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam: `end_offset` is the height of one run's end: give 2 points
+
+$ bimcraft-cli run --cmd 'beam {"points": [[0, 0], [5000, 0]], "level": "Level 9"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'beam {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (beam): beam: `points` [[x, y], …] is required
+
+$ bimcraft-cli run --cmd 'strip_footing {"points": [[0, 0], [5000, 0]], "type": "Beam 200 x 500"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (strip_footing): stripfooting 100002: type `Beam 200 x 500` doesn't exist (there are: Strip 600 x 300)
+
+$ bimcraft-cli run --cmd 'strip_footing {"points": [[0, 0], [100, 0]], "offset": 0, "end_offset": 2000}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (strip_footing): stripfooting 100002: it slopes 87.1°, more than the 75° a stripfooting may; what stands is a column
+

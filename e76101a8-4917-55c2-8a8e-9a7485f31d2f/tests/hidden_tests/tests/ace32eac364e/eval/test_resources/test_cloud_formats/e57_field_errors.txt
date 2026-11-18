@@ -1,0 +1,35 @@
+### bad_bad_scale.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_bad_scale.e57: scan 1: <cartesianX>'s scale isn't a number: half
+### bad_bad_minimum.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_bad_minimum.e57: scan 1: <cartesianX>'s minimum isn't an integer: zero
+### bad_scale_zero.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_scale_zero.e57: scan 1: <cartesianX>'s scale 0 and offset 0 aren't usable
+### bad_max_under_min.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_max_under_min.e57: scan 1: <cartesianX>'s maximum 3 is under its minimum 5
+### bad_too_many_fields.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_too_many_fields.e57: scan 1: its points have 35 fields; BIMCraft reads up to 32
+### bad_no_prototype.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_prototype.e57: scan 1: its points have no prototype
+### bad_no_file_offset.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_file_offset.e57: scan 1: it doesn't say where its points are

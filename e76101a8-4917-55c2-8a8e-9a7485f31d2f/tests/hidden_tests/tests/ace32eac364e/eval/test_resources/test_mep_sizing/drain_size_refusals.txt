@@ -1,0 +1,75 @@
+$ drain_size {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `units` (UHC) or `fixtures` is required
+$ drain_size {"units": 200}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: 200 UHC is more than the tables of this version list for this role and slope: the most is DN 100 at 160 UHC (a blank in the standard's table means not allowed, not that the tables ended); split the load, or give a steeper `slope`
+$ drain_size {"units": 13000, "role": "main", "slope": 0.04}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: 13000 UHC is more than the tables of this version list for this role and slope: the most is DN 400 at 12000 UHC (a blank in the standard's table means not allowed, not that the tables ended); split the load, or give a steeper `slope`
+$ drain_size {"units": 10, "role": "main", "slope": 0.001}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: 10 UHC is more than the tables of this version list for this role and slope: the most is DN 0 at 0 UHC (a blank in the standard's table means not allowed, not that the tables ended); split the load, or give a steeper `slope`
+$ drain_size {"units": 9000, "role": "stack", "floors": 10}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: 9000 UHC is more than the tables of this version list for this role and slope: the most is DN 300 at 8400 UHC (a blank in the standard's table means not allowed, not that the tables ended); split the load, or give a steeper `slope`
+$ drain_size {"fixtures": {"bidet": 1}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `fixtures`: no fixture `bidet`, use wc, lav, sink, shower, laundry
+$ drain_size {"fixtures": {"wc": 1.5}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `fixtures`: `wc` must be a whole number from 0 to 10000, got 1.5
+$ drain_size {"fixtures": {"wc": -1}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `fixtures`: `wc` must be a whole number from 0 to 10000, got -1
+$ drain_size {"fixtures": [1]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `fixtures` must be an object {kind: count}, got [1]
+$ drain_size {"fixtures": {"wc": 0}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `units` (UHC) or `fixtures` is required
+$ drain_size {"units": 10, "role": "vent"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `role` must be one of branch, main, stack, got "vent"
+$ drain_size {"units": 10, "slope": 2}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `slope` must be a number from 0 to 1, got 2
+$ drain_size {"units": 10, "floors": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `floors` must be a number from 1 to 1000, got 0
+$ drain_size {"units": 10, "min_dn": 2000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: `min_dn` must be a number from 0 to 1000, got 2000
+$ drain_size {"units": 10, "dn": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (drain_size): drain_size: unknown parameter `dn`

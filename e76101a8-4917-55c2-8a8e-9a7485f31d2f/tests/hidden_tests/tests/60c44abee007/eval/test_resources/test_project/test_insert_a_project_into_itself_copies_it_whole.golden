@@ -1,0 +1,33 @@
+$ bimcraft-cli run --cmd 'new {"name": "Other"}' --cmd 'level {"elevation": 6000, "name": "Roof"}' --cmd 'wall {"points": [[0,0],[3000,0],[3000,3000]], "type": "Exterior - 300mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'wall {"points": [[0,0],[0,2000]], "level": "Roof"}' --cmd 'parameter {"name": "Fire Rating", "categories": ["wall"]}' --cmd 'type {"category": "wall", "name": "Thick 450", "thickness": 450}' --cmd 'wall {"points": [[0,5000],[3000,5000]], "type": "Thick 450"}' --cmd 'save {"path": "other.bimcraft"}'
+[exit 0]
+--- stdout
+{"language":"en","name":"Other"}
+{"id":100002,"name":"Roof"}
+{"ids":[100003,100004]}
+{"host":100003,"id":100005,"mark":"1","offset":1500.0}
+{"ids":[100006]}
+{"name":"Fire Rating","parameter":{"categories":["wall"],"kind":"text"}}
+{"category":"wall","name":"Thick 450","type":{"thickness":450.0}}
+{"ids":[100007]}
+{"format":"bimcraft","path":"other.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run other.bimcraft --cmd 'insert {"path": "other.bimcraft"}' --cmd 'elements {"category": "level"}'
+[exit 0]
+--- stdout
+{"name":"Other","path":"other.bimcraft"}
+{"copies":[100008,100009,100010,100011,100012,100013,100014,100015],"ids":{"100000":100008,"100001":100009,"100002":100010,"100003":100011,"100004":100012,"100005":100013,"100006":100014,"100007":100015},"left_out":[],"library":[]}
+{"count":6,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":6000.0,"guid":"<GUID-3>","id":100002,"name":"Roof","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-4>","id":100008,"name":"Level 1 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-5>","id":100009,"name":"Level 2 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":6000.0,"guid":"<GUID-6>","id":100010,"name":"Roof 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":6}
+
+--- stderr
+
+$ bimcraft-cli run other.bimcraft --cmd 'insert {"path": "other.bimcraft", "ids": [100004]}' --cmd 'elements {"category": "door"}'
+[exit 0]
+--- stdout
+{"name":"Other","path":"other.bimcraft"}
+{"copies":[100008],"ids":{"100004":100008},"left_out":[],"library":[]}
+{"count":1,"elements":[{"at":[1500.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-7>","height":2100.0,"host":"<GUID-8>","id":100005,"level":"<GUID-1>","mark":"1","offset":1500.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"<GUID-9>","width":900.0}],"returned":1}
+
+--- stderr
+

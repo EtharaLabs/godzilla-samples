@@ -1,0 +1,10 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "position": "origin"}' --cmd 'import_cad {"path": "plan.dxf", "name": "moved", "position": "origin", "at": [20000, 5000]}' --cmd 'import_cad {"path": "plan.dxf", "name": "turned", "position": "centre", "at": [-30000, 0], "angle": 90}' --cmd 'elements {"category": "cadimport"}'
+[exit 0]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[0.0,0.0],[11246.278974,7000.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"cad":"moved","entities":8,"extents":[[20000.0,5000.0],[31246.278974,12000.0]],"far":0,"id":100003,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"cad":"turned","entities":8,"extents":[[-33500.0,-5623.139487],[-26500.0,5623.139487]],"far":0,"id":100004,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+{"count":3,"elements":[{"at":[0.0,0.0],"cad":"plan","category":"cadimport","entities":8,"extents":[[0.0,0.0],[11246.278974,7000.0]],"guid":"<GUID-1>","hidden":["FROZEN","HIDDEN"],"id":100002,"layers":5,"level":"<GUID-2>","scale":1.0,"source":"plan.dxf","unit":"mm"},{"at":[20000.0,5000.0],"cad":"moved","category":"cadimport","entities":8,"extents":[[20000.0,5000.0],[31246.278974,12000.0]],"guid":"<GUID-3>","hidden":["FROZEN","HIDDEN"],"id":100003,"layers":5,"level":"<GUID-2>","scale":1.0,"source":"plan.dxf","unit":"mm"},{"angle":90.0,"at":[-30000.0,0.0],"cad":"turned","category":"cadimport","entities":8,"extents":[[-33500.0,-5623.139487],[-26500.0,5623.139487]],"guid":"<GUID-4>","hidden":["FROZEN","HIDDEN"],"id":100004,"layers":5,"level":"<GUID-2>","origin":[5623.139487,3500.0],"scale":1.0,"source":"plan.dxf","unit":"mm"}],"returned":3}
+
+--- stderr
+

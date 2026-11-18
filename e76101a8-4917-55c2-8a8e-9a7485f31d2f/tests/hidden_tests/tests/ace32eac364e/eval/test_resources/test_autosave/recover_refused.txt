@@ -1,0 +1,14 @@
+{"path": "truncated.bimcraft", "project": "house.bimcraft"} -> exit 1: {"ids":[100002]}
+line 1 (recover): open: truncated.bimcraft is not a BIMCraft project: EOF while parsing a string at line 1 column 27
+{"path": "newer.bimcraft"} -> exit 1: {"ids":[100002]}
+line 1 (recover): open: newer.bimcraft is not a BIMCraft project: it was saved by a newer BIMCraft (file format 99; this one reads up to 17): update BIMCraft to open it
+{"path": "empty.bimcraft"} -> exit 1: {"ids":[100002]}
+line 1 (recover): open: empty.bimcraft is not a BIMCraft project: EOF while parsing a value at line 1 column 0
+{"path": "missing.bimcraft"} -> exit 1: {"ids":[100002]}
+line 1 (recover): open: missing.bimcraft: No such file or directory (os error 2)
+{} -> exit 1: {"ids":[100002]}
+line 1 (recover): open: `path` is required
+{"path": "truncated.bimcraft", "project": 5} -> exit 1: {"ids":[100002]}
+line 1 (recover): recover: `project` must be text of at most 256 characters, got 5
+{"path": 7} -> exit 1: {"ids":[100002]}
+line 1 (recover): open: `path` must be text of at most 256 characters, got 7

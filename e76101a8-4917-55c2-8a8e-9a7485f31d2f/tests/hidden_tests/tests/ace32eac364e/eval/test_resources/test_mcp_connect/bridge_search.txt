@@ -1,0 +1,30 @@
+## favorites variable
+exit: 1
+--- stdout
+--- stderr
+bimcraft-cli mcp: mine/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+## favorites variable empty
+exit: 1
+--- stdout
+--- stderr
+bimcraft-cli mcp: xdg/bimcraft/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+## xdg
+exit: 1
+--- stdout
+--- stderr
+bimcraft-cli mcp: xdg/bimcraft/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+## xdg empty
+exit: 1
+--- stdout
+--- stderr
+bimcraft-cli mcp: <HOME>/.config/bimcraft/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+## home only
+exit: 1
+--- stdout
+--- stderr
+bimcraft-cli mcp: <HOME>/.config/bimcraft/bridge.json: no window has opened a control port (start one with `bimcraft --control 0`)
+## nothing
+exit: 1
+--- stdout
+--- stderr
+bimcraft-cli mcp: there is no folder for the bridge file here: set BIMCRAFT_FAVORITES

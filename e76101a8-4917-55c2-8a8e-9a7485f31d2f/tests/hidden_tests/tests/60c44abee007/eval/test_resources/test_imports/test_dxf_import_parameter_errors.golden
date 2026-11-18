@@ -1,0 +1,114 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "units": "mm", "scale": 2}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: give `units` or `scale`, not both
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "scale": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `scale` is mm to each of the drawing's units, from 0.000001 to 10000000, not 0
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "scale": 1000000000.0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `scale` is mm to each of the drawing's units, from 0.000001 to 10000000, not 1000000000
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "units": "furlong"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `units` is auto, mm, cm, m, in or ft, not furlong
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "position": "corner"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `position` is center (the middle of the drawing on `at`) or origin (its origin on `at`), not corner
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "colors": "sepia"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `colors` is preserve, invert or black, not sepia
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "layers": "some"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `layers` is visible (those the file has on and thawed), all, or a list of the layers to show, not "some"
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "layers": ["NOPE"]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: the drawing has no layer `NOPE` (it has: 0, WALLS, HIDDEN, FROZEN, TRUE)
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "layers": [3]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: `layers` lists layers by name, not 3
+
+$ bimcraft-cli run --cmd 'import_cad {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: give `path`, a DXF file to bring in, or `cad`, the name of a drawing the project holds
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "cad": "plan"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: give `path`, a DXF file to bring in, or `cad`, a drawing the project holds; not both
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "name": "  "}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: a CAD drawing needs a `name`
+
+$ bimcraft-cli run --cmd 'import_cad {"cad": "nothing"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: the project holds no CAD drawing named `nothing` (it holds: none)
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf", "level": "Level 9"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (import_cad): import_cad: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'import_cad {"path": "plan.dxf"}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (import_cad): import_cad: the project already holds a CAD drawing named `plan`: place it again with `cad`, or bring this file in under another `name`
+
+$ bimcraft-cli run --cmd 'import_cad {"path": "plan.dxf"}' --cmd 'import_cad {"cad": "plan", "link": true}'
+[exit 1]
+--- stdout
+{"cad":"plan","entities":8,"extents":[[-5623.139487,-3500.0],[5623.139487,3500.0]],"far":0,"id":100002,"layers":5,"left_out":{"3DFACE":1},"scale":1.0,"source":"plan.dxf","unit":"mm"}
+
+--- stderr
+line 1 (import_cad): import_cad: `link` is for a file brought in by `path`; a drawing the project holds stays as it's held
+

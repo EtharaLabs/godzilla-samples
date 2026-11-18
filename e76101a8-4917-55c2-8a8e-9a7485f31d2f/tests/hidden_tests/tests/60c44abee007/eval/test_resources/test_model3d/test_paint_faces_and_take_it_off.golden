@@ -1,0 +1,51 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'column {"at": [8000, 1500]}' --cmd 'paint {"id": 100002, "face": "exterior", "material": "Timber"}' --cmd 'paint {"id": 100002, "face": "interior", "material": "Copper"}' --cmd 'PT {"ids": [100008], "face": "top", "material": "Ceramic tile"}' --cmd 'paint {"id": 100010, "material": "Copper"}' --cmd 'elements {"category": "column"}' --cmd 'elements {"category": "wall", "limit": 1}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "painted.png"}' --cmd 'paint {"id": 100002, "face": "exterior", "material": null}' --cmd 'paint {"id": 100010, "material": null}' --cmd 'elements {"category": "wall", "limit": 1}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "unpainted.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"id":100010}
+{"painted":[100002]}
+{"painted":[100002]}
+{"painted":[100008]}
+{"painted":[100010]}
+{"count":1,"elements":[{"angle":0.0,"at":[8000.0,1500.0],"base_offset":0.0,"category":"column","depth":400.0,"guid":"<GUID-1>","height":3000.0,"id":100010,"level":"<GUID-2>","params":{"Paint":{"all":"Copper"}},"room_bounding":true,"round":false,"top_level":"<GUID-3>","type":"Rectangular 400 x 400","type_guid":"<GUID-4>","width":400.0}],"returned":1}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-5>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","params":{"Paint":{"exterior":"Timber","interior":"Copper"}},"room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-6>"}],"returned":1}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"painted.png","target":null,"view":"{3D}","width":320}
+{"painted":[100002]}
+{"painted":[100010]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,0.0],"guid":"<GUID-5>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","params":{"Paint":{"interior":"Copper"}},"room_bounding":true,"start":[0.0,0.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-6>"}],"returned":1}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"unpainted.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'paint {"id": 100002, "material": "Unobtainium"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (paint): paint: the library has no `Unobtainium`; add it with `material`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'paint {"id": 100002, "face": "top", "material": "Timber"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (paint): paint: a wall has no face `top`; its faces are exterior, interior
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'paint {"id": 999999, "material": "Timber"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (paint): paint: no element 999999
+
+=== file painted.png
+png 320x200 rgba pixels-sha256=39c349460336c830ab4b4103dca5413d6ff3a7b8a386172afeba313f933c0c0b
+=== file unpainted.png
+png 320x200 rgba pixels-sha256=8d4a236e47e24b631ea10eed73c6ff5a9238806871c2dbf1501d51ba50f384fa

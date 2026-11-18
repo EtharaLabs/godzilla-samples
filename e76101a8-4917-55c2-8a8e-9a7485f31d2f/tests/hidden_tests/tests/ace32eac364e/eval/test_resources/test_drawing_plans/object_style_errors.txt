@@ -1,0 +1,35 @@
+$ object_styles {"categories": {"dimension": {"cut": 3}}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (object_styles): object_styles: `dimension` isn't a model category; Object Styles has: wall, floor, ceiling, shaft, mass, door, window, room, roomseparator, column, structuralcolumn, footing, beam, stripfooting, pipe, duct, conduit, cabletray, wire, downconductor, groundconductor, cable, rebar, furniture, casework, plumbing, drain, pipefitting, pipeaccessory, equipment, outlet, switch, airterminal, earthing, inspectionbox, lighting, generic, dataoutlet, voiceoutlet, patchpanel, rack, stair, ramp, railing, roof (and `component`, for every family category)
+
+$ object_styles {"categories": {"wall": {"cut": 17}}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (object_styles): object_styles: `categories` is {category: {projection?: pen, cut?: pen}, …}: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ object_styles {"categories": {"wall": {"cut": 2.5}}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (object_styles): object_styles: `categories` is {category: {projection?: pen, cut?: pen}, …}: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 2.5
+
+$ object_styles {"categories": {"wall": {"weight": 2}}}
+exit: 1
+--- stdout
+--- stderr
+line 1 (object_styles): object_styles: `categories` is {category: {projection?: pen, cut?: pen}, …}: unknown field `weight`, expected `projection` or `cut`
+
+$ object_styles {"categories": ["wall"]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (object_styles): object_styles: `categories` is {category: {projection?: pen, cut?: pen}, …}: invalid type: sequence, expected a map
+
+$ object_styles {"reset": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (object_styles): object_styles: `reset` is true or false, not 1

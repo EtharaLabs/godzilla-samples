@@ -1,0 +1,48 @@
+=== ids_of {"ids": [100002, 100006, 100007, 100008, 100010, 100011, 100012, 100000]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"elements":[{"category":"wall","guid":"GUID-1","id":100002,"ifc":"0G002$0Bz008000000002$","name":"Generic - 200mm"},{"category":"door","guid":"GUID-2","id":100006,"ifc":"0G00350CL0080000000035","name":"Single 900 x 2100"},{"category":"window","guid":"GUID-3","id":100007,"ifc":"0G00370CT0080000000037","name":"Fixed 1200 x 1500"},{"category":"room","guid":"GUID-4","id":100008,"ifc":"0G00390Cb0080000000039","name":"Hall"},{"category":"grid","guid":"GUID-5","id":100010,"ifc":"0G003B0Cj008000000003B","name":"1"},{"category":"line","guid":"GUID-6","id":100011,"ifc":"0G003C0Cn008000000003C","name":""},{"category":"sheet","guid":"GUID-7","id":100012,"ifc":"0G003E0Cv008000000003E","name":"Unnamed"},{"category":"level","guid":"GUID-8","id":100000,"ifc":"0G002z0Br008000000002z","name":"Level 1"}]}
+--- stderr
+=== ids_of {"ids": ["100000c1-00c1-4000-8000-0000000000c1", 100009]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"elements":[{"category":"wall","guid":"GUID-1","id":100003,"ifc":"0G00310C50080000000031","name":"Thick"},{"category":"wall","guid":"GUID-2","id":100009,"ifc":"0G003A0Cf008000000003A","name":"Generic - 200mm"}]}
+--- stderr
+=== ids_of {"id": 100004}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"elements":[{"category":"wall","guid":"GUID-1","id":100004,"ifc":"0G00330CD0080000000033","name":"Generic - 200mm"}]}
+--- stderr
+=== ids_of {"ids": ["Brick", "Thick", 999999, 999628]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"elements":[{"category":"filled region type","guid":"GUID-1","id":999654,"ifc":"0G003X0E5008000000003X","name":"Brick"},{"category":"wall type","guid":"GUID-2","id":999467,"ifc":"0G00320C90080000000032","name":"Thick"},{"category":"wall type","guid":"GUID-3","id":999999,"ifc":"0G008Y0Y9008000000008Y","name":"Exterior - 300mm"},{"category":"layer","guid":"GUID-4","id":999628,"ifc":"0G00010050080000000001","name":"layer 1 of wall type Exterior - 300mm"}]}
+--- stderr
+=== ids_of {"ids": [123]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (ids_of): ids_of: no element or library entry 123
+=== ids_of {"ids": ["Nothing at all"]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (ids_of): ids_of: no element or library entry "Nothing at all"
+=== ids_of {}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (ids_of): ids_of: `ids` [id or GUID, …] is required
+=== ids_of {"ids": "100002"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (ids_of): ids_of: `ids` [id or GUID, …] is required

@@ -1,0 +1,333 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[6000,0],[6000,6000],[0,6000]], "top": [[3000,-1000],[7000,3000],[3000,7000],[-1000,3000]], "height": 8000, "name": "Twist"}' --cmd 'mass_floors {}' --cmd 'schedule {"name": "Twist Floors", "category": "massfloors"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "twist.png"}' --cmd 'save {"path": "twist.glb"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":36.0,"height":8000.0,"id":100004,"volume_m3":245.33}
+{"ids":[100005,100006,100007],"made":[100005,100006,100007],"removed":[],"stale":[],"updated":[]}
+{"available":["Mass","Level","Area","Perimeter","Volume","Count"],"category":"massfloor","columns":["Mass","Level","Area (m²)","Perimeter","Volume"],"elements":[[100004],[100004],[100004]],"id":100008,"name":"Twist Floors","rows":[["Twist","Level 1",36.0,24000.0,97.31],["Twist","Level 2",29.81,21840.0,87.19],["Twist","Level 3",29.25,21630.0,60.83]]}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"twist.png","target":null,"view":"{3D}","width":320}
+{"elements":4,"format":"glTF 2.0","path":"twist.glb","triangles":168}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'mass {"boundary": [[0,0],[6000,0],[6000,6000],[0,6000]], "top": [[0,6000],[6000,6000],[6000,0],[0,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (mass): mass 100002: its top outline runs the other way round from its footprint
+
+$ bimcraft-cli run --cmd 'mass {"boundary": [[0,0],[6000,0],[6000,6000],[0,6000]], "top": [[6000,6000],[0,6000],[0,0],[6000,0]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (mass): mass 100002: lofted between its outlines it collapses 8/16 of the way up
+
+=== file twist.png
+png 320x200 rgba pixels-sha256=2685c2934dfde0f167b02ec77eea58825123d320c8b0af280adba59fa0649894
+=== file twist.glb
+{
+ "accessors": [
+  {
+   "bufferView": 0,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 392,
+   "max": [
+    7.0,
+    8.0,
+    1.0
+   ],
+   "min": [
+    -1.0,
+    0.0,
+    -7.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 392,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 0,
+   "componentType": 5125,
+   "count": 396,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 4704,
+   "componentType": 5126,
+   "count": 24,
+   "max": [
+    6.0,
+    0.0,
+    0.0
+   ],
+   "min": [
+    0.0,
+    -0.2,
+    -6.0
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 4704,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 1584,
+   "componentType": 5125,
+   "count": 36,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 4992,
+   "componentType": 5126,
+   "count": 24,
+   "max": [
+    6.375,
+    3.0,
+    0.375
+   ],
+   "min": [
+    -0.375,
+    2.8,
+    -6.375
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 4992,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 1728,
+   "componentType": 5125,
+   "count": 36,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 5280,
+   "componentType": 5126,
+   "count": 24,
+   "max": [
+    6.75,
+    6.0,
+    0.75
+   ],
+   "min": [
+    -0.75,
+    5.8,
+    -6.75
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 5280,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 1872,
+   "componentType": 5125,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "asset": {
+  "extras": {
+   "source": "the default 3D view",
+   "units": "metres",
+   "up": "+Y, BIMCraft's +Z"
+  },
+  "generator": "BIMCraft 0.10.0",
+  "version": "2.0"
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 5568,
+   "byteOffset": 0,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 5568,
+   "byteOffset": 5568,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 2016,
+   "byteOffset": 11136,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 13152
+  }
+ ],
+ "materials": [
+  {
+   "alphaMode": "BLEND",
+   "doubleSided": true,
+   "name": "#9ebee0 60% clear",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.341914,
+     0.514918,
+     0.745404,
+     0.4
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#d6d6d2",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.672443,
+     0.672443,
+     0.64448,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "100004",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 1,
+      "POSITION": 0
+     },
+     "indices": 2,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100005",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 4,
+      "POSITION": 3
+     },
+     "indices": 5,
+     "material": 1,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100006",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 7,
+      "POSITION": 6
+     },
+     "indices": 8,
+     "material": 1,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100007",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 10,
+      "POSITION": 9
+     },
+     "indices": 11,
+     "material": 1,
+     "mode": 4
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "extras": {
+    "category": "mass",
+    "guid": "<GUID-1>",
+    "id": 100004
+   },
+   "mesh": 0,
+   "name": "100004"
+  },
+  {
+   "extras": {
+    "category": "floor",
+    "guid": "<GUID-2>",
+    "id": 100005
+   },
+   "mesh": 1,
+   "name": "100005"
+  },
+  {
+   "extras": {
+    "category": "floor",
+    "guid": "<GUID-3>",
+    "id": 100006
+   },
+   "mesh": 2,
+   "name": "100006"
+  },
+  {
+   "extras": {
+    "category": "floor",
+    "guid": "<GUID-4>",
+    "id": 100007
+   },
+   "mesh": 3,
+   "name": "100007"
+  }
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1,
+    2,
+    3
+   ]
+  }
+ ]
+}
+bin-sha256=c1feb35ec05c512df1a4a5c533a45d062d3a360d44986885d16e11717ab541d2

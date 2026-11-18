@@ -1,0 +1,8 @@
+$ bimcraft-cli run base.bimcraft --cmd 'modify {"id": 100000, "view_range": {"cut": 100, "bottom": 500}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (modify): level 100000: its plan's view range runs top ≥ cut plane ≥ bottom ≥ view depth, not top at the level above, cut 100, bottom 500, depth 0
+

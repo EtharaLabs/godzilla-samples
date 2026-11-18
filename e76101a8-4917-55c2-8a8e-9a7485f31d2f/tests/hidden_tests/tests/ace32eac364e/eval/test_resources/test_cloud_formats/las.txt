@@ -1,0 +1,32 @@
+exit: 0
+--- stdout
+{"cloud":"survey12","id":100002,"origin":[500005000.0,7000010000.0,11500.0],"points":4,"read":4}
+{"cloud":"intensity13","id":100003,"origin":[500.0,500.0,0.0],"points":3,"read":3}
+{"cloud":"plain10","id":100004,"origin":[1500.0,3000.0,4500.0],"points":2,"read":2}
+{"cloud":"colour14","id":100005,"origin":[500.0,0.0,0.0],"points":2,"read":2}
+{"cloud":"format6","id":100006,"origin":[5000.0,0.0,2500.0],"points":2,"read":2}
+{"cloud":"format3","id":100007,"origin":[1000.0,0.0,0.0],"points":2,"read":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+--- scans
+scan colour14: source=colour14.las origin=[500.0, 0.0, 0.0] read=2 kept=2 stations=[]
+  -500.0 0.0 0.0 rgb=[255, 128, 0]
+  500.0 0.0 0.0 rgb=[0, 0, 255]
+scan format3: source=format3.las origin=[1000.0, 0.0, 0.0] read=2 kept=2 stations=[]
+  -1000.0 0.0 0.0 rgb=[255, 255, 0]
+  1000.0 0.0 0.0 rgb=[0, 0, 0]
+scan format6: source=format6.las origin=[5000.0, 0.0, 2500.0] read=2 kept=2 stations=[]
+  -5000.0 0.0 -2500.0 rgb=[0, 0, 0]
+  5000.0 0.0 2500.0 rgb=[255, 255, 255]
+scan intensity13: source=intensity13.las origin=[500.0, 500.0, 0.0] read=3 kept=3 stations=[]
+  -500.0 -500.0 0.0 rgb=[0, 0, 0]
+  500.0 -500.0 0.0 rgb=[255, 255, 255]
+  -500.0 500.0 0.0 rgb=[128, 128, 128]
+scan plain10: source=plain10.las origin=[1500.0, 3000.0, 4500.0] read=2 kept=2 stations=[]
+  -500.0 -1000.0 -1500.0 rgb=[160, 160, 160]
+  500.0 1000.0 1500.0 rgb=[160, 160, 160]
+scan survey12: source=survey12.las origin=[500005000.0, 7000010000.0, 11500.0] read=4 kept=4 stations=[]
+  -5000.0 -10000.0 -1500.0 rgb=[255, 0, 0]
+  5000.0 10000.0 1500.0 rgb=[0, 255, 0]
+  0.0 -9000.0 0.0 rgb=[0, 0, 255]
+  -2500.0 -2500.0 -1000.0 rgb=[128, 128, 128]

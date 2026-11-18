@@ -1,0 +1,35 @@
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "area": 90, "slope": 0.01}'
+[exit 0]
+--- stdout
+{"carries_lpm":null,"flow_lpm":225.0,"inside_mm":91.3,"ok":null}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "area": 400, "rainfall": 180, "slope": 0.02, "inside": 100}'
+[exit 0]
+--- stdout
+{"carries_lpm":406.0,"flow_lpm":1200.0,"inside_mm":150.1,"ok":false}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "area": 400, "rainfall": 180, "slope": 0.02, "inside": 150}'
+[exit 0]
+--- stdout
+{"carries_lpm":1197.2,"flow_lpm":1200.0,"inside_mm":150.1,"ok":false}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 900, "slope": 0.005, "inside": 75}'
+[exit 0]
+--- stdout
+{"carries_lpm":94.3,"flow_lpm":900.0,"inside_mm":174.8,"ok":false}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "horizontal", "flow": 300, "slope": 0.04}'
+[exit 0]
+--- stdout
+{"carries_lpm":null,"flow_lpm":300.0,"inside_mm":78.4,"ok":null}
+
+--- stderr
+

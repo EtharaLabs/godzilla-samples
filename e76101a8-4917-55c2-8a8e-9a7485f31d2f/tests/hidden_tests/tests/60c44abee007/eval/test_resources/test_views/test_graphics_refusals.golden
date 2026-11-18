@@ -1,0 +1,106 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'filter {"name": "All walls", "categories": ["walls"]}' --cmd 'option {"set": "S", "options": ["a", "b"]}' --save base.bimcraft
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"categories":["wall"],"matches":[100002,100003,100004,100005],"name":"All walls","rules":[]}
+{"now":null,"options":["a","b"],"primary":"a","set":"S"}
+{"format":"bimcraft","path":"base.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"filters": [{"filter": "Nope"}]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: there's no view filter `Nope` (there are: All walls)
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"filters": [{"filter": "All walls"}, {"filter": "All walls", "halftone": true}]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: filter `All walls` is applied twice
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"template": "Nope"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: there's no view template `Nope` (there are: Electrical Ceiling, Electrical Lighting, Electrical Power)
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"phase": "Nope"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: there's no phase `Nope` (there are: Existing, New Construction)
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"phase_filter": "Nope"}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: there's no phase filter `Nope` (there are: Show All, Show Complete, Show New, Show Previous + Demolished, Show Previous + New)
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"options": {"S": "c"}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: design option set `S` has no option `c` (there are: a, b)
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"options": {"T": "a"}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: there's no design option set `T` (there are: S)
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"categories": {"walls": {"transparency": 101}}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: category `wall`: transparency is a percent, 0 to 100, not 101
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"categories": {"walls": {"cut": {"weight": 17}}}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: category `wall`: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"categories": {"walls": {"sparkle": true}}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: category `wall`: unknown field `sparkle`, expected one of `hidden`, `projection`, `cut`, `halftone`, `transparency`, `shown`
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"view": "Nowhere", "hide": ["walls"]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: no view named `Nowhere`
+
+$ bimcraft-cli run base.bimcraft --cmd 'graphics {"elements": {"999999": {"halftone": true}}}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (graphics): graphics: no element 999999
+

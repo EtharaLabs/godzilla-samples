@@ -1,0 +1,24 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'visual_style {}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "shaded.png"}' --cmd 'visual_style {"style": "hidden_line"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "hidden.png"}' --cmd 'visual_style {"view": "{3D}", "style": "wireframe"}' --cmd 'visual_style {}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "wire.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"style":"shaded","view":null}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"shaded.png","target":null,"view":"{3D}","width":320}
+{"style":"hidden_line","view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"hidden.png","target":null,"view":"{3D}","width":320}
+{"style":"wireframe","view":100010}
+{"style":"wireframe","view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"wire.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+
+=== file shaded.png
+png 320x200 rgba pixels-sha256=89f671f558af50b4cec294c4a19bfc5488c4b90be884cfb93783ecbf44d05ca4
+=== file hidden.png
+png 320x200 rgba pixels-sha256=1ac2be0527b2054c7d10423f0680a8a927793288d84f2a5b59439da7829d335e
+=== file wire.png
+png 320x200 rgba pixels-sha256=4790d201db446f5b6273b2e9e53185f2ced5a2e14892f26e348f867304f45aed

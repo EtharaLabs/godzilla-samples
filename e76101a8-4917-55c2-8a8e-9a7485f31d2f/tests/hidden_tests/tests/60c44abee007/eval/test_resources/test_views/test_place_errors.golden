@@ -1,0 +1,44 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'sheet {}' --cmd 'sheet {}' --cmd 'place {"sheet": "A101", "view": "Level 1"}' --cmd 'place {"sheet": "A101", "view": "Level 1"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006,"number":"A101"}
+{"id":100007,"number":"A102"}
+{"at":[215.0,168.5],"id":100008}
+
+--- stderr
+line 1 (place): viewport 100009: Level 1 is on sheet A101 already; a view goes on one sheet
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'sheet {}' --cmd 'sheet {}' --cmd 'place {"sheet": "A101", "view": "Level 1"}' --cmd 'place {"sheet": "A999", "view": "Level 2"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006,"number":"A101"}
+{"id":100007,"number":"A102"}
+{"at":[215.0,168.5],"id":100008}
+
+--- stderr
+line 1 (place): place: no sheet numbered `A999`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'sheet {}' --cmd 'sheet {}' --cmd 'place {"sheet": "A101", "view": "Level 1"}' --cmd 'place {"sheet": "A101", "view": "Nowhere"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006,"number":"A101"}
+{"id":100007,"number":"A102"}
+{"at":[215.0,168.5],"id":100008}
+
+--- stderr
+line 1 (place): place: no level, section, elevation, schedule or 3D view named `Nowhere`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'sheet {}' --cmd 'sheet {}' --cmd 'place {"sheet": "A101", "view": "Level 1"}' --cmd 'place {"sheet": "A102", "view": "Level 1"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006,"number":"A101"}
+{"id":100007,"number":"A102"}
+{"at":[215.0,168.5],"id":100008}
+
+--- stderr
+line 1 (place): viewport 100009: Level 1 is on sheet A101 already; a view goes on one sheet
+

@@ -1,0 +1,32 @@
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Odd, Name", "target": "model", "lines": [{"angle": 30, "spacing": 125.5, "origin": [1, 2], "shift": 0.25, "dashes": [10, -5, 0, -5]}]}' --cmd 'export_fill_patterns {}' --cmd 'export_fill_patterns {"names": ["Tile 300", "Sand"]}' --cmd 'export_fill_patterns {"path": "out.pat", "names": ["Odd, Name", "Brick 225 x 75", "Solid fill"]}' --cmd 'export_fill_patterns {"names": ["Nope"]}'
+[exit 1]
+--- stdout
+{"name":"Odd, Name","pattern":{"lines":[{"angle":30.0,"dashes":[10.0,-5.0,0.0,-5.0],"origin":[1.0,2.0],"shift":0.25,"spacing":125.5}],"target":"model"}}
+{"text":";%UNITS=MM\n;%VERSION=3.0\n;Fill patterns from BIMCraft\n*Brick 225 x 75\n;%TYPE=MODEL\n0,0,0,0,75\n90,0,0,75,112.5,75,-75\n*Crosshatch\n;%TYPE=DRAFTING\n0,0,0,0,2\n90,0,0,0,2\n*Diagonal Crosshatch\n;%TYPE=DRAFTING\n45,0,0,0,2\n135,0,0,0,2\n*Diagonal Down\n;%TYPE=DRAFTING\n135,0,0,0,1.5\n*Diagonal Up\n;%TYPE=DRAFTING\n45,0,0,0,1.5\n*Horizontal\n;%TYPE=DRAFTING\n0,0,0,0,1.5\n*Odd  Name\n;%TYPE=MODEL\n30,1,2,0.25,125.5,10,-5,0,-5\n*Sand\n;%TYPE=DRAFTING\n0,0,0,0.5,1,0,-1\n*Tile 300\n;%TYPE=MODEL\n0,0,0,0,300\n90,0,0,0,300\n*Vertical\n;%TYPE=DRAFTING\n90,0,0,0,1.5\n"}
+{"text":";%UNITS=MM\n;%VERSION=3.0\n;Fill patterns from BIMCraft\n*Sand\n;%TYPE=DRAFTING\n0,0,0,0.5,1,0,-1\n*Tile 300\n;%TYPE=MODEL\n0,0,0,0,300\n90,0,0,0,300\n"}
+{"path":"out.pat"}
+
+--- stderr
+line 1 (export_fill_patterns): export_fill_patterns: there's no fill pattern `Nope`
+
+=== file out.pat
+;%UNITS=MM
+;%VERSION=3.0
+;Fill patterns from BIMCraft
+*Brick 225 x 75
+;%TYPE=MODEL
+0,0,0,0,75
+90,0,0,75,112.5,75,-75
+*Odd  Name
+;%TYPE=MODEL
+30,1,2,0.25,125.5,10,-5,0,-5
+
+$ bimcraft-cli run --cmd 'import_fill_patterns {"path": "out.pat"}' --cmd 'import_fill_patterns {"path": "out.pat", "replace": true}'
+[exit 0]
+--- stdout
+{"imported":["Odd  Name"],"left_out":[{"name":"Brick 225 x 75","why":"the project has a pattern of that name"}],"left_out_count":1}
+{"imported":["Brick 225 x 75","Odd  Name"],"left_out":[],"left_out_count":0}
+
+--- stderr
+
+=== files: out.pat

@@ -1,0 +1,51 @@
+=== setup
+exit: 0
+--- stdout
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"id":100005}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== mirror {"ids": [100002, 100003, 100004, 100005], "axis": [[0, -5000], [0, 5000]], "copy": false} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"mirrored":[100002,100003,100004,100005]}
+{"count":4,"elements":[{"angle":150.000000006,"category":"line","centre":[-1000.0,0.0],"guid":"GUID-1","id":100002,"length":4765.4,"level":"GUID-2","radii":[2000.0,-800.0],"shape":"partial ellipse","span":[10.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[-1000.0,1500.0],[-3000.0,-500.0]],"guid":"GUID-3","id":100003,"length":4920.12,"level":"GUID-2","shape":"fitted spline","start_tangent":[0.0,1.0],"style":"Thin Lines","view":"GUID-2"},{"arc":180.0,"category":"line","end":[-2000.0,0.0],"guid":"GUID-4","id":100004,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[-1000.0,2000.0],[-3000.0,2000.0],[-4000.0,0.0]],"guid":"GUID-5","id":100005,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"}],"returned":4}
+--- stderr
+=== rotate {"ids": [100002, 100003, 100004, 100005], "angle": 90, "about": [0, 0]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"rotated":[100002,100003,100004,100005]}
+{"count":4,"elements":[{"angle":119.999999994,"category":"line","centre":[0.0,1000.0],"guid":"GUID-1","id":100002,"length":4765.4,"level":"GUID-2","radii":[2000.0,800.0],"shape":"partial ellipse","span":[10.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[-1500.0,1000.0],[500.0,3000.0]],"guid":"GUID-3","id":100003,"length":4920.12,"level":"GUID-2","shape":"fitted spline","start_tangent":[-1.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[0.0,2000.0],"guid":"GUID-4","id":100004,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[-2000.0,1000.0],[-2000.0,3000.0],[0.0,4000.0]],"guid":"GUID-5","id":100005,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"}],"returned":4}
+--- stderr
+=== move {"ids": [100002, 100003], "by": [500, -250]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"moved":[100002,100003]}
+{"count":4,"elements":[{"angle":29.9999999938,"category":"line","centre":[1500.0,-250.0],"guid":"GUID-1","id":100002,"length":4765.4,"level":"GUID-2","radii":[2000.0,800.0],"shape":"partial ellipse","span":[10.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[500.0,-250.0],[1500.0,1250.0],[3500.0,-750.0]],"guid":"GUID-3","id":100003,"length":4920.12,"level":"GUID-2","shape":"fitted spline","start_tangent":[0.0,1.0],"style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[2000.0,0.0],"guid":"GUID-4","id":100004,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[3000.0,2000.0],[4000.0,0.0]],"guid":"GUID-5","id":100005,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"}],"returned":4}
+--- stderr
+=== copy {"ids": [100004, 100005], "by": [0, 3000]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100006,100007]}
+{"count":6,"elements":[{"angle":30.0,"category":"line","centre":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":4765.4,"level":"GUID-2","radii":[2000.0,800.0],"shape":"partial ellipse","span":[10.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1000.0,1500.0],[3000.0,-500.0]],"guid":"GUID-3","id":100003,"length":4920.12,"level":"GUID-2","shape":"fitted spline","start_tangent":[0.0,1.0],"style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[2000.0,0.0],"guid":"GUID-4","id":100004,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[3000.0,2000.0],[4000.0,0.0]],"guid":"GUID-5","id":100005,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[2000.0,3000.0],"guid":"GUID-6","id":100006,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,3000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,3000.0],[1000.0,5000.0],[3000.0,5000.0],[4000.0,3000.0]],"guid":"GUID-7","id":100007,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"}],"returned":6}
+--- stderr
+=== rotate {"ids": [100004], "angle": 45, "about": [1000, 0], "copy": true} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100006]}
+{"count":5,"elements":[{"angle":30.0,"category":"line","centre":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":4765.4,"level":"GUID-2","radii":[2000.0,800.0],"shape":"partial ellipse","span":[10.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1000.0,1500.0],[3000.0,-500.0]],"guid":"GUID-3","id":100003,"length":4920.12,"level":"GUID-2","shape":"fitted spline","start_tangent":[0.0,1.0],"style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[2000.0,0.0],"guid":"GUID-4","id":100004,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[3000.0,2000.0],[4000.0,0.0]],"guid":"GUID-5","id":100005,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[1707.107,707.107],"guid":"GUID-6","id":100006,"length":3141.59,"level":"GUID-2","shape":"arc","start":[292.893,-707.107],"style":"Thin Lines","view":"GUID-2"}],"returned":5}
+--- stderr
+=== mirror {"ids": [100004], "axis": [[0, 0], [1000, 1000]], "copy": true} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100006]}
+{"count":5,"elements":[{"angle":30.0,"category":"line","centre":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":4765.4,"level":"GUID-2","radii":[2000.0,800.0],"shape":"partial ellipse","span":[10.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","fit":[[0.0,0.0],[1000.0,1500.0],[3000.0,-500.0]],"guid":"GUID-3","id":100003,"length":4920.12,"level":"GUID-2","shape":"fitted spline","start_tangent":[0.0,1.0],"style":"Thin Lines","view":"GUID-2"},{"arc":-180.0,"category":"line","end":[2000.0,0.0],"guid":"GUID-4","id":100004,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","control":[[0.0,0.0],[1000.0,2000.0],[3000.0,2000.0],[4000.0,0.0]],"guid":"GUID-5","id":100005,"knots":[0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"length":5268.21,"level":"GUID-2","shape":"spline","style":"Thin Lines","view":"GUID-2"},{"arc":180.0,"category":"line","end":[0.0,2000.0],"guid":"GUID-6","id":100006,"length":3141.59,"level":"GUID-2","shape":"arc","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"}],"returned":5}
+--- stderr

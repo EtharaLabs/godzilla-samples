@@ -1,0 +1,161 @@
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 0}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X` line 1: its lines are 0.05 to 100000 apart, not 0
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5, "dashes": [-1, -2]}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X` line 1: dashes need a dash (0 is a dot) and a space (a negative length) among them, and 0.05 or more in all
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": "a", "spacing": 5}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: `lines` is [{angle, spacing, origin?: [x, y], shift?, dashes?: [mm, -mm, …]}, …]: invalid type: string "a", expected f64
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: there's no fill pattern `X`; make one with `lines` (there are: Brick 225 x 75, Crosshatch, Diagonal Crosshatch, Diagonal Down, Diagonal Up, Horizontal, Sand, Solid fill, Tile 300, Vertical)
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "target": "paper"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: `target` is drafting or model: unknown variant `paper`, expected `drafting` or `model`
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Crosshatch", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: filled region type `Crosshatch` fills with `Crosshatch`; give it another first
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Brick 225 x 75", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: filled region type `Brick` fills with `Brick 225 x 75`; give it another first
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Nope", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: there's no fill pattern `Nope`
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Horizontal", "rename": "Vertical"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: there's already a fill pattern `Vertical`
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Horizontal", "drawn": "big"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: `drawn` is a view's scale, a number, not "big"
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "Horizontal", "colour": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: `colour` isn't one of its parameters: name, target, lines, drawn, rename, delete
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "T"}'
+[exit 0]
+--- stdout
+{"name":"T","type":{"background_color":[0,0,0],"foreground_color":[0,0,0]}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "T", "foreground": "Nope"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region_type): filled_region_type: filled region type `T`: there's no fill pattern `Nope` (there are: Brick 225 x 75, Crosshatch, Diagonal Crosshatch, Diagonal Down, Diagonal Up, Horizontal, Sand, Solid fill, Tile 300, Vertical)
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "Sand", "rename": "Brick"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region_type): filled_region_type: there's already a filled region type `Brick`
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "T", "foreground_color": "red"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region_type): filled_region_type: `foreground_color` is "#rrggbb" or [r, g, b], each 0 to 255, not "red"
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "Nope", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region_type): filled_region_type: there's no filled region type `Nope`
+
+$ bimcraft-cli run --cmd 'filled_region_type {"name": "Nope", "masking": true}'
+[exit 0]
+--- stdout
+{"name":"Nope","type":{"background_color":[0,0,0],"foreground_color":[0,0,0],"masking":true}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5}], "drawn": -1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X`: the scale it was drawn at is a number above 0, at most 100000
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5, "shift": 1e12}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X` line 1: its angle, origin and shift are numbers, the shift within 100000
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5, "origin": [1e12, 0]}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X` line 1: its origin is within 100000 of the pattern's
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5, "dashes": [1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1]}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X` line 1: 18 dashes and spaces, more than 16
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5, "dashes": [1e12,-1]}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X` line 1: a dash or a space is a length within 100000
+
+$ bimcraft-cli run --cmd 'fill_pattern {"name": "X", "lines": [{"angle": 0, "spacing": 5}, {"angle": 1, "spacing": 5}, {"angle": 2, "spacing": 5}, {"angle": 3, "spacing": 5}, {"angle": 4, "spacing": 5}, {"angle": 5, "spacing": 5}, {"angle": 6, "spacing": 5}, {"angle": 7, "spacing": 5}, {"angle": 8, "spacing": 5}, {"angle": 9, "spacing": 5}, {"angle": 10, "spacing": 5}, {"angle": 11, "spacing": 5}, {"angle": 12, "spacing": 5}, {"angle": 13, "spacing": 5}, {"angle": 14, "spacing": 5}, {"angle": 15, "spacing": 5}, {"angle": 16, "spacing": 5}, {"angle": 17, "spacing": 5}, {"angle": 18, "spacing": 5}, {"angle": 19, "spacing": 5}, {"angle": 20, "spacing": 5}, {"angle": 21, "spacing": 5}, {"angle": 22, "spacing": 5}, {"angle": 23, "spacing": 5}, {"angle": 24, "spacing": 5}, {"angle": 25, "spacing": 5}, {"angle": 26, "spacing": 5}, {"angle": 27, "spacing": 5}, {"angle": 28, "spacing": 5}, {"angle": 29, "spacing": 5}, {"angle": 30, "spacing": 5}, {"angle": 31, "spacing": 5}, {"angle": 32, "spacing": 5}, {"angle": 33, "spacing": 5}, {"angle": 34, "spacing": 5}, {"angle": 35, "spacing": 5}, {"angle": 36, "spacing": 5}, {"angle": 37, "spacing": 5}, {"angle": 38, "spacing": 5}, {"angle": 39, "spacing": 5}, {"angle": 40, "spacing": 5}, {"angle": 41, "spacing": 5}, {"angle": 42, "spacing": 5}, {"angle": 43, "spacing": 5}, {"angle": 44, "spacing": 5}, {"angle": 45, "spacing": 5}, {"angle": 46, "spacing": 5}, {"angle": 47, "spacing": 5}, {"angle": 48, "spacing": 5}, {"angle": 49, "spacing": 5}, {"angle": 50, "spacing": 5}, {"angle": 51, "spacing": 5}, {"angle": 52, "spacing": 5}, {"angle": 53, "spacing": 5}, {"angle": 54, "spacing": 5}, {"angle": 55, "spacing": 5}, {"angle": 56, "spacing": 5}, {"angle": 57, "spacing": 5}, {"angle": 58, "spacing": 5}, {"angle": 59, "spacing": 5}, {"angle": 60, "spacing": 5}, {"angle": 61, "spacing": 5}, {"angle": 62, "spacing": 5}, {"angle": 63, "spacing": 5}, {"angle": 64, "spacing": 5}, {"angle": 65, "spacing": 5}, {"angle": 66, "spacing": 5}, {"angle": 67, "spacing": 5}, {"angle": 68, "spacing": 5}, {"angle": 69, "spacing": 5}, {"angle": 70, "spacing": 5}, {"angle": 71, "spacing": 5}, {"angle": 72, "spacing": 5}, {"angle": 73, "spacing": 5}, {"angle": 74, "spacing": 5}, {"angle": 75, "spacing": 5}, {"angle": 76, "spacing": 5}, {"angle": 77, "spacing": 5}, {"angle": 78, "spacing": 5}, {"angle": 79, "spacing": 5}, {"angle": 80, "spacing": 5}, {"angle": 81, "spacing": 5}, {"angle": 82, "spacing": 5}, {"angle": 83, "spacing": 5}, {"angle": 84, "spacing": 5}, {"angle": 85, "spacing": 5}, {"angle": 86, "spacing": 5}, {"angle": 87, "spacing": 5}, {"angle": 88, "spacing": 5}, {"angle": 89, "spacing": 5}, {"angle": 90, "spacing": 5}, {"angle": 91, "spacing": 5}, {"angle": 92, "spacing": 5}, {"angle": 93, "spacing": 5}, {"angle": 94, "spacing": 5}, {"angle": 95, "spacing": 5}, {"angle": 96, "spacing": 5}, {"angle": 97, "spacing": 5}, {"angle": 98, "spacing": 5}, {"angle": 99, "spacing": 5}, {"angle": 100, "spacing": 5}, {"angle": 101, "spacing": 5}, {"angle": 102, "spacing": 5}, {"angle": 103, "spacing": 5}, {"angle": 104, "spacing": 5}, {"angle": 105, "spacing": 5}, {"angle": 106, "spacing": 5}, {"angle": 107, "spacing": 5}, {"angle": 108, "spacing": 5}, {"angle": 109, "spacing": 5}, {"angle": 110, "spacing": 5}, {"angle": 111, "spacing": 5}, {"angle": 112, "spacing": 5}, {"angle": 113, "spacing": 5}, {"angle": 114, "spacing": 5}, {"angle": 115, "spacing": 5}, {"angle": 116, "spacing": 5}, {"angle": 117, "spacing": 5}, {"angle": 118, "spacing": 5}, {"angle": 119, "spacing": 5}, {"angle": 120, "spacing": 5}, {"angle": 121, "spacing": 5}, {"angle": 122, "spacing": 5}, {"angle": 123, "spacing": 5}, {"angle": 124, "spacing": 5}, {"angle": 125, "spacing": 5}, {"angle": 126, "spacing": 5}, {"angle": 127, "spacing": 5}, {"angle": 128, "spacing": 5}, {"angle": 129, "spacing": 5}, {"angle": 130, "spacing": 5}, {"angle": 131, "spacing": 5}, {"angle": 132, "spacing": 5}, {"angle": 133, "spacing": 5}, {"angle": 134, "spacing": 5}, {"angle": 135, "spacing": 5}, {"angle": 136, "spacing": 5}, {"angle": 137, "spacing": 5}, {"angle": 138, "spacing": 5}, {"angle": 139, "spacing": 5}, {"angle": 140, "spacing": 5}, {"angle": 141, "spacing": 5}, {"angle": 142, "spacing": 5}, {"angle": 143, "spacing": 5}, {"angle": 144, "spacing": 5}, {"angle": 145, "spacing": 5}, {"angle": 146, "spacing": 5}, {"angle": 147, "spacing": 5}, {"angle": 148, "spacing": 5}, {"angle": 149, "spacing": 5}, {"angle": 150, "spacing": 5}, {"angle": 151, "spacing": 5}, {"angle": 152, "spacing": 5}, {"angle": 153, "spacing": 5}, {"angle": 154, "spacing": 5}, {"angle": 155, "spacing": 5}, {"angle": 156, "spacing": 5}, {"angle": 157, "spacing": 5}, {"angle": 158, "spacing": 5}, {"angle": 159, "spacing": 5}, {"angle": 160, "spacing": 5}, {"angle": 161, "spacing": 5}, {"angle": 162, "spacing": 5}, {"angle": 163, "spacing": 5}, {"angle": 164, "spacing": 5}, {"angle": 165, "spacing": 5}, {"angle": 166, "spacing": 5}, {"angle": 167, "spacing": 5}, {"angle": 168, "spacing": 5}, {"angle": 169, "spacing": 5}, {"angle": 170, "spacing": 5}, {"angle": 171, "spacing": 5}, {"angle": 172, "spacing": 5}, {"angle": 173, "spacing": 5}, {"angle": 174, "spacing": 5}, {"angle": 175, "spacing": 5}, {"angle": 176, "spacing": 5}, {"angle": 177, "spacing": 5}, {"angle": 178, "spacing": 5}, {"angle": 179, "spacing": 5}, {"angle": 180, "spacing": 5}, {"angle": 181, "spacing": 5}, {"angle": 182, "spacing": 5}, {"angle": 183, "spacing": 5}, {"angle": 184, "spacing": 5}, {"angle": 185, "spacing": 5}, {"angle": 186, "spacing": 5}, {"angle": 187, "spacing": 5}, {"angle": 188, "spacing": 5}, {"angle": 189, "spacing": 5}, {"angle": 190, "spacing": 5}, {"angle": 191, "spacing": 5}, {"angle": 192, "spacing": 5}, {"angle": 193, "spacing": 5}, {"angle": 194, "spacing": 5}, {"angle": 195, "spacing": 5}, {"angle": 196, "spacing": 5}, {"angle": 197, "spacing": 5}, {"angle": 198, "spacing": 5}, {"angle": 199, "spacing": 5}, {"angle": 200, "spacing": 5}, {"angle": 201, "spacing": 5}, {"angle": 202, "spacing": 5}, {"angle": 203, "spacing": 5}, {"angle": 204, "spacing": 5}, {"angle": 205, "spacing": 5}, {"angle": 206, "spacing": 5}, {"angle": 207, "spacing": 5}, {"angle": 208, "spacing": 5}, {"angle": 209, "spacing": 5}, {"angle": 210, "spacing": 5}, {"angle": 211, "spacing": 5}, {"angle": 212, "spacing": 5}, {"angle": 213, "spacing": 5}, {"angle": 214, "spacing": 5}, {"angle": 215, "spacing": 5}, {"angle": 216, "spacing": 5}, {"angle": 217, "spacing": 5}, {"angle": 218, "spacing": 5}, {"angle": 219, "spacing": 5}, {"angle": 220, "spacing": 5}, {"angle": 221, "spacing": 5}, {"angle": 222, "spacing": 5}, {"angle": 223, "spacing": 5}, {"angle": 224, "spacing": 5}, {"angle": 225, "spacing": 5}, {"angle": 226, "spacing": 5}, {"angle": 227, "spacing": 5}, {"angle": 228, "spacing": 5}, {"angle": 229, "spacing": 5}, {"angle": 230, "spacing": 5}, {"angle": 231, "spacing": 5}, {"angle": 232, "spacing": 5}, {"angle": 233, "spacing": 5}, {"angle": 234, "spacing": 5}, {"angle": 235, "spacing": 5}, {"angle": 236, "spacing": 5}, {"angle": 237, "spacing": 5}, {"angle": 238, "spacing": 5}, {"angle": 239, "spacing": 5}, {"angle": 240, "spacing": 5}, {"angle": 241, "spacing": 5}, {"angle": 242, "spacing": 5}, {"angle": 243, "spacing": 5}, {"angle": 244, "spacing": 5}, {"angle": 245, "spacing": 5}, {"angle": 246, "spacing": 5}, {"angle": 247, "spacing": 5}, {"angle": 248, "spacing": 5}, {"angle": 249, "spacing": 5}, {"angle": 250, "spacing": 5}, {"angle": 251, "spacing": 5}, {"angle": 252, "spacing": 5}, {"angle": 253, "spacing": 5}, {"angle": 254, "spacing": 5}, {"angle": 255, "spacing": 5}, {"angle": 256, "spacing": 5}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (fill_pattern): fill_pattern: fill pattern `X`: 257 line families, more than 256
+

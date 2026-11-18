@@ -1,0 +1,8 @@
+$ bimcraft-cli run base.bimcraft --cmd 'modify {"id": 100011, "slopes": [10, 20]}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (modify): roof 100011: `slopes` has 2 numbers for its 4 edges (one for each, the courtyards' after the boundary's; 0 for the roof's slope), or leave it empty
+

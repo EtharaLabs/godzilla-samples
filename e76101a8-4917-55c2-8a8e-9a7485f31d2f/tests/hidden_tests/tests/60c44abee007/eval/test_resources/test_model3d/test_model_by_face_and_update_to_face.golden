@@ -1,0 +1,37 @@
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'wall_by_face {"mass": 100004, "faces": [0, 2], "type": "Exterior - 300mm"}' --cmd 'WB {"mass": 100004, "faces": [1]}' --cmd 'floor_by_face {"mass": 100004}' --cmd 'roof_by_face {"mass": 100004, "slope": 20, "overhang": 400}' --cmd 'modify {"id": 100004, "boundary": [[0,0],[12000,0],[12000,8000],[0,8000]], "height": 6500}' --cmd 'UF {"mass": 100004}' --cmd 'update_by_face {}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "roof"}'
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+{"ids":[100005,100006]}
+{"ids":[100007]}
+{"area_m2":80.0,"id":100008}
+{"id":100009}
+{"area_m2":96.0,"base_offset":0.0,"boundary":[[0.0,0.0],[12000.0,0.0],[12000.0,8000.0],[0.0,8000.0]],"category":"mass","gross_floor_area_m2":288.0,"guid":"<GUID-1>","height":6500.0,"id":100004,"level":"<GUID-2>","levels":[100000,100001,100002],"name":"Block","top_level":null,"volume_m3":624.0}
+{"unchanged":[],"updated":[100005,100006,100007,100008,100009]}
+{"unchanged":[100005,100006,100007,100008,100009],"updated":[]}
+{"count":3,"elements":[{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"<GUID-3>","height":6500.0,"id":100005,"length":12000.0,"level":"<GUID-2>","location":"exterior-finish","params":{"Mass Face":{"face":0,"mass":"<GUID-1>"}},"room_bounding":true,"start":[12000.0,0.0],"thickness":300.0,"top_level":null,"type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[12000.0,8000.0],"guid":"<GUID-5>","height":6500.0,"id":100006,"length":12000.0,"level":"<GUID-2>","location":"exterior-finish","params":{"Mass Face":{"face":2,"mass":"<GUID-1>"}},"room_bounding":true,"start":[0.0,8000.0],"thickness":300.0,"top_level":null,"type":"Exterior - 300mm","type_guid":"<GUID-4>"},{"base_offset":0.0,"category":"wall","end":[12000.0,0.0],"guid":"<GUID-6>","height":6500.0,"id":100007,"length":8000.0,"level":"<GUID-2>","location":"exterior-finish","params":{"Mass Face":{"face":1,"mass":"<GUID-1>"}},"room_bounding":true,"start":[12000.0,8000.0],"thickness":200.0,"top_level":null,"type":"Generic - 200mm","type_guid":"<GUID-7>"}],"returned":3}
+{"count":1,"elements":[{"area_m2":96.0,"boundary":[[0.0,0.0],[12000.0,0.0],[12000.0,8000.0],[0.0,8000.0]],"category":"roof","guid":"<GUID-8>","id":100009,"level":"<GUID-2>","offset":6500.0,"outline":[[0.0,0.0],[12000.0,0.0],[12000.0,8000.0],[0.0,8000.0]],"overhang":400.0,"params":{"Mass Face":{"face":"top","mass":"<GUID-1>"}},"ridge":7810.29,"slope":20.0,"type":"Generic - 300mm","type_guid":"<GUID-9>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'mass {"boundary": [[0,0],[10000,0],[10000,8000],[0,8000]], "height": 9500, "name": "Block"}' --cmd 'wall_by_face {"mass": 100004, "faces": [7]}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+{"area_m2":80.0,"height":9500.0,"id":100004,"volume_m3":760.0}
+
+--- stderr
+line 1 (wall_by_face): wall_by_face: face 7 isn't an edge of the footprint: 0 to 3, from its first point
+
+$ bimcraft-cli run --cmd 'level {"elevation": 6000}' --cmd 'level {"elevation": 9000}' --cmd 'wall_by_face {"mass": 100000}'
+[exit 1]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Level 4"}
+
+--- stderr
+line 1 (wall_by_face): wall_by_face: 100000 isn't a mass
+

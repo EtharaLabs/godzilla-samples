@@ -1,0 +1,53 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'window {"at": [6000, 2000]}' --cmd 'floor {}' --cmd 'roof {"slope": 30, "overhang": 300}' --cmd 'graphic_display_options {}' --cmd 'graphic_display_options {"edges": false}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "noedges.png"}' --cmd 'GD {"silhouette": 4, "ambient_shadows": true}' --cmd 'graphic_display_options {"view": "{3D}"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "outlined.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":3000.0}
+{"host":100003,"id":100007,"mark":"1","offset":2000.0}
+{"area_m2":24.0,"id":100008}
+{"id":100009}
+{"ambient_shadows":false,"edges":true,"silhouette":0,"view":null}
+{"ambient_shadows":false,"edges":false,"silhouette":0,"view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"noedges.png","target":null,"view":"{3D}","width":320}
+{"ambient_shadows":true,"edges":false,"silhouette":4,"view":100010}
+{"ambient_shadows":true,"edges":false,"silhouette":4,"view":100010}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"outlined.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'graphic_display_options {"silhouette": 11}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (graphic_display_options): graphic_display_options: `silhouette` is how many px wide the outline is, a whole number 0 to 10, got 11
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'graphic_display_options {"silhouette": 1.5}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (graphic_display_options): graphic_display_options: `silhouette` is how many px wide the outline is, a whole number 0 to 10, got 1.5
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'graphic_display_options {"edges": "no"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (graphic_display_options): graphic_display_options: `edges` must be true or false, got "no"
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'graphic_display_options {"view": "Level 1", "edges": true}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (graphic_display_options): graphic_display_options: Level 1 isn't a 3D view; only a 3D view has graphic display options
+
+=== file noedges.png
+png 320x200 rgba pixels-sha256=a54e3e0ec39901a3cf419a9cbb9991b1e6960a52f2c294dd9fd029185b2a6cc9
+=== file outlined.png
+png 320x200 rgba pixels-sha256=fa47f5346d5736b4384176556fcc41417c3da488b1773ad8841bc56219ac5057

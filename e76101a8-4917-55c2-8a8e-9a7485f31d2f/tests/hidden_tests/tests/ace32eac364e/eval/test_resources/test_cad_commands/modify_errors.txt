@@ -1,0 +1,24 @@
+### cad
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (modify): cadimport 100002: the project holds no CAD drawing named `nope`
+### colors
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (modify): modify: element 100002: unknown variant `pink`, expected one of `preserve`, `invert`, `black`
+### level
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (modify): modify: no level or plan view named `Roof` (the levels are: Level 1, Level 2)
+### scale
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (modify): cadimport 100002: a scale of 0 mm to the drawing's unit isn't one; give one from 0.000001 to 10000000

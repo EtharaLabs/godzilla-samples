@@ -1,0 +1,95 @@
+$ circuit {"load": 2000}
+exit: 0
+--- stdout
+{"breaker_a":16.0,"carries_a":24.0,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":15.75,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+--- stderr
+$ circuit {"load": 2000, "system": "230/400"}
+exit: 0
+--- stdout
+{"breaker_a":10.0,"carries_a":24.0,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":8.7,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":230.0}
+--- stderr
+$ circuit {"load": 9000, "phases": "3FN", "system": "220/380", "length": 40000, "power_factor": 0.92, "demand": 0.8}
+exit: 0
+--- stdout
+{"breaker_a":16.0,"carries_a":21.0,"chosen":null,"conductors":"3 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":11.89,"drop_percent":1.91,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":380.0}
+--- stderr
+$ circuit {"load": 5000, "apparent": true, "phases": "FF", "length": 25000, "section": 4, "breaker": 32}
+exit: 0
+--- stdout
+{"breaker_a":32.0,"carries_a":32.0,"chosen":{"breaker_a":32.0,"breaker_ok":true,"carries_a":32.0,"carries_ok":true,"drop_ok":true,"drop_percent":3.06,"minimum_section_ok":true,"section_mm2":4.0},"conductors":"2 × 4 + PE 4 mm²","current_a":22.73,"drop_percent":3.06,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":false,"minimum_section_mm2":2.5,"section_mm2":4.0,"volts":220.0}
+--- stderr
+$ circuit {"load": 5000, "apparent": true, "phases": "FF", "section": 1.5, "breaker": 16}
+exit: 0
+--- stdout
+{"breaker_a":25.0,"carries_a":32.0,"chosen":{"breaker_a":16.0,"breaker_ok":false,"carries_a":17.5,"carries_ok":false,"drop_ok":null,"drop_percent":null,"minimum_section_ok":false,"section_mm2":1.5},"conductors":"2 × 4 + PE 4 mm²","current_a":22.73,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":4.0,"volts":220.0}
+--- stderr
+$ circuit {"load": 600, "use": "lighting", "method": "11", "grouped": 4, "insulation": "epr", "conductor": "rigid", "ambient": 40}
+exit: 0
+--- stdout
+{"breaker_a":6.0,"carries_a":16.38,"chosen":null,"conductors":"1 × 1.5 + N 1.5 + PE 1.5 mm²","current_a":4.72,"drop_percent":null,"factors":{"grouping":0.75,"soil":1.0,"temperature":0.91},"grew":true,"minimum_section_mm2":1.5,"section_mm2":1.5,"volts":127.0}
+--- stderr
+$ circuit {"load": 20000, "phases": "3F", "method": "61A", "grouped": 3, "spacing": 250, "soil": 2, "system": "230/400"}
+exit: 0
+--- stdout
+{"breaker_a":32.0,"carries_a":32.76,"chosen":null,"conductors":"3 × 6 + PE 6 mm²","current_a":28.87,"drop_percent":null,"factors":{"grouping":0.8,"soil":1.05,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":6.0,"volts":400.0}
+--- stderr
+$ circuit {"load": 20000, "phases": "3F", "method": "61", "ambient": 35, "soil": 3}
+exit: 0
+--- stdout
+{"breaker_a":63.0,"carries_a":69.35,"chosen":null,"conductors":"3 × 25 + PE 16 mm²","current_a":52.49,"drop_percent":null,"factors":{"grouping":1.0,"soil":0.96,"temperature":0.84},"grew":true,"minimum_section_mm2":2.5,"section_mm2":25.0,"volts":220.0}
+--- stderr
+$ circuit {"load": 150000, "phases": "3FN", "system": "220/380", "reduced_neutral": true}
+exit: 0
+--- stdout
+{"breaker_a":250.0,"carries_a":275.0,"chosen":null,"conductors":"3 × 150 + N 70 + PE 95 mm²","current_a":227.9,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":150.0,"volts":380.0}
+--- stderr
+$ circuit {"load": 150000, "phases": "3FN", "system": "220/380"}
+exit: 0
+--- stdout
+{"breaker_a":250.0,"carries_a":275.0,"chosen":null,"conductors":"3 × 150 + N 150 + PE 95 mm²","current_a":227.9,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":150.0,"volts":380.0}
+--- stderr
+$ circuit {"load": 3000, "length": 80000}
+exit: 0
+--- stdout
+{"breaker_a":25.0,"carries_a":101.0,"chosen":null,"conductors":"1 × 25 + N 25 + PE 16 mm²","current_a":23.62,"drop_percent":2.78,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":25.0,"volts":127.0}
+--- stderr
+$ circuit {"load": 3000, "length": 80000, "drop_limit": 2, "conductor": "rigid"}
+exit: 0
+--- stdout
+{"breaker_a":25.0,"carries_a":125.0,"chosen":null,"conductors":"1 × 35 + N 35 + PE 16 mm²","current_a":23.62,"drop_percent":1.87,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":35.0,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "breaker": 40}
+exit: 0
+--- stdout
+{"breaker_a":40.0,"carries_a":41.0,"chosen":null,"conductors":"1 × 6 + N 6 + PE 6 mm²","current_a":7.87,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":6.0,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "ambient": 10, "method": "1"}
+exit: 0
+--- stdout
+{"breaker_a":10.0,"carries_a":23.79,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":7.87,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.22},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "method": "11", "bundle": true, "grouped": 12}
+exit: 0
+--- stdout
+{"breaker_a":10.0,"carries_a":12.15,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":7.87,"drop_percent":null,"factors":{"grouping":0.45,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "method": "11A", "grouped": 20}
+exit: 0
+--- stdout
+{"breaker_a":10.0,"carries_a":16.47,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":7.87,"drop_percent":null,"factors":{"grouping":0.61,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "method": "11", "grouped": 20}
+exit: 0
+--- stdout
+{"breaker_a":10.0,"carries_a":18.9,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":7.87,"drop_percent":null,"factors":{"grouping":0.7,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "grouped": 25}
+exit: 0
+--- stdout
+{"breaker_a":10.0,"carries_a":12.16,"chosen":null,"conductors":"1 × 4 + N 4 + PE 4 mm²","current_a":7.87,"drop_percent":null,"factors":{"grouping":0.38,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":4.0,"volts":127.0}
+--- stderr
+$ circuit {"load": 1000, "grouped": 2.4, "method": "4", "use": "lighting", "length": 15000, "power_factor": 0.5}
+exit: 0
+--- stdout
+{"breaker_a":16.0,"carries_a":18.4,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":15.75,"drop_percent":1.81,"factors":{"grouping":0.8,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":1.5,"section_mm2":2.5,"volts":127.0}
+--- stderr

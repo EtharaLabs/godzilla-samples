@@ -1,0 +1,41 @@
+$ bimcraft-cli run --script crlf.txt
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+{"id":100003,"name":"Five"}
+
+--- stderr
+
+$ bimcraft-cli run --script nonl.txt
+[exit 0]
+--- stdout
+{"id":100002,"name":"Level 3"}
+
+--- stderr
+
+$ bimcraft-cli run --script bom.txt
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (﻿level): unknown command `﻿level`; list_commands shows them
+
+$ bimcraft-cli run --script bin.txt
+[exit 1]
+--- stdout
+
+--- stderr
+bin.txt: stream did not contain valid UTF-8
+
+$ bimcraft-cli run --script empty.txt
+[exit 0]
+--- stdout
+
+--- stderr
+
+$ bimcraft-cli run --script comments.txt
+[exit 0]
+--- stdout
+
+--- stderr
+

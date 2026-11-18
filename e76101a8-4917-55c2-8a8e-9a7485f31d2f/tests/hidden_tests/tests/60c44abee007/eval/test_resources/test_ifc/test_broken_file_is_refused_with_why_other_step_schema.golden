@@ -1,0 +1,22 @@
+$ bimcraft-cli run broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: this STEP file is in AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }, not IFC
+
+$ bimcraft-cli convert broken.ifc out.bimcraft
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: this STEP file is in AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }, not IFC
+
+$ bimcraft-cli info broken.ifc
+[exit 1]
+--- stdout
+
+--- stderr
+open: broken.ifc: this STEP file is in AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }, not IFC
+
+out.bimcraft written: False

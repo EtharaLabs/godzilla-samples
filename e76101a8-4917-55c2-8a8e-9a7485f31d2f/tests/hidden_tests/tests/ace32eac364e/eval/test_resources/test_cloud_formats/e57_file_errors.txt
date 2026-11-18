@@ -1,0 +1,40 @@
+### bad_version_2.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_version_2.e57: it's E57 version 2; BIMCraft reads version 1
+### bad_page_2048.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_page_2048.e57: its pages are 2048 bytes; E57's are 1024
+### bad_not_e57.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_not_e57.e57: it isn't an E57 file: it doesn't start with ASTM-E57
+### bad_header_cut.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_header_cut.e57: its header is cut short
+### bad_half.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_half.e57: it's cut short: byte 6984 is past its 4096 bytes
+### bad_no_data3d.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_no_data3d.e57: it holds no scans (no data3D)
+### bad_same_section.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_same_section.e57: scan 2: its points at offset 48 are the section another scan reads; each scan keeps its own
+### bad_too_many_points.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_too_many_points.e57: scan 1: the scans of a file hold up to 100000000 points together; thin the survey where it was made

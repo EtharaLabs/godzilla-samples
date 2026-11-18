@@ -1,0 +1,35 @@
+$ bimcraft-cli run --cmd 'open {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (open): open: `path` is required
+
+$ bimcraft-cli run --cmd 'open {"path": 5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (open): open: `path` must be text of at most 256 characters, got 5
+
+$ bimcraft-cli run --cmd 'open {"path": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (open): open: `path` must be text of at most 256 characters, got "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+$ bimcraft-cli run --cmd 'open {"path": "folder.bimcraft"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (open): open: folder.bimcraft: Is a directory (os error 21)
+
+$ bimcraft-cli run --cmd 'open {"path": "x.bimcraft", "extra": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (open): open: x.bimcraft: No such file or directory (os error 2)
+

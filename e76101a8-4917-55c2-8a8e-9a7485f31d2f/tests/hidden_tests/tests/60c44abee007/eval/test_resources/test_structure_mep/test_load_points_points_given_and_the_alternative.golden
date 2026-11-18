@@ -1,0 +1,35 @@
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "Kitchen", "area": 14, "perimeter": 15000, "points": 3}, {"name": "Laundry", "area": 8, "perimeter": 12000, "points": 6}, {"name": "Bathroom", "area": 5, "perimeter": 9000, "points": 2}], "alternative": true}'
+[exit 0]
+--- stdout
+{"alternative_applied":true,"alternative_possible":true,"lighting_va":420.0,"not_covered":"the exceptions to the lighting point and to a veranda's outlet, the placement of the outlets (near the lavatory, over a counter, up to 0.80 m outside the door of a room of 2.25 m² or less) and the TUE","ok":false,"rooms":[{"area_m2":14.0,"counter_outlets":2,"kind":"kitchen","lighting_points":1,"lighting_va":220.0,"name":"Kitchen","ok":false,"perimeter_m":15.0,"tug_minimum":5,"tug_points":3,"tug_va":1300.0},{"area_m2":8.0,"kind":"service","lighting_points":1,"lighting_va":100.0,"name":"Laundry","ok":true,"perimeter_m":12.0,"tug_minimum":4,"tug_points":6,"tug_va":1600.0},{"area_m2":5.0,"kind":"bath","lighting_points":1,"lighting_va":100.0,"name":"Bathroom","ok":true,"perimeter_m":9.0,"tug_minimum":1,"tug_points":2,"tug_va":1200.0}],"skipped":[],"total_va":4520.0,"tug_va":4100.0,"wet_points":11}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "Kitchen", "area": 14, "perimeter": 15000, "points": 3}, {"name": "Laundry", "area": 8, "perimeter": 12000, "points": 6}, {"name": "Bathroom", "area": 5, "perimeter": 9000, "points": 2}], "alternative": false}'
+[exit 0]
+--- stdout
+{"alternative_applied":false,"alternative_possible":true,"lighting_va":420.0,"not_covered":"the exceptions to the lighting point and to a veranda's outlet, the placement of the outlets (near the lavatory, over a counter, up to 0.80 m outside the door of a room of 2.25 m² or less) and the TUE","ok":false,"rooms":[{"area_m2":14.0,"counter_outlets":2,"kind":"kitchen","lighting_points":1,"lighting_va":220.0,"name":"Kitchen","ok":false,"perimeter_m":15.0,"tug_minimum":5,"tug_points":3,"tug_va":1800.0},{"area_m2":8.0,"kind":"service","lighting_points":1,"lighting_va":100.0,"name":"Laundry","ok":true,"perimeter_m":12.0,"tug_minimum":4,"tug_points":6,"tug_va":2100.0},{"area_m2":5.0,"kind":"bath","lighting_points":1,"lighting_va":100.0,"name":"Bathroom","ok":true,"perimeter_m":9.0,"tug_minimum":1,"tug_points":2,"tug_va":1200.0}],"skipped":[],"total_va":5520.0,"tug_va":5100.0,"wet_points":11}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "Bathroom", "area": 5, "perimeter": 9000, "points": 2}], "alternative": true}'
+[exit 0]
+--- stdout
+{"alternative_applied":false,"alternative_possible":false,"lighting_va":100.0,"not_covered":"the exceptions to the lighting point and to a veranda's outlet, the placement of the outlets (near the lavatory, over a counter, up to 0.80 m outside the door of a room of 2.25 m² or less) and the TUE","ok":true,"rooms":[{"area_m2":5.0,"kind":"bath","lighting_points":1,"lighting_va":100.0,"name":"Bathroom","ok":true,"perimeter_m":9.0,"tug_minimum":1,"tug_points":2,"tug_va":1200.0}],"skipped":[],"total_va":1300.0,"tug_va":1200.0,"wet_points":2}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": [{"name": "Living", "area": 20, "perimeter": 18000, "points": 0}]}'
+[exit 0]
+--- stdout
+{"alternative_applied":false,"alternative_possible":false,"lighting_va":280.0,"not_covered":"the exceptions to the lighting point and to a veranda's outlet, the placement of the outlets (near the lavatory, over a counter, up to 0.80 m outside the door of a room of 2.25 m² or less) and the TUE","ok":false,"rooms":[{"area_m2":20.0,"kind":"dry","lighting_points":1,"lighting_va":280.0,"name":"Living","ok":false,"perimeter_m":18.0,"tug_minimum":4,"tug_points":0,"tug_va":0.0}],"skipped":[],"total_va":280.0,"tug_va":0.0,"wet_points":0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'load_points {"rooms": []}'
+[exit 0]
+--- stdout
+{"alternative_applied":false,"alternative_possible":false,"lighting_va":-0.0,"not_covered":"the exceptions to the lighting point and to a veranda's outlet, the placement of the outlets (near the lavatory, over a counter, up to 0.80 m outside the door of a room of 2.25 m² or less) and the TUE","ok":true,"rooms":[],"skipped":[],"total_va":-0.0,"tug_va":-0.0,"wet_points":0}
+
+--- stderr
+

@@ -1,0 +1,10 @@
+{"path": "box.xyz"} (after two: True) -> exit 1: line 1 (point_cloud): point_cloud: the project already holds a scan named `box`: place it again with `cloud`, or bring this file in under another `name`
+{"cloud": "nope"} (after two: True) -> exit 1: line 1 (point_cloud): point_cloud: the project holds no scan named `nope` (it holds: b, box)
+{"cloud": "nope"} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: the project holds no scan named `nope` (it holds: none)
+{"path": "box.xyz", "cloud": "box"} (after two: True) -> exit 1: line 1 (point_cloud): point_cloud: give `path`, a scan file to bring in, or `cloud`, a scan the project holds; not both
+{} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: give `path`, a scan file (PTS, XYZ, PLY, LAS or E57) to bring in, or `cloud`, the name of a scan the project holds
+{"path": "box.xyz", "name": " "} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: a scan needs a `name`
+{"path": "box.xyz", "level": "Roof"} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: no level or plan view named `Roof` (the levels are: Level 1, Level 2)
+{"path": "box.xyz", "at": [1]} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: `at` must be a point [x, y] in mm, got [1]
+{"path": "box.xyz", "angle": "x"} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: `angle` must be a number in mm, got "x"
+{"path": "box.xyz", "offset": "x"} (after two: False) -> exit 1: line 1 (point_cloud): point_cloud: `offset` must be a number in mm, got "x"

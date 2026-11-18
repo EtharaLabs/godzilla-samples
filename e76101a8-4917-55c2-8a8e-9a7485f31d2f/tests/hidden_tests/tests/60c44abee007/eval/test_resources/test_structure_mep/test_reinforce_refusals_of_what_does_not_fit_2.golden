@@ -1,0 +1,18 @@
+reinforce {"host": 100003, "cover": 30, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the beam is too short for that cover
+reinforce {"host": 100002, "cover": {"top": 30, "bottom": 30, "sides": 80}, "stirrup": {"diameter": 10, "spacing": 200}, "bottom": {"count": 2, "diameter": 10}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: 2 bottom bars of 10 mm leave 0.0 mm between them, less than the 20 mm clearance: use fewer or thinner bars
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 4, "diameter": 12.5, "bent": {"count": 2, "top": 2900}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the bent bars meet in the middle: each end takes 3328 mm of the 5940 mm: give a shorter `top` or a steeper `angle`
+reinforce {"host": 100010, "cover": 30, "bars": {"diameter": 12.5, "x": 4, "y": 4, "jog": {"by": 60, "from_top": 600}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: after the jog two bars are 3.3 mm apart, less than the 20 mm clearance: give a smaller `by`, or fewer bars
+reinforce {"host": 100005, "cover": 30, "bars": {"diameter": 12.5, "count": 2}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: `bars` count 2 isn't 3 to 1000
+reinforce {"host": 100005, "cover": 30, "bars": {"diameter": 12.5, "count": 6, "hook": 500}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: a bars hook of 500 mm doesn't fit in a section 327.5 mm across between the bars
+reinforce {"host": 100007, "cover": 50, "mesh": {"x": {"diameter": 10, "spacing": 150}, "hook": 400}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: a hook of 400 mm turned up from the mesh x bars reaches past the top cover of a footing 400 mm thick
+reinforce {"host": 100008, "cover": {"top": 190, "bottom": 30, "sides": 30}, "top": {"x": {"diameter": 10, "spacing": 100}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the mesh doesn't fit the floor's 200 mm thickness between the covers
+reinforce {"host": 100008, "cover": 30, "bottom": {"x": {"diameter": 10, "spacing": 100}}, "clearance": -3}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: `clearance` must be over 0 and up to 1000000000 mm, got -3

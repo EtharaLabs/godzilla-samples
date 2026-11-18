@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": "cube.xyz"}' --cmd 'point_cloud {"path": "cube.xyz", "name": "cm", "units": "cm"}' --cmd 'point_cloud {"path": "cube.xyz", "name": "ft", "units": "ft"}' --cmd 'point_cloud {"path": "cube.xyz", "name": "in", "units": "in"}' --cmd 'point_cloud {"path": "cube.xyz", "name": "thin", "spacing": 250}' --cmd 'point_cloud {"path": "cube.xyz", "name": "file", "origin": "file", "level": "Level 2"}' --cmd 'point_cloud {"path": "cube.xyz", "name": "placed", "at": [5000, -2000], "offset": 1200, "angle": 30, "origin": "centre"}' --cmd 'elements {"category": "pointcloud"}'
+[exit 0]
+--- stdout
+{"cloud":"cube","id":100002,"origin":[450.0,450.0,100.0],"points":300,"read":300}
+{"cloud":"cm","id":100003,"origin":[4.5,4.5,1.0],"points":300,"read":300}
+{"cloud":"ft","id":100004,"origin":[137.16,137.16,30.48],"points":300,"read":300}
+{"cloud":"in","id":100005,"origin":[11.43,11.43,2.54],"points":300,"read":300}
+{"cloud":"thin","id":100006,"origin":[450.0,450.0,100.0],"points":16,"read":300}
+{"cloud":"file","id":100007,"origin":[450.0,450.0,100.0],"points":300,"read":300}
+{"cloud":"placed","id":100008,"origin":[450.0,450.0,100.0],"points":300,"read":300}
+{"count":7,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"cube","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":100.0,"points":300,"source":"cube.xyz"},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"cm","guid":"<GUID-3>","id":100003,"level":"<GUID-2>","offset":1.0,"points":300,"source":"cube.xyz"},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"ft","guid":"<GUID-4>","id":100004,"level":"<GUID-2>","offset":30.48,"points":300,"source":"cube.xyz"},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"in","guid":"<GUID-5>","id":100005,"level":"<GUID-2>","offset":2.54,"points":300,"source":"cube.xyz"},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"thin","guid":"<GUID-6>","id":100006,"level":"<GUID-2>","offset":100.0,"points":16,"source":"cube.xyz"},{"angle":0.0,"at":[450.0,450.0],"category":"pointcloud","cloud":"file","guid":"<GUID-7>","id":100007,"level":"<GUID-8>","offset":-2900.0,"points":300,"source":"cube.xyz"},{"angle":30.0,"at":[5000.0,-2000.0],"category":"pointcloud","cloud":"placed","guid":"<GUID-9>","id":100008,"level":"<GUID-2>","offset":1200.0,"points":300,"source":"cube.xyz"}],"returned":7}
+
+--- stderr
+

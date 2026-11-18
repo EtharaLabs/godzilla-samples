@@ -1,0 +1,18 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'section {"start": [0,-1000], "end": [6000,-1000], "name": "S1"}' --cmd 'filled_region {"view": "S1", "sketch": [[[0,0],[4000,0]],[[4000,0],[4000,3000]],[[4000,3000],[0,3000]],[[0,3000],[0,0]]], "type": "Diagonal Up"}' --cmd 'sheet {"number": "A9", "size": "A4"}' --cmd 'filled_region {"view": "A9", "sketch": [[[10,10],[60,10]],[[60,10],[60,40]],[[60,40],[10,40]],[[10,40],[10,10]]]}' --cmd 'elements {"category": "region"}' --cmd 'render {"view": "S1", "path": "s1.png", "width": 400, "height": 300}' --cmd 'render {"view": "A9", "path": "a9.png"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"id":100003,"name":"S1"}
+{"area_m2":12.0,"id":100004}
+{"id":100005,"number":"A9"}
+{"area_m2":0.0,"id":100006}
+{"count":2,"elements":[{"area_m2":12.0,"category":"region","guid":"<GUID-1>","id":100004,"level":null,"line_style":"Thin Lines","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"sketch":[{"end":[4000.0,0.0],"guid":"<GUID-2>","id":999467,"start":[0.0,0.0]},{"end":[4000.0,3000.0],"guid":"<GUID-3>","id":999466,"start":[4000.0,0.0]},{"end":[0.0,3000.0],"guid":"<GUID-4>","id":999465,"start":[4000.0,3000.0]},{"end":[0.0,0.0],"guid":"<GUID-5>","id":999464,"start":[0.0,3000.0]}],"type":"Diagonal Up","view":"<GUID-6>"},{"area_m2":0.0,"category":"region","guid":"<GUID-7>","id":100006,"level":null,"line_style":"Thin Lines","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"sketch":[{"end":[60.0,10.0],"guid":"<GUID-8>","id":999463,"start":[10.0,10.0]},{"end":[60.0,40.0],"guid":"<GUID-9>","id":999462,"start":[60.0,10.0]},{"end":[10.0,40.0],"guid":"<GUID-10>","id":999461,"start":[60.0,40.0]},{"end":[10.0,10.0],"guid":"<GUID-11>","id":999460,"start":[10.0,40.0]}],"type":"Solid Black","view":"<GUID-12>"}],"returned":2}
+{"height":300,"kind":"section","path":"s1.png","view":"S1","width":400}
+{"height":1050,"kind":"sheet","path":"a9.png","view":"A9","width":1485}
+
+--- stderr
+
+=== file s1.png
+png 400x300 rgba
+=== file a9.png
+png 1485x1050 rgba

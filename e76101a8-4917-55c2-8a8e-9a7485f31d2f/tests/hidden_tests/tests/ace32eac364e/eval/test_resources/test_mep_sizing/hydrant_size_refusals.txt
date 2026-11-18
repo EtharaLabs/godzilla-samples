@@ -1,0 +1,90 @@
+$ hydrant_size {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` (1, 2, 3, 4-40, 4-65 or 5) or `column` and `area` is required
+$ hydrant_size {"column": 4, "area": 2500, "inside": 60}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: the system is type 4: give `type` as 4-40 or 4-65, by the nozzle
+$ hydrant_size {"type": "2", "nominal": 50}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `nominal` needs the pipe's `inside` diameter (mm)
+$ hydrant_size {"column": 1, "area": 100, "type": "3"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` 3 contradicts `column` 1 and `area`, which give type 1: give one, or make them agree
+$ hydrant_size {"column": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `area` (m², built) is required with `column`
+$ hydrant_size {"area": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `column` (1 to 5, of IT 22's Tabela 3) is required with `area`
+$ hydrant_size {"column": 2.5, "area": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `column` must be a whole number from 1 to 5
+$ hydrant_size {"column": 6, "area": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `column` must be a number from 1 to 5, got 6
+$ hydrant_size {"column": 3, "area": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `area` must be a number from 2.22507385851e-308 to 100000000, got 0
+$ hydrant_size {"type": "6"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` must be one of 1, 2, 3, 4-40, 4-65, 5, got "6"
+$ hydrant_size {"type": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `type` must be one of 1, 2, 3, 4-40, 4-65, 5, got 1
+$ hydrant_size {"type": "1", "hydrants": 1.5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `hydrants` must be a whole number from 1 to 1000
+$ hydrant_size {"type": "1", "hydrants": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `hydrants` must be a number from 1 to 1000, got 0
+$ hydrant_size {"region": "RJ", "type": "1"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `region` must be SP: only IT 22/2025 of the Corpo de Bombeiros of São Paulo is covered, no other state's rule
+$ hydrant_size {"type": "3", "inside": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `inside` must be a number from 2.22507385851e-308 to 5000, got 0
+$ hydrant_size {"type": "3", "inside": 60, "material": "iron"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `material` must be one of steel, steel-wet, copper, pvc, pex, got "iron"
+$ hydrant_size {"type": "3", "inside": 60, "length": -1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: `length` must be a number from 0 to 1000000000, got -1
+$ hydrant_size {"type": "3", "pressure": 10}
+exit: 1
+--- stdout
+--- stderr
+line 1 (hydrant_size): hydrant_size: unknown parameter `pressure`

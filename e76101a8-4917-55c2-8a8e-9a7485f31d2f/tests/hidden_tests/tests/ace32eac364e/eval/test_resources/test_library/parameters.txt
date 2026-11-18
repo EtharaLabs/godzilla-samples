@@ -1,0 +1,108 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"area_m2":48.0,"id":100007,"number":"1"}
+{"name":"Fire Rating","parameter":{"categories":["door","wall"],"kind":"text"}}
+{"name":"Accessible","parameter":{"categories":["room"],"kind":"yesno"}}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Fire Rating":"EI 60"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}
+{"area_m2":48.0,"category":"room","enclosed":true,"guid":"GUID-5","id":100007,"level":"GUID-2","limit_offset":-300.0,"name":"Hall","number":"1","params":{"Accessible":true},"perimeter_m":28.0,"point":[4000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":129.6}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== elements {"category": "wall", "limit": 1} | elements {"category": "room"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Fire Rating":"EI 60"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":1}
+{"count":1,"elements":[{"area_m2":48.0,"category":"room","enclosed":true,"guid":"GUID-5","id":100007,"level":"GUID-2","limit_offset":-300.0,"name":"Hall","number":"1","params":{"Accessible":true},"perimeter_m":28.0,"point":[4000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":129.6}],"returned":1}
+--- stderr
+=== parameter {"name": "Fire Rating", "rename": "Rating"} | elements {"category": "wall", "limit": 1} | library {"kind": "parameter"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"name":"Rating","parameter":{"categories":["door","wall"],"kind":"text"}}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Rating":"EI 60"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":1}
+{"count":2,"library":[{"guid":"GUID-5","id":999466,"kind":"parameter","name":"Accessible"},{"guid":"GUID-6","id":999467,"kind":"parameter","name":"Rating"}],"parts":[]}
+--- stderr
+=== parameter {"name": "Fire Rating", "categories": ["door"]} | elements {"category": "wall", "limit": 1}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"name":"Fire Rating","parameter":{"categories":["door"],"kind":"text"}}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":1}
+--- stderr
+=== parameter {"name": "Fire Rating", "delete": true} | elements {"category": "wall", "limit": 1}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":"Fire Rating"}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":1}
+--- stderr
+=== parameter {"name": "Width Note", "kind": "length", "categories": ["window", "column", "component"]} | parameter {"name": "Width Note"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"name":"Width Note","parameter":{"categories":["column","component","window"],"kind":"length"}}
+{"name":"Width Note","parameter":{"categories":["column","component","window"],"kind":"length"}}
+--- stderr
+=== parameter {"name": "Fire Rating", "kind": "number"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: `Fire Rating` has values of its kind; take them away before it holds another
+=== modify {"id": 100002, "params": {"Accessible": true}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): wall 100002: `Accessible` isn't a parameter of walls; add it with `parameter`
+=== modify {"id": 100007, "params": {"Accessible": "yes"}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): room 100007: `Accessible` holds yes or no, not "yes"
+=== parameter {"name": "Fire Rating", "rename": "Accessible"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: there's a parameter `Accessible` already
+=== parameter {"name": "Fire Rating", "rename": ""}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: `rename` needs a name
+=== parameter {"name": "X", "kind": "colour"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: `kind`: "colour" isn't one of text, number, length, yesno
+=== parameter {"name": "X", "categories": ["sheet"]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: `sheet` isn't a category it can be for; there are wall, floor, ceiling, roof, door, window, room, column, component, stair, ramp, railing, mass, structuralcolumn, footing, beam, stripfooting, pipe, duct, conduit, cabletray, wire, downconductor, groundconductor, cable
+=== parameter {"name": "X", "categories": "wall"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: `categories` is a list of categories, not "wall"
+=== parameter {"name": "Nope", "delete": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: there's no parameter `Nope`
+=== parameter {}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: `name` is required

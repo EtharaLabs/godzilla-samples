@@ -1,0 +1,67 @@
+schema_version = "1.4"
+reward_type = "bounded_continuous"
+artifacts = [{ source = "/workspace", exclude = ["./executable", "./target", "./.git"] }]
+
+[task]
+name = "ethara/e76101a8-4917-55c2-8a8e-9a7485f31d2f"
+version = "1.0.0"
+description = "Rebuild BIMCraft, a building-information-modelling tool (levels, walls, openings, floors, rooms, roofs; plans, sections, elevations and sheets; IFC import and export) driven entirely by commands, in Rust with only the standard library, from its documentation and a compiled reference binary; graded by 2,375 hidden tests that compare the rebuilt program's behavior with the original's."
+authors = [{ name = "Vaibhav Singh", email = "vaibhav.singh@ethara.ai" }]
+keywords = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "bim", "cad", "ifc"]
+
+[metadata]
+instance_id = "ipedrax__bimcraft.cee8d72"
+repository = "IPedrax/BIMCraft"
+commit = "cee8d7241c600ae4be79e05e2991f74c66a27ae9"
+language = "rust"
+difficulty = "hard"
+base_commit = "685d144f56cf2d94d6cbe9c0a98a112f431afcce"
+reference_commit = "86f1a9dba10f8c7eabc6e8432083ef78288d2044"
+platforms = ["linux/arm64", "linux/amd64"]
+test_branches = 2
+active_tests = 2375
+ignored_tests = 31
+language_policy = "original"
+tests_provenance = "automated"
+generator_fingerprint = "0d9ba35a4e4e744b"
+test_suite_sha256 = "886fe6e532c87965ec47e9ec86fbbe7a2e6f24fd3665bb0b3cc6b512fdb35346"
+category = "software-engineering"
+reward_type = "bounded_continuous"
+domain = "software-engineering"
+field = "computer-science"
+subfield = "computer-aided-design"
+tags = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "bim", "cad", "ifc"]
+expert_time_estimate_hours = 200.0
+null_floor = 0.0
+discrimination_weight = 1.0
+
+[agent]
+timeout_sec = 86400
+user = "agent"
+network_mode = "allowlist"
+allowed_hosts = ["api.openai.com", "api.anthropic.com"]
+
+[verifier]
+timeout_sec = 43200
+user = "root"
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 28800
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 28800
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+env = { PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/cargo/bin" }

@@ -1,0 +1,12 @@
+exit 0; last two lines: ['{"count":2,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":2}', '{"format":"bimcraft","path":"after.bimcraft"}']
+$ bimcraft-cli run --cmd 'circuit {"load": 2000}' --cmd 'conduit_fill {"section": 2.5}' --cmd 'drain_size {"units": 5}' --cmd 'undo {}'
+[exit 1]
+--- stdout
+{"breaker_a":16.0,"carries_a":24.0,"chosen":null,"conductors":"1 × 2.5 + N 2.5 + PE 2.5 mm²","current_a":15.75,"drop_percent":null,"factors":{"grouping":1.0,"soil":1.0,"temperature":1.0},"grew":true,"minimum_section_mm2":2.5,"section_mm2":2.5,"volts":127.0}
+{"circuits":1,"conductors":3,"fill_percent":null,"inside_mm":null,"limit_percent":null,"ok":null,"sections_mm2":[2.5,2.5,2.5],"size":null,"smallest":"1/2\"","source":{"document":"Ficha técnica \"Eletroduto Rígido Soldável e Roscável\"","inside":"outside less twice the wall","maker":"Amanco Wavin Eletroduto rígido roscável","page":"8 and 9 (outside diameter B (dem) and wall C)","url":"https://mediahub.wavin.com/m/2159cf9811cfe732/original/-FT-Eletroduto-Soldavel-e-Roscavel.pdf"}}
+{"capacity":6.0,"dn":50.0,"minimum_dn":0.0,"units":5.0}
+
+--- stderr
+line 1 (undo): nothing to undo
+
+saved project equals a fresh one: True

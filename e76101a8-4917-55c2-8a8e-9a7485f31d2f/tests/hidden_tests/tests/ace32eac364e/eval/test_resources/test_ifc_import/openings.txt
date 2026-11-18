@@ -1,0 +1,82 @@
+exit: 0
+--- stdout
+{"elements":{"door":5,"level":1,"wall":1,"window":2},"format":"IFC4","moved":null,"name":"Openings","path":"x.ifc","skipped":["IFCWALL #29 'Ghost': it has no body BIMCraft can read","IFCDOOR #212 'Ghosted': its wall was left out","IFCDOOR #217 'Loose': it isn't in a wall","IFCWINDOW #158 'Tall': sill 900 + height 2500 reach 3400 mm, past its wall IFCWALL #25 'Long', 3000 mm high there; BIMCraft keeps a door or window within its wall's height, where Revit lets one rise past the top","IFCDOOR #46 'Right': door 100002 and door 100010 overlap in wall GUID-1"]}
+{"count":9,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-2","id":100000,"name":"Level 0","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"base_offset":0.0,"category":"wall","end":[16000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100001,"length":16000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":null,"type":"Imported - 200mm","type_guid":"GUID-3"},{"at":[2600.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-4","height":2100.0,"host":"GUID-1","id":100003,"level":"GUID-2","mark":"D12","offset":2600.0,"operation":"sliding","sill":0.0,"type":"Slide 1200","type_guid":"GUID-5","width":1200.0},{"at":[4800.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-6","height":2100.0,"host":"GUID-1","id":100004,"level":"GUID-2","mark":"D3","offset":4800.0,"operation":"double-swing","sill":0.0,"type":"Pair 1600","type_guid":"GUID-7","width":1600.0},{"at":[6500.0,0.0],"category":"door","flip_facing":false,"flip_hand":true,"guid":"GUID-8","height":2100.0,"host":"GUID-1","id":100005,"level":"GUID-2","mark":"D13","offset":6500.0,"operation":"folding","sill":0.0,"type":"Imported 1000 x 2100","type_guid":"GUID-9","width":1000.0},{"at":[8000.0,0.0],"category":"door","flip_facing":false,"flip_hand":true,"guid":"GUID-10","height":2100.0,"host":"GUID-1","id":100006,"level":"GUID-2","mark":"D14","offset":8000.0,"sill":0.0,"type":"Imported 1000 x 2100 (2)","type_guid":"GUID-11","width":1000.0},{"at":[9600.0,0.0],"category":"window","flip_facing":false,"flip_hand":false,"guid":"GUID-12","height":1500.0,"host":"GUID-1","id":100007,"level":"GUID-2","mark":"W4","offset":9600.0,"sill":900.0,"type":"Imported 1200 x 1500","type_guid":"GUID-13","width":1200.0},{"at":[13400.0,0.0],"category":"window","flip_facing":false,"flip_hand":false,"guid":"GUID-14","height":600.0,"host":"GUID-1","id":100009,"level":"GUID-2","mark":"W3","offset":13400.0,"sill":1500.0,"type":"Imported 800 x 600","type_guid":"GUID-15","width":800.0},{"at":[950.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"GUID-16","height":2100.0,"host":"GUID-1","id":100010,"level":"GUID-2","mark":"D9","offset":950.0,"sill":0.0,"type":"Imported 900 x 2100 (2)","type_guid":"GUID-17","width":900.0}],"returned":9}
+--- stderr
+--- inspect, less a new project's
+{
+ "counts": {
+  "door": 5,
+  "level": 1,
+  "wall": 1,
+  "window": 2
+ },
+ "levels": [
+  {
+   "elevation": 0.0,
+   "id": 100000,
+   "name": "Level 0"
+  }
+ ],
+ "name": "Openings",
+ "types": {
+  "door": {
+   "Imported 1000 x 2100": {
+    "height": 2100.0,
+    "operation": "folding",
+    "sill": 0.0,
+    "width": 1000.0
+   },
+   "Imported 1000 x 2100 (2)": {
+    "height": 2100.0,
+    "sill": 0.0,
+    "width": 1000.0
+   },
+   "Imported 900 x 2100": {
+    "height": 2100.0,
+    "operation": "swing",
+    "sill": 0.0,
+    "width": 900.0
+   },
+   "Imported 900 x 2100 (2)": {
+    "height": 2100.0,
+    "sill": 0.0,
+    "width": 900.0
+   },
+   "Pair 1600": {
+    "height": 2100.0,
+    "operation": "double-swing",
+    "sill": 0.0,
+    "width": 1600.0
+   },
+   "Slide 1200": {
+    "height": 2100.0,
+    "operation": "sliding",
+    "sill": 0.0,
+    "width": 1200.0
+   }
+  },
+  "wall": {
+   "Imported - 200mm": {
+    "thickness": 200.0
+   }
+  },
+  "window": {
+   "Imported 1000 x 2500": {
+    "height": 2500.0,
+    "sill": 900.0,
+    "width": 1000.0
+   },
+   "Imported 1200 x 1500": {
+    "height": 1500.0,
+    "sill": 900.0,
+    "width": 1200.0
+   },
+   "Imported 800 x 600": {
+    "height": 600.0,
+    "sill": 1500.0,
+    "width": 800.0
+   }
+  }
+ }
+}

@@ -1,0 +1,30 @@
+### bad_offset_zero.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_offset_zero.e57: scan 1: its points at offset 0 aren't a compressed vector section
+### bad_offset_on_checksum.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_offset_on_checksum.e57: scan 1: offset 1021 falls on a page's checksum
+### bad_packet_type.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_packet_type.e57: scan 1: a packet of type 5, which E57 doesn't have
+### bad_packet_streams.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_packet_streams.e57: scan 1: a data packet has 2 streams; its prototype has 3
+### bad_bad_rotation.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_bad_rotation.e57: scan 1: its pose's rotation isn't a rotation
+### bad_bad_translation.e57
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_bad_translation.e57: scan 1: its pose's translation isn't a place

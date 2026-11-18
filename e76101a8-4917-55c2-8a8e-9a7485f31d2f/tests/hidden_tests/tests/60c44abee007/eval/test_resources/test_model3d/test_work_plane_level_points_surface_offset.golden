@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'work_plane {}' --cmd 'work_plane {"level": "Level 2", "offset": 100}' --cmd 'work_plane {"offset": -250}' --cmd 'work_plane {"points": [[0, 0, 0], [1000, 0, 0], [0, 1000, 1000]]}' --cmd 'work_plane {"surface": {"point": [0, 2000, 1500], "normal": [-1, 0, 0]}, "offset": 150}' --cmd 'work_plane {"points": [[0, 0, 0], [1000, 0, 0], [0, 0, 1000]]}' --cmd 'work_plane {}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"level":100000,"normal":[0.0,0.0,1.0],"offset":0.0,"origin":[0.0,0.0,0.0],"points":null,"slope":0.0,"surface":null,"view":100006,"z":0.0}
+{"level":100001,"normal":[0.0,0.0,1.0],"offset":100.0,"origin":[0.0,0.0,3100.0],"points":null,"slope":0.0,"surface":null,"view":100006,"z":3100.0}
+{"level":100001,"normal":[0.0,0.0,1.0],"offset":-250.0,"origin":[0.0,0.0,2750.0],"points":null,"slope":0.0,"surface":null,"view":100006,"z":2750.0}
+{"level":null,"normal":[0.0,-0.707107,0.707107],"offset":0.0,"origin":[0.0,0.0,0.0],"points":[[0.0,0.0,0.0],[1000.0,0.0,0.0],[0.0,1000.0,1000.0]],"slope":45.0,"surface":null,"view":100006,"z":0.0}
+{"level":null,"normal":[-1.0,0.0,0.0],"offset":150.0,"origin":[-150.0,2000.0,1500.0],"points":null,"slope":90.0,"surface":{"normal":[-1.0,0.0,0.0],"point":[0.0,2000.0,1500.0]},"view":100006,"z":null}
+{"level":null,"normal":[0.0,-1.0,0.0],"offset":0.0,"origin":[0.0,0.0,0.0],"points":[[0.0,0.0,0.0],[1000.0,0.0,0.0],[0.0,0.0,1000.0]],"slope":90.0,"surface":null,"view":100006,"z":null}
+{"level":100000,"normal":[0.0,-1.0,0.0],"offset":0.0,"origin":[0.0,0.0,0.0],"points":null,"slope":90.0,"surface":null,"view":100006,"z":null}
+
+--- stderr
+

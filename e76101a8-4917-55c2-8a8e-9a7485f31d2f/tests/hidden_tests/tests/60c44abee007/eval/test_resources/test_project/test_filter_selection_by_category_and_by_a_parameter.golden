@@ -1,0 +1,27 @@
+$ bimcraft-cli run sample.bimcraft --cmd 'filter_selection {"ids": [100007, 100008, 100011, 100014, 100015, 100018, 100025]}' --cmd 'filter_selection {"ids": [100007, 100008, 100011], "by": "Type", "keep": ["Interior - 100mm"]}' --cmd 'filter_selection {"ids": [100014, 100015, 100016, 100017], "by": "Width", "keep": ["800", "900"]}' --cmd 'filter_selection {"ids": [100007, 100014], "by": "Mark"}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+{"by":"Category","fields":["Category","Level","Phase Created","Phase Demolished","Design Option"],"groups":[{"count":2,"ids":[100014,100015],"value":"door"},{"count":1,"ids":[100025],"value":"room"},{"count":3,"ids":[100007,100008,100011],"value":"wall"},{"count":1,"ids":[100018],"value":"window"}]}
+{"by":"Type","fields":["Category","Id","Type","Level","Length","Height","Thickness","Phase Created","Phase Demolished","Design Option"],"groups":[{"count":2,"ids":[100007,100008],"value":"Exterior - 300mm"},{"count":1,"ids":[100011],"value":"Interior - 100mm"}],"ids":[100011]}
+{"by":"Width","fields":["Category","Mark","Type","Width","Height","Level","Wall","Family","Operation","Phase Created","Phase Demolished","Design Option"],"groups":[{"count":3,"ids":[100015,100016,100017],"value":"800"},{"count":1,"ids":[100014],"value":"900"}],"ids":[100014,100015,100016,100017]}
+
+--- stderr
+line 1 (filter_selection): filter_selection: `Mark` isn't a parameter every element has; they share: Category, Type, Height, Level, Phase Created, Phase Demolished, Design Option
+
+$ bimcraft-cli run sample.bimcraft --cmd 'filter_selection {"ids": [100007], "keep": "wall"}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (filter_selection): filter_selection: `keep` must be a list of values, got "wall"
+
+$ bimcraft-cli run sample.bimcraft --cmd 'filter_selection {"ids": [123456]}'
+[exit 1]
+--- stdout
+{"name":"Sample House","path":"sample.bimcraft"}
+
+--- stderr
+line 1 (filter_selection): filter_selection: no element 123456
+

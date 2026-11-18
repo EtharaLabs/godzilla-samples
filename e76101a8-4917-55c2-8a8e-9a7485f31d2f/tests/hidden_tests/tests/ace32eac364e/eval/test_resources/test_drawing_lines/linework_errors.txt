@@ -1,0 +1,41 @@
+$ linework {"id": 100002, "at": [1000, 900], "style": "Wide Lines"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: element 100002 draws no edge within 200 mm of [1000, 900] in that view
+
+$ linework {"id": 100002, "at": [1000, 100]}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: give `style`, a line style, or `invisible: true`; `remove: true` takes Linework off
+
+$ linework {"id": 100002, "at": [1000, 100], "style": "Nope"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: there's no line style `Nope` (there are: Centre Lines, Hairline, Hidden Lines, Medium Lines, Overhead Lines, Thin Lines, Wide Lines)
+
+$ linework {"view": "Section 1", "id": 100002, "at": [1000, 100], "style": "Wide Lines"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: Linework works in plans: give a level's plan or a plan view as `view`
+
+$ linework {"id": 999999, "at": [1000, 100], "style": "Wide Lines"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: no element 999999
+
+$ linework {"id": 100002, "style": "Wide Lines"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: `at` [x, y] is required
+
+$ linework {"id": 100002, "at": [1000, 100], "style": "Wide Lines", "pen": 3}
+exit: 1
+--- stdout
+--- stderr
+line 3 (linework): linework: `pen` isn't one of its parameters: view, level, id, at, style, invisible, remove

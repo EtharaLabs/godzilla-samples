@@ -1,0 +1,13 @@
+=== site/project.bimcraft | reload {}
+exit: 0
+--- stdout
+{"name":"Project","path":"site/project.bimcraft"}
+{"failed":[],"reloaded":["Architecture"]}
+--- stderr
+=== site/project.bimcraft | reload {} | elements {"category": "link"}
+exit: 0
+--- stdout
+{"links_not_loaded":[{"error":"site/arch.bimcraft: No such file or directory (os error 2)","name":"Architecture"}],"name":"Project","path":"site/project.bimcraft"}
+{"failed":[{"error":"site/arch.bimcraft: No such file or directory (os error 2)","name":"Architecture"}],"reloaded":[]}
+{"count":1,"elements":[{"angle":90.0,"at":[1000.0,2000.0],"category":"link","elements":null,"guid":"GUID-1","id":100002,"loaded":false,"name":"Architecture","path":"arch.bimcraft"}],"returned":1}
+--- stderr

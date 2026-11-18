@@ -1,0 +1,49 @@
+$ bimcraft-cli run --cmd 'point_cloud {"path": ["north.pts", "south.xyz", "east.las"], "spacing": 100}' --cmd 'point_cloud {"path": ["north.pts"], "name": "one"}' --cmd 'elements {"category": "pointcloud"}' --save p.bimcraft
+[exit 0]
+--- stdout
+{"cloud":"north","id":100002,"origin":[1500.0,500.0,0.0],"points":4,"read":6}
+{"cloud":"one","id":100003,"origin":[500.0,0.0,0.0],"points":2,"read":2}
+{"count":2,"elements":[{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"north","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","offset":-0.0,"points":4,"source":"north.pts","stations":[{"points":2,"source":"north.pts"},{"points":2,"source":"south.xyz"},{"points":0,"source":"east.las"}]},{"angle":0.0,"at":[0.0,0.0],"category":"pointcloud","cloud":"one","guid":"<GUID-3>","id":100003,"level":"<GUID-2>","offset":-0.0,"points":2,"source":"north.pts"}],"returned":2}
+{"format":"bimcraft","path":"p.bimcraft"}
+
+--- stderr
+
+=== p.bimcraft [clouds]
+{
+ "north": {
+  "colours": "eAH7z8AARAvAAAAiFwW/",
+  "origin": [
+   1500.0,
+   500.0,
+   0.0
+  ],
+  "points": "eAE9iLkNAEAIw7zb3WDsRQlTUfFJRIoSG1GHMCa93QLRf37/K0sCZ9ANLw==",
+  "read": 6,
+  "source": "north.pts",
+  "stations": [
+   {
+    "points": 2,
+    "source": "north.pts"
+   },
+   {
+    "points": 2,
+    "source": "south.xyz"
+   },
+   {
+    "points": 0,
+    "source": "east.las"
+   }
+  ]
+ },
+ "one": {
+  "colours": "eAH7z8Dwn4EBAAj9Af8=",
+  "origin": [
+   500.0,
+   0.0,
+   0.0
+  ],
+  "points": "eAFjYPh1mAEOfjnDmAAxsgL7",
+  "read": 2,
+  "source": "north.pts"
+ }
+}

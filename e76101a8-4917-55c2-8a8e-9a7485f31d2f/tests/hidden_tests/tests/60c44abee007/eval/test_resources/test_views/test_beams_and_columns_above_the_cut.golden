@@ -1,0 +1,46 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'structural_column {"at": [3000, 2000]}' --cmd 'beam {"points": [[0, 2000], [6000, 2000]], "offset": 2900}' --cmd 'beam {"points": [[3000, 0], [3000, 4000]], "offset": 2900, "type": "Steel Tube 150"}' --cmd 'ceiling {"boundary": [[3500, 2500], [5500, 2500], [5500, 3500], [3500, 3500]], "offset": 2500}' --cmd 'modify {"id": 100000, "view_range": {"top": 3000}}' --cmd 'render {"path": "structure.svg", "width": 400, "height": 300}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006}
+{"ids":[100007]}
+{"ids":[100008]}
+{"area_m2":2.0,"id":100009}
+{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":3000.0}}
+{"height":300,"kind":"plan","path":"structure.svg","view":"Level 1","width":400}
+
+--- stderr
+
+=== svg structure.svg
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+<rect width="400" height="300" fill="#ffffff"/>
+<path d="M85.7 150.0 L314.3 150.0" fill="none" stroke="#787878" stroke-width="0.6857143" stroke-linecap="round" stroke-linejoin="miter" stroke-dasharray="14 5"/>
+<path d="M200.0 226.2 L200.0 73.8" fill="none" stroke="#787878" stroke-width="0.6857143" stroke-linecap="round" stroke-linejoin="miter" stroke-dasharray="14 5"/>
+<path d="M318.1 230.0 L314.3 226.2 L310.5 222.4 L89.5 222.4 L85.7 226.2 L81.9 230.0 Z M318.1 70.0 L314.3 73.8 L310.5 77.6 L310.5 222.4 L314.3 226.2 L318.1 230.0 Z M81.9 70.0 L85.7 73.8 L89.5 77.6 L310.5 77.6 L314.3 73.8 L318.1 70.0 Z M81.9 230.0 L85.7 226.2 L89.5 222.4 L89.5 77.6 L85.7 73.8 L81.9 70.0 Z M194.3 155.7 L205.7 155.7 L205.7 144.3 L194.3 144.3 Z" fill="#a8a8a8"/>
+<path d="M318.1 230.0 L314.3 226.2 L310.5 222.4 L89.5 222.4 L85.7 226.2 L81.9 230.0 Z" fill="#a8a8a8"/>
+<path d="M318.1 70.0 L314.3 73.8 L310.5 77.6 L310.5 222.4 L314.3 226.2 L318.1 230.0 Z" fill="#a8a8a8"/>
+<path d="M81.9 70.0 L85.7 73.8 L89.5 77.6 L310.5 77.6 L314.3 73.8 L318.1 70.0 Z" fill="#a8a8a8"/>
+<path d="M81.9 230.0 L85.7 226.2 L89.5 222.4 L89.5 77.6 L85.7 73.8 L81.9 70.0 Z" fill="#a8a8a8"/>
+<path d="M194.3 155.7 L205.7 155.7 L205.7 144.3 L194.3 144.3 Z" fill="#a8a8a8"/>
+<path d="M89.5 221.4 L89.5 222.4 L310.5 222.4 L310.5 221.4" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M318.1 229.0 L318.1 230.0 L81.9 230.0 L81.9 229.0" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M309.5 222.4 L310.5 222.4 L310.5 77.6 L309.5 77.6" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M317.1 70.0 L318.1 70.0 L318.1 230.0 L317.1 230.0" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M310.5 78.6 L310.5 77.6 L89.5 77.6 L89.5 78.6" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M81.9 71.0 L81.9 70.0 L318.1 70.0 L318.1 71.0" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M90.5 77.6 L89.5 77.6 L89.5 222.4 L90.5 222.4" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M82.9 230.0 L81.9 230.0 L81.9 70.0 L82.9 70.0" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M194.3 155.7 L205.7 155.7 L205.7 144.3 L194.3 144.3 Z" fill="none" stroke="#191919" stroke-width="1.3333334" stroke-linecap="round" stroke-linejoin="miter"/>
+<path d="M85.7 153.8 L314.3 153.8 L314.3 146.2 L85.7 146.2 Z" fill="none" stroke="#191919" stroke-width="0.6857143" stroke-linecap="round" stroke-linejoin="miter" stroke-dasharray="10 5"/>
+<path d="M202.9 226.2 L202.9 73.8 L197.1 73.8 L197.1 226.2 Z" fill="none" stroke="#191919" stroke-width="0.6857143" stroke-linecap="round" stroke-linejoin="miter" stroke-dasharray="10 5"/>
+<path d="M24.0 266.0 L24.0 282.0 L34.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M49.3 266.0 L38.7 266.0 L38.7 282.0 L49.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M38.7 274.0 L46.7 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M53.3 266.0 L58.7 282.0 L64.0 266.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M78.7 266.0 L68.0 266.0 L68.0 282.0 L78.7 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M68.0 274.0 L76.0 274.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.7 266.0 L82.7 282.0 L93.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.7 268.7 L117.3 266.0 L117.3 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114.7 282.0 L120.0 282.0" fill="none" stroke="#191919" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

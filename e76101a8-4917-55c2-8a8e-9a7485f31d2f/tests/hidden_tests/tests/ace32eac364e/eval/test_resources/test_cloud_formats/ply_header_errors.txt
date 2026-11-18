@@ -1,0 +1,55 @@
+### not_ply.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: not_ply.ply: it isn't a PLY file: it doesn't start with ply
+### no_end_header.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: no_end_header.ply: its header has no end_header
+### no_x.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: no_x.ply: its vertices have no x
+### no_z.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: no_z.ply: its vertices have no z
+### bad_count.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: bad_count.ply: element vertex -1: not a count
+### unknown_type.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: unknown_type.ply: property x is of type quaternion, which PLY doesn't have
+### list_in_vertex.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: list_in_vertex.ply: its vertices hold a list, which a point can't
+### unknown_format.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: unknown_format.ply: its format is ebcdic: PLY is ascii, binary_little_endian or binary_big_endian
+### no_format.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: no_format.ply: its header has no format
+### property_first.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: property_first.ply: a property before any element
+### not_ply_header_line.ply
+exit: 1
+--- stdout
+--- stderr
+line 1 (point_cloud): point_cloud: not_ply_header_line.ply: its header says "hello world", which isn't PLY

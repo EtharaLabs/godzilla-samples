@@ -1,0 +1,18 @@
+reinforce {"host": 100002, "cover": {"top": 210, "bottom": 210, "sides": 20}, "bottom": {"count": 2, "diameter": 90}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: a 90 mm bottom bar doesn't fit inside the stirrup, 80.0 mm deep
+reinforce {"host": 100009, "cover": 30, "bottom": {"count": 2, "diameter": 10}, "skin": {"diameter": 3, "spacing": 3.5}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: that is more than the 1000 bars a command makes: widen a spacing or use fewer bars
+reinforce {"host": 100002, "cover": 30, "stirrup": {"diameter": 5, "spacing": 200, "ends": {"length": -5, "spacing": 100}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: `ends` length -5 mm must be over 0
+reinforce {"host": 100010, "cover": 30, "bars": {"diameter": 12.5, "x": 3, "y": 3}, "stirrup": {"diameter": 5, "spacing": 200, "ends": {"length": 0, "spacing": 100}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: `ends` length 0 mm must be over 0
+reinforce {"host": 100005, "cover": 30, "bars": {"diameter": 12.5}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: a round column needs `bars` count: how many round its circle
+reinforce {"host": 100006, "cover": {"top": 50, "bottom": 50, "sides": 700}, "mesh": {"x": {"diameter": 10, "spacing": 100}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the mesh x bars don't fit inside that cover
+reinforce {"host": 100008, "cover": 30, "bottom": {"x": {"diameter": 10, "spacing": 100}, "hook": 300}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: a hook of 300 mm doesn't fit the bottom x bars, which have 130.0 mm to the cover on the other face
+reinforce {"host": 100008, "cover": 30, "clearance": 1, "bottom": {"x": {"diameter": 3, "spacing": 3.5}, "y": {"diameter": 3, "spacing": 3.5}}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: that is more than the 1000 bars a command makes: widen a spacing or use fewer bars
+reinforce {"host": 100002, "cover": {"top": 30, "bottom": 30, "sides": 80}, "stirrup": {"diameter": 10, "spacing": 200}, "skin": {"diameter": 32, "spacing": 100}}
+  exit 1; stdout lines 11; line 1 (reinforce): reinforce: the section is too narrow for skin bars with that cover and stirrup

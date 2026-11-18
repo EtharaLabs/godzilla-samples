@@ -1,0 +1,26 @@
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[6000,0],[6000,4000],[0,4000]], "slope": 5, "arrow": [[0,2000],[6000,2000]]}' --cmd 'elements {"category": "floor"}' --cmd 'section {"start": [-500, 2000], "end": [6500, 2000]}' --cmd 'render {"view": "Section 1", "path": "s.png", "width": 400, "height": 300}'
+[exit 0]
+--- stdout
+{"area_m2":24.0,"id":100002}
+{"count":1,"elements":[{"area_m2":24.0,"arrow":[[0.0,2000.0],[6000.0,2000.0]],"boundary":[[0.0,0.0],[6000.0,0.0],[6000.0,4000.0],[0.0,4000.0]],"category":"floor","guid":"<GUID-1>","id":100002,"level":"<GUID-2>","pattern_angle":0.0,"pattern_origin":[0.0,0.0],"slope":5.0,"thickness":200.0,"top":[0.0,524.93],"type":"Generic - 200mm","type_guid":"<GUID-3>","volume_m3":4.818}],"returned":1}
+{"id":100003,"name":"Section 1"}
+{"height":300,"kind":"section","path":"s.png","view":"Section 1","width":400}
+
+--- stderr
+
+=== file s.png
+png 400x300 rgba pixels-sha256=08b18aab654a2f18d63ee386fdc1863a8eed2d11ba45f40a8eb51efff7b62f92
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[6000,0],[6000,4000],[0,4000]], "slope": 5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor 100002: a sloped floor needs a slope arrow, from where its top is at its offset toward where it rises
+
+$ bimcraft-cli run --cmd 'floor {"boundary": [[0,0],[6000,0],[6000,4000],[0,4000]], "slope": 80, "arrow": [[0,2000],[6000,2000]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (floor): floor 100002: slope 80° isn't between -75° and 75°
+

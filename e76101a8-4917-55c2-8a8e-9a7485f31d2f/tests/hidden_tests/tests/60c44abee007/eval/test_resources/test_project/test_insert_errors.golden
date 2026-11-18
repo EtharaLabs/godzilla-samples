@@ -1,0 +1,43 @@
+$ bimcraft-cli run --cmd 'new {"name": "Other"}' --cmd 'level {"elevation": 6000, "name": "Roof"}' --cmd 'wall {"points": [[0,0],[3000,0],[3000,3000]], "type": "Exterior - 300mm"}' --cmd 'door {"at": [1500, 0]}' --cmd 'wall {"points": [[0,0],[0,2000]], "level": "Roof"}' --cmd 'parameter {"name": "Fire Rating", "categories": ["wall"]}' --cmd 'type {"category": "wall", "name": "Thick 450", "thickness": 450}' --cmd 'wall {"points": [[0,5000],[3000,5000]], "type": "Thick 450"}' --cmd 'save {"path": "other.bimcraft"}'
+[exit 0]
+--- stdout
+{"language":"en","name":"Other"}
+{"id":100002,"name":"Roof"}
+{"ids":[100003,100004]}
+{"host":100003,"id":100005,"mark":"1","offset":1500.0}
+{"ids":[100006]}
+{"name":"Fire Rating","parameter":{"categories":["wall"],"kind":"text"}}
+{"category":"wall","name":"Thick 450","type":{"thickness":450.0}}
+{"ids":[100007]}
+{"format":"bimcraft","path":"other.bimcraft"}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'insert {"path": "missing.bimcraft"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (insert): insert: missing.bimcraft: No such file or directory (os error 2)
+
+$ bimcraft-cli run --cmd 'insert {"path": "other.bimcraft", "ids": [123456]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (insert): insert: no element 123456
+
+$ bimcraft-cli run --cmd 'insert {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (insert): insert: `path` is required
+
+$ bimcraft-cli run --cmd 'insert {"path": "other.bimcraft", "ids": "all"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (insert): insert: `ids` [id, …] is required
+

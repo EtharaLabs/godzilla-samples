@@ -1,0 +1,210 @@
+$ bimcraft-cli run --cmd 'family {"name": "Basin", "category": "plumbing", "parameters": [{"name": "Size", "kind": "length", "value": 600}], "types": {"Standard": {}}, "forms": [{"plane": "xy", "profile": [["-Size / 2", "-Size / 2"], ["Size / 2", "-Size / 2"], ["Size / 2", "Size / 2"], ["-Size / 2", "Size / 2"]], "from": 0, "to": 800, "material": "Porcelain"}, {"plane": "xy", "circle": {"centre": [0, 0], "radius": "Size / 3"}, "from": 600, "to": 900, "void": true}, {"plane": "xy", "circle": {"centre": [5000, 0], "radius": 100}, "from": 0, "to": 100, "void": true}]}' --cmd 'family {"name": "Lamp", "category": "lighting", "parameters": [], "types": {"Standard": {}}, "forms": [{"plane": "xz", "profile": [[0, 0], [200, 0], [100, 400], [0, 400]], "axis": [[0, 0], [0, 400]], "from": 0, "to": 360, "material": "Metal"}]}' --cmd 'render {"family": "Basin", "width": 320, "height": 200, "path": "basin.png"}' --cmd 'render {"family": "Lamp", "width": 320, "height": 200, "path": "lamp.png"}' --cmd 'component {"family": "Basin", "at": [0, 0]}' --cmd 'component {"family": "Lamp", "at": [2000, 0]}' --cmd 'save {"path": "bits.glb"}'
+[exit 0]
+--- stdout
+{"family":{"category":"plumbing","forms":[{"from":0.0,"material":"Porcelain","plane":"xy","profile":[["-Size / 2","-Size / 2"],["Size / 2","-Size / 2"],["Size / 2","Size / 2"],["-Size / 2","Size / 2"]],"to":800.0},{"circle":{"centre":[0.0,0.0],"radius":"Size / 3"},"from":600.0,"plane":"xy","to":900.0,"void":true},{"circle":{"centre":[5000.0,0.0],"radius":100.0},"from":0.0,"plane":"xy","to":100.0,"void":true}],"parameters":[{"kind":"length","name":"Size","value":600}],"types":{"Standard":{}}},"name":"Basin","warnings":["form 3: its void passes through no solid form listed before it; it cuts nothing (in type `Standard`)"]}
+{"family":{"category":"lighting","forms":[{"axis":[[0.0,0.0],[0.0,400.0]],"from":0.0,"material":"Metal","plane":"xz","profile":[[0.0,0.0],[200.0,0.0],[100.0,400.0],[0.0,400.0]],"to":360.0}],"parameters":[],"types":{"Standard":{}}},"name":"Lamp","warnings":[]}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"family":"Basin","height":200,"kind":"family 3d preview","lens":null,"mode":"3d","path":"basin.png","target":null,"type":"Standard","view":"Basin","width":320}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"family":"Lamp","height":200,"kind":"family 3d preview","lens":null,"mode":"3d","path":"lamp.png","target":null,"type":"Standard","view":"Lamp","width":320}
+{"id":100002}
+{"id":100003}
+{"elements":2,"format":"glTF 2.0","path":"bits.glb","triangles":383}
+
+--- stderr
+
+=== file basin.png
+png 320x200 rgba pixels-sha256=0c5c11987e50adcebd06974ee29fcca6e3c9a73a05edf72e5331cd6a8b3c15c3
+=== file lamp.png
+png 320x200 rgba pixels-sha256=8a2ed0f93f2d8d15b9343086c5c451282f556c22fafbca0eafd081724a8e78b2
+=== file bits.glb
+{
+ "accessors": [
+  {
+   "bufferView": 0,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 283,
+   "max": [
+    0.3,
+    0.8,
+    0.3
+   ],
+   "min": [
+    -0.3,
+    0.0,
+    -0.3
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 0,
+   "componentType": 5126,
+   "count": 283,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 0,
+   "componentType": 5125,
+   "count": 765,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 0,
+   "byteOffset": 3396,
+   "componentType": 5126,
+   "count": 130,
+   "max": [
+    2.2,
+    0.4,
+    0.2
+   ],
+   "min": [
+    1.8,
+    0.0,
+    -0.2
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "byteOffset": 3396,
+   "componentType": 5126,
+   "count": 130,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "byteOffset": 3060,
+   "componentType": 5125,
+   "count": 384,
+   "type": "SCALAR"
+  }
+ ],
+ "asset": {
+  "extras": {
+   "source": "the default 3D view",
+   "units": "metres",
+   "up": "+Y, BIMCraft's +Z"
+  },
+  "generator": "BIMCraft 0.10.0",
+  "version": "2.0"
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 4956,
+   "byteOffset": 0,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 4956,
+   "byteOffset": 4956,
+   "byteStride": 12,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 4596,
+   "byteOffset": 9912,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 14508
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "#f4f4f0",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.904661,
+     0.904661,
+     0.871367,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "#96989e",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.304987,
+     0.313989,
+     0.341914,
+     1.0
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 0.9
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "100002",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 1,
+      "POSITION": 0
+     },
+     "indices": 2,
+     "material": 0,
+     "mode": 4
+    }
+   ]
+  },
+  {
+   "name": "100003",
+   "primitives": [
+    {
+     "attributes": {
+      "NORMAL": 4,
+      "POSITION": 3
+     },
+     "indices": 5,
+     "material": 1,
+     "mode": 4
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "extras": {
+    "category": "component",
+    "guid": "<GUID-1>",
+    "id": 100002
+   },
+   "mesh": 0,
+   "name": "100002"
+  },
+  {
+   "extras": {
+    "category": "component",
+    "guid": "<GUID-2>",
+    "id": 100003
+   },
+   "mesh": 1,
+   "name": "100003"
+  }
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1
+   ]
+  }
+ ]
+}
+bin-sha256=ff077852c5ae7c44dcc16f98686daefbd03f9bfa1cb8a222a1d16ab9cbaf1ca3

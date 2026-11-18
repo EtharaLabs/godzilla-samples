@@ -1,0 +1,75 @@
+$ bimcraft-cli run … (fonts scrubbed)
+[exit 0]
+{"types": {"Arrow - 2.5mm Arial": {"background": "opaque", "baseline_spacing": 7.0, "centre_mark": true, "color": [0, 0, 0], "diameter_symbol": "Ø", "equality_text": "EQ", "font": "Arial", "line_extension": 0.8, "line_pen": 4, "radius_symbol": "R", "read": "up_then_left", "string": "continuous", "text_offset": 1.0, "text_size": 2.5, "tick": "arrow", "tick_pen": 7, "tick_size": 2.5, "width_factor": 1.0, "witness": "gap_to_element", "witness_extension": 0.8, "witness_gap": 0.6, "witness_length": 5.0}, "Diagonal - 2.5mm Arial": {"background": "opaque", "baseline_spacing": 7.0, "centre_mark": true, "color": [0, 0, 0], "diameter_symbol": "Ø", "equality_text": "EQ", "font": "Arial", "line_extension": 0.8, "line_pen": 4, "radius_symbol": "R", "read": "up_then_left", "string": "continuous", "text_offset": 1.0, "text_size": 2.5, "tick": "diagonal", "tick_pen": 7, "tick_size": 2.0, "width_factor": 1.0, "witness": "gap_to_element", "witness_extension": 0.8, "witness_gap": 0.6, "witness_length": 5.0}}}
+--- stderr
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "tick": "star"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: unknown variant `star`, expected one of `diagonal`, `arrow`, `open_arrow`, `dot`, `none`
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "line_pen": 17}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "decimals": 7}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: dimension type `X`: it rounds to at most 6 places, not 7
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "like": "Nope"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: there's no dimension type `Nope` to start from
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "width_factor": 20}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: dimension type `X`: its width factor, 20, isn't from 0.1 to 10
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "tick_size": 60}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: dimension type `X`: its tick size, 60 mm on paper, isn't from 0 to 50
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "text_size": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: dimension type `X`: its text size, 0 mm, isn't above 0 and at most 100
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "radius_symbol": "a\nb"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension_type): dimension_type: dimension type `X`: its radius symbol is up to 200 characters on one line
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "X", "font": ""}'
+[exit 0]
+--- stdout
+{"name":"X","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"Arial","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"diagonal","tick_pen":7,"tick_size":2.0,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'dimension_type {"name": "Diagonal - 2.5mm Arial", "delete": true}'
+[exit 0]
+--- stdout
+{"deleted":"Diagonal - 2.5mm Arial"}
+
+--- stderr
+

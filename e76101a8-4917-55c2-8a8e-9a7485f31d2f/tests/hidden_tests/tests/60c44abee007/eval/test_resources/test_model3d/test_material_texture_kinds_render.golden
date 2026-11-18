@@ -1,0 +1,27 @@
+$ bimcraft-cli run --cmd 'material {"name": "Mbrick", "color": "#a0a0a0", "texture": {"kind": "brick"}}' --cmd 'type {"category": "wall", "name": "Wbrick", "layers": [{"material": "Mbrick", "thickness": 200}]}' --cmd 'wall {"points": [[0, 0], [1200, 0]], "type": "Wbrick"}' --cmd 'material {"name": "Mboards", "color": "#a0a0a0", "texture": {"kind": "boards"}}' --cmd 'type {"category": "wall", "name": "Wboards", "layers": [{"material": "Mboards", "thickness": 200}]}' --cmd 'wall {"points": [[1500, 0], [2700, 0]], "type": "Wboards"}' --cmd 'material {"name": "Mroof", "color": "#a0a0a0", "texture": {"kind": "roof"}}' --cmd 'type {"category": "wall", "name": "Wroof", "layers": [{"material": "Mroof", "thickness": 200}]}' --cmd 'wall {"points": [[3000, 0], [4200, 0]], "type": "Wroof"}' --cmd 'material {"name": "Mmetal", "color": "#a0a0a0", "texture": {"kind": "metal"}}' --cmd 'type {"category": "wall", "name": "Wmetal", "layers": [{"material": "Mmetal", "thickness": 200}]}' --cmd 'wall {"points": [[4500, 0], [5700, 0]], "type": "Wmetal"}' --cmd 'material {"name": "Mplaster", "color": "#a0a0a0", "texture": {"kind": "plaster"}}' --cmd 'type {"category": "wall", "name": "Wplaster", "layers": [{"material": "Mplaster", "thickness": 200}]}' --cmd 'wall {"points": [[6000, 0], [7200, 0]], "type": "Wplaster"}' --cmd 'material {"name": "Mfabric", "color": "#a0a0a0", "texture": {"kind": "fabric"}}' --cmd 'type {"category": "wall", "name": "Wfabric", "layers": [{"material": "Mfabric", "thickness": 200}]}' --cmd 'wall {"points": [[7500, 0], [8700, 0]], "type": "Wfabric"}' --cmd 'render {"view": "{3D}", "width": 480, "height": 240, "azimuth": -90, "elevation": 5, "path": "kinds.png"}'
+[exit 0]
+--- stdout
+{"material":{"color":[160,160,160],"cut":"none","surface":"none","texture":{"kind":"brick","size":[900.0,600.0]}},"name":"Mbrick"}
+{"category":"wall","name":"Wbrick","type":{"layers":[{"function":"structure","material":"Mbrick","thickness":200.0}],"thickness":200.0}}
+{"ids":[100002]}
+{"material":{"color":[160,160,160],"cut":"none","surface":"none","texture":{"kind":"boards","size":[1200.0,1120.0]}},"name":"Mboards"}
+{"category":"wall","name":"Wboards","type":{"layers":[{"function":"structure","material":"Mboards","thickness":200.0}],"thickness":200.0}}
+{"ids":[100003]}
+{"material":{"color":[160,160,160],"cut":"none","surface":"none","texture":{"kind":"roof","size":[1320.0,1000.0]}},"name":"Mroof"}
+{"category":"wall","name":"Wroof","type":{"layers":[{"function":"structure","material":"Mroof","thickness":200.0}],"thickness":200.0}}
+{"ids":[100004]}
+{"material":{"color":[160,160,160],"cut":"none","surface":"none","texture":{"kind":"metal","size":[800.0,800.0]}},"name":"Mmetal"}
+{"category":"wall","name":"Wmetal","type":{"layers":[{"function":"structure","material":"Mmetal","thickness":200.0}],"thickness":200.0}}
+{"ids":[100005]}
+{"material":{"color":[160,160,160],"cut":"none","surface":"none","texture":{"kind":"plaster","size":[500.0,500.0]}},"name":"Mplaster"}
+{"category":"wall","name":"Wplaster","type":{"layers":[{"function":"structure","material":"Mplaster","thickness":200.0}],"thickness":200.0}}
+{"ids":[100006]}
+{"material":{"color":[160,160,160],"cut":"none","surface":"none","texture":{"kind":"fabric","size":[100.0,100.0]}},"name":"Mfabric"}
+{"category":"wall","name":"Wfabric","type":{"layers":[{"function":"structure","material":"Mfabric","thickness":200.0}],"thickness":200.0}}
+{"ids":[100007]}
+{"azimuth":-90.0,"elevation":5.0,"eye":null,"eye_elevation":null,"height":240,"kind":"3D view","lens":null,"path":"kinds.png","target":null,"view":"{3D}","width":480}
+
+--- stderr
+
+=== file kinds.png
+png 480x240 rgba pixels-sha256=9f0164c028f28e8b40d377496faa09da17411d74b4075b796957c3c5c2dd4f21

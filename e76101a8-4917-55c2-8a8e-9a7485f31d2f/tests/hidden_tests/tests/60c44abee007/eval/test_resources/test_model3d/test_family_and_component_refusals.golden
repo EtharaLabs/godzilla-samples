@@ -1,0 +1,81 @@
+$ bimcraft-cli run --cmd 'family {"path": "plinth.json", "dry_run": true}' --cmd 'family {}'
+[exit 0]
+--- stdout
+{"changes":{"deleted":false,"forms":{"deleted":[],"patched":[],"replaced":3},"parameters":{"added":["Count","Depth","Finish","Height","Lid","Lift","Tilt","Width"],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":["Large","Small"],"changed":[],"removed":[]}},"dry_run":true,"family":{"category":"generic","forms":[{"from":"Lift","guid":"<GUID-1>","id":999456,"material":"Finish","plane":"xy","profile":[["-Width / 2","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-Width / 2","Depth / 2"]],"to":"Height"},{"circle":{"centre":[0.0,"Height + 150"],"radius":100.0},"from":-200.0,"guid":"<GUID-2>","id":999455,"plane":"xz","to":200.0,"visible":"Lid"},{"from":"-Width / 2 - 100","guid":"<GUID-3>","id":999454,"material":"Metal","plane":"yz","profile":[[-100.0,0.0],[100.0,0.0],[0.0,200.0]],"to":"-Width / 2"}],"parameters":[{"kind":"length","name":"Width","value":1000},{"kind":"length","name":"Depth","value":600},{"formula":"Width / 2","kind":"length","name":"Height","value":null},{"kind":"number","name":"Count","value":3},{"kind":"angle","name":"Tilt","value":15},{"kind":"yesno","name":"Lid","value":true},{"kind":"material","name":"Finish","value":"Concrete"},{"instance":true,"kind":"length","name":"Lift","value":0}],"types":{"Large":{"Depth":900,"Width":1600},"Small":{"Width":800}}},"name":"Plinth","ok":true,"values":{"Large":{"Count":3.0,"Depth":900.0,"Finish":"Concrete","Height":800.0,"Lid":1.0,"Lift":0.0,"Tilt":15.0,"Width":1600.0},"Small":{"Count":3.0,"Depth":600.0,"Finish":"Concrete","Height":400.0,"Lid":1.0,"Lift":0.0,"Tilt":15.0,"Width":800.0}},"warnings":[]}
+{"families":[{"category":"airterminal","forms":2,"name":"Air Terminal","symbols":0,"types":3},{"category":"casework","forms":3,"name":"Base Cabinet","symbols":0,"types":3},{"category":"plumbing","forms":5,"name":"Bathtub","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Bed","symbols":0,"types":3},{"category":"window","forms":10,"name":"Casement Window","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Ceiling Luminaire","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Chair","symbols":0,"types":1},{"category":"dataoutlet","forms":3,"name":"Data Outlet","symbols":0,"types":2},{"category":"furniture","forms":4,"name":"Desk","symbols":0,"types":2},{"category":"equipment","forms":2,"name":"Distribution Board","symbols":0,"types":3},{"category":"door","forms":9,"name":"Double Door","symbols":4,"types":3},{"category":"earthing","forms":1,"name":"Earthing Electrode","symbols":0,"types":2},{"category":"pipefitting","forms":2,"name":"Elbow 90","symbols":0,"types":3},{"category":"window","forms":5,"name":"Fixed Window","symbols":0,"types":3},{"category":"drain","forms":5,"name":"Floor Drain","symbols":0,"types":2},{"category":"pipeaccessory","forms":4,"name":"Gate Valve","symbols":0,"types":2},{"category":"inspectionbox","forms":2,"name":"Inspection Box","symbols":0,"types":2},{"category":"plumbing","forms":9,"name":"Kitchen Sink","symbols":0,"types":2},{"category":"outlet","forms":2,"name":"Outlet","symbols":0,"types":3},{"category":"patchpanel","forms":1,"name":"Patch Panel","symbols":0,"types":2},{"category":"rack","forms":2,"name":"Rack","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Recessed Luminaire","symbols":0,"types":2},{"category":"plumbing","forms":5,"name":"Shower","symbols":0,"types":2},{"category":"door","forms":6,"name":"Single Door","symbols":2,"types":3},{"category":"door","forms":6,"name":"Sliding Door","symbols":2,"types":3},{"category":"window","forms":14,"name":"Sliding Window","symbols":2,"types":3},{"category":"furniture","forms":4,"name":"Sofa","symbols":0,"types":2},{"category":"switch","forms":2,"name":"Switch","symbols":0,"types":2},{"category":"furniture","forms":5,"name":"Table","symbols":0,"types":3},{"category":"pipefitting","forms":2,"name":"Tee","symbols":0,"types":3},{"category":"outlet","forms":2,"name":"Three-Phase Outlet","symbols":0,"types":2},{"category":"voiceoutlet","forms":2,"name":"Voice Outlet","symbols":0,"types":2},{"category":"plumbing","forms":3,"name":"WC","symbols":0,"types":1},{"category":"casework","forms":2,"name":"Wardrobe","symbols":0,"types":2},{"category":"plumbing","forms":2,"name":"Washbasin","symbols":0,"types":2}]}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'family {"name": "M", "parameters": [{"name": "Mass Face", "kind": "length"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: parameter `Mass Face`: a component holds nothing of a mass under that name; name it otherwise
+
+$ bimcraft-cli run --cmd 'family {"name": "P", "parameters": [{"name": "Phase Created", "kind": "length"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: parameter `Phase Created`: a component holds its phase and its design option under that name; name it otherwise
+
+$ bimcraft-cli run --cmd 'family {"name": "Table", "rename": " "}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: `rename` needs a name
+
+$ bimcraft-cli run --cmd 'family {"name": "Table", "form": 5}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: `form` must be {id | guid, …the form's fields}, not 5
+
+$ bimcraft-cli run --cmd 'family {"name": "Table", "form": {"radius": 5}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: `form` needs the form's `id` or `guid`
+
+$ bimcraft-cli run --cmd 'family {"name": "Table", "delete_form": [true]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: `form` needs the form's `id` or `guid`, not true
+
+$ bimcraft-cli run --cmd 'family {"name": "Table", "form": {"guid": "<GUID-4>", "to": 5}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: form <GUID-4> is not of family "Table"
+
+$ bimcraft-cli run --cmd 'component {"family": "Table", "at": [0, 0], "params": [1, 2]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (component): component: `params` is {parameter: value}, not [1,2]
+
+$ bimcraft-cli run --cmd 'favorite {"action": "save", "kind": "family", "name": "Table", "path": "fav.json"}' --cmd 'favorite {"action": "load", "kind": "family", "name": "Table", "path": "fav.json"}'
+[exit 1]
+--- stdout
+{"kind":"family","path":"fav.json","saved":"Table"}
+
+--- stderr
+line 1 (favorite): favorite: the project has family `Table` already: load it `as` another name, or `replace` it
+
+$ bimcraft-cli run --cmd 'favorite {"action": "save", "kind": "family", "name": "Table", "path": "fav.json"}' --cmd 'favorite {"action": "load", "kind": "family", "name": "Table", "replace": true, "path": "fav.json"}' --cmd 'favorite {"action": "load", "kind": "family", "name": "Table", "as": "Table 2", "path": "fav.json"}'
+[exit 0]
+--- stdout
+{"kind":"family","path":"fav.json","saved":"Table"}
+{"kind":"family","loaded":"Table"}
+{"kind":"family","loaded":"Table 2"}
+
+--- stderr
+

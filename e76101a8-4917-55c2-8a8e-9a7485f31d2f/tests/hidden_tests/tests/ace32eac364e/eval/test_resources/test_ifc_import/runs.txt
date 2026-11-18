@@ -1,0 +1,113 @@
+exit: 0
+--- stdout
+{"elements":{"beam":2,"cabletray":2,"conduit":1,"duct":1,"groundconductor":1,"level":1,"pipe":2,"stripfooting":1,"wire":1},"format":"IFC4","moved":null,"name":"Runs","path":"x.ifc","skipped":["IFCBEAM #42 'V2': its ends are one over the other; a beam runs along, and what stands is a column","IFCPIPESEGMENT #206 'Stub': too short (0.5 mm)","IFCPIPESEGMENT #210 'Nothing': it has no body BIMCraft can read, or it stands (a column) or lies flat"]}
+{"count":12,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"GUID-1","id":100000,"name":"Level 0","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"axis":[[0.0,0.0,2800.0],[3000.0,0.0,2800.0]],"category":"beam","depth":140.0,"end":[3000.0,0.0],"guid":"GUID-2","id":100001,"justify":"centre","length":3000.0,"level":"GUID-1","offset":2800.0,"params":{"Mark":"V1"},"round":false,"start":[0.0,0.0],"type":"Imported 400 x 140","type_guid":"GUID-3","width":400.0},{"axis":[[0.0,2000.0,3000.0],[3980.15,2000.0,3398.02]],"category":"beam","depth":200.0,"end":[3980.149,2000.0],"end_offset":3398.015,"guid":"GUID-4","id":100002,"justify":"centre","length":4000.0,"level":"GUID-1","offset":3000.0,"params":{"Mark":"V3"},"round":false,"start":[0.0,2000.0],"type":"Imported 300 x 200","type_guid":"GUID-5","width":300.0},{"axis":[[0.0,4000.0,500.0],[0.0,8000.0,500.0]],"category":"pipe","depth":50.0,"end":[0.0,8000.0],"guid":"GUID-6","id":100003,"justify":"centre","length":4000.0,"level":"GUID-1","offset":500.0,"round":true,"start":[0.0,4000.0],"system":"Cold water","type":"Imported Round 50","type_guid":"GUID-7","width":50.0},{"axis":[[2000.0,9000.0,2600.0],[7000.0,9000.0,2600.0]],"category":"duct","depth":300.0,"end":[7000.0,9000.0],"guid":"GUID-8","id":100004,"justify":"top","length":5000.0,"level":"GUID-1","offset":2750.0,"round":false,"start":[2000.0,9000.0],"system":"Supply air","type":"Imported 200 x 300","type_guid":"GUID-9","width":200.0},{"axis":[[0.0,10000.0,2700.0],[6000.0,10000.0,2700.0]],"category":"cabletray","depth":100.0,"end":[6000.0,10000.0],"guid":"GUID-10","id":100005,"justify":"centre","length":6000.0,"level":"GUID-1","offset":2700.0,"round":false,"start":[0.0,10000.0],"type":"Imported 300 x 100","type_guid":"GUID-11","width":300.0},{"axis":[[0.0,11000.0,2700.0],[6000.0,11000.0,2700.0]],"category":"cabletray","depth":80.0,"end":[6000.0,11000.0],"guid":"GUID-12","id":100006,"justify":"centre","length":6000.0,"level":"GUID-1","offset":2700.0,"round":false,"start":[0.0,11000.0],"type":"Imported 400 x 80","type_guid":"GUID-13","width":400.0},{"axis":[[0.0,12000.0,2500.0],[6000.0,12000.0,2500.0]],"category":"conduit","depth":25.0,"end":[6000.0,12000.0],"guid":"GUID-14","id":100007,"justify":"centre","length":6000.0,"level":"GUID-1","offset":2500.0,"round":true,"start":[0.0,12000.0],"type":"Imported Round 25","type_guid":"GUID-15","width":25.0},{"axis":[[0.0,14000.0,-400.0],[6000.0,14000.0,-400.0]],"category":"stripfooting","depth":400.0,"end":[6000.0,14000.0],"guid":"GUID-16","id":100008,"justify":"centre","length":6000.0,"level":"GUID-1","offset":-400.0,"params":{"Mark":"Strip"},"round":false,"start":[0.0,14000.0],"type":"Imported 600 x 400","type_guid":"GUID-17","width":600.0},{"axis":[[0.0,15000.0,-500.0],[6000.0,15000.0,-500.0]],"category":"groundconductor","depth":10.0,"end":[6000.0,15000.0],"guid":"GUID-18","id":100009,"justify":"centre","length":6000.0,"level":"GUID-1","offset":-500.0,"round":true,"start":[0.0,15000.0],"type":"Imported Round 10","type_guid":"GUID-19","width":10.0},{"axis":[[1000.0,16000.0,2900.0],[4000.0,16000.0,2900.0]],"category":"wire","depth":7.4,"end":[4000.0,16000.0],"guid":"GUID-20","id":100010,"justify":"centre","length":3000.0,"level":"GUID-1","offset":2900.0,"round":true,"start":[1000.0,16000.0],"type":"Imported Round 7.4","type_guid":"GUID-21","width":7.4},{"axis":[[0.0,20000.0,500.0],[0.0,24000.0,500.0]],"category":"pipe","depth":50.0,"end":[0.0,24000.0],"guid":"GUID-22","id":100011,"justify":"centre","length":4000.0,"level":"GUID-1","offset":500.0,"round":true,"start":[0.0,20000.0],"type":"Imported Round 50 (2)","type_guid":"GUID-23","width":50.0}],"returned":12}
+--- stderr
+--- inspect, less a new project's
+{
+ "counts": {
+  "beam": 2,
+  "cabletray": 2,
+  "conduit": 1,
+  "duct": 1,
+  "groundconductor": 1,
+  "level": 1,
+  "pipe": 2,
+  "stripfooting": 1,
+  "wire": 1
+ },
+ "levels": [
+  {
+   "elevation": 0.0,
+   "id": 100000,
+   "name": "Level 0"
+  }
+ ],
+ "name": "Runs",
+ "parameters": {
+  "Mark": {
+   "categories": [
+    "beam",
+    "stripfooting"
+   ],
+   "kind": "text"
+  }
+ },
+ "types": {
+  "runs": {
+   "beam": {
+    "Imported 300 x 200": {
+     "depth": 200.0,
+     "round": false,
+     "width": 300.0
+    },
+    "Imported 400 x 140": {
+     "depth": 140.0,
+     "material": "Concrete",
+     "round": false,
+     "width": 400.0
+    }
+   },
+   "cabletray": {
+    "Imported 300 x 100": {
+     "depth": 100.0,
+     "round": false,
+     "width": 300.0
+    },
+    "Imported 400 x 80": {
+     "depth": 80.0,
+     "round": false,
+     "width": 400.0
+    }
+   },
+   "conduit": {
+    "Imported Round 25": {
+     "depth": 25.0,
+     "round": true,
+     "width": 25.0
+    }
+   },
+   "duct": {
+    "Imported 200 x 300": {
+     "depth": 300.0,
+     "round": false,
+     "width": 200.0
+    }
+   },
+   "groundconductor": {
+    "Imported Round 10": {
+     "depth": 10.0,
+     "round": true,
+     "width": 10.0
+    }
+   },
+   "pipe": {
+    "Imported Round 50": {
+     "depth": 50.0,
+     "material": "Copper",
+     "round": true,
+     "width": 50.0
+    },
+    "Imported Round 50 (2)": {
+     "depth": 50.0,
+     "round": true,
+     "width": 50.0
+    }
+   },
+   "stripfooting": {
+    "Imported 600 x 400": {
+     "depth": 400.0,
+     "round": false,
+     "width": 600.0
+    }
+   },
+   "wire": {
+    "Imported Round 7.4": {
+     "depth": 7.4,
+     "round": true,
+     "width": 7.4
+    }
+   }
+  }
+ }
+}

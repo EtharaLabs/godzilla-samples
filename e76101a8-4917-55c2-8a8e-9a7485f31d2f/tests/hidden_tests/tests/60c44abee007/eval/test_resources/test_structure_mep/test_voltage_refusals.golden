@@ -1,0 +1,70 @@
+$ bimcraft-cli run --cmd 'voltage {"name": "220 V", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: voltage `220 V` is one distribution system `127/220 V` supplies: change or delete that first
+
+$ bimcraft-cli run --cmd 'voltage {"name": "9 V"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: `nominal` (volts) is required for a new voltage
+
+$ bimcraft-cli run --cmd 'voltage {"name": "9 V", "nominal": 9, "min": 10}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: voltage `9 V`: `min` is volts above 0 and not above the nominal 9 V, not 10
+
+$ bimcraft-cli run --cmd 'voltage {"name": "9 V", "nominal": 9, "max": 8}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: voltage `9 V`: `max` is volts up to 100000 and not under the nominal 9 V, not 8
+
+$ bimcraft-cli run --cmd 'voltage {"name": "9 V", "nominal": -9}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: voltage `9 V`: `nominal` is volts above 0 and up to 100000, not -9
+
+$ bimcraft-cli run --cmd 'voltage {"name": "127 V", "rename": "220 V"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: there's already a voltage `220 V`
+
+$ bimcraft-cli run --cmd 'voltage {"name": "nope", "delete": true}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: there's no voltage `nope`
+
+$ bimcraft-cli run --cmd 'voltage {"name": "9 V", "nominal": 9, "colour": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: `colour` isn't one of its parameters: name, nominal, min, max, rename, delete
+
+$ bimcraft-cli run --cmd 'voltage {"name": "  ", "nominal": 9}'
+[exit 0]
+--- stdout
+{"voltages":{"127 V":{"max":139.7,"min":114.3,"nominal":127.0},"220 V":{"max":242.0,"min":198.0,"nominal":220.0},"230 V":{"max":253.0,"min":207.0,"nominal":230.0},"277 V":{"max":304.7,"min":249.3,"nominal":277.0},"380 V":{"max":418.0,"min":342.0,"nominal":380.0},"400 V":{"max":440.0,"min":360.0,"nominal":400.0},"480 V":{"max":528.0,"min":432.0,"nominal":480.0}}}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'voltage {"name": "9 V", "rename": "12 V"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (voltage): voltage: there's no voltage `9 V` to rename
+

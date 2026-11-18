@@ -1,0 +1,43 @@
+$ bimcraft-cli run --cmd 'family {"name": "Plinth", "category": "generic", "parameters": [{"name": "Width", "kind": "length", "value": 1000}, {"name": "Depth", "kind": "length", "value": 600}, {"name": "Height", "kind": "length", "formula": "Width / 2"}, {"name": "Count", "kind": "number", "value": 3}, {"name": "Tilt", "kind": "angle", "value": 15}, {"name": "Lid", "kind": "yesno", "value": true}, {"name": "Finish", "kind": "material", "value": "Concrete"}, {"name": "Lift", "kind": "length", "instance": true, "value": 0}], "types": {"Small": {"Width": 800}, "Large": {"Width": 1600, "Depth": 900}}, "forms": [{"plane": "xy", "profile": [["-Width / 2", "-Depth / 2"], ["Width / 2", "-Depth / 2"], ["Width / 2", "Depth / 2"], ["-Width / 2", "Depth / 2"]], "from": "Lift", "to": "Height", "material": "Finish"}, {"plane": "xz", "circle": {"centre": [0, "Height + 150"], "radius": 100}, "from": -200, "to": 200, "visible": "Lid"}, {"plane": "yz", "profile": [[-100, 0], [100, 0], [0, 200]], "from": "-Width / 2 - 100", "to": "-Width / 2", "material": "Metal"}]}' --cmd 'component {"family": "Plinth", "at": [1000, 2000], "angle": 30, "offset": 100, "mirrored": true, "params": {"Lift": 50}}' --cmd 'CM {"family": "Plinth", "type": "Large", "at": [4000, 0]}' --cmd 'component {"family": "Table", "type": "1200 x 800", "at": [0, -2000]}' --cmd 'elements {"category": "component"}' --cmd 'render {"view": "{3D}", "width": 320, "height": 200, "path": "comps.png"}'
+[exit 0]
+--- stdout
+{"family":{"category":"generic","forms":[{"from":"Lift","material":"Finish","plane":"xy","profile":[["-Width / 2","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-Width / 2","Depth / 2"]],"to":"Height"},{"circle":{"centre":[0.0,"Height + 150"],"radius":100.0},"from":-200.0,"plane":"xz","to":200.0,"visible":"Lid"},{"from":"-Width / 2 - 100","material":"Metal","plane":"yz","profile":[[-100.0,0.0],[100.0,0.0],[0.0,200.0]],"to":"-Width / 2"}],"parameters":[{"kind":"length","name":"Width","value":1000},{"kind":"length","name":"Depth","value":600},{"formula":"Width / 2","kind":"length","name":"Height","value":null},{"kind":"number","name":"Count","value":3},{"kind":"angle","name":"Tilt","value":15},{"kind":"yesno","name":"Lid","value":true},{"kind":"material","name":"Finish","value":"Concrete"},{"instance":true,"kind":"length","name":"Lift","value":0}],"types":{"Large":{"Depth":900,"Width":1600},"Small":{"Width":800}}},"name":"Plinth","warnings":[]}
+{"id":100002}
+{"id":100003}
+{"id":100004}
+{"count":3,"elements":[{"angle":30.0,"at":[1000.0,2000.0],"category":"component","family":"Plinth","family_guid":"<GUID-1>","guid":"<GUID-2>","height":1050.0,"id":100002,"level":"<GUID-3>","mirrored":true,"offset":100.0,"params":{"Lift":50},"type":"Large","values":{"Count":3.0,"Depth":900.0,"Finish":"Concrete","Height":800.0,"Lid":1.0,"Lift":50.0,"Tilt":15.0,"Width":1600.0}},{"angle":0.0,"at":[4000.0,0.0],"category":"component","family":"Plinth","family_guid":"<GUID-1>","guid":"<GUID-4>","height":1050.0,"id":100003,"level":"<GUID-3>","offset":0.0,"type":"Large","values":{"Count":3.0,"Depth":900.0,"Finish":"Concrete","Height":800.0,"Lid":1.0,"Lift":0.0,"Tilt":15.0,"Width":1600.0}},{"angle":0.0,"at":[0.0,-2000.0],"category":"component","family":"Table","family_guid":"<GUID-5>","guid":"<GUID-6>","height":750.0,"id":100004,"level":"<GUID-3>","offset":0.0,"type":"1200 x 800","values":{"Depth":800.0,"Height":750.0,"Leg Width":60.0,"Material":"Timber","Thickness":40.0,"Width":1200.0}}],"returned":3}
+{"azimuth":-45.0,"elevation":30.0,"eye":null,"eye_elevation":null,"height":200,"kind":"3D view","lens":null,"path":"comps.png","target":null,"view":"{3D}","width":320}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'family {"name": "Plinth", "category": "generic", "parameters": [{"name": "Width", "kind": "length", "value": 1000}, {"name": "Depth", "kind": "length", "value": 600}, {"name": "Height", "kind": "length", "formula": "Width / 2"}, {"name": "Count", "kind": "number", "value": 3}, {"name": "Tilt", "kind": "angle", "value": 15}, {"name": "Lid", "kind": "yesno", "value": true}, {"name": "Finish", "kind": "material", "value": "Concrete"}, {"name": "Lift", "kind": "length", "instance": true, "value": 0}], "types": {"Small": {"Width": 800}, "Large": {"Width": 1600, "Depth": 900}}, "forms": [{"plane": "xy", "profile": [["-Width / 2", "-Depth / 2"], ["Width / 2", "-Depth / 2"], ["Width / 2", "Depth / 2"], ["-Width / 2", "Depth / 2"]], "from": "Lift", "to": "Height", "material": "Finish"}, {"plane": "xz", "circle": {"centre": [0, "Height + 150"], "radius": 100}, "from": -200, "to": 200, "visible": "Lid"}, {"plane": "yz", "profile": [[-100, 0], [100, 0], [0, 200]], "from": "-Width / 2 - 100", "to": "-Width / 2", "material": "Metal"}]}' --cmd 'component {"family": "Plinth", "at": [0, 0], "params": {"Width": 500}}'
+[exit 1]
+--- stdout
+{"family":{"category":"generic","forms":[{"from":"Lift","material":"Finish","plane":"xy","profile":[["-Width / 2","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-Width / 2","Depth / 2"]],"to":"Height"},{"circle":{"centre":[0.0,"Height + 150"],"radius":100.0},"from":-200.0,"plane":"xz","to":200.0,"visible":"Lid"},{"from":"-Width / 2 - 100","material":"Metal","plane":"yz","profile":[[-100.0,0.0],[100.0,0.0],[0.0,200.0]],"to":"-Width / 2"}],"parameters":[{"kind":"length","name":"Width","value":1000},{"kind":"length","name":"Depth","value":600},{"formula":"Width / 2","kind":"length","name":"Height","value":null},{"kind":"number","name":"Count","value":3},{"kind":"angle","name":"Tilt","value":15},{"kind":"yesno","name":"Lid","value":true},{"kind":"material","name":"Finish","value":"Concrete"},{"instance":true,"kind":"length","name":"Lift","value":0}],"types":{"Large":{"Depth":900,"Width":1600},"Small":{"Width":800}}},"name":"Plinth","warnings":[]}
+
+--- stderr
+line 1 (component): component 100002: `Width` is a type parameter of `Plinth`; change it in its type, with `family`
+
+$ bimcraft-cli run --cmd 'component {"family": "Nope", "at": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (component): component: family `Nope` doesn't exist (there are: Air Terminal, Base Cabinet, Bathtub, Bed, Casement Window, Ceiling Luminaire, Chair, Data Outlet, Desk, Distribution Board, Double Door, Earthing Electrode, Elbow 90, Fixed Window, Floor Drain, Gate Valve, Inspection Box, Kitchen Sink, Outlet, Patch Panel, Rack, Recessed Luminaire, Shower, Single Door, Sliding Door, Sliding Window, Sofa, Switch, Table, Tee, Three-Phase Outlet, Voice Outlet, WC, Wardrobe, Washbasin)
+
+$ bimcraft-cli run --cmd 'component {"family": "Table", "type": "9 x 9", "at": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (component): component 100002: type `9 x 9` doesn't exist (there are: 1200 x 800, 1600 x 900, 2000 x 1000)
+
+$ bimcraft-cli run --cmd 'component {"family": "Table"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (component): component: `at` [x, y] is required
+
+=== file comps.png
+png 320x200 rgba pixels-sha256=f74dc17f3ec22b2cccea98117cbbc21ab8337924eb5b907d274071a2bbb3c44c

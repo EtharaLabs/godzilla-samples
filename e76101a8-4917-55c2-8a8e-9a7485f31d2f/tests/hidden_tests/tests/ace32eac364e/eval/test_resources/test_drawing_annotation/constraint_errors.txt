@@ -1,0 +1,95 @@
+$ dimension_constraint {"id": 100003, "equal": true}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_constraint): dimension_constraint: wall 100003 isn't a dimension
+
+$ dimension_constraint {"id": 100009, "locked": [5]}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_constraint): dimension_constraint: dimension 100009 has segments 0 to 1, not 5
+
+$ dimension_constraint {"id": 100009, "locked": "all"}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_constraint): dimension_constraint: `locked` is a list of segments, not "all"
+
+$ dimension_constraint {"id": 100010, "equal": true}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_constraint): dimension 100010: only an aligned or a linear dimension of two segments or more is kept equal
+
+$ dimension_constraint {"id": 100011, "locked": [0]}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_constraint): dimension 100011: only an aligned or a linear dimension's segments are locked
+
+$ dimension_constraint {"id": 100009, "frozen": true}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_constraint): dimension_constraint: `frozen` isn't one of its parameters: id, equal, locked
+
+$ dimension_text {"id": 100003, "prefix": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_text): dimension_text: wall 100003 isn't a dimension
+
+$ dimension_text {"id": 100009, "segment": 7, "prefix": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_text): dimension_text: dimension 100009 has segments 0 to 1, not 7
+
+$ dimension_text {"id": 100009, "suffix": "a\tb"}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_text): dimension 100009: its suffix is up to 200 characters on one line
+
+$ dimension_text {"id": 100009, "font": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_text): dimension_text: `font` isn't one of its parameters: id, segment, prefix, suffix, above, below, replace
+
+$ dimension_value {"id": 100009}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_value): dimension_value: `value`, the length in mm, is required
+
+$ dimension_value {"id": 100009, "value": -5}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_value): dimension_value: `value` is a length above 0 and at most 1000000000 mm, not -5
+
+$ dimension_value {"id": 100009, "value": 100, "segment": 4}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_value): dimension_value: dimension 100009 has segments 0 to 1, not 4
+
+$ dimension_value {"id": 100011, "value": 100}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_value): dimension_value: dimension 100011 isn't an aligned or a linear one: only their lengths are typed
+
+$ dimension_value {"id": 999999, "value": 100}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_value): dimension_value: no element 999999
+
+$ dimension_value {"id": 100003, "value": 100}
+exit: 1
+--- stdout
+--- stderr
+line 10 (dimension_value): dimension_value: wall 100003 isn't a dimension

@@ -1,0 +1,9 @@
+$ bimcraft-cli run slab.ifc --cmd 'elements {"category": "floor"}' --cmd 'elements {"category": "shaft"}'
+[exit 0]
+--- stdout
+{"elements":{"floor":1,"level":1,"shaft":1},"format":"IFC4","moved":null,"name":"Hand Made","path":"slab.ifc","skipped":[]}
+{"count":1,"elements":[{"area_m2":21.5,"boundary":[[0.0,0.0],[6000.0,0.0],[6000.0,4000.0],[0.0,4000.0]],"category":"floor","guid":"<GUID-1>","id":100001,"level":"<GUID-2>","openings":[[[1000.0,1000.0],[1000.0,2000.0],[2500.0,2000.0],[2500.0,1000.0]]],"params":{"Mark":"Slab"},"pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[0.0,0.0],"type":"Imported - 200mm","type_guid":"<GUID-3>","volume_m3":4.3}],"returned":1}
+{"count":1,"elements":[{"area_m2":1.0,"base_offset":-200.0,"boundary":[[4000.0,1000.0],[5000.0,1000.0],[5000.0,2000.0],[4000.0,2000.0]],"category":"shaft","guid":"<GUID-4>","height":200.0,"id":100002,"level":"<GUID-2>","top_level":null}],"returned":1}
+
+--- stderr
+

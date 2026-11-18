@@ -1,0 +1,12 @@
+$ bimcraft-cli run p.ifc --cmd 'elements {"category": "door"}' --cmd 'elements {"category": "wall", "limit": 1}' --cmd 'phase {}' --cmd 'option {"set": "Kitchen"}' --cmd 'library {"kind": "parameter"}'
+[exit 0]
+--- stdout
+{"elements":{"door":1,"level":2,"wall":4},"format":"IFC4","moved":null,"name":"Project","path":"p.ifc","skipped":[]}
+{"count":1,"elements":[{"at":[4000.0,0.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-1>","height":2100.0,"host":"<GUID-2>","id":100006,"level":"<GUID-3>","mark":"1","offset":4000.0,"operation":"swing","params":{"Accessible":true,"Cost":450.5,"Fire Rating":"30 min"},"sill":0.0,"type":"Single 900 x 2100 (2)","type_guid":"<GUID-4>","width":900.0}],"returned":1}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"<GUID-2>","height":3000.0,"id":100002,"length":8000.0,"level":"<GUID-3>","params":{"Phase Created":"Existing","Phase Demolished":"Demolition"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"<GUID-5>","type":"Generic - 200mm","type_guid":"<GUID-6>"}],"returned":1}
+{"now":null,"overrides":{"demolished":{"cut":{"color":[200,40,30],"dash":"dashed"},"projection":{"color":[200,40,30],"dash":"dashed"}},"existing":{"halftone":true}},"phases":["Existing","Demolition","New Construction"]}
+{"now":null,"options":["Open","Closed"],"primary":"Open","set":"Kitchen"}
+{"count":3,"library":[{"guid":"<GUID-7>","id":999896,"kind":"parameter","name":"Fire Rating"},{"guid":"<GUID-8>","id":999897,"kind":"parameter","name":"Cost"},{"guid":"<GUID-9>","id":999898,"kind":"parameter","name":"Accessible"}],"parts":[]}
+
+--- stderr
+

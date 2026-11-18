@@ -1,0 +1,41 @@
+$ spot {"at": [20000, 20000]}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot): spot: nothing to read at [20000, 20000] on Level 1; place it on a floor, a roof, a stair, a wall or a column
+
+$ spot {}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot): spot: `at` [x, y] is required
+
+$ spot {"at": [0, 0], "view": "Nowhere"}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot): spot: no view named `Nowhere`
+
+$ spot {"at": [0, 0], "host": 999999}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot): spot 100013: element 999999 doesn't exist
+
+$ spot_slope {"at": [20000, 20000]}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot_slope): spot_slope: no slope to read at [20000, 20000] on Level 1; place it on a floor or a roof
+
+$ spot_slope {"at": [1000, 1000], "view": "S"}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot_slope): spot_slope: a spot slope reads a floor's or a roof's top: place it in a plan
+
+$ spot_slope {"at": [1000, 1000], "host": 100002}
+exit: 1
+--- stdout
+--- stderr
+line 9 (spot_slope): spot_slope: no slope to read at [1000, 1000] on Level 1; place it on a floor or a roof

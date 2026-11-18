@@ -1,0 +1,18 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'level {"elevation": 6000}' --cmd 'room {"point": [3000, 2000], "top_level": "Level 3", "limit_offset": 500, "base_offset": 200}' --cmd 'elements {"category": "room"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006,"name":"Level 3"}
+{"area_m2":24.0,"id":100007,"number":"1"}
+{"count":1,"elements":[{"area_m2":24.0,"base_offset":200.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100007,"level":"<GUID-2>","limit_offset":500.0,"name":"Room","number":"1","perimeter_m":20.0,"point":[3000.0,2000.0],"top_level":"<GUID-3>","unbounded_height":6300.0,"volume_m3":151.2}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'room {"point": [3000, 2000], "limit_offset": -4000}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+
+--- stderr
+line 1 (room): room 100006: the room's top (its upper limit 0 + limit offset -4000) must be above its bottom (its level 0 + base offset 0); raise the limit offset or lower the base offset
+

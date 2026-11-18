@@ -1,0 +1,55 @@
+$ conduit_fill {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `section` (mm²) is required
+$ conduit_fill {"section": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `section` (mm²) is required
+$ conduit_fill {"section": 2000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `section` must be a number from 0 to 1000, got 2000
+$ conduit_fill {"section": 2.5, "size": "7\""}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `size` must be one of 1/2", 3/4", 1", 1.1/4", 1.1/2", 2", 2.1/2", 3", 4"
+$ conduit_fill {"section": 2.5, "size": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `size` must be text of at most 256 characters, got 1
+$ conduit_fill {"section": 2.5, "family": "copper"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `family` must be one of pvc-thread, pvc-solder, steel-heavy, steel-rir, got "copper"
+$ conduit_fill {"section": 2.5, "circuits": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `circuits` must be a number from 1 to 1000, got 0
+$ conduit_fill {"section": 2.5, "phases": "N"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `phases` must be one of FN, FF, 3F, 3FN, got "N"
+$ conduit_fill {"section": 2.5, "reduced_neutral": 1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: `reduced_neutral` must be true or false, got 1
+$ conduit_fill {"section": 2.5, "insulation": "epr"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: unknown parameter `insulation`
+$ conduit_fill 7
+exit: 1
+--- stdout
+--- stderr
+line 1 (conduit_fill): conduit_fill: params must be an object

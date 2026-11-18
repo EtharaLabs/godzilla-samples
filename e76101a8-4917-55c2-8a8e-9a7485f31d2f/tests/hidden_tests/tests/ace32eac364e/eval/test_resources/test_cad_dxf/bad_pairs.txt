@@ -1,0 +1,45 @@
+### bad_number_in_hatch
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 12: `x` isn't a number
+### bad_number_in_layer_table
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 16: `red` isn't a number
+### binary_dxf
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: it's a binary DXF; save it as an ASCII DXF (any version) and bring that in
+### ends_after_code
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 7: the file ends after group code 10, with no value
+### infinite_value
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 12: `inf` isn't a number a drawing can hold
+### nan_value
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 12: `NaN` isn't a number a drawing can hold
+### not_a_group_code
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 5: `hello` isn't a group code
+### past_a_drawing
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 12: 2e12 is past what a drawing holds (1000000000000)
+### value_not_a_number
+exit: 1
+--- stdout
+--- stderr
+line 1 (import_cad): import_cad: bad.dxf: line 12: `abc` isn't a number

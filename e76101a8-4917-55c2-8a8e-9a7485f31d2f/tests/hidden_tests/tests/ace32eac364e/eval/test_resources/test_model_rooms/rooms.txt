@@ -1,0 +1,15 @@
+exit: 0
+--- stdout
+{"ids": [100002, 100003, 100004, 100005]}
+{"area_m2": 0.0, "id": 100006, "number": "1", "warning": "[9000, 1000] isn't enclosed by walls or room separation lines on Level 1: the room is placed unbounded, a 1000 mm square, until they close round it"}
+{"area_m2": 48.0, "id": 100007, "number": "2"}
+{"ids": [100008]}
+{"area_m2": 18.0, "id": 100009, "number": "K-01"}
+{"area_m2": 0.0, "id": 100010, "number": "3", "warning": "room 100007 is already in this space; two rooms can't share one, so this one is placed unbounded: move it, delete one of them, or part them with a room separation line"}
+{"ids": [100011, 100012, 100013]}
+{"ids": [100014]}
+{"area_m2": 15.53, "id": 100015, "number": "4"}
+{"count": 5, "elements": [{"area_m2": 0.0, "category": "room", "enclosed": false, "guid": "GUID-1", "id": 100006, "level": "GUID-2", "limit_offset": -300.0, "name": "Room", "number": "1", "perimeter_m": 0.0, "point": [9000.0, 1000.0], "top_level": "GUID-3", "unbounded_height": 2700.0, "volume_m3": 0.0}, {"area_m2": 30.0, "category": "room", "enclosed": true, "guid": "GUID-4", "id": 100007, "level": "GUID-2", "limit_offset": -300.0, "name": "Living", "number": "2", "perimeter_m": 22.0, "point": [4000.0, 3000.0], "top_level": "GUID-3", "unbounded_height": 2700.0, "volume_m3": 81.0}, {"area_m2": 18.0, "category": "room", "enclosed": true, "guid": "GUID-5", "id": 100009, "level": "GUID-2", "limit_offset": -300.0, "name": "Kitchen", "number": "K-01", "perimeter_m": 18.0, "point": [6500.0, 3000.0], "top_level": "GUID-3", "unbounded_height": 2700.0, "volume_m3": 48.6}, {"area_m2": 0.0, "category": "room", "enclosed": false, "guid": "GUID-6", "id": 100010, "level": "GUID-2", "limit_offset": -300.0, "name": "Room", "number": "3", "perimeter_m": 0.0, "point": [2000.0, 3000.0], "shares_space_with": 100007, "top_level": "GUID-3", "unbounded_height": 2700.0, "volume_m3": 0.0}, {"area_m2": 15.53, "category": "room", "enclosed": true, "guid": "GUID-7", "id": 100015, "level": "GUID-2", "limit_offset": -300.0, "name": "Apse", "number": "4", "perimeter_m": 15.71, "point": [20500.0, 1500.0], "top_level": "GUID-3", "unbounded_height": 2700.0, "volume_m3": 41.93}], "returned": 5}
+{"counts": {"level": 2, "room": 5, "wall": 9}, "history": ["Wall", "Room", "Room", "Wall", "Room", "Room", "Wall", "Wall", "Room"], "room_area": "centre", "warnings": ["room 100006 (1 Room) is not enclosed: the walls around it no longer close", "room 100010 (3 Room) is in the space room 100007 has; two rooms can't share one, so it is unbounded: delete one, or part them with a room separation line"]}
+{"height": 1000, "kind": "plan", "path": "plan.svg", "view": "Level 1", "width": 1600}
+--- stderr

@@ -1,0 +1,47 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"name":"Rating","parameter":{"categories":["wall"],"kind":"text"}}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Rating":"EI 60"},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option","Rating"],"category":"wall","columns":["Type","Rating"],"elements":[[100002]],"id":100006,"name":"Rated","rows":[["Generic - 200mm","EI 60"]]}
+{"categories":["wall"],"matches":[100002],"name":"Rated walls","rules":[{"field":"Rating","op":"equals","value":"EI 60"}]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== parameter {"name": "Rating", "rename": "Fire Rating"} | schedule {"name": "Rated"} | filter {"name": "Rated walls"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"name":"Fire Rating","parameter":{"categories":["wall"],"kind":"text"}}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option","Fire Rating"],"category":"wall","columns":["Type","Fire Rating"],"elements":[[100002]],"id":100006,"name":"Rated","rows":[["Generic - 200mm","EI 60"]]}
+{"categories":["wall"],"matches":[100002],"name":"Rated walls","rules":[{"field":"Fire Rating","op":"equals","value":"EI 60"}]}
+--- stderr
+=== parameter {"name": "Rating", "delete": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: view filter `Rated walls` has a rule on `Rating`; take the rule off before the parameter goes
+=== parameter {"name": "Rating", "categories": ["door"]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (parameter): parameter: view filter `Rated walls` has a rule on `Rating`; take the rule off before the parameter goes
+=== filter {"name": "Rated walls", "delete": true} | parameter {"name": "Rating", "categories": ["door"]} | schedule {"name": "Rated"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":true,"name":"Rated walls"}
+{"name":"Rating","parameter":{"categories":["door"],"kind":"text"}}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Type"],"elements":[[100002],[100003],[100004],[100005]],"id":100006,"name":"Rated","rows":[["Generic - 200mm"],["Generic - 200mm"],["Generic - 200mm"],["Generic - 200mm"]]}
+--- stderr
+=== filter {"name": "Rated walls", "delete": true} | parameter {"name": "Rating", "delete": true} | schedule {"name": "Rated"} | elements {"category": "wall", "limit": 1}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"deleted":true,"name":"Rated walls"}
+{"deleted":"Rating"}
+{"available":["Id","Type","Level","Length","Height","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"wall","columns":["Type"],"elements":[[100002],[100003],[100004],[100005]],"id":100006,"name":"Rated","rows":[["Generic - 200mm"],["Generic - 200mm"],["Generic - 200mm"],["Generic - 200mm"]]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":1}
+--- stderr

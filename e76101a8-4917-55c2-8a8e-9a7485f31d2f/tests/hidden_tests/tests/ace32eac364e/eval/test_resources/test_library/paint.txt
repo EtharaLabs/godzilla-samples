@@ -1,0 +1,96 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":48.0,"id":100006}
+{"family":{"category":"furniture","forms":[{"from":0.0,"plane":"xy","profile":[[0.0,0.0],[500.0,0.0],[500.0,500.0],[0.0,500.0]],"to":500.0}],"parameters":[],"types":{"A":{}}},"name":"Box","warnings":[]}
+{"id":100007}
+{"id":100008,"name":"1"}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== paint {"id": 100002, "face": "exterior", "material": "Brick"} | PT {"ids": [100006, 100007], "material": "Timber"} | elements {"category": "wall"} | elements {"category": "floor"} | elements {"category": "component"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"painted":[100002]}
+{"painted":[100006,100007]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Paint":{"exterior":"Brick"}},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":4}
+{"count":1,"elements":[{"area_m2":48.0,"boundary":[[8000.0,6000.0],[0.0,6000.0],[0.0,0.0],[8000.0,0.0]],"category":"floor","guid":"GUID-8","id":100006,"level":"GUID-2","params":{"Paint":{"bottom":"Timber","top":"Timber"}},"pattern_angle":0.0,"pattern_origin":[0.0,0.0],"thickness":200.0,"top":[0.0,0.0],"type":"Generic - 200mm","type_guid":"GUID-9","volume_m3":9.6}],"returned":1}
+{"count":1,"elements":[{"angle":0.0,"at":[1000.0,1000.0],"category":"component","family":"Box","family_guid":"GUID-10","guid":"GUID-11","height":500.0,"id":100007,"level":"GUID-2","offset":0.0,"params":{"Paint":{"all":"Timber"}},"type":"A","values":{}}],"returned":1}
+--- stderr
+=== paint {"ids": [100002, 100003], "material": "Glass"} | paint {"id": 100002, "face": "interior", "material": null} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"painted":[100002,100003]}
+{"painted":[100002]}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Paint":{"exterior":"Glass"}},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","params":{"Paint":{"exterior":"Glass","interior":"Glass"}},"room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":4}
+--- stderr
+=== paint {"id": 100002, "material": "Brick"} | material {"name": "Brick", "delete": true}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"painted":[100002]}
+--- stderr
+line 1 (material): material: `Brick` is in wall type `Exterior - 300mm`'s layers; take it out of them first
+=== paint {"id": 100002, "face": "top", "material": "Brick"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (paint): paint: a wall has no face `top`; its faces are exterior, interior
+=== paint {"id": 100008, "material": "Brick"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (paint): paint: grid 100008 has no face to paint
+=== paint {"id": 100002, "material": "Nope"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (paint): paint: the library has no `Nope`; add it with `material`
+=== paint {"id": 100002}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (paint): paint: `material` is required: a material's name, or null to take the paint off
+=== paint {"id": 100002, "material": 5}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (paint): paint: `material` is a material's name, or null, not 5
+=== paint {"material": "Brick"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (paint): paint: `ids` [id, …] is required
+=== modify {"id": 100002, "params": {"Paint": {"top": "Brick"}}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): wall 100002: a wall has no face `top` to paint; its faces are exterior, interior
+=== modify {"id": 100002, "params": {"Paint": {"exterior": "Nope"}}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): wall 100002: its `exterior` is painted a material of the library, not "Nope"; add one with `material`
+=== modify {"id": 100002, "params": {"Paint": "Brick"}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (modify): wall 100002: `Paint` is {face: material}, not "Brick"
+=== modify {"id": 100002, "params": {"Paint": {"exterior": "Brick"}}} | elements {"category": "wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Paint":{"exterior":"Brick"}},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}
+{"count":4,"elements":[{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","params":{"Paint":{"exterior":"Brick"}},"room_bounding":true,"start":[0.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[8000.0,6000.0],"guid":"GUID-5","height":3000.0,"id":100003,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,0.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,6000.0],"guid":"GUID-6","height":3000.0,"id":100004,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[8000.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"},{"base_offset":0.0,"category":"wall","end":[0.0,0.0],"guid":"GUID-7","height":3000.0,"id":100005,"length":6000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,6000.0],"thickness":200.0,"top_level":"GUID-3","type":"Generic - 200mm","type_guid":"GUID-4"}],"returned":4}
+--- stderr

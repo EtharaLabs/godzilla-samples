@@ -1,0 +1,56 @@
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[1000,0]],[[1000,0],[1000,1000]]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): filled_region: the sketch doesn't close into loops: line 0 ends at [0, 0] without meeting another: the loop is open; line 1 ends at [1000, 1000] without meeting another: the loop is open
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[1000,1000]],[[1000,1000],[1000,0]],[[1000,0],[0,1000]],[[0,1000],[0,0]]]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): filled_region: the sketch doesn't close into loops: line 0 and line 2 intersect at [500, 500]
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": []}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): filled_region: the sketch doesn't close into loops: there are no lines: draw the outline
+
+$ bimcraft-cli run --cmd 'filled_region {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): filled_region: `sketch`, its outlines' lines, is required
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[4000,0]],[[4000,0],[4000,3000]],[[4000,3000],[0,3000]],[[0,3000],[0,0]]], "type": "Nope"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): region 100002: there's no filled region type `Nope` (there are: Brick, Crosshatch, Diagonal Up, Masking, Sand, Solid Black)
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[4000,0]],[[4000,0],[4000,3000]],[[4000,3000],[0,3000]],[[0,3000],[0,0]]], "line_style": "Nope"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): region 100002: there's no line style `Nope`
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[4000,0]],[[4000,0],[4000,3000]],[[4000,3000],[0,3000]],[[0,3000],[0,0]]], "view": "Nope"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): filled_region: no view named `Nope`
+
+$ bimcraft-cli run --cmd 'filled_region {"sketch": [[[0,0],[4000,0]],[[4000,0],[4000,3000]],[[4000,3000],[0,3000]],[[0,3000],[0,0]]], "colour": 1}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (filled_region): filled_region: `colour` isn't one of its parameters: sketch, view, level, type, line_style
+

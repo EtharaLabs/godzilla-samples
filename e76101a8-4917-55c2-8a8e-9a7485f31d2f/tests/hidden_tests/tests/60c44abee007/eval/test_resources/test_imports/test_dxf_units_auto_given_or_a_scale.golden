@@ -1,0 +1,11 @@
+$ bimcraft-cli run --cmd 'import_cad {"path": "site.dxf"}' --cmd 'import_cad {"path": "site.dxf", "name": "as cm", "units": "cm"}' --cmd 'import_cad {"path": "site.dxf", "name": "as feet", "units": "ft"}' --cmd 'import_cad {"path": "site.dxf", "name": "scaled", "scale": 25.4}' --cmd 'import_cad {"path": "site.dxf", "name": "auto", "units": "auto"}'
+[exit 0]
+--- stdout
+{"cad":"site","entities":2,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":1,"left_out":{},"scale":1000.0,"source":"site.dxf","unit":"m"}
+{"cad":"as cm","entities":2,"extents":[[-50.0,-30.0],[50.0,30.0]],"far":0,"id":100003,"layers":1,"left_out":{},"scale":10.0,"source":"site.dxf","unit":"cm (its file says m)"}
+{"cad":"as feet","entities":2,"extents":[[-1524.0,-914.4],[1524.0,914.4]],"far":0,"id":100004,"layers":1,"left_out":{},"scale":304.8,"source":"site.dxf","unit":"ft (its file says m)"}
+{"cad":"scaled","entities":2,"extents":[[-127.0,-76.2],[127.0,76.2]],"far":0,"id":100005,"layers":1,"left_out":{},"scale":25.4,"source":"site.dxf","unit":"a scale of its own (its file says m)"}
+{"cad":"auto","entities":2,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100006,"layers":1,"left_out":{},"scale":1000.0,"source":"site.dxf","unit":"m"}
+
+--- stderr
+

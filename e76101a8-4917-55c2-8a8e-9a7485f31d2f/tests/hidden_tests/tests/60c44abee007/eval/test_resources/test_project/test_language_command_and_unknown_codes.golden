@@ -1,0 +1,25 @@
+$ bimcraft-cli run --cmd 'language {}' --cmd 'language {"code": "fr"}' --cmd 'level {"elevation": 7000}' --cmd 'language {}' --cmd 'elements {"category": "level"}'
+[exit 0]
+--- stdout
+{"language":"en"}
+{"language":"fr"}
+{"id":100002,"name":"Niveau 3"}
+{"language":"fr"}
+{"count":3,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-1>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-2>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}},{"category":"level","computation_height":1200.0,"elevation":7000.0,"guid":"<GUID-3>","id":100002,"name":"Niveau 3","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":3}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'language {"code": "xx"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (language): language: `xx` is no language here; use en, pt, es or sv
+
+$ bimcraft-cli run --cmd 'new {"language": "klingon"}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (new): new: `klingon` is no language here; use en, pt, es or sv
+

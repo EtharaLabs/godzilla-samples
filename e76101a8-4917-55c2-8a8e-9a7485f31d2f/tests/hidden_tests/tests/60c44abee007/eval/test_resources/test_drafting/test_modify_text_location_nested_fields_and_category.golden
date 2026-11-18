@@ -1,0 +1,25 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]], "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'modify {"id": 100002, "location": "exterior-finish"}' --cmd 'modify {"id": 100000, "view_range": {"cut": 1500, "top": 2800}}' --cmd 'modify {"id": 100000, "view_range": {"bottom": -100, "depth": -500}}' --cmd 'text {"text": "First note", "at": [0, 1000]}' --cmd 'modify {"id": 100004, "text": "Second note, longer"}' --cmd 'elements {"category": "wall"}' --cmd 'elements {"category": "door"}' --cmd 'elements {"category": "level"}' --cmd 'elements {"category": "text"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":3000.0}
+{"base_offset":0.0,"category":"wall","end":[6000.0,150.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","location":"exterior-finish","room_bounding":true,"start":[0.0,150.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}
+{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-2>","id":100000,"name":"Level 1","view_range":{"bottom":0.0,"cut":1500.0,"depth":0.0,"top":2800.0}}
+{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-2>","id":100000,"name":"Level 1","view_range":{"bottom":-100.0,"cut":1500.0,"depth":-500.0,"top":2800.0}}
+{"id":100004}
+{"angle":0.0,"at":[0.0,1000.0],"category":"text","guid":"<GUID-5>","id":100004,"level":"<GUID-2>","size":2.5,"text":"Second note, longer","type":"2.5mm","view":"<GUID-2>"}
+{"count":1,"elements":[{"base_offset":0.0,"category":"wall","end":[6000.0,150.0],"guid":"<GUID-1>","height":3000.0,"id":100002,"length":6000.0,"level":"<GUID-2>","location":"exterior-finish","room_bounding":true,"start":[0.0,150.0],"thickness":300.0,"top_level":"<GUID-3>","type":"Exterior - 300mm","type_guid":"<GUID-4>"}],"returned":1}
+{"count":1,"elements":[{"at":[3000.0,150.0],"category":"door","flip_facing":false,"flip_hand":false,"guid":"<GUID-6>","height":2100.0,"host":"<GUID-1>","id":100003,"level":"<GUID-2>","mark":"1","offset":3000.0,"sill":0.0,"type":"Single 900 x 2100","type_guid":"<GUID-7>","width":900.0}],"returned":1}
+{"count":2,"elements":[{"category":"level","computation_height":1200.0,"elevation":0.0,"guid":"<GUID-2>","id":100000,"name":"Level 1","view_range":{"bottom":-100.0,"cut":1500.0,"depth":-500.0,"top":2800.0}},{"category":"level","computation_height":1200.0,"elevation":3000.0,"guid":"<GUID-3>","id":100001,"name":"Level 2","view_range":{"bottom":0.0,"cut":1200.0,"depth":0.0,"top":null}}],"returned":2}
+{"count":1,"elements":[{"angle":0.0,"at":[0.0,1000.0],"category":"text","guid":"<GUID-5>","id":100004,"level":"<GUID-2>","size":2.5,"text":"Second note, longer","type":"2.5mm","view":"<GUID-2>"}],"returned":1}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'modify {"id": 100002, "category": "floor"}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (modify): modify: `category` can't change; delete the element and create another
+

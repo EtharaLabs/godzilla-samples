@@ -1,0 +1,8 @@
+$ bimcraft-cli run base.bimcraft --cmd 'modify {"id": 100009, "limit_offset": -3500}'
+[exit 1]
+--- stdout
+{"name":"Project","path":"base.bimcraft"}
+
+--- stderr
+line 1 (modify): room 100009: the room's top (its upper limit 3000 + limit offset -3500) must be above its bottom (its level 0 + base offset 0); raise the limit offset or lower the base offset
+

@@ -1,0 +1,12 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]], "type": "Exterior - 300mm"}' --cmd 'door {"at": [3000, 0]}' --cmd 'dimension {"refs": [{"id": 100002, "face": "left", "point": "start"}, {"id": 100003, "face": "start"}, {"id": 100002, "point": "end"}], "at": [0, -1500]}' --cmd 'elements {"category": "dimension"}' --cmd 'flip {"ids": [100002]}' --cmd 'elements {"category": "dimension"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"host":100002,"id":100003,"mark":"1","offset":3000.0}
+{"id":100004,"values":[2550.0,3450.0]}
+{"count":1,"elements":[{"at":[0.0,-1500.0],"category":"dimension","guid":"<GUID-1>","id":100004,"kind":"aligned","labels":["2550","3450"],"level":"<GUID-2>","refs":[{"face":"left","id":"<GUID-3>","point":"start"},{"face":"start","id":"<GUID-4>"},{"face":"centre","id":"<GUID-3>","point":"end"}],"type":"Diagonal - 2.5mm Arial","values":[2550.0,3450.0]}],"returned":1}
+{"flipped":[100002]}
+{"count":1,"elements":[{"at":[0.0,-1500.0],"category":"dimension","guid":"<GUID-1>","id":100004,"kind":"aligned","labels":["2550","3450"],"level":"<GUID-2>","refs":[{"face":"right","id":"<GUID-3>","point":"end"},{"face":"end","id":"<GUID-4>"},{"face":"centre","id":"<GUID-3>","point":"start"}],"type":"Diagonal - 2.5mm Arial","values":[2550.0,3450.0]}],"returned":1}
+
+--- stderr
+

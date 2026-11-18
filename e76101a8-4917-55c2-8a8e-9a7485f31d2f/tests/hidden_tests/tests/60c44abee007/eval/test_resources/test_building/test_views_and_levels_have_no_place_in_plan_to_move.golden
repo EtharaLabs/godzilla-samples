@@ -1,0 +1,39 @@
+$ bimcraft-cli run --cmd 'move {"ids": [100000], "by": [10, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (move): move: level 100000 has no place in plan; change its elevation, or add a level
+
+$ bimcraft-cli run --cmd 'sheet {}' --cmd 'rotate {"ids": [100002], "about": [0, 0], "angle": 90}'
+[exit 1]
+--- stdout
+{"id":100002,"number":"A101"}
+
+--- stderr
+line 1 (rotate): rotate: sheet 100002 has no place in plan; move the views on it
+
+$ bimcraft-cli run --cmd 'schedule {"name": "Doors", "category": "doors"}' --cmd 'copy {"ids": [100002], "by": [10, 0]}'
+[exit 1]
+--- stdout
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Mark","Type","Width","Height","Level","Wall"],"elements":[],"id":100002,"name":"Doors","rows":[]}
+
+--- stderr
+line 1 (copy): copy: schedule 100002 has no place in plan; move its viewport on its sheet
+
+$ bimcraft-cli run --cmd 'duplicate_view {"view": "Level 1"}' --cmd 'move {"ids": [100002], "by": [10, 0]}'
+[exit 1]
+--- stdout
+{"annotations":0,"id":100002,"level":100000,"name":"Level 1 Copy 1"}
+
+--- stderr
+line 1 (move): move: planview 100002 has no place in plan; move its viewport on its sheet
+
+$ bimcraft-cli run --cmd 'visual_style {"style": "wireframe"}' --cmd 'move {"ids": [100002], "by": [10, 0]}'
+[exit 1]
+--- stdout
+{"style":"wireframe","view":100002}
+
+--- stderr
+line 1 (move): move: view3d 100002 has no place in plan; move its viewport on its sheet
+

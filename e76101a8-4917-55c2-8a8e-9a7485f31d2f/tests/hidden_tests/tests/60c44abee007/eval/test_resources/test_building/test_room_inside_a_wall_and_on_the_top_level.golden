@@ -1,0 +1,18 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'room_area {"at": "finish"}' --cmd 'room {"point": [3000, 50]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"at":"finish"}
+
+--- stderr
+line 1 (room): room: [3000, 50] lies inside wall 100002; place a room in the space between walls, not in a wall
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "level": "Level 2"}' --cmd 'room {"point": [3000, 2000], "level": "Level 2"}' --cmd 'elements {"category": "room"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006,"number":"1"}
+{"count":1,"elements":[{"area_m2":24.0,"category":"room","enclosed":true,"guid":"<GUID-1>","id":100006,"level":"<GUID-2>","name":"Room","number":"1","perimeter_m":20.0,"point":[3000.0,2000.0],"unbounded_height":2500.0,"volume_m3":60.0}],"returned":1}
+
+--- stderr
+

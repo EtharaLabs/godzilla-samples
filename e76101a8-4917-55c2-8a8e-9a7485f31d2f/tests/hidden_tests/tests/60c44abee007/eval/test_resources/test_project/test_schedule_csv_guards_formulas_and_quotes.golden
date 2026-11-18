@@ -1,0 +1,20 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[3000,0],[3000,3000],[0,3000]], "closed": true}' --cmd 'wall {"points": [[6000,0],[9000,0],[9000,3000],[6000,3000]], "closed": true}' --cmd 'wall {"points": [[12000,0],[15000,0],[15000,3000],[12000,3000]], "closed": true}' --cmd 'room {"point": [1500, 1500], "name": "=SUM(A1:A9)", "number": "-1"}' --cmd 'room {"point": [7500, 1500], "name": "Hall, \"main\"", "number": "@2"}' --cmd 'room {"point": [13500, 1500], "name": "Line\nbreak", "number": "+3"}' --cmd 'schedule {"category": "rooms", "path": "rooms.csv"}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006,100007,100008,100009]}
+{"ids":[100010,100011,100012,100013]}
+{"area_m2":9.0,"id":100014,"number":"-1"}
+{"area_m2":9.0,"id":100015,"number":"@2"}
+{"area_m2":9.0,"id":100016,"number":"+3"}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[[100014],[100016],[100015]],"id":null,"name":"Room Schedule","rows":[["-1","=SUM(A1:A9)","Level 1",9.0,12000.0],["+3","Line\nbreak","Level 1",9.0,12000.0],["@2","Hall, \"main\"","Level 1",9.0,12000.0]]}
+
+--- stderr
+
+=== file rooms.csv
+Number,Name,Level,Area (m²),Perimeter
+'-1,'=SUM(A1:A9),Level 1,9.0,12000.0
+'+3,"Line
+break",Level 1,9.0,12000.0
+'@2,"Hall, ""main""",Level 1,9.0,12000.0
+

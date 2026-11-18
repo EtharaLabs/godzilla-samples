@@ -1,0 +1,41 @@
+$ graphics {"background_grid": {"spacing": [0, 1]}}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: background grid: spacing X/Y must be finite and between 0.001 and 1000000000 mm; divisions X/Y 1–1000, rotation -360–360 degrees, and pens 0–16
+
+$ graphics {"background_grid": {"divisions": [0, 5]}}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: background grid: spacing X/Y must be finite and between 0.001 and 1000000000 mm; divisions X/Y 1–1000, rotation -360–360 degrees, and pens 0–16
+
+$ graphics {"background_grid": {"rotation": 400}}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: background grid: spacing X/Y must be finite and between 0.001 and 1000000000 mm; divisions X/Y 1–1000, rotation -360–360 degrees, and pens 0–16
+
+$ graphics {"background_grid": {"main": {"pen": 17}}}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: background grid: a line weight is a pen, a whole number from 0 (a hairline) to 16, not 17
+
+$ graphics {"background_grid": {"colour": [1, 2, 3]}}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: background grid: unknown field `colour`, expected one of `visible`, `main`, `sub`, `spacing`, `divisions`, `rotation`
+
+$ graphics {"background_grid": "on"}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: `background_grid` is an object, or null to restore defaults
+
+$ graphics {"view": "Level 2", "background_grid": {"visible": false}}
+exit: 1
+--- stdout
+--- stderr
+line 3 (graphics): graphics: its background grids follow view template `Gridded`; change the template, or `template: null` to stop following it

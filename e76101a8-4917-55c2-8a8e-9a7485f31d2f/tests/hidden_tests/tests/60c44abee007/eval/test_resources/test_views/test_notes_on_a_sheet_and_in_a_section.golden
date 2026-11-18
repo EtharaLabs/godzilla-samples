@@ -1,0 +1,28 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[3000,0],[3000,4000]], "type": "Interior - 100mm"}' --cmd 'dimension_type {"name": "Diagonal - 2.5mm Arial", "font": "IBM Plex Sans"}' --cmd 'dimension_type {"name": "Arrow - 2.5mm Arial", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "2.5mm", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "3.5mm", "font": "IBM Plex Sans"}' --cmd 'text_type {"name": "5mm", "font": "IBM Plex Sans"}' --cmd 'section {"start": [-1000, 2000], "end": [7000, 2000]}' --cmd 'sheet {"size": "A4"}' --cmd 'text {"text": "General notes:\n1. Check on site.", "at": [20, 190], "view": "A101", "type": "3.5mm"}' --cmd 'detail_line {"points": [[20, 170], [120, 170]], "view": "A101", "style": "Wide Lines"}' --cmd 'filled_region {"sketch": [[[20,150],[60,150]],[[60,150],[60,160]],[[60,160],[20,160]],[[20,160],[20,150]]], "view": "A101", "type": "Crosshatch"}' --cmd 'text {"text": "Cut here", "at": [2000, 1500], "view": "Section 1"}' --cmd 'elements {"category": "text"}' --cmd 'render {"view": "A101", "path": "a101.pdf"}' --cmd 'render {"view": "Section 1", "path": "section.png", "width": 400, "height": 300}'
+[exit 0]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"name":"Diagonal - 2.5mm Arial","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"IBM Plex Sans","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"diagonal","tick_pen":7,"tick_size":2.0,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"name":"Arrow - 2.5mm Arial","type":{"background":"opaque","baseline_spacing":7.0,"centre_mark":true,"color":[0,0,0],"diameter_symbol":"Ø","equality_text":"EQ","font":"IBM Plex Sans","line_extension":0.8,"line_pen":4,"radius_symbol":"R","read":"up_then_left","string":"continuous","text_offset":1.0,"text_size":2.5,"tick":"arrow","tick_pen":7,"tick_size":2.5,"width_factor":1.0,"witness":"gap_to_element","witness_extension":0.8,"witness_gap":0.6,"witness_length":5.0}}
+{"name":"2.5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":2.5}}
+{"name":"3.5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":3.5}}
+{"name":"5mm","type":{"border_offset":1.0,"border_pen":1,"color":[0,0,0],"font":"IBM Plex Sans","size":5.0}}
+{"id":100007,"name":"Section 1"}
+{"id":100008,"number":"A101"}
+{"id":100009}
+{"id":100010}
+{"area_m2":0.0,"id":100011}
+{"id":100012}
+{"count":2,"elements":[{"angle":0.0,"at":[20.0,190.0],"category":"text","guid":"<GUID-1>","id":100009,"level":null,"size":3.5,"text":"General notes:\n1. Check on site.","type":"3.5mm","view":"<GUID-2>"},{"angle":0.0,"at":[2000.0,1500.0],"category":"text","guid":"<GUID-3>","id":100012,"level":null,"size":2.5,"text":"Cut here","type":"2.5mm","view":"<GUID-4>"}],"returned":2}
+{"kind":"sheet","path":"a101.pdf","view":"A101"}
+{"height":300,"kind":"section","path":"section.png","view":"Section 1","width":400}
+
+--- stderr
+
+=== pdf a101.pdf: %PDF-1.4
+obj 3: << /Type /Page /Parent 2 0 R /MediaBox [0 0 841.890 595.276] /Resources << /XObject << >> >> /Contents 4 0 R >>
+obj 4: << /Length * /Filter /FlateDecode >> stream[45418] sha256=1ccaf105bd4bf9eb29c69bbe8c015a8c3995781dc1033bb5363f2e47f8b4043b
+obj 1: << /Type /Catalog /Pages 2 0 R >>
+obj 2: << /Type /Pages /Kids [3 0 R] /Count 1 >>
+=== png section.png: 400x300, 4 channels

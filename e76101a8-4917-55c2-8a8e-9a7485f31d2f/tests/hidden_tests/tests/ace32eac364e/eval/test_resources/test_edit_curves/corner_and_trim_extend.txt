@@ -1,0 +1,131 @@
+=== setup
+exit: 0
+--- stdout
+{"id":100002}
+{"id":100003}
+{"ids":[100004]}
+{"id":100005}
+{"id":100006}
+{"id":100007,"name":"1"}
+{"id":100008,"name":"S"}
+{"id":100009}
+{"id":100010}
+{"id":100011}
+{"id":100012}
+{"id":100013}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== TR {"ids": [100002, 100003], "keep": [[100, 0], [1000, 900]]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100002,100003]}
+{"count":9,"elements":[{"category":"line","end":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-3","id":100003,"length":1000.0,"level":"GUID-2","shape":"line","start":[1000.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[2000.0,2500.0],"guid":"GUID-4","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[2000.0,1500.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[3000.0,2000.0],"guid":"GUID-5","id":100006,"length":2000.0,"level":"GUID-2","shape":"line","start":[3000.0,4000.0],"style":"Wide Lines","view":"GUID-2"},{"category":"line","end":[2000.0,500.0],"guid":"GUID-6","id":100009,"length":2000.0,"level":null,"shape":"line","start":[0.0,500.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[3000.0,3000.0],"guid":"GUID-8","id":100010,"length":3000.0,"level":null,"shape":"line","start":[3000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"arc":90.0,"category":"line","end":[0.0,12000.0],"guid":"GUID-9","id":100011,"length":2221.44,"level":"GUID-2","shape":"arc","start":[0.0,10000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[-2000.0,11000.0],"guid":"GUID-10","id":100012,"length":1000.0,"level":"GUID-2","shape":"line","start":[-3000.0,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,-2000.0],"guid":"GUID-11","id":100013,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,-2000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":9}
+--- stderr
+=== corner {"ids": [100002, 100003]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100002,100003]}
+{"count":9,"elements":[{"category":"line","end":[1000.0,0.0],"guid":"GUID-1","id":100002,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-3","id":100003,"length":1000.0,"level":"GUID-2","shape":"line","start":[1000.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[2000.0,2500.0],"guid":"GUID-4","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[2000.0,1500.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[3000.0,2000.0],"guid":"GUID-5","id":100006,"length":2000.0,"level":"GUID-2","shape":"line","start":[3000.0,4000.0],"style":"Wide Lines","view":"GUID-2"},{"category":"line","end":[2000.0,500.0],"guid":"GUID-6","id":100009,"length":2000.0,"level":null,"shape":"line","start":[0.0,500.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[3000.0,3000.0],"guid":"GUID-8","id":100010,"length":3000.0,"level":null,"shape":"line","start":[3000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"arc":90.0,"category":"line","end":[0.0,12000.0],"guid":"GUID-9","id":100011,"length":2221.44,"level":"GUID-2","shape":"arc","start":[0.0,10000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[-2000.0,11000.0],"guid":"GUID-10","id":100012,"length":1000.0,"level":"GUID-2","shape":"line","start":[-3000.0,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,-2000.0],"guid":"GUID-11","id":100013,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,-2000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":9}
+--- stderr
+=== trim_extend {"boundary": 100004, "ids": [100005, 100006], "keep": [[2000, 1600], [3000, 2100]]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100005,100006]}
+{"count":9,"elements":[{"category":"line","end":[800.0,0.0],"guid":"GUID-1","id":100002,"length":800.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-3","id":100003,"length":800.0,"level":"GUID-2","shape":"line","start":[1000.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[2000.0,3000.0],"guid":"GUID-4","id":100005,"length":1500.0,"level":"GUID-2","shape":"line","start":[2000.0,1500.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[3000.0,2000.0],"guid":"GUID-5","id":100006,"length":1000.0,"level":"GUID-2","shape":"line","start":[3000.0,3000.0],"style":"Wide Lines","view":"GUID-2"},{"category":"line","end":[2000.0,500.0],"guid":"GUID-6","id":100009,"length":2000.0,"level":null,"shape":"line","start":[0.0,500.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[3000.0,3000.0],"guid":"GUID-8","id":100010,"length":3000.0,"level":null,"shape":"line","start":[3000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"arc":90.0,"category":"line","end":[0.0,12000.0],"guid":"GUID-9","id":100011,"length":2221.44,"level":"GUID-2","shape":"arc","start":[0.0,10000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[-2000.0,11000.0],"guid":"GUID-10","id":100012,"length":1000.0,"level":"GUID-2","shape":"line","start":[-3000.0,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,-2000.0],"guid":"GUID-11","id":100013,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,-2000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":9}
+--- stderr
+=== trim_extend {"boundary": 100007, "ids": [100002, 100013], "keep": [[100, 0], [500, -2000]]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100002,100013]}
+{"count":9,"elements":[{"category":"line","end":[7000.0,0.0],"guid":"GUID-1","id":100002,"length":7000.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-3","id":100003,"length":800.0,"level":"GUID-2","shape":"line","start":[1000.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[2000.0,2500.0],"guid":"GUID-4","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[2000.0,1500.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[3000.0,2000.0],"guid":"GUID-5","id":100006,"length":2000.0,"level":"GUID-2","shape":"line","start":[3000.0,4000.0],"style":"Wide Lines","view":"GUID-2"},{"category":"line","end":[2000.0,500.0],"guid":"GUID-6","id":100009,"length":2000.0,"level":null,"shape":"line","start":[0.0,500.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[3000.0,3000.0],"guid":"GUID-8","id":100010,"length":3000.0,"level":null,"shape":"line","start":[3000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"arc":90.0,"category":"line","end":[0.0,12000.0],"guid":"GUID-9","id":100011,"length":2221.44,"level":"GUID-2","shape":"arc","start":[0.0,10000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[-2000.0,11000.0],"guid":"GUID-10","id":100012,"length":1000.0,"level":"GUID-2","shape":"line","start":[-3000.0,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[7000.0,-2000.0],"guid":"GUID-11","id":100013,"length":7000.0,"level":"GUID-2","shape":"line","start":[0.0,-2000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":9}
+--- stderr
+=== trim_extend {"boundary": 100010, "ids": [100009], "keep": [[100, 500]]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100009]}
+{"count":9,"elements":[{"category":"line","end":[800.0,0.0],"guid":"GUID-1","id":100002,"length":800.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-3","id":100003,"length":800.0,"level":"GUID-2","shape":"line","start":[1000.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[2000.0,2500.0],"guid":"GUID-4","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[2000.0,1500.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[3000.0,2000.0],"guid":"GUID-5","id":100006,"length":2000.0,"level":"GUID-2","shape":"line","start":[3000.0,4000.0],"style":"Wide Lines","view":"GUID-2"},{"category":"line","end":[3000.0,500.0],"guid":"GUID-6","id":100009,"length":3000.0,"level":null,"shape":"line","start":[0.0,500.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[3000.0,3000.0],"guid":"GUID-8","id":100010,"length":3000.0,"level":null,"shape":"line","start":[3000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"arc":90.0,"category":"line","end":[0.0,12000.0],"guid":"GUID-9","id":100011,"length":2221.44,"level":"GUID-2","shape":"arc","start":[0.0,10000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[-2000.0,11000.0],"guid":"GUID-10","id":100012,"length":1000.0,"level":"GUID-2","shape":"line","start":[-3000.0,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,-2000.0],"guid":"GUID-11","id":100013,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,-2000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":9}
+--- stderr
+=== corner {"ids": [100011, 100012], "keep": [[700, 11000], [-2500, 11000]]} | elements {"category": "line"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100011,100012]}
+{"count":9,"elements":[{"category":"line","end":[800.0,0.0],"guid":"GUID-1","id":100002,"length":800.0,"level":"GUID-2","shape":"line","start":[0.0,0.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,1000.0],"guid":"GUID-3","id":100003,"length":800.0,"level":"GUID-2","shape":"line","start":[1000.0,200.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[2000.0,2500.0],"guid":"GUID-4","id":100005,"length":1000.0,"level":"GUID-2","shape":"line","start":[2000.0,1500.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[3000.0,2000.0],"guid":"GUID-5","id":100006,"length":2000.0,"level":"GUID-2","shape":"line","start":[3000.0,4000.0],"style":"Wide Lines","view":"GUID-2"},{"category":"line","end":[2000.0,500.0],"guid":"GUID-6","id":100009,"length":2000.0,"level":null,"shape":"line","start":[0.0,500.0],"style":"Thin Lines","view":"GUID-7"},{"category":"line","end":[3000.0,3000.0],"guid":"GUID-8","id":100010,"length":3000.0,"level":null,"shape":"line","start":[3000.0,0.0],"style":"Thin Lines","view":"GUID-7"},{"arc":45.0,"category":"line","end":[0.0,12000.0],"guid":"GUID-9","id":100011,"length":1110.72,"level":"GUID-2","shape":"arc","start":[414.214,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[414.214,11000.0],"guid":"GUID-10","id":100012,"length":3414.21,"level":"GUID-2","shape":"line","start":[-3000.0,11000.0],"style":"Thin Lines","view":"GUID-2"},{"category":"line","end":[1000.0,-2000.0],"guid":"GUID-11","id":100013,"length":1000.0,"level":"GUID-2","shape":"line","start":[0.0,-2000.0],"style":"Thin Lines","view":"GUID-2"}],"returned":9}
+--- stderr
+=== trim_extend {"boundary": 100004, "ids": [100009], "keep": [[100, 500]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: detail line 100009 is in another view than 100004 is drawn in; trim it to a line of its own view
+=== trim_extend {"boundary": 100010, "ids": [100002], "keep": [[100, 0]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: detail line 100002 is in another view than 100010 is drawn in; trim it to a line of its own view
+=== corner {"ids": [100002, 100009]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (corner): corner: detail lines 100002 and 100009 are in different views; trim lines of one view
+=== corner {"ids": [100002, 100013]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (corner): corner: the lines don't meet, run on as far as need be: they're parallel, or an arc's circle misses the other
+=== corner {"ids": [100002, 100003], "keep": "nonsense"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (corner): corner: `keep` [[x, y], …] is required
+=== corner {"ids": [100002, 100003], "keep": [[0, 0], [1, 1], [2, 2]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (corner): corner: `keep` is a point on each line, [[x, y], [x, y]]
+=== trim_extend {"boundary": 100004, "ids": [100005], "keep": []}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: `keep` gives a point on each line to keep: 0 for 1 lines
+=== trim_extend {"ids": [100005], "keep": [[0, 0]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: `boundary`, a line to trim or extend to, is required
+=== trim_extend {"boundary": 100004, "ids": [100004], "keep": [[0, 0]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: 100004 is not a detail line
+=== trim_extend {"boundary": 100004, "ids": [100013], "keep": [[500, -2000]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: detail line 100013 never meets 100004
+=== trim_extend {"boundary": 100000, "ids": [100005], "keep": [[2000, 1600]]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (trim_extend): trim_extend: 100000 has no line to trim or extend to
+=== trim_extend {"boundary": 100004, "ids": [100005], "keep": [[2000, 3500]]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"ids":[100005]}
+--- stderr

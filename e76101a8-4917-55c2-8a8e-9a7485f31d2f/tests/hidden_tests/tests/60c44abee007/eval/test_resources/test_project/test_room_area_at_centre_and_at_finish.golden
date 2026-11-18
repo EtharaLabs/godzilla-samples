@@ -1,0 +1,22 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[8000,0],[8000,6000],[0,6000]], "closed": true, "type": "Exterior - 300mm"}' --cmd 'wall {"points": [[5000,0],[5000,6000]], "type": "Interior - 100mm"}' --cmd 'door {"at": [2000, 0]}' --cmd 'door {"at": [5000, 3000], "type": "Single 800 x 2100"}' --cmd 'window {"at": [8000, 3000]}' --cmd 'window {"at": [2500, 6000], "sill": 1100}' --cmd 'room {"point": [2500, 3000], "name": "Living"}' --cmd 'room {"point": [6500, 3000], "name": "Bedroom"}' --cmd 'floor {}' --cmd 'schedule {"category": "rooms"}' --cmd 'room_area {"at": "finish"}' --cmd 'room_area {}' --cmd 'schedule {"category": "rooms"}' --cmd 'room_area {"at": "centre"}' --cmd 'schedule {"category": "rooms"}' --cmd 'room_area {"at": "outside"}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"host":100002,"id":100007,"mark":"1","offset":2000.0}
+{"host":100006,"id":100008,"mark":"2","offset":3000.0}
+{"host":100003,"id":100009,"mark":"1","offset":3000.0}
+{"host":100004,"id":100010,"mark":"2","offset":5500.0}
+{"area_m2":30.0,"id":100011,"number":"1"}
+{"area_m2":18.0,"id":100012,"number":"2"}
+{"area_m2":48.0,"id":100013}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[[100011],[100012]],"id":null,"name":"Room Schedule","rows":[["1","Living","Level 1",30.0,22000.0],["2","Bedroom","Level 1",18.0,18000.0]]}
+{"at":"finish"}
+{"at":"finish"}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[[100011],[100012]],"id":null,"name":"Room Schedule","rows":[["1","Living","Level 1",27.36,21000.0],["2","Bedroom","Level 1",15.96,17000.0]]}
+{"at":"centre"}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Number","Name","Level","Area (m²)","Perimeter"],"elements":[[100011],[100012]],"id":null,"name":"Room Schedule","rows":[["1","Living","Level 1",30.0,22000.0],["2","Bedroom","Level 1",18.0,18000.0]]}
+
+--- stderr
+line 1 (room_area): room_area: `at` is centre or finish, not `outside`
+

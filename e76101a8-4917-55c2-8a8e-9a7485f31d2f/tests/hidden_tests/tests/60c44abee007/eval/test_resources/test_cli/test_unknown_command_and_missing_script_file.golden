@@ -1,0 +1,14 @@
+$ bimcraft-cli run --cmd 'bogus {}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (bogus): unknown command `bogus`; list_commands shows them
+
+$ bimcraft-cli run --script missing.txt
+[exit 1]
+--- stdout
+
+--- stderr
+missing.txt: No such file or directory (os error 2)
+

@@ -1,0 +1,76 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[{"from":"Top","material":"Timber","plane":"xy","profile":[[0.0,0.0],["Width",0.0],["Width","Depth"],[0.0,"Depth"]],"to":"Height"}],"parameters":[{"kind":"length","name":"Width","value":1200},{"kind":"length","name":"Depth","value":600},{"instance":true,"kind":"length","name":"Height","value":740},{"formula":"Height - 30","kind":"length","name":"Top","value":null}],"types":{"1200 x 600":{},"1600 x 800":{"Depth":800,"Width":1600}}},"name":"Work Desk","warnings":[]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== family {"name": "Work Desk", "save": "desk.json"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"path":"desk.json","saved":"Work Desk"}
+--- stderr
+=== family {"name": "Work Desk", "save": "dry.json", "dry_run": true}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"dry_run":true,"name":"Work Desk","ok":true,"path":"dry.json","saved":false}
+--- stderr
+=== family {"save": "x.json"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `name` is required: the family to save
+=== family {"name": "Nope", "save": "x.json"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: there's no family `Nope` to save
+=== family {"name": "Work Desk", "save": "nodir/x.json"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: nodir/x.json: No such file or directory (os error 2)
+=== family {"path": "chair.json"} | family {"name": "Chair"} | family {"name": "Gone"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":"Seat Height - Thickness","guid":"GUID-1","id":999595,"material":"Material","plane":"xy","profile":[["-(Width / 2)","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-(Width / 2)","Depth / 2"]],"to":"Seat Height"},{"from":"Depth / 2 - Thickness","guid":"GUID-2","id":999594,"material":"Material","plane":"xz","profile":[["-(Width / 2)","Seat Height"],["Width / 2","Seat Height"],["Width / 2","Height"],["-(Width / 2)","Height"]],"to":"Depth / 2"},{"from":0.0,"guid":"GUID-3","id":999593,"material":"Material","plane":"xy","profile":[["(Width + 100) / 2 - 50 - Leg Width","(Depth + 100) / 2 - 50 - Leg Width"],["(Width + 100) / 2 - 50","(Depth + 100) / 2 - 50 - Leg Width"],["(Width + 100) / 2 - 50","(Depth + 100) / 2 - 50"],["(Width + 100) / 2 - 50 - Leg Width","(Depth + 100) / 2 - 50"]],"to":"Seat Height - Thickness"},{"from":0.0,"guid":"GUID-4","id":999592,"material":"Material","plane":"xy","profile":[["(Width + 100) / 2 - 50 - Leg Width","-(Depth + 100) / 2 + 50"],["(Width + 100) / 2 - 50","-(Depth + 100) / 2 + 50"],["(Width + 100) / 2 - 50","-(Depth + 100) / 2 + 50 + Leg Width"],["(Width + 100) / 2 - 50 - Leg Width","-(Depth + 100) / 2 + 50 + Leg Width"]],"to":"Seat Height - Thickness"},{"from":0.0,"guid":"GUID-5","id":999591,"material":"Material","plane":"xy","profile":[["-(Width + 100) / 2 + 50","(Depth + 100) / 2 - 50 - Leg Width"],["-(Width + 100) / 2 + 50 + Leg Width","(Depth + 100) / 2 - 50 - Leg Width"],["-(Width + 100) / 2 + 50 + Leg Width","(Depth + 100) / 2 - 50"],["-(Width + 100) / 2 + 50","(Depth + 100) / 2 - 50"]],"to":"Seat Height - Thickness"},{"from":0.0,"guid":"GUID-6","id":999590,"material":"Material","plane":"xy","profile":[["-(Width + 100) / 2 + 50","-(Depth + 100) / 2 + 50"],["-(Width + 100) / 2 + 50 + Leg Width","-(Depth + 100) / 2 + 50"],["-(Width + 100) / 2 + 50 + Leg Width","-(Depth + 100) / 2 + 50 + Leg Width"],["-(Width + 100) / 2 + 50","-(Depth + 100) / 2 + 50 + Leg Width"]],"to":"Seat Height - Thickness"}],"parameters":[{"kind":"length","name":"Width","value":450.0},{"kind":"length","name":"Depth","value":450.0},{"kind":"length","name":"Seat Height","value":450.0},{"kind":"length","name":"Height","value":850.0},{"kind":"length","name":"Thickness","value":40.0},{"kind":"length","name":"Leg Width","value":40.0},{"kind":"material","name":"Material","value":"Timber"}],"types":{"450 x 450":{},"Tall":{"Height":1100}}},"name":"Chair","warnings":[]}
+{"family":{"category":"furniture","forms":[{"from":"Seat Height - Thickness","guid":"GUID-1","id":999595,"material":"Material","plane":"xy","profile":[["-(Width / 2)","-Depth / 2"],["Width / 2","-Depth / 2"],["Width / 2","Depth / 2"],["-(Width / 2)","Depth / 2"]],"to":"Seat Height"},{"from":"Depth / 2 - Thickness","guid":"GUID-2","id":999594,"material":"Material","plane":"xz","profile":[["-(Width / 2)","Seat Height"],["Width / 2","Seat Height"],["Width / 2","Height"],["-(Width / 2)","Height"]],"to":"Depth / 2"},{"from":0.0,"guid":"GUID-3","id":999593,"material":"Material","plane":"xy","profile":[["(Width + 100) / 2 - 50 - Leg Width","(Depth + 100) / 2 - 50 - Leg Width"],["(Width + 100) / 2 - 50","(Depth + 100) / 2 - 50 - Leg Width"],["(Width + 100) / 2 - 50","(Depth + 100) / 2 - 50"],["(Width + 100) / 2 - 50 - Leg Width","(Depth + 100) / 2 - 50"]],"to":"Seat Height - Thickness"},{"from":0.0,"guid":"GUID-4","id":999592,"material":"Material","plane":"xy","profile":[["(Width + 100) / 2 - 50 - Leg Width","-(Depth + 100) / 2 + 50"],["(Width + 100) / 2 - 50","-(Depth + 100) / 2 + 50"],["(Width + 100) / 2 - 50","-(Depth + 100) / 2 + 50 + Leg Width"],["(Width + 100) / 2 - 50 - Leg Width","-(Depth + 100) / 2 + 50 + Leg Width"]],"to":"Seat Height - Thickness"},{"from":0.0,"guid":"GUID-5","id":999591,"material":"Material","plane":"xy","profile":[["-(Width + 100) / 2 + 50","(Depth + 100) / 2 - 50 - Leg Width"],["-(Width + 100) / 2 + 50 + Leg Width","(Depth + 100) / 2 - 50 - Leg Width"],["-(Width + 100) / 2 + 50 + Leg Width","(Depth + 100) / 2 - 50"],["-(Width + 100) / 2 + 50","(Depth + 100) / 2 - 50"]],"to":"Seat Height - Thickness"},{"from":0.0,"guid":"GUID-6","id":999590,"material":"Material","plane":"xy","profile":[["-(Width + 100) / 2 + 50","-(Depth + 100) / 2 + 50"],["-(Width + 100) / 2 + 50 + Leg Width","-(Depth + 100) / 2 + 50"],["-(Width + 100) / 2 + 50 + Leg Width","-(Depth + 100) / 2 + 50 + Leg Width"],["-(Width + 100) / 2 + 50","-(Depth + 100) / 2 + 50 + Leg Width"]],"to":"Seat Height - Thickness"}],"parameters":[{"kind":"length","name":"Width","value":450.0},{"kind":"length","name":"Depth","value":450.0},{"kind":"length","name":"Seat Height","value":450.0},{"kind":"length","name":"Height","value":850.0},{"kind":"length","name":"Thickness","value":40.0},{"kind":"length","name":"Leg Width","value":40.0},{"kind":"material","name":"Material","value":"Timber"}],"types":{"450 x 450":{},"Tall":{"Height":1100}}},"name":"Chair","values":{"450 x 450":{"Depth":450.0,"Height":850.0,"Leg Width":40.0,"Material":"Timber","Seat Height":450.0,"Thickness":40.0,"Width":450.0},"Tall":{"Depth":450.0,"Height":1100.0,"Leg Width":40.0,"Material":"Timber","Seat Height":450.0,"Thickness":40.0,"Width":450.0}},"warnings":[]}
+--- stderr
+line 1 (family): family: there's no family `Gone`
+=== family {"path": "plank.json"} | family {}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"plane":"xy","profile":[[0.0,0.0],[2000.0,0.0],[2000.0,200.0],[0.0,200.0]],"to":30.0}],"parameters":[],"types":{"A":{}}},"name":"plank","warnings":[]}
+{"families":[{"category":"airterminal","forms":2,"name":"Air Terminal","symbols":0,"types":3},{"category":"casework","forms":3,"name":"Base Cabinet","symbols":0,"types":3},{"category":"plumbing","forms":5,"name":"Bathtub","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Bed","symbols":0,"types":3},{"category":"window","forms":10,"name":"Casement Window","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Ceiling Luminaire","symbols":0,"types":2},{"category":"furniture","forms":6,"name":"Chair","symbols":0,"types":1},{"category":"dataoutlet","forms":3,"name":"Data Outlet","symbols":0,"types":2},{"category":"furniture","forms":4,"name":"Desk","symbols":0,"types":2},{"category":"equipment","forms":2,"name":"Distribution Board","symbols":0,"types":3},{"category":"door","forms":9,"name":"Double Door","symbols":4,"types":3},{"category":"earthing","forms":1,"name":"Earthing Electrode","symbols":0,"types":2},{"category":"pipefitting","forms":2,"name":"Elbow 90","symbols":0,"types":3},{"category":"window","forms":5,"name":"Fixed Window","symbols":0,"types":3},{"category":"drain","forms":5,"name":"Floor Drain","symbols":0,"types":2},{"category":"pipeaccessory","forms":4,"name":"Gate Valve","symbols":0,"types":2},{"category":"inspectionbox","forms":2,"name":"Inspection Box","symbols":0,"types":2},{"category":"plumbing","forms":9,"name":"Kitchen Sink","symbols":0,"types":2},{"category":"outlet","forms":2,"name":"Outlet","symbols":0,"types":3},{"category":"patchpanel","forms":1,"name":"Patch Panel","symbols":0,"types":2},{"category":"rack","forms":2,"name":"Rack","symbols":0,"types":3},{"category":"lighting","forms":2,"name":"Recessed Luminaire","symbols":0,"types":2},{"category":"plumbing","forms":5,"name":"Shower","symbols":0,"types":2},{"category":"door","forms":6,"name":"Single Door","symbols":2,"types":3},{"category":"door","forms":6,"name":"Sliding Door","symbols":2,"types":3},{"category":"window","forms":14,"name":"Sliding Window","symbols":2,"types":3},{"category":"furniture","forms":4,"name":"Sofa","symbols":0,"types":2},{"category":"switch","forms":2,"name":"Switch","symbols":0,"types":2},{"category":"furniture","forms":5,"name":"Table","symbols":0,"types":3},{"category":"pipefitting","forms":2,"name":"Tee","symbols":0,"types":3},{"category":"outlet","forms":2,"name":"Three-Phase Outlet","symbols":0,"types":2},{"category":"voiceoutlet","forms":2,"name":"Voice Outlet","symbols":0,"types":2},{"category":"plumbing","forms":3,"name":"WC","symbols":0,"types":1},{"category":"casework","forms":2,"name":"Wardrobe","symbols":0,"types":2},{"category":"plumbing","forms":2,"name":"Washbasin","symbols":0,"types":2},{"category":"furniture","forms":1,"name":"Work Desk","symbols":0,"types":2},{"category":"furniture","forms":1,"name":"plank","symbols":0,"types":1}]}
+--- stderr
+=== family {"path": "plank.json", "name": "Board", "dry_run": true} | family {"name": "Board"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"changes":{"deleted":false,"forms":{"deleted":[],"patched":[],"replaced":1},"parameters":{"added":[],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":["A"],"changed":[],"removed":[]}},"dry_run":true,"family":{"category":"furniture","forms":[{"from":0.0,"plane":"xy","profile":[[0.0,0.0],[2000.0,0.0],[2000.0,200.0],[0.0,200.0]],"to":30.0}],"parameters":[],"types":{"A":{}}},"name":"Board","ok":true,"values":{"A":{}},"warnings":[]}
+--- stderr
+line 1 (family): family: there's no family `Board`
+=== family {"path": "list.json"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: list.json is not a family: it isn't an object
+=== family {"path": "broken.json"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: broken.json is not a family: key must be a string at line 1 column 2
+=== family {"path": "missing.json"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: missing.json: No such file or directory (os error 2)

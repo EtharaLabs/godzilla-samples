@@ -1,0 +1,59 @@
+=== setup
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"material":{"color":[18,52,86],"cut":"none","surface":"none"},"name":"Lonely"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"material":"M","plane":"xy","profile":[[0.0,0.0],[500.0,0.0],[500.0,500.0],[0.0,500.0]],"to":500.0}],"parameters":[{"kind":"material","name":"M","value":"Lonely"}],"types":{"A":{}}},"name":"Crate","warnings":[]}
+{"category":"wall","name":"Spare","type":{"thickness":120.0}}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== purge {"dry_run": true} | library {"kind": "type:wall"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":65,"dry_run":true,"removed":[{"kind":"beam type","name":"Beam 150 x 400"},{"kind":"beam type","name":"Steel Tube 150"},{"kind":"cable type","name":"Cat6A"},{"kind":"cable type","name":"Optical 3"},{"kind":"cabletray type","name":"Perforated 200 x 50"},{"kind":"cabletray type","name":"Perforated 300 x 100"},{"kind":"ceiling type","name":"Tile 600 x 600"},{"kind":"column type","name":"Round 300"},{"kind":"conduit type","name":"PVC 20"},{"kind":"conduit type","name":"PVC 32"},{"kind":"conduit type","name":"Steel 25"},{"kind":"door type","name":"Single 800 x 2100"},{"kind":"downconductor type","name":"Copper 8"},{"kind":"downconductor type","name":"Flat 25 x 3"},{"kind":"duct type","name":"Rectangular 600 x 400"},{"kind":"duct type","name":"Round 300"},{"kind":"footing type","name":"Footing 1500 x 1500"},{"kind":"groundconductor type","name":"Steel 8"},{"kind":"pipe type","name":"Copper 22"},{"kind":"pipe type","name":"PVC 110"},{"kind":"pipe type","name":"PVC 25"},{"kind":"structuralcolumn type","name":"Concrete 200 x 500"},{"kind":"structuralcolumn type","name":"Concrete Round 400"},{"kind":"wall type","name":"Exterior - 300mm"},{"kind":"wall type","name":"Interior - 100mm"},{"kind":"wall type","name":"Spare"},{"kind":"window type","name":"Fixed 600 x 900"},{"kind":"wire type","name":"Wire 4"},{"kind":"wire type","name":"Wire 6"},{"kind":"family","name":"Air Terminal"},{"kind":"family","name":"Base Cabinet"},{"kind":"family","name":"Bathtub"},{"kind":"family","name":"Bed"},{"kind":"family","name":"Casement Window"},{"kind":"family","name":"Ceiling Luminaire"},{"kind":"family","name":"Chair"},{"kind":"family","name":"Crate"},{"kind":"family","name":"Data Outlet"},{"kind":"family","name":"Desk"},{"kind":"family","name":"Distribution Board"},{"kind":"family","name":"Double Door"},{"kind":"family","name":"Earthing Electrode"},{"kind":"family","name":"Elbow 90"},{"kind":"family","name":"Fixed Window"},{"kind":"family","name":"Floor Drain"},{"kind":"family","name":"Gate Valve"},{"kind":"family","name":"Inspection Box"},{"kind":"family","name":"Kitchen Sink"},{"kind":"family","name":"Outlet"},{"kind":"family","name":"Patch Panel"},{"kind":"family","name":"Rack"},{"kind":"family","name":"Recessed Luminaire"},{"kind":"family","name":"Shower"},{"kind":"family","name":"Single Door"},{"kind":"family","name":"Sliding Door"},{"kind":"family","name":"Sliding Window"},{"kind":"family","name":"Sofa"},{"kind":"family","name":"Switch"},{"kind":"family","name":"Table"},{"kind":"family","name":"Tee"},{"kind":"family","name":"Three-Phase Outlet"},{"kind":"family","name":"Voice Outlet"},{"kind":"family","name":"WC"},{"kind":"family","name":"Wardrobe"},{"kind":"family","name":"Washbasin"}]}
+{"count":4,"library":[{"guid":"GUID-1","id":999462,"kind":"type:wall","name":"Spare"},{"guid":"GUID-2","id":999997,"kind":"type:wall","name":"Interior - 100mm"},{"guid":"GUID-3","id":999998,"kind":"type:wall","name":"Generic - 200mm"},{"guid":"GUID-4","id":999999,"kind":"type:wall","name":"Exterior - 300mm"}],"parts":[]}
+--- stderr
+=== PU {} | purge {}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":65,"dry_run":false,"removed":[{"kind":"beam type","name":"Beam 150 x 400"},{"kind":"beam type","name":"Steel Tube 150"},{"kind":"cable type","name":"Cat6A"},{"kind":"cable type","name":"Optical 3"},{"kind":"cabletray type","name":"Perforated 200 x 50"},{"kind":"cabletray type","name":"Perforated 300 x 100"},{"kind":"ceiling type","name":"Tile 600 x 600"},{"kind":"column type","name":"Round 300"},{"kind":"conduit type","name":"PVC 20"},{"kind":"conduit type","name":"PVC 32"},{"kind":"conduit type","name":"Steel 25"},{"kind":"door type","name":"Single 800 x 2100"},{"kind":"downconductor type","name":"Copper 8"},{"kind":"downconductor type","name":"Flat 25 x 3"},{"kind":"duct type","name":"Rectangular 600 x 400"},{"kind":"duct type","name":"Round 300"},{"kind":"footing type","name":"Footing 1500 x 1500"},{"kind":"groundconductor type","name":"Steel 8"},{"kind":"pipe type","name":"Copper 22"},{"kind":"pipe type","name":"PVC 110"},{"kind":"pipe type","name":"PVC 25"},{"kind":"structuralcolumn type","name":"Concrete 200 x 500"},{"kind":"structuralcolumn type","name":"Concrete Round 400"},{"kind":"wall type","name":"Exterior - 300mm"},{"kind":"wall type","name":"Interior - 100mm"},{"kind":"wall type","name":"Spare"},{"kind":"window type","name":"Fixed 600 x 900"},{"kind":"wire type","name":"Wire 4"},{"kind":"wire type","name":"Wire 6"},{"kind":"family","name":"Air Terminal"},{"kind":"family","name":"Base Cabinet"},{"kind":"family","name":"Bathtub"},{"kind":"family","name":"Bed"},{"kind":"family","name":"Casement Window"},{"kind":"family","name":"Ceiling Luminaire"},{"kind":"family","name":"Chair"},{"kind":"family","name":"Crate"},{"kind":"family","name":"Data Outlet"},{"kind":"family","name":"Desk"},{"kind":"family","name":"Distribution Board"},{"kind":"family","name":"Double Door"},{"kind":"family","name":"Earthing Electrode"},{"kind":"family","name":"Elbow 90"},{"kind":"family","name":"Fixed Window"},{"kind":"family","name":"Floor Drain"},{"kind":"family","name":"Gate Valve"},{"kind":"family","name":"Inspection Box"},{"kind":"family","name":"Kitchen Sink"},{"kind":"family","name":"Outlet"},{"kind":"family","name":"Patch Panel"},{"kind":"family","name":"Rack"},{"kind":"family","name":"Recessed Luminaire"},{"kind":"family","name":"Shower"},{"kind":"family","name":"Single Door"},{"kind":"family","name":"Sliding Door"},{"kind":"family","name":"Sliding Window"},{"kind":"family","name":"Sofa"},{"kind":"family","name":"Switch"},{"kind":"family","name":"Table"},{"kind":"family","name":"Tee"},{"kind":"family","name":"Three-Phase Outlet"},{"kind":"family","name":"Voice Outlet"},{"kind":"family","name":"WC"},{"kind":"family","name":"Wardrobe"},{"kind":"family","name":"Washbasin"}]}
+{"count":0,"dry_run":false,"removed":[]}
+--- stderr
+=== purge {"kinds": ["material"]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":5,"dry_run":false,"removed":[{"kind":"material","name":"Ceramic tile"},{"kind":"material","name":"Gypsum board"},{"kind":"material","name":"Membrane"},{"kind":"material","name":"Roof tiles"},{"kind":"material","name":"Screed"}]}
+--- stderr
+=== purge {"kinds": ["family", "material"], "dry_run": true}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":46,"dry_run":true,"removed":[{"kind":"family","name":"Air Terminal"},{"kind":"family","name":"Base Cabinet"},{"kind":"family","name":"Bathtub"},{"kind":"family","name":"Bed"},{"kind":"family","name":"Casement Window"},{"kind":"family","name":"Ceiling Luminaire"},{"kind":"family","name":"Chair"},{"kind":"family","name":"Crate"},{"kind":"family","name":"Data Outlet"},{"kind":"family","name":"Desk"},{"kind":"family","name":"Distribution Board"},{"kind":"family","name":"Double Door"},{"kind":"family","name":"Earthing Electrode"},{"kind":"family","name":"Elbow 90"},{"kind":"family","name":"Fixed Window"},{"kind":"family","name":"Floor Drain"},{"kind":"family","name":"Gate Valve"},{"kind":"family","name":"Inspection Box"},{"kind":"family","name":"Kitchen Sink"},{"kind":"family","name":"Outlet"},{"kind":"family","name":"Patch Panel"},{"kind":"family","name":"Rack"},{"kind":"family","name":"Recessed Luminaire"},{"kind":"family","name":"Shower"},{"kind":"family","name":"Single Door"},{"kind":"family","name":"Sliding Door"},{"kind":"family","name":"Sliding Window"},{"kind":"family","name":"Sofa"},{"kind":"family","name":"Switch"},{"kind":"family","name":"Table"},{"kind":"family","name":"Tee"},{"kind":"family","name":"Three-Phase Outlet"},{"kind":"family","name":"Voice Outlet"},{"kind":"family","name":"WC"},{"kind":"family","name":"Wardrobe"},{"kind":"family","name":"Washbasin"},{"kind":"material","name":"Ceramic tile"},{"kind":"material","name":"Gypsum board"},{"kind":"material","name":"Membrane"},{"kind":"material","name":"Roof tiles"},{"kind":"material","name":"Screed"},{"kind":"material","name":"Fabric"},{"kind":"material","name":"Glass"},{"kind":"material","name":"Lonely"},{"kind":"material","name":"Porcelain"},{"kind":"material","name":"Timber"}]}
+--- stderr
+=== purge {"kinds": ["template", "filter", "picture"]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":3,"dry_run":false,"removed":[{"kind":"view template","name":"Electrical Ceiling"},{"kind":"view template","name":"Electrical Lighting"},{"kind":"view template","name":"Electrical Power"}]}
+--- stderr
+=== purge {"kinds": ["spaceship"]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (purge): purge: `kinds` holds type, family, material, picture, filter, template, not "spaceship"
+=== purge {"kinds": "type"}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (purge): purge: `kinds` is a list of what to purge, not "type"
+=== purge {"kinds": []}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":0,"dry_run":false,"removed":[]}
+--- stderr

@@ -1,0 +1,20 @@
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 0, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `bottom` count 0 isn't 1 to 1000
+reinforce {"host": 100002, "cover": 30, "stirrup": {"diameter": 6.3, "spacing": 5}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `stirrup` spacing 5 mm must be more than the 6.3 mm diameter, and up to 1000000000
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16, "hook": {"start": 100, "middle": 3}}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `bottom hook` must be a length in mm, or {start, end}
+reinforce {"host": 100002, "cover": 30, "bottom": {"count": 2, "diameter": 16}, "check": "NBR 6118", "aggressiveness": 5}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `aggressiveness` is the class 1 to 4 (I to IV)
+reinforce {"host": 100002, "cover": -5, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: `cover` must be over 0 and up to 1000000000 mm, got -5
+reinforce {"host": 100003, "cover": 30, "bars": {"diameter": 12.5, "count": 6}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a rectangular column takes `x` and `y` bars along its faces, not `count`
+reinforce {"host": 100003, "cover": 30, "bars": {"diameter": 12.5, "x": 2, "y": 3}, "ties": {"diameter": 5}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: ties go with the stirrups: give a `stirrup` too
+reinforce {"host": 100003, "cover": 30, "bars": {"diameter": 12.5, "x": 2, "y": 2, "hook": {"below": 200}}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: a bars hook of 200 mm doesn't fit in a section 127.5 mm across between the bars
+reinforce {"host": 100006, "cover": 30}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: nothing to reinforce with: give a `bottom` or a `top` mesh with `x` or `y` bars
+reinforce {"host": 100002, "hosts": [100002], "cover": 30, "bottom": {"count": 2, "diameter": 16}}
+  exit 1; stdout lines 7; line 1 (reinforce): reinforce: give `host` or `hosts`, not both

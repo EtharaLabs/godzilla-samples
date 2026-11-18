@@ -1,0 +1,17 @@
+exit 0
+{"elements":477,"storeys":1}
+{"beam": 110, "ceiling": 1, "component": 240, "floor": 1, "level": 2, "structuralcolumn": 63, "wall": 32, "window": 28}
+$ bimcraft-cli run --cmd 'highrise {"storeys": 0}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (highrise): highrise: `storeys` must be between 1 and 80
+
+$ bimcraft-cli run --cmd 'highrise {"storeys": 81}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (highrise): highrise: `storeys` must be between 1 and 80
+

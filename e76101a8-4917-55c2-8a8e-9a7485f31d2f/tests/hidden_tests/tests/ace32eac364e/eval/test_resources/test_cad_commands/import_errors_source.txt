@@ -1,0 +1,48 @@
+### cad_unknown
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: the project holds no CAD drawing named `nope` (it holds: plan)
+### empty_name
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: a CAD drawing needs a `name`
+### link_a_held_drawing
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `link` is for a file brought in by `path`; a drawing the project holds stays as it's held
+### link_not_a_flag
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `link` must be true or false, got "yes"
+### neither_path_nor_cad
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: give `path`, a DXF file to bring in, or `cad`, the name of a drawing the project holds
+### path_and_cad
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: give `path`, a DXF file to bring in, or `cad`, a drawing the project holds; not both
+### path_not_text
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: `path` must be text of at most 256 characters, got 5
+### same_name_again
+exit: 1
+--- stdout
+{"cad":"plan","entities":6,"extents":[[-5000.0,-3000.0],[5000.0,3000.0]],"far":0,"id":100002,"layers":3,"left_out":{},"scale":1000.0,"source":"plan.dxf","unit":"m"}
+--- stderr
+line 1 (import_cad): import_cad: the project already holds a CAD drawing named `plan`: place it again with `cad`, or bring this file in under another `name`

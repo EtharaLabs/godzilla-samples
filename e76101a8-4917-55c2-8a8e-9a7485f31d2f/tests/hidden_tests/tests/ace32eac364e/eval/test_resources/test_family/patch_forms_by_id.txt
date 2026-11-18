@@ -1,0 +1,82 @@
+=== setup
+exit: 0
+--- stdout
+{"family":{"category":"furniture","forms":[{"from":0.0,"plane":"xy","profile":[[0.0,0.0],[600.0,0.0],[600.0,400.0],[0.0,400.0]],"to":30.0},{"from":0.0,"plane":"xy","profile":[[50.0,50.0],[150.0,50.0],[150.0,150.0],[50.0,150.0]],"to":600.0},{"circle":{"centre":[500.0,300.0],"radius":25.0},"from":0.0,"plane":"xy","to":600.0}],"parameters":[],"types":{"A":{}}},"name":"Shelf","warnings":[]}
+{"format":"bimcraft","path":"p.bimcraft"}
+--- stderr
+=== library {"kind": "form", "name": "Shelf"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"count":0,"library":[],"parts":[{"guid":"GUID-1","id":999463,"index":2,"kind":"form","of":"family Shelf"},{"guid":"GUID-2","id":999464,"index":1,"kind":"form","of":"family Shelf"},{"guid":"GUID-3","id":999465,"index":0,"kind":"form","of":"family Shelf"}]}
+--- stderr
+=== family {"name": "Shelf", "form": {"id": 999464, "to": 900}} | library {"kind": "form", "name": "Shelf"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"guid":"GUID-1","id":999465,"plane":"xy","profile":[[0.0,0.0],[600.0,0.0],[600.0,400.0],[0.0,400.0]],"to":30.0},{"from":0.0,"guid":"GUID-2","id":999464,"plane":"xy","profile":[[50.0,50.0],[150.0,50.0],[150.0,150.0],[50.0,150.0]],"to":900.0},{"circle":{"centre":[500.0,300.0],"radius":25.0},"from":0.0,"guid":"GUID-3","id":999463,"plane":"xy","to":600.0}],"parameters":[],"types":{"A":{}}},"name":"Shelf","warnings":[]}
+{"count":0,"library":[],"parts":[{"guid":"GUID-3","id":999463,"index":2,"kind":"form","of":"family Shelf"},{"guid":"GUID-2","id":999464,"index":1,"kind":"form","of":"family Shelf"},{"guid":"GUID-1","id":999465,"index":0,"kind":"form","of":"family Shelf"}]}
+--- stderr
+=== family {"name": "Shelf", "form": {"id": 999463, "material": "Timber"}} | family {"name": "Shelf", "form": {"id": 999463, "material": null}}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"guid":"GUID-1","id":999465,"plane":"xy","profile":[[0.0,0.0],[600.0,0.0],[600.0,400.0],[0.0,400.0]],"to":30.0},{"from":0.0,"guid":"GUID-2","id":999464,"plane":"xy","profile":[[50.0,50.0],[150.0,50.0],[150.0,150.0],[50.0,150.0]],"to":600.0},{"circle":{"centre":[500.0,300.0],"radius":25.0},"from":0.0,"guid":"GUID-3","id":999463,"material":"Timber","plane":"xy","to":600.0}],"parameters":[],"types":{"A":{}}},"name":"Shelf","warnings":[]}
+{"family":{"category":"furniture","forms":[{"from":0.0,"guid":"GUID-1","id":999465,"plane":"xy","profile":[[0.0,0.0],[600.0,0.0],[600.0,400.0],[0.0,400.0]],"to":30.0},{"from":0.0,"guid":"GUID-2","id":999464,"plane":"xy","profile":[[50.0,50.0],[150.0,50.0],[150.0,150.0],[50.0,150.0]],"to":600.0},{"circle":{"centre":[500.0,300.0],"radius":25.0},"from":0.0,"guid":"GUID-3","id":999463,"plane":"xy","to":600.0}],"parameters":[],"types":{"A":{}}},"name":"Shelf","warnings":[]}
+--- stderr
+=== family {"name": "Shelf", "delete_form": [999465]} | library {"kind": "form", "name": "Shelf"}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"family":{"category":"furniture","forms":[{"from":0.0,"guid":"GUID-1","id":999464,"plane":"xy","profile":[[50.0,50.0],[150.0,50.0],[150.0,150.0],[50.0,150.0]],"to":600.0},{"circle":{"centre":[500.0,300.0],"radius":25.0},"from":0.0,"guid":"GUID-2","id":999463,"plane":"xy","to":600.0}],"parameters":[],"types":{"A":{}}},"name":"Shelf","warnings":[]}
+{"count":0,"library":[],"parts":[{"guid":"GUID-2","id":999463,"index":1,"kind":"form","of":"family Shelf"},{"guid":"GUID-1","id":999464,"index":0,"kind":"form","of":"family Shelf"}]}
+--- stderr
+=== family {"name": "Shelf", "dry_run": true, "form": {"id": 999464, "to": 900}, "delete_form": [999463]}
+exit: 0
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+{"changes":{"deleted":false,"forms":{"deleted":[999463],"patched":[999464],"replaced":0},"parameters":{"added":[],"changed":[],"removed":[]},"rename":null,"symbols":{"deleted":[],"patched":[],"replaced":0},"types":{"added":[],"changed":[],"removed":[]}},"dry_run":true,"family":{"category":"furniture","forms":[{"from":0.0,"guid":"GUID-1","id":999465,"plane":"xy","profile":[[0.0,0.0],[600.0,0.0],[600.0,400.0],[0.0,400.0]],"to":30.0},{"from":0.0,"guid":"GUID-2","id":999464,"plane":"xy","profile":[[50.0,50.0],[150.0,50.0],[150.0,150.0],[50.0,150.0]],"to":900.0}],"parameters":[],"types":{"A":{}}},"name":"Shelf","ok":true,"values":{"A":{}},"warnings":[]}
+--- stderr
+=== family {"name": "Shelf", "form": {"id": 999000, "to": 1}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: form 999000 is not of family "Shelf"
+=== family {"name": "Shelf", "delete_form": [999000]}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: form 999000 is not of family "Shelf"
+=== family {"name": "Shelf", "form": {"to": 1}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `form` needs the form's `id` or `guid`
+=== family {"name": "Shelf", "form": 5}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `form` must be {id | guid, …the form's fields}, not 5
+=== family {"name": "Shelf", "form": {"id": "nope"}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: `form` needs the form's `id` or `guid`, not "nope"
+=== family {"name": "Shelf", "form": {"id": 999464, "to": "tall"}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family `Shelf`: form 2: formula `tall` reads `tall`, which isn't one of its parameters
+family `Shelf`: type `A`: form 2: formula `tall`: `tall` isn't one of its parameters
+=== family {"name": "Shelf", "symbol": {"id": 999464}}
+exit: 1
+--- stdout
+{"name":"Project","path":"p.bimcraft"}
+--- stderr
+line 1 (family): family: symbol 999464 is not of family "Shelf"

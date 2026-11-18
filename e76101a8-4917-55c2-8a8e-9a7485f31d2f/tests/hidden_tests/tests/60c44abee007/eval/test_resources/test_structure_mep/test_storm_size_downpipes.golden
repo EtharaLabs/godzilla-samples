@@ -1,0 +1,42 @@
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "area": 80, "gutter": 60, "length": 3000}'
+[exit 0]
+--- stdout
+{"by_depth_mm":-10.8,"by_length_mm":50.0,"flow_lpm":200.0,"inside_mm":70.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "area": 300, "rainfall": 170, "gutter": 80, "length": 5000, "outlet": "funnel"}'
+[exit 0]
+--- stdout
+{"by_depth_mm":28.5,"by_length_mm":67.7,"flow_lpm":850.0,"inside_mm":70.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "area": 300, "rainfall": 170, "gutter": 80, "length": 5000, "outlet": "edge"}'
+[exit 0]
+--- stdout
+{"by_depth_mm":38.4,"by_length_mm":69.1,"flow_lpm":850.0,"inside_mm":70.0}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 1500, "gutter": 100, "length": 1000}'
+[exit 0]
+--- stdout
+{"by_depth_mm":50.6,"by_length_mm":110.6,"flow_lpm":1500.0,"inside_mm":110.6}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 1200, "gutter": 75, "length": 8000, "outlet": "funnel"}'
+[exit 0]
+--- stdout
+{"by_depth_mm":76.8,"by_length_mm":76.3,"flow_lpm":1200.0,"inside_mm":76.8}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'storm_size {"kind": "downpipe", "flow": 600, "gutter": 50, "length": 300}'
+[exit 0]
+--- stdout
+{"by_depth_mm":99.1,"by_length_mm":84.4,"flow_lpm":600.0,"inside_mm":99.1}
+
+--- stderr
+

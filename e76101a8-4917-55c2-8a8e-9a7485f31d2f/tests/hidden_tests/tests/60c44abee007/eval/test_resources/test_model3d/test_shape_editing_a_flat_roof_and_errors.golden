@@ -1,0 +1,44 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'roof {}' --cmd 'add_point {"id": 100006, "at": [3000, 2000], "z": 200}' --cmd 'add_split_line {"id": 100006, "a": [0, 2000], "b": [6000, 2000]}' --cmd 'edit_shape {"id": 100006}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006}
+
+--- stderr
+line 1 (add_point): add_point: 100006: a pitched roof's slopes come from its `slope`: only a flat roof takes points and split lines: `modify` its `slope` to 0, or `reset_shape`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'roof {"slope": 30}' --cmd 'add_point {"id": 100006, "at": [3000, 2000], "z": 200}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"id":100006}
+
+--- stderr
+line 1 (add_point): add_point: 100006: a pitched roof's slopes come from its `slope`: only a flat roof takes points and split lines: `modify` its `slope` to 0, or `reset_shape`
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]]}' --cmd 'edit_shape {"id": 100002}'
+[exit 1]
+--- stdout
+{"ids":[100002]}
+
+--- stderr
+line 1 (edit_shape): edit_shape: 100002: only floors and flat roofs have shapes
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'floor {}' --cmd 'add_point {"id": 100006, "at": [9000, 9000], "z": 10}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006}
+
+--- stderr
+line 1 (add_point): floor 100006: the shape point at (9000, 9000) is outside its outline
+
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0],[6000,4000],[0,4000]], "closed": true}' --cmd 'floor {}' --cmd 'edit_shape {"id": 100006, "points": [{"at": [1000, 1000]}]}'
+[exit 1]
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"area_m2":24.0,"id":100006}
+
+--- stderr
+line 1 (edit_shape): edit_shape: the point at P2(1000.0, 1000.0) needs its height `z`
+

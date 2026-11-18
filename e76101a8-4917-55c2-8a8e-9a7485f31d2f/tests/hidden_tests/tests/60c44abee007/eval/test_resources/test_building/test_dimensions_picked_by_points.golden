@@ -1,0 +1,38 @@
+$ bimcraft-cli run --cmd 'wall {"points": [[0,0],[6000,0]], "arc": 90}' --cmd 'column {"at": [8000, 2000], "type": "Round 300"}' --cmd 'wall {"points": [[0,3000],[6000,3000]]}' --cmd 'wall {"points": [[0,5000],[6000,5000]]}' --cmd 'detail_line {"centre": [12000, 2000], "radius": 800}' --cmd 'dimension {"refs": [[3000, 3000], [3000, 5000]], "at": [3500, 4000]}' --cmd 'dimension {"kind": "radial", "refs": [[8150, 2000]], "at": [9000, 2500]}' --cmd 'dimension {"kind": "diameter", "refs": [[12800, 2000]], "at": [13500, 2500]}' --cmd 'dimension {"kind": "arc_length", "refs": [[3000, -1242.6]], "at": [3000, -2500]}' --cmd 'dimension {"kind": "radial", "refs": [[3000, -1242.6]], "at": [3000, -2000]}' --cmd 'elements {"category": "dimension"}'
+[exit 0]
+--- stdout
+{"ids":[100002]}
+{"id":100003}
+{"ids":[100004]}
+{"ids":[100005]}
+{"id":100006}
+{"id":100007,"values":[2000.0]}
+{"id":100008,"values":[150.0]}
+{"id":100009,"values":[1600.0]}
+{"id":100010,"values":[6664.32]}
+{"id":100011,"values":[4242.64]}
+{"count":5,"elements":[{"at":[3500.0,4000.0],"category":"dimension","guid":"<GUID-1>","id":100007,"kind":"aligned","labels":["2000"],"level":"<GUID-2>","refs":[{"face":"centre","id":"<GUID-3>"},{"face":"centre","id":"<GUID-4>"}],"type":"Diagonal - 2.5mm Arial","values":[2000.0]},{"at":[9000.0,2500.0],"category":"dimension","guid":"<GUID-5>","id":100008,"kind":"radial","labels":["R 150"],"level":"<GUID-2>","refs":[{"face":"centre","id":"<GUID-6>"}],"type":"Arrow - 2.5mm Arial","values":[150.0]},{"at":[13500.0,2500.0],"category":"dimension","guid":"<GUID-7>","id":100009,"kind":"diameter","labels":["Ø 1600"],"level":"<GUID-2>","refs":[{"face":"centre","id":"<GUID-8>"}],"type":"Arrow - 2.5mm Arial","values":[1600.0]},{"at":[3000.0,-2500.0],"category":"dimension","guid":"<GUID-9>","id":100010,"kind":"arc_length","labels":["6664"],"level":"<GUID-2>","refs":[{"face":"centre","id":"<GUID-10>"}],"type":"Diagonal - 2.5mm Arial","values":[6664.32]},{"at":[3000.0,-2000.0],"category":"dimension","guid":"<GUID-11>","id":100011,"kind":"radial","labels":["R 4243"],"level":"<GUID-2>","refs":[{"face":"centre","id":"<GUID-10>"}],"type":"Arrow - 2.5mm Arial","values":[4242.64]}],"returned":5}
+
+--- stderr
+
+$ bimcraft-cli run --cmd 'dimension {"kind": "radial", "refs": [[100, 100]], "at": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension): dimension: no round column's, curved wall's, circle's or arc's edge at [100, 100] on Level 1
+
+$ bimcraft-cli run --cmd 'dimension {"kind": "arc_length", "refs": [[100, 100]], "at": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension): dimension: no curved wall or arc at [100, 100] on Level 1
+
+$ bimcraft-cli run --cmd 'dimension {"kind": "aligned", "refs": [[100, 100]], "at": [0, 0]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (dimension): dimension: no wall face, wall centre line, wall end, door, window or grid line at [100, 100] on Level 1
+

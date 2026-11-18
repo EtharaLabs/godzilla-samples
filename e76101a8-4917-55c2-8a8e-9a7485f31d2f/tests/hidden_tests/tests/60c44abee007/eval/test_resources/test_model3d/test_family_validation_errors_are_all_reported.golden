@@ -1,0 +1,82 @@
+$ bimcraft-cli run --cmd 'family {"name": "A", "parameters": [{"name": "W", "kind": "length", "formula": "Q * 2"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `A`: parameter `W`: formula `Q * 2` reads `Q`, which isn't one of its parameters
+family `A`: type `T`: parameter `W`: formula `Q * 2`: `Q` isn't one of its parameters
+
+$ bimcraft-cli run --cmd 'family {"name": "B", "parameters": [{"name": "W", "kind": "length", "formula": "(1 + "}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `B`: parameter `W`: formula `(1 + `: something's missing at its end (character 6)
+family `B`: type `T`: parameter `W`: formula `(1 + `: something's missing at its end (character 6)
+
+$ bimcraft-cli run --cmd 'family {"name": "C", "parameters": [{"name": "W", "kind": "length", "value": 1}], "types": {"T": {"Z": 3}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `C`: type `T`: `Z` isn't one of its parameters
+
+$ bimcraft-cli run --cmd 'family {"name": "D", "category": "door", "parameters": [], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `D`: a door or window family needs a length parameter `Width`: the size of the opening it makes
+family `D`: warning: its plan draws no symbols: a door's or a window's plan shows its swing or its sill, and this one shows nothing
+
+$ bimcraft-cli run --cmd 'family {"name": "E", "parameters": [], "types": {"T": {}}, "forms": [{"plane": "xy", "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `E`: form 1: it takes a `profile`, a `circle` or a `mesh`, one of them
+
+$ bimcraft-cli run --cmd 'family {"name": "F", "parameters": [], "types": {"T": {}}, "forms": [{"plane": "xy", "profile": [[0, 0], [100, 0], [0, 100]], "to": 100, "material": "Unobtainium"}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `F`: form 1: material `Unobtainium` isn't in the library; add it with `material`
+
+$ bimcraft-cli run --cmd 'family {"name": "G", "parameters": [{"name": "W", "kind": "length", "formula": "Q"}, {"name": "W", "kind": "length"}], "types": {"T": {}}, "forms": [{"plane": "xy", "profile": [[0, 0], ["Nope", 0], [0, 100]], "to": 100}]}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `G`: parameter `W`: formula `Q` reads `Q`, which isn't one of its parameters
+family `G`: form 1: formula `Nope` reads `Nope`, which isn't one of its parameters
+family `G`: parameter `W` is named twice
+
+$ bimcraft-cli run --cmd 'family {"name": "H", "parameters": [], "types": {}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `H`: it needs a type: add one to `types`
+
+$ bimcraft-cli run --cmd 'family {"name": "I", "category": "spaceship", "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: `category`: unknown variant `spaceship`, expected one of `furniture`, `casework`, `plumbing`, `drain`, `pipefitting`, `pipeaccessory`, `equipment`, `outlet`, `switch`, `airterminal`, `earthing`, `inspectionbox`, `lighting`, `generic`, `dataoutlet`, `voiceoutlet`, `patchpanel`, `rack`, `door`, `window`
+
+$ bimcraft-cli run --cmd 'family {"name": "J", "parameters": [{"name": "Paint", "kind": "length"}], "types": {"T": {}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family: parameter `Paint`: an element holds its paint under that name; name it otherwise
+
+$ bimcraft-cli run --cmd 'family {"name": "K", "parameters": [{"name": "W", "kind": "length", "value": 1, "instance": true}], "types": {"T": {"W": 2}}}'
+[exit 1]
+--- stdout
+
+--- stderr
+line 1 (family): family `K`: type `T`: `W` is an instance parameter; each component sets its own
+
