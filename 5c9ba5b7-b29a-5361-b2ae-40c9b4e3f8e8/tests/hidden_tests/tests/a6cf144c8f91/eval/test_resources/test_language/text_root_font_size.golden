@@ -1,0 +1,59 @@
+exit: 0
+--- stdout ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-202.64 -91 405.28 162.5" width="405.28" height="162.5" class="lini lini-scope-86a528ad">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-86a528ad { color-scheme: light dark; --lini-blue-ink: light-dark(#004496, #a0ecff); --lini-caption-color: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.55)); --lini-caption-font-weight: 400; --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-group-fill: light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.05)); --lini-group-stroke: light-dark(rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.4)); --lini-link-font-weight: 400; --lini-stroke: light-dark(#444, #9aa0a6); }
+      .lini-scope-86a528ad[data-theme="dark"], [data-theme="dark"] .lini-scope-86a528ad { color-scheme: dark; }
+      .lini-scope-86a528ad[data-theme="light"], [data-theme="light"] .lini-scope-86a528ad { color-scheme: light; }
+    }
+    .lini-scope-86a528ad, .lini-scope-86a528ad text { font-family: var(--lini-font-family); }
+    .lini-scope-86a528ad { font-size: 20px; font-weight: var(--lini-font-weight); color: var(--lini-blue-ink); }
+    .lini-scope-86a528ad .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-86a528ad .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-86a528ad .lini-box { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; }
+    .lini-scope-86a528ad .lini-group { fill: var(--lini-group-fill); stroke: var(--lini-group-stroke); stroke-width: 1; stroke-dasharray: 5,4; }
+    .lini-scope-86a528ad .lini-caption { color: var(--lini-caption-color); font-size: 16px; font-weight: var(--lini-caption-font-weight); }
+    .lini-scope-86a528ad .lini-link { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-86a528ad .lini-link-label { fill: currentColor; stroke: none; text-anchor: middle; font-size: 14.6667px; font-weight: var(--lini-link-font-weight); }
+    .lini-scope-86a528ad .lini-cut-bg { fill: white; stroke: none; }
+    .lini-scope-86a528ad .lini-cut { fill: black; stroke: none; }
+    .lini-scope-86a528ad .lini-marker { fill: var(--lini-stroke); stroke: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-group lini-block" data-id="g" transform="translate(-88.98,0)">
+      <rect x="-93.16" y="-51" width="186.32" height="102" rx="8" ry="8"/>
+      <g class="lini-node lini-box lini-block" data-id="a" transform="translate(-45.2,0)">
+        <rect x="-26.96" y="-30" width="53.92" height="60" rx="8" ry="8"/>
+        <text class="lini-text" x="0" y="0" dy="0.358em">A</text>
+      </g>
+      <g class="lini-node lini-box lini-block" data-id="b" transform="translate(45.96,0)">
+        <rect x="-26.2" y="-30" width="52.4" height="60" rx="8" ry="8"/>
+        <text class="lini-text" x="0" y="0" dy="0.358em">B</text>
+      </g>
+      <g class="lini-node lini-caption lini-block" transform="translate(-40.296,-63)">
+        <rect x="-52.864" y="-8" width="105.728" height="16" rx="0" ry="0"/>
+        <text class="lini-text" x="0" y="0" dy="0.358em">Caption scales</text>
+      </g>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="a" transform="translate(67.13,0)">
+      <rect x="-25.45" y="-30" width="50.9" height="60" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">a</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="c" transform="translate(156.11,0)">
+      <rect x="-25.53" y="-30" width="51.06" height="60" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">c</text>
+    </g>
+  </g>
+  <g class="lini-links">
+    <g class="lini-link" data-from="a" data-to="c">
+      <mask id="lini-label-cut-0a7a16a0" maskUnits="userSpaceOnUse" x="91.58" y="-2" width="40" height="4"><rect class="lini-cut-bg" x="91.58" y="-2" width="40" height="4"/><rect class="lini-cut" x="69.5967" y="-9.5333" width="83.9667" height="19.0667"/></mask>
+      <path d="M 93.58 0 L 126.08 0" mask="url(#lini-label-cut-0a7a16a0)"/>
+      <polygon class="lini-marker lini-marker-arrow" points="130.08,0 121.08,4.5 121.08,-4.5"/>
+      <text class="lini-link-label" x="111.58" y="0" dy="0.358em">label scales</text>
+    </g>
+  </g>
+</svg>
+--- stderr ---
+<stdin>:3:1: warning: endpoint 'a' auto-created at scene root — a node 'a' also exists at 'g.a'

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// a comment with &lt;angle&gt; &amp; &quot;quotes&quot;</span>
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">layout</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">grid</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-type">repeat</span><span class="lini-tok-punct">(</span><span class="lini-tok-number">2</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">80</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-var">--brand</span><span class="lini-tok-punct">:</span> <span class="lini-tok-const">#ff6600</span><span class="lini-tok-punct">;</span>
+  w = <span class="lini-tok-punct">(</span><span class="lini-tok-number">8</span> * <span class="lini-tok-number">2</span> + <span class="lini-tok-number">1.5</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type-user">svc</span><span class="lini-tok-op">::</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-wash</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop-user">my-prop</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">3</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-class">.hot</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--red</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">2</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type-user">svc</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">api</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;API &lt;v2&gt; &amp; co&quot;</span> <span class="lini-tok-class">.hot</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> w<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">opacity</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">50</span>%<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">oval</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">db</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;DB&quot;</span>
+api <span class="lini-tok-op">-&gt;</span> db <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">along</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.5</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span> <span class="lini-tok-string">&quot;reads&quot;</span> <span class="lini-tok-punct">]</span>
+api <span class="lini-tok-op">--&gt;</span> db
+api <span class="lini-tok-op">~&gt;</span> db
+api <span class="lini-tok-op">-</span>o&lt; db
+a<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">left</span> <span class="lini-tok-punct">(</span>-<span class="lini-tok-punct">)</span> b:<span class="lini-tok-keyword">right</span>
+
+--- stderr

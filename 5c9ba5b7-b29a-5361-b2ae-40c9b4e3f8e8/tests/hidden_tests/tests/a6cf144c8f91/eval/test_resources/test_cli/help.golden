@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+Compile Lini diagrams to SVG
+
+Usage: executable [OPTIONS] <INPUT>
+       executable <COMMAND>
+
+Commands:
+  fmt        Reformat a file to canonical style in place
+  serve      Serve a live preview (a file) or the playground (a directory)
+  desugar    Print a file lowered to primitives + .lini-* classes
+  highlight  Print a file as syntax-highlighted HTML — <span class="lini-tok-*"> runs
+  theme      List the built-in themes, or print one as a --lini-* CSS file
+  help       Print this message or the help of the given subcommand(s)
+
+Arguments:
+  <INPUT>  Input .lini file (use '-' for stdin)
+
+Options:
+  -o, --output <OUTPUT>        Output path (default: stdout)
+      --format <FORMAT>        Output wrapper: `svg` (default) or `html` [default: svg]
+      --static                 Inline `var()`s as literals **and** outline text to paths — self-contained for any renderer (resvg, librsvg, raster converters)
+      --embed-font             Embed the used bundled font family × weights as base64 `@font-face` — browser-only (resvg/librsvg ignore `@font-face`)
+      --check                  Run the full compile but write nothing — every error and warning the compile would report, without the SVG
+      --json                   Emit diagnostics as a JSON document (stable codes, spans, and machine-applicable fixes) instead of SVG — the tooling/LSP form [SPEC 20/21]. Exit 1 if any error-level diagnostic fired
+      --theme <NAME|FILE|A/B>  A theme: a built-in name (`dark`, `high-contrast`, …), a CSS file of `--lini-*` overrides, or a light/dark pair (`light/dark`). See `lini theme`
+      --watch                  Recompile on every change to the input file. Requires `-o`
+      --no-fs                  Read nothing from disk but the input: a local `|image|` path errors and `--theme` takes a built-in only. For compiling source you did not write (a rendering service)
+      --no-warn                Suppress lint warnings
+      --strict                 Treat lint warnings as errors. Useful for CI
+  -h, --help                   Print help
+  -V, --version                Print version
+--- stderr ---

@@ -1,0 +1,27 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-topic {
+    fill: --fill; stroke: --stroke; stroke-width: 2; radius: 8; padding: 8 14; direction: column; gap: 12;
+  }
+}
+
+|block| .lini-group.lini-block {
+  layout: tree; direction: column; routing: straight; gap: 64 48;
+} [
+  |block#lini-topic-1| .lini-topic.lini-block.lini-level-0 [
+    "r"
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-1 [ "a" ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-1 [ "b" ]
+  ]
+  lini-topic-1:bottom - lini-topic-1.lini-topic-1:top & lini-topic-1.lini-topic-2:top
+]
+
+--- stderr

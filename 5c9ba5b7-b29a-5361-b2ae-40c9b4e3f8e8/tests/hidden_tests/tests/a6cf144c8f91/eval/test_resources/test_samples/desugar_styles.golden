@@ -1,0 +1,67 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 26; gap: 20; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --teal-wash; stroke: --teal-ink; stroke-width: 2; padding: 20; direction: column; gap: 12; color: --teal-ink;
+  }
+  .lini-box {
+    fill: --sky-wash; stroke: --sky-ink; stroke-width: 2; padding: 20; radius: 6; direction: column; gap: 12; color: --sky-ink;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-alert {
+    stroke: --red; fill: --red-wash; color: --red-ink; width: 84; height: 46;
+  }
+  .thin { stroke-width: 1; }
+  .bold { font-weight: bold; }
+  .power { stroke: --red; stroke-width: 2.5; }
+  .warn { stroke: --orange; stroke-width: 2; }
+  .ghost { opacity: 0.35; }
+}
+
+|block| .lini-block { font-size: 18; font-weight: bold; } [ "Styles" ]
+|block#cascade| .lini-group.lini-block { gap: 14; align: center; } [
+  |block| .lini-caption.lini-block [ "cascade" ]
+  |block| .lini-box.lini-block [ "element" ]
+  |block| .lini-box.lini-block.warn [ "+ class" ]
+  |block| .lini-box.lini-block.warn {
+    fill: --amber-wash; stroke: --amber-ink; color: --amber-ink;
+  } [ "+ inline" ]
+  |oval| .lini-alert.lini-oval [ "alert" ]
+]
+|block#classes| .lini-group.lini-block { gap: 14; } [
+  |block| .lini-caption.lini-block [ "classes" ]
+  |block| .lini-box.lini-block.thin [ "thin" ]
+  |block| .lini-box.lini-block.bold [ "bold" ]
+  |block| .lini-box.lini-block.power [ "power" ]
+  |block| .lini-box.lini-block.warn [ "warn" ]
+  |block| .lini-box.lini-block.ghost [ "ghost" ]
+]
+|block#modifiers| .lini-group.lini-block { gap: 16; align: center; } [
+  |block| .lini-caption.lini-block [ "modifiers" ]
+  |block| .lini-box.lini-block { stroke-style: dashed; } [ "dashed" ]
+  |block| .lini-box.lini-block { stroke-style: dotted; } [ "dotted" ]
+  |block| .lini-box.lini-block { multiple: 4; } [ "multiple" ]
+  |block| .lini-box.lini-block { shadow: 2 3 5; } [ "shadow" ]
+  |block| .lini-box.lini-block { rotate: -8; } [ "rotate" ]
+]
+|block#text| .lini-group.lini-block { gap: 14; align: center; } [
+  |block| .lini-caption.lini-block [ "typography" ]
+  |block| .lini-box.lini-block { font-style: italic; } [ "italic" ]
+  |block| .lini-box.lini-block { font-family: serif; } [ "serif" ]
+  |block| .lini-box.lini-block { color: hsl(280, 55%, 50%); } [ "hsl" ]
+  |block| .lini-box.lini-block { text-transform: uppercase; } [ "upper" ]
+  |block| .lini-box.lini-block { text-decoration: underline; } [ "under" ]
+  |block| .lini-box.lini-block { text-shadow: 1 1 2 --gray-ink; } [ "shadow" ]
+  |block| .lini-box.lini-block { letter-spacing: 3; } [ "spaced" ]
+  |block| .lini-box.lini-block { line-spacing: 12; } [ "two\nlines" ]
+]
+--- stderr ---

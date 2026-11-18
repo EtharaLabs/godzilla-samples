@@ -1,0 +1,34 @@
+|page| { sheet: a5 landscape; gap: 50; align: origin; } [    // landscape → direction: row
+  // the ISO sheet: frame, zones, marks — views share their axes datum-to-datum
+
+  |drawing#side| "DIN 912 — M8 × 40" { scale: 1.5; } [
+    |sketch#screw| {
+      draw: move(0, 0) up(6.5) chamfer(0.8) right(8):head down(2.5):k right(12)
+            point():v right(28):m8 chamfer(1) down(4);
+      revolve: x-axis;                           // a turned part
+      thread: m8 1.25;                           // the threaded run
+    } [
+      |hidden#socket| {                          // the hex socket, dashed
+        draw: move(0, 3) right(4) line(3, -3);
+        mirror: x-axis;
+      }
+    ]
+    screw:head (o) { side: left; }               // → ⌀13
+    screw:left (-) screw:k { side: bottom; }     // → 8 — K, the head
+    screw:k (-) screw:right { side: bottom; }    // → 40 — L, under the head
+    screw:v (-) screw:right { side: top; }       // → 28 — the thread length
+    screw:m8 <- { side: top; }                   // → M8×1.25 — composed by the thread
+  ]
+
+  |drawing#end| { scale: 1.5; } [
+    |oval#od| { width: 13; height: 13; }
+    |oval| { width: 11.4; height: 11.4; }        // the head, end-on
+    |hex#socket| { width: 7; height: 6; }
+    socket:left (-) socket:right                 // the socket, visible here
+  ]
+
+  |title-block| {
+    title: "Socket cap screw"; drawing-number: "DIN 912 — M8 × 40";
+    revision: "A"; sheet-number: "1/1"; date: "2026-07-08"; author: "AM";
+  }
+]

@@ -1,0 +1,89 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 24; gap: 38; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-cyl {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-icon {
+    fill: --icon-fill; stroke: --stroke; stroke-width: 2; width: 32; height: 32;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-badge {
+    pin: top right; translate: 6 -6; radius: 8; padding: 2 6; shadow: 2 3 3; fill: --accent; color: --accent-text; font-size: 11; font-weight: normal;
+  }
+  .lini-sign {
+    width: 64; height: 64; padding: 4; stroke-width: 2; fit: contain;
+  }
+  .lini-edge { fill: --sky-wash; stroke: --sky-ink; color: --sky-ink; }
+  .lini-svc { fill: --teal-wash; stroke: --teal-ink; color: --teal-ink; }
+  .lini-api {
+    symbol: octagon; fill: --green-wash; stroke: --green-ink; color: --green-ink;
+  }
+  .lini-auth {
+    symbol: shield; fill: --purple-wash; stroke: --purple-ink; color: --purple-ink; translate: 0 2;
+  }
+  .lini-store { fill: --rose-wash; stroke: --rose-ink; color: --rose-ink; }
+  .lini-link { stroke: --gray-deep; }
+  .flow { stroke: --blue-deep; }
+  .cache { stroke: --teal-deep; }
+  .async { stroke: --amber-deep; }
+  .auth { stroke: --purple-deep; }
+}
+
+|oval#users| .lini-oval {
+  width: 156; height: 62; fill: gradient(--sky, --purple); stroke: none; color: white; font-weight: bold;
+} [ "Users" ]
+|block#edge| .lini-group.lini-block { gap: 20; } [
+  |block| .lini-caption.lini-block [ "Edge" ]
+  |block#lb| .lini-edge.lini-box.lini-block [
+    "Load balancer"
+    |block| .lini-badge.lini-block [ "v2" ]
+  ]
+  |icon#cdn| .lini-sign.lini-icon {
+    fill: --orange-wash; stroke: --orange-ink; color: --orange-ink; width: 85; symbol: cloud;
+  } [
+    "CDN" { translate: 6 2; }
+  ]
+]
+|block#svc| .lini-group.lini-block { gap: 28; } [
+  |block| .lini-caption.lini-block [ "Services" ]
+  |icon#api| .lini-api.lini-sign.lini-icon [ "API" ]
+  |icon#auth| .lini-auth.lini-sign.lini-icon [
+    "Auth" { translate: 0 -4; }
+  ]
+  |block#worker| .lini-svc.lini-box.lini-block [
+    "Worker"
+    |block| .lini-badge.lini-block [ "NEW" ]
+  ]
+]
+|block#data| .lini-group.lini-block { gap: 28; } [
+  |block| .lini-caption.lini-block [ "Data" ]
+  |cyl#pg| .lini-store.lini-cyl [ "Postgres" ]
+  |cyl#redis| .lini-store.lini-cyl [ "Redis" ]
+  |block#queue| .lini-svc.lini-box.lini-block {
+    fill: --amber-wash; stroke: --amber-deep; color: --amber-ink; multiple: 4;
+  } [ "Queue" ]
+]
+
+users -> edge.lb .flow
+edge.lb -> svc.api
+edge.lb -> svc.auth .auth
+svc.api -> data.pg .flow
+svc.api --> data.redis .cache { along: 0.5; } [ "cache" ]
+svc.worker ~> data.queue:right .async { along: 0.5; } [ "jobs" ]
+--- stderr ---

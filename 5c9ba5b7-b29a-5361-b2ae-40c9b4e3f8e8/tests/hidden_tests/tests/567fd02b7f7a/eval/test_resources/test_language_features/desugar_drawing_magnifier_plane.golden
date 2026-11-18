@@ -1,0 +1,20 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-plane {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-magnifier { stroke: --stroke-light; stroke-width: 1; fill: none; }
+}
+
+|sketch#s| .lini-sketch { draw: move(0, 0) right(60) up(20) left(60) close(); }
+|oval#m1| .lini-magnifier.lini-oval { width: 15; translate: 10 5; } [ "A" ]
+|line#cut| "B" .lini-plane.lini-line { at: 30; facing: left; chrome: plane; }
+
+--- stderr

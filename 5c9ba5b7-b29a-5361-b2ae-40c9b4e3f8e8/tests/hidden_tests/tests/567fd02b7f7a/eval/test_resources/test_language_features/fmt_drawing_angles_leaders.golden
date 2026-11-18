@@ -1,0 +1,17 @@
+exit: 0
+--- stdout
+{
+  layout: drawing;
+}
+
+|sketch#w| {
+  draw: move(0, 0) right(30):base line(-10, 20):slope left(20) close();
+}
+
+w:base (<) w:slope
+w:slope <- "TAPER"
+w:top-left <- "EDGE" { side: left; }
+w:left (-) w:right { side: bottom; }
+w:bottom (-) w:top { side: right; }
+
+--- stderr

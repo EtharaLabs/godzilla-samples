@@ -1,0 +1,15 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+}
+
+|sketch#a| .lini-sketch {
+  draw: move(0, 0) right(20):base up(10) left(20) close();
+}
+
+a:left (-) a:right { side: bottom; }
+a:base <- { along: 0.5; } [ "FACE" ]
+
+--- stderr

@@ -1,0 +1,92 @@
+exit: 0
+--- stdout ---
+// Phosphor icons. `|icon| { symbol: … }` paints like a node — `fill` is the body,
+// `stroke` the line, `stroke-width` (default 2) counter-scaled to stay even at any
+// size. `|sign|` is a larger preset and an ordinary wireable node. Source for
+// assets/icons.png.
+{
+  direction: column; gap: 16; padding: 8 28 24 28; align: center; clearance: 14;
+  |-| { stroke: --gray-ink; stroke-width: 2; }
+
+  |row| { align: end; }
+  |tile::column| { gap: 9; align: center; font-size: 13; }
+  |lbl::block| {
+    font-size: 13; font-weight: bold; color: --gray-ink; padding: 16 0 0 0;
+  }
+  |cap::block| { font-size: 11; color: --gray-deep; }
+  |sign| { font-size: 12; }
+
+  // Two-tone colour classes — a soft `wash` body under an `ink` line. Wear one on
+  // any node (`|icon| .rose`, `|box| .teal`, …) to paint the pair at once.
+  .rose { fill: --rose-wash; stroke: --rose-ink; color: --rose-ink; }
+  .amber { fill: --amber-wash; stroke: --amber-ink; color: --amber-ink; }
+  .teal { fill: --teal-wash; stroke: --teal-ink; color: --teal-ink; }
+  .sky { fill: --sky-wash; stroke: --sky-ink; color: --sky-ink; }
+  .purple { fill: --purple-wash; stroke: --purple-ink; color: --purple-ink; }
+  .lime { fill: --lime-wash; stroke: --lime-ink; color: --lime-ink; }
+}
+
+|lbl| "Icons"
+|group| { gap: 40; fill: none; } [
+  |tile| [
+    |icon| { symbol: house; }
+    |cap| "default"
+  ]
+  |tile| [
+    |icon| .rose { symbol: heart; }
+    |cap| "two-tone"
+  ]
+  |tile| [
+    |icon| { symbol: cloud; fill: none; stroke: --sky-deep; }
+    |cap| "line"
+  ]
+  |tile| [
+    |icon| .teal { symbol: user; }
+    |cap| "user"
+  ]
+  |tile| [
+    |icon| .amber { symbol: bell; } [
+      "3" { translate: 0 -2; }
+    ]
+    |cap| "+ label"
+  ]
+  |tile| [
+    |icon| .purple { symbol: star; }
+    |cap| "star"
+  ]
+]
+
+|lbl| "Signs, fit: auto"
+|row#a| { gap: 44; } [
+  |sign#web| .sky { symbol: ghost; fit: auto; }
+  |sign#auth| .purple { symbol: rocket; fit: auto; }
+  |sign#svc| .teal { symbol: gear; fit: auto; }
+  |sign#cpu| .amber { symbol: cpu; fit: auto; }
+  |sign#store| .rose { symbol: database; fit: auto; }
+
+  web -> auth
+  auth -> svc
+  svc -> cpu
+  cpu -> store
+]
+
+|lbl| "Signs + Text"
+|row#b| { gap: 44; } [
+  |sign#web| .teal { symbol: folder-simple; } [
+    "Folder" { translate: 0 2; }
+  ]
+  |sign#auth| .lime { symbol: presentation; } [
+    "Canvas" { translate: 0 -3; }
+  ]
+  |sign#svc| .purple { symbol: seal; } [ "Alert" ]
+  |sign#cpu| .rose { symbol: video-camera; } [
+    "video" { translate: -6 0; }
+  ]
+  |sign#store| .amber { symbol: wall; }
+
+  web ---< auth
+  auth --> svc
+  svc --> cpu
+  cpu ~> store
+]
+--- stderr ---

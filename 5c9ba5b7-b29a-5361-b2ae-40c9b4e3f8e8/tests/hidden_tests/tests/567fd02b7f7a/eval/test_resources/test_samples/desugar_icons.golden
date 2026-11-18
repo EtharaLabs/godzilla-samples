@@ -1,0 +1,93 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 8 28 24 28; gap: 16; font-size: 15; direction: column; align: center; clearance: 14;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-icon {
+    fill: --icon-fill; stroke: --stroke; stroke-width: 2; width: 32; height: 32;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-row { direction: row; align: end; }
+  .lini-column { direction: column; }
+  .lini-sign {
+    width: 64; height: 64; padding: 4; stroke-width: 2; fit: contain; font-size: 12;
+  }
+  .lini-tile { gap: 9; align: center; font-size: 13; }
+  .lini-lbl {
+    font-size: 13; font-weight: bold; color: --gray-ink; padding: 16 0 0 0;
+  }
+  .lini-cap { font-size: 11; color: --gray-deep; }
+  .lini-link { stroke: --gray-ink; stroke-width: 2; }
+  .rose { fill: --rose-wash; stroke: --rose-ink; color: --rose-ink; }
+  .amber { fill: --amber-wash; stroke: --amber-ink; color: --amber-ink; }
+  .teal { fill: --teal-wash; stroke: --teal-ink; color: --teal-ink; }
+  .sky { fill: --sky-wash; stroke: --sky-ink; color: --sky-ink; }
+  .purple { fill: --purple-wash; stroke: --purple-ink; color: --purple-ink; }
+  .lime { fill: --lime-wash; stroke: --lime-ink; color: --lime-ink; }
+}
+
+|block| .lini-lbl.lini-block [ "Icons" ]
+|block| .lini-group.lini-block { gap: 40; fill: none; } [
+  |block| .lini-tile.lini-column.lini-block [
+    |icon| .lini-icon { symbol: house; }
+    |block| .lini-cap.lini-block [ "default" ]
+  ]
+  |block| .lini-tile.lini-column.lini-block [
+    |icon| .lini-icon.rose { symbol: heart; }
+    |block| .lini-cap.lini-block [ "two-tone" ]
+  ]
+  |block| .lini-tile.lini-column.lini-block [
+    |icon| .lini-icon { symbol: cloud; fill: none; stroke: --sky-deep; }
+    |block| .lini-cap.lini-block [ "line" ]
+  ]
+  |block| .lini-tile.lini-column.lini-block [
+    |icon| .lini-icon.teal { symbol: user; }
+    |block| .lini-cap.lini-block [ "user" ]
+  ]
+  |block| .lini-tile.lini-column.lini-block [
+    |icon| .lini-icon.amber { symbol: bell; } [
+      "3" { translate: 0 -2; }
+    ]
+    |block| .lini-cap.lini-block [ "+ label" ]
+  ]
+  |block| .lini-tile.lini-column.lini-block [
+    |icon| .lini-icon.purple { symbol: star; }
+    |block| .lini-cap.lini-block [ "star" ]
+  ]
+]
+|block| .lini-lbl.lini-block [ "Signs, fit: auto" ]
+|block#a| .lini-row.lini-block { gap: 44; } [
+  |icon#web| .lini-sign.lini-icon.sky { symbol: ghost; fit: auto; }
+  |icon#auth| .lini-sign.lini-icon.purple { symbol: rocket; fit: auto; }
+  |icon#svc| .lini-sign.lini-icon.teal { symbol: gear; fit: auto; }
+  |icon#cpu| .lini-sign.lini-icon.amber { symbol: cpu; fit: auto; }
+  |icon#store| .lini-sign.lini-icon.rose { symbol: database; fit: auto; }
+  web -> auth
+  auth -> svc
+  svc -> cpu
+  cpu -> store
+]
+|block| .lini-lbl.lini-block [ "Signs + Text" ]
+|block#b| .lini-row.lini-block { gap: 44; } [
+  |icon#web| .lini-sign.lini-icon.teal { symbol: folder-simple; } [
+    "Folder" { translate: 0 2; }
+  ]
+  |icon#auth| .lini-sign.lini-icon.lime { symbol: presentation; } [
+    "Canvas" { translate: 0 -3; }
+  ]
+  |icon#svc| .lini-sign.lini-icon.purple { symbol: seal; } [ "Alert" ]
+  |icon#cpu| .lini-sign.lini-icon.rose { symbol: video-camera; } [
+    "video" { translate: -6 0; }
+  ]
+  |icon#store| .lini-sign.lini-icon.amber { symbol: wall; }
+  web ---< auth
+  auth --> svc
+  svc --> cpu
+  cpu ~> store
+]
+
+--- stderr

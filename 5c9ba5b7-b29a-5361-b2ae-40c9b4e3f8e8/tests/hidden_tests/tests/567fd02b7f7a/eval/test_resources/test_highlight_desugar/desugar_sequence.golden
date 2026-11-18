@@ -1,0 +1,23 @@
+exit: 0
+--- stdout
+{
+  layout: sequence; padding: 20; gap: 32 32; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-note { fill: --fill; stroke: --stroke; padding: 20; scale: 1; }
+  .lini-sequence .lini-note { padding: 6 10; font-size: 13; }
+  .lini-drawing .lini-note { padding: 6 10; font-size: 13; }
+}
+
+|block#a| .lini-box.lini-block [ "A" ]
+|block#b| .lini-box.lini-block [ "B" ]
+a -> b { along: 0.5; } [ "call" ]
+b --> a { along: 0.5; } [ "ret" ]
+|block| .lini-note.lini-block { place: over a b; } [ "n" ]
+
+--- stderr

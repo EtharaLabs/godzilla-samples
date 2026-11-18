@@ -1,0 +1,55 @@
+exit: 0
+--- stdout
+{
+  layout: sequence; padding: 20; gap: 32 32; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-cyl {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-loop {
+    fill: none; stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; radius: 4; padding: 24; font-size: 12;
+  }
+  .lini-opt {
+    fill: none; stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; radius: 4; padding: 24; font-size: 12;
+  }
+  .lini-alt {
+    fill: none; stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; radius: 4; padding: 24; font-size: 12;
+  }
+  .lini-else {
+    fill: none; stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; font-size: 12;
+  }
+  .lini-note { fill: --fill; stroke: --stroke; padding: 20; scale: 1; }
+  .lini-sequence .lini-note { padding: 6 10; font-size: 13; }
+  .lini-drawing .lini-note { padding: 6 10; font-size: 13; }
+}
+
+|block#u| .lini-box.lini-block [ "User" ]
+|block#a| .lini-box.lini-block [ "API" ]
+|cyl#d| .lini-cyl [ "DB" ]
+u -> a { along: 0.5; } [ "login" ]
+|block| .lini-loop.lini-block [
+  "retry"
+  a -> d { along: 0.5; } [ "query" ]
+  d --> a { along: 0.5; } [ "rows" ]
+]
+|block| .lini-alt.lini-block [
+  "ok?"
+  a --> u { along: 0.5; } [ "200" ]
+  |block| .lini-else.lini-block [ "no" ]
+  a --> u { along: 0.5; } [ "401" ]
+]
+|block| .lini-opt.lini-block [
+  "cache"
+  a -> a { along: 0.5; } [ "memo" ]
+]
+|block| .lini-note.lini-block { place: over a d; } [ "async" ]
+|block| .lini-note.lini-block { place: left u; } [ "left" ]
+a ~> d { along: 0.5; } [ "log" ]
+
+--- stderr

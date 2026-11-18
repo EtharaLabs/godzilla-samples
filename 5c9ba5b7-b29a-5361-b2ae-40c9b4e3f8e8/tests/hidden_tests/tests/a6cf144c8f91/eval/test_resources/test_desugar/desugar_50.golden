@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-label { shape: plain; font-size: 11; color: --label-ink; gap: 4; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-gnd { symbol: gnd; }
+  .lini-sch-tag-line { fill: none; stroke: --label-ink; stroke-width: 1.5; }
+}
+
+|block#g1| .lini-gnd.lini-label.lini-block { direction: row; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+  }
+]
+--- stderr ---

@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8170 -6170 16340 12340" width="16340" height="12340" class="lini lini-scope-dfdcf9c3">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-dfdcf9c3 { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-stroke-dark: light-dark(black, white); --lini-text-color: var(--lini-fg); }
+      .lini-scope-dfdcf9c3[data-theme="dark"], [data-theme="dark"] .lini-scope-dfdcf9c3 { color-scheme: dark; }
+      .lini-scope-dfdcf9c3[data-theme="light"], [data-theme="light"] .lini-scope-dfdcf9c3 { color-scheme: light; }
+    }
+    .lini-scope-dfdcf9c3, .lini-scope-dfdcf9c3 text { font-family: var(--lini-font-family); }
+    .lini-scope-dfdcf9c3 { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-dfdcf9c3 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-dfdcf9c3 .lini-sketch { fill: var(--lini-fill); stroke: var(--lini-stroke-dark); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-dfdcf9c3 .lini-wall { fill: var(--lini-stroke-dark); stroke: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-floorplan lini-drawing lini-block" transform="translate(0,0)">
+      <rect x="-8150" y="-6150" width="16300" height="12300" rx="0" ry="0"/>
+      <g class="lini-node lini-wall lini-sketch" transform="translate(-8150,-5850)">
+        <path d="M 0 -300 L 16300 -300 L 16300 12000 L 15700 12000 L 15700 300 L 0 300 Z" fill-rule="evenodd"/>
+      </g>
+    </g>
+  </g>
+  <g class="lini-links"/>
+</svg>
+--- stderr ---
+example.lini:1:1: warning: the drawing renders 16300 px wide — 'scale:' is a ratio; a 5 m beam at 1:50 is 'scale: 0.02'

@@ -1,0 +1,17 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-bars { radius: 2; stroke: auto; }
+}
+
+|block| .lini-chart.lini-block { categories: "a", "b"; } [
+  |block| .lini-bars.lini-block { data: 1, 2; }
+]
+
+--- stderr

@@ -1,0 +1,152 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 44; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-row { direction: row; }
+  .lini-table {
+    layout: grid; align: stretch; justify: stretch; gap: 1; gap-fill: --stroke; padding: 0; fill: none; stroke: --stroke; stroke-width: 2; stroke-style: solid; font-size: 14; font-weight: normal; scale: 1;
+  }
+  .lini-cell { padding: 4 8; }
+  .lini-header { fill: --header-fill; font-weight: semibold; }
+  .lini-note { fill: --fill; stroke: --stroke; padding: 20; scale: 1; }
+  .lini-balloon {
+    width: 16; fill: --fill; stroke: --stroke; font-size: 11; scale: 1;
+  }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-hole { fill: --bg; stroke: --stroke-dark; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-shoulder { stroke: --stroke-dark; }
+  .lini-steel { fill: hatch(45, 5); }
+  .lini-bronze { fill: hatch(-45, 4); }
+  .lini-align-start { align: start; }
+  .lini-align-end { align: end; }
+  .lini-justify-start { justify: start; }
+  .lini-justify-end { justify: end; }
+  .lini-sequence .lini-note { padding: 6 10; font-size: 13; }
+  .lini-drawing .lini-note { padding: 6 10; font-size: 13; }
+  .lini-link { stroke: --gray-ink; }
+  .lini-dimension { stroke: --blue-ink; }
+}
+
+|block#face-view| .lini-drawing.lini-block { unit: mm; px-per-unit: 4; } [
+  |block| .lini-footnote.lini-caption.lini-block [ "GUIDE HOUSING" ]
+  |sketch#flange| .lini-sketch {
+    draw: move(-55, 48) right(110):base fillet(8):r8 up(96):post left(92):crown
+          point():c1 line(-18, 24):flank point():c2 close();
+  } [
+    |oval#boss| .lini-oval { width: 64; height: 64; fill: none; }
+    |oval#seat| .lini-hole.lini-oval { width: 32; } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-centerline.lini-line { chrome: y-axis; }
+    ]
+    |oval#bore| .lini-oval { width: 24; height: 24; fill: none; }
+    |oval#bolt| .lini-hole.lini-oval {
+      width: 10; translate: -36 -30; pattern: grid(2, 2, 72, 60);
+    } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-centerline.lini-line { chrome: y-axis; }
+    ]
+  ]
+  flange:left (-) flange.bolt.1 (-) flange.bolt.2 (-) flange:right {
+    side: bottom;
+  }
+  flange:left (-) flange:right { side: bottom; }
+  flange.bolt.1 (-) flange.bolt.3 { side: right; }
+  flange:top (-) flange:bottom { side: right; tol: 0.2 -0.05; }
+  flange.seat (-) flange.bolt.1 { project: horizontal; side: top; }
+  flange:c1 (-) flange:c2
+  flange:flank (<) flange:crown { format: decimal 1; }
+  flange:r8 (o)
+  flange.seat:top-right (o) { tol: H7; }
+  flange.bolt (o) { along: 0.5; side: left; } [ "THRU" ]
+  flange.bolt.2 & flange.bolt.4 <- { along: 0.5; side: right; } [
+    "2× CSK 90°"
+  ]
+  flange:base >- { along: 0.5; } [ "A" ]
+  flange:flank *- { along: 0.5; side: left; } [ "Ra 1.6" ]
+]
+|block| .lini-row.lini-block { gap: 40; align: center; } [
+  |block#unit-view| .lini-drawing.lini-block { unit: mm; px-per-unit: 4; } [
+    |block| .lini-footnote.lini-caption.lini-block [ "GUIDE UNIT — SECTION" ]
+    |sketch#housing| .lini-steel.lini-sketch {
+      draw: move(-60, -48) right(16) down(16) right(44):boss down(16)
+            left(20):seat down(4) left(40):bore close():mount;
+      revolve: x-axis;
+    } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-shoulder.lini-line { chrome: edges; }
+    ]
+    |sketch#bush| .lini-bronze.lini-sketch {
+      draw: move(-12, -16) right(24):od down(6):face left(24) close();
+      revolve: x-axis;
+    } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-shoulder.lini-line { chrome: edges; }
+    ]
+    |block#spindle| .lini-drawing.lini-block { px-per-unit: 4; } [
+      |sketch#shaft| .lini-sketch {
+        draw: move(-60, -10) right(64) right(26):stub down(20)
+              left(26):underside left(64) close();
+        fill: --bg;
+      }
+      |sketch#knob| .lini-steel.lini-sketch {
+        draw: move(-7, -20) right(14) down(40) left(14) close();
+      }
+      knob:left || shaft:right
+    ]
+    |line| .lini-centerline.lini-line { points: -70 0, 62 0; }
+    bush:left || housing:right { gap: -20; }
+    spindle.shaft:left || housing:right { gap: -50; }
+    housing:left (-) spindle.knob:right { side: bottom; }
+    |oval#b1| .lini-balloon.lini-oval { translate: -40 -70; } [ "1" ]
+    |oval#b2| .lini-balloon.lini-oval { translate: 2 -70; } [ "2" ]
+    |oval#b3| .lini-balloon.lini-oval { translate: 30 -70; } [ "3" ]
+    |oval#b4| .lini-balloon.lini-oval { translate: 64 -70; } [ "4" ]
+    b1 -* housing:boss
+    b2 -* bush:face
+    b3 -* spindle.shaft:stub
+    b4 -* spindle.knob:top
+    spindle.knob:top-right <- { along: 0.5; side: right; } [ "KNURLED" ]
+    |block#hint| .lini-note.lini-block { translate: -96 -30; } [
+      "SHIM TO SUIT ON ASSEMBLY"
+    ]
+    hint -> housing:mount
+  ]
+  |block#bom| .lini-table.lini-group.lini-block { columns: 22, auto, 30; } [
+    |block| .lini-cell.lini-block [ "#" ]
+    |block| .lini-cell.lini-block [ "Part" ]
+    |block| .lini-cell.lini-block [ "Qty" ]
+    |block| .lini-cell.lini-block [ "1" ]
+    |block| .lini-cell.lini-block [ "Housing" ]
+    |block| .lini-cell.lini-block [ "1" ]
+    |block| .lini-cell.lini-block [ "2" ]
+    |block| .lini-cell.lini-block [ "Bush" ]
+    |block| .lini-cell.lini-block [ "1" ]
+    |block| .lini-cell.lini-block [ "3" ]
+    |block| .lini-cell.lini-block [ "Shaft" ]
+    |block| .lini-cell.lini-block [ "1" ]
+    |block| .lini-cell.lini-block [ "4" ]
+    |block| .lini-cell.lini-block [ "Knob" ]
+    |block| .lini-cell.lini-block [ "1" ]
+  ]
+]
+--- stderr ---

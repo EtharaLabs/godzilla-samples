@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+{
+  layout: grid; columns: repeat(2); gap: 30;
+  --brand: #ff6600;
+  w = 120;
+  scale(n) = (100*1.2^n);
+  |box| { radius: 6; }
+  |svc::box| { fill: --teal-wash; stroke: --teal-ink; }
+  .hot { stroke: --red-deep; }
+}
+
+// leading comment
+|svc#api| "API"  // trailing comment
+|box#b| { fill: red; }
+|group#g| "G" [
+  |box#x| "x"
+  |box#y| "y"
+  x -> y
+]
+
+|table#t| { columns: 80, 140; } [
+  "Fruit" "Qty"
+  "Apple" "12"
+  "Watermelon" "3" { color: --red-ink; }
+]
+
+api -> b "q" .hot
+--- stderr ---

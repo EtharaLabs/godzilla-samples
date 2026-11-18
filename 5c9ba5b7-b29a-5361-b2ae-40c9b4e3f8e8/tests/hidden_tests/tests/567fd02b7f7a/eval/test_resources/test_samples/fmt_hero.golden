@@ -1,0 +1,71 @@
+exit: 0
+--- stdout
+// The Lini hero — a colourful service map. Palette colours, a gradient entry
+// point, mixed link styles. Source for assets/hero.png.
+{
+  direction: column; gap: 38; padding: 24;
+  // the tiers stack top-down; each tier is a row
+  |-| { stroke: --gray-deep; }
+
+  |edge::box| { fill: --sky-wash; stroke: --sky-ink; color: --sky-ink; }
+  |svc::box| { fill: --teal-wash; stroke: --teal-ink; color: --teal-ink; }
+  |api::sign| {
+    symbol: octagon; fill: --green-wash; stroke: --green-ink; color: --green-ink;
+  }
+  |auth::sign| {
+    symbol: shield; fill: --purple-wash; stroke: --purple-ink; color: --purple-ink; translate: 0 2;
+  }
+  |store::cyl| { fill: --rose-wash; stroke: --rose-ink; color: --rose-ink; }
+
+  .flow { stroke: --blue-deep; }
+  .cache { stroke: --teal-deep; }
+  .async { stroke: --amber-deep; }
+  .auth { stroke: --purple-deep; }
+}
+
+|oval#users| "Users" {
+  width: 156; height: 62; fill: gradient(--sky, --purple); stroke: none; color: white; font-weight: bold;
+}
+
+|group#edge| { gap: 20; } [
+  |caption| "Edge"
+  |edge#lb| [
+    "Load balancer"
+    |badge| "v2"
+  ]
+  |sign#cdn| "cloud" {
+    fill: --orange-wash; stroke: --orange-ink; color: --orange-ink; width: 85;
+  } [
+    "CDN" { translate: 6 2; }
+  ]
+]
+
+|group#svc| { gap: 28; } [
+  |caption| "Services"
+  |api#api| [ "API" ]
+  |auth#auth| [
+    "Auth" { translate: 0 -4; }
+  ]
+  |svc#worker| [
+    "Worker"
+    |badge| "NEW"
+  ]
+]
+
+|group#data| { gap: 28; } [
+  |caption| "Data"
+  |store#pg| "Postgres"
+  |store#redis| "Redis"
+  |svc#queue| "Queue" {
+    fill: --amber-wash; stroke: --amber-deep; color: --amber-ink; multiple: 4;
+  }
+]
+
+users -> edge.lb .flow
+edge.lb -> svc.api
+edge.lb -> svc.auth .auth
+svc.api -> data.pg .flow
+svc.api --> data.redis "cache" .cache
+svc.worker ~> data.queue:right "jobs" .async
+
+--- stderr

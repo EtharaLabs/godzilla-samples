@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+{
+  layout: tree; padding: 20; gap: 64 48; font-size: 15; direction: bilateral; routing: orthogonal;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-topic {
+    fill: --fill; stroke: --stroke; stroke-width: 2; radius: 8; padding: 8 14; direction: column; gap: 12;
+  }
+  .lini-mindmap { max-width: 160; font-size: 17; font-weight: semibold; }
+  .lini-mindmap .lini-topic { max-width: 160; font-weight: medium; }
+  .lini-mindmap .lini-level-1 { font-size: 15; }
+  .lini-mindmap .lini-hue-rose {
+    fill: --rose-wash; stroke: --rose-deep; color: --rose-ink;
+  }
+}
+
+|block#m| .lini-mindmap.lini-topic.lini-block.lini-level-0 [
+  "M"
+  |block#a| .lini-topic.lini-block.lini-side-right.lini-level-1.lini-hue-rose [
+    "A"
+  ]
+]
+
+m:right - m.a:left .lini-hue-rose
+--- stderr ---

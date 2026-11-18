@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>lini — flow.lini</title>
+        <!-- The bundled families as webfonts, so the live preview's name-only
+        SVG (`<text>`, no embedded bytes) renders on the exact faces layout
+        measured with [SPEC 6/17]. -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet"
+        />
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                height: 100%;
+            }
+            body {
+                font:
+                    13px/1.4 system-ui,
+                    -apple-system,
+                    sans-serif;
+                background: #1c1c1c;
+                display: flex;
+                flex-direction: column;
+            }
+            header {
+                flex: 0 0 auto;
+                padding: 8px 16px;
+                background: #111;
+                color: #eee;
+                border-bottom: 1px solid #333;
+                display: flex;
+                gap: 16px;
+                align-items: center;
+            }
+            header strong {
+                color: #6ab7ff;
+                letter-spacing: 0.5px;
+            }
+            .status {
+                font-size: 12px;
+                color: #888;
+                margin-left: auto;
+            }
+            .status.ok {
+                color: #5fcf5f;
+            }
+            .status.err {
+                color: #ff6666;
+            }
+            main {
+                flex: 1 1 auto;
+                overflow: auto;
+                padding: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #2a2a2a;
+            }
+            /* The paper behind the figure is the theme's own (`--lini-bg`,
+            declared on `:root` by the server when `--theme` is set) — a figure
+            paints no background it was not given. White with no theme. */
+            #svg-host {
+                background: var(--lini-bg, white);
+                padding: 16px;
+                border-radius: 6px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                max-width: 100%;
+                max-height: 100%;
+            }
+            #svg-host svg {
+                display: block;
+                max-width: 100%;
+                height: auto;
+            }
+            #error-host {
+                display: none;
+                background: #2a1010;
+                color: #ffaaaa;
+                padding: 16px;
+                border-radius: 6px;
+                border: 1px solid #5a2020;
+                font:
+                    12px/1.5 ui-monospace,
+                    monospace;
+                white-space: pre-wrap;
+                max-width: 80ch;
+            }
+        </style>
+        <style>:root { --lini-accent: #7adff7; --lini-accent-text: #0a2c4e; --lini-amber: #9e6000; --lini-amber-deep: #dba200; --lini-amber-ink: #ffdf5c; --lini-amber-soft: #593900; --lini-amber-wash: #35280a; --lini-bg: #00509e; --lini-blue: #006cd3; --lini-blue-deep: #62aeff; --lini-blue-ink: #a0ecff; --lini-blue-soft: #113f75; --lini-blue-wash: #192b41; --lini-caption-color: rgba(255, 255, 255, 0.72); --lini-caption-font-weight: 400; --lini-component-fill: #2f6199; --lini-component-stroke: white; --lini-cyan: var(--lini-teal); --lini-danger: #ffa295; --lini-fg: #edf5fb; --lini-fill: #2f6199; --lini-font-weight: 500; --lini-footer-color: rgba(255, 255, 255, 0.72); --lini-gray: #6f6f6f; --lini-gray-deep: #acacac; --lini-gray-ink: #e8e8e8; --lini-gray-soft: #404040; --lini-gray-wash: #2a2a2a; --lini-green: #008a45; --lini-green-deep: #42c887; --lini-green-ink: #8bffc3; --lini-green-soft: #004f2a; --lini-green-wash: #143121; --lini-grid: rgba(255, 255, 255, 0.22); --lini-group-fill: rgba(255, 255, 255, 0.07); --lini-group-stroke: rgba(255, 255, 255, 0.55); --lini-header-fill: rgba(255, 255, 255, 0.14); --lini-icon-fill: rgba(255, 255, 255, 0.25); --lini-indigo: var(--lini-purple); --lini-label-ink: #7bd9de; --lini-lime: #5a7d00; --lini-lime-deep: #98bc42; --lini-lime-ink: #d3f986; --lini-lime-soft: #354800; --lini-lime-wash: #252e13; --lini-link-font-weight: 400; --lini-muted: rgba(255, 255, 255, 0.72); --lini-orange: #b44a00; --lini-orange-deep: #f39042; --lini-orange-ink: #ffcd84; --lini-orange-soft: #662e00; --lini-orange-wash: #3b2413; --lini-pin-number: rgba(255, 255, 255, 0.65); --lini-pink: var(--lini-rose); --lini-purple: #6858d0; --lini-purple-deep: #a39cff; --lini-purple-ink: #ded9ff; --lini-purple-soft: #3c3574; --lini-purple-wash: #282741; --lini-red: #bd3936; --lini-red-deep: #fd8379; --lini-red-ink: #ffc1b5; --lini-red-soft: #6b2622; --lini-red-wash: #3e211e; --lini-rose: #b83667; --lini-rose-deep: #f880a5; --lini-rose-ink: #ffbee0; --lini-rose-soft: #68243c; --lini-rose-wash: #3c2028; --lini-shadow-color: rgba(0, 0, 0, 0.18); --lini-sheet: #00509e; --lini-sky: #0080b4; --lini-sky-deep: #00c0f0; --lini-sky-ink: #5ffdff; --lini-sky-soft: #004a65; --lini-sky-wash: #0a2f3a; --lini-stray: #ffa295; --lini-stroke: rgba(255, 255, 255, 0.85); --lini-stroke-dark: white; --lini-stroke-light: rgba(255, 255, 255, 0.6); --lini-teal: #008b81; --lini-teal-deep: #00cabe; --lini-teal-ink: #4ffffa; --lini-teal-soft: #004f4a; --lini-teal-wash: #07312e; --lini-text-color: var(--lini-fg); --lini-tip-bg: #edf5fb; --lini-tip-fg: #00509e; --lini-warn: #f3bd5c; --lini-wire: #a8d8f0; --lini-yellow: var(--lini-amber); }</style>
+    </head>
+    <body>
+        <header>
+            <strong>lini serve</strong>
+            <span>flow.lini</span>
+            <span class="status" id="status">connecting…</span>
+        </header>
+        <main>
+            <div id="svg-host"></div>
+            <div id="error-host"></div>
+        </main>
+        <script>
+            const svgHost = document.getElementById("svg-host");
+            const errHost = document.getElementById("error-host");
+            const status = document.getElementById("status");
+
+            function setStatus(text, cls) {
+                status.textContent = text;
+                status.className = "status" + (cls ? " " + cls : "");
+            }
+
+            async function reload() {
+                try {
+                    const r = await fetch("/svg", { cache: "no-store" });
+                    const text = await r.text();
+                    if (
+                        r.headers
+                            .get("content-type")
+                            ?.startsWith("image/svg+xml")
+                    ) {
+                        svgHost.innerHTML = text;
+                        svgHost.style.display = "block";
+                        errHost.style.display = "none";
+                        setStatus(
+                            "rendered " + new Date().toLocaleTimeString(),
+                            "ok",
+                        );
+                    } else {
+                        // Compile error — body is plain text.
+                        errHost.textContent = text;
+                        errHost.style.display = "block";
+                        svgHost.style.display = "none";
+                        setStatus("compile error", "err");
+                    }
+                } catch (e) {
+                    setStatus("fetch failed: " + e.message, "err");
+                }
+            }
+
+            const events = new EventSource("/events");
+            events.addEventListener("reload", () => reload());
+            events.onopen = () => setStatus("watching", "ok");
+            events.onerror = () => setStatus("disconnected (retrying…)", "err");
+
+            reload();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+exit: 0
+--- stdout
+|page| { sheet: a4 landscape; } [
+  |drawing#side| { scale: 2; } [
+    |sketch#s| { draw: move(0, 0) right(30):body up(10):h left(30) close(); }
+    |magnifier#m1| "A" { width: 8; translate: 5 5; }
+  ]
+  |drawing#end| { scale: 2; } [
+    |oval#od| { width: 20; height: 20; }
+  ]
+  |drawing#det| { of: m1; scale: 4; } [
+    |sketch#s2| { draw: move(0, 0) right(5) up(5); }
+  ]
+]
+
+side.s:h - end.od:top
+
+--- stderr

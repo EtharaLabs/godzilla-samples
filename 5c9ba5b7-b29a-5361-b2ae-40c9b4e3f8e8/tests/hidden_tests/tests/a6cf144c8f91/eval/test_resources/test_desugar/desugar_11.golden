@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-column { direction: column; }
+  .lini-component {
+    fill: --component-fill; stroke: --component-stroke; stroke-width: 1.5; radius: 0; padding: 8; prefix: "U";
+  }
+  .lini-pin { height: 20; padding: 0; font-size: 11; gap: 0; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-J { prefix: "J"; }
+  .lini-pin-stub { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-pin-number { color: --pin-number; font-size: 10; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+}
+
+|block#J| .lini-J.lini-component.lini-block.lini-pose-180 {
+  pins: 3; direction: column; gap: 0;
+} [
+  |block| .lini-column.lini-block { gap: 0; align: end; } [
+    |block#p3| .lini-pin.lini-block { number: 3; side: right; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: right; translate: 28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: right; translate: 28 -9; width: 20;
+      } [ "3" ]
+    ]
+    |block#p2| .lini-pin.lini-block { number: 2; side: right; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: right; translate: 28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: right; translate: 28 -9; width: 20;
+      } [ "2" ]
+    ]
+    |block#p1| .lini-pin.lini-block { number: 1; side: right; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: right; translate: 28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: right; translate: 28 -9; width: 20;
+      } [ "1" ]
+    ]
+  ]
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -36; } [ "J" ]
+]
+--- stderr ---

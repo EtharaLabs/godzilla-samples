@@ -1,0 +1,24 @@
+exit: 0
+--- stdout
+|table| { columns: auto, 60, auto; } [
+  |header| [ "Name" "Qty" "Note" ]
+  "Apple"
+  "3"
+  "red"
+  "Kiwi" { color: --green-ink; }
+  "12"
+  "green"
+  |footer| [ "Total" "15" "" ]
+]
+|entity#u| "users" [
+  "id" "int" { font-weight: bold; }
+  "name" "text"
+]
+|entity#o| "orders" [
+  "id"      "int"
+  "user_id" "int"
+]
+
+o:left -o< u:right
+
+--- stderr

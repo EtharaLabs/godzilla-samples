@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+<span class="lini-tok-comment">// A sequence diagram (SPEC §10): `layout: sequence` reads the wires as time —</span>
+<span class="lini-tok-comment">// participants across the top, messages top-to-bottom in source order. Calls open</span>
+<span class="lini-tok-comment">// activation bars, a loop repeats a span, a self-message is internal work, a note</span>
+<span class="lini-tok-comment">// annotates. A participant's own paint flows onto its lifeline + bars. Source for</span>
+<span class="lini-tok-comment">// assets/sequence.png.</span>
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">layout</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">sequence</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">icon</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">user</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;user&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">62</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-deep</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-wash</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">shop</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Storefront&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--sky-wash</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--sky-deep</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">pay</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Payments&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--green-wash</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--green-deep</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">slant</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">db</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Orders&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--orange-wash</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--orange-deep</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">note</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;starts checkout&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">place</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">over</span> user<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-soft</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-deep</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+user <span class="lini-tok-op">-&gt;</span> shop <span class="lini-tok-string">&quot;place order&quot;</span>
+shop <span class="lini-tok-op">-&gt;</span> pay <span class="lini-tok-string">&quot;charge $42&quot;</span>
+pay <span class="lini-tok-op">-&gt;</span> pay <span class="lini-tok-string">&quot;verify card&quot;</span>
+pay <span class="lini-tok-op">--&gt;</span> shop <span class="lini-tok-string">&quot;receipt&quot;</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">loop</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;each item&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--purple-wash</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--purple-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">color</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--gray-deep</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  shop <span class="lini-tok-op">-&gt;</span> db <span class="lini-tok-string">&quot;reserve stock&quot;</span>
+  db <span class="lini-tok-op">--&gt;</span> shop <span class="lini-tok-string">&quot;in stock&quot;</span>
+<span class="lini-tok-punct">]</span>
+
+shop <span class="lini-tok-op">--&gt;</span> user <span class="lini-tok-string">&quot;order #1024&quot;</span>
+user <span class="lini-tok-op">~&gt;</span> shop <span class="lini-tok-string">&quot;track parcel&quot;</span>
+--- stderr ---

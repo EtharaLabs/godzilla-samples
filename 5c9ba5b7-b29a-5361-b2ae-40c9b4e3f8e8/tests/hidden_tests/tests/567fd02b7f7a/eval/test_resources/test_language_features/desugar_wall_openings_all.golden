@@ -1,0 +1,67 @@
+exit: 0
+--- stdout
+{
+  layout: floorplan; padding: 20; font-size: 15; unit: m; scale: 0.02; px-per-unit: 4000;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-wall { fill: --stroke-dark; stroke: none; }
+  .lini-door-leaf { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-door-swing { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-window-sill { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-stair-tread { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-stair-arrow { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-stairs { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+}
+
+|sketch#o| .lini-wall.lini-sketch {
+  draw: move(0, 0) right(8):n down(5):e left(8):s close():w;
+  wall-thickness: 0.2;
+} [
+  |block| .lini-door.lini-block { on: n; at: 1; swing: left; unit-mm: 1000; } [
+    |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+    |line| .lini-door-swing.lini-line { chrome: swing 0; }
+  ]
+  |block| .lini-door.lini-block {
+    on: e; at: 1; hinge: end; swing: right; unit-mm: 1000;
+  } [
+    |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+    |line| .lini-door-swing.lini-line { chrome: swing 0; }
+  ]
+  |block| .lini-door.lini-block {
+    on: s; at: 2; width: 1.6; symbol: double; unit-mm: 1000;
+  } [
+    |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+    |line| .lini-door-swing.lini-line { chrome: swing 0; }
+    |line| .lini-door-leaf.lini-line { chrome: leaf 1; }
+    |line| .lini-door-swing.lini-line { chrome: swing 1; }
+  ]
+  |block| .lini-window.lini-block { on: w; at: 1; width: 2; unit-mm: 1000; } [
+    |line| .lini-window-sill.lini-line { chrome: sill 0; }
+    |line| .lini-window-sill.lini-line { chrome: sill 1; }
+  ]
+  |block| .lini-door.lini-block {
+    on: n; at: 4; symbol: sliding; width: 2; unit-mm: 1000;
+  } [
+    |line| .lini-door-leaf.lini-line { chrome: panel 0; }
+    |line| .lini-door-leaf.lini-line { chrome: panel 1; }
+  ]
+]
+|block| .lini-stairs.lini-block { steps: 10; translate: 5 2; unit-mm: 1000; } [
+  |line| .lini-stair-tread.lini-line { chrome: tread 0; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 1; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 2; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 3; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 4; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 5; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 6; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 7; }
+  |line| .lini-stair-tread.lini-line { chrome: tread 8; }
+  |line| .lini-stair-arrow.lini-line { chrome: arrow 0; }
+]
+
+o:n (-) o:s { side: right; }
+
+--- stderr

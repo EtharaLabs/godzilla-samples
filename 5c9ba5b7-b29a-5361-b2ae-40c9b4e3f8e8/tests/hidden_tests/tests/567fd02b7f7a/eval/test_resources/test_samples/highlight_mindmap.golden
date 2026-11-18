@@ -1,0 +1,55 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// The mindmap preset [SPEC 8/12]: `|mindmap|` is the visible root topic and</span>
+<span class="lini-tok-comment">// bundles `layout: tree; direction: bilateral; routing: natural`, the palette</span>
+<span class="lini-tok-comment">// walk (one hue per first-level branch — red and grey skipped), the</span>
+<span class="lini-tok-comment">// `.lini-level-N` depth ramp, and `max-width: 160` topic wrap. Branch wires</span>
+<span class="lini-tok-comment">// are desugar-generated, so `lini desugar` prints them like any other link.</span>
+
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-comment">// A topic stacks its card content by default [SPEC 11]; here the icon reads</span>
+  <span class="lini-tok-comment">// as part of the title, so each branch card stays one line tall and the tier</span>
+  <span class="lini-tok-comment">// sits level whether or not it carries a glyph.</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">row</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">mindmap</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Product Vision&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">16</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">ship</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Shipping cadence&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">icon</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> rocket<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">height</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">none</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-deep</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Weekly release train&quot;</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Feature flags gate the risky work&quot;</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">build</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Build quality&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">icon</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> seal<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">height</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">none</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--orange-deep</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Snapshot tests on every output&quot;</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Zero clippy debt&quot;</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">learn</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Learning loop&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Dogfood the tool daily&quot;</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;User interviews every sprint&quot;</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">plan</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Planning&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">icon</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> presentation<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">height</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">none</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--lime-deep</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;One-page specs before code&quot;</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Stages sized for one session&quot;</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">team</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Team&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Small and senior&quot;</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ownership over process&quot;</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">care</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Customer care&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">icon</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> heart<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">height</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">none</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-deep</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Support rotations&quot;</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Bug fixes beat features&quot;</span>
+  <span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">]</span>
+
+--- stderr

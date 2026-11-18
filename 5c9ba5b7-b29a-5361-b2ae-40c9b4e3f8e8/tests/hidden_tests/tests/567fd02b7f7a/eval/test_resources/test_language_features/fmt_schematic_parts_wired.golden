@@ -1,0 +1,27 @@
+exit: 0
+--- stdout
+{
+  layout: schematic;
+}
+
+|component#U1| "MCU" [
+  |pin#vcc| { side: top; number: 1; }
+  |pin#gnd| { side: bottom; number: 2; }
+  |pin#io| { side: right; number: 3; }
+  |pin#rst| { side: left; number: 4; }
+]
+|R#R1| "10k"
+|C#C1| "100n"
+|LED#D1|
+|gnd#G1|
+|J#J1| { pins: 3; }
+
+U1.vcc - "3V3"
+U1.gnd - G1
+U1.io - R1 - D1 - |gnd|
+U1.rst - C1 - |gnd|
+J1.p1 -> "TX"
+J1.p2 -<> "RX"
+J1.p3 - |nc|
+
+--- stderr

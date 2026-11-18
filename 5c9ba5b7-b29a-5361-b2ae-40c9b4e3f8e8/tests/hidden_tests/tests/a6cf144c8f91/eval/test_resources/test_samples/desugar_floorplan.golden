@@ -1,0 +1,185 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15; density: 4;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-rect { radius: 0; }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-floorplan { layout: floorplan; }
+  .lini-wall { fill: --stroke-dark; stroke: none; }
+  .lini-door-leaf { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-door-swing { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-window-sill { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-bed { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+  .lini-sofa { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+  .lini-dining { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+  .lini-bath { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+  .lini-appliance { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+  .lini-slab { fill: --bg; stroke: --stroke-dark; stroke-width: 1; }
+  .lini-room {
+    layout: flow; direction: column; align: center; gap: 2; font-size: 11; letter-spacing: 1;
+  }
+}
+
+|block#unit| .lini-floorplan.lini-drawing.lini-block {
+  unit: m; scale: 0.02; px-per-unit: 4000;
+} [
+  |block| .lini-footnote.lini-caption.lini-block [
+    "UNIT 12A — ONE BEDROOM · 65 m²"
+  ]
+  |sketch#outer| .lini-wall.lini-sketch {
+    draw: move(0, 0) right(9.6):north down(6.8):east left(9.6):south
+          close():west;
+    wall-thickness: 0.2;
+  } [
+    |block#entry| .lini-door.lini-block {
+      on: east; at: 1.2; width: 0.95; swing: right; unit-mm: 1000;
+    } [
+      "D1"
+      |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+      |line| .lini-door-swing.lini-line { chrome: swing 0; }
+    ]
+    |block#slider| .lini-door.lini-block {
+      on: west; at: 3.4; width: 2.4; symbol: sliding; unit-mm: 1000;
+    } [
+      "D2"
+      |line| .lini-door-leaf.lini-line { chrome: panel 0; }
+      |line| .lini-door-leaf.lini-line { chrome: panel 1; }
+    ]
+    |block#w1| .lini-window.lini-block {
+      on: west; at: 0.5; width: 2; unit-mm: 1000;
+    } [
+      "W1"
+      |line| .lini-window-sill.lini-line { chrome: sill 0; }
+      |line| .lini-window-sill.lini-line { chrome: sill 1; }
+    ]
+  ]
+  |sketch#bedwall| .lini-partition.lini-wall.lini-sketch {
+    draw: move(0, 3.8) right(4.6):head down(3):side;
+    wall-thickness: 0.1;
+  } [
+    |block#bed-door| .lini-door.lini-block {
+      on: side; at: 0.4; width: 0.9; swing: right; unit-mm: 1000;
+    } [
+      "D3"
+      |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+      |line| .lini-door-swing.lini-line { chrome: swing 0; }
+    ]
+  ]
+  |sketch#laundry| .lini-partition.lini-wall.lini-sketch {
+    draw: move(6, 6.8) up(0.8);
+    wall-thickness: 0.1;
+  }
+  |sketch#bathwall| .lini-partition.lini-wall.lini-sketch {
+    draw: move(9.6, 4) left(2.9):head down(2.8):side;
+    wall-thickness: 0.1;
+  } [
+    |block#bath-door| .lini-door.lini-block {
+      on: side; at: 1; width: 0.8; hinge: end; unit-mm: 1000;
+    } [
+      "D4"
+      |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+      |line| .lini-door-swing.lini-line { chrome: swing 0; }
+    ]
+  ]
+  |block#deck| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 1.4; height: 6.6; translate: -0.8 3.4;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 3.9; height: 0.6; translate: 7.55 0.4;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 2; height: 0.9; translate: 7.2 2.05; radius: 4;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 1.1; height: 0.55; translate: 2 1.75;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 0.45; height: 0.45; translate: 0.6 4.075;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 0.45; height: 0.45; translate: 3 4.075;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 0.6; height: 1.4; translate: 4.25 6;
+  }
+  |block| .lini-slab.lini-rect.lini-box.lini-block {
+    width: 1.2; height: 0.55; translate: 7.35 4.325;
+  }
+  |block| .lini-appliance.lini-block {
+    symbol: stove; translate: 6.4 0.4; unit-mm: 1000;
+  }
+  |block| .lini-appliance.lini-block {
+    symbol: fridge; translate: 8.1 0.4; unit-mm: 1000;
+  } [ "F" ]
+  |block| .lini-appliance.lini-block {
+    symbol: dishwasher; translate: 7.7 2.05; unit-mm: 1000;
+  } [ "DW" ]
+  |block| .lini-appliance.lini-block {
+    symbol: washer; translate: 6.35 6.4; unit-mm: 1000;
+  } [ "W/D" ]
+  |block| .lini-bath.lini-block {
+    symbol: double-sink; translate: 6.8 2.05; unit-mm: 1000;
+  }
+  |block| .lini-sofa.lini-block {
+    symbol: stool; translate: 6.7 2.75; unit-mm: 1000;
+  }
+  |block| .lini-sofa.lini-block {
+    symbol: stool; translate: 7.2 2.75; unit-mm: 1000;
+  }
+  |block| .lini-sofa.lini-block {
+    symbol: stool; translate: 7.7 2.75; unit-mm: 1000;
+  }
+  |block| .lini-sofa.lini-block { translate: 2 0.55; unit-mm: 1000; }
+  |block| .lini-dining.lini-block {
+    symbol: four; translate: 4.3 2.2; unit-mm: 1000;
+  }
+  |block| .lini-bed.lini-block { translate: 1.8 4.85; unit-mm: 1000; }
+  |block| .lini-bath.lini-block {
+    symbol: sink; translate: 7.35 4.325; unit-mm: 1000;
+  }
+  |block| .lini-bath.lini-block {
+    symbol: toilet; rotate: 180; translate: 9.15 5; unit-mm: 1000;
+  }
+  |block| .lini-bath.lini-block {
+    symbol: tub; translate: 7.6 6.325; unit-mm: 1000;
+  }
+  |block| .lini-bath.lini-block {
+    symbol: shower; translate: 9.05 6.25; unit-mm: 1000;
+  }
+  |block| .lini-room.lini-block { translate: 2.2 2.75; } [
+    "LIVING / DINING"
+    "23.9 m²"
+  ]
+  |block| .lini-room.lini-block { translate: 7.4 3.2; } [ "KITCHEN" ]
+  |block| .lini-room.lini-block { translate: 3.3 6.1; } [ "BEDROOM" "12.8 m²" ]
+  |block| .lini-room.lini-block { translate: 5.65 4.6; } [ "HALL" ]
+  |block| .lini-room.lini-block { translate: 8.35 5.55; } [ "BATH" "7.3 m²" ]
+  |block| .lini-room.lini-block { translate: -0.8 3.4; } [ "BALCONY" ]
+  |sketch#north| .lini-sketch {
+    draw: move(-0.8, 5.73) line(0.22, 0.72) line(-0.22, -0.2) line(-0.22, 0.2)
+          close();
+    fill: --stroke-dark; stroke: none;
+  }
+  |block| .lini-room.lini-block { translate: -0.8 5.46; } [ "N" ]
+  outer:west-in (-) outer:east-in { side: top; }
+  outer:west-in (-) bedwall:side-out { side: bottom; }
+  bedwall:side-in (-) outer:east-in { side: bottom; }
+  outer:north-in (-) bathwall:head-out { side: right; }
+  bathwall:head-in (-) outer:south-in { side: right; }
+  outer:north-in (-) outer:south-in { side: right; }
+]
+--- stderr ---

@@ -1,0 +1,28 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-svc { fill: --teal-wash; }
+}
+
+|block| .lini-group.lini-block [
+  |block| .lini-caption.lini-block [ "Services" ]
+  |block#api| .lini-svc.lini-box.lini-block [ "API" ]
+  |block#auth| .lini-svc.lini-box.lini-block [ "Auth" ]
+]
+
+api -> auth { along: 0.5; } [ "calls" ]
+
+--- stderr

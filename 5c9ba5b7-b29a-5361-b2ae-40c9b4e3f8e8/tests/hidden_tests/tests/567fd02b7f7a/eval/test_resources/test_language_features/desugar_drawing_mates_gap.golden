@@ -1,0 +1,15 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+}
+
+|sketch#a| .lini-sketch { draw: move(0, 0) right(20) up(10) left(20) close(); }
+|sketch#b| .lini-sketch { draw: move(0, 0) right(10) up(10) left(10) close(); }
+|sketch#c| .lini-sketch { draw: move(0, 0) right(5) up(5) left(5) close(); }
+
+a:right || b:left { gap: 5; }
+b:top || c:bottom { gap: -2; }
+
+--- stderr

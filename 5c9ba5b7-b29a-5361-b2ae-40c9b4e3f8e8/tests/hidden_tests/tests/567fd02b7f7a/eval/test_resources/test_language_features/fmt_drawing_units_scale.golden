@@ -1,0 +1,12 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; unit: mm; density: 4; scale: 0.5;
+}
+
+|sketch#s| { draw: move(0, 0) right(100) up(50) left(100) close(); }
+
+s:left (-) s:right { tol: 0.1 -0.2; }
+s:bottom (-) s:top { tol: h7; format: decimal 2; }
+
+--- stderr

@@ -1,0 +1,18 @@
+{ layout: schematic; |vcc::label| { symbol: power } [ "5V" ] }
+|component#u1| "AMS1117-3.3" [
+  |pin#vin| { side: left; number: 3; }
+  |space| { span: 2; }                 // empty rail slots — the datasheet's pin-group gap
+  |pin#en| "EN/~SHDN" { side: left; number: 4; }   // label = displayed name (id shows when absent)
+  |pin#gnd| { side: bottom; number: 1; }
+  |pin#vout| { side: right; number: 2; }
+]
+|J#j1| "3V3 OUT" { pins: 4; rotate: 180; }
+|C#c1| "22u"
+|label#tach| "TACH"
+
+u1.vin - |vcc|              // the power-flag capsule, defined above
+u1.vout - c1 - |gnd|        // a chain PASSES THROUGH a 2-pin part: series circuit
+u1.vout - j1.p3 "3V3"       // net name = the wire's label, set beside the trace
+j1.p1 -> "NSTDBY"           // one-ended label wire; the marker sets the tag's shape
+u1.en - "EN"                // a plain name is a RUN of trace, not a stop
+j1.p2 - tach; tach - j1.p4  // two wires to one declared label merge at its point

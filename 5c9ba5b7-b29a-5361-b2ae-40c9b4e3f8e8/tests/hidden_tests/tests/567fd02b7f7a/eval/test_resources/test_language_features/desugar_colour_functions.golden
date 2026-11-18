@@ -1,0 +1,32 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-row { direction: row; }
+}
+
+|block| .lini-row.lini-block [
+  |block| .lini-box.lini-block { fill: rgb(10, 20, 30); }
+  |block| .lini-box.lini-block { fill: rgba(255, 0, 0, 0.5); }
+  |block| .lini-box.lini-block { fill: hsl(120, 50%, 50%); }
+  |block| .lini-box.lini-block { fill: hsla(240, 100%, 50%, 0.3); }
+  |block| .lini-box.lini-block { fill: #abc; }
+  |block| .lini-box.lini-block { fill: #aabbccdd; }
+  |block| .lini-box.lini-block {
+    fill: linear-gradient(90, --red, --blue, --green);
+  }
+  |block| .lini-box.lini-block { fill: radial-gradient(--amber, --purple); }
+  |block| .lini-box.lini-block {
+    fill: gradient(--rose, --sky); stroke: gradient(--teal, --lime);
+  }
+  |block| .lini-box.lini-block { fill: --red-wash; stroke: --red-ink; }
+  |block| .lini-box.lini-block { fill: transparent; stroke: currentColor; }
+]
+
+--- stderr

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout
+{
+  layout: drawing;
+}
+
+|sketch#shaft| {
+  draw: move(0, 0) up(10) right(20):a down(3) right(30) chamfer(1) down(7);
+  revolve: x-axis;
+}
+|sketch#plate| {
+  draw: move(0, 30) right(40) up(10) arc(5, 90) left(20) close();
+  mirror: y-axis;
+}
+
+shaft:a (o)
+shaft:left (-) shaft:right { side: bottom; }
+
+--- stderr

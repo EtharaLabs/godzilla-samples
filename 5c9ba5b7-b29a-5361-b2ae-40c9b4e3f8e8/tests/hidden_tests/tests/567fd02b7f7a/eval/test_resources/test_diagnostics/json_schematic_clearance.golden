@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "Y005",
+      "family": "schematic-tracks",
+      "severity": "error",
+      "message": "'clearance' 30 is past the sheet's pin pitch 20 — two wired pins stand one pitch apart, so no wire could keep it",
+      "span": {
+        "start": 0,
+        "end": 0,
+        "line": 1,
+        "col": 1,
+        "endLine": 1,
+        "endCol": 1
+      }
+    }
+  ]
+}
+
+--- stderr

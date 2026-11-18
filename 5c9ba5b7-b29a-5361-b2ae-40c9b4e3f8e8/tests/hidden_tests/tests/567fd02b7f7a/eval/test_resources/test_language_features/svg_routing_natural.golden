@@ -1,0 +1,66 @@
+exit: 0
+--- stdout
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-214.805 -65.0271 429.61 113.5271" width="429.61" height="113.5271" class="lini lini-scope-cc0eabe7">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-cc0eabe7 { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-link-font-weight: 400; --lini-stroke: light-dark(#444, #9aa0a6); --lini-text-color: var(--lini-fg); }
+      .lini-scope-cc0eabe7[data-theme="dark"], [data-theme="dark"] .lini-scope-cc0eabe7 { color-scheme: dark; }
+      .lini-scope-cc0eabe7[data-theme="light"], [data-theme="light"] .lini-scope-cc0eabe7 { color-scheme: light; }
+    }
+    .lini-scope-cc0eabe7, .lini-scope-cc0eabe7 text { font-family: var(--lini-font-family); }
+    .lini-scope-cc0eabe7 { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-cc0eabe7 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-cc0eabe7 .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-cc0eabe7 .lini-box { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; }
+    .lini-scope-cc0eabe7 .lini-link { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-cc0eabe7 .lini-marker { fill: var(--lini-stroke); stroke: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-box lini-block" data-id="a" transform="translate(-168.585,0)">
+      <rect x="-25.22" y="-27.5" width="50.44" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">A</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="b" transform="translate(-56.715,0)">
+      <rect x="-24.65" y="-27.5" width="49.3" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">B</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="c" transform="translate(55.485,0)">
+      <rect x="-25.55" y="-27.5" width="51.1" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">C</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="d" transform="translate(168.42,0)">
+      <rect x="-25.385" y="-27.5" width="50.77" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">D</text>
+    </g>
+  </g>
+  <g class="lini-links">
+    <g class="lini-link" data-from="a" data-to="c">
+      <path d="M -142.365 -12.5 L -140.365 -12.5 C -106.7096 -12.5 -114.6746 -47.068 -81.1211 -44.4516 C -55.5487 -42.4575 -55.3935 -46.4457 -29.8211 -44.4516 C 3.4381 -41.8581 -13.4252 0 19.935 0 L 25.435 0"/>
+      <polygon class="lini-marker lini-marker-arrow" points="29.435,0 20.435,4.5 20.435,-4.5"/>
+    </g>
+    <g class="lini-link" data-from="a" data-to="d">
+      <path d="M -142.365 0 L -140.365 0 C -3.5222 0 -3.8078 -12.5 133.035 -12.5 L 138.535 -12.5"/>
+      <polygon class="lini-marker lini-marker-arrow" points="142.535,-12.5 133.535,-8 133.535,-17"/>
+    </g>
+    <g class="lini-link" data-from="b" data-to="d">
+      <path d="M -31.065 0 L -29.065 0 C 7.4872 0 -7.6172 -44.5 28.935 -44.5 C 55.485 -44.5 55.485 -44.5 82.035 -44.5 C 115.8775 -44.5 99.1925 0 133.035 0 L 138.535 0"/>
+      <polygon class="lini-marker lini-marker-arrow" points="142.535,0 133.535,4.5 133.535,-4.5"/>
+    </g>
+    <g class="lini-link" data-from="d" data-to="a">
+      <path d="M 142.035 12.5 L 140.035 12.5 C 3.335 12.5 3.335 12.5 -133.365 12.5 L -138.865 12.5"/>
+      <polygon class="lini-marker lini-marker-arrow" points="-142.865,12.5 -133.865,8 -133.865,17"/>
+    </g>
+    <g class="lini-link" data-from="c" data-to="c">
+      <path d="M 82.035 0 L 84.035 0 C 107.6006 0 55.485 -61.0656 55.485 -37.5 L 55.485 -32"/>
+      <polygon class="lini-marker lini-marker-arrow" points="55.485,-28 50.985,-37 59.985,-37"/>
+    </g>
+  </g>
+</svg>
+
+--- stderr
+in.lini:7:1: warning: clearance (a -> d): natural wire passes 0.0 px from the body at (-82.36500000000001, -28.5)–(-31.065000000000012, 28.5), under margin 8; drawn anyway
+in.lini:7:1: warning: clearance (a -> d): natural wire passes 0.0 px from the body at (28.934999999999985, -28.5)–(82.03499999999998, 28.5), under margin 8; drawn anyway
+in.lini:9:1: warning: clearance (d -> a): natural wire passes 0.0 px from the body at (28.934999999999985, -28.5)–(82.03499999999998, 28.5), under margin 8; drawn anyway
+in.lini:9:1: warning: clearance (d -> a): natural wire passes 0.0 px from the body at (-82.36500000000001, -28.5)–(-31.065000000000012, 28.5), under margin 8; drawn anyway
+in.lini:10:1: warning: clearance (c -> c): natural wire passes 0.0 px from the body at (28.934999999999985, -28.5)–(82.03499999999998, 28.5), under margin 8; drawn anyway

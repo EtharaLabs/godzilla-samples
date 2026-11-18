@@ -1,0 +1,25 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+}
+
+|block| .lini-box.lini-block { max-width: 120; } [
+  "A long label that should wrap across several lines within the cap"
+]
+|block| .lini-box.lini-block { font-family: mono; font-size: 18; } [ "Mono" ]
+|block| .lini-box.lini-block {
+  font-style: italic; font-weight: bold; letter-spacing: 2;
+} [ "Italic bold" ]
+|block| .lini-box.lini-block {
+  text-decoration: underline; text-shadow: 1 1 2 --gray; line-spacing: 4;
+} [ "Under" ]
+|block| .lini-box.lini-block { text-transform: uppercase; } [ "Upper" ]
+
+--- stderr

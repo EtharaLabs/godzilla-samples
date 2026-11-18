@@ -1,0 +1,10 @@
+exit: 0
+--- stdout
+|chart| { width: 300; height: 200; categories: "a", "b", "c"; } [
+  |axis| { side: left; scale: log; range: 1 auto; }
+  |axis| { side: right; range: -10 0; }
+  |bars| { data: 3, 300, 30000; }
+  |line| { data: -5, -2, -8; axis: 2; }
+]
+
+--- stderr

@@ -1,0 +1,54 @@
+exit: 0
+--- stdout ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-240.59 -48.5 481.18 97" width="481.18" height="97" class="lini lini-scope-cc0eabe7">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-cc0eabe7 { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-link-font-weight: 400; --lini-stroke: light-dark(#444, #9aa0a6); --lini-text-color: var(--lini-fg); }
+      .lini-scope-cc0eabe7[data-theme="dark"], [data-theme="dark"] .lini-scope-cc0eabe7 { color-scheme: dark; }
+      .lini-scope-cc0eabe7[data-theme="light"], [data-theme="light"] .lini-scope-cc0eabe7 { color-scheme: light; }
+    }
+    .lini-scope-cc0eabe7, .lini-scope-cc0eabe7 text { font-family: var(--lini-font-family); }
+    .lini-scope-cc0eabe7 { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-cc0eabe7 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-cc0eabe7 .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-cc0eabe7 .lini-box { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; }
+    .lini-scope-cc0eabe7 .lini-link { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-cc0eabe7 .lini-marker { fill: var(--lini-stroke); stroke: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-box lini-block" transform="translate(-195.8625,0)">
+      <rect x="-23.7275" y="-27.5" width="47.455" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">x</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="k" transform="translate(-110.0925,0)">
+      <rect x="-24.0425" y="-27.5" width="48.085" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">y</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="cat" transform="translate(-16.8975,0)">
+      <rect x="-31.1525" y="-27.5" width="62.305" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">cat</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="dog" transform="translate(85.9425,0)">
+      <rect x="-33.6875" y="-27.5" width="67.375" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">dog</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="kat" transform="translate(188.61,0)">
+      <rect x="-30.98" y="-27.5" width="61.96" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">kat</text>
+    </g>
+  </g>
+  <g class="lini-links">
+    <g class="lini-link" data-from="cat" data-to="dog">
+      <path d="M 15.255 0 L 47.755 0"/>
+      <polygon class="lini-marker lini-marker-arrow" points="51.755,0 42.755,4.5 42.755,-4.5"/>
+    </g>
+    <g class="lini-link" data-from="kat" data-to="dog">
+      <path d="M 156.63 0 L 124.13 0"/>
+      <polygon class="lini-marker lini-marker-arrow" points="120.13,0 129.13,-4.5 129.13,4.5"/>
+    </g>
+  </g>
+</svg>
+--- stderr ---
+p.lini:2:2: warning: class '.a' is never worn
+p.lini:7:1: warning: 'kat' auto-creates a new box; did you mean 'cat'?

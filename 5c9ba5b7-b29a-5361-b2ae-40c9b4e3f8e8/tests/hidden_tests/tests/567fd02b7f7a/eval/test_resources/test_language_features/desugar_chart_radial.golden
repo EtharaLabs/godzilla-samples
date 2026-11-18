@@ -1,0 +1,26 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 36; font-size: 15; columns: repeat(2);
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-pie { layout: pie; gap: 15; }
+  .lini-slice { stroke: auto; }
+}
+
+|block| .lini-chart.lini-block {
+  direction: radial; width: 220; height: 220; categories: "a", "b", "c", "d", "e";
+} [
+  |line| "r1" .lini-line { data: 3, 4, 2, 5, 1; }
+  |block| .lini-area.lini-block { data: 2, 2, 3, 3, 2; } [ "r2" ]
+]
+|block| .lini-pie.lini-block { hole: 0.5; width: 200; height: 200; } [
+  |block| .lini-slice.lini-block { value: 3; } [ "a" ]
+  |block| .lini-slice.lini-block { value: 2; fill: --teal; } [ "b" ]
+  |block| .lini-slice.lini-block { value: 0; } [ "c" ]
+]
+
+--- stderr

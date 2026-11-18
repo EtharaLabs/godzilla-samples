@@ -1,0 +1,18 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+}
+
+|sketch#w| .lini-sketch {
+  draw: move(0, 0) right(30):base line(-10, 20):slope left(20) close();
+}
+
+w:base (<) w:slope
+w:slope <- { along: 0.5; } [ "TAPER" ]
+w:top-left <- { along: 0.5; side: left; } [ "EDGE" ]
+w:left (-) w:right { side: bottom; }
+w:bottom (-) w:top { side: right; }
+
+--- stderr

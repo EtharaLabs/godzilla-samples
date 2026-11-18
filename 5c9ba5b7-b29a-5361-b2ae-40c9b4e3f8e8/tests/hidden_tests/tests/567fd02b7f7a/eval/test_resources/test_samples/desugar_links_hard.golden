@@ -1,0 +1,65 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 40; font-size: 15; columns: repeat(3); clearance: 10;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20; direction: column;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .hot { stroke: --red; stroke-width: 3; }
+  .cool { stroke: --blue; }
+  .attention { stroke: --orange; }
+}
+
+|block#alpha| .lini-box.lini-block { cell: 1 1; } [ "Alpha" ]
+|block#north| .lini-group.lini-block { cell: 2 1; gap: 16; } [
+  |block| .lini-caption.lini-block [ "North" ]
+  |block#n1| .lini-box.lini-block [ "N1" ]
+  |block#n2| .lini-box.lini-block [ "N2" ]
+]
+|block#beta| .lini-box.lini-block { cell: 3 1; } [ "Beta" ]
+|block#west| .lini-group.lini-block { cell: 1 2; gap: 16; } [
+  |block| .lini-caption.lini-block [ "West" ]
+  |block#w1| .lini-box.lini-block [ "W1" ]
+  |block#w2| .lini-box.lini-block [ "W2" ]
+]
+|block#hub| .lini-box.lini-block { cell: 2 2; } [ "Hub" ]
+|block#east| .lini-group.lini-block { cell: 3 2; padding: 16; gap: 16; } [
+  |block| .lini-caption.lini-block [ "East" ]
+  |block#e1| .lini-box.lini-block [ "E1" ]
+  |block#e2| .lini-box.lini-block [ "E2" ]
+]
+|block#gamma| .lini-box.lini-block { cell: 1 3; } [ "Gamma" ]
+|block#south| .lini-group.lini-block { cell: 2 3; gap: 16; } [
+  |block| .lini-caption.lini-block [ "South" ]
+  |block#s1| .lini-box.lini-block [ "S1" ]
+  |block#s2| .lini-box.lini-block [ "S2" ]
+]
+|block#delta| .lini-box.lini-block { cell: 3 3; } [ "Delta" ]
+
+hub -> north.n1 & east.e1
+hub -> south.s1 & west.w1
+north.n2 -> east.e1 .cool
+north.n2 -> east.e1 .cool
+west.w2 -> south.s1
+west.w2 -> south.s1
+alpha -> delta { along: 0.25, 0.5, 0.75; } [ "One" "Two" "Three" ]
+beta -> gamma
+gamma -> south.s1
+south.s1 -> delta:top
+east -> east.e2
+alpha -> west.w2 .hot
+west.w1 -> gamma .hot
+beta -> delta
+east -> west .attention
+east -> hub .attention
+
+--- stderr

@@ -1,0 +1,89 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// A small e-commerce schema — the |entity| ER card and the crow's-foot cardinality</span>
+<span class="lini-tok-comment">// operators [SPEC 8, 9]. An entity's label is its centred title; rows read left as</span>
+<span class="lini-tok-comment">// &quot;field&quot; &quot;type&quot;, or &quot;key&quot; &quot;field&quot; &quot;type&quot; for a keyed (3-column) table. Entities are</span>
+<span class="lini-tok-comment">// pinned so the schema reads as a graph, not a grid; `-o&lt;` is zero-or-many, `-+&lt;`</span>
+<span class="lini-tok-comment">// one-or-many, `-o+` zero-or-one — the ring / bar / crow composed on the target end.</span>
+<span class="lini-tok-comment">// Category is left in the default palette; the rest wear a hue (ink stroke, wash fill).</span>
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">30</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">entity</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">user</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;User&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">pin</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0</span> <span class="lini-tok-number">-14</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--blue-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--blue-wash</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;PK&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">cell</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">pk</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;&quot;</span>
+  <span class="lini-tok-string">&quot;name&quot;</span>
+  <span class="lini-tok-string">&quot;varchar&quot;</span>
+  <span class="lini-tok-string">&quot;&quot;</span>
+  <span class="lini-tok-string">&quot;email&quot;</span>
+  <span class="lini-tok-string">&quot;varchar&quot;</span>
+<span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">entity</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">order</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Order&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">pin</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">200</span> <span class="lini-tok-number">124</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-wash</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;PK&quot;</span>
+  <span class="lini-tok-string">&quot;id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;FK&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">cell</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">user_fk</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;user_id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;&quot;</span>
+  <span class="lini-tok-string">&quot;total&quot;</span>
+  <span class="lini-tok-string">&quot;decimal&quot;</span>
+<span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">entity</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">item</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;LineItem&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">pin</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">19</span> <span class="lini-tok-number">304</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--amber-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--amber-wash</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;PK&quot;</span>
+  <span class="lini-tok-string">&quot;id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;FK&quot;</span>
+  <span class="lini-tok-string">&quot;order_id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;FK&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">cell</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">product_fk</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;product_id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+<span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">entity</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">product</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Product&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">pin</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-204</span> <span class="lini-tok-number">185</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">auto</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--green-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--green-wash</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;PK&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">cell</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">pk</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;id&quot;</span>
+  <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;&quot;</span>
+  <span class="lini-tok-string">&quot;name&quot;</span>
+  <span class="lini-tok-string">&quot;varchar&quot;</span>
+  <span class="lini-tok-string">&quot;&quot;</span>
+  <span class="lini-tok-string">&quot;price&quot;</span>
+  <span class="lini-tok-string">&quot;decimal&quot;</span>
+<span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">entity</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">cart</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Cart&quot;</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">pin</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">176</span> <span class="lini-tok-number">-171</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--rose-wash</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;items&quot;</span>   <span class="lini-tok-string">&quot;int&quot;</span>
+  <span class="lini-tok-string">&quot;updated&quot;</span> <span class="lini-tok-string">&quot;timestamp&quot;</span>
+<span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">entity</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">category</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Category&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">pin</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-195</span> <span class="lini-tok-number">-143</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;name&quot;</span> <span class="lini-tok-string">&quot;varchar&quot;</span>
+  <span class="lini-tok-string">&quot;slug&quot;</span> <span class="lini-tok-string">&quot;varchar&quot;</span>
+<span class="lini-tok-punct">]</span>
+
+user.pk <span class="lini-tok-op">-</span>o&lt; order.user_fk<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">left</span>
+<span class="lini-tok-comment">// a user's key appears in zero-or-many orders — both ends name a |cell#id|, so</span>
+<span class="lini-tok-comment">// the wire leaves and lands on those rows; `:left` picks the wall it lands on</span>
+user <span class="lini-tok-op">-</span>o+ cart
+<span class="lini-tok-comment">// a user owns zero-or-one cart</span>
+order <span class="lini-tok-op">-</span>+&lt; item<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">right</span>
+<span class="lini-tok-comment">// an order contains one-or-many line items</span>
+product.pk <span class="lini-tok-op">-</span>o&lt; item.product_fk
+<span class="lini-tok-comment">// a product's key appears in zero-or-many line items — a wire anchored to one</span>
+<span class="lini-tok-comment">// field leaves each card at that field's row [SPEC 8]; the rest tie card to card</span>
+category <span class="lini-tok-op">-</span>o&lt; product
+<span class="lini-tok-comment">// a category groups zero-or-many products</span>
+
+--- stderr

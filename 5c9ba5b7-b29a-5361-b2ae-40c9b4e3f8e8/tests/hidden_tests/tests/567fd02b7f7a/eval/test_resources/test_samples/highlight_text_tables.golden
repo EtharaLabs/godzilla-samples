@@ -1,0 +1,70 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// Text &amp; tables [SPEC 3, 5, 6, 8, 9, 12]: a bare &quot;…&quot; is a &lt;text&gt; leaf that</span>
+<span class="lini-tok-comment">// carries its own text style in place; `max-width:` wraps a card's long label</span>
+<span class="lini-tok-comment">// to fit — the wrapped size is the measured size, so the grid tracks read it —</span>
+<span class="lini-tok-comment">// and the holding box's horizontal packing knob flushes the lines (`align` in a</span>
+<span class="lini-tok-comment">// column box — a card stacks its content [SPEC 11] — or a grid; `justify` in a</span>
+<span class="lini-tok-comment">// row box); a table's `align` reads one</span>
+<span class="lini-tok-comment">// value per column, reaching the header band and every body cell; a cell may</span>
+<span class="lini-tok-comment">// carry its own `{ }` block (&quot;Lime&quot; below — fmt keeps the block and lifts that</span>
+<span class="lini-tok-comment">// row out of the aligned grid); and a link's [ ] labels are the same styleable</span>
+<span class="lini-tok-comment">// leaves — `|-|` dresses them all at once, one label overriding in place.</span>
+
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">column</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">26</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">26</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">|</span>-<span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--gray</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">color</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">12</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> bold<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-string">&quot;Styleable text, in place&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">20</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> bold<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">row</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">styles</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">16</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;default&quot;</span>
+  <span class="lini-tok-string">&quot;coloured&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">color</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--red-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-string">&quot;bold&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> bold<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-string">&quot;italic&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">font-style</span><span class="lini-tok-punct">:</span> italic<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-string">&quot;underline&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">text-decoration</span><span class="lini-tok-punct">:</span> underline<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">row</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">tables</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">26</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">table</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">invoice</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Invoice&quot;</span> <span class="lini-tok-punct">{</span>
+    <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">130</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">70</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">100</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">start</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">center</span><span class="lini-tok-punct">,</span> <span class="lini-tok-keyword">end</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-string">&quot;Item&quot;</span>      <span class="lini-tok-string">&quot;Qty&quot;</span> <span class="lini-tok-string">&quot;Price&quot;</span>
+    <span class="lini-tok-string">&quot;Keyboard&quot;</span>  <span class="lini-tok-string">&quot;2&quot;</span>   <span class="lini-tok-string">&quot;$120.00&quot;</span>
+    <span class="lini-tok-string">&quot;Monitor&quot;</span>   <span class="lini-tok-string">&quot;1&quot;</span>   <span class="lini-tok-string">&quot;$340.00&quot;</span>
+    <span class="lini-tok-string">&quot;USB cable&quot;</span> <span class="lini-tok-string">&quot;5&quot;</span>   <span class="lini-tok-string">&quot;$9.50&quot;</span>
+  <span class="lini-tok-punct">]</span>
+
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">table</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">stock</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Stock&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">110</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">70</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">90</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-string">&quot;Item&quot;</span>  <span class="lini-tok-string">&quot;Qty&quot;</span> <span class="lini-tok-string">&quot;State&quot;</span>
+    <span class="lini-tok-string">&quot;Apple&quot;</span> <span class="lini-tok-string">&quot;12&quot;</span>  <span class="lini-tok-string">&quot;fresh&quot;</span>
+    <span class="lini-tok-string">&quot;Mango&quot;</span> <span class="lini-tok-string">&quot;3&quot;</span>   <span class="lini-tok-string">&quot;ripe&quot;</span>
+    <span class="lini-tok-string">&quot;Lime&quot;</span> <span class="lini-tok-string">&quot;0&quot;</span> <span class="lini-tok-string">&quot;out&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">color</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--red-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> bold<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">grid</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">cards</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">columns</span><span class="lini-tok-punct">:</span> <span class="lini-tok-type">repeat</span><span class="lini-tok-punct">(</span><span class="lini-tok-number">3</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">14</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">c1</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ship the release notes to every customer&quot;</span> <span class="lini-tok-punct">{</span>
+    <span class="lini-tok-prop">max-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">150</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">start</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">c2</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Rotate the signing keys before the audit window&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">max-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">150</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">c3</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Archive dashboards nobody has opened this quarter&quot;</span> <span class="lini-tok-punct">{</span>
+    <span class="lini-tok-prop">max-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">150</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">end</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">a</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Alpha&quot;</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">b</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Beta&quot;</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">c</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Gamma&quot;</span>
+
+a <span class="lini-tok-op">-&gt;</span> b <span class="lini-tok-string">&quot;styled by |-|&quot;</span>
+<span class="lini-tok-comment">// wears the global label look — teal, bold, 12</span>
+b <span class="lini-tok-op">-&gt;</span> c <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;nudged &amp; turned&quot;</span> <span class="lini-tok-punct">{</span>
+    <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0</span> <span class="lini-tok-number">-10</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">rotate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-6</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">color</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--red-ink</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">text-shadow</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">1</span> <span class="lini-tok-number">1</span> <span class="lini-tok-number">2</span> <span class="lini-tok-var">--gray-ink</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">]</span>
+<span class="lini-tok-comment">// one label overrides — text-shadow rides the label leaf, like any text prop</span>
+
+--- stderr

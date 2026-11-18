@@ -1,0 +1,32 @@
+exit: 0
+--- stdout
+{
+  layout: grid; columns: repeat(3);
+}
+
+|chart| { width: 200; height: 140; categories: "a", "b", "c"; } [
+  |axis| { side: left; format: decimal 2; }
+  |bars| { data: 0.123, 1234.5, 98765; }
+]
+|chart| { width: 200; height: 140; categories: "a", "b", "c"; } [
+  |axis| { side: left; format: significant 3; }
+  |bars| { data: 0.123, 1234.5, 98765; }
+]
+|chart| { width: 200; height: 140; categories: "a", "b", "c"; } [
+  |axis| { side: left; format: scientific 2; }
+  |bars| { data: 0.123, 1234.5, 98765; }
+]
+|chart| { width: 200; height: 140; categories: "a", "b", "c"; } [
+  |axis| { side: left; format: engineering 1; }
+  |bars| { data: 0.123, 1234.5, 98765; }
+]
+|chart| { width: 200; height: 140; categories: "a", "b", "c"; } [
+  |axis| { side: left; format: percent 0; }
+  |bars| { data: 0.123, 1234.5, 98765; }
+]
+|chart| { width: 200; height: 140; categories: "a", "b", "c"; } [
+  |axis| { side: left; format: fraction 8; }
+  |bars| { data: 0.123, 1234.5, 98765; }
+]
+
+--- stderr

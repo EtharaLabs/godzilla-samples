@@ -1,0 +1,27 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-icon {
+    fill: --icon-fill; stroke: --stroke; stroke-width: 2; width: 32; height: 32;
+  }
+  .lini-row { direction: row; }
+  .lini-sign {
+    width: 64; height: 64; padding: 4; stroke-width: 2; fit: contain;
+  }
+}
+
+|block| .lini-row.lini-block [
+  |icon| .lini-icon { fill: --amber; symbol: star; }
+  |icon| .lini-icon { stroke: --sky-deep; fill: none; symbol: house; }
+  |icon| .lini-icon { color: --teal; symbol: cloud; }
+  |icon| .lini-sign.lini-icon { symbol: warning; } [ "Hot surface" ]
+  |icon| .lini-sign.lini-icon {
+    fit: contain; width: 80; height: 40; symbol: info;
+  } [ "Note" ]
+]
+
+--- stderr

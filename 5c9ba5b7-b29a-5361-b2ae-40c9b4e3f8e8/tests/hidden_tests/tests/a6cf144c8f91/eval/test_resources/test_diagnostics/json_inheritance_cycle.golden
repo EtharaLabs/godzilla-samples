@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+{
+  "file": "<stdin>",
+  "diagnostics": [
+    {
+      "code": "R004",
+      "family": "inheritance-cycle",
+      "severity": "error",
+      "message": "cycle in 'a → b → a'",
+      "span": {
+        "start": 4,
+        "end": 13,
+        "line": 2,
+        "col": 3,
+        "endLine": 2,
+        "endCol": 12
+      }
+    }
+  ]
+}
+--- stderr ---

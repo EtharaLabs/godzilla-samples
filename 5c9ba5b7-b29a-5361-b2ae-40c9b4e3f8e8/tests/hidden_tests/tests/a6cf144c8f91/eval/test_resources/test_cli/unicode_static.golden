@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-183.725 -48.5 367.45 97" width="367.45" height="97" class="lini lini-scope-892083e5">
+  <style>
+    .lini-scope-892083e5, .lini-scope-892083e5 text { font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    .lini-scope-892083e5 { font-size: 15px; font-weight: 500; color: black; }
+    .lini-scope-892083e5 .lini-canvas { fill: white; }
+    .lini-scope-892083e5 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-892083e5 .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-892083e5 .lini-box { fill: white; stroke: #444; stroke-width: 2; }
+  </style>
+  <defs>
+    <path id="lini-g1500-0" d="M80 0L80 716L504 716L504 0L80 0ZM144 60L440 60L440 656L144 656L144 60Z"/>
+    <path id="lini-g1500-119" d="M80 0L80 716L326 716Q391 716 444 688.5Q497 661 528.5 611.5Q560 562 560 497Q560 433 528.5 383Q497 333 444 305.5Q391 278 326 278L140 278L140 382L329 382Q368 382 395 398.5Q422 415 436.5 441.5Q451 468 451 497Q451 526 436.5 552Q422 578 395 595Q368 612 329 612L190 612L190 0L80 0Z"/>
+    <path id="lini-g1500-177" d="M224 -16Q168 -16 126 6Q84 28 59.5 66.5Q35 105 35 155Q35 210 63.5 248Q92 286 139.5 306Q187 326 245 326Q278 326 305 321.5Q332 317 353 311Q374 305 386 298L386 325Q386 375 350 405Q314 435 257 435Q218 435 183 417.5Q148 400 126 370L53 427Q75 458 106.5 480Q138 502 177 514Q216 526 260 526Q370 526 430 471.5Q490 417 490 319L490 0L386 0L386 63L380 63Q366 43 343.5 25Q321 7 291 -4.5Q261 -16 224 -16ZM243 72Q285 72 317 92Q349 112 367.5 144.5Q386 177 386 215Q363 228 332 236.5Q301 245 265 245Q200 245 172 219Q144 193 144 154Q144 118 170.5 95Q197 72 243 72Z"/>
+    <path id="lini-g1500-241" d="M62 0L62 510L170 510L170 0L62 0ZM116 585Q86 585 64.5 606.5Q43 628 43 658Q43 689 64.5 709.5Q86 730 116 730Q147 730 168 709.5Q189 689 189 658Q189 628 168 606.5Q147 585 116 585Z"/>
+    <path id="lini-g1500-259" d="M62 0L62 716L170 716L170 0L62 0Z"/>
+    <path id="lini-g1500-265" d="M62 0L62 510L164 510L164 440L170 440Q192 477 235.5 501.5Q279 526 331 526Q425 526 472 470.5Q519 415 519 322L519 0L412 0L412 308Q412 370 381 398.5Q350 427 300 427Q261 427 232 405.5Q203 384 186.5 349Q170 314 170 274L170 0L62 0Z"/>
+  </defs>
+  <rect class="lini-canvas" x="-183.725" y="-48.5" width="367.45" height="97"/>
+  <g class="lini-scene">
+    <g class="lini-node lini-box lini-block" transform="translate(-126.375,0)">
+      <rect x="-36.35" y="-27.5" width="72.7" height="55" rx="8" ry="8"/>
+      <g class="lini-text">
+        <use href="#lini-g1500-119" transform="translate(-16.35 5.37) scale(0.015 -0.015)"/>
+        <use href="#lini-g1500-259" transform="translate(-7.485 5.37) scale(0.015 -0.015)"/>
+        <use href="#lini-g1500-177" transform="translate(-3.99 5.37) scale(0.015 -0.015)"/>
+        <use href="#lini-g1500-241" transform="translate(4.185 5.37) scale(0.015 -0.015)"/>
+        <use href="#lini-g1500-265" transform="translate(7.68 5.37) scale(0.015 -0.015)"/>
+      </g>
+    </g>
+    <g class="lini-node lini-box lini-block" transform="translate(-17.025,0)">
+      <rect x="-35" y="-27.5" width="70" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">你好</text>
+    </g>
+    <g class="lini-node lini-box lini-block" transform="translate(109.35,0)">
+      <rect x="-53.375" y="-27.5" width="106.75" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">mixed ü 😀</text>
+    </g>
+  </g>
+  <g class="lini-links"/>
+</svg>
+--- stderr ---
+<stdin>:2:7: warning: no bundled glyph for '你', '好' in "你好" — under --static this text stays <text>, drawn by the viewer's fonts
+<stdin>:3:7: warning: no bundled glyph for '😀' in "mixed ü 😀" — under --static this text stays <text>, drawn by the viewer's fonts

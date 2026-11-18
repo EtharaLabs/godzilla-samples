@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-cyl {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+}
+
+|block#a| .lini-box.lini-block [ "a" ]
+a & b -> store
+|block#b| .lini-box.lini-block [ "b" ]
+|cyl#store| .lini-cyl
+--- stderr ---

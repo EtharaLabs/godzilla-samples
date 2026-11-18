@@ -1,0 +1,67 @@
+schema_version = "1.4"
+reward_type = "bounded_continuous"
+artifacts = [{ source = "/workspace", exclude = ["./executable", "./target", "./.git"] }]
+
+[task]
+name = "ethara/5c9ba5b7-b29a-5361-b2ae-40c9b4e3f8e8"
+version = "1.0.0"
+description = "Rebuild lini, a compiler from a plain-text diagram language to themeable SVG (flowcharts, tables, ER schemas, charts, engineering drawings, floor plans and circuit schematics), in Rust with only the standard library, from its documentation and a compiled reference binary; graded by 2,632 hidden tests that compare the rebuilt program's behavior with the original's."
+authors = [{ name = "Aman Yadav", email = "aman.yadav@ethara.ai" }]
+keywords = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "compiler", "diagrams", "svg"]
+
+[metadata]
+instance_id = "monfa-red__lini.5dab4bf"
+repository = "monfa-red/lini"
+commit = "5dab4bf4da1d567f2f06425b565840b7d9776417"
+language = "rust"
+difficulty = "medium"
+base_commit = "12c27f968745d224b2cd525baf19710d1dafa9d6"
+reference_commit = "8fecaab68d01cd599cb4f2395d76cd67ac3852b2"
+platforms = ["linux/arm64", "linux/amd64"]
+test_branches = 2
+active_tests = 2632
+ignored_tests = 0
+language_policy = "original"
+tests_provenance = "automated"
+generator_fingerprint = "0d9ba35a4e4e744b"
+test_suite_sha256 = "484aab038719d1edf7bb282de66821815e8d03d010e14f93d74f038e5d35c0d9"
+category = "software-engineering"
+reward_type = "bounded_continuous"
+domain = "software-engineering"
+field = "computer-science"
+subfield = "compilers"
+tags = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "compiler", "diagrams", "svg"]
+expert_time_estimate_hours = 120.0
+null_floor = 0.0
+discrimination_weight = 1.0
+
+[agent]
+timeout_sec = 86400
+user = "agent"
+network_mode = "allowlist"
+allowed_hosts = ["api.openai.com", "api.anthropic.com"]
+
+[verifier]
+timeout_sec = 43200
+user = "root"
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+env = { PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/cargo/bin" }

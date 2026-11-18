@@ -1,0 +1,35 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 30; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-cyl {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-badge {
+    pin: top right; translate: 6 -6; radius: 8; padding: 2 6; shadow: 2 3 3; fill: --accent; color: --accent-text; font-size: 11; font-weight: normal;
+  }
+  .lini-chip {
+    radius: 12; fill: --sky-wash; stroke: --sky-ink; color: --sky-ink;
+  }
+}
+
+|block#api| .lini-group.lini-block [
+  |block| .lini-caption.lini-block [ "API" ]
+  |block#health| .lini-chip.lini-box.lini-block [ "OK" ]
+  |block| .lini-badge.lini-block [ "v2" ]
+]
+|cyl#db| .lini-cyl [ "db" ]
+
+--- stderr

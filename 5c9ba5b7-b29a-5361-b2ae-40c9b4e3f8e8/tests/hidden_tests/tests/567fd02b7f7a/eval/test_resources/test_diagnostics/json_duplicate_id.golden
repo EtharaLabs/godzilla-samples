@@ -1,0 +1,31 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "R003",
+      "family": "duplicate-id",
+      "severity": "error",
+      "message": "duplicate id 'a'",
+      "span": {
+        "start": 8,
+        "end": 15,
+        "line": 2,
+        "col": 1,
+        "endLine": 2,
+        "endCol": 8
+      },
+      "related": {
+        "start": 0,
+        "end": 7,
+        "line": 1,
+        "col": 1,
+        "endLine": 1,
+        "endCol": 8
+      }
+    }
+  ]
+}
+
+--- stderr

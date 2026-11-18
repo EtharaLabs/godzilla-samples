@@ -1,0 +1,298 @@
+exit: 0
+--- stdout
+// A whole sheet, the way one is really drawn: an ISO page, a captioned
+// `|region|` per block tiling the page's grid, and inside each of them
+// `layout: schematic` — the ICs on the scope's track row, every passive seated
+// at the pin it serves, and the router drawing the wires **between parts**.
+// That is the point of the file: a pin that runs straight to a net label says
+// nothing. Rails ride **power flags** wherever they are wanted, and only the
+// six signals that genuinely leave a block are written out as net names
+// [SPEC 16].
+{
+  // `density:` is screen resolution alone — px per millimetre — so the paper
+  // stays true-scale in print [SPEC 15.1] and the number says how much circuit
+  // an A3 holds: the parts are drawn in sheet px [SPEC 16.6], so 10 fits these
+  // seven blocks on the sheet edge to edge.
+  density: 5.5;
+
+  // A power flag is a one-line define with intrinsic text [SPEC 8/16.4]: the
+  // symbol's connection point sits at its bottom, so a chain ending in one
+  // grows **up** out of the pin it feeds. Three rails and a chassis stud are
+  // the sheet's global labels — the reason a rail wants no tag on every pin it
+  // reaches; `|gnd|` ships as a built-in define beside them.
+  |v24::label| { symbol: power; } [
+    "24V"
+  ]
+  |v5::label| { symbol: power; } [
+    "5V"
+  ]
+  |v3::label| { symbol: power; } [
+    "3V3"
+  ]
+  |chassis::label| { symbol: chassis; }
+
+  // The captioned block: a `|group|` that is its own schematic scope, so one
+  // node both frames the block and seats what is inside it [SPEC 16.6]. It
+  // states no `gap:` — the sheet's own coarse pitch is the lattice every part
+  // centre lands on [SPEC 16.1], and a block that overrode it would draw on a
+  // grid of its own.
+  // …and its caption sits **inside** the frame it names, as a sheet titles
+  // a block [SPEC 16.6] — a diagram's would stand above the corner, in the
+  // gutter a tiled page has no room for.
+  |region::group| { layout: schematic; }
+}
+
+// The page is an ordinary container inside its frame [SPEC 15.8], so the blocks
+// take a grid: fixed tracks, each sized to the widest and tallest block the
+// lattice draws in it, stretched to tile the sheet edge to edge. The
+// bottom-right cell is left empty for the title block, which takes no cell at
+// all — a `|title-block|` is pulled out of the flow and pinned flush inside the
+// frame's corner [SPEC 15.8]. `padding:` clears the frame, which is inset
+// 10 mm from the trimmed edge, so no block draws over it.
+|page| {
+  sheet: a3 landscape; layout: grid; columns: 680, 790, 610; rows: 460, 440, 500; padding: 0; gap: 24; align: stretch; justify: stretch;
+} [
+
+  |region#entry| "24 V entry" { cell: 1 1; } [
+    // The high-side switch faces its feed: the pfet glyph presents the
+    // channel pins on its right, and a half turn re-sides them at the fuse
+    // — read at lowering, every text upright [SPEC 16.1] — so the 24 V path
+    // runs straight through instead of orbiting the body.
+    |Q#Q1| "AOD4185" { symbol: pfet; cell: 2 1; rotate: 180; }
+    // `pins: N` gives a connector one column of pins, facing left; the header
+    // sits at the sheet's edge, so it is flipped to face its circuit —
+    // `mirror: y-axis` re-sides the column with pin 1 still on top, where
+    // `rotate: 180` would put it at the bottom [SPEC 16.1/16.2].
+    |J#J1| "JST XH" { pins: 2; cell: 1 1; mirror: y-axis; }
+    |F#F1| "2A"
+    |D#D1| "SMAJ24A" { symbol: tvs; }
+    |R#R1| "100k"
+    |C#C1| "470u" { symbol: polarized; }
+
+    // Reverse-polarity protection. `cell:` places an anchor on the scope's own
+    // track grid, so the terminal block leads and the FET follows [SPEC 16.1];
+    // the fuse between them is a **two-ended** chain, its satellite dropped on
+    // the line joining the two pins. The feed rides the block's **top** screw
+    // and the two returns the ones below it, so the returns drop straight to
+    // their studs instead of crossing back over the line they came in beside.
+    J1.p1 - F1 - Q1.s
+    J1.p2 - |gnd|
+    // Everything the fused rail carries hangs under the one straight bus: the
+    // indicator sits **after** the fuse, so a lit LED says the fuse is good.
+    // Cathode first — polarity in a wire is a pin path [SPEC 16.3].
+    Q1.s - D1.k - |gnd|
+    Q1.g - R1 - |gnd|
+    Q1.d - C1 - |gnd|
+    Q1.d - |v24|
+  ]
+
+  |region#buck| "5 V buck" { cell: 2 1; } [
+    |component#U1| "LM2596S-5.0" [
+      |pin#VIN| { side: left; number: 1; }
+      |pin#ONOFF| "ON/OFF" { side: left; number: 5; }
+      |pin#GND| { side: bottom; number: 3; }
+      |pin#OUT| { side: right; number: 2; }
+      |pin#FB| { side: right; number: 4; }
+    ]
+    |C#C2| "100n"
+    |R#R3| "10k"
+    |L#L1| "100u"
+    |D#D3| "SS54" { symbol: schottky; }
+    |C#C3| "220u" { symbol: polarized; }
+    |R#R4| "4k7"
+    |LED#D4| "blue"
+
+    U1.VIN - |v24|
+    U1.VIN - C2 - |gnd|
+    U1.ONOFF - R3 - |gnd|
+    U1.GND - |gnd|
+    // A chain passes **through** a two-pin part [SPEC 16.5], so the switch node,
+    // the inductor and the rail flag are one statement — and the catch diode
+    // forking off the same pin dots the junction.
+    U1.OUT - L1 - |v5|
+    U1.OUT - D3.k - |gnd|
+    // The feedback tap: a wire from the far end of the inductor back into the
+    // regulator, its net name carried as the link's own label [SPEC 16.5]. On
+    // the fixed-output part FB *is* the rail, so the bulk cap and the
+    // indicator hang there — one pin, one column, and the switch node keeps
+    // its own.
+    L1.p2 - U1.FB "5V"
+    U1.FB - C3 - |gnd|
+    U1.FB - R4 - D4 - |gnd|
+  ]
+
+  |region#ldo| "3.3 V rail" { cell: 3 1; } [
+    |component#U2| "AP2112K-3.3" [
+      |pin#VIN| { side: left; number: 1; }
+      |pin#EN| { side: left; number: 3; }
+      |pin#GND| { side: bottom; number: 2; }
+      |pin#VOUT| { side: right; number: 5; }
+    ]
+    |C#C4| "1u"
+    |R#R5| "100k"
+    |C#C5| "1u"
+    |R#R6| "1k"
+    |LED#D5| "green"
+
+    U2.VIN - |v5|
+    U2.VIN - C4 - |gnd|
+    // Two placed ends — the enable pull-up is dropped on the line between the
+    // pins it bridges [SPEC 16.1].
+    U2.EN - R5 - U2.VIN
+    U2.GND - |gnd|
+    U2.VOUT - C5 - |gnd|
+    U2.VOUT - R6 - D5 - |gnd|
+    U2.VOUT - |v3|
+  ]
+
+  |region#mcu| "MCU core" { cell: 1 2; span: 2; } [
+    |component#U3| "STM32G031K8T6" [
+      |pin#VDD| { side: left; number: 3; }
+      |pin#BOOT0| "PB8/BOOT0" { side: left; number: 31; }
+      |pin#GND| { side: bottom; number: 4; }
+      |pin#PA1| "PA1/DE" { side: right; number: 7; }
+      |pin#PA2| "PA2/TX" { side: right; number: 8; }
+      |pin#PA3| "PA3/RX" { side: right; number: 9; }
+      |pin#PA4| "PA4/FLT" { side: right; number: 10; }
+      |pin#PA6| "PA6/PWM" { side: right; number: 12; }
+      |pin#PA7| "PA7/TACH" { side: right; number: 13; }
+      |pin#PA13| "PA13/SWDIO" { side: right; number: 23; }
+      |pin#PA14| "PA14/SWCLK" { side: right; number: 24; }
+      // The two pins that carry a *chain* sit on the **other** side from the
+      // ones that carry a name: a net label is a run of trace and takes no
+      // lane, so the right side is all names and the header, and the reset
+      // network and the LED get the left flank to themselves [SPEC 16.1/16.4].
+      |pin#NRST| { side: left; number: 5; }
+      |pin#PA5| "PA5/LED" { side: left; number: 11; }
+    ]
+    // A second anchor: the debug header, so SWD is routed part-to-part instead
+    // of being written out as four more net labels. `pins: N` generates one
+    // column of numbered, nameless pins, facing left — at the block's right
+    // edge that is already facing the MCU [SPEC 16.2].
+    |J#J2| "SWD 4×1" { pins: 4; }
+    |C#C6| "100n"
+    |R#R7| "10k"
+    |C#C7| "100n"
+    |SW#SW1| "RST" { symbol: push; }
+    |R#R8| "1k"
+
+    U3.VDD - |v3|
+    U3.VDD - C6 - |gnd|
+    U3.BOOT0 - R7 - |gnd|
+    U3.GND - |gnd|
+    U3.NRST - C7 - |gnd|
+    U3.NRST - SW1 - |gnd|
+    U3.PA5 - R8 - |gnd|
+    // The header's own pinout, as ARM numbers it: the rail on pin 1 and the
+    // return on pin 4, so the two signals sit between them and the flags stand
+    // clear of the wires crossing to the MCU.
+    J2.p1 - |v3|
+    U3.PA13 - J2.p2
+    U3.PA14 - J2.p3
+    J2.p4 - |gnd|
+
+    // What actually leaves the block, and only that, is written as a name: the
+    // one-ended wire mints the tag it points at, and a bare `-` leaves it
+    // `plain` — a run of trace with the name standing off it [SPEC 16.4/16.5].
+    U3.PA1 - "RS_DE"
+    U3.PA2 - "RS_TX"
+    U3.PA3 - "RS_RX"
+    U3.PA4 - "V_FAULT"
+    U3.PA6 - "FAN_PWM"
+    U3.PA7 - "FAN_TACH"
+  ]
+
+  |region#mon| "Rail monitor" { cell: 3 2; } [
+    |opamp#U4| "TLV9061IDCKR"
+    |R#R9| "100k"
+    |R#R10| "10k"
+    |R#R11| "2k2"
+    |D#D7| "LM4040" { symbol: zener; }
+    |label#fault| "V_FAULT"
+
+    // `|opamp|` is the amplifier triangle, its power pins present but hidden
+    // [SPEC 16.2]: open loop across a divider and a shunt reference, it is a
+    // comparator. The net tag is declared here and wired, the other spelling of
+    // the minted form above.
+    U4.inp - R9 - |v24|
+    U4.inp - R10 - |gnd|
+    U4.inn - R11 - |v3|
+    U4.inn - D7.k - |gnd|
+    U4.out - fault
+  ]
+
+  |region#bus| "RS-485" { cell: 1 3; } [
+    |component#U5| "SN65HVD75D" [
+      |pin#RO| "R" { side: left; number: 1; }
+      |pin#NRE| "RE" { side: left; number: 2; }
+      |pin#DE| { side: left; number: 3; }
+      |pin#DI| "D" { side: left; number: 4; }
+      |pin#GND| { side: bottom; number: 5; }
+      |pin#VCC| { side: right; number: 8; }
+      |pin#A| { side: right; number: 6; }
+      |pin#B| { side: right; number: 7; }
+    ]
+    |J#J3| "Phoenix 1725643" { pins: 3; }
+    |C#C8| "100n"
+    |R#R12| "680R"
+    |R#R13| "680R"
+
+    U5.VCC - |v3|
+    U5.VCC - C8 - |gnd|
+    U5.GND - |gnd|
+    U5.RO - "RS_RX"
+    // Receiver and driver enable are tied by name, as a sheet ties them.
+    U5.NRE - "RS_DE"
+    U5.DE - "RS_DE"
+    U5.DI - "RS_TX"
+    U5.A - R12 - |v3|
+    U5.B - R13 - |gnd|
+    U5.A - J3.p1
+    U5.B - J3.p2
+    J3.p3 - |gnd|
+  ]
+
+  |region#fan| "Fan drive" { cell: 2 3; } [
+    |Q#Q2| "IRLZ44N" { symbol: nfet; }
+    |J#J4| "Molex 5045" { pins: 3; }
+    // A forced turn states the chain's ray [SPEC 16.1]: stood on end with
+    // `p1` at its bottom, the gate resistor grows its chain **up** off the
+    // gate, sharing the pull-down's column, and the net name stands on end
+    // above it, reading along the trace [SPEC 16.4] — the whole gate network
+    // in one column instead of a row across the block.
+    |R#R14| "100R" { rotate: 270; }
+    |R#R15| "100k"
+    |R#R16| "10k"
+    |D#D8| "1N4007"
+    |label#pwm| "FAN_PWM"
+    |label#tach| "FAN_TACH"
+
+    // The gate resistor sits in the chain the net name terminates, and the
+    // flyback diode hangs off the drain with its cathode on the rail.
+    Q2.g - R14 - pwm
+    Q2.g - R15 - |gnd|
+    Q2.s - |gnd|
+    Q2.d - J4.p3
+    Q2.d - D8.a - |v24|
+    // The fan header reads down the way its wires leave. Both upward chains
+    // turn off their pins, so both take a lane, and the lane order is the
+    // pins' own [SPEC 16.1]: the top screw is the deeper one along the ray, so
+    // the rail keeps the inner column and the tach steps outside it — which is
+    // what lets the tach's lead cross the rail's column below where it is
+    // live. The switched return takes the bottom screw, and its run to the
+    // drain crosses nothing.
+    J4.p1 - |v24|
+    // The tach net is named first, and the pull-up taps the name: two wires to
+    // one label merge at its connection point [SPEC 16.5], so the resistor
+    // stands off the tach trace instead of queueing in a second lane beside the
+    // connector.
+    J4.p2 - tach
+    tach - R16 - |v3|
+  ]
+
+  |title-block| {
+    title: "Bench motor node"; drawing-number: "LN-0057"; revision: "C"; sheet-number: "1/1"; date: "2026-08-30"; author: "AM";
+  }
+]
+
+--- stderr

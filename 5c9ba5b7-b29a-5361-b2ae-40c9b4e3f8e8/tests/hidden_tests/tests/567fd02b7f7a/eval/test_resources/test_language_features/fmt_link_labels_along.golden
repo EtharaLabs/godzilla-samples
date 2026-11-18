@@ -1,0 +1,13 @@
+exit: 0
+--- stdout
+{
+  direction: row; gap: 120;
+}
+
+|box#a|
+|box#b|
+
+a -> b { along: 0.1, 0.5, 0.9; } [ "start" "mid" "end" ]
+a:top -> b:top "over" { stroke: --red; stroke-width: 3; }
+
+--- stderr

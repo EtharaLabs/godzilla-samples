@@ -1,0 +1,122 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 0; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-rect { radius: 0; }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-magnifier { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-page { fill: --bg; stroke-width: 0; width: 210; height: 297; }
+  .lini-frame { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-zone { font-size: 11; color: --stroke-light; }
+  .lini-tick { stroke: --stroke; stroke-width: 1; fill: none; }
+}
+
+|block| .lini-page.lini-block {
+  width: 297; height: 210; direction: row; px-per-unit: 4;
+} [
+  |block#side| .lini-drawing.lini-block { scale: 2; px-per-unit: 4; } [
+    |sketch#s| .lini-sketch {
+      draw: move(0, 0) right(30):body up(10):h left(30) close();
+    }
+    |oval#m1| .lini-magnifier.lini-oval { width: 8; translate: 5 5; } [ "A" ]
+  ]
+  |block#end| .lini-drawing.lini-block { scale: 2; px-per-unit: 4; } [
+    |oval#od| .lini-oval { width: 20; height: 20; }
+  ]
+  |block#det| .lini-drawing.lini-block { of: m1; scale: 4; px-per-unit: 4; } [
+    |block| .lini-footnote.lini-caption.lini-block { of-title: view; }
+    |sketch#s2| .lini-sketch { draw: move(0, 0) right(5) up(5); }
+  ]
+  |block| .lini-frame.lini-rect.lini-box.lini-block {
+    chrome: frame; pin: center;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 2; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 4; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 5; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 2; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 4; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 5; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick left 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick left 3; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick right 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick right 3; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark top; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark bottom; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark left; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark right; pin: center; points: 0 0, 0 0;
+  }
+  |block| .lini-zone.lini-block { chrome: zone top 0; pin: center; } [ "1" ]
+  |block| .lini-zone.lini-block { chrome: zone top 1; pin: center; } [ "2" ]
+  |block| .lini-zone.lini-block { chrome: zone top 2; pin: center; } [ "3" ]
+  |block| .lini-zone.lini-block { chrome: zone top 3; pin: center; } [ "4" ]
+  |block| .lini-zone.lini-block { chrome: zone top 4; pin: center; } [ "5" ]
+  |block| .lini-zone.lini-block { chrome: zone top 5; pin: center; } [ "6" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 0; pin: center; } [ "1" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 1; pin: center; } [ "2" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 2; pin: center; } [ "3" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 3; pin: center; } [ "4" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 4; pin: center; } [ "5" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 5; pin: center; } [ "6" ]
+  |block| .lini-zone.lini-block { chrome: zone left 0; pin: center; } [ "A" ]
+  |block| .lini-zone.lini-block { chrome: zone left 1; pin: center; } [ "B" ]
+  |block| .lini-zone.lini-block { chrome: zone left 2; pin: center; } [ "C" ]
+  |block| .lini-zone.lini-block { chrome: zone left 3; pin: center; } [ "D" ]
+  |block| .lini-zone.lini-block { chrome: zone right 0; pin: center; } [ "A" ]
+  |block| .lini-zone.lini-block { chrome: zone right 1; pin: center; } [ "B" ]
+  |block| .lini-zone.lini-block { chrome: zone right 2; pin: center; } [ "C" ]
+  |block| .lini-zone.lini-block { chrome: zone right 3; pin: center; } [ "D" ]
+]
+
+side.s:h - end.od:top
+
+--- stderr

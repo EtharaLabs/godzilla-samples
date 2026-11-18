@@ -1,0 +1,33 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 24; gap: 20; font-size: 15; direction: column;
+  base = 90;
+  scale(n) = (base * 1.2 ^ n);
+  wave(a, f) = (u * 320, a * sin(2 * pi * f * u));
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+}
+
+|block#a| .lini-box.lini-block {
+  width: scale(0); height: 40; fill: --teal-wash; stroke: --teal-ink;
+} [ "scale(0)" ]
+|block#b| .lini-box.lini-block {
+  width: scale(3); height: 40; fill: --teal-wash; stroke: --teal-ink;
+} [ "scale(3)" ]
+|block#pad| .lini-box.lini-block {
+  padding: (8 * 2); fill: --amber-wash; stroke: --amber-ink;
+} [ "padding 8*2" ]
+|line#sine| .lini-line {
+  points: (u * 320, 24 * sin(2 * pi * 3 * u)); samples: 64; stroke: --sky-deep; stroke-width: 2;
+}
+|line#named| .lini-line {
+  points: wave(18, 2); samples: 64; stroke: --rose-deep; stroke-width: 2;
+}
+
+--- stderr

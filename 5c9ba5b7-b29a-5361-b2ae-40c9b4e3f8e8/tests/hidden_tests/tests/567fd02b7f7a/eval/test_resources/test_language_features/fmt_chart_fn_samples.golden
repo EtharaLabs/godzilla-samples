@@ -1,0 +1,14 @@
+exit: 0
+--- stdout
+{
+  f(k) = (sin(x * k) * exp(-x / 5));
+}
+
+|chart| { width: 300; height: 200; samples: 30; } [
+  |axis| { side: bottom; range: 0 10; }
+  |line| { fn: f(1); }
+  |line| { fn: f(2); stroke-style: dotted; }
+  |area| { fn: (abs(cos(x))); }
+]
+
+--- stderr

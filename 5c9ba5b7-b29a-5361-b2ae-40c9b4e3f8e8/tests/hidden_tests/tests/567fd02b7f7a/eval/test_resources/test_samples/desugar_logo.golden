@@ -1,0 +1,56 @@
+exit: 0
+--- stdout
+{
+  layout: stack; padding: 25; font-size: 15; unit: mm; density: 10; px-per-unit: 10;
+  --coral: #e9536c;
+  --lilac: #9c8cee;
+  cap = 0.9;
+  bowl = 2.5;
+  weight = (2 * cap);
+  inner = (bowl - cap);
+  outer = (bowl + cap);
+  tail = (outer + weight + cap);
+  hook = (tail + bowl);
+  stem = (hook + bowl);
+  edge = (stem + cap);
+  shoulder = outer;
+  tail_y = (shoulder + bowl);
+  arch = (shoulder + outer);
+  run = (bowl + 8 * cap);
+  crown = (shoulder + run);
+  capline = (crown + cap);
+  brow = ((capline + tail_y) / 2);
+  dash = (bowl / 3);
+  pitch = ((run - dash) / 2);
+  quarter = (cap * sqrt(5) / 3);
+  notch_y = (brow - 4 * cap / 3);
+  .lini-sketch { fill: --coral; stroke: none; stroke-width: 2; }
+}
+
+|sketch#n| .lini-sketch {
+  draw: move(0, -arch) arc(outer, outer, outer) down(bowl) arc(cap, 180)
+        up(bowl) arc(inner, -90);
+  mirror: y-axis;
+}
+|sketch#l| .lini-sketch {
+  draw: move(-edge, -crown) down(run) arc(outer, -180) up(bowl) arc(cap, -180)
+        down(bowl) arc(inner, 180) up(run) arc(cap, -180) close();
+}
+|sketch#i| .lini-sketch {
+  draw: move(tail - cap, -tail_y) down(bowl) arc(outer, -90) arc(cap, -180)
+        arc(inner, 90) up(bowl) arc(cap, -180) close();
+}
+|sketch#brow| .lini-sketch {
+  draw: move(-tail - quarter, -notch_y) arc(2 * quarter, 0, cap)
+        arc(quarter, 0, -cap / 2) arc(-2 * quarter, -10 * cap / 3, -2 * cap)
+        arc(-2 * quarter, 10 * cap / 3, -2 * cap) arc(quarter, 0, -cap / 2)
+        close();
+  mirror: y-axis; fill: --lilac;
+}
+|sketch#dots| .lini-sketch {
+  draw: move(stem - cap, -crown) down(dash) arc(cap, -180) up(dash)
+        arc(cap, -180) close();
+  pattern: grid(1, 3, 0, pitch); opacity: 0.75;
+}
+
+--- stderr

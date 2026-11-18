@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "L002",
+      "family": "bad-escape",
+      "severity": "error",
+      "message": "invalid escape sequence '\\q'",
+      "span": {
+        "start": 8,
+        "end": 10,
+        "line": 1,
+        "col": 9,
+        "endLine": 1,
+        "endCol": 11
+      }
+    }
+  ]
+}
+
+--- stderr

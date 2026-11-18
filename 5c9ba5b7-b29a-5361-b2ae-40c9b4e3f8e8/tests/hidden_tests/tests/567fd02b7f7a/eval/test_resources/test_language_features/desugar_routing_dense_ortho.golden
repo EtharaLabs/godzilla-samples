@@ -1,0 +1,32 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 30; font-size: 15; columns: repeat(3);
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+}
+
+|block#a| .lini-box.lini-block
+|block#b| .lini-box.lini-block
+|block#c| .lini-box.lini-block
+|block#d| .lini-box.lini-block
+|block#e| .lini-box.lini-block
+|block#f| .lini-box.lini-block
+|block#g| .lini-box.lini-block
+|block#h| .lini-box.lini-block
+|block#i| .lini-box.lini-block
+
+a -> i
+c -> g
+b -> h
+d -> f
+a:right -> c:left
+g:top -> a:bottom
+e -> e
+a & b & c -> e
+
+--- stderr

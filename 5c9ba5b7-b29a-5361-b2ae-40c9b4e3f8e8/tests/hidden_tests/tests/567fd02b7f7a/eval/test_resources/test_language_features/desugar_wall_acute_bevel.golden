@@ -1,0 +1,14 @@
+exit: 0
+--- stdout
+{
+  layout: floorplan; padding: 20; font-size: 15; unit: m; scale: 0.02; px-per-unit: 4000;
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-wall { fill: --stroke-dark; stroke: none; }
+}
+
+|sketch| .lini-wall.lini-sketch {
+  draw: move(0, 0) right(5) line(-4, 1) close();
+  wall-thickness: 0.2;
+}
+
+--- stderr

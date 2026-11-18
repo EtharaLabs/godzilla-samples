@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+}
+
+|block#a| .lini-box.lini-block
+|block#b| .lini-box.lini-block
+|block#c| .lini-box.lini-block
+
+a -> b { along: 0.5; } [ "step" ]
+b -> c { along: 0.5; } [ "step" ]
+--- stderr ---

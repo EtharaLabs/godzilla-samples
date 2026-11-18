@@ -1,0 +1,22 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+}
+
+|block| .lini-chart.lini-block { width: 300; height: 200; } [
+  |block| .lini-axis.lini-block { side: bottom; range: 0 10; }
+  |block| .lini-axis.lini-block { side: left; range: 0 10; }
+  |block| .lini-dots.lini-block { data: 1 2, 3 4, 5 6; marker: circle; }
+  |block| .lini-bubble.lini-block { at: 2 3; value: 5; } [ "a" ]
+  |block| .lini-bubble.lini-block { at: 6 7; value: 12; fill: --purple; } [
+    "b"
+  ]
+]
+
+--- stderr

@@ -1,0 +1,43 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 36; font-size: 15; columns: repeat(2);
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+}
+
+|block| .lini-chart.lini-block { width: 240; height: 140; } [
+  |block| .lini-axis.lini-block { side: bottom; format: year; }
+  |line| .lini-line {
+    data: "2026-01-01T00:00Z" 1, "2026-01-03T12:30Z" 3, "2026-02-10T06:00Z" 2;
+  }
+]
+|block| .lini-chart.lini-block { width: 240; height: 140; } [
+  |block| .lini-axis.lini-block { side: bottom; format: month; }
+  |line| .lini-line {
+    data: "2026-01-01T00:00Z" 1, "2026-01-03T12:30Z" 3, "2026-02-10T06:00Z" 2;
+  }
+]
+|block| .lini-chart.lini-block { width: 240; height: 140; } [
+  |block| .lini-axis.lini-block { side: bottom; format: day; }
+  |line| .lini-line {
+    data: "2026-01-01T00:00Z" 1, "2026-01-03T12:30Z" 3, "2026-02-10T06:00Z" 2;
+  }
+]
+|block| .lini-chart.lini-block { width: 240; height: 140; } [
+  |block| .lini-axis.lini-block { side: bottom; format: hour; }
+  |line| .lini-line {
+    data: "2026-01-01T00:00Z" 1, "2026-01-03T12:30Z" 3, "2026-02-10T06:00Z" 2;
+  }
+]
+|block| .lini-chart.lini-block { width: 240; height: 140; } [
+  |block| .lini-axis.lini-block { side: bottom; format: minute; }
+  |line| .lini-line {
+    data: "2026-01-01T00:00Z" 1, "2026-01-03T12:30Z" 3, "2026-02-10T06:00Z" 2;
+  }
+]
+
+--- stderr

@@ -1,0 +1,50 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 36; font-size: 15; columns: repeat(3);
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-bars { radius: 2; stroke: auto; }
+}
+
+|block| .lini-chart.lini-block {
+  width: 200; height: 140; categories: "a", "b", "c";
+} [
+  |block| .lini-axis.lini-block { side: left; format: decimal 2; }
+  |block| .lini-bars.lini-block { data: 0.123, 1234.5, 98765; }
+]
+|block| .lini-chart.lini-block {
+  width: 200; height: 140; categories: "a", "b", "c";
+} [
+  |block| .lini-axis.lini-block { side: left; format: significant 3; }
+  |block| .lini-bars.lini-block { data: 0.123, 1234.5, 98765; }
+]
+|block| .lini-chart.lini-block {
+  width: 200; height: 140; categories: "a", "b", "c";
+} [
+  |block| .lini-axis.lini-block { side: left; format: scientific 2; }
+  |block| .lini-bars.lini-block { data: 0.123, 1234.5, 98765; }
+]
+|block| .lini-chart.lini-block {
+  width: 200; height: 140; categories: "a", "b", "c";
+} [
+  |block| .lini-axis.lini-block { side: left; format: engineering 1; }
+  |block| .lini-bars.lini-block { data: 0.123, 1234.5, 98765; }
+]
+|block| .lini-chart.lini-block {
+  width: 200; height: 140; categories: "a", "b", "c";
+} [
+  |block| .lini-axis.lini-block { side: left; format: percent 0; }
+  |block| .lini-bars.lini-block { data: 0.123, 1234.5, 98765; }
+]
+|block| .lini-chart.lini-block {
+  width: 200; height: 140; categories: "a", "b", "c";
+} [
+  |block| .lini-axis.lini-block { side: left; format: fraction 8; }
+  |block| .lini-bars.lini-block { data: 0.123, 1234.5, 98765; }
+]
+
+--- stderr

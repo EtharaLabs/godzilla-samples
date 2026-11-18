@@ -1,0 +1,172 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 0; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-hex {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-rect { radius: 0; }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-table {
+    layout: grid; align: stretch; justify: stretch; gap: 1; gap-fill: --stroke; padding: 0; fill: none; stroke: --stroke; stroke-width: 2; stroke-style: solid; font-size: 14; font-weight: normal; scale: 1;
+  }
+  .lini-cell { padding: 4 8; }
+  .lini-header { fill: --header-fill; font-weight: semibold; }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-hidden {
+    stroke-style: dashed; stroke: --stroke-dark; stroke-width: 1; fill: none;
+  }
+  .lini-shoulder { stroke: --stroke-dark; }
+  .lini-threadline { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-page { fill: --bg; stroke-width: 0; width: 210; height: 297; }
+  .lini-title-block {
+    font-size: 14; font-weight: semibold; stroke-width: 1; radius: 0;
+  }
+  .lini-field { font-size: 12; font-weight: normal; color: --footer-color; }
+  .lini-frame { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-zone { font-size: 11; color: --stroke-light; }
+  .lini-tick { stroke: --stroke; stroke-width: 1; fill: none; }
+  .lini-align-start { align: start; }
+  .lini-align-end { align: end; }
+  .lini-justify-start { justify: start; }
+  .lini-justify-end { justify: end; }
+}
+
+|block| .lini-page.lini-block {
+  width: 210; height: 148; gap: 50; align: origin; direction: row; px-per-unit: 4;
+} [
+  |block#side| .lini-drawing.lini-block { scale: 2; px-per-unit: 4; } [
+    |block| .lini-footnote.lini-caption.lini-block [ "DIN 912 — M8 × 40" ]
+    |sketch#screw| .lini-sketch {
+      draw: move(0, 0) up(6.5) chamfer(0.8) right(8):head down(2.5):k right(12)
+            point():v right(28):m8 chamfer(1) down(4);
+      revolve: x-axis; thread: m8 1.25;
+    } [
+      |sketch#socket| .lini-hidden.lini-sketch {
+        draw: move(0, 3.5) right(3) line(1.5, -3.5);
+        mirror: x-axis;
+      } [
+        |line| .lini-centerline.lini-line { chrome: x-axis; }
+      ]
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-shoulder.lini-line { chrome: edges; }
+      |line| .lini-threadline.lini-line { chrome: thread; }
+    ]
+    screw:head (o) { side: left; }
+    screw:left (-) screw:k { side: bottom; }
+    screw:k (-) screw:right { side: bottom; }
+    screw:v (-) screw:right { side: top; }
+    screw:m8 <- { side: top; }
+  ]
+  |block#end| .lini-drawing.lini-block { scale: 2; px-per-unit: 4; } [
+    |oval| .lini-oval { width: 13; height: 13; }
+    |oval| .lini-oval { width: 11.4; height: 11.4; }
+    |hex#socket| .lini-hex { width: 7; height: 6; rotate: 90; }
+    socket:top (-) socket:bottom
+  ]
+  |block| .lini-title-block.lini-table.lini-group.lini-block {
+    columns: auto, auto, auto; pin: bottom right;
+  } [
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Title"; span: 3 1;
+    } [
+      |block| .lini-field.lini-block [ "Title" ]
+      "Socket cap screw"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Dwg No.";
+    } [
+      |block| .lini-field.lini-block [ "Dwg No." ]
+      "DIN 912 — M8 × 40"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Rev";
+    } [
+      |block| .lini-field.lini-block [ "Rev" ]
+      "A"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Sheet";
+    } [
+      |block| .lini-field.lini-block [ "Sheet" ]
+      "1/1"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Date";
+    } [
+      |block| .lini-field.lini-block [ "Date" ]
+      "2026-07-08"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Drawn";
+    } [
+      |block| .lini-field.lini-block [ "Drawn" ]
+      "AM"
+    ]
+    |image| .lini-image {
+      src: "assets/logo.svg"; cell: 3 3; width: 12; height: 12;
+    }
+  ]
+  |block| .lini-frame.lini-rect.lini-box.lini-block {
+    chrome: frame; pin: center;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 3; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 3; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark top; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark bottom; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark left; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark right; pin: center; points: 0 0, 0 0;
+  }
+  |block| .lini-zone.lini-block { chrome: zone top 0; pin: center; } [ "1" ]
+  |block| .lini-zone.lini-block { chrome: zone top 1; pin: center; } [ "2" ]
+  |block| .lini-zone.lini-block { chrome: zone top 2; pin: center; } [ "3" ]
+  |block| .lini-zone.lini-block { chrome: zone top 3; pin: center; } [ "4" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 0; pin: center; } [ "1" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 1; pin: center; } [ "2" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 2; pin: center; } [ "3" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 3; pin: center; } [ "4" ]
+  |block| .lini-zone.lini-block { chrome: zone left 0; pin: center; } [ "A" ]
+  |block| .lini-zone.lini-block { chrome: zone left 1; pin: center; } [ "B" ]
+  |block| .lini-zone.lini-block { chrome: zone right 0; pin: center; } [ "A" ]
+  |block| .lini-zone.lini-block { chrome: zone right 1; pin: center; } [ "B" ]
+]
+--- stderr ---

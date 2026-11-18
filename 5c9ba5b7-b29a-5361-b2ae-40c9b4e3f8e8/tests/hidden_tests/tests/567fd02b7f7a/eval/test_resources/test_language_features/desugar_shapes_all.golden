@@ -1,0 +1,54 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-hex {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-slant {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12; skew: 15;
+  }
+  .lini-cyl {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-diamond {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-poly { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-rect { radius: 0; }
+  .lini-badge {
+    pin: top right; translate: 6 -6; radius: 8; padding: 2 6; shadow: 2 3 3; fill: --accent; color: --accent-text; font-size: 11; font-weight: normal;
+  }
+  .lini-row { direction: row; }
+  .lini-note { fill: --fill; stroke: --stroke; padding: 20; scale: 1; }
+  .lini-sequence .lini-note { padding: 6 10; font-size: 13; }
+  .lini-drawing .lini-note { padding: 6 10; font-size: 13; }
+}
+
+|block| .lini-row.lini-block [
+  |block| .lini-box.lini-block [ "box" ]
+  |block| .lini-rect.lini-box.lini-block [ "rect" ]
+  |oval| .lini-oval [ "oval" ]
+  |hex| .lini-hex [ "hex" ]
+  |slant| .lini-slant [ "slant" ]
+  |cyl| .lini-cyl [ "cyl" ]
+  |diamond| .lini-diamond [ "dia" ]
+  |block| .lini-note.lini-block [ "note" ]
+  |block| .lini-badge.lini-block [ "b" ]
+  |line| .lini-line { points: 0 0, 20 10, 40 0; radius: 4; }
+  |poly| .lini-poly { points: 0 0, 20 0, 10 15; }
+  |path| .lini-path { path: "M0 0 L10 10 L20 0 Z"; }
+]
+
+--- stderr

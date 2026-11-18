@@ -1,0 +1,71 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 24; gap: 24; font-size: 15; direction: column; align: start;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-badge {
+    pin: top right; translate: 6 -6; radius: 8; padding: 2 6; shadow: 2 3 3; fill: --accent; color: --accent-text; font-size: 11; font-weight: normal;
+  }
+  .lini-row { direction: row; }
+  .lini-dot { font-size: 12; }
+  .lini-chip { fill: --amber-soft; stroke: --amber-ink; color: --amber-ink; }
+  .lini-pad { fill: --green-soft; stroke: --green-ink; color: --green-ink; }
+}
+
+|block#anchors| .lini-group.lini-block { gap: 8; } [
+  |block| .lini-caption.lini-block [ "pin" ]
+  |block#pins| .lini-box.lini-block {
+    width: 180; height: 120; fill: --sky-wash; stroke: --sky-ink; radius: 8;
+  } [
+    |block| .lini-dot.lini-block { pin: center; color: --teal-ink; } [
+      "center"
+    ]
+    |block| .lini-dot.lini-block { pin: top left; color: --rose-ink; } [ "TL" ]
+    |block| .lini-dot.lini-block { pin: top; color: --rose-ink; } [ "T" ]
+    |block| .lini-dot.lini-block { pin: top right; color: --rose-ink; } [ "TR" ]
+    |block| .lini-dot.lini-block { pin: left; color: --rose-ink; } [ "L" ]
+    |block| .lini-dot.lini-block { pin: right; color: --rose-ink; } [ "R" ]
+    |block| .lini-dot.lini-block { pin: bottom left; color: --sky-ink; } [
+      "BL"
+    ]
+    |block| .lini-dot.lini-block { pin: bottom; color: --sky-ink; } [ "B" ]
+    |block| .lini-dot.lini-block { pin: bottom right; color: --sky-ink; } [
+      "BR"
+    ]
+  ]
+]
+|block#moves| .lini-group.lini-block { gap: 14; } [
+  |block| .lini-caption.lini-block [ "translate" ]
+  |block| .lini-row.lini-block { gap: 14; align: center; } [
+    |block#a| .lini-chip.lini-box.lini-block [ "A" ]
+    |block#b| .lini-chip.lini-box.lini-block { translate: 0 12; } [ "nudged" ]
+  ]
+  |block#card| .lini-box.lini-block {
+    width: 140; height: 74; fill: --purple-wash; stroke: --purple-ink; color: --purple-ink;
+  } [
+    "Card"
+    |block| .lini-badge.lini-block { translate: -4 4; } [ "9" ]
+    |block| .lini-block { pin: center; translate: 0 24; color: --muted; } [
+      "id 42"
+    ]
+  ]
+]
+|block#spacing| .lini-group.lini-block { gap: 10; } [
+  |block| .lini-caption.lini-block [ "padding" ]
+  |block| .lini-pad.lini-box.lini-block [ "scalar" ]
+  |block| .lini-pad.lini-box.lini-block { padding: 4 14; } [ "v h" ]
+  |block| .lini-pad.lini-box.lini-block { padding: 2 8 16 24; } [ "t r b l" ]
+]
+
+--- stderr

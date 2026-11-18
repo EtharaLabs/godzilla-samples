@@ -1,0 +1,24 @@
+exit: 0
+--- stdout
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-21 -21 2000042 42" width="2000042" height="42" class="lini lini-scope-e4ee9d9d">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-e4ee9d9d { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-stroke-dark: light-dark(black, white); --lini-text-color: var(--lini-fg); }
+      .lini-scope-e4ee9d9d[data-theme="dark"], [data-theme="dark"] .lini-scope-e4ee9d9d { color-scheme: dark; }
+      .lini-scope-e4ee9d9d[data-theme="light"], [data-theme="light"] .lini-scope-e4ee9d9d { color-scheme: light; }
+    }
+    .lini-scope-e4ee9d9d, .lini-scope-e4ee9d9d text { font-family: var(--lini-font-family); }
+    .lini-scope-e4ee9d9d { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-e4ee9d9d .lini-sketch { fill: var(--lini-fill); stroke: var(--lini-stroke-dark); stroke-width: 2; stroke-dasharray: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-sketch" transform="translate(0,0)">
+      <path d="M 0 0 L 2000000 0" fill-rule="evenodd"/>
+    </g>
+  </g>
+  <g class="lini-links"/>
+</svg>
+
+--- stderr
+in.lini:1:1: warning: the drawing renders 2000042 px wide — 'scale:' is a ratio; a 5 m beam at 1:50 is 'scale: 0.02'

@@ -1,0 +1,90 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 24; gap: 30; font-size: 15; direction: column; align: start;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20; direction: column;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-row { direction: row; }
+  .lini-spec { points: -70 0, 70 0; stroke-width: 2; }
+  .lini-port { fill: --teal-soft; stroke: --teal-ink; color: --teal-ink; }
+  .lini-room {
+    direction: row; gap: 60; padding: 12; fill: --teal-wash; stroke: --teal-ink;
+  }
+}
+
+|block| .lini-block { font-size: 18; font-weight: bold; } [
+  "Markers & internal links"
+]
+|block| .lini-row.lini-block { gap: 44; align: start; } [
+  |block#ends| .lini-group.lini-block { gap: 20; } [
+    |block| .lini-caption.lini-block [ "markers" ]
+    |line| .lini-spec.lini-line { marker-end: arrow; stroke: --sky-deep; }
+    |line| .lini-spec.lini-line {
+      marker-start: dot; marker-end: dot; stroke: --green-deep;
+    }
+    |line| .lini-spec.lini-line { marker-end: diamond; stroke: --purple-deep; }
+  ]
+  |block#cardinality| .lini-group.lini-block { gap: 18; } [
+    |block| .lini-caption.lini-block [ "ER cardinality" ]
+    |line| .lini-spec.lini-line { marker-end: one; stroke: --sky-deep; }
+    |line| .lini-spec.lini-line { marker-end: crow; stroke: --sky-deep; }
+    |line| .lini-spec.lini-line {
+      marker-end: exactly-one; stroke: --blue-deep;
+    }
+    |line| .lini-spec.lini-line {
+      marker-end: zero-or-one; stroke: --blue-deep;
+    }
+    |line| .lini-spec.lini-line {
+      marker-end: one-or-many; stroke: --blue-deep;
+    }
+    |line| .lini-spec.lini-line {
+      marker-end: zero-or-many; stroke: --blue-deep;
+    }
+  ]
+]
+|block| .lini-row.lini-block { gap: 52; align: center; } [
+  |block#rel| .lini-row.lini-block { gap: 84; } [
+    |block| .lini-caption.lini-block [ "cardinality operators — either end" ]
+    |block#author| .lini-box.lini-block [ "Author" ]
+    |block#book| .lini-box.lini-block [ "Book" ]
+    author +-o< book { along: 0.5; } [ "writes" ]
+  ]
+  |block#chains| .lini-row.lini-block { gap: 44; } [
+    |block| .lini-caption.lini-block [ "chains — every hop marked" ]
+    |block#relay| .lini-box.lini-block [ "relay" ]
+    |block#hub| .lini-box.lini-block [ "hub" ]
+    |block#sink| .lini-box.lini-block [ "sink" ]
+    relay -> hub
+    hub <-> sink
+  ]
+]
+|block#rooms| .lini-group.lini-block { direction: row; gap: 80; } [
+  |block| .lini-caption.lini-block [ "template-internal links" ]
+  |block#garden| .lini-room.lini-group.lini-block [
+    |block#inlet| .lini-port.lini-box.lini-block [ "in" ]
+    |block#outlet| .lini-port.lini-box.lini-block [ "out" ]
+    inlet -> outlet { along: 0.5; } [ "flows" ]
+    |block| .lini-caption.lini-block [ "Garden" ]
+  ]
+  |block#kitchen| .lini-room.lini-group.lini-block [
+    |block#inlet| .lini-port.lini-box.lini-block [ "in" ]
+    |block#outlet| .lini-port.lini-box.lini-block [ "out" ]
+    inlet -> outlet { along: 0.5; } [ "flows" ]
+    |block| .lini-caption.lini-block [ "Kitchen" ]
+  ]
+]
+
+rooms.garden.outlet -> rooms.kitchen.inlet { along: 0.5; } [ "carries" ]
+
+--- stderr

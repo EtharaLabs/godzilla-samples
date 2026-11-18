@@ -1,0 +1,52 @@
+// Positioning & spacing — pin (the 9 named anchor points), translate (a
+// post-placement nudge, a tucked badge, exact coordinates), and the 1-, 2- and
+// 4-value padding forms. Palette colours.
+{
+  direction: column; gap: 24; padding: 24; align: start;
+  |dot::block| { font-size: 12; }
+  |chip::box| { fill: --amber-soft; stroke: --amber-ink; color: --amber-ink; }
+  |pad::box| { fill: --green-soft; stroke: --green-ink; color: --green-ink; }
+}
+
+// pin: lift a child out of flow and sit it flush on a named point of the parent
+|group#anchors| { gap: 8; } [
+  |caption| "pin"
+  |box#pins| {
+    width: 180; height: 120; fill: --sky-wash; stroke: --sky-ink; radius: 8;
+  } [
+    |dot| "center" { pin: center; color: --teal-ink; }
+    |dot| "TL" { pin: top left; color: --rose-ink; }
+    |dot| "T" { pin: top; color: --rose-ink; }
+    |dot| "TR" { pin: top right; color: --rose-ink; }
+    |dot| "L" { pin: left; color: --rose-ink; }
+    |dot| "R" { pin: right; color: --rose-ink; }
+    |dot| "BL" { pin: bottom left; color: --sky-ink; }
+    |dot| "B" { pin: bottom; color: --sky-ink; }
+    |dot| "BR" { pin: bottom right; color: --sky-ink; }
+  ]
+]
+
+// translate: a flow nudge that moves nobody, a badge tucked out over its corner,
+// and — with pin: center — exact parent-local coordinates, no size arithmetic
+|group#moves| { gap: 14; } [
+  |caption| "translate"
+  |row| { gap: 14; align: center; } [
+    |chip#a| "A"
+    |chip#b| "nudged" { translate: 0 12; }
+  ]
+  |box#card| {
+    width: 140; height: 74; fill: --purple-wash; stroke: --purple-ink; color: --purple-ink;
+  } [
+    "Card"
+    |badge| "9" { translate: -4 4; }
+    |block| "id 42" { pin: center; translate: 0 24; color: --muted; }
+  ]
+]
+
+// padding takes 1-, 2-, or 4-value forms, and places the content it insets
+|group#spacing| { gap: 10; } [
+  |caption| "padding"
+  |pad| "scalar"
+  |pad| "v h" { padding: 4 14; }
+  |pad| "t r b l" { padding: 2 8 16 24; }
+]

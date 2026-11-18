@@ -1,0 +1,17 @@
+exit: 0
+--- stdout
+|row| [
+  |box| { fill: rgb(10, 20, 30); }
+  |box| { fill: rgba(255, 0, 0, 0.5); }
+  |box| { fill: hsl(120, 50%, 50%); }
+  |box| { fill: hsla(240, 100%, 50%, 0.3); }
+  |box| { fill: #abc; }
+  |box| { fill: #aabbccdd; }
+  |box| { fill: linear-gradient(90, --red, --blue, --green); }
+  |box| { fill: radial-gradient(--amber, --purple); }
+  |box| { fill: gradient(--rose, --sky); stroke: gradient(--teal, --lime); }
+  |box| { fill: --red-wash; stroke: --red-ink; }
+  |box| { fill: transparent; stroke: currentColor; }
+]
+
+--- stderr

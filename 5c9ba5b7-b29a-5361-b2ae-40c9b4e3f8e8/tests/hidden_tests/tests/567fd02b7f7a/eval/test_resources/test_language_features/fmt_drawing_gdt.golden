@@ -1,0 +1,22 @@
+exit: 0
+--- stdout
+{
+  layout: drawing;
+}
+
+|sketch#p| { draw: move(0, 0) right(40):face up(20) left(40) close(); }
+|datum#A| "A"
+|datum#B| "B"
+p:face || A
+p:left || B
+|feature-control#f1| "position" {
+  tol: 0.05; datums: A, B; zone: diameter; material: maximum;
+}
+|feature-control#f2| [
+  |control| "flatness" { tol: 0.01; }
+  |control| "parallelism" { tol: 0.02; datums: A; }
+]
+|surface-finish#sf| { symbol: machined; } [ "Ra 1.6" ]
+sf || p:bottom
+
+--- stderr

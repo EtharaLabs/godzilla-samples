@@ -1,0 +1,14 @@
+exit: 0
+--- stdout
+{
+  layout: drawing;
+}
+
+|sketch#a| { draw: move(0, 0) right(20) up(10) left(20) close(); }
+|sketch#b| { draw: move(0, 0) right(10) up(10) left(10) close(); }
+|sketch#c| { draw: move(0, 0) right(5) up(5) left(5) close(); }
+
+a:right || b:left { gap: 5; }
+b:top || c:bottom { gap: -2; }
+
+--- stderr

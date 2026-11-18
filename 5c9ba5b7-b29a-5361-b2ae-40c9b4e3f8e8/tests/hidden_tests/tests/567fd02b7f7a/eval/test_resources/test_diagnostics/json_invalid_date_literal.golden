@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "Y000",
+      "family": "layout",
+      "severity": "error",
+      "message": "'2026-13-01' is not a date — ISO-8601: '2026-01-31', optionally 'T09:30' and 'Z'",
+      "span": {
+        "start": 10,
+        "end": 58,
+        "line": 2,
+        "col": 1,
+        "endLine": 2,
+        "endCol": 49
+      }
+    }
+  ]
+}
+
+--- stderr

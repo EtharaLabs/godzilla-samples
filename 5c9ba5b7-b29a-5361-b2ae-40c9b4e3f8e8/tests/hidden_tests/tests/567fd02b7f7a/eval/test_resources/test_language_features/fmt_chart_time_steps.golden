@@ -1,0 +1,28 @@
+exit: 0
+--- stdout
+{
+  layout: grid; columns: repeat(2);
+}
+
+|chart| { width: 240; height: 140; } [
+  |axis| { side: bottom; step: year; }
+  |line| { data: "2025-11-01" 1, "2026-03-15" 3, "2026-09-10" 2; }
+]
+|chart| { width: 240; height: 140; } [
+  |axis| { side: bottom; step: month; }
+  |line| { data: "2025-11-01" 1, "2026-03-15" 3, "2026-09-10" 2; }
+]
+|chart| { width: 240; height: 140; } [
+  |axis| { side: bottom; step: 2 week; }
+  |line| { data: "2025-11-01" 1, "2026-03-15" 3, "2026-09-10" 2; }
+]
+|chart| { width: 240; height: 140; } [
+  |axis| { side: bottom; step: day; }
+  |line| { data: "2025-11-01" 1, "2026-03-15" 3, "2026-09-10" 2; }
+]
+|chart| { width: 240; height: 140; } [
+  |axis| { side: bottom; step: 3 month; }
+  |line| { data: "2025-11-01" 1, "2026-03-15" 3, "2026-09-10" 2; }
+]
+
+--- stderr

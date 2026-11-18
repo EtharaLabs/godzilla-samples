@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "P006",
+      "family": "text-carries-children",
+      "severity": "error",
+      "message": "text content takes no '[ ]' — wrap it in '|block|' to give it children",
+      "span": {
+        "start": 4,
+        "end": 5,
+        "line": 1,
+        "col": 5,
+        "endLine": 1,
+        "endCol": 6
+      }
+    }
+  ]
+}
+
+--- stderr

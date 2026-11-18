@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+}
+
+|block#r1| .lini-R.lini-block.lini-pose-90 [
+  |path| .lini-sch-line.lini-path {
+    path: "M 12 0 M 0 64 M 6 0 L 6 16 M 12 16 L 12 48 L 0 48 L 0 16 Z M 6 48 L 6 64";
+  }
+  |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [ "1k" ]
+  |block#p1| .lini-block { pin: center; translate: 0 -32; }
+  |block#p2| .lini-block { pin: center; translate: 0 32; }
+  |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "r1" ]
+]
+--- stderr ---

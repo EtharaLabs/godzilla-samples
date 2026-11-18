@@ -1,0 +1,17 @@
+exit: 0
+--- stdout
+{
+  layout: floorplan; unit: m; scale: 0.02; thickness: 0.15;
+}
+
+|wall#outer| {
+  draw: move(0, 0) right(7.2):north down(4.8):east left(7.2):south close():west;
+} [
+  |door#entry| { on: south; at: 3; swing: right; }
+  |window#w1| { on: north; at: 0.9; width: 1.8; }
+]
+|stairs| { steps: 14; translate: 6 3; }
+
+outer:west (-) outer:east { side: top; }
+
+--- stderr

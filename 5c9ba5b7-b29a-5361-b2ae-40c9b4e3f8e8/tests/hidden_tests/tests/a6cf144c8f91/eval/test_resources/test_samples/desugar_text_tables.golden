@@ -1,0 +1,98 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 26; gap: 26; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-row { direction: row; }
+  .lini-grid { layout: grid; }
+  .lini-table {
+    layout: grid; align: stretch; justify: stretch; gap: 1; gap-fill: --stroke; padding: 0; fill: none; stroke: --stroke; stroke-width: 2; stroke-style: solid; font-size: 14; font-weight: normal; scale: 1;
+  }
+  .lini-cell { padding: 4 8; }
+  .lini-header { fill: --header-fill; font-weight: semibold; }
+  .lini-align-start { align: start; }
+  .lini-align-end { align: end; }
+  .lini-justify-start { justify: start; }
+  .lini-justify-end { justify: end; }
+  .lini-link {
+    stroke: --gray; color: --teal-ink; font-size: 12; font-weight: bold;
+  }
+}
+
+"Styleable text, in place" { font-size: 20; font-weight: bold; }
+|block#styles| .lini-row.lini-block { gap: 16; } [
+  "default"
+  "coloured" { color: --red-ink; }
+  "bold" { font-weight: bold; }
+  "italic" { font-style: italic; }
+  "underline" { text-decoration: underline; }
+]
+|block#tables| .lini-row.lini-block { gap: 26; } [
+  |block#invoice| .lini-table.lini-group.lini-block {
+    columns: 130, 70, 100; align: start, center, end;
+  } [
+    |block| .lini-caption.lini-block [ "Invoice" ]
+    |block| .lini-cell.lini-block [ "Item" ]
+    |block| .lini-cell.lini-block [ "Qty" ]
+    |block| .lini-cell.lini-block [ "Price" ]
+    |block| .lini-cell.lini-block [ "Keyboard" ]
+    |block| .lini-cell.lini-block [ "2" ]
+    |block| .lini-cell.lini-block [ "$120.00" ]
+    |block| .lini-cell.lini-block [ "Monitor" ]
+    |block| .lini-cell.lini-block [ "1" ]
+    |block| .lini-cell.lini-block [ "$340.00" ]
+    |block| .lini-cell.lini-block [ "USB cable" ]
+    |block| .lini-cell.lini-block [ "5" ]
+    |block| .lini-cell.lini-block [ "$9.50" ]
+  ]
+  |block#stock| .lini-table.lini-group.lini-block { columns: 110, 70, 90; } [
+    |block| .lini-caption.lini-block [ "Stock" ]
+    |block| .lini-cell.lini-block [ "Item" ]
+    |block| .lini-cell.lini-block [ "Qty" ]
+    |block| .lini-cell.lini-block [ "State" ]
+    |block| .lini-cell.lini-block [ "Apple" ]
+    |block| .lini-cell.lini-block [ "12" ]
+    |block| .lini-cell.lini-block [ "fresh" ]
+    |block| .lini-cell.lini-block [ "Mango" ]
+    |block| .lini-cell.lini-block [ "3" ]
+    |block| .lini-cell.lini-block [ "ripe" ]
+    |block| .lini-cell.lini-block [ "Lime" ]
+    |block| .lini-cell.lini-block [ "0" ]
+    |block| .lini-cell.lini-block [
+      "out" { color: --red-ink; font-weight: bold; }
+    ]
+  ]
+]
+|block#cards| .lini-grid.lini-block { columns: repeat(3); gap: 14; } [
+  |block#c1| .lini-box.lini-block { max-width: 150; align: start; } [
+    "Ship the release notes to every customer"
+  ]
+  |block#c2| .lini-box.lini-block { max-width: 150; } [
+    "Rotate the signing keys before the audit window"
+  ]
+  |block#c3| .lini-box.lini-block { max-width: 150; align: end; } [
+    "Archive dashboards nobody has opened this quarter"
+  ]
+]
+|block#a| .lini-box.lini-block [ "Alpha" ]
+|block#b| .lini-box.lini-block [ "Beta" ]
+|block#c| .lini-box.lini-block [ "Gamma" ]
+
+a -> b { along: 0.5; } [ "styled by |-|" ]
+b -> c { along: 0.5; } [
+  "nudged & turned" {
+    translate: 0 -10; rotate: -6; color: --red-ink; text-shadow: 1 1 2 --gray-ink;
+  }
+]
+--- stderr ---

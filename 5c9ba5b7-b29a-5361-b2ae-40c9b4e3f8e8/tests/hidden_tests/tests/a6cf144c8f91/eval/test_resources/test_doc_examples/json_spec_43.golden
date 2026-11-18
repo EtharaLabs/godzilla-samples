@@ -1,0 +1,36 @@
+exit: 1
+--- stdout ---
+{
+  "file": "<stdin>",
+  "diagnostics": [
+    {
+      "code": "V000",
+      "family": "validate",
+      "severity": "warning",
+      "message": "'body' auto-creates a new box; did you mean 'bolt'?",
+      "span": {
+        "start": 149,
+        "end": 158,
+        "line": 3,
+        "col": 1,
+        "endLine": 3,
+        "endCol": 10
+      }
+    },
+    {
+      "code": "R009",
+      "family": "chain-too-short",
+      "severity": "error",
+      "message": "link requires at least two endpoints",
+      "span": {
+        "start": 0,
+        "end": 14,
+        "line": 1,
+        "col": 1,
+        "endLine": 1,
+        "endCol": 15
+      }
+    }
+  ]
+}
+--- stderr ---

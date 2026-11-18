@@ -1,0 +1,9 @@
+exit: 0
+--- stdout
+|chart| { width: 300; height: 200; categories: "a", "b", "c", "d"; } [
+  |area| "fill" { data: 1, 3, 2, 4; }
+  |line| "step" { data: 2, 2, 3, 1; curve: step; }
+  |line| "smooth" { data: 1, 4, 2, 3; curve: smooth; }
+]
+
+--- stderr

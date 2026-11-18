@@ -1,0 +1,37 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-surface-finish {
+    symbol: basic; stroke: --stroke-dark; stroke-width: 1; fill: none; font-size: 12; scale: 1;
+  }
+  .lini-feature-control {
+    stroke: --stroke-dark; stroke-width: 1; fill: --bg; font-size: 12; scale: 1;
+  }
+  .lini-datum {
+    stroke: --stroke-dark; stroke-width: 1; fill: --bg; font-size: 12; scale: 1;
+  }
+}
+
+|sketch#p| .lini-sketch {
+  draw: move(0, 0) right(40):face up(20) left(40) close();
+}
+|block#A| .lini-datum.lini-block [ "A" ]
+|block#B| .lini-datum.lini-block [ "B" ]
+p:face || A
+p:left || B
+|block#f1| .lini-feature-control.lini-block {
+  tol: 0.05; datums: A, B; zone: diameter; material: maximum;
+} [ "position" ]
+|block#f2| .lini-feature-control.lini-block [
+  |block| .lini-control.lini-block { tol: 0.01; } [ "flatness" ]
+  |block| .lini-control.lini-block { tol: 0.02; datums: A; } [ "parallelism" ]
+]
+|block#sf| .lini-surface-finish.lini-block { symbol: machined; } [ "Ra 1.6" ]
+sf || p:bottom
+
+--- stderr

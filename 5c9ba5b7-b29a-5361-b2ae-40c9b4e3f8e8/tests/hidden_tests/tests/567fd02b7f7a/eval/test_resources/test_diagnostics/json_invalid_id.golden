@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "P003",
+      "family": "invalid-id",
+      "severity": "error",
+      "message": "'#123' is not a valid id — an id starts with a letter or '_'",
+      "span": {
+        "start": 4,
+        "end": 8,
+        "line": 1,
+        "col": 5,
+        "endLine": 1,
+        "endCol": 9
+      }
+    }
+  ]
+}
+
+--- stderr

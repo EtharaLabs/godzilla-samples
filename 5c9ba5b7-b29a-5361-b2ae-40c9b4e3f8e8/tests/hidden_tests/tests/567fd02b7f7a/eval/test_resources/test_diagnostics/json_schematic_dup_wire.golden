@@ -1,0 +1,31 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "R022",
+      "family": "duplicate-wire",
+      "severity": "error",
+      "message": "'r1.p1 - r2.p1' is already wired — a repeated wire means nothing on a sheet",
+      "span": {
+        "start": 51,
+        "end": 64,
+        "line": 5,
+        "col": 1,
+        "endLine": 5,
+        "endCol": 14
+      },
+      "related": {
+        "start": 37,
+        "end": 50,
+        "line": 4,
+        "col": 1,
+        "endLine": 4,
+        "endCol": 14
+      }
+    }
+  ]
+}
+
+--- stderr

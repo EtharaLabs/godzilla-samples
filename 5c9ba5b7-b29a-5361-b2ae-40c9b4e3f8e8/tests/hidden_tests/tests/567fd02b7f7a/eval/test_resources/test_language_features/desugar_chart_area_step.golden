@@ -1,0 +1,20 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+}
+
+|block| .lini-chart.lini-block {
+  width: 300; height: 200; categories: "a", "b", "c", "d";
+} [
+  |block| .lini-area.lini-block { data: 1, 3, 2, 4; } [ "fill" ]
+  |line| "step" .lini-line { data: 2, 2, 3, 1; curve: step; }
+  |line| "smooth" .lini-line { data: 1, 4, 2, 3; curve: smooth; }
+]
+
+--- stderr

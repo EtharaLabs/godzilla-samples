@@ -1,0 +1,20 @@
+exit: 0
+--- stdout
+{
+  layout: grid; columns: repeat(2);
+}
+
+|chart| {
+  width: 260; height: 180; categories: "q1", "q2", "q3"; bars: stacked;
+} [
+  |bars| "a" { data: 1, 2, 3; }
+  |bars| "b" { data: 3, 2, 1; }
+]
+|chart| {
+  width: 260; height: 180; categories: "q1", "q2", "q3"; direction: row;
+} [
+  |bars| "a" { data: 1, 2, 3; labels: "x", "y", "z"; }
+  |bars| "b" { data: 3, 2, 1; fill: --red, --green, --blue; }
+]
+
+--- stderr

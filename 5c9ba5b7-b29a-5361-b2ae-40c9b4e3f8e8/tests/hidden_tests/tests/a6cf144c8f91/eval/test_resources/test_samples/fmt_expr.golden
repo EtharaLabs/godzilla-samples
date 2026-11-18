@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+// Expressions & functions (SPEC §10.7): a (…) group is compile-time math, `=` binds
+// a reusable value or function (read in any expression), and a parametric `points:`
+// draws a curve. Everything folds to literals at compile time.
+{
+  direction: column; gap: 20; padding: 24;
+  base = 90;
+  // a variable — a reusable value, read bare in any expression
+  scale(n) = (base * 1.2 ^ n);
+  // a reusable size, in terms of the variable
+  wave(a, f) = (u * 320, a * sin(2 * pi * f * u));
+  // a parametric point
+}
+
+|box#a| "scale(0)" {
+  width: scale(0); height: 40; fill: --teal-wash; stroke: --teal-ink;
+}
+|box#b| "scale(3)" {
+  width: scale(3); height: 40; fill: --teal-wash; stroke: --teal-ink;
+}
+|box#pad| "padding 8*2" {
+  padding: (8 * 2); fill: --amber-wash; stroke: --amber-ink;
+}
+
+// A sine wave from a (…) expression, and the same curve named via wave().
+|line#sine| {
+  points: (u * 320, 24 * sin(2 * pi * 3 * u)); samples: 64; stroke: --sky-deep; stroke-width: 2;
+}
+|line#named| {
+  points: wave(18, 2); samples: 64; stroke: --rose-deep; stroke-width: 2;
+}
+--- stderr ---

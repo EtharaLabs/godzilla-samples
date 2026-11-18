@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "R004",
+      "family": "inheritance-cycle",
+      "severity": "error",
+      "message": "cycle in 'a → b → a'",
+      "span": {
+        "start": 2,
+        "end": 11,
+        "line": 1,
+        "col": 3,
+        "endLine": 1,
+        "endCol": 12
+      }
+    }
+  ]
+}
+
+--- stderr

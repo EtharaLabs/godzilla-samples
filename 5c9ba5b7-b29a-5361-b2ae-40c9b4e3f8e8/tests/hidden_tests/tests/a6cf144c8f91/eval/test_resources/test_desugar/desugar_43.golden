@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+}
+
+|block#R2| .lini-R.lini-block [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 12 M 0 6 L 16 6 M 16 0 L 48 0 L 48 12 L 16 12 Z M 48 6 L 64 6";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "a" ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "R2" ]
+]
+|block| .lini-R.lini-block [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 12 M 0 6 L 16 6 M 16 0 L 48 0 L 48 12 L 16 12 Z M 48 6 L 64 6";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "b" ]
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "R1" ]
+]
+|block| .lini-R.lini-block [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 12 M 0 6 L 16 6 M 16 0 L 48 0 L 48 12 L 16 12 Z M 48 6 L 64 6";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "c" ]
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "R3" ]
+]
+--- stderr ---

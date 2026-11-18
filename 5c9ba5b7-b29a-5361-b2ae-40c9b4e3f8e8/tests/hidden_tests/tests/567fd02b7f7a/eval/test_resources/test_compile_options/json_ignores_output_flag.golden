@@ -1,0 +1,37 @@
+exit: 1
+--- stdout
+{
+  "file": "e.lini",
+  "diagnostics": [
+    {
+      "code": "V001",
+      "family": "unknown-property",
+      "severity": "error",
+      "message": "unknown property 'colr'; did you mean 'color'?",
+      "span": {
+        "start": 10,
+        "end": 19,
+        "line": 1,
+        "col": 11,
+        "endLine": 1,
+        "endCol": 20
+      },
+      "suggestion": {
+        "span": {
+          "start": 10,
+          "end": 14,
+          "line": 1,
+          "col": 11,
+          "endLine": 1,
+          "endCol": 15
+        },
+        "replacement": "color",
+        "applicability": "machine-applicable"
+      }
+    }
+  ]
+}
+
+--- stderr
+
+--- file out.svg (absent)

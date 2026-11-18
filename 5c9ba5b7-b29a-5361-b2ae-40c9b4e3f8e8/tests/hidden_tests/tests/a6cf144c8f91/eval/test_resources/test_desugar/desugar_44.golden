@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-component {
+    fill: --component-fill; stroke: --component-stroke; stroke-width: 1.5; radius: 0; padding: 8; prefix: "U";
+  }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+}
+
+|block| .lini-component.lini-block { prefix: "IC"; direction: column; gap: 0; } [
+  |block| .lini-part-value.lini-block { pin: top; translate: 0 -20; } [ "x" ]
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -36; } [ "IC1" ]
+]
+--- stderr ---

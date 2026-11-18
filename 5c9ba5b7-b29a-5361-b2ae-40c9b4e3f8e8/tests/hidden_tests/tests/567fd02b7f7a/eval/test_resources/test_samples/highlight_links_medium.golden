@@ -1,0 +1,53 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// The realistic scene — a mid-size diagram with groups, exercising every</span>
+<span class="lini-tok-comment">// common routing pattern at once.</span>
+
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">40</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">clearance</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">12</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">group</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">column</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-comment">// the scene runs left to right; each room stacks its treats</span>
+  <span class="lini-tok-class">.loud</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--red</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-class">.quiet</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--blue</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-class">.happy</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--green</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type-user">treat</span><span class="lini-tok-op">::</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">radius</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">6</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">oval</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">cat</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Cat&quot;</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">group</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">kitchen</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">caption</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Kitchen&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type-user">treat</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">bowl</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Bowl&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type-user">treat</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">water</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Water&quot;</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">group</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">garden</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">caption</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Garden&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type-user">treat</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">dog</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Dog&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type-user">treat</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">bird</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Bird&quot;</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type-user">treat</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">roof</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-string">&quot;Roof&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">badge</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;new&quot;</span>
+<span class="lini-tok-punct">]</span>
+
+cat <span class="lini-tok-op">-&gt;</span> kitchen.bowl <span class="lini-tok-op">&amp;</span> kitchen.water <span class="lini-tok-class">.loud</span>
+cat <span class="lini-tok-op">-&gt;</span> roof <span class="lini-tok-class">.loud</span>
+
+kitchen.bowl <span class="lini-tok-op">-&gt;</span> garden.dog <span class="lini-tok-string">&quot;X&quot;</span> <span class="lini-tok-class">.loud</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">along</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.35</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+kitchen.bowl <span class="lini-tok-op">-&gt;</span> garden.dog <span class="lini-tok-class">.loud</span>
+
+kitchen.water <span class="lini-tok-op">&lt;---</span> garden.dog <span class="lini-tok-class">.quiet</span>
+kitchen.water <span class="lini-tok-op">&lt;-</span> garden.dog <span class="lini-tok-class">.quiet</span>
+kitchen.water <span class="lini-tok-op">&lt;-</span> garden.dog <span class="lini-tok-class">.quiet</span>
+
+garden.bird <span class="lini-tok-op">-&gt;</span> roof
+garden.bird <span class="lini-tok-op">-&gt;</span> roof
+kitchen.water <span class="lini-tok-op">&lt;-&gt;</span> garden.bird <span class="lini-tok-class">.quiet</span>
+kitchen.water <span class="lini-tok-op">-&gt;</span> roof <span class="lini-tok-class">.happy</span>
+kitchen.water <span class="lini-tok-op">-&gt;</span> roof <span class="lini-tok-class">.happy</span>
+
+garden <span class="lini-tok-op">~&gt;</span> kitchen.bowl <span class="lini-tok-class">.loud</span>
+
+--- stderr

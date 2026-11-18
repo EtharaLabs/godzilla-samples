@@ -1,0 +1,86 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-rect { radius: 0; }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-column { direction: column; }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-hole { fill: --bg; stroke: --stroke-dark; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-surface-finish {
+    symbol: basic; stroke: --stroke-dark; stroke-width: 1; fill: none; font-size: 12; scale: 1;
+  }
+  .lini-feature-control {
+    stroke: --stroke-dark; stroke-width: 1; fill: --bg; font-size: 12; scale: 1;
+  }
+  .lini-datum {
+    stroke: --stroke-dark; stroke-width: 1; fill: --bg; font-size: 12; scale: 1;
+  }
+}
+
+|block#bracket-view| .lini-drawing.lini-block { unit: mm; px-per-unit: 4; } [
+  |block| .lini-footnote.lini-caption.lini-block [ "MOUNTING BRACKET" ]
+  |block#plate| .lini-rect.lini-box.lini-block { width: 100; height: 72; } [
+    |oval#pin| .lini-hole.lini-oval { width: 12; translate: -26 0; } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-centerline.lini-line { chrome: y-axis; }
+    ]
+  ]
+  plate:left (-) plate:right { side: bottom; }
+  plate:top (-) plate:bottom { side: right; } [
+    |block| .lini-datum.lini-block [ "C" ]
+  ]
+  plate.pin (o) [
+    |block| .lini-feature-control.lini-block {
+      tol: 0.1; zone: diameter; material: maximum; datums: A, B;
+    } [ "position" ]
+  ]
+  |block#milled| .lini-surface-finish.lini-block { symbol: machined; } [
+    "Ra 1.6"
+  ]
+  milled || plate:top
+  |block#cast| .lini-surface-finish.lini-block { translate: 30 -36; } [
+    "Ra 6.3"
+  ]
+  |block#bore| .lini-surface-finish.lini-block {
+    symbol: prohibited; translate: -20 -52;
+  } [ "Ra 0.8" ]
+  plate.pin <- bore
+  plate:bottom >- { along: 0.5; } [ "A" ]
+  |block#axis| .lini-datum.lini-block { translate: -26 22; } [ "B" ]
+  plate.pin <- axis
+  |block#refine| .lini-feature-control.lini-block { translate: -46 -56; } [
+    |block| .lini-control.lini-block { tol: 0.4; zone: diameter; datums: A, B; } [
+      "position"
+    ]
+    |block| .lini-control.lini-block { tol: 0.1; zone: diameter; datums: A; } [
+      "position"
+    ]
+  ]
+  plate.pin <- refine
+  |block#stack| .lini-column.lini-block { gap: 0; } [
+    |block| .lini-surface-finish.lini-block { symbol: machined; } [ "Ra 3.2" ]
+    |block| .lini-feature-control.lini-block { tol: 0.2; } [ "flatness" ]
+  ]
+  stack || plate:right
+]
+
+--- stderr

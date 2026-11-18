@@ -1,0 +1,102 @@
+exit: 1
+--- stdout ---
+{
+  "file": "<stdin>",
+  "diagnostics": [
+    {
+      "code": "V004",
+      "family": "class-never-worn",
+      "severity": "warning",
+      "message": "class '.a' is never worn",
+      "span": {
+        "start": 3,
+        "end": 20,
+        "line": 2,
+        "col": 2,
+        "endLine": 2,
+        "endCol": 19
+      }
+    },
+    {
+      "code": "V004",
+      "family": "class-never-worn",
+      "severity": "warning",
+      "message": "class '.b' is never worn",
+      "span": {
+        "start": 22,
+        "end": 39,
+        "line": 3,
+        "col": 2,
+        "endLine": 3,
+        "endCol": 19
+      }
+    },
+    {
+      "code": "V001",
+      "family": "unknown-property",
+      "severity": "error",
+      "message": "unknown property 'colr'; did you mean 'color'?",
+      "span": {
+        "start": 50,
+        "end": 59,
+        "line": 5,
+        "col": 9,
+        "endLine": 5,
+        "endCol": 18
+      },
+      "suggestion": {
+        "span": {
+          "start": 50,
+          "end": 54,
+          "line": 5,
+          "col": 9,
+          "endLine": 5,
+          "endCol": 13
+        },
+        "replacement": "color",
+        "applicability": "machine-applicable"
+      }
+    },
+    {
+      "code": "V001",
+      "family": "unknown-property",
+      "severity": "error",
+      "message": "unknown property 'opacty'; did you mean 'opacity'?",
+      "span": {
+        "start": 61,
+        "end": 70,
+        "line": 5,
+        "col": 20,
+        "endLine": 5,
+        "endCol": 29
+      },
+      "suggestion": {
+        "span": {
+          "start": 61,
+          "end": 67,
+          "line": 5,
+          "col": 20,
+          "endLine": 5,
+          "endCol": 26
+        },
+        "replacement": "opacity",
+        "applicability": "machine-applicable"
+      }
+    },
+    {
+      "code": "V010",
+      "family": "invalid-color",
+      "severity": "error",
+      "message": "invalid color 'nocolour'",
+      "span": {
+        "start": 82,
+        "end": 96,
+        "line": 6,
+        "col": 9,
+        "endLine": 6,
+        "endCol": 23
+      }
+    }
+  ]
+}
+--- stderr ---

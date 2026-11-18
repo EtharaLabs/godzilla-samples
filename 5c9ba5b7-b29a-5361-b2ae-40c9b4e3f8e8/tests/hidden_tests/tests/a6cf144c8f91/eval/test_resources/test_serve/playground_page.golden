@@ -1,0 +1,986 @@
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 32112
+Connection: close
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lini — playground</title>
+    <!-- The bundled families as webfonts, so the live preview's name-only
+         SVG (`<text>`, no embedded bytes) renders on the exact faces layout
+         measured with [SPEC 6/17]. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Set the theme before first paint to avoid a flash.
+      (function () {
+        var t = localStorage.getItem("lini-theme");
+        if (t !== "dark" && t !== "light") {
+          t = matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      :root {
+        --mono:
+          ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      }
+      /* Dracula */
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #21222c;
+        --panel: #282a36;
+        --panel-2: #21222c;
+        --control: #343746;
+        --border: #44475a;
+        --text: #f8f8f2;
+        --muted: #6272a4;
+        --accent: #bd93f9;
+        --accent-ink: #21222c;
+        --warn: #ffb86c;
+        --err: #ff5555;
+        --paper: #282a36;
+        --shadow: rgba(0, 0, 0, 0.5);
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #e8e8ee;
+        --panel: #ffffff;
+        --panel-2: #f1f1f5;
+        --control: #ffffff;
+        --border: #d3d3dd;
+        --text: #24292f;
+        --muted: #8a8f98;
+        --accent: #8250df;
+        --accent-ink: #ffffff;
+        --warn: #9a6700;
+        --err: #cf222e;
+        --paper: #ffffff;
+        --shadow: rgba(0, 0, 0, 0.18);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          13px/1.5 system-ui,
+          -apple-system,
+          sans-serif;
+      }
+
+      /* Top bar — always visible, full width, above the tabs on mobile. */
+      .topbar {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: var(--panel-2);
+        border-bottom: 1px solid var(--border);
+      }
+      .brand {
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      select {
+        background: var(--control);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 8px;
+        font: 12px var(--mono);
+        max-width: 40vw;
+      }
+      .dirty {
+        color: var(--accent);
+        visibility: hidden;
+        font-size: 11px;
+      }
+      .spacer {
+        flex: 1;
+      }
+      .btn {
+        padding: 6px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        line-height: 1.2;
+      }
+      .btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .btn:disabled {
+        color: var(--muted);
+        opacity: 0.55;
+        cursor: default;
+      }
+      .btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn-icon {
+        padding: 6px 10px;
+        font-size: 15px;
+        line-height: 1;
+      }
+
+      /* Tabs — mobile only */
+      .tabs {
+        display: none;
+        flex: 0 0 auto;
+        background: var(--panel-2);
+        border-bottom: 1px solid var(--border);
+      }
+      .tab {
+        flex: 1;
+        padding: 12px;
+        background: none;
+        border: none;
+        color: var(--muted);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .tab.active {
+        color: var(--text);
+        box-shadow: inset 0 -2px 0 var(--accent);
+      }
+
+      .panes {
+        flex: 1 1 auto;
+        display: flex;
+        min-height: 0;
+      }
+      .pane {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+      }
+      .divider {
+        flex: 0 0 6px;
+        background: var(--border);
+        cursor: col-resize;
+        touch-action: none;
+      }
+      .divider:hover {
+        background: var(--accent);
+      }
+
+      /* The editor is a transparent textarea over a highlighted <pre>.
+         Both layers share identical metrics so glyphs line up exactly. */
+      .editor-wrap {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        background: var(--panel);
+      }
+      #highlight,
+      #editor,
+      .codeview {
+        margin: 0;
+        border: 0;
+        padding: 16px 18px;
+        font: 13px/1.6 var(--mono);
+        tab-size: 2;
+        white-space: pre;
+        box-sizing: border-box;
+      }
+      #highlight,
+      #editor {
+        position: absolute;
+        inset: 0;
+      }
+      #highlight {
+        pointer-events: none;
+        overflow: hidden;
+        color: var(--text);
+      }
+      #editor {
+        resize: none;
+        outline: none;
+        background: transparent;
+        color: transparent;
+        caret-color: var(--accent);
+        overflow: auto;
+        /* Hide the scrollbar so its width can't desync the overlay — a visible
+           textarea scrollbar steals client height/width the highlight layer
+           doesn't have, drifting them apart. */
+        scrollbar-width: none;
+      }
+      #editor::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Desugar pane — read-only highlighted view of the expanded source. */
+      .pane.desugar {
+        background: var(--panel);
+      }
+      .codeview {
+        flex: 1 1 auto;
+        overflow: auto;
+        color: var(--text);
+      }
+
+      /* <lini:palette> the token palette — regenerate with `cargo xtask gen-grammars`. */
+      /* Lini syntax highlighting — the token palette [SPEC 18].
+         Printed by `lini highlight --css`; re-tint a role by redeclaring its variable. */
+      @layer lini.defaults {
+        :root {
+          --lini-tok-comment: light-dark(#8a8f98, #6272a4);
+          --lini-tok-string: light-dark(#0a7d2c, #f1fa8c);
+          --lini-tok-value: light-dark(#8250df, #bd93f9);
+          --lini-tok-type: light-dark(#1078a8, #8be9fd);
+          --lini-tok-prop: light-dark(#c2185b, #ff79c6);
+          --lini-tok-var: light-dark(#b3530b, #ffb86c);
+          --lini-tok-op: light-dark(#c2185b, #ff79c6);
+          --lini-tok-class: light-dark(#1a7f37, #50fa7b);
+          --lini-tok-punct: light-dark(#6e7781, #7b7f9e);
+        }
+      }
+
+      .lini-tok-comment {
+        color: var(--lini-tok-comment);
+        font-style: italic;
+      }
+
+      .lini-tok-string {
+        color: var(--lini-tok-string);
+      }
+
+      .lini-tok-number,
+      .lini-tok-const,
+      .lini-tok-keyword {
+        color: var(--lini-tok-value);
+      }
+
+      .lini-tok-type {
+        color: var(--lini-tok-type);
+        font-style: italic;
+      }
+
+      .lini-tok-prop {
+        color: var(--lini-tok-prop);
+      }
+
+      .lini-tok-type-user {
+        color: var(--lini-tok-type);
+        font-style: italic;
+        opacity: 0.65;
+      }
+
+      .lini-tok-prop-user {
+        color: var(--lini-tok-prop);
+        opacity: 0.65;
+      }
+
+      .lini-tok-var {
+        color: var(--lini-tok-var);
+      }
+
+      .lini-tok-op {
+        color: var(--lini-tok-op);
+      }
+
+      .lini-tok-class {
+        color: var(--lini-tok-class);
+        font-style: italic;
+      }
+
+      .lini-tok-punct {
+        color: var(--lini-tok-punct);
+      }
+      /* </lini:palette> */
+
+      .pane.preview {
+        background: var(--bg);
+      }
+      #preview {
+        flex: 1 1 auto;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+      }
+      /* The paper behind the figure is the theme's own (`--lini-bg`, declared
+         on `:root` by the server when `--theme` is set) — a figure paints no
+         background it was not given. Unthemed, the sheet stays see-through. */
+      #preview svg {
+        background: var(--lini-bg, transparent);
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 6px 24px var(--shadow);
+        overflow: hidden;
+      }
+
+      #diag {
+        flex: 0 0 auto;
+        margin: 0;
+        max-height: 30vh;
+        overflow: auto;
+        padding: 10px 14px;
+        background: var(--panel-2);
+        border-top: 1px solid var(--border);
+        font: 12px/1.5 var(--mono);
+        white-space: pre-wrap;
+        color: var(--muted);
+      }
+      #diag:empty {
+        display: none;
+      }
+      #diag.warn {
+        color: var(--warn);
+      }
+      #diag.err {
+        color: var(--err);
+      }
+
+      /* Desktop: per-pane toggles. A pane shows when its `show-*` class is set;
+         a divider shows only between two visible panes — so the last pane left
+         on can never be toggled off into emptiness. */
+      @media (min-width: 769px) {
+        body:not(.show-code) .pane.code,
+        body:not(.show-desugar) .pane.desugar,
+        body:not(.show-preview) .pane.preview {
+          display: none;
+        }
+        .divider {
+          display: none;
+        }
+        body.show-code.show-desugar .divider.d1,
+        body.show-code.show-preview .divider.d1,
+        body.show-desugar.show-preview .divider.d2 {
+          display: block;
+        }
+      }
+
+      /* Mobile: three tabs pick the single visible pane; toggles are gone. */
+      @media (max-width: 768px) {
+        .tabs {
+          display: flex;
+        }
+        .pane,
+        .divider {
+          display: none;
+        }
+        body[data-tab="code"] .pane.code,
+        body[data-tab="desugar"] .pane.desugar,
+        body[data-tab="preview"] .pane.preview {
+          display: flex;
+        }
+        #render,
+        #toggle-code,
+        #toggle-desugar,
+        #toggle-preview {
+          display: none;
+        }
+        .topbar {
+          gap: 6px;
+        }
+        .btn {
+          padding: 6px 9px;
+        }
+        #highlight,
+        #editor,
+        .codeview {
+          font-size: 12px;
+        }
+      }
+    </style>
+    
+  </head>
+  <body class="show-code show-preview" data-tab="code">
+    <div class="topbar">
+      <span class="brand">Lini</span>
+      <select id="file" title="open a sample"></select>
+      <span class="dirty" id="dirty" title="unsaved changes">●</span>
+      <span class="spacer"></span>
+      <button class="btn btn-icon" id="render" title="render (Ctrl/Cmd-S)">
+        ▶
+      </button>
+      <button class="btn" id="restore" disabled title="revert to the loaded version">
+        Rest
+      </button>
+      <button class="btn" id="save" disabled title="write to disk">Save</button>
+      <button class="btn btn-icon" id="toggle-code" title="toggle code pane">
+        &lt;/&gt;
+      </button>
+      <button
+        class="btn btn-icon"
+        id="toggle-desugar"
+        title="toggle desugar pane"
+      >
+        { }
+      </button>
+      <button
+        class="btn btn-icon"
+        id="toggle-preview"
+        title="toggle preview pane"
+      >
+        ▦
+      </button>
+      <button class="btn btn-icon" id="theme" title="toggle light / dark">
+        ◐
+      </button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="code">Code</button>
+      <button class="tab" data-tab="desugar">Desugar</button>
+      <button class="tab" data-tab="preview">Preview</button>
+    </div>
+
+    <div class="panes">
+      <section class="pane code">
+        <div class="editor-wrap">
+          <pre id="highlight" aria-hidden="true"></pre>
+          <textarea
+            id="editor"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            wrap="off"
+          ></textarea>
+        </div>
+      </section>
+
+      <div class="divider d1" title="drag to resize"></div>
+
+      <section class="pane desugar">
+        <pre id="desugar" class="codeview" aria-hidden="true"></pre>
+      </section>
+
+      <div class="divider d2" title="drag to resize"></div>
+
+      <section class="pane preview">
+        <div id="preview"></div>
+      </section>
+    </div>
+
+    <pre id="diag"></pre>
+
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const editor = $("#editor");
+      const preview = $("#preview");
+      const desugarView = $("#desugar");
+      const diag = $("#diag");
+      const fileSelect = $("#file");
+      const saveBtn = $("#save");
+      const restoreBtn = $("#restore");
+      const dirtyDot = $("#dirty");
+      const highlight = $("#highlight");
+
+      let savedText = "";
+      let currentPath = null;
+      let dirty = false;
+      let files = [];
+
+      // ---- transport seam ------------------------------------------
+      // The only code that touches the server. A future WASM build swaps
+      // these for an in-browser compile + a baked file manifest; nothing
+      // else on the page changes.
+      async function listFiles() {
+        const t = (await (await fetch("/api/files")).text()).trim();
+        return t ? t.split("\n") : [];
+      }
+      async function loadFile(path) {
+        return await (
+          await fetch("/api/file?path=" + encodeURIComponent(path))
+        ).text();
+      }
+      async function compile(source) {
+        // The file's path anchors relative image src: paths server-side.
+        const q = currentPath
+          ? "?path=" + encodeURIComponent(currentPath)
+          : "";
+        const r = await fetch("/compile" + q, { method: "POST", body: source });
+        return await r.json(); // { ok, svg?, error?, diagnostics, formatted?, desugared? }
+      }
+      async function saveFile(path, source) {
+        const r = await fetch("/save?path=" + encodeURIComponent(path), {
+          method: "POST",
+          body: source,
+        });
+        return await r.json();
+      }
+      // --------------------------------------------------------------
+
+      // <lini:tokenizer> — lifted whole by `tests/playground.rs`, which runs
+      // it in node over every sample and diffs it against `lini::highlight_html`
+      // byte for byte. Nothing between the markers may touch the DOM.
+      const esc = (s) =>
+        s.replace(
+          /[&<>"]/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+            })[c],
+        );
+
+      // ---- syntax highlighting -------------------------------------
+      // The browser's copy of `lini::highlight_html` — same tokens, same
+      // classes, same output. It exists because this page carries no wasm and
+      // the overlay must re-colour on every keystroke, so a round trip is not
+      // an option; it is a *copy*, not a second grammar, and `tests/playground.rs`
+      // holds it byte-identical to the Rust scanner over every sample.
+      //
+      // It preserves every character (escaped) so the highlighted <pre> lines
+      // up glyph-for-glyph with the textarea above it. Its word lists come
+      // from the same source the editor grammars do: the region marked
+      // `<lini:generated>` is written by `cargo xtask gen-grammars` and
+      // guarded byte-identical by `tests/grammar.rs`.
+      function tokenize(src) {
+        let out = "";
+        let i = 0;
+        const n = src.length;
+        let inValue = false; // between a `name:` and the end of its value
+        const at = (re) => {
+          re.lastIndex = i;
+          const m = re.exec(src);
+          return m && m.index === i ? m[0] : null;
+        };
+        const emit = (cls, s) => {
+          out += cls
+            ? `<span class="lini-tok-${cls}">${esc(s)}</span>`
+            : esc(s);
+          i += s.length;
+        };
+        const prevWord = () => i > 0 && /[\w-]/.test(src[i - 1]);
+
+        const WS = /[ \t\r]+/y;
+        const COMMENT = /\/\/[^\n]*/y;
+        const STRING = /"(?:\\.|[^"\\\n])*"?/y;
+        const VAR_NAME = /--[A-Za-z_][\w-]*(?=[ \t]*:(?!:))/y;
+        const CSS_VAR = /--[A-Za-z_][\w-]*/y;
+        const LINK_OP = /(?:<>|[<>*])?(?:---|--|~|-)(?:<>|[<>*])?/y;
+        const CLASS = /(?:\.[A-Za-z_][\w-]*)+/y;
+        const HEX =
+          /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![0-9a-fA-F])/y;
+        const NUMBER = /[-+]?(?:\d+\.\d+|\d+|\.\d+)/y;
+        const IDENT = /[A-Za-z_][\w-]*/y;
+        // <lini:generated> word lists — regenerate with `cargo xtask gen-grammars`.
+        const TYPE_BUILTIN =
+          /(?:BT|BZ|C|D|F|FB|I|J|L|LED|M|Q|R|SW|TP|V|Y|alt|appliance|area|axis|badge|balloon|band|bars|bath|bed|block|box|breakline|bubble|caption|cell|centerline|chart|column|component|control|cyl|datum|diamond|dining|door|door-leaf|door-swing|dots|drawing|else|entity|feature-control|field|floorplan|footer|footnote|frame|gnd|grid|group|halo|header|hex|hidden|hole|icon|image|junction|label|line|loop|magnifier|mark|mindmap|nc|note|opamp|opt|oval|page|partition|path|pie|pin|pitch-circle|plane|poly|projection|rect|row|schematic|sequence|sheet-caption|shoulder|sign|sketch|slant|slice|sofa|space|stack|stair-arrow|stair-tread|stairs|surface-finish|table|threadline|tick|title-block|topic|wall|window|window-sill|zone)(?![\w-])/y;
+        const PROP_KNOWN =
+          /(?:activation|align|along|approved|at|author|axis|bars|baseline|break|categories|cell|characteristic|clearance|color|columns|corner-radius|curve|data|date|datums|density|department|direction|document-type|draw|drawing-number|facing|fill|fit|fn|font-family|font-size|font-style|font-weight|format|gap|gap-fill|gridlines|height|hinge|hint|hole|href|justify|labels|layer|layout|legend|letter-spacing|line-spacing|marker|marker-end|marker-start|material|max-width|mirror|modifiers|multiple|number|of|on|opacity|padding|path|pattern|pin|pins|place|points|prefix|project|radius|range|reference|revision|revolve|rotate|routing|rows|samples|scale|shadow|shape|sheet|sheet-number|side|skew|span|src|status|step|steps|stroke|stroke-style|stroke-width|swing|symbol|text-decoration|text-shadow|text-transform|text-wrap|thickness|thread|ticks|title|tol|tooltip|translate|unit|value|width|zone)(?=[ \t]*:(?!:)(?!(?:bottom|left|right|top)(?![\w-])))/y;
+        const PROP_NAME =
+          /[A-Za-z_][\w-]*(?=[ \t]*:(?!:)(?!(?:bottom|left|right|top)(?![\w-])))/y;
+        const BUILDER =
+          /(?:gradient|hatch|hsl|hsla|linear-gradient|oklch|radial-gradient|repeat|rgb|rgba)(?=\s*\()/y;
+        const KEYWORD =
+          /(?:flow|row|column|radial|bilateral|start|center|end|stretch|evenly|origin|rows|columns|none|auto|solid|dashed|dotted|wavy|phantom|log|linear|hover|always|orthogonal|natural|straight|contain|cover|x-axis|y-axis|px|mm|cm|m|in|over|arrow|dot|circle|diamond|datum|crow|many|one|exactly-one|zero-or-one|one-or-many|zero-or-many|bottom|left|right|top|chart|drawing|floorplan|grid|pie|schematic|sequence|stack|tree)(?![\w-])/y;
+        const COLOR =
+          /(?:white|black|red|green|blue|gray|grey|crimson|orange|yellow|gold|silver|navy|teal|purple|pink|brown|cyan|magenta|lime|maroon|olive|cornflowerblue|currentColor|transparent)(?![\w-])/y;
+        const SIDE = /(?:bottom|left|right|top)(?![\w-])/y;
+        // </lini:generated>
+
+        while (i < n) {
+          const c = src[i];
+          if (c === "\n") {
+            out += "\n";
+            i++;
+            inValue = false;
+            continue;
+          }
+          let t;
+          if ((t = at(WS))) {
+            emit(null, t);
+            continue;
+          }
+          if ((t = at(COMMENT))) {
+            emit("comment", t);
+            continue;
+          }
+          if ((t = at(STRING))) {
+            emit("string", t);
+            continue;
+          }
+
+          if (inValue) {
+            if ((t = at(CSS_VAR))) {
+              emit("var", t);
+              continue;
+            }
+            if ((t = at(BUILDER))) {
+              emit("type", t);
+              continue;
+            }
+            if ((t = at(HEX))) {
+              emit("const", t);
+              continue;
+            }
+            if ((t = at(NUMBER))) {
+              emit("number", t);
+              continue;
+            }
+            if ((t = at(KEYWORD))) {
+              emit("keyword", t);
+              continue;
+            }
+            if ((t = at(COLOR))) {
+              emit("const", t);
+              continue;
+            }
+            if (c === ";" || c === "}" || c === "]") {
+              emit("punct", c);
+              inValue = false;
+              continue;
+            }
+            if (c === "(" || c === ")" || c === ",") {
+              emit("punct", c);
+              continue;
+            }
+            if ((t = at(IDENT))) {
+              emit(null, t);
+              continue;
+            }
+            emit(null, c);
+            continue;
+          }
+
+          // structural mode (identity, selectors, links)
+          if (c === "|") {
+            emit("punct", "|");
+            while (i < n && src[i] !== "|" && src[i] !== "\n") {
+              let b;
+              if ((b = at(WS))) {
+                emit(null, b);
+                continue;
+              }
+              if (src[i] === ":" && src[i + 1] === ":") {
+                emit("op", "::");
+                continue;
+              }
+              if (src[i] === "#") {
+                emit("punct", "#");
+                let id;
+                if ((id = at(IDENT))) emit("type", id);
+                continue;
+              }
+              if ((b = at(CLASS))) {
+                emit("class", b);
+                continue;
+              }
+              if ((b = at(TYPE_BUILTIN))) {
+                emit("type", b);
+                continue;
+              }
+              if ((b = at(IDENT))) {
+                emit("type-user", b);
+                continue;
+              }
+              emit(null, src[i]);
+            }
+            if (src[i] === "|") emit("punct", "|");
+            continue;
+          }
+          if ((t = at(VAR_NAME))) {
+            emit("var", t);
+            continue;
+          }
+          if ((t = at(PROP_KNOWN))) {
+            emit("prop", t);
+            continue;
+          }
+          if ((t = at(PROP_NAME))) {
+            emit("prop-user", t);
+            continue;
+          }
+          if ((t = at(CSS_VAR))) {
+            emit("var", t);
+            continue;
+          }
+          if ((t = at(LINK_OP))) {
+            emit("op", t);
+            continue;
+          }
+          if (!prevWord() && (t = at(CLASS))) {
+            emit("class", t);
+            continue;
+          }
+          if (!prevWord() && (t = at(SIDE))) {
+            emit("const", t);
+            continue;
+          }
+          if ((t = at(HEX))) {
+            emit("const", t);
+            continue;
+          }
+          if ((t = at(NUMBER))) {
+            emit("number", t);
+            continue;
+          }
+          if (c === ":") {
+            emit("punct", c);
+            inValue = true;
+            continue;
+          }
+          if (c === "&") {
+            emit("op", c);
+            continue;
+          }
+          if ("{}[];,()".includes(c)) {
+            emit("punct", c);
+            continue;
+          }
+          if ((t = at(IDENT))) {
+            emit(null, t);
+            continue;
+          }
+          emit(null, c);
+        }
+        return out;
+      }
+      // </lini:tokenizer>
+      function renderHighlight() {
+        highlight.innerHTML = tokenize(editor.value) + "\n";
+        highlight.scrollTop = editor.scrollTop;
+        highlight.scrollLeft = editor.scrollLeft;
+      }
+      // --------------------------------------------------------------
+
+      function setDirty(d) {
+        dirty = d;
+        dirtyDot.style.visibility = d ? "visible" : "hidden";
+        saveBtn.disabled = !d;
+        restoreBtn.disabled = !d;
+      }
+
+      function showWarnings(list) {
+        diag.className = list.length ? "warn" : "";
+        diag.textContent = list.join("\n");
+      }
+      function showError(msg, list = []) {
+        preview.innerHTML = "";
+        diag.className = "err";
+        diag.textContent = [msg, ...list].join("\n");
+      }
+
+      // Render is explicit (never on keystroke). It also formats the buffer
+      // and refreshes the desugar view, all from one /compile round-trip.
+      async function render() {
+        let res;
+        try {
+          res = await compile(editor.value);
+        } catch (e) {
+          showError("fetch failed: " + e.message);
+          return;
+        }
+        if (typeof res.formatted === "string" && res.formatted !== editor.value) {
+          const top = editor.scrollTop;
+          editor.value = res.formatted;
+          renderHighlight();
+          editor.scrollTop = top;
+          setDirty(editor.value !== savedText);
+        }
+        desugarView.innerHTML =
+          typeof res.desugared === "string"
+            ? tokenize(res.desugared) + "\n"
+            : "";
+        if (res.ok) {
+          preview.innerHTML = res.svg;
+          showWarnings(res.diagnostics || []);
+        } else {
+          showError(res.error || "compile error", res.diagnostics || []);
+        }
+      }
+
+      async function open(path) {
+        const text = await loadFile(path);
+        editor.value = text;
+        renderHighlight();
+        savedText = text;
+        currentPath = path;
+        fileSelect.value = path;
+        if (location.hash.slice(1) !== path) location.hash = path;
+        setDirty(false);
+        render();
+      }
+      // The URL hash remembers the open file across reloads, and tracks
+      // back/forward and manual hash edits.
+      window.addEventListener("hashchange", () => {
+        const p = decodeURIComponent(location.hash.slice(1));
+        if (p && p !== currentPath && files.includes(p)) open(p);
+      });
+
+      function showTab(which) {
+        document.body.dataset.tab = which;
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) =>
+            t.classList.toggle("active", t.dataset.tab === which),
+          );
+      }
+
+      // Per-pane toggles (desktop). Each shows/hides its pane; the last visible
+      // pane can't be turned off — its button disables.
+      const PANES = ["code", "desugar", "preview"];
+      const paneOn = { code: true, desugar: false, preview: true };
+      const paneBtn = {
+        code: $("#toggle-code"),
+        desugar: $("#toggle-desugar"),
+        preview: $("#toggle-preview"),
+      };
+      function applyPanes() {
+        const onCount = PANES.filter((p) => paneOn[p]).length;
+        PANES.forEach((p) => {
+          document.body.classList.toggle("show-" + p, paneOn[p]);
+          paneBtn[p].classList.toggle("active", paneOn[p]);
+          paneBtn[p].disabled = paneOn[p] && onCount === 1;
+        });
+        localStorage.setItem("lini-panes", JSON.stringify(paneOn));
+      }
+
+      editor.addEventListener("input", () => {
+        renderHighlight();
+        setDirty(editor.value !== savedText);
+      });
+      editor.addEventListener("scroll", () => {
+        highlight.scrollTop = editor.scrollTop;
+        highlight.scrollLeft = editor.scrollLeft;
+      });
+      fileSelect.addEventListener("change", () => open(fileSelect.value));
+
+      $("#render").addEventListener("click", () => {
+        render();
+        showTab("preview");
+      });
+      restoreBtn.addEventListener("click", () => {
+        editor.value = savedText;
+        renderHighlight();
+        setDirty(false);
+        render();
+      });
+      saveBtn.addEventListener("click", async () => {
+        if (!currentPath) return;
+        const res = await saveFile(currentPath, editor.value);
+        if (res.ok) {
+          savedText = editor.value;
+          setDirty(false);
+        } else {
+          showError("save failed: " + (res.error || ""));
+        }
+      });
+      PANES.forEach((p) =>
+        paneBtn[p].addEventListener("click", () => {
+          if (paneOn[p] && PANES.filter((q) => paneOn[q]).length === 1) return;
+          paneOn[p] = !paneOn[p];
+          applyPanes();
+        }),
+      );
+      $("#theme").addEventListener("click", () => {
+        const next =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("lini-theme", next);
+      });
+
+      // Ctrl/Cmd-S (and -Enter) render — they never write to disk. Saving is
+      // the Save button alone, so it can't be a reflex.
+      document.addEventListener("keydown", (e) => {
+        if ((e.metaKey || e.ctrlKey) && (e.key === "s" || e.key === "Enter")) {
+          e.preventDefault();
+          render();
+          showTab("preview");
+        }
+      });
+      // On mobile there's no Render button — switching to a render tab renders.
+      document.querySelectorAll(".tab").forEach((t) =>
+        t.addEventListener("click", () => {
+          showTab(t.dataset.tab);
+          if (t.dataset.tab !== "code") render();
+        }),
+      );
+
+      // Draggable splits: a divider resizes the pane to its left (desktop).
+      (function () {
+        const panes = $(".panes");
+        document.querySelectorAll(".divider").forEach((divider) => {
+          divider.addEventListener("pointerdown", (e) => {
+            const pane = divider.previousElementSibling;
+            if (!pane || !pane.classList.contains("pane")) return;
+            e.preventDefault();
+            divider.setPointerCapture(e.pointerId);
+            const move = (ev) => {
+              const cr = panes.getBoundingClientRect();
+              const pr = pane.getBoundingClientRect();
+              let w = ev.clientX - pr.left;
+              w = Math.max(160, Math.min(cr.width - 200, w));
+              pane.style.flex = "0 0 " + w + "px";
+            };
+            const up = () => {
+              divider.releasePointerCapture(e.pointerId);
+              divider.removeEventListener("pointermove", move);
+              divider.removeEventListener("pointerup", up);
+            };
+            divider.addEventListener("pointermove", move);
+            divider.addEventListener("pointerup", up);
+          });
+        });
+      })();
+      // Drag widths are desktop-only; drop them when the layout goes to tabs so
+      // a fixed px width can't constrain the single visible pane.
+      const mqMobile = matchMedia("(max-width: 768px)");
+      mqMobile.addEventListener("change", () => {
+        if (mqMobile.matches)
+          document.querySelectorAll(".pane").forEach((p) => (p.style.flex = ""));
+      });
+
+      (async function init() {
+        try {
+          const s = JSON.parse(localStorage.getItem("lini-panes") || "{}");
+          PANES.forEach((p) => {
+            if (typeof s[p] === "boolean") paneOn[p] = s[p];
+          });
+        } catch {}
+        if (!PANES.some((p) => paneOn[p])) paneOn.preview = true;
+        applyPanes();
+        files = await listFiles();
+        if (!files.length) {
+          fileSelect.innerHTML = "<option>no .lini files</option>";
+          showError("No .lini files in this directory.");
+          return;
+        }
+        fileSelect.innerHTML = files
+          .map((f) => `<option value="${esc(f)}">${esc(f)}</option>`)
+          .join("");
+        const fromHash = decodeURIComponent(location.hash.slice(1));
+        open(files.includes(fromHash) ? fromHash : files[0]);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "R020",
+      "family": "schematic-invent",
+      "severity": "error",
+      "message": "'NSTDBY' is unknown — a schematic never invents a box; did you mean '- \"NSTDBY\"' (a net label)?",
+      "span": {
+        "start": 38,
+        "end": 44,
+        "line": 3,
+        "col": 9,
+        "endLine": 3,
+        "endCol": 15
+      }
+    }
+  ]
+}
+
+--- stderr

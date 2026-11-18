@@ -1,0 +1,46 @@
+exit: 0
+--- stdout
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-72.75 -46.75 145.5 93.5" width="145.5" height="93.5" class="lini lini-scope-004598af">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-004598af { color-scheme: light dark; --lini-component-stroke: light-dark(#8a1c1c, #d98f8f); --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-sheet: light-dark(#faf6ea, #22201b); --lini-stroke: light-dark(#444, #9aa0a6); --lini-text-color: var(--lini-fg); --lini-wire: light-dark(#0a7a2f, #4cc472); }
+      .lini-scope-004598af[data-theme="dark"], [data-theme="dark"] .lini-scope-004598af { color-scheme: dark; }
+      .lini-scope-004598af[data-theme="light"], [data-theme="light"] .lini-scope-004598af { color-scheme: light; }
+    }
+    .lini-scope-004598af, .lini-scope-004598af text { font-family: var(--lini-font-family); }
+    .lini-scope-004598af { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-004598af .lini-canvas { fill: var(--lini-sheet); }
+    .lini-scope-004598af .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-004598af .lini-path { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-004598af .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-004598af .lini-sch-line { fill: none; stroke: var(--lini-component-stroke); stroke-width: 1.5; }
+    .lini-scope-004598af .lini-ref { font-size: 12px; font-weight: 600; }
+    .lini-scope-004598af .lini-part-value { font-size: 12px; }
+  </style>
+  <defs/>
+  <rect class="lini-canvas" x="-72.75" y="-46.75" width="145.5" height="93.5"/>
+  <g class="lini-scene">
+    <g class="lini-node lini-F lini-block" data-id="x1" transform="translate(0,0)">
+      <rect x="-32.75" y="-6.75" width="65.5" height="13.5" rx="0" ry="0"/>
+      <g class="lini-node lini-sch-line lini-path" transform="translate(-32,-6)">
+        <path d="M 0 0 M 64 12 M 0 6 L 64 6 M 16 0 L 48 0 L 48 12 L 16 12 Z"/>
+      </g>
+      <g class="lini-node lini-part-value lini-block" transform="translate(0,20.75)">
+        <rect x="-11.52" y="-6" width="23.04" height="12" rx="0" ry="0"/>
+        <text class="lini-text" x="0" y="0" dy="0.358em">Part</text>
+      </g>
+      <g class="lini-node lini-block" data-id="p1" transform="translate(-32,0)">
+      </g>
+      <g class="lini-node lini-block" data-id="p2" transform="translate(32,0)">
+      </g>
+      <g class="lini-node lini-ref lini-block" transform="translate(0,-20.75)">
+        <rect x="-5.772" y="-6" width="11.544" height="12" rx="0" ry="0"/>
+        <text class="lini-text" x="0" y="0" dy="0.358em">x1</text>
+      </g>
+    </g>
+  </g>
+  <g class="lini-links"/>
+</svg>
+
+--- stderr
+in.lini:2:1: warning: 'x1' has no placed end — its chain falls back to the flow

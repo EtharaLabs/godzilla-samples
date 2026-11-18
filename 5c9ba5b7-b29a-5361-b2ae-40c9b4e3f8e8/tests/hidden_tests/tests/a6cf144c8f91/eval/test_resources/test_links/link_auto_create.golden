@@ -1,0 +1,57 @@
+exit: 0
+--- stdout ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-217.5725 -48.5 435.145 118.5" width="435.145" height="118.5" class="lini lini-scope-06c07c44">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-06c07c44 { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-link-font-weight: 400; --lini-stroke: light-dark(#444, #9aa0a6); --lini-text-color: var(--lini-fg); }
+      .lini-scope-06c07c44[data-theme="dark"], [data-theme="dark"] .lini-scope-06c07c44 { color-scheme: dark; }
+      .lini-scope-06c07c44[data-theme="light"], [data-theme="light"] .lini-scope-06c07c44 { color-scheme: light; }
+    }
+    .lini-scope-06c07c44, .lini-scope-06c07c44 text { font-family: var(--lini-font-family); }
+    .lini-scope-06c07c44 { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-06c07c44 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-06c07c44 .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-06c07c44 .lini-box { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; }
+    .lini-scope-06c07c44 .lini-link { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-06c07c44 .lini-link-label { fill: currentColor; stroke: none; text-anchor: middle; font-size: 11px; font-weight: var(--lini-link-font-weight); }
+    .lini-scope-06c07c44 .lini-cut-bg { fill: white; stroke: none; }
+    .lini-scope-06c07c44 .lini-cut { fill: black; stroke: none; }
+    .lini-scope-06c07c44 .lini-marker { fill: var(--lini-stroke); stroke: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-box lini-block" data-id="users" transform="translate(-157.68,0)">
+      <rect x="-38.8925" y="-27.5" width="77.785" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">users</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="api" transform="translate(-50.3475,0)">
+      <rect x="-30.44" y="-27.5" width="60.88" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">api</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="db" transform="translate(47.3025,0)">
+      <rect x="-29.21" y="-27.5" width="58.42" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">db</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="cache" transform="translate(155.5425,0)">
+      <rect x="-41.03" y="-27.5" width="82.06" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">cache</text>
+    </g>
+  </g>
+  <g class="lini-links">
+    <g class="lini-link" data-from="users" data-to="api">
+      <path d="M -117.7875 0 L -85.2875 0"/>
+      <polygon class="lini-marker lini-marker-arrow" points="-81.2875,0 -90.2875,4.5 -90.2875,-4.5"/>
+    </g>
+    <g class="lini-link" data-from="api" data-to="db">
+      <path d="M -18.9075 0 L 13.5925 0"/>
+      <polygon class="lini-marker lini-marker-arrow" points="17.5925,0 8.5925,4.5 8.5925,-4.5"/>
+    </g>
+    <g class="lini-link" data-from="api" data-to="cache">
+      <mask id="lini-label-cut-a7d2fd06" maskUnits="userSpaceOnUse" x="-52.3475" y="26.5" width="209.89" height="20"><rect class="lini-cut-bg" x="-52.3475" y="26.5" width="209.89" height="20"/><rect class="lini-cut" x="43.055" y="37.35" width="19.085" height="14.3"/></mask>
+      <path d="M -50.3475 28.5 L -50.3475 28.5 A 16 16 0 0 0 -34.3475 44.5 L 143.0425 44.5 A 12.5 12.5 0 0 0 155.5425 32 L 155.5425 32" mask="url(#lini-label-cut-a7d2fd06)"/>
+      <polygon class="lini-marker lini-marker-arrow" points="155.5425,28 160.0425,37 151.0425,37"/>
+      <text class="lini-link-label" x="52.5975" y="44.5" dy="0.358em">hit</text>
+    </g>
+  </g>
+</svg>
+--- stderr ---

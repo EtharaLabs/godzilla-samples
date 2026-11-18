@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "P000",
+      "family": "parse",
+      "severity": "error",
+      "message": "a class follows the bars — write '|box| .hot', not '|box.hot|'",
+      "span": {
+        "start": 4,
+        "end": 5,
+        "line": 1,
+        "col": 5,
+        "endLine": 1,
+        "endCol": 6
+      }
+    }
+  ]
+}
+
+--- stderr

@@ -1,0 +1,15 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; unit: mm; density: 4; scale: 0.5; px-per-unit: 4;
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+}
+
+|sketch#s| .lini-sketch {
+  draw: move(0, 0) right(100) up(50) left(100) close();
+}
+
+s:left (-) s:right { tol: 0.1 -0.2; }
+s:bottom (-) s:top { tol: h7; format: decimal 2; }
+
+--- stderr

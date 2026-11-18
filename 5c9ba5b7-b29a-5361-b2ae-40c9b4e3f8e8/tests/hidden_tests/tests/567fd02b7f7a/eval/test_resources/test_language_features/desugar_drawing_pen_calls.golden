@@ -1,0 +1,14 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+}
+
+|sketch| .lini-sketch {
+  draw: move(0, 0) right(10) line(5, 5) up(5) arc(5, 0, 5)
+        curve(2, 3, 4, -3, 6, 0) left(10) arc(3, -90) down(2) close()
+        move(40, 0) circle(4);
+}
+
+--- stderr

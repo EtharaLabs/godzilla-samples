@@ -1,0 +1,20 @@
+exit: 0
+--- stdout
+{
+  layout: drawing;
+}
+
+|sketch| {
+  draw: move(0, 0) right(20) up(20) left(20) close();
+  fill: hatch(45, 4);
+}
+|sketch| {
+  draw: move(30, 0) right(20) up(20) left(20) close();
+  fill: hatch(--red, 135, 3);
+}
+|sketch| {
+  draw: move(60, 0) circle(10);
+  fill: hatch(0, 2); stroke-style: phantom;
+}
+
+--- stderr

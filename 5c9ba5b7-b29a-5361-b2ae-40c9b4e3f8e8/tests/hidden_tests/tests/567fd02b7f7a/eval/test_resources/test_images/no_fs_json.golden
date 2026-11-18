@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "a.lini",
+  "diagnostics": [
+    {
+      "code": "R024",
+      "family": "asset-no-fs",
+      "severity": "error",
+      "message": "cannot read image 'logo.svg' — local files are off (--no-fs); use an http(s) URL or a data: URI",
+      "span": {
+        "start": 10,
+        "end": 25,
+        "line": 1,
+        "col": 11,
+        "endLine": 1,
+        "endCol": 26
+      }
+    }
+  ]
+}
+
+--- stderr

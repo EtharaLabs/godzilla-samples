@@ -1,0 +1,50 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// Proportional type [SPEC 5, 6]: `font-family: &quot;Google Sans&quot;` swaps the scene</span>
+<span class="lini-tok-comment">// onto the bundled proportional family — measured from its real per-glyph</span>
+<span class="lini-tok-comment">// metrics, so boxes hug their text exactly as in mono. The widened weight set</span>
+<span class="lini-tok-comment">// (`medium`, `semibold`, and the numeric 400–700) grades the hierarchy, and</span>
+<span class="lini-tok-comment">// `max-width` wraps body copy at its true rendered width.</span>
+
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">font-family</span><span class="lini-tok-punct">:</span> <span class="lini-tok-string">&quot;Google Sans&quot;</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">column</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">24</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">26</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">15</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-comment">// a card stacks by default [SPEC 11]; this only opens the gutter, for</span>
+  <span class="lini-tok-comment">// three lines of copy rather than an icon over a word</span>
+  <span class="lini-tok-class">.card-title</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">17</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> bold<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-class">.card-brief</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">15</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> medium<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">color</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-deep</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-string">&quot;Pick a plan&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">24</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">font-weight</span><span class="lini-tok-punct">:</span> semibold<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">row</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">plans</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">24</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">start</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">starter</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">max-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">190</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">radius</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">12</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">start</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-string">&quot;Starter&quot;</span> <span class="lini-tok-class">.card-title</span>
+    <span class="lini-tok-string">&quot;Free&quot;</span> <span class="lini-tok-class">.card-brief</span>
+    <span class="lini-tok-string">&quot;For side projects and weekend experiments. One seat, community support.&quot;</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">13</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">team</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+    <span class="lini-tok-prop">max-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">190</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">radius</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">12</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">start</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--teal-wash</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-string">&quot;Team&quot;</span> <span class="lini-tok-class">.card-title</span>
+    <span class="lini-tok-string">&quot;$12 / seat&quot;</span> <span class="lini-tok-class">.card-brief</span>
+    <span class="lini-tok-string">&quot;Shared workspaces, review flows, and priority support for growing groups.&quot;</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">13</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">box</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">scale</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">max-width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">190</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">radius</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">12</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">18</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">align</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">start</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-string">&quot;Scale&quot;</span> <span class="lini-tok-class">.card-title</span>
+    <span class="lini-tok-string">&quot;Custom&quot;</span> <span class="lini-tok-class">.card-brief</span>
+    <span class="lini-tok-string">&quot;Dedicated infrastructure, audit logs, and a human who answers the phone.&quot;</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">font-size</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">13</span><span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">]</span>
+
+plans.starter <span class="lini-tok-op">-&gt;</span> plans.team <span class="lini-tok-string">&quot;grow&quot;</span>
+plans.team <span class="lini-tok-op">-&gt;</span> plans.scale <span class="lini-tok-string">&quot;scale up&quot;</span>
+
+--- stderr

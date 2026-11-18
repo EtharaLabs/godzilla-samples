@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+a -> b
+a -> b "x"
+a & b -> c
+a -> b -> c
+a --> b
+a ---> b
+a ~> b
+a -> b { along: 0.3, 0.7; } [ "near a" "near b" ]
+a -> b .loud
+a -> b "flows" .c1.c2
+a.b:left -> c
+--- stderr ---

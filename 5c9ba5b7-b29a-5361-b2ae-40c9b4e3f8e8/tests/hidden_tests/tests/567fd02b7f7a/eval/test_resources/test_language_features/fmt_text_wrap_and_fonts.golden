@@ -1,0 +1,15 @@
+exit: 0
+--- stdout
+|box| "A long label that should wrap across several lines within the cap" {
+  max-width: 120;
+}
+|box| "Mono" { font-family: mono; font-size: 18; }
+|box| "Italic bold" {
+  font-style: italic; font-weight: bold; letter-spacing: 2;
+}
+|box| "Under" {
+  text-decoration: underline; text-shadow: 1 1 2 --gray; line-spacing: 4;
+}
+|box| "Upper" { text-transform: uppercase; }
+
+--- stderr

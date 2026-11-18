@@ -1,0 +1,76 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 36; font-size: 15; columns: repeat(2);
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-pie { layout: pie; gap: 15; }
+  .lini-bars { radius: 2; stroke: auto; }
+  .lini-slice { stroke: auto; }
+  .lini-mark { marker: dot; }
+}
+
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; direction: row; bars: stacked; categories: "Q1", "Q2", "Q3", "Q4";
+} [
+  "Revenue by region ($k)"
+  |block| .lini-bars.lini-block { data: 40, 45, 50, 60; } [ "NA" ]
+  |block| .lini-bars.lini-block { data: 30, 35, 33, 40; } [ "EU" ]
+  |block| .lini-bars.lini-block { data: 20, 25, 30, 38; } [ "APAC" ]
+]
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; bars: overlay; tooltip: hover; categories: "build", "test", "ship";
+} [
+  "Deploy time (s)"
+  |block| .lini-bars.lini-block { data: 96, 154, 41; } [ "v1" ]
+  |block| .lini-bars.lini-block {
+    data: 63, 148, 38; fill: auto, --red, auto; labels: "-34%", "-4%", "-7%";
+  } [ "v2" ]
+]
+|block| .lini-chart.lini-block { width: 380; height: 270; tooltip: always; } [
+  "Plan price vs. usage ($)"
+  |block| .lini-axis.lini-block { side: bottom; range: 0 40; } [
+    "GB transferred"
+  ]
+  |block| .lini-axis.lini-block { side: left; } [ "monthly bill" ]
+  |line| "list price" .lini-line {
+    data: 0 5, 10 12, 25 30, 40 30; curve: step;
+  }
+  |line| "metered" .lini-line { data: 0 0, 40 34; curve: linear; }
+  |block| .lini-dots.lini-block {
+    data: 6 5, 13 12, 19 12, 29 30, 34 30; fill: auto, auto, auto, --red, auto; stroke: auto, auto, auto, --red-ink, auto; labels: "-$0", "+$1", "-$4", "+$5", "+$1";
+  } [ "accounts" ]
+]
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; categories: "Apr", "May", "Jun", "Jul", "Aug", "Sep";
+} [
+  "Reservoir level (m)"
+  |block#m| .lini-axis.lini-block { side: left; range: 20 60; }
+  |block| .lini-mark.lini-block {
+    at: 40; axis: m; stroke: --gray-deep; stroke-style: dashed;
+  } [ "target" ]
+  |block| .lini-area.lini-block { data: 52, 48, 41, 34, 29, 36; baseline: 40; } [
+    "level"
+  ]
+]
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; direction: radial; categories: "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun";
+} [
+  "Goal completion (%)"
+  |block| .lini-axis.lini-block { range: 0 100; step: 50; }
+  |block| .lini-bars.lini-block { data: 80, 65, 90, 70, 95, 40, 55; } [
+    "steps"
+  ]
+]
+|block| .lini-pie.lini-block { width: 380; height: 270; hole: 0.55; } [
+  "Storage by class"
+  |block| .lini-slice.lini-block { value: 38; } [ "Hot" ]
+  |block| .lini-slice.lini-block { value: 27; } [ "Warm" ]
+  |block| .lini-slice.lini-block { value: 22; } [ "Cold" ]
+  |block| .lini-slice.lini-block { value: 13; } [ "Archive" ]
+]
+
+--- stderr

@@ -1,0 +1,12 @@
+exit: 0
+--- stdout
+|chart| { width: 300; height: 200; categories: "a", "b", "c", "d"; } [
+  |axis#y| { side: left; range: 0 10; }
+  |band| "low" { range: 0 3; axis: y; fill: --green; }
+  |band| "high" { range: 7 10; axis: y; fill: --red; }
+  |mark| "target" { axis: y; at: 5; }
+  |mark| "pt" { axis: y; at: 1 6; }
+  |line| { data: 2, 5, 8, 4; marker: diamond; }
+]
+
+--- stderr

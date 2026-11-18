@@ -1,0 +1,55 @@
+exit: 0
+--- stdout
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-115.4475 -96.5 230.895 193" width="230.895" height="193" class="lini lini-scope-15c732a7">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-15c732a7 { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-link-font-weight: 400; --lini-stroke: light-dark(#444, #9aa0a6); --lini-text-color: var(--lini-fg); }
+      .lini-scope-15c732a7[data-theme="dark"], [data-theme="dark"] .lini-scope-15c732a7 { color-scheme: dark; }
+      .lini-scope-15c732a7[data-theme="light"], [data-theme="light"] .lini-scope-15c732a7 { color-scheme: light; }
+    }
+    .lini-scope-15c732a7, .lini-scope-15c732a7 text { font-family: var(--lini-font-family); }
+    .lini-scope-15c732a7 { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-15c732a7 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-15c732a7 .lini-line { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-15c732a7 .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-15c732a7 .lini-box { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; }
+    .lini-scope-15c732a7 .lini-link { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-15c732a7 .lini-link-dashed { stroke-dasharray: 7,5.5; }
+    .lini-scope-15c732a7 .lini-sequence-message { fill: currentColor; stroke: none; text-anchor: middle; font-size: 13px; font-weight: normal; }
+    .lini-scope-15c732a7 .lini-marker { fill: var(--lini-stroke); stroke: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-line" transform="translate(0,0)">
+      <line x1="-59.2075" y1="-19.5" x2="-59.2075" y2="76.5"/>
+    </g>
+    <g class="lini-node lini-line" transform="translate(0,0)">
+      <line x1="52.24" y1="-19.5" x2="52.24" y2="76.5"/>
+    </g>
+    <g class="lini-node lini-block" style="fill: var(--lini-fill); stroke: var(--lini-stroke)" transform="translate(52.24,28.5)">
+      <rect x="-5" y="-15" width="10" height="30" rx="0" ry="0"/>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="user" transform="translate(-59.2075,-48)">
+      <rect x="-35.24" y="-27.5" width="70.48" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">user</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="server" transform="translate(52.24,-48)">
+      <rect x="-42.2075" y="-27.5" width="84.415" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">server</text>
+    </g>
+  </g>
+  <g class="lini-links">
+    <g class="lini-link" data-from="user" data-to="server">
+      <path d="M -59.2075 12.5 L 42.74 12.5"/>
+      <polygon class="lini-marker lini-marker-arrow" points="46.74,12.5 37.74,17 37.74,8"/>
+      <text class="lini-sequence-message" x="-3.4838" y="1" dy="0.358em">login</text>
+    </g>
+    <g class="lini-link lini-link-dashed" data-from="server" data-to="user">
+      <path d="M 46.24 44.5 L -55.7075 44.5"/>
+      <polygon class="lini-marker lini-marker-arrow" points="-59.7075,44.5 -50.7075,40 -50.7075,49"/>
+      <text class="lini-sequence-message" x="-3.4838" y="33" dy="0.358em">token</text>
+    </g>
+  </g>
+</svg>
+
+--- stderr

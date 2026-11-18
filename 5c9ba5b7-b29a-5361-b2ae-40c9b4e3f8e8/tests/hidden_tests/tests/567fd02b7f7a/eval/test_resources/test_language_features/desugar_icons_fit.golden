@@ -1,0 +1,21 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-icon {
+    fill: --icon-fill; stroke: --stroke; stroke-width: 2; width: 32; height: 32;
+  }
+  .lini-row { direction: row; }
+}
+
+|block| .lini-row.lini-block [
+  |icon| .lini-icon { fit: contain; width: 40; height: 20; symbol: star; }
+  |icon| .lini-icon { fit: cover; width: 40; height: 20; symbol: heart; }
+  |icon| .lini-icon { fit: stretch; width: 40; height: 20; symbol: gear; }
+  |icon| .lini-icon { width: 50; height: 30; symbol: bell; }
+]
+
+--- stderr

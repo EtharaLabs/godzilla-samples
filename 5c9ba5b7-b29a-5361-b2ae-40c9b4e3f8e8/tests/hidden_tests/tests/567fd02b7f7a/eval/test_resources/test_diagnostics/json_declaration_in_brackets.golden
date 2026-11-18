@@ -1,0 +1,23 @@
+exit: 1
+--- stdout
+{
+  "file": "in.lini",
+  "diagnostics": [
+    {
+      "code": "P000",
+      "family": "parse",
+      "severity": "error",
+      "message": "declarations go in '{ }', not '[ ]'",
+      "span": {
+        "start": 8,
+        "end": 12,
+        "line": 1,
+        "col": 9,
+        "endLine": 1,
+        "endCol": 13
+      }
+    }
+  ]
+}
+
+--- stderr

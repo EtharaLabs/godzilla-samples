@@ -1,0 +1,130 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 30; gap: 30 34; font-size: 15; columns: repeat(3); justify: end;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-column { direction: column; }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-hole { fill: --bg; stroke: --stroke-dark; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-pitch-circle {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-hidden {
+    stroke-style: dashed; stroke: --stroke-dark; stroke-width: 1; fill: none;
+  }
+  .lini-tile { gap: 10; align: center; }
+  .lini-cap { font-size: 12; color: --muted; }
+  .lini-view { scale: 0.5; }
+  .lini-arm {
+    draw: move(-30, 8) right(16) curve(10, 0, 14, -14, 26, -16) right(18);
+    fill: none;
+  }
+}
+
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#plate| .lini-sketch {
+      draw: move(0, 0) right(52) chamfer(9) down(30) left(52) fillet(9) close()
+            move(26, 15) circle(7);
+    }
+  ]
+  |block| .lini-cap.lini-block [ "chamfer · fillet · bore" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#nut| .lini-sketch {
+      draw: move(-12, -20.78) angle(90, 24) angle(150, 24) angle(210, 24)
+            angle(270, 24) angle(330, 24) close();
+    }
+  ]
+  |block| .lini-cap.lini-block [ "angle — 0 up, clockwise" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#slot| .lini-sketch {
+      draw: move(-16, -11) right(32) arc(0, 22, 11) left(32) arc(0, -22, 11)
+            close();
+    }
+  ]
+  |block| .lini-cap.lini-block [ "arc — the two-point form" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#pin| .lini-sketch {
+      draw: move(-25, 0) up(9) right(20):collar down(4) right(30) down(5);
+      mirror: x-axis;
+    } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+    ]
+  ]
+  |block| .lini-cap.lini-block [ "mirror — fused" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#clip| .lini-sketch {
+      draw: move(-24, -10) right(16) down(20) left(16) close();
+      mirror: y-axis;
+    }
+  ]
+  |block| .lini-cap.lini-block [ "mirror — twinned" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#strap| .lini-sketch {
+      draw: move(-30, -12) right(60) down(24) left(60) close();
+    } [
+      |oval#bolt| .lini-hole.lini-oval {
+        width: 8; translate: -21 0; pattern: grid(4, 1, 14, 0);
+      } [
+        |line| .lini-centerline.lini-line { chrome: x-axis; }
+        |line| .lini-centerline.lini-line { chrome: y-axis; }
+      ]
+    ]
+  ]
+  |block| .lini-cap.lini-block [ "pattern — grid" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#flange| .lini-sketch { draw: move(0, 0) circle(22) circle(7); } [
+      |oval#bolt| .lini-hole.lini-oval { width: 6; pattern: radial(6, 14.5); } [
+        |line| .lini-centerline.lini-line { chrome: x-axis; }
+        |line| .lini-centerline.lini-line { chrome: y-axis; }
+        |oval| .lini-pitch-circle.lini-oval { chrome: ring; }
+      ]
+    ]
+  ]
+  |block| .lini-cap.lini-block [ "pattern — radial" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch#body| .lini-sketch {
+      draw: move(-26, -14) right(52) down(28) left(52) close();
+    }
+    |sketch#vee| .lini-hidden.lini-sketch {
+      draw: move(-11, 14) line(11, -15) line(11, 15);
+    }
+    |line| .lini-centerline.lini-line { points: 0 -20, 0 20; }
+  ]
+  |block| .lini-cap.lini-block [ "hidden · centre line" ]
+]
+|block| .lini-tile.lini-column.lini-block [
+  |block| .lini-view.lini-drawing.lini-block { px-per-unit: 4; } [
+    |sketch| .lini-arm.lini-sketch
+    |sketch#raised| .lini-arm.lini-sketch {
+      translate: 0 -20; stroke-style: phantom;
+    }
+  ]
+  |block| .lini-cap.lini-block [ "curve · alternate position" ]
+]
+
+--- stderr

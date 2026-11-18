@@ -1,0 +1,79 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// GD&amp;T — drafting symbols [SPEC 15.9], the alpha.4 cluster. Stage 1: the</span>
+<span class="lini-tok-comment">// ISO 1302 surface-texture symbol off the shared drafting-glyph registry in</span>
+<span class="lini-tok-comment">// natural units — glyph height follows the annotation font, line weight the</span>
+<span class="lini-tok-comment">// statement's stroke, at any view scale. Stage 2: `|feature-control|` frames</span>
+<span class="lini-tok-comment">// — the characteristic glyph, the zone-prefixed tolerance with its material</span>
+<span class="lini-tok-comment">// modifier, the datum references, each in a bordered compartment; `|control|`</span>
+<span class="lini-tok-comment">// rows compose a composite frame (a shared characteristic merges its symbol</span>
+<span class="lini-tok-comment">// cell); `|datum|` is the framed letter as a node, joining the scope's datum</span>
+<span class="lini-tok-comment">// alphabet exactly as `&gt;-` does. `datums:` must name declared letters — a</span>
+<span class="lini-tok-comment">// frame renders semantically valid or errors, never plausible-wrong.</span>
+<span class="lini-tok-comment">// Stage 3: `||` with an annotation end is a **seat** [SPEC 15.5] — flush on</span>
+<span class="lini-tok-comment">// the face after mates, `gap:` along the normal, `translate:` the lateral</span>
+<span class="lini-tok-comment">// nudge; a `|column|` bundle seats as one and the dim rows stand off it.</span>
+<span class="lini-tok-comment">// Stage 4: a dimension's `[ ]` **carries** annotation nodes — a frame stacks</span>
+<span class="lini-tok-comment">// at the text seat, under the value, riding the row as a packing obstacle; a</span>
+<span class="lini-tok-comment">// carried `|datum|` states the measured feature's axis datum.</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">drawing</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">bracket-view</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;MOUNTING BRACKET&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">unit</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">mm</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">rect</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">plate</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">100</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">height</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">72</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">hole</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">pin</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">width</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">12</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-26</span> <span class="lini-tok-number">0</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+
+  plate<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">left</span> <span class="lini-tok-punct">(</span>-<span class="lini-tok-punct">)</span> plate:<span class="lini-tok-keyword">right</span> { side: <span class="lini-tok-keyword">bottom</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+  <span class="lini-tok-comment">// A carried `|datum|` [SPEC 15.9]: the height reads as a feature of size,</span>
+  <span class="lini-tok-comment">// and the framed letter under its value makes the mid-plane datum C.</span>
+  plate<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">top</span> <span class="lini-tok-punct">(</span>-<span class="lini-tok-punct">)</span> plate:<span class="lini-tok-keyword">bottom</span> { side: <span class="lini-tok-keyword">right</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">datum</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;C&quot;</span>
+  <span class="lini-tok-punct">]</span>
+
+  <span class="lini-tok-comment">// A carried frame: the bore's size and its location tolerance read as one</span>
+  <span class="lini-tok-comment">// statement — the ⌀ position zone at maximum material stacks under the</span>
+  <span class="lini-tok-comment">// value, rides the leader's text seat, and packs as an obstacle.</span>
+  plate.pin <span class="lini-tok-punct">(</span>o<span class="lini-tok-punct">)</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">feature-control</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;position&quot;</span> <span class="lini-tok-punct">{</span>
+      <span class="lini-tok-prop">tol</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.1</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">zone</span><span class="lini-tok-punct">:</span> diameter<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">material</span><span class="lini-tok-punct">:</span> maximum<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">datums</span><span class="lini-tok-punct">:</span> A<span class="lini-tok-punct">,</span> B<span class="lini-tok-punct">;</span>
+    <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+
+  <span class="lini-tok-comment">// Seated: `||` stands the vee's tip flush on the top face — after mates,</span>
+  <span class="lini-tok-comment">// both axes — and `translate:` slides it along the face. The cast finish</span>
+  <span class="lini-tok-comment">// shows the plain placement: the tip is the node's datum, set down by hand.</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">surface-finish</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">milled</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ra 1.6&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> machined<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  milled <span class="lini-tok-punct">|</span><span class="lini-tok-punct">|</span> plate<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">top</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">surface-finish</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">cast</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ra 6.3&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">30</span> <span class="lini-tok-number">-36</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+  <span class="lini-tok-comment">// Leader-wired: the same placed node, reached from the bore's rim.</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">surface-finish</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">bore</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ra 0.8&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> prohibited<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-20</span> <span class="lini-tok-number">-52</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  plate.pin <span class="lini-tok-op">&lt;-</span> bore
+
+  <span class="lini-tok-comment">// The datum alphabet, both forms: the `&gt;-` leader plants A on the mounting</span>
+  <span class="lini-tok-comment">// face; the `|datum|` node names the bore axis B, wired to its feature.</span>
+  plate<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">bottom</span> &gt;- <span class="lini-tok-string">&quot;A&quot;</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">datum</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">axis</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;B&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-26</span> <span class="lini-tok-number">22</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  plate.pin <span class="lini-tok-op">&lt;-</span> axis
+
+  <span class="lini-tok-comment">// A composite frame, leader-wired to the feature it controls: the pattern</span>
+  <span class="lini-tok-comment">// located to the datums, then refined feature-to-feature — adjacent rows</span>
+  <span class="lini-tok-comment">// share the position symbol cell.</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">feature-control</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">refine</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">translate</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">-46</span> <span class="lini-tok-number">-56</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">control</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;position&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">tol</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.4</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">zone</span><span class="lini-tok-punct">:</span> diameter<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">datums</span><span class="lini-tok-punct">:</span> A<span class="lini-tok-punct">,</span> B<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">control</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;position&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">tol</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.1</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">zone</span><span class="lini-tok-punct">:</span> diameter<span class="lini-tok-punct">;</span> <span class="lini-tok-prop">datums</span><span class="lini-tok-punct">:</span> A<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+  plate.pin <span class="lini-tok-op">&lt;-</span> refine
+
+  <span class="lini-tok-comment">// A seated bundle [SPEC 15.5]: the `|column|` of finish over frame is</span>
+  <span class="lini-tok-comment">// sheet content — the vee stands touching the frame's top edge (ISO 1302),</span>
+  <span class="lini-tok-comment">// the stack seats as one, flush on the right face, and the vertical</span>
+  <span class="lini-tok-comment">// dimension row packs past its union box.</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">column</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">stack</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">surface-finish</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ra 3.2&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">symbol</span><span class="lini-tok-punct">:</span> machined<span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">feature-control</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;flatness&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">tol</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.2</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+  <span class="lini-tok-punct">]</span>
+  stack <span class="lini-tok-punct">|</span><span class="lini-tok-punct">|</span> plate<span class="lini-tok-punct">:</span><span class="lini-tok-keyword">right</span>
+<span class="lini-tok-punct">]</span>
+
+--- stderr

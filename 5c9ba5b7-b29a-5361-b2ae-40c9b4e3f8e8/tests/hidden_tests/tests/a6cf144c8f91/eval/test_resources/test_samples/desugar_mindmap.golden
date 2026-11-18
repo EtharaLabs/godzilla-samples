@@ -1,0 +1,122 @@
+exit: 0
+--- stdout ---
+{
+  layout: tree; padding: 20; gap: 64 48; font-size: 15; direction: bilateral; routing: natural;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-icon {
+    fill: --icon-fill; stroke: --stroke; stroke-width: 2; width: 32; height: 32;
+  }
+  .lini-topic {
+    fill: --fill; stroke: --stroke; stroke-width: 2; radius: 8; padding: 8 14; direction: row; gap: 12;
+  }
+  .lini-mindmap { max-width: 160; font-size: 17; font-weight: semibold; }
+  .lini-mindmap .lini-topic { max-width: 160; font-weight: medium; }
+  .lini-mindmap .lini-level-1 { font-size: 15; }
+  .lini-mindmap .lini-level-2 { font-size: 14; }
+  .lini-mindmap .lini-hue-rose {
+    fill: --rose-wash; stroke: --rose-deep; color: --rose-ink;
+  }
+  .lini-mindmap .lini-hue-orange {
+    fill: --orange-wash; stroke: --orange-deep; color: --orange-ink;
+  }
+  .lini-mindmap .lini-hue-amber {
+    fill: --amber-wash; stroke: --amber-deep; color: --amber-ink;
+  }
+  .lini-mindmap .lini-hue-lime {
+    fill: --lime-wash; stroke: --lime-deep; color: --lime-ink;
+  }
+  .lini-mindmap .lini-hue-green {
+    fill: --green-wash; stroke: --green-deep; color: --green-ink;
+  }
+  .lini-mindmap .lini-hue-teal {
+    fill: --teal-wash; stroke: --teal-deep; color: --teal-ink;
+  }
+}
+
+|block#lini-topic-1| .lini-mindmap.lini-topic.lini-block.lini-level-0 {
+  padding: 16;
+} [
+  "Product Vision"
+  |block#ship| .lini-topic.lini-block.lini-side-right.lini-level-1.lini-hue-rose [
+    "Shipping cadence"
+    |icon| .lini-icon {
+      symbol: rocket; width: 18; height: 18; fill: none; stroke: --rose-deep;
+    }
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-rose [
+      "Weekly release train"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-rose [
+      "Feature flags gate the risky work"
+    ]
+  ]
+  ship:right - ship.lini-topic-1:left & ship.lini-topic-2:left .lini-hue-rose
+  |block#build| .lini-topic.lini-block.lini-side-right.lini-level-1.lini-hue-orange [
+    "Build quality"
+    |icon| .lini-icon {
+      symbol: seal; width: 18; height: 18; fill: none; stroke: --orange-deep;
+    }
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-orange [
+      "Snapshot tests on every output"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-orange [
+      "Zero clippy debt"
+    ]
+  ]
+  build:right - build.lini-topic-1:left & build.lini-topic-2:left .lini-hue-orange
+  |block#learn| .lini-topic.lini-block.lini-side-right.lini-level-1.lini-hue-amber [
+    "Learning loop"
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-amber [
+      "Dogfood the tool daily"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-amber [
+      "User interviews every sprint"
+    ]
+  ]
+  learn:right - learn.lini-topic-1:left & learn.lini-topic-2:left .lini-hue-amber
+  |block#plan| .lini-topic.lini-block.lini-side-left.lini-level-1.lini-hue-lime [
+    "Planning"
+    |icon| .lini-icon {
+      symbol: presentation; width: 18; height: 18; fill: none; stroke: --lime-deep;
+    }
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-lime [
+      "One-page specs before code"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-lime [
+      "Stages sized for one session"
+    ]
+  ]
+  plan:left - plan.lini-topic-1:right & plan.lini-topic-2:right .lini-hue-lime
+  |block#team| .lini-topic.lini-block.lini-side-left.lini-level-1.lini-hue-green [
+    "Team"
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-green [
+      "Small and senior"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-green [
+      "Ownership over process"
+    ]
+  ]
+  team:left - team.lini-topic-1:right & team.lini-topic-2:right .lini-hue-green
+  |block#care| .lini-topic.lini-block.lini-side-left.lini-level-1.lini-hue-teal [
+    "Customer care"
+    |icon| .lini-icon {
+      symbol: heart; width: 18; height: 18; fill: none; stroke: --teal-deep;
+    }
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-teal [
+      "Support rotations"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-teal [
+      "Bug fixes beat features"
+    ]
+  ]
+  care:left - care.lini-topic-1:right & care.lini-topic-2:right .lini-hue-teal
+]
+
+lini-topic-1:right - lini-topic-1.ship:left .lini-hue-rose
+lini-topic-1:right - lini-topic-1.build:left .lini-hue-orange
+lini-topic-1:right - lini-topic-1.learn:left .lini-hue-amber
+lini-topic-1:left - lini-topic-1.plan:right .lini-hue-lime
+lini-topic-1:left - lini-topic-1.team:right .lini-hue-green
+lini-topic-1:left - lini-topic-1.care:right .lini-hue-teal
+--- stderr ---

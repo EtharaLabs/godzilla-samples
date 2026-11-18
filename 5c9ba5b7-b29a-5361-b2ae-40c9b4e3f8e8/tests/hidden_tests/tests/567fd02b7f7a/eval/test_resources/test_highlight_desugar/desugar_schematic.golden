@@ -1,0 +1,53 @@
+exit: 0
+--- stdout
+{
+  layout: schematic; padding: 20; gap: 100; font-size: 15; clearance: 10; fill: --sheet;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-label { shape: plain; font-size: 11; color: --label-ink; gap: 4; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-gnd { symbol: gnd; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-sch-solid { fill: --component-stroke; stroke: none; }
+  .lini-sch-tag-line { fill: none; stroke: --label-ink; stroke-width: 1.5; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+  .lini-net-run { width: 40; padding: 0 4; }
+}
+
+|block#r1| .lini-R.lini-block [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 12 M 0 6 L 16 6 M 16 0 L 48 0 L 48 12 L 16 12 Z M 48 6 L 64 6";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "10k"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "r1" ]
+]
+|block#c1| .lini-C.lini-block [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 29 12 M 35 12 L 64 12";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 64 24 M 27.5 0 L 30.5 0 L 30.5 24 L 27.5 24 Z M 33.5 0 L 36.5 0 L 36.5 24 L 33.5 24 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "1u" ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "c1" ]
+]
+|block#g| .lini-gnd.lini-label.lini-block { direction: row; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+  }
+]
+r1.p2 - c1.p1
+c1.p2 - g
+r1.p1 - lini-label-1
+|block#lini-label-1| .lini-net-run.lini-label.lini-block [ "VIN" ]
+
+--- stderr

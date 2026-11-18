@@ -1,0 +1,28 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-mark { marker: dot; }
+}
+
+|block| .lini-chart.lini-block {
+  width: 300; height: 200; categories: "a", "b", "c", "d";
+} [
+  |block#y| .lini-axis.lini-block { side: left; range: 0 10; }
+  |block| .lini-band.lini-block { range: 0 3; axis: y; fill: --green; } [
+    "low"
+  ]
+  |block| .lini-band.lini-block { range: 7 10; axis: y; fill: --red; } [
+    "high"
+  ]
+  |block| .lini-mark.lini-block { axis: y; at: 5; } [ "target" ]
+  |block| .lini-mark.lini-block { axis: y; at: 1 6; } [ "pt" ]
+  |line| .lini-line { data: 2, 5, 8, 4; marker: diamond; }
+]
+
+--- stderr

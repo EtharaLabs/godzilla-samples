@@ -1,0 +1,60 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-row { direction: row; }
+}
+
+|block| .lini-row.lini-block {
+  align: start; justify: start; width: 300; height: 80;
+} [
+  |block| .lini-box.lini-block [ "a" ]
+  |block| .lini-box.lini-block { height: 50; }
+  |oval| .lini-oval [ "c" ]
+]
+|block| .lini-row.lini-block {
+  align: center; justify: center; width: 300; height: 80;
+} [
+  |block| .lini-box.lini-block [ "a" ]
+  |block| .lini-box.lini-block { height: 50; }
+  |oval| .lini-oval [ "c" ]
+]
+|block| .lini-row.lini-block {
+  align: end; justify: end; width: 300; height: 80;
+} [
+  |block| .lini-box.lini-block [ "a" ]
+  |block| .lini-box.lini-block { height: 50; }
+  |oval| .lini-oval [ "c" ]
+]
+|block| .lini-row.lini-block {
+  align: stretch; justify: space-between; width: 300; height: 80;
+} [
+  |block| .lini-box.lini-block [ "a" ]
+  |block| .lini-box.lini-block { height: 50; }
+  |oval| .lini-oval [ "c" ]
+]
+|block| .lini-row.lini-block {
+  align: baseline; justify: space-around; width: 300; height: 80;
+} [
+  |block| .lini-box.lini-block [ "a" ]
+  |block| .lini-box.lini-block { height: 50; }
+  |oval| .lini-oval [ "c" ]
+]
+|block| .lini-row.lini-block {
+  align: center; justify: space-evenly; width: 300; height: 80;
+} [
+  |block| .lini-box.lini-block [ "a" ]
+  |block| .lini-box.lini-block { height: 50; }
+  |oval| .lini-oval [ "c" ]
+]
+
+--- stderr

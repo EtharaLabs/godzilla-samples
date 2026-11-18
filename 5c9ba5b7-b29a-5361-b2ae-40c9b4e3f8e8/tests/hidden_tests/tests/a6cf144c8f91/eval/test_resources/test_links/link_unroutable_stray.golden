@@ -1,0 +1,42 @@
+exit: 0
+--- stdout ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-98.42 -48.5 196.84 97" width="196.84" height="97" class="lini lini-scope-13f70054">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-13f70054 { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-stray: light-dark(crimson, #ff6b6b); --lini-stroke: light-dark(#444, #9aa0a6); --lini-text-color: var(--lini-fg); }
+      .lini-scope-13f70054[data-theme="dark"], [data-theme="dark"] .lini-scope-13f70054 { color-scheme: dark; }
+      .lini-scope-13f70054[data-theme="light"], [data-theme="light"] .lini-scope-13f70054 { color-scheme: light; }
+    }
+    .lini-scope-13f70054, .lini-scope-13f70054 text { font-family: var(--lini-font-family); }
+    .lini-scope-13f70054 { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-13f70054 .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-13f70054 .lini-text { fill: currentColor; stroke: none; text-anchor: middle; }
+    .lini-scope-13f70054 .lini-box { fill: var(--lini-fill); stroke: var(--lini-stroke); stroke-width: 2; }
+    .lini-scope-13f70054 .lini-link { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-box lini-block" data-id="a" transform="translate(-52.2,0)">
+      <rect x="-25.22" y="-27.5" width="50.44" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">A</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="b" transform="translate(-0.33,0)">
+      <rect x="-24.65" y="-27.5" width="49.3" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">B</text>
+    </g>
+    <g class="lini-node lini-box lini-block" data-id="c" transform="translate(51.87,0)">
+      <rect x="-25.55" y="-27.5" width="51.1" height="55" rx="8" ry="8"/>
+      <text class="lini-text" x="0" y="0" dy="0.358em">C</text>
+    </g>
+  </g>
+  <g class="lini-links">
+    <g class="lini-stray" data-from="a" data-to="c">
+      <path d="M -25.98 0 L 25.32 0" fill="none" stroke="var(--lini-stray)" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <path d="M -0.33 -6.5 L 6.67 5.5 L -7.33 5.5 Z" fill="var(--lini-fill)" stroke="var(--lini-stray)" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M -0.33 -2.5 L -0.33 1" stroke="var(--lini-stray)" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="-0.33" cy="3.6" r="0.9" fill="var(--lini-stray)"/>
+    </g>
+  </g>
+</svg>
+--- stderr ---
+<stdin>:5:1: warning: impossible (a -> c): no legal route: every side entry or channel is closed at this layout

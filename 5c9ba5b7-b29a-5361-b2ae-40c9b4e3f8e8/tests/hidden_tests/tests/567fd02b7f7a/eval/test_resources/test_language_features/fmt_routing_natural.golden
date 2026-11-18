@@ -1,0 +1,18 @@
+exit: 0
+--- stdout
+{
+  routing: natural; direction: row; gap: 60;
+}
+
+|box#a| "A"
+|box#b| "B"
+|box#c| "C"
+|box#d| "D"
+
+a -> c
+a -> d
+b -> d
+d -> a
+c -> c
+
+--- stderr

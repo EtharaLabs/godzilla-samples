@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-sch-solid { fill: --component-stroke; stroke: none; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+}
+
+|block#q1| .lini-Q.lini-block { symbol: nfet; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 56 48 M 10 24 A 20 20 0 1 1 50 24 A 20 20 0 1 1 10 24 M 0 24 L 20 24 M 20 14 L 20 34 M 28.5 16 L 44 16 L 44 4 L 56 4 M 28.5 32 L 44 32 L 44 44 L 56 44 M 28.5 24 L 44 24 L 44 32";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 56 48 M 25.5 14 L 28.5 14 L 28.5 19.3 L 25.5 19.3 Z M 25.5 21.3 L 28.5 21.3 L 28.5 26.7 L 25.5 26.7 Z M 25.5 28.7 L 28.5 28.7 L 28.5 34 L 25.5 34 Z M 28 24 L 37 20.8 L 37 27.2 Z"; pin: center;
+  }
+  |block#g| .lini-block { pin: center; translate: -28 0; }
+  |block#d| .lini-block { pin: center; translate: 28 -20; }
+  |block#s| .lini-block { pin: center; translate: 28 20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "q1" ]
+]
+--- stderr ---

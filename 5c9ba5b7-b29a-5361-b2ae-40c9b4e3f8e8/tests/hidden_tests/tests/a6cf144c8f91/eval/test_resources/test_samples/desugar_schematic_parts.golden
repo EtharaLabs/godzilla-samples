@@ -1,0 +1,455 @@
+exit: 0
+--- stdout ---
+{
+  layout: schematic; padding: 20; gap: 40; font-size: 15; clearance: 10; fill: --sheet;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-component {
+    fill: --component-fill; stroke: --component-stroke; stroke-width: 1.5; radius: 0; padding: 8; prefix: "U";
+  }
+  .lini-label { shape: plain; font-size: 11; color: --label-ink; gap: 4; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-opamp { fill: none; stroke: none; prefix: "U"; }
+  .lini-gnd { symbol: gnd; }
+  .lini-nc { symbol: nc; }
+  .lini-head { font-size: 13; color: --muted; padding: 0 8; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-sch-solid { fill: --component-stroke; stroke: none; }
+  .lini-sch-tag-line { fill: none; stroke: --label-ink; stroke-width: 1.5; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+  .lini-tag-outline { stroke: --label-ink; stroke-width: 1.5; padding: 2 6; }
+  .lini-tag-round { radius: 99; }
+  .lini-tag-flag-left { padding: 2 6 2 14; }
+  .lini-tag-flag-right { padding: 2 14 2 6; }
+  .lini-tag-flag-both { padding: 2 14; }
+  .lini-net-run { width: 40; padding: 0 4; }
+}
+
+|block| .lini-head.lini-block { cell: 1 1; } [ "Passives" ]
+|block#R1| .lini-R.lini-block { cell: 2 1; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 12 M 0 6 L 16 6 M 16 0 L 48 0 L 48 12 L 16 12 Z M 48 6 L 64 6";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "10k"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "R1" ]
+]
+|block#R2| .lini-R.lini-block { cell: 3 1; symbol: pot; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 16 12 M 16 6 L 48 6 L 48 18 L 16 18 Z M 48 12 L 64 12 M 32 24 L 32 21";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 64 24 M 32 18 L 28.8 21.6 L 35.2 21.6 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "10k"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block#w| .lini-block { pin: center; translate: 0 12; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "R2" ]
+]
+|block#R3| .lini-R.lini-block { cell: 4 1; symbol: ntc; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 20 M 0 10 L 16 10 M 16 4 L 48 4 L 48 16 L 16 16 Z M 48 10 L 64 10 M 14 20 L 22 20 L 50 0";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "10k"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "R3" ]
+]
+|block#C1| .lini-C.lini-block { cell: 5 1; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 29 12 M 35 12 L 64 12";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 64 24 M 27.5 0 L 30.5 0 L 30.5 24 L 27.5 24 Z M 33.5 0 L 36.5 0 L 36.5 24 L 33.5 24 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "100n"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "C1" ]
+]
+|block#C2| .lini-C.lini-block { cell: 6 1; symbol: polarized; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 32 M 0 16 L 29 16 M 39 4 A 18 18 0 0 0 39 28 M 37 16 L 64 16 M 6 2 L 12 2 M 9 0 L 9 5";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 64 32 M 27.5 4 L 30.5 4 L 30.5 28 L 27.5 28 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "47u"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "C2" ]
+]
+|block#L1| .lini-L.lini-block { cell: 7 1; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 10 M 0 5 L 12 5 A 5 5 0 0 1 22 5 A 5 5 0 0 1 32 5 A 5 5 0 0 1 42 5 A 5 5 0 0 1 52 5 L 64 5";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "4u7"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "L1" ]
+]
+|block#FB1| .lini-FB.lini-block { cell: 8 1; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 26 M 0 13 L 25.65 13 M 38.35 13 L 64 13 M 42.26 6.22 L 32.74 0.72 L 21.74 19.78 L 31.26 25.28 Z";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "600R"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "FB1" ]
+]
+|block#F1| .lini-F.lini-block { cell: 9 1; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 12 M 0 6 L 64 6 M 16 0 L 48 0 L 48 12 L 16 12 Z";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "1A" ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "F1" ]
+]
+|block#Y1| .lini-Y.lini-block { cell: 10 1; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 20 M 0 10 L 24 10 M 24 2 L 24 18 M 28 0 L 36 0 L 36 20 L 28 20 Z M 40 2 L 40 18 M 40 10 L 64 10";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "16M"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "Y1" ]
+]
+|block| .lini-head.lini-block { cell: 1 2; } [ "Diodes" ]
+|block#D1| .lini-D.lini-block { cell: 2 2; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 16 M 0 8 L 24 8 M 24 0 L 40 8 L 24 16 Z M 40 0 L 40 16 M 40 8 L 64 8";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "1N4148"
+  ]
+  |block#a| .lini-block { pin: center; translate: -32 0; }
+  |block#k| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "D1" ]
+]
+|block#D2| .lini-D.lini-block { cell: 3 2; symbol: zener; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 16 M 0 8 L 24 8 M 24 0 L 40 8 L 24 16 Z M 44 0 L 40 2 L 40 14 L 36 16 M 40 8 L 64 8";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "5V1"
+  ]
+  |block#a| .lini-block { pin: center; translate: -32 0; }
+  |block#k| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "D2" ]
+]
+|block#D3| .lini-D.lini-block { cell: 4 2; symbol: schottky; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 16 M 0 8 L 24 8 M 24 0 L 40 8 L 24 16 Z M 36 2 L 36 0 L 40 0 L 40 16 L 44 16 L 44 14 M 40 8 L 64 8";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "SS34"
+  ]
+  |block#a| .lini-block { pin: center; translate: -32 0; }
+  |block#k| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "D3" ]
+]
+|block#D4| .lini-D.lini-block { cell: 5 2; symbol: tvs; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 76 16 M 0 8 L 22 8 M 22 0 L 38 8 L 22 16 Z M 54 0 L 38 8 L 54 16 Z M 41 0 L 38 2 L 38 14 L 35 16 M 54 8 L 76 8";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "SMAJ24"
+  ]
+  |block#a| .lini-block { pin: center; translate: -38 0; }
+  |block#k| .lini-block { pin: center; translate: 38 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "D4" ]
+]
+|block#D5| .lini-LED.lini-block { cell: 6 2; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 28 M 0 14 L 24 14 M 24 6 L 40 14 L 24 22 Z M 40 6 L 40 22 M 40 14 L 64 14 M 28 6 L 34 0 M 34 3 L 34 0 L 31 0 M 36 8 L 42 2 M 42 5 L 42 2 L 39 2";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "green"
+  ]
+  |block#a| .lini-block { pin: center; translate: -32 0; }
+  |block#k| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "D5" ]
+]
+|block| .lini-head.lini-block { cell: 1 3; } [ "Transistors" ]
+|block#Q1| .lini-Q.lini-block { cell: 2 3; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 56 48 M 10 24 A 20 20 0 1 1 50 24 A 20 20 0 1 1 10 24 M 0 24 L 24 24 M 24 20 L 40 4 L 56 4 M 24 28 L 40 44 L 56 44";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 56 48 M 22.5 16 L 25.5 16 L 25.5 32 L 22.5 32 Z M 36.02 40.02 L 31.92 31.4 L 27.4 35.92 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "BC847"
+  ]
+  |block#b| .lini-block { pin: center; translate: -28 0; }
+  |block#c| .lini-block { pin: center; translate: 28 -20; }
+  |block#e| .lini-block { pin: center; translate: 28 20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "Q1" ]
+]
+|block#Q2| .lini-Q.lini-block { cell: 3 3; symbol: pnp; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 56 48 M 10 24 A 20 20 0 1 1 50 24 A 20 20 0 1 1 10 24 M 0 24 L 24 24 M 24 20 L 40 4 L 56 4 M 24 28 L 40 44 L 56 44";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 56 48 M 22.5 16 L 25.5 16 L 25.5 32 L 22.5 32 Z M 26.12 30.12 L 34.75 34.23 L 30.23 38.75 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "BC857"
+  ]
+  |block#b| .lini-block { pin: center; translate: -28 0; }
+  |block#c| .lini-block { pin: center; translate: 28 -20; }
+  |block#e| .lini-block { pin: center; translate: 28 20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "Q2" ]
+]
+|block#Q3| .lini-Q.lini-block { cell: 4 3; symbol: nfet; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 56 48 M 10 24 A 20 20 0 1 1 50 24 A 20 20 0 1 1 10 24 M 0 24 L 20 24 M 20 14 L 20 34 M 28.5 16 L 44 16 L 44 4 L 56 4 M 28.5 32 L 44 32 L 44 44 L 56 44 M 28.5 24 L 44 24 L 44 32";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 56 48 M 25.5 14 L 28.5 14 L 28.5 19.3 L 25.5 19.3 Z M 25.5 21.3 L 28.5 21.3 L 28.5 26.7 L 25.5 26.7 Z M 25.5 28.7 L 28.5 28.7 L 28.5 34 L 25.5 34 Z M 28 24 L 37 20.8 L 37 27.2 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "2N7002"
+  ]
+  |block#g| .lini-block { pin: center; translate: -28 0; }
+  |block#d| .lini-block { pin: center; translate: 28 -20; }
+  |block#s| .lini-block { pin: center; translate: 28 20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "Q3" ]
+]
+|block#Q4| .lini-Q.lini-block { cell: 5 3; symbol: pfet; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 56 48 M 10 24 A 20 20 0 1 1 50 24 A 20 20 0 1 1 10 24 M 0 24 L 20 24 M 20 14 L 20 34 M 28.5 16 L 44 16 L 44 4 L 56 4 M 28.5 32 L 44 32 L 44 44 L 56 44 M 28.5 24 L 44 24 L 44 32";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 0 M 56 48 M 25.5 14 L 28.5 14 L 28.5 19.3 L 25.5 19.3 Z M 25.5 21.3 L 28.5 21.3 L 28.5 26.7 L 25.5 26.7 Z M 25.5 28.7 L 28.5 28.7 L 28.5 34 L 25.5 34 Z M 37 24 L 28 27.2 L 28 20.8 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "DMP2"
+  ]
+  |block#g| .lini-block { pin: center; translate: -28 0; }
+  |block#d| .lini-block { pin: center; translate: 28 -20; }
+  |block#s| .lini-block { pin: center; translate: 28 20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "Q4" ]
+]
+|block#U1| .lini-opamp.lini-component.lini-block { cell: 6 3; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 64 M 12 4 L 60 32 L 12 60 Z M 0 12 L 12 12 M 0 52 L 12 52 M 60 32 L 64 32 M 17 17 L 25 17 M 21 13 L 21 21 M 17 47 L 25 47";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "TLV9061"
+  ]
+  |block#out| .lini-block { pin: center; translate: 32 0; }
+  |block#inp| .lini-block { pin: center; translate: -32 -20; }
+  |block#inn| .lini-block { pin: center; translate: -32 20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "U1" ]
+]
+|block#Q5| .lini-Q.lini-block.lini-mirror-x { cell: 7 3; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 48 M 56 0 M 10 24 A 20 20 0 1 0 50 24 A 20 20 0 1 0 10 24 M 0 24 L 24 24 M 24 28 L 40 44 L 56 44 M 24 20 L 40 4 L 56 4";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 0 48 M 56 0 M 22.5 32 L 25.5 32 L 25.5 16 L 22.5 16 Z M 36.02 7.98 L 31.92 16.6 L 27.4 12.08 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "BC847"
+  ]
+  |block#b| .lini-block { pin: center; translate: -28 0; }
+  |block#c| .lini-block { pin: center; translate: 28 20; }
+  |block#e| .lini-block { pin: center; translate: 28 -20; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "Q5" ]
+]
+|block| .lini-head.lini-block { cell: 1 4; } [ "Sources & switches" ]
+|block#V1| .lini-V.lini-block { cell: 2 4; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 20 12 M 20 12 A 12 12 0 1 0 44 12 A 12 12 0 1 0 20 12 M 44 12 L 64 12 M 29 8 L 35 8 M 32 5 L 32 11 M 29 17 L 35 17";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "5V" ]
+  |block#plus| .lini-block { pin: center; translate: -32 0; }
+  |block#minus| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "V1" ]
+]
+|block#V2| .lini-V.lini-block { cell: 3 4; symbol: ac; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 20 12 M 20 12 A 12 12 0 1 0 44 12 A 12 12 0 1 0 20 12 M 44 12 L 64 12 M 26 12 Q 29 6 32 12 Q 35 18 38 12";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "230V"
+  ]
+  |block#plus| .lini-block { pin: center; translate: -32 0; }
+  |block#minus| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "V2" ]
+]
+|block#I1| .lini-I.lini-block { cell: 4 4; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 20 12 M 20 12 A 12 12 0 1 0 44 12 A 12 12 0 1 0 20 12 M 44 12 L 64 12 M 26 12 L 38 12 M 34 8 L 38 12 L 34 16";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "20m"
+  ]
+  |block#plus| .lini-block { pin: center; translate: -32 0; }
+  |block#minus| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "I1" ]
+]
+|block#I2| .lini-I.lini-block { cell: 5 4; symbol: ac; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 20 12 M 20 12 A 12 12 0 1 0 44 12 A 12 12 0 1 0 20 12 M 44 12 L 64 12 M 26 7 Q 29 3 32 7 Q 35 11 38 7 M 26 16 L 38 16 M 34 12 L 38 16 L 34 20";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "20m"
+  ]
+  |block#plus| .lini-block { pin: center; translate: -32 0; }
+  |block#minus| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "I2" ]
+]
+|block#BT1| .lini-BT.lini-block { cell: 6 4; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 20 M 0 10 L 28 10 M 28 0 L 28 20 M 36 5 L 36 15 M 36 10 L 64 10";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "3V" ]
+  |block#plus| .lini-block { pin: center; translate: -32 0; }
+  |block#minus| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "BT1" ]
+]
+|block#BT2| .lini-BT.lini-block { cell: 7 4; symbol: battery; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 72 20 M 0 10 L 24 10 M 24 0 L 24 20 M 32 5 L 32 15 M 40 0 L 40 20 M 48 5 L 48 15 M 48 10 L 72 10";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "12V"
+  ]
+  |block#plus| .lini-block { pin: center; translate: -36 0; }
+  |block#minus| .lini-block { pin: center; translate: 36 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "BT2" ]
+]
+|block#SW1| .lini-SW.lini-block { cell: 8 4; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 20 12 M 20 12 L 44 0 M 44 12 L 64 12";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [ "ON" ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "SW1" ]
+]
+|block#SW2| .lini-SW.lini-block { cell: 9 4; symbol: push; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 28 M 0 14 L 24 14 M 40 14 L 64 14 M 20 8 L 44 8 M 32 8 L 32 0";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "RST"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "SW2" ]
+]
+|block| .lini-head.lini-block { cell: 1 5; } [ "Electromechanical" ]
+|block#M1| .lini-M.lini-block { cell: 2 5; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 20 12 M 20 12 A 12 12 0 1 0 44 12 A 12 12 0 1 0 20 12 M 44 12 L 64 12 M 26 17 L 26 7 L 32 13 L 38 7 L 38 17";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "5V fan"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "M1" ]
+]
+|block#BZ1| .lini-BZ.lini-block { cell: 3 5; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 64 24 M 0 12 L 24 12 M 24 22 L 24 2 A 10 10 0 0 1 24 22 Z M 34 12 L 64 12";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "85dB"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -32 0; }
+  |block#p2| .lini-block { pin: center; translate: 32 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "BZ1" ]
+]
+|block#TP1| .lini-TP.lini-block { cell: 4 5; } [
+  |path| .lini-sch-line.lini-path {
+    path: "M 0 0 M 32 12 M 0 6 L 20 6 M 20 6 A 6 6 0 1 0 32 6 A 6 6 0 1 0 20 6";
+  }
+  |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+    "VBUS"
+  ]
+  |block#p1| .lini-block { pin: center; translate: -16 0; }
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "TP1" ]
+]
+|block| .lini-head.lini-block { cell: 1 6; } [ "Net tags" ]
+|block| .lini-net-run.lini-label.lini-block { cell: 2 6; } [ "NRST" ]
+|block| .lini-tag-flag-right.lini-label.lini-block { cell: 3 6; shape: right; } [
+  |path| .lini-sch-tag-line.lini-path {
+    chrome: tag right; pin: center; path: "M 0 0";
+  }
+  "TX"
+]
+|block| .lini-tag-flag-left.lini-label.lini-block { cell: 4 6; shape: left; } [
+  |path| .lini-sch-tag-line.lini-path {
+    chrome: tag left; pin: center; path: "M 0 0";
+  }
+  "RX"
+]
+|block| .lini-tag-flag-both.lini-label.lini-block { cell: 5 6; shape: both; } [
+  |path| .lini-sch-tag-line.lini-path {
+    chrome: tag both; pin: center; path: "M 0 0";
+  }
+  "SDA"
+]
+|block| .lini-tag-outline.lini-tag-round.lini-label.lini-block {
+  cell: 6 6; shape: round;
+} [ "CLK" ]
+|block| .lini-label.lini-block { direction: row; cell: 7 6; symbol: power; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 20 M 8 20 L 8 0 M 3 9 L 8 0 L 13 9";
+  }
+  "VBUS"
+]
+|block| .lini-label.lini-block { direction: row; cell: 8 6; symbol: antenna; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 20 20 M 10 20 L 10 6 M 0 0 L 10 6 L 20 0";
+  }
+  "RF"
+]
+|block| .lini-head.lini-block { cell: 1 7; } [ "Grounds" ]
+|block| .lini-gnd.lini-label.lini-block { direction: row; cell: 2 7; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+  }
+]
+|block| .lini-label.lini-block { direction: row; cell: 3 7; symbol: earth; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 14 M 8 0 L 8 6 M 0 6 L 16 6 M 3 10 L 13 10 M 6 14 L 10 14";
+  }
+]
+|block| .lini-label.lini-block { direction: row; cell: 4 7; symbol: chassis; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 12 M 8 0 L 8 6 M 2 6 L 16 6 M 5 6 L 2 12 M 10 6 L 7 12 M 15 6 L 12 12";
+  }
+]
+|block| .lini-nc.lini-label.lini-block { direction: row; cell: 5 7; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 12 10 M 0 5 L 8 5 M 4 1 L 12 9 M 12 1 L 4 9";
+  }
+]
+--- stderr ---

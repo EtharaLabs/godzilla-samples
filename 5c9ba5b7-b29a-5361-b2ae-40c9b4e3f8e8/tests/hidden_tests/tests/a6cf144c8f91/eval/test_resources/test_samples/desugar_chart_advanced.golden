@@ -1,0 +1,77 @@
+exit: 0
+--- stdout ---
+{
+  layout: grid; padding: 20; gap: 36; font-size: 15; columns: repeat(2);
+  cure(k) = (100 * (1 - exp(-x/k)));
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-bars { radius: 2; stroke: auto; }
+  .lini-mark { marker: dot; }
+}
+
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; categories: "free", "pro", "team", "ent";
+} [
+  "Requests by tier (req/s)"
+  |block| .lini-axis.lini-block { side: left; scale: log; }
+  |block| .lini-bars.lini-block { data: 5, 80, 1200, 45000; }
+]
+|block| .lini-chart.lini-block { width: 380; height: 270; } [
+  "Weekly active users"
+  |block#t| .lini-axis.lini-block { side: bottom; step: month; }
+  |block| .lini-axis.lini-block { side: left; unit: "k"; } [ "users" ]
+  |block| .lini-band.lini-block {
+    range: "2026-02-15" "2026-04-01"; fill: --sky;
+  } [ "beta" ]
+  |block| .lini-mark.lini-block {
+    at: "2026-04-06"; axis: t; stroke: --red-deep;
+  } [ "GA" ]
+  |line| "wau" .lini-line {
+    data: "2026-01-05" 12, "2026-02-02" 15, "2026-03-02" 21, "2026-04-06" 28, "2026-05-04" 34, "2026-06-01" 45; marker: dot;
+  }
+]
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; categories: "Jan", "Feb", "Mar", "Apr", "May", "Jun";
+} [
+  "Chart position"
+  |block| .lini-axis.lini-block { side: left; range: 50 1; } [ "position" ]
+  |line| "single" .lini-line { data: 44, 31, 18, 9, 12, 4; marker: circle; }
+  |line| "album" .lini-line { data: 62, 48, 35, 22, 16, 11; marker: circle; }
+]
+|block| .lini-chart.lini-block {
+  width: 380; height: 270; clearance: 10; categories: "Mon", "Tue", "Wed", "Thu", "Fri";
+} [
+  "Throughput vs. error rate"
+  |block#req| .lini-axis.lini-block { side: left; unit: "/s"; } [ "requests" ]
+  |block#err| .lini-axis.lini-block {
+    side: right; range: 0 3; unit: "%"; format: decimal 1; gridlines: none;
+  } [ "errors" ]
+  |block| .lini-bars.lini-block { data: 820, 932, 901, 1090, 1204; axis: req; } [
+    "requests"
+  ]
+  |line| "error rate" .lini-line {
+    data: 2.1, 0.8, 1.5, 0.4, 0.6; axis: err; marker: dot;
+  }
+]
+|block| .lini-chart.lini-block { width: 380; height: 270; samples: 60; } [
+  "Cure strength"
+  |block| .lini-axis.lini-block { side: bottom; range: 0 90; } [ "minutes" ]
+  |block| .lini-axis.lini-block { side: left; range: 0 100; unit: "%"; }
+  |line| "epoxy" .lini-line { fn: cure(18); }
+  |line| "acrylic" .lini-line { fn: cure(34); stroke-style: dashed; }
+]
+|block| .lini-chart.lini-block { width: 380; height: 270; } [
+  "Motor draw (A)"
+  |block| .lini-axis.lini-block { side: bottom; } [ "phase" ]
+  |block| .lini-axis.lini-block { side: left; }
+  |block| .lini-band.lini-block { range: 0 1.4; fill: --sky; } [ "Close" ]
+  |block| .lini-band.lini-block { range: 1.4 3.1; fill: --rose; } [ "Inject" ]
+  |block| .lini-band.lini-block { range: 3.1 5.1; fill: --amber; } [ "Hold" ]
+  |line| "draw" .lini-line {
+    stroke: --rose-deep; fn: (0.12 + 1.2*exp(-((u-0.8)/0.12)^2)), (1.5 + 3.0*u^1.1), 0.5;
+  }
+]
+--- stderr ---

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout
+{
+  layout: grid; columns: repeat(2);
+}
+
+|chart| {
+  direction: radial; width: 220; height: 220; categories: "a", "b", "c", "d", "e";
+} [
+  |line| "r1" { data: 3, 4, 2, 5, 1; }
+  |area| "r2" { data: 2, 2, 3, 3, 2; }
+]
+|pie| { hole: 0.5; width: 200; height: 200; } [
+  |slice| "a" { value: 3; }
+  |slice| "b" { value: 2; fill: --teal; }
+  |slice| "c" { value: 0; }
+]
+
+--- stderr

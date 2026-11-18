@@ -1,0 +1,17 @@
+exit: 0
+--- stdout
+{
+  base = 8;
+  f(n) = (base * n + 2);
+  --c: oklch(0.6, 0.15, 250);
+}
+
+|box| {
+  width: f(5); height: (base * 6); padding: (base / 2) base; radius: max(2, min(10, 4)); fill: --c; opacity: (0.5 + 0.25);
+}
+|box| {
+  width: (round(12.6) + floor(1.9)); height: (sqrt(1600)); rotate: (cos(0) * 45);
+}
+|box| { width: (2 ^ 5); height: (10 / 4 + 40); rotate: (abs(-10)); }
+
+--- stderr

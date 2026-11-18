@@ -1,0 +1,27 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-breakline { stroke: --stroke-light; stroke-width: 1; fill: none; }
+}
+
+|sketch#bar| .lini-sketch {
+  draw: move(0, 0) right(200) up(10) left(200) close();
+  break: 60 140;
+} [
+  |line| .lini-breakline.lini-line { chrome: break 0; }
+  |line| .lini-breakline.lini-line { chrome: break 1; }
+]
+|sketch#b2| .lini-sketch {
+  draw: move(0, 30) right(100) up(10) left(100) close();
+  break: 20 40, 60 80 x-axis;
+} [
+  |line| .lini-breakline.lini-line { chrome: break 0; }
+  |line| .lini-breakline.lini-line { chrome: break 1; }
+  |line| .lini-breakline.lini-line { chrome: break 2; }
+  |line| .lini-breakline.lini-line { chrome: break 3; }
+]
+
+--- stderr

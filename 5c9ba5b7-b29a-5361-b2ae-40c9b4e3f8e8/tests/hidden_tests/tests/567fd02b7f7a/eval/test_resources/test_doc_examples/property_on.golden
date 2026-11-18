@@ -1,0 +1,40 @@
+exit: 0
+--- stdout
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8020 -420 16040 840" width="16040" height="840" class="lini lini-scope-376e202f">
+  <style>
+    @layer lini.defaults {
+      :root, .lini-scope-376e202f { color-scheme: light dark; --lini-fg: light-dark(black, #e8e8ea); --lini-fill: light-dark(white, #26262b); --lini-font-family: "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --lini-font-weight: 500; --lini-stroke: light-dark(#444, #9aa0a6); --lini-stroke-dark: light-dark(black, white); --lini-stroke-light: light-dark(rgba(0, 0, 0, 0.545), rgba(255, 255, 255, 0.64)); --lini-text-color: var(--lini-fg); }
+      .lini-scope-376e202f[data-theme="dark"], [data-theme="dark"] .lini-scope-376e202f { color-scheme: dark; }
+      .lini-scope-376e202f[data-theme="light"], [data-theme="light"] .lini-scope-376e202f { color-scheme: light; }
+    }
+    .lini-scope-376e202f, .lini-scope-376e202f text { font-family: var(--lini-font-family); }
+    .lini-scope-376e202f { font-size: 15px; font-weight: var(--lini-font-weight); color: var(--lini-text-color); }
+    .lini-scope-376e202f .lini-block { fill: none; stroke: none; stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-376e202f .lini-sketch { fill: var(--lini-fill); stroke: var(--lini-stroke-dark); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-376e202f .lini-line { fill: none; stroke: var(--lini-stroke); stroke-width: 2; stroke-dasharray: none; }
+    .lini-scope-376e202f .lini-wall { fill: var(--lini-stroke-dark); stroke: none; }
+    .lini-scope-376e202f .lini-window-sill { fill: none; stroke: var(--lini-stroke-light); stroke-width: 1; }
+  </style>
+  <defs/>
+  <g class="lini-scene">
+    <g class="lini-node lini-floorplan lini-drawing lini-block" transform="translate(0,0)">
+      <rect x="-8000" y="-400" width="16000" height="800" rx="0" ry="0"/>
+      <g class="lini-node lini-wall lini-sketch" transform="translate(-8000,0)">
+        <path d="M 0 -400 L 4800 -400 L 4800 400 L 0 400 Z M 9600 -400 L 16000 -400 L 16000 400 L 9600 400 Z" fill-rule="evenodd"/>
+        <g class="lini-node lini-window lini-block" transform="translate(7200,0)">
+          <rect x="-2400" y="-400" width="4800" height="800" rx="0" ry="0"/>
+          <g class="lini-node lini-window-sill lini-line" transform="translate(0,0)">
+            <line x1="-2400" y1="-133.3333" x2="2400" y2="-133.3333"/>
+          </g>
+          <g class="lini-node lini-window-sill lini-line" transform="translate(0,0)">
+            <line x1="-2400" y1="133.3333" x2="2400" y2="133.3333"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="lini-links"/>
+</svg>
+
+--- stderr
+in.lini:1:1: warning: the drawing renders 16000 px wide — 'scale:' is a ratio; a 5 m beam at 1:50 is 'scale: 0.02'

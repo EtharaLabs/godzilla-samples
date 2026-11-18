@@ -1,0 +1,31 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 36; font-size: 15;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-table {
+    layout: grid; align: stretch; justify: stretch; gap: 1; gap-fill: --stroke; padding: 0; fill: none; stroke: --stroke; stroke-width: 2; stroke-style: solid; font-size: 14; font-weight: normal; scale: 1;
+  }
+  .lini-cell { padding: 4 8; }
+  .lini-header { fill: --header-fill; font-weight: semibold; }
+  .lini-align-start { align: start; }
+  .lini-align-end { align: end; }
+  .lini-justify-start { justify: start; }
+  .lini-justify-end { justify: end; }
+}
+
+|block#t| .lini-table.lini-group.lini-block { columns: 80, 80; } [
+  |block| .lini-cell.lini-block [ "A" ]
+  |block| .lini-cell.lini-block [ "Qty" ]
+  |block| .lini-cell.lini-block [
+    "Apple" { color: red; }
+  ]
+  |block| .lini-cell.lini-block [ "3" ]
+]
+
+--- stderr

@@ -1,0 +1,24 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 20; gap: 60; font-size: 15; routing: natural; direction: row;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+}
+
+|block#a| .lini-box.lini-block [ "A" ]
+|block#b| .lini-box.lini-block [ "B" ]
+|block#c| .lini-box.lini-block [ "C" ]
+|block#d| .lini-box.lini-block [ "D" ]
+
+a -> c
+a -> d
+b -> d
+d -> a
+c -> c
+
+--- stderr

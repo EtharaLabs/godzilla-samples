@@ -1,0 +1,172 @@
+exit: 0
+--- stdout ---
+{
+  layout: schematic; padding: 20; gap: 100; font-size: 15; clearance: 10; fill: --sheet;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-row { direction: row; }
+  .lini-column { direction: column; }
+  .lini-component {
+    fill: --component-fill; stroke: --component-stroke; stroke-width: 1.5; radius: 0; padding: 8; prefix: "U";
+  }
+  .lini-pin { height: 20; padding: 0; font-size: 11; gap: 0; }
+  .lini-label { shape: plain; font-size: 11; color: --label-ink; gap: 4; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-J { prefix: "J"; }
+  .lini-gnd { symbol: gnd; }
+  .lini-v5 { symbol: power; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-sch-solid { fill: --component-stroke; stroke: none; }
+  .lini-sch-tag-line { fill: none; stroke: --label-ink; stroke-width: 1.5; }
+  .lini-pin-stub { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-pin-number { color: --pin-number; font-size: 10; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+  .lini-tag-flag-left { padding: 2 6 2 14; }
+  .lini-tag-flag-right { padding: 2 14 2 6; }
+  .lini-net-run { width: 40; padding: 0 4; }
+}
+
+|block#U1| .lini-component.lini-block { direction: column; gap: 0; } [
+  |block| .lini-row.lini-block { height: 20; }
+  |block| .lini-row.lini-block { gap: 24; align: center; } [
+    |block| .lini-column.lini-block { gap: 0; align: start; } [
+      |block#vin| .lini-pin.lini-block { side: left; number: 3; } [
+        "vin"
+        |line| .lini-pin-stub.lini-line {
+          points: 0 0, 20 0; pin: left; translate: -28 0;
+        }
+        |block| .lini-pin-number.lini-block {
+          pin: left; translate: -28 -9; width: 20;
+        } [ "3" ]
+      ]
+    ]
+    |block| .lini-column.lini-block { gap: 0; align: end; } [
+      |block#vout| .lini-pin.lini-block { side: right; number: 2; } [
+        "vout"
+        |line| .lini-pin-stub.lini-line {
+          points: 0 0, 20 0; pin: right; translate: 28 0;
+        }
+        |block| .lini-pin-number.lini-block {
+          pin: right; translate: 28 -9; width: 20;
+        } [ "2" ]
+      ]
+    ]
+  ]
+  |block| .lini-row.lini-block { gap: 0; align: end; height: 20; } [
+    |block#gnd| .lini-pin.lini-block {
+      side: bottom; number: 1; width: 20; height: auto;
+    } [
+      "gnd"
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 0 20; pin: bottom; translate: 0 28;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: bottom; translate: 9 28; height: 20;
+      } [ "1" ]
+    ]
+  ]
+  |block| .lini-part-value.lini-block { pin: top; translate: 0 -20; } [
+    "AMS1117-3.3"
+  ]
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -36; } [ "U1" ]
+]
+|block#J1| .lini-J.lini-component.lini-block {
+  pins: 4; direction: column; gap: 0;
+} [
+  |block| .lini-column.lini-block { gap: 0; align: start; padding: 0 0 20 0; } [
+    |block#p1| .lini-pin.lini-block { number: 1; side: left; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: left; translate: -28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: left; translate: -28 -9; width: 20;
+      } [ "1" ]
+    ]
+    |block#p2| .lini-pin.lini-block { number: 2; side: left; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: left; translate: -28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: left; translate: -28 -9; width: 20;
+      } [ "2" ]
+    ]
+    |block#p3| .lini-pin.lini-block { number: 3; side: left; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: left; translate: -28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: left; translate: -28 -9; width: 20;
+      } [ "3" ]
+    ]
+    |block#p4| .lini-pin.lini-block { number: 4; side: left; } [
+      |line| .lini-pin-stub.lini-line {
+        points: 0 0, 20 0; pin: left; translate: -28 0;
+      }
+      |block| .lini-pin-number.lini-block {
+        pin: left; translate: -28 -9; width: 20;
+      } [ "4" ]
+    ]
+  ]
+  |block| .lini-part-value.lini-block { pin: top; translate: 0 -20; } [
+    "JST XH"
+  ]
+  |block| .lini-ref.lini-block { pin: top; translate: 0 -36; } [ "J1" ]
+]
+|block#C1| .lini-C.lini-block.lini-pose-90 [
+  |path| .lini-sch-line.lini-path {
+    path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+  }
+  |path| .lini-sch-solid.lini-path {
+    path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+  }
+  |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+    "22u"
+  ]
+  |block#p1| .lini-block { pin: center; translate: 0 -32; }
+  |block#p2| .lini-block { pin: center; translate: 0 32; }
+  |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C1" ]
+]
+|block#G1| .lini-gnd.lini-label.lini-block { direction: row; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+  }
+]
+U1.vin - lini-cap-1
+|block#lini-cap-1| .lini-v5.lini-label.lini-block { direction: row; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 20 M 8 20 L 8 0 M 3 9 L 8 0 L 13 9";
+  }
+  "5V"
+]
+U1.vout - C1.p1
+C1.p2 - G1
+U1.vout - J1.p3 { along: 0.5; } [ "3V3" ]
+U1.gnd - lini-cap-2
+|block#lini-cap-2| .lini-gnd.lini-label.lini-block { direction: row; } [
+  |path| .lini-sch-tag-line.lini-path {
+    path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+  }
+]
+J1.p1 - lini-label-1
+|block#lini-label-1| .lini-tag-flag-right.lini-label.lini-block {
+  shape: right;
+} [
+  |path| .lini-sch-tag-line.lini-path {
+    chrome: tag right; pin: center; path: "M 0 0";
+  }
+  "NSTDBY"
+]
+J1.p2 - lini-label-2
+|block#lini-label-2| .lini-tag-flag-left.lini-label.lini-block { shape: left; } [
+  |path| .lini-sch-tag-line.lini-path {
+    chrome: tag left; pin: center; path: "M 0 0";
+  }
+  "SLEEP"
+]
+J1.p4 - lini-label-3
+|block#lini-label-3| .lini-net-run.lini-label.lini-block [ "SENSE" ]
+--- stderr ---

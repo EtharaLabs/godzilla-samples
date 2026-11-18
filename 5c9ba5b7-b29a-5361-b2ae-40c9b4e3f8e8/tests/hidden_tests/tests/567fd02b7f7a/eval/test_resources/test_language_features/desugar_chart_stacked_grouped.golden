@@ -1,0 +1,30 @@
+exit: 0
+--- stdout
+{
+  layout: grid; padding: 20; gap: 36; font-size: 15; columns: repeat(2);
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-chart { layout: chart; gap: 15; }
+  .lini-bars { radius: 2; stroke: auto; }
+}
+
+|block| .lini-chart.lini-block {
+  width: 260; height: 180; categories: "q1", "q2", "q3"; bars: stacked;
+} [
+  |block| .lini-bars.lini-block { data: 1, 2, 3; } [ "a" ]
+  |block| .lini-bars.lini-block { data: 3, 2, 1; } [ "b" ]
+]
+|block| .lini-chart.lini-block {
+  width: 260; height: 180; categories: "q1", "q2", "q3"; direction: row;
+} [
+  |block| .lini-bars.lini-block { data: 1, 2, 3; labels: "x", "y", "z"; } [
+    "a"
+  ]
+  |block| .lini-bars.lini-block { data: 3, 2, 1; fill: --red, --green, --blue; } [
+    "b"
+  ]
+]
+
+--- stderr

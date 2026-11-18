@@ -1,0 +1,43 @@
+exit: 0
+--- stdout
+{
+  layout: tree; padding: 20; gap: 64 48; font-size: 15; direction: bilateral; routing: natural;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-topic {
+    fill: --fill; stroke: --stroke; stroke-width: 2; radius: 8; padding: 8 14; direction: column; gap: 12;
+  }
+  .lini-mindmap { max-width: 160; font-size: 17; font-weight: semibold; }
+  .lini-mindmap .lini-topic { max-width: 160; font-weight: medium; }
+  .lini-mindmap .lini-level-1 { font-size: 15; }
+  .lini-mindmap .lini-level-2 { font-size: 14; }
+  .lini-mindmap .lini-level-3 { font-size: 13; }
+  .lini-mindmap .lini-hue-rose {
+    fill: --rose-wash; stroke: --rose-deep; color: --rose-ink;
+  }
+}
+
+|block#lini-topic-1| .lini-mindmap.lini-topic.lini-block.lini-level-0 [
+  |block#lini-topic-1| .lini-topic.lini-block.lini-side-right.lini-level-1.lini-hue-rose [
+    "root"
+    |block#lini-topic-1| .lini-topic.lini-block.lini-level-2.lini-hue-rose [
+      "l"
+    ]
+    |block#lini-topic-2| .lini-topic.lini-block.lini-level-2.lini-hue-rose [
+      "r1"
+    ]
+    |block#lini-topic-3| .lini-topic.lini-block.lini-level-2.lini-hue-rose [
+      "r2"
+      |block#lini-topic-1| .lini-topic.lini-block.lini-level-3.lini-hue-rose [
+        "x"
+      ]
+    ]
+    lini-topic-3:right - lini-topic-3.lini-topic-1:left .lini-hue-rose
+  ]
+  lini-topic-1:right - lini-topic-1.lini-topic-1:left & lini-topic-1.lini-topic-2:left & lini-topic-1.lini-topic-3:left .lini-hue-rose
+]
+
+lini-topic-1:right - lini-topic-1.lini-topic-1:left .lini-hue-rose
+
+--- stderr

@@ -1,0 +1,34 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-hole { fill: --bg; stroke: --stroke-dark; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-pitch-circle {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+}
+
+|oval#h| .lini-hole.lini-oval { width: 8; pattern: radial(6, 20); } [
+  |line| .lini-centerline.lini-line { chrome: x-axis; }
+  |line| .lini-centerline.lini-line { chrome: y-axis; }
+  |oval| .lini-pitch-circle.lini-oval { chrome: ring; }
+]
+|oval| .lini-pitch-circle.lini-oval { width: 40; }
+|oval#g| .lini-hole.lini-oval {
+  width: 4; pattern: grid(3, 2, 10, 10); translate: 40 0;
+} [
+  |line| .lini-centerline.lini-line { chrome: x-axis; }
+  |line| .lini-centerline.lini-line { chrome: y-axis; }
+]
+
+h (o)
+g.1 (o) { side: left; }
+
+--- stderr

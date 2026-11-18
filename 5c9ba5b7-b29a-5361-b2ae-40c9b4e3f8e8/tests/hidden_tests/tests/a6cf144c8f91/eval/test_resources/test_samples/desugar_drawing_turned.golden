@@ -1,0 +1,93 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 48; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-oval {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; direction: column; gap: 12;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-drawing { layout: drawing; padding: 0; }
+  .lini-hole { fill: --bg; stroke: --stroke-dark; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-breakline { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-hidden {
+    stroke-style: dashed; stroke: --stroke-dark; stroke-width: 1; fill: none;
+  }
+  .lini-shoulder { stroke: --stroke-dark; }
+  .lini-threadline { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-hidden .lini-centerline { stroke: none; }
+}
+
+|block#tiebar-view| .lini-drawing.lini-block {
+  scale: 0.75; unit: mm; px-per-unit: 4;
+} [
+  |block| .lini-footnote.lini-caption.lini-block [ "TIE BAR" ]
+  |sketch#bar| .lini-sketch {
+    draw: move(-150, 0) up(10) chamfer(1.5) right(40):m20 point():a right(260)
+          chamfer(1.5) down(10);
+    revolve: x-axis; thread: m20 1.5; break: -90 90;
+  } [
+    |sketch#centre| .lini-hidden.lini-sketch {
+      translate: 150 0;
+      draw: move(0, 4) left(10) line(-4, -4);
+      mirror: x-axis;
+    } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+    ]
+    |line| .lini-centerline.lini-line { chrome: x-axis; }
+    |line| .lini-shoulder.lini-line { chrome: edges; }
+    |line| .lini-threadline.lini-line { chrome: thread; }
+    |line| .lini-breakline.lini-line { chrome: break 0; }
+    |line| .lini-breakline.lini-line { chrome: break 1; }
+  ]
+  bar:left (-) bar:right { side: bottom; }
+  bar:left (-) bar:a { side: top; }
+  bar:m20 (o) { side: left; tol: h6; }
+  bar:m20 <- { side: top; }
+]
+|block#barrel-view| .lini-drawing.lini-block { scale: 0.5; px-per-unit: 4; } [
+  |block| .lini-footnote.lini-caption.lini-block [ "BARREL" ]
+  |sketch#body| .lini-sketch {
+    draw: move(-242.5, 0) up(21) chamfer(1.5) right(38):m42 point():tl
+          right(32):land up(1.5):sh1 right(14):port down(6):sh2 fillet(2):r1
+          right(10):groove fillet(2) up(6):sh3 right(10):collar up(2.5)
+          right(381):tube chamfer(1.5) down(25);
+    revolve: x-axis; thread: m42 1.5; break: -40 215;
+  } [
+    |oval#m8| .lini-hole.lini-oval {
+      width: 8; translate: -120 0; pattern: grid(3, 1, 35, 0); thread: 1.25;
+    } [
+      |line| .lini-centerline.lini-line { chrome: x-axis; }
+      |line| .lini-centerline.lini-line { chrome: y-axis; }
+      |line| .lini-threadline.lini-line { chrome: thread-arc internal 1.25; }
+    ]
+    |line| .lini-centerline.lini-line { chrome: x-axis; }
+    |line| .lini-shoulder.lini-line { chrome: edges; }
+    |line| .lini-threadline.lini-line { chrome: thread; }
+    |line| .lini-breakline.lini-line { chrome: break 0; }
+    |line| .lini-breakline.lini-line { chrome: break 1; }
+  ]
+  body:left (-) body:tl { side: bottom; }
+  body:sh1 (-) body:sh2 (-) body:sh3 { side: bottom; }
+  body:left (-) body:right { side: bottom; }
+  body:m42 <- { side: top; }
+  body:r1 (o) { side: top; }
+  body:land >- { along: 0.5; } [ "A" ]
+  body:land (o) { tol: h6; side: left; }
+  body:collar (o) { tol: f7; side: left; }
+  body:tube (o) { side: left; }
+  body.m8 <- { along: 0.5; side: top; } [ "3× M8×1.25, 10 DEEP" ]
+]
+--- stderr ---

@@ -1,0 +1,27 @@
+exit: 0
+--- stdout
+{
+  layout: floorplan; padding: 20; font-size: 15; unit: m; scale: 0.02; px-per-unit: 4000;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-wall { fill: --stroke-dark; stroke: none; }
+  .lini-door-leaf { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-door-swing { stroke: --stroke-light; stroke-width: 1; fill: none; }
+  .lini-bed { stroke: --stroke-dark; stroke-width: 1; fill: --bg; }
+}
+
+|sketch#w| .lini-wall.lini-sketch {
+  draw: move(0, 0) right(4):south up(3):east;
+  wall-thickness: 0.2;
+} [
+  |block| .lini-door.lini-block { on: south; at: 1; unit-mm: 1000; } [
+    |line| .lini-door-leaf.lini-line { chrome: leaf 0; }
+    |line| .lini-door-swing.lini-line { chrome: swing 0; }
+  ]
+]
+|block| .lini-bed.lini-block { translate: 1 1; unit-mm: 1000; }
+
+--- stderr

@@ -1,0 +1,14 @@
+exit: 0
+--- stdout
+{
+  routing: straight; direction: row;
+}
+
+|box#a| "A"
+|oval#b| "B"
+|hex#c| "C"
+
+a -> b -> c
+c -> a "back"
+
+--- stderr

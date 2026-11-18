@@ -1,0 +1,822 @@
+exit: 0
+--- stdout
+{
+  layout: flow; padding: 0; gap: 36; font-size: 15; density: 4.7;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-path { fill: --fill; stroke: --stroke; stroke-width: 2; }
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-rect { radius: 0; }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-sheet-caption {
+    translate: 10 10; font-scale: 16 15; font-weight: semibold;
+  }
+  .lini-row { direction: row; }
+  .lini-column { direction: column; }
+  .lini-table {
+    layout: grid; align: stretch; justify: stretch; gap: 1; gap-fill: --stroke; padding: 0; fill: none; stroke: --stroke; stroke-width: 2; stroke-style: solid; font-size: 14; font-weight: normal; scale: 1;
+  }
+  .lini-cell { padding: 4 8; }
+  .lini-header { fill: --header-fill; font-weight: semibold; }
+  .lini-page { fill: --bg; stroke-width: 0; width: 210; height: 297; }
+  .lini-title-block {
+    font-size: 14; font-weight: semibold; stroke-width: 1; radius: 0;
+  }
+  .lini-field { font-size: 12; font-weight: normal; color: --footer-color; }
+  .lini-frame { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-zone { font-size: 11; color: --stroke-light; }
+  .lini-tick { stroke: --stroke; stroke-width: 1; fill: none; }
+  .lini-component {
+    fill: --component-fill; stroke: --component-stroke; stroke-width: 1.5; radius: 0; padding: 8; prefix: "U";
+  }
+  .lini-pin { height: 20; padding: 0; font-size: 11; gap: 0; }
+  .lini-space { width: 20; height: 20; }
+  .lini-label { shape: plain; font-size: 11; color: --label-ink; gap: 4; }
+  .lini-junction { fill: --wire; stroke: none; width: 8; }
+  .lini-gnd { symbol: gnd; }
+  .lini-nc { symbol: nc; }
+  .lini-vsys { symbol: power; }
+  .lini-vm { symbol: power; }
+  .lini-region { layout: schematic; padding: 60 20; }
+  .lini-align-start { align: start; }
+  .lini-align-end { align: end; }
+  .lini-justify-start { justify: start; }
+  .lini-justify-end { justify: end; }
+  .lini-sch-line { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-sch-solid { fill: --component-stroke; stroke: none; }
+  .lini-sch-tag-line { fill: none; stroke: --label-ink; stroke-width: 1.5; }
+  .lini-pin-stub { fill: none; stroke: --component-stroke; stroke-width: 1.5; }
+  .lini-pin-number { color: --pin-number; font-size: 10; }
+  .lini-ref { font-size: 12; font-weight: semibold; }
+  .lini-part-value { font-size: 12; }
+  .lini-net-run { width: 40; padding: 0 4; }
+}
+
+|block| .lini-page.lini-block {
+  width: 420; height: 297; layout: grid; padding: 0; columns: 800, 1000; gap: 10; px-per-unit: 4.7;
+} [
+  |block#boost| .lini-region.lini-group.lini-block {
+    gap: 100; clearance: 10; cell: 1 1;
+  } [
+    |block| .lini-sheet-caption.lini-caption.lini-block [ "5.5v Boost" ]
+    |block#U6| .lini-component.lini-block { direction: column; gap: 0; } [
+      |block| .lini-row.lini-block { height: 20; }
+      |block| .lini-row.lini-block { gap: 24; align: center; } [
+        |block| .lini-column.lini-block {
+          gap: 0; align: start; padding: 0 0 20 0;
+        } [
+          |block#VIN| .lini-pin.lini-block { side: left; number: 3; } [
+            "VIN"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "3" ]
+          ]
+          |block| .lini-space.lini-block
+          |block#SW| .lini-pin.lini-block { side: left; number: 5; } [
+            "SW"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "5" ]
+          ]
+          |block| .lini-space.lini-block { span: 2; height: 40; }
+          |block#EN| .lini-pin.lini-block { side: left; number: 4; } [
+            "EN"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "4" ]
+          ]
+        ]
+        |block| .lini-column.lini-block { gap: 0; align: end; } [
+          |block#VOUT| .lini-pin.lini-block { side: right; number: 6; } [
+            "VOUT"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "6" ]
+          ]
+          |block| .lini-space.lini-block { span: 5; height: 100; }
+          |block#FB| .lini-pin.lini-block { side: right; number: 2; } [
+            "FB"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "2" ]
+          ]
+        ]
+      ]
+      |block| .lini-row.lini-block { gap: 0; align: end; height: 20; } [
+        |block#GND| .lini-pin.lini-block {
+          side: bottom; number: 1; width: 20; height: auto;
+        } [
+          "GND"
+          |line| .lini-pin-stub.lini-line {
+            points: 0 0, 0 20; pin: bottom; translate: 0 28;
+          }
+          |block| .lini-pin-number.lini-block {
+            pin: bottom; translate: 9 28; height: 20;
+          } [ "1" ]
+        ]
+      ]
+      |block| .lini-part-value.lini-block { pin: top; translate: 0 -20; } [
+        "TPS61023DRLR"
+      ]
+      |block| .lini-ref.lini-block { pin: top; translate: 0 -36; } [ "U6" ]
+    ]
+    |block#C11| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "10u"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C11" ]
+    ]
+    |block#L2| .lini-L.lini-block.lini-pose-180 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 64 10 M 0 0 M 64 5 L 52 5 A 5 5 180 0 1 42 5 A 5 5 180 0 1 32 5 A 5 5 180 0 1 22 5 A 5 5 180 0 1 12 5 L 0 5";
+      }
+      |block| .lini-part-value.lini-block { pin: bottom; translate: 0 20; } [
+        "1uH"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 32 0; }
+      |block#p2| .lini-block { pin: center; translate: -32 0; }
+      |block| .lini-ref.lini-block { pin: top; translate: 0 -20; } [ "L2" ]
+    ]
+    |block#R15| .lini-R.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 12 0 M 0 64 M 6 0 L 6 16 M 12 16 L 12 48 L 0 48 L 0 16 Z M 6 48 L 6 64";
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "240k"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "R15" ]
+    ]
+    |block#R16| .lini-R.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 12 0 M 0 64 M 6 0 L 6 16 M 12 16 L 12 48 L 0 48 L 0 16 Z M 6 48 L 6 64";
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "30k"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "R16" ]
+    ]
+    |block#C12| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "10u"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C12" ]
+    ]
+    |block#C13| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "10u"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C13" ]
+    ]
+    |block#C14| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "10u"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C14" ]
+    ]
+    U6.VIN - lini-cap-1
+    |block#lini-cap-1| .lini-vsys.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 20 M 8 20 L 8 0 M 3 9 L 8 0 L 13 9";
+      }
+      "VSYS"
+    ]
+    U6.VIN - C11.p1
+    C11.p2 - lini-cap-2
+    |block#lini-cap-2| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U6.SW - L2.p1
+    L2.p2 - U6.VIN
+    U6.EN - lini-label-1
+    |block#lini-label-1| .lini-net-run.lini-label.lini-block [ "EN_BSTD" ]
+    U6.GND - lini-cap-3
+    |block#lini-cap-3| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U6.VOUT - lini-cap-4
+    |block#lini-cap-4| .lini-vm.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 20 M 8 20 L 8 0 M 3 9 L 8 0 L 13 9";
+      }
+      "VM"
+    ]
+    U6.VOUT - C12.p1
+    C12.p2 - lini-cap-5
+    |block#lini-cap-5| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U6.VOUT - C13.p1
+    C13.p2 - lini-cap-6
+    |block#lini-cap-6| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U6.VOUT - C14.p1
+    C14.p2 - lini-cap-7
+    |block#lini-cap-7| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U6.VOUT - R15.p1
+    R15.p2 - R16.p1
+    R16.p2 - lini-cap-8
+    |block#lini-cap-8| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U6.FB - R16.p1
+  ]
+  |block#stepper| .lini-region.lini-group.lini-block {
+    gap: 100; clearance: 10; cell: 2 1;
+  } [
+    |block| .lini-sheet-caption.lini-caption.lini-block [ "Stepper Driver" ]
+    |block#U8| .lini-component.lini-block { direction: column; gap: 0; } [
+      |block| .lini-row.lini-block { height: 20; }
+      |block| .lini-row.lini-block { gap: 24; align: center; } [
+        |block| .lini-column.lini-block { gap: 0; align: start; } [
+          |block#VS| .lini-pin.lini-block { side: left; number: 18; } [
+            "VS"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "18" ]
+          ]
+          |block#VCP| .lini-pin.lini-block { side: left; number: 2; } [
+            "VCP"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "2" ]
+          ]
+          |block#STEP| .lini-pin.lini-block { side: left; number: 4; } [
+            "STEP"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "4" ]
+          ]
+          |block#DIR| .lini-pin.lini-block { side: left; number: 3; } [
+            "DIR"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "3" ]
+          ]
+          |block#AD0| .lini-pin.lini-block { side: left; number: 5; } [
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "5" ]
+            "MS1_AD0"
+          ]
+          |block#AD1| .lini-pin.lini-block { side: left; number: 6; } [
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "6" ]
+            "MS2_AD1"
+          ]
+          |block#OA1| .lini-pin.lini-block { side: left; number: 19; } [
+            "OA1"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "19" ]
+          ]
+          |block#OA2| .lini-pin.lini-block { side: left; number: 1; } [
+            "OA2"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "1" ]
+          ]
+          |block#OB1| .lini-pin.lini-block { side: left; number: 17; } [
+            "OB1"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "17" ]
+          ]
+          |block#OB2| .lini-pin.lini-block { side: left; number: 15; } [
+            "OB2"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "15" ]
+          ]
+          |block#MODE| .lini-pin.lini-block { side: left; number: 9; } [
+            "MODE"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: left; translate: -28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: left; translate: -28 -9; width: 20;
+            } [ "9" ]
+          ]
+        ]
+        |block| .lini-column.lini-block {
+          gap: 0; align: end; padding: 0 0 20 0;
+        } [
+          |block#NSTDBY| .lini-pin.lini-block { side: right; number: 11; } [
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "11" ]
+            "VIO/NSTDBY"
+          ]
+          |block#EN| .lini-pin.lini-block { side: right; number: 7; } [
+            "EN"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "7" ]
+          ]
+          |block#STEPPER| .lini-pin.lini-block { side: right; number: 8; } [
+            "STEPPER"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "8" ]
+          ]
+          |block#PDN| .lini-pin.lini-block { side: right; number: 10; } [
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "10" ]
+            "PDN_UART"
+          ]
+          |block#DIAG| .lini-pin.lini-block { side: right; number: 12; } [
+            "DIAG"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "12" ]
+          ]
+          |block#V18| .lini-pin.lini-block { side: right; number: 13; } [
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "13" ]
+            "1.8VOUT"
+          ]
+          |block#BRA| .lini-pin.lini-block { side: right; number: 20; } [
+            "BRA"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "20" ]
+          ]
+          |block#BRB| .lini-pin.lini-block { side: right; number: 16; } [
+            "BRB"
+            |line| .lini-pin-stub.lini-line {
+              points: 0 0, 20 0; pin: right; translate: 28 0;
+            }
+            |block| .lini-pin-number.lini-block {
+              pin: right; translate: 28 -9; width: 20;
+            } [ "16" ]
+          ]
+        ]
+      ]
+      |block| .lini-row.lini-block { gap: 0; align: end; height: 20; } [
+        |block#GND| .lini-pin.lini-block {
+          side: bottom; number: 21; width: 20; height: auto;
+        } [
+          "GND"
+          |line| .lini-pin-stub.lini-line {
+            points: 0 0, 0 20; pin: bottom; translate: 0 28;
+          }
+          |block| .lini-pin-number.lini-block {
+            pin: bottom; translate: 9 28; height: 20;
+          } [ "21" ]
+        ]
+      ]
+      |block| .lini-part-value.lini-block { pin: top; translate: 0 -20; } [
+        "TMC2300-LA-T"
+      ]
+      |block| .lini-ref.lini-block { pin: top; translate: 0 -36; } [ "U8" ]
+    ]
+    |block#C23| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "10u"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C23" ]
+    ]
+    |block#C24| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "100n"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C24" ]
+    ]
+    |block#C25| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "100n"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C25" ]
+    ]
+    |block#C26| .lini-C.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 24 0 M 0 64 M 12 0 L 12 29 M 12 35 L 12 64";
+      }
+      |path| .lini-sch-solid.lini-path {
+        path: "M 24 0 M 0 64 M 24 27.5 L 24 30.5 L 0 30.5 L 0 27.5 Z M 24 33.5 L 24 36.5 L 0 36.5 L 0 33.5 Z"; pin: center;
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "100n"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "C26" ]
+    ]
+    |block#R20| .lini-R.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 12 0 M 0 64 M 6 0 L 6 16 M 12 16 L 12 48 L 0 48 L 0 16 Z M 6 48 L 6 64";
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "470m"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "R20" ]
+    ]
+    |block#R21| .lini-R.lini-block.lini-pose-90 [
+      |path| .lini-sch-line.lini-path {
+        path: "M 12 0 M 0 64 M 6 0 L 6 16 M 12 16 L 12 48 L 0 48 L 0 16 Z M 6 48 L 6 64";
+      }
+      |block| .lini-part-value.lini-block { pin: center; translate: 24 8; } [
+        "470m"
+      ]
+      |block#p1| .lini-block { pin: center; translate: 0 -32; }
+      |block#p2| .lini-block { pin: center; translate: 0 32; }
+      |block| .lini-ref.lini-block { pin: center; translate: 24 -8; } [ "R21" ]
+    ]
+    U8.VS - lini-cap-1
+    |block#lini-cap-1| .lini-vm.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 20 M 8 20 L 8 0 M 3 9 L 8 0 L 13 9";
+      }
+      "VM"
+    ]
+    U8.VS - C23.p1
+    C23.p2 - lini-cap-2
+    |block#lini-cap-2| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.VS - C24.p1
+    C24.p2 - lini-cap-3
+    |block#lini-cap-3| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.VCP - lini-cap-4
+    |block#lini-cap-4| .lini-nc.lini-label.lini-block.lini-pose-180 {
+      direction: row;
+    } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 12 10 M 0 0 M 12 5 L 4 5 M 8 9 L 0 1 M 0 9 L 8 1";
+      }
+    ]
+    U8.STEP - lini-label-1
+    |block#lini-label-1| .lini-net-run.lini-label.lini-block [ "STEPD" ]
+    U8.DIR - lini-label-2
+    |block#lini-label-2| .lini-net-run.lini-label.lini-block [ "DIRD" ]
+    U8.AD0 - lini-label-3
+    |block#lini-label-3| .lini-net-run.lini-label.lini-block [ "AD0" ]
+    U8.AD1 - lini-label-4
+    |block#lini-label-4| .lini-net-run.lini-label.lini-block [ "AD1" ]
+    U8.OA1 - lini-label-5
+    |block#lini-label-5| .lini-net-run.lini-label.lini-block [ "COIL_A1" ]
+    U8.OA2 - lini-label-6
+    |block#lini-label-6| .lini-net-run.lini-label.lini-block [ "COIL_A2" ]
+    U8.OB1 - lini-label-7
+    |block#lini-label-7| .lini-net-run.lini-label.lini-block [ "COIL_B1" ]
+    U8.OB2 - lini-label-8
+    |block#lini-label-8| .lini-net-run.lini-label.lini-block [ "COIL_B2" ]
+    U8.MODE - lini-cap-5
+    |block#lini-cap-5| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.GND - lini-cap-6
+    |block#lini-cap-6| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.NSTDBY - U8.EN { along: 0.5; } [ "NSTDBY" ]
+    U8.EN - U8.STEPPER
+    U8.STEPPER - C25.p1
+    C25.p2 - lini-cap-7
+    |block#lini-cap-7| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.PDN - lini-label-9
+    |block#lini-label-9| .lini-net-run.lini-label.lini-block.lini-pose-180 [
+      "COMM"
+    ]
+    U8.DIAG - lini-cap-8
+    |block#lini-cap-8| .lini-nc.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 12 10 M 0 5 L 8 5 M 4 1 L 12 9 M 12 1 L 4 9";
+      }
+    ]
+    U8.V18 - C26.p1 { along: 0.5; } [ "1V8" ]
+    C26.p2 - lini-cap-9
+    |block#lini-cap-9| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.BRA - R20.p1 { along: 0.5; } [ "RS_A" ]
+    R20.p2 - lini-cap-10
+    |block#lini-cap-10| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+    U8.BRB - R21.p1 { along: 0.5; } [ "RS_B" ]
+    R21.p2 - lini-cap-11
+    |block#lini-cap-11| .lini-gnd.lini-label.lini-block { direction: row; } [
+      |path| .lini-sch-tag-line.lini-path {
+        path: "M 0 0 M 16 15 M 8 0 L 8 6 M 0 6 L 16 6 M 1 6 L 8 15 L 15 6";
+      }
+    ]
+  ]
+  |block| .lini-title-block.lini-table.lini-group.lini-block {
+    columns: auto, auto, auto; pin: bottom right;
+  } [
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Title"; span: 3 1;
+    } [
+      |block| .lini-field.lini-block [ "Title" ]
+      "Boost and stepper blocks"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Dwg No.";
+    } [
+      |block| .lini-field.lini-block [ "Dwg No." ]
+      "LN-0058"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Rev";
+    } [
+      |block| .lini-field.lini-block [ "Rev" ]
+      "A"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Sheet";
+    } [
+      |block| .lini-field.lini-block [ "Sheet" ]
+      "1/1"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Date";
+    } [
+      |block| .lini-field.lini-block [ "Date" ]
+      "2026-08-31"
+    ]
+    |block| .lini-cell.lini-block {
+      direction: column; padding: 2 6; width: 96; gap: 4; field: "Drawn";
+    } [
+      |block| .lini-field.lini-block [ "Drawn" ]
+      "AM"
+    ]
+  ]
+  |block| .lini-frame.lini-rect.lini-box.lini-block {
+    chrome: frame; pin: center;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 2; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 3; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 5; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 6; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick top 7; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 2; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 3; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 5; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 6; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick bottom 7; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick left 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick left 2; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick left 4; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick left 5; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick right 1; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick right 2; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick right 4; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: tick right 5; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark top; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark bottom; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark left; pin: center; points: 0 0, 0 0;
+  }
+  |line| .lini-tick.lini-line {
+    chrome: mark right; pin: center; points: 0 0, 0 0;
+  }
+  |block| .lini-zone.lini-block { chrome: zone top 0; pin: center; } [ "1" ]
+  |block| .lini-zone.lini-block { chrome: zone top 1; pin: center; } [ "2" ]
+  |block| .lini-zone.lini-block { chrome: zone top 2; pin: center; } [ "3" ]
+  |block| .lini-zone.lini-block { chrome: zone top 3; pin: center; } [ "4" ]
+  |block| .lini-zone.lini-block { chrome: zone top 4; pin: center; } [ "5" ]
+  |block| .lini-zone.lini-block { chrome: zone top 5; pin: center; } [ "6" ]
+  |block| .lini-zone.lini-block { chrome: zone top 6; pin: center; } [ "7" ]
+  |block| .lini-zone.lini-block { chrome: zone top 7; pin: center; } [ "8" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 0; pin: center; } [ "1" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 1; pin: center; } [ "2" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 2; pin: center; } [ "3" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 3; pin: center; } [ "4" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 4; pin: center; } [ "5" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 5; pin: center; } [ "6" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 6; pin: center; } [ "7" ]
+  |block| .lini-zone.lini-block { chrome: zone bottom 7; pin: center; } [ "8" ]
+  |block| .lini-zone.lini-block { chrome: zone left 0; pin: center; } [ "A" ]
+  |block| .lini-zone.lini-block { chrome: zone left 1; pin: center; } [ "B" ]
+  |block| .lini-zone.lini-block { chrome: zone left 2; pin: center; } [ "C" ]
+  |block| .lini-zone.lini-block { chrome: zone left 3; pin: center; } [ "D" ]
+  |block| .lini-zone.lini-block { chrome: zone left 4; pin: center; } [ "E" ]
+  |block| .lini-zone.lini-block { chrome: zone left 5; pin: center; } [ "F" ]
+  |block| .lini-zone.lini-block { chrome: zone right 0; pin: center; } [ "A" ]
+  |block| .lini-zone.lini-block { chrome: zone right 1; pin: center; } [ "B" ]
+  |block| .lini-zone.lini-block { chrome: zone right 2; pin: center; } [ "C" ]
+  |block| .lini-zone.lini-block { chrome: zone right 3; pin: center; } [ "D" ]
+  |block| .lini-zone.lini-block { chrome: zone right 4; pin: center; } [ "E" ]
+  |block| .lini-zone.lini-block { chrome: zone right 5; pin: center; } [ "F" ]
+]
+
+--- stderr

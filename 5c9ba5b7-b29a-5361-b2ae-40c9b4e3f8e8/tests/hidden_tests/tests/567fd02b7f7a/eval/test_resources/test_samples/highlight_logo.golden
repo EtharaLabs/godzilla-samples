@@ -1,0 +1,109 @@
+exit: 0
+--- stdout
+<span class="lini-tok-comment">// Lini's wordmark, built the way a CAD model of it is: one datum — the</span>
+<span class="lini-tok-comment">// baseline, on the centreline through the `n` — and every station measured out</span>
+<span class="lini-tok-comment">// from it, so each x in the file reads ± one named distance. Two dimensions</span>
+<span class="lini-tok-comment">// drive the whole letterform and the other eighteen derive from them</span>
+<span class="lini-tok-comment">// [SPEC 10.7]; the parts that are true reflections are drawn once and folded</span>
+<span class="lini-tok-comment">// with `mirror: y-axis` [SPEC 15.3]; the dotted stem is one dash under a linear</span>
+<span class="lini-tok-comment">// `pattern:` [SPEC 15.4]. Root `layout: stack` [SPEC 12] puts every pen on that</span>
+<span class="lini-tok-comment">// one datum — the placement a drawing uses, without a drawing's drafting — and</span>
+<span class="lini-tok-comment">// `unit: mm` + `density: 10` render the model's millimetres at 10 px each. The</span>
+<span class="lini-tok-comment">// output is assets/logo/lini.svg.</span>
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">layout</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">stack</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">unit</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">mm</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">density</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">10</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">padding</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">25</span><span class="lini-tok-punct">;</span>
+
+  <span class="lini-tok-var">--coral</span><span class="lini-tok-punct">:</span> <span class="lini-tok-const">#e9536c</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-var">--lilac</span><span class="lini-tok-punct">:</span> <span class="lini-tok-const">#9c8cee</span><span class="lini-tok-punct">;</span>
+
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">sketch</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--coral</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">stroke</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">none</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span>
+
+  <span class="lini-tok-comment">// The two driving dimensions: half the stroke — which is every round end's</span>
+  <span class="lini-tok-comment">// radius — and the centreline radius every hook and arch is swept on. From</span>
+  <span class="lini-tok-comment">// them, the stroke itself (1.8, which is also the gap between letters) and</span>
+  <span class="lini-tok-comment">// the inside (1.6) and outside (3.4) radius of a hook.</span>
+  cap = <span class="lini-tok-number">0.9</span><span class="lini-tok-punct">;</span>
+  bowl = <span class="lini-tok-number">2.5</span><span class="lini-tok-punct">;</span>
+  weight = <span class="lini-tok-punct">(</span><span class="lini-tok-number">2</span> * cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  inner = <span class="lini-tok-punct">(</span>bowl <span class="lini-tok-op">-</span> cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  outer = <span class="lini-tok-punct">(</span>bowl + cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+
+  <span class="lini-tok-comment">// x, measured out from the centreline and so worn ± by both sides: the `n`'s</span>
+  <span class="lini-tok-comment">// legs stand at the bowl radius, the `l`'s tail and the `i`'s stem at 6.1,</span>
+  <span class="lini-tok-comment">// both hooks' centres at 8.6, the `l`'s stem and the `i`'s dotted one at</span>
+  <span class="lini-tok-comment">// 11.1, and the silhouette at 12 — half the wordmark wide.</span>
+  tail = <span class="lini-tok-punct">(</span>outer + weight + cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  hook = <span class="lini-tok-punct">(</span>tail + bowl<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  stem = <span class="lini-tok-punct">(</span>hook + bowl<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  edge = <span class="lini-tok-punct">(</span>stem + cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+
+  <span class="lini-tok-comment">// y, measured up from the baseline: the feet and the `i`'s tail end sit a cap</span>
+  <span class="lini-tok-comment">// above it, the springing line every arch and hook rises from at 3.4, the</span>
+  <span class="lini-tok-comment">// short caps at 5.9, the `n`'s crown at 6.8, the tall stem's 9.7 run to its</span>
+  <span class="lini-tok-comment">// cap centre at 13.1, and the cap height at 14. A tittle's centre splits the</span>
+  <span class="lini-tok-comment">// last two — 4.05 above, 4.05 below, the pair of equals the sketch carries.</span>
+  shoulder = outer<span class="lini-tok-punct">;</span>
+  tail_y = <span class="lini-tok-punct">(</span>shoulder + bowl<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  arch = <span class="lini-tok-punct">(</span>shoulder + outer<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  run = <span class="lini-tok-punct">(</span>bowl + <span class="lini-tok-number">8</span> * cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  crown = <span class="lini-tok-punct">(</span>shoulder + run<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  capline = <span class="lini-tok-punct">(</span>crown + cap<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  brow = <span class="lini-tok-punct">(</span><span class="lini-tok-punct">(</span>capline + tail_y<span class="lini-tok-punct">)</span> / <span class="lini-tok-number">2</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+
+  <span class="lini-tok-comment">// The dotted stem: a dash a third of the bowl long, at the pitch that makes</span>
+  <span class="lini-tok-comment">// three of them span the tall stem's run exactly.</span>
+  dash = <span class="lini-tok-punct">(</span>bowl / <span class="lini-tok-number">3</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  pitch = <span class="lini-tok-punct">(</span><span class="lini-tok-punct">(</span>run <span class="lini-tok-op">-</span> dash<span class="lini-tok-punct">)</span> / <span class="lini-tok-number">2</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+
+  <span class="lini-tok-comment">// A tittle is a 2·cap dome, a cap-radius bite lifting it off the stem below,</span>
+  <span class="lini-tok-comment">// and a cap/2 fillet blending the two on each side. All four tangent points</span>
+  <span class="lini-tok-comment">// land on one line, `notch_y`, spaced a quarter chord apart — so those two</span>
+  <span class="lini-tok-comment">// numbers place every one of them.</span>
+  quarter = <span class="lini-tok-punct">(</span>cap * sqrt<span class="lini-tok-punct">(</span><span class="lini-tok-number">5</span><span class="lini-tok-punct">)</span> / <span class="lini-tok-number">3</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  notch_y = <span class="lini-tok-punct">(</span>brow <span class="lini-tok-op">-</span> <span class="lini-tok-number">4</span> * cap / <span class="lini-tok-number">3</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-comment">// The `n` — half a letter, crown of its arch round to crown of its bowl, both</span>
+<span class="lini-tok-comment">// ends on the axis: an open subpath under `mirror:` is fused, so the half comes</span>
+<span class="lini-tok-comment">// back whole. A drawing would mark that axis with a centreline; a stack draws</span>
+<span class="lini-tok-comment">// only what is asked for. The pen opens on a two-point arc because a tangent</span>
+<span class="lini-tok-comment">// one has no heading yet to continue.</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">sketch</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">n</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">draw</span><span class="lini-tok-punct">:</span> move<span class="lini-tok-punct">(</span><span class="lini-tok-number">0</span><span class="lini-tok-punct">,</span> -arch<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>outer<span class="lini-tok-punct">,</span> outer<span class="lini-tok-punct">,</span> outer<span class="lini-tok-punct">)</span> down<span class="lini-tok-punct">(</span>bowl<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-number">180</span><span class="lini-tok-punct">)</span>
+        up<span class="lini-tok-punct">(</span>bowl<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>inner<span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">90</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-prop">mirror</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">y-axis</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-comment">// The `l` — a stem the full height of the mark, a hook, a tail that stops short.</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">sketch</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">l</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">draw</span><span class="lini-tok-punct">:</span> move<span class="lini-tok-punct">(</span>-edge<span class="lini-tok-punct">,</span> -crown<span class="lini-tok-punct">)</span> down<span class="lini-tok-punct">(</span>run<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>outer<span class="lini-tok-punct">,</span> <span class="lini-tok-number">-180</span><span class="lini-tok-punct">)</span> up<span class="lini-tok-punct">(</span>bowl<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-number">-180</span><span class="lini-tok-punct">)</span>
+        down<span class="lini-tok-punct">(</span>bowl<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>inner<span class="lini-tok-punct">,</span> <span class="lini-tok-number">180</span><span class="lini-tok-punct">)</span> up<span class="lini-tok-punct">(</span>run<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">180</span><span class="lini-tok-punct">)</span> close<span class="lini-tok-punct">(</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-comment">// The `i`'s tail — the `l`'s hook across the centreline, cut a quarter turn</span>
+<span class="lini-tok-comment">// short so it ends in a round cap standing on the baseline.</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">sketch</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">i</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">draw</span><span class="lini-tok-punct">:</span> move<span class="lini-tok-punct">(</span>tail - cap<span class="lini-tok-punct">,</span> -tail_y<span class="lini-tok-punct">)</span> down<span class="lini-tok-punct">(</span>bowl<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>outer<span class="lini-tok-punct">,</span> <span class="lini-tok-number">-90</span><span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-number">-180</span><span class="lini-tok-punct">)</span>
+        arc<span class="lini-tok-punct">(</span>inner<span class="lini-tok-punct">,</span> <span class="lini-tok-number">90</span><span class="lini-tok-punct">)</span> up<span class="lini-tok-punct">(</span>bowl<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">180</span><span class="lini-tok-punct">)</span> close<span class="lini-tok-punct">(</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-comment">// The two tittles — one drawn, both had: a closed subpath under `mirror:` is</span>
+<span class="lini-tok-comment">// duplicated across the axis rather than fused. Bite, fillet, dome over the</span>
+<span class="lini-tok-comment">// top, fillet back.</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">sketch</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">brow</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">draw</span><span class="lini-tok-punct">:</span> move<span class="lini-tok-punct">(</span>-tail - quarter<span class="lini-tok-punct">,</span> -notch_y<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span><span class="lini-tok-number">2</span> * quarter<span class="lini-tok-punct">,</span> <span class="lini-tok-number">0</span><span class="lini-tok-punct">,</span> cap<span class="lini-tok-punct">)</span>
+        arc<span class="lini-tok-punct">(</span>quarter<span class="lini-tok-punct">,</span> <span class="lini-tok-number">0</span><span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span>cap / <span class="lini-tok-number">2</span><span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span><span class="lini-tok-op">-</span><span class="lini-tok-number">2</span> * quarter<span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">10</span> * cap / <span class="lini-tok-number">3</span><span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">2</span> * cap<span class="lini-tok-punct">)</span>
+        arc<span class="lini-tok-punct">(</span><span class="lini-tok-op">-</span><span class="lini-tok-number">2</span> * quarter<span class="lini-tok-punct">,</span> <span class="lini-tok-number">10</span> * cap / <span class="lini-tok-number">3</span><span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">2</span> * cap<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>quarter<span class="lini-tok-punct">,</span> <span class="lini-tok-number">0</span><span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span>cap / <span class="lini-tok-number">2</span><span class="lini-tok-punct">)</span>
+        close<span class="lini-tok-punct">(</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-prop">mirror</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">y-axis</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">fill</span><span class="lini-tok-punct">:</span> <span class="lini-tok-var">--lilac</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-comment">// The `i`'s stem, dotted — one dash, then three of it. It stands on the `l`'s</span>
+<span class="lini-tok-comment">// stem station mirrored, and fills the same run.</span>
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">sketch</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">dots</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">draw</span><span class="lini-tok-punct">:</span> move<span class="lini-tok-punct">(</span>stem - cap<span class="lini-tok-punct">,</span> -crown<span class="lini-tok-punct">)</span> down<span class="lini-tok-punct">(</span>dash<span class="lini-tok-punct">)</span> arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-number">-180</span><span class="lini-tok-punct">)</span> up<span class="lini-tok-punct">(</span>dash<span class="lini-tok-punct">)</span>
+        arc<span class="lini-tok-punct">(</span>cap<span class="lini-tok-punct">,</span> <span class="lini-tok-op">-</span><span class="lini-tok-number">180</span><span class="lini-tok-punct">)</span> close<span class="lini-tok-punct">(</span><span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span>
+  <span class="lini-tok-prop">pattern</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">grid</span><span class="lini-tok-punct">(</span><span class="lini-tok-number">1</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">3</span><span class="lini-tok-punct">,</span> <span class="lini-tok-number">0</span><span class="lini-tok-punct">,</span> pitch<span class="lini-tok-punct">)</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">opacity</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">0.75</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+--- stderr

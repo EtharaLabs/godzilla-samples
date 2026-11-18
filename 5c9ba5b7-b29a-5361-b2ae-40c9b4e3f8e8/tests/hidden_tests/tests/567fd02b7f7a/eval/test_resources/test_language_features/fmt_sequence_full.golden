@@ -1,0 +1,27 @@
+exit: 0
+--- stdout
+{
+  layout: sequence;
+}
+
+|box#u| "User"
+|box#a| "API"
+|cyl#d| "DB"
+u -> a "login"
+|loop| "retry" [
+  a -> d "query"
+  d --> a "rows"
+]
+|alt| "ok?" [
+  a --> u "200"
+  |else| "no"
+  a --> u "401"
+]
+|opt| "cache" [
+  a -> a "memo"
+]
+|note| "async" { place: over a d; }
+|note| "left" { place: left u; }
+a ~> d "log"
+
+--- stderr

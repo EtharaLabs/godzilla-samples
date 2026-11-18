@@ -1,0 +1,34 @@
+exit: 1
+--- stdout ---
+{
+  "file": "e.lini",
+  "diagnostics": [
+    {
+      "code": "V001",
+      "family": "unknown-property",
+      "severity": "error",
+      "message": "unknown property 'colr'; did you mean 'color'?",
+      "span": {
+        "start": 14,
+        "end": 23,
+        "line": 1,
+        "col": 15,
+        "endLine": 1,
+        "endCol": 24
+      },
+      "suggestion": {
+        "span": {
+          "start": 14,
+          "end": 18,
+          "line": 1,
+          "col": 15,
+          "endLine": 1,
+          "endCol": 19
+        },
+        "replacement": "color",
+        "applicability": "machine-applicable"
+      }
+    }
+  ]
+}
+--- stderr ---

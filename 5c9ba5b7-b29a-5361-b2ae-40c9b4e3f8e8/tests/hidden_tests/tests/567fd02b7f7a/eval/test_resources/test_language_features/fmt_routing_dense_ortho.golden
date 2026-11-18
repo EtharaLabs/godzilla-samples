@@ -1,0 +1,26 @@
+exit: 0
+--- stdout
+{
+  layout: grid; columns: repeat(3); gap: 30;
+}
+
+|box#a|
+|box#b|
+|box#c|
+|box#d|
+|box#e|
+|box#f|
+|box#g|
+|box#h|
+|box#i|
+
+a -> i
+c -> g
+b -> h
+d -> f
+a:right -> c:left
+g:top -> a:bottom
+e -> e
+a & b & c -> e
+
+--- stderr

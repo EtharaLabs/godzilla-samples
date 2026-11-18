@@ -1,0 +1,160 @@
+exit: 0
+--- stdout ---
+// The architectural vocabulary at one glance [SPEC 15.11] — every wall look,
+// every door pose and symbol, the windows, the flight, and all six fixture
+// families with every `symbol:` variant, drawn at 1:50. A floorplan is a
+// drawing scope, so there is no track grid to lay a catalogue on: each piece is
+// datum-placed with `translate:` and each wall is drawn where it stands. The
+// true-size law does the sizing — a tub is 1700 × 750 mm and a `|door|` left to
+// itself is 900 mm wide, whatever the file drafts in.
+{
+  density: 4; font-size: 10;
+  |head::block| {
+    layout: flow; align: center; font-size: 12; letter-spacing: 1;
+  }
+  |cap::block| { layout: flow; align: center; color: --muted; }
+}
+
+|floorplan#parts| "THE FLOORPLAN PARTS — SPEC 15.11" { unit: m; scale: 0.02; } [
+
+  // ── Walls. A `|wall|`'s `draw:` is the **centreline**; `thickness:` offsets
+  // it half either way into the outline that takes the paint — mitred at the
+  // corners, bevelled past miter limit 4, concentric round an `arc()`.
+  |head| { translate: -3.7 0; } [ "WALLS" ]
+  |wall| { draw: move(-1.2, 0) right(2.4); }
+  |partition| { draw: move(1.5, 0) right(2.4); }
+  |wall| { draw: move(4.2, 0) right(2.4); thickness: 0.4; }
+  |wall| {
+    draw: move(6.9, 0) right(2.4);
+    fill: --bg; stroke: --stroke-dark; stroke-width: 1;
+  }
+  |wall| {
+    draw: move(9.6, 0) right(2.4);
+    fill: hatch(45); stroke: --stroke-dark; stroke-width: 1;
+  }
+  |wall| { draw: move(12.9, -0.5) right(1.2) down(1); }
+  |wall| { draw: move(15.1, 0.25) arc(2.2, 0, 1.8); }
+  |cap| { translate: 0 1.3; } [ "solid · 200" ]
+  |cap| { translate: 2.7 1.3; } [ "|partition| · 100" ]
+  |cap| { translate: 5.4 1.3; } [ "thickness: 0.4" ]
+  |cap| { translate: 8.1 1.3; } [ "fill: --bg" ]
+  |cap| { translate: 10.8 1.3; } [ "hatch(45) section" ]
+  |cap| { translate: 13.5 1.3; } [ "mitred corner" ]
+  |cap| { translate: 16.2 1.3; } [ "arc · concentric" ]
+
+  // ── Doors. `hinge:` picks the jamb by the segment's draw direction and
+  // `swing:` the side the leaf opens toward — `left` is the left of the pen's
+  // travel, so on these east-running walls it opens north. The chrome is
+  // generated: a leaf at 90° open plus its quarter arc, two mirrored halves for
+  // `double`, and two overlapping panels for `sliding`, which hangs no leaf. An
+  // opening's own text is its **schedule tag**, seated beside the gap on the
+  // face the leaf never sweeps — the last cell wears one.
+  |head| { translate: -3.7 2.9; } [ "DOORS" ]
+  |wall| { draw: move(-1.2, 2.9) right(2.4):run; } [
+    |door| { on: run; at: 0.75; hinge: start; swing: left; }
+  ]
+  |wall| { draw: move(1.5, 2.9) right(2.4):run; } [
+    |door| { on: run; at: 0.75; hinge: start; swing: right; }
+  ]
+  |wall| { draw: move(4.2, 2.9) right(2.4):run; } [
+    |door| { on: run; at: 0.75; hinge: end; swing: left; }
+  ]
+  |wall| { draw: move(6.9, 2.9) right(2.4):run; } [
+    |door| { on: run; at: 0.75; hinge: end; swing: right; }
+  ]
+  |wall| { draw: move(9.6, 2.9) right(2.4):run; } [
+    |door| { on: run; at: 0.45; width: 1.5; symbol: double; }
+  ]
+  |wall| { draw: move(12.3, 2.9) right(2.4):run; } [
+    |door| { on: run; at: 0.3; width: 1.8; symbol: sliding; }
+  ]
+  |partition| { draw: move(15, 2.9) right(2.4):run; } [
+    |door| "D1" { on: run; at: 0.75; }
+  ]
+  |cap| { translate: 0 4.25; } [ "start · left" ]
+  |cap| { translate: 2.7 4.25; } [ "start · right" ]
+  |cap| { translate: 5.4 4.25; } [ "end · left" ]
+  |cap| { translate: 8.1 4.25; } [ "end · right" ]
+  |cap| { translate: 10.8 4.25; } [ "symbol: double" ]
+  |cap| { translate: 13.5 4.25; } [ "symbol: sliding" ]
+  |cap| { translate: 16.2 4.25; } [ "|partition| · schedule tag" ]
+
+  // ── A window draws its sill pair across the gap at the thickness's thirds;
+  // openings share a run freely as long as they never overlap. A flight draws
+  // `steps` treads at a 250 mm going, plus the up arrow.
+  |head| { translate: -3.7 6; } [ "WINDOWS · STAIRS" ]
+  |wall| { draw: move(-1.2, 6) right(2.4):run; } [
+    |window| { on: run; at: 0.6; }
+  ]
+  |wall| { draw: move(1.5, 6) right(2.4):run; } [
+    |window| { on: run; at: 0.2; width: 2; }
+  ]
+  |partition| { draw: move(4.2, 6) right(2.4):run; } [
+    |window| { on: run; at: 0.6; }
+  ]
+  |wall| { draw: move(6.9, 6) right(2.4):run; } [
+    |door| { on: run; at: 0.2; width: 0.7; }
+    |window| { on: run; at: 1.2; width: 1; }
+  ]
+  // the two flights stand on the row's baseline, so every caption in the row
+  // sits on one line however tall the piece above it is
+  |stairs| { steps: 4; translate: 10.8 6.6; }
+  |stairs| { steps: 8; translate: 13.5 6.1; }
+  |cap| { translate: 0 7.35; } [ "1200 default" ]
+  |cap| { translate: 2.7 7.35; } [ "width: 2" ]
+  |cap| { translate: 5.4 7.35; } [ "in a |partition|" ]
+  |cap| { translate: 8.1 7.35; } [ "two on one run" ]
+  |cap| { translate: 10.8 7.35; } [ "steps: 4" ]
+  |cap| { translate: 13.5 7.35; } [ "steps: 8" ]
+
+  // ── The furniture. Every body is one path on the fixture's own node, filled
+  // `--bg` so it masks the floor under it; the smart label reads **beside** the
+  // body, like a discrete's value — so a row seats its pieces on one baseline
+  // and their labels line up without a caption being written at all. A bed is
+  // named for its mattress: `queen` is what a bare `|bed|` draws.
+  |head| { translate: -3.7 9.4; } [ "BEDS" ]
+  |bed| "queen" { translate: 0 9.4; }
+  |bed| "king" { symbol: king; translate: 2.7 9.4; }
+  |bed| "double" { symbol: double; translate: 5.4 9.45; }
+  |bed| "single" { symbol: single; translate: 8.1 9.4; }
+
+  // One anatomy at four widths — outline, then the run tracing arm → back →
+  // arm; `one` is the armchair, `corner` folds the same two strokes round an L.
+  // The bar `stool` is the family's one-stroke member: a plain round seat.
+  |head| { translate: -3.7 12.2; } [ "SOFAS" ]
+  |sofa| "three" { translate: 0 12.95; }
+  |sofa| "two" { symbol: two; translate: 2.7 12.95; }
+  |sofa| "one" { symbol: one; translate: 5.4 12.95; }
+  |sofa| "corner" { symbol: corner; translate: 8.1 12.2; }
+  |sofa| "stool" { symbol: stool; translate: 10.8 13.225; }
+
+  // A `|dining|` is sized by its **tabletop**; the chairs stand a small
+  // pull-back off its edge, and that pair of rows is what extends the bbox.
+  |head| { translate: -3.7 15.4; } [ "DINING" ]
+  |dining| "six" { translate: 0 15.445; }
+  |dining| "four" { symbol: four; translate: 2.7 15.495; }
+  |dining| "round" { symbol: round; translate: 5.4 15.395; }
+
+  // The sanitaryware. A toilet is **one** silhouette — the cistern's shoulders
+  // flowing into the rounded pan — and `double-sink` is one unit with two
+  // basins, the kitchen run's, never two sinks side by side.
+  |head| { translate: -3.7 17.45; } [ "BATH" ]
+  |bath| "tub" { translate: 0 17.525; }
+  |bath| "shower" { symbol: shower; translate: 2.7 17.45; }
+  |bath| "toilet" { symbol: toilet; translate: 5.4 17.7; }
+  |bath| "sink" { symbol: sink; translate: 8.1 17.7; }
+  |bath| "double-sink" { symbol: double-sink; translate: 10.8 17.675; }
+
+  // ── …and the kitchen boxes, whose label is the one that centres **in** the
+  // body — the F / W / DW convention every real plan writes.
+  |head| { translate: -3.7 18.9; } [ "APPLIANCES" ]
+  |appliance| { symbol: stove; translate: 0 18.9; }
+  |appliance| "F" { symbol: fridge; translate: 2.7 18.9; }
+  |appliance| "W" { symbol: washer; translate: 5.4 18.9; }
+  |appliance| "DW" { symbol: dishwasher; translate: 8.1 18.9; }
+  |cap| { translate: 0 19.55; } [ "stove" ]
+  |cap| { translate: 2.7 19.55; } [ "fridge" ]
+  |cap| { translate: 5.4 19.55; } [ "washer" ]
+  |cap| { translate: 8.1 19.55; } [ "dishwasher" ]
+]
+--- stderr ---

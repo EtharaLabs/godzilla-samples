@@ -1,0 +1,28 @@
+exit: 0
+--- stdout
+{
+  layout: drawing; padding: 20; font-size: 15; px-per-unit: 4;
+  .lini-line { fill: none; stroke: --stroke; stroke-width: 2; }
+  .lini-sketch { fill: --fill; stroke: --stroke-dark; stroke-width: 2; }
+  .lini-centerline {
+    stroke-style: center; stroke: --stroke-light; stroke-width: 1; fill: none;
+  }
+  .lini-shoulder { stroke: --stroke-dark; }
+}
+
+|sketch#shaft| .lini-sketch {
+  draw: move(0, 0) up(10) right(20):a down(3) right(30) chamfer(1) down(7);
+  revolve: x-axis;
+} [
+  |line| .lini-centerline.lini-line { chrome: x-axis; }
+  |line| .lini-shoulder.lini-line { chrome: edges; }
+]
+|sketch#plate| .lini-sketch {
+  draw: move(0, 30) right(40) up(10) arc(5, 90) left(20) close();
+  mirror: y-axis;
+}
+
+shaft:a (o)
+shaft:left (-) shaft:right { side: bottom; }
+
+--- stderr

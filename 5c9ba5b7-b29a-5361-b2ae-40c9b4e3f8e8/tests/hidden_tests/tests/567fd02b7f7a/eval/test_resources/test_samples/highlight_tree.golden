@@ -1,0 +1,51 @@
+exit: 0
+--- stdout
+<span class="lini-tok-punct">{</span>
+  <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">column</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">gap</span><span class="lini-tok-punct">:</span> <span class="lini-tok-number">64</span><span class="lini-tok-punct">;</span>
+<span class="lini-tok-punct">}</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">column</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Organisation&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">layout</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">tree</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">ceo</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;CEO&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">cto</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;CTO&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">backend</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Backend&quot;</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">frontend</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Frontend&quot;</span>
+    <span class="lini-tok-punct">]</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">coo</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;COO&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">ops</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Operations&quot;</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">qa</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Quality&quot;</span>
+      ops <span class="lini-tok-op">---</span> qa
+    <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">column</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Review flow&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">layout</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">tree</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">row</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">request</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Request&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">triage</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Triage&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">approve</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Approve&quot;</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">reject</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Reject&quot;</span>
+    <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">]</span>
+
+<span class="lini-tok-punct">|</span><span class="lini-tok-type">column</span><span class="lini-tok-punct">|</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">layout</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">tree</span><span class="lini-tok-punct">;</span> <span class="lini-tok-prop">direction</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">bilateral</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+  <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">plan</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Launch&quot;</span> <span class="lini-tok-punct">[</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">product</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Product&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">mvp</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;MVP&quot;</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">docs</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Docs&quot;</span>
+    <span class="lini-tok-punct">]</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">market</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Marketing&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">site</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Site&quot;</span>
+    <span class="lini-tok-punct">]</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">sales</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Sales&quot;</span> <span class="lini-tok-punct">{</span> <span class="lini-tok-prop">side</span><span class="lini-tok-punct">:</span> <span class="lini-tok-keyword">left</span><span class="lini-tok-punct">;</span> <span class="lini-tok-punct">}</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">leads</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Leads&quot;</span>
+    <span class="lini-tok-punct">]</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">ops</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Ops&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">legal</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Legal&quot;</span>
+    <span class="lini-tok-punct">]</span>
+    <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">team</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Team&quot;</span> <span class="lini-tok-punct">[</span>
+      <span class="lini-tok-punct">|</span><span class="lini-tok-type">topic</span><span class="lini-tok-punct">#</span><span class="lini-tok-type">hire</span><span class="lini-tok-punct">|</span> <span class="lini-tok-string">&quot;Hiring&quot;</span>
+    <span class="lini-tok-punct">]</span>
+  <span class="lini-tok-punct">]</span>
+<span class="lini-tok-punct">]</span>
+
+--- stderr

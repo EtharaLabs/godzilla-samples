@@ -1,0 +1,82 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 20; gap: 64; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-column { direction: column; }
+  .lini-topic {
+    fill: --fill; stroke: --stroke; stroke-width: 2; radius: 8; padding: 8 14; direction: column; gap: 12;
+  }
+}
+
+|block| .lini-column.lini-block { layout: tree; gap: 64 48; } [
+  "Organisation"
+  |block#ceo| .lini-topic.lini-block.lini-level-0 [
+    "CEO"
+    |block#cto| .lini-topic.lini-block.lini-level-1 [
+      "CTO"
+      |block#backend| .lini-topic.lini-block.lini-level-2 [ "Backend" ]
+      |block#frontend| .lini-topic.lini-block.lini-level-2 [ "Frontend" ]
+    ]
+    cto:bottom - cto.backend:top & cto.frontend:top
+    |block#coo| .lini-topic.lini-block.lini-level-1 [
+      "COO"
+      |block#ops| .lini-topic.lini-block.lini-level-2 [ "Operations" ]
+      |block#qa| .lini-topic.lini-block.lini-level-2 [ "Quality" ]
+      ops --- qa
+    ]
+    coo:bottom - coo.ops:top & coo.qa:top
+  ]
+  ceo:bottom - ceo.cto:top & ceo.coo:top
+]
+|block| .lini-column.lini-block { layout: tree; direction: row; gap: 64 48; } [
+  "Review flow"
+  |block#request| .lini-topic.lini-block.lini-level-0 [
+    "Request"
+    |block#triage| .lini-topic.lini-block.lini-level-1 [
+      "Triage"
+      |block#approve| .lini-topic.lini-block.lini-level-2 [ "Approve" ]
+      |block#reject| .lini-topic.lini-block.lini-level-2 [ "Reject" ]
+    ]
+    triage:right - triage.approve:left & triage.reject:left
+  ]
+  request:right - request.triage:left
+]
+|block| .lini-column.lini-block {
+  layout: tree; direction: bilateral; gap: 64 48;
+} [
+  |block#plan| .lini-topic.lini-block.lini-level-0 [
+    "Launch"
+    |block#product| .lini-topic.lini-block.lini-side-right.lini-level-1 [
+      "Product"
+      |block#mvp| .lini-topic.lini-block.lini-level-2 [ "MVP" ]
+      |block#docs| .lini-topic.lini-block.lini-level-2 [ "Docs" ]
+    ]
+    product:right - product.mvp:left & product.docs:left
+    |block#market| .lini-topic.lini-block.lini-side-right.lini-level-1 [
+      "Marketing"
+      |block#site| .lini-topic.lini-block.lini-level-2 [ "Site" ]
+    ]
+    market:right - market.site:left
+    |block#sales| .lini-topic.lini-block.lini-side-left.lini-level-1 [
+      "Sales"
+      |block#leads| .lini-topic.lini-block.lini-level-2 [ "Leads" ]
+    ]
+    sales:left - sales.leads:right
+    |block#ops| .lini-topic.lini-block.lini-side-left.lini-level-1 [
+      "Ops"
+      |block#legal| .lini-topic.lini-block.lini-level-2 [ "Legal" ]
+    ]
+    ops:left - ops.legal:right
+    |block#team| .lini-topic.lini-block.lini-side-left.lini-level-1 [
+      "Team"
+      |block#hire| .lini-topic.lini-block.lini-level-2 [ "Hiring" ]
+    ]
+    team:left - team.hire:right
+  ]
+  plan:right - plan.product:left & plan.market:left
+  plan:left - plan.sales:right & plan.ops:right & plan.team:right
+]
+--- stderr ---

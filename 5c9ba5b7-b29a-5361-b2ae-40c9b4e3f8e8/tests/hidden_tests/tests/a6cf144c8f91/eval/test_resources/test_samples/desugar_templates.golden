@@ -1,0 +1,96 @@
+exit: 0
+--- stdout ---
+{
+  layout: flow; padding: 26; gap: 22; font-size: 15; direction: column;
+  .lini-block {
+    fill: none; stroke: none; stroke-width: 2; padding: 0; gap: 36;
+  }
+  .lini-box {
+    fill: --fill; stroke: --stroke; stroke-width: 2; padding: 20; radius: 8; direction: column; gap: 12;
+  }
+  .lini-group {
+    stroke: --group-stroke; stroke-style: dashed; stroke-width: 1; fill: --group-fill; radius: 8; padding: 20;
+  }
+  .lini-caption {
+    pin: top left; translate: 0 -20; color: --caption-color; font-scale: 12 15; font-weight: --caption-font-weight;
+  }
+  .lini-footnote {
+    pin: bottom; translate: 0 19; font-scale: 12 15; color: --footer-color;
+  }
+  .lini-badge {
+    pin: top right; translate: 6 -6; radius: 8; padding: 2 6; shadow: 2 3 3; fill: --accent; color: --accent-text; font-size: 11; font-weight: normal;
+  }
+  .lini-row { direction: row; }
+  .lini-column { direction: column; }
+  .lini-table {
+    layout: grid; align: stretch; justify: stretch; gap: 1; gap-fill: --stroke; padding: 0; fill: none; stroke: --stroke; stroke-width: 2; stroke-style: solid; font-size: 14; font-weight: normal; scale: 1;
+  }
+  .lini-cell { padding: 4 8; }
+  .lini-header { fill: --header-fill; font-weight: semibold; }
+  .lini-panel {
+    direction: column; gap: 10; padding: 14; fill: --gray-wash; stroke: --gray-soft; radius: 8;
+  }
+  .lini-tile {
+    fill: --sky-soft; stroke: --sky-ink; color: --sky-ink; radius: 6;
+  }
+  .lini-align-start { align: start; }
+  .lini-align-end { align: end; }
+  .lini-justify-start { justify: start; }
+  .lini-justify-end { justify: end; }
+}
+
+|block| .lini-block { font-size: 18; font-weight: bold; } [ "Templates" ]
+|block#upper| .lini-row.lini-block { gap: 22; align: start; } [
+  |block#profile| .lini-panel.lini-group.lini-block [
+    |block| .lini-caption.lini-block [ "Profile" ]
+    |block#name| .lini-tile.lini-box.lini-block [ "Ada Lovelace" ]
+    |block#role| .lini-tile.lini-box.lini-block {
+      fill: --teal-soft; stroke: --teal-ink; color: --teal-ink;
+    } [ "Engineer" ]
+    |block| .lini-footnote.lini-caption.lini-block [ "since 1843" ]
+  ]
+  |block#nested| .lini-panel.lini-group.lini-block { direction: row; gap: 16; } [
+    |block| .lini-caption.lini-block [ "row + column" ]
+    |block| .lini-row.lini-block [
+      |block#r1| .lini-tile.lini-box.lini-block {
+        fill: --amber-soft; stroke: --amber-ink; color: --amber-ink;
+      } [ "a" ]
+      |block#r2| .lini-tile.lini-box.lini-block {
+        fill: --amber-soft; stroke: --amber-ink; color: --amber-ink;
+      } [ "b" ]
+    ]
+    |block| .lini-column.lini-block [
+      |block#c1| .lini-tile.lini-box.lini-block {
+        fill: --rose-soft; stroke: --rose-ink; color: --rose-ink;
+      } [ "p" ]
+      |block#c2| .lini-tile.lini-box.lini-block {
+        fill: --rose-soft; stroke: --rose-ink; color: --rose-ink;
+      } [ "q" ]
+    ]
+  ]
+]
+|block#lower| .lini-row.lini-block { gap: 22; align: start; } [
+  |block#svc| .lini-tile.lini-box.lini-block {
+    width: 150; height: 70; fill: --teal-soft; stroke: --teal-ink; color: --teal-ink;
+  } [
+    "Service"
+    |block| .lini-badge.lini-block [ "NEW" ]
+  ]
+  |block#basket| .lini-table.lini-group.lini-block {
+    columns: 80, 56, 70; stroke: --gray-ink;
+  } [
+    |block| .lini-cell.lini-block [ "Fruit" ]
+    |block| .lini-cell.lini-block [ "Qty" ]
+    |block| .lini-cell.lini-block [ "Note" ]
+    |block| .lini-cell.lini-block [ "Apple" ]
+    |block| .lini-cell.lini-block [ "12" ]
+    |block| .lini-cell.lini-block [ "fresh" ]
+    |block| .lini-cell.lini-block [ "Mango" ]
+    |block| .lini-cell.lini-block [ "3" ]
+    |block| .lini-cell.lini-block [ "ripe" ]
+  ]
+  |block#docs| .lini-tile.lini-box.lini-block {
+    href: "https://example.com"; width: 96; height: 70; fill: --purple-soft; stroke: --purple-ink; color: --purple-ink;
+  } [ "Docs" ]
+]
+--- stderr ---
