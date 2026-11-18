@@ -1,0 +1,700 @@
+   2.5      OK
+=== draw on |sketch|
+   red      R000 [11..20] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   1        R000 [11..18] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   0        R000 [11..18] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   -1       R000 [11..19] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   1 2      R000 [11..20] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   1 2 3    R000 [11..22] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   1, 2     R000 [11..21] 'draw' is one run of pen calls — commas belong inside call arguments
+   "s"      R000 [11..20] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   5%       V005 [11..19] 'draw' takes a number — a '%' is a colour component
+   --x      R000 [11..20] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   foo      R000 [11..20] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   (1+2)    R000 [11..22] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   none     R000 [11..21] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   auto     R000 [11..21] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+   2.5      R000 [11..20] 'draw' holds pen calls and ':segment' points — see SPEC 15.3
+=== drawing-number on |title-block|
+   red      R000 [16..35] 'drawing-number' takes a quoted string — write drawing-number: "…"
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [16..36] 'drawing-number' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [16..34] 'drawing-number' takes a number — a '%' is a colour component
+   --x      OK
+   foo      R000 [16..35] 'drawing-number' takes a quoted string — write drawing-number: "…"
+   (1+2)    OK
+   none     R000 [16..36] 'drawing-number' takes a quoted string — write drawing-number: "…"
+   auto     R000 [16..36] 'drawing-number' takes a quoted string — write drawing-number: "…"
+   2.5      OK
+=== facing on |plane|
+   1, 2     V005 [10..22] 'facing' takes one value, not a comma list
+   5%       V005 [10..20] 'facing' takes a number — a '%' is a colour component
+=== fill on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..18] 'fill' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..16] 'fill' takes a number — a '%' is a colour component
+   --x      OK
+   foo      V010 [8..17] invalid color 'foo'
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== fit on |icon|
+   red      R000 [0..19] 'fit' must be auto, contain, cover, or stretch
+   1        R000 [0..17] 'fit' must be auto, contain, cover, or stretch
+   0        R000 [0..17] 'fit' must be auto, contain, cover, or stretch
+   -1       R000 [0..18] 'fit' must be auto, contain, cover, or stretch
+   1 2      R000 [0..19] 'fit' must be auto, contain, cover, or stretch
+   1 2 3    R000 [0..21] 'fit' must be auto, contain, cover, or stretch
+   1, 2     V005 [9..18] 'fit' takes one value, not a comma list
+   "s"      R000 [0..19] 'fit' must be auto, contain, cover, or stretch
+   5%       V005 [9..16] 'fit' takes a number — a '%' is a colour component
+   --x      R000 [0..19] 'fit' must be auto, contain, cover, or stretch
+   foo      R000 [0..19] 'fit' must be auto, contain, cover, or stretch
+   (1+2)    R000 [0..21] 'fit' must be auto, contain, cover, or stretch
+   none     R000 [0..20] 'fit' must be auto, contain, cover, or stretch
+   auto     R000 [0..20] '|icon|' needs a 'symbol' (e.g. { symbol: heart })
+   2.5      R000 [0..19] 'fit' must be auto, contain, cover, or stretch
+=== fn on |line|
+   1 2      R000 [9..16] 'fn' segments are comma-separated — 'fn: (u*10), 5, (2*u)'
+   1 2 3    R000 [9..18] 'fn' segments are comma-separated — 'fn: (u*10), 5, (2*u)'
+   "s"      R000 [9..16] 'fn' takes an expression, a call, a name, or a constant
+   5%       V005 [9..15] 'fn' takes a number — a '%' is a colour component
+   --x      R000 [9..16] 'fn' takes an expression, a call, a name, or a constant
+=== font-family on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..25] 'font-family' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..23] 'font-family' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== font-size on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..23] 'font-size' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..21] 'font-size' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== font-style on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..24] 'font-style' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..22] 'font-style' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== font-weight on |box|
+   red      OK
+   1        V005 [8..22] 'font-weight' takes normal, medium, semibold, bold, or 400, 500, 600, 700
+   0        V005 [8..22] 'font-weight' takes normal, medium, semibold, bold, or 400, 500, 600, 700
+   -1       V005 [8..23] 'font-weight' takes normal, medium, semibold, bold, or 400, 500, 600, 700
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..25] 'font-weight' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..23] 'font-weight' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      V005 [8..24] 'font-weight' takes normal, medium, semibold, bold, or 400, 500, 600, 700
+=== format on |line|
+   1, 2     V005 [9..21] 'format' takes one value, not a comma list
+   5%       V005 [9..19] 'format' takes a number — a '%' is a colour component
+=== gap on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..17] 'gap' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..15] 'gap' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== gap-fill on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..22] 'gap-fill' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..20] 'gap-fill' takes a number — a '%' is a colour component
+   --x      OK
+   foo      V010 [8..21] invalid color 'foo'
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== gridlines on |axis|
+   1, 2     V005 [9..24] 'gridlines' takes one value, not a comma list
+   5%       V005 [9..22] 'gridlines' takes a number — a '%' is a colour component
+=== height on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..20] 'height' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..18] 'height' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== hinge on |box|
+   red      V005 [8..18] 'hinge' hangs the leaf at the segment's start or end
+   1        V005 [8..16] 'hinge' hangs the leaf at the segment's start or end
+   0        V005 [8..16] 'hinge' hangs the leaf at the segment's start or end
+   -1       V005 [8..17] 'hinge' hangs the leaf at the segment's start or end
+   1 2      V005 [8..18] 'hinge' hangs the leaf at the segment's start or end
+   1 2 3    V005 [8..20] 'hinge' hangs the leaf at the segment's start or end
+   1, 2     V005 [8..19] 'hinge' takes one value, not a comma list
+   "s"      V005 [8..18] 'hinge' hangs the leaf at the segment's start or end
+   5%       V005 [8..17] 'hinge' hangs the leaf at the segment's start or end
+   --x      V005 [8..18] 'hinge' hangs the leaf at the segment's start or end
+   foo      V005 [8..18] 'hinge' hangs the leaf at the segment's start or end
+   (1+2)    V005 [8..20] 'hinge' hangs the leaf at the segment's start or end
+   none     V005 [8..19] 'hinge' hangs the leaf at the segment's start or end
+   auto     V005 [8..19] 'hinge' hangs the leaf at the segment's start or end
+   2.5      V005 [8..18] 'hinge' hangs the leaf at the segment's start or end
+=== hint on |box|
+   red      R000 [8..17] 'hint' takes a quoted string — write hint: "…"
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..18] 'hint' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..16] 'hint' takes a number — a '%' is a colour component
+   --x      OK
+   foo      R000 [8..17] 'hint' takes a quoted string — write hint: "…"
+   (1+2)    OK
+   none     R000 [8..18] 'hint' takes a quoted string — write hint: "…"
+   auto     R000 [8..18] 'hint' takes a quoted string — write hint: "…"
+   2.5      OK
+=== hole on |pie|
+   red      Y000 [0..0] 'hole' is a fraction 0..1
+   1        Y000 [0..0] 'hole' is a fraction 0..1
+   0        Y000 [0..17] a pie needs at least one '|slice|'
+   -1       Y000 [0..0] 'hole' is a fraction 0..1
+   1 2      Y000 [0..0] 'hole' is a fraction 0..1
+   1 2 3    Y000 [0..0] 'hole' is a fraction 0..1
+   1, 2     V005 [8..18] 'hole' takes one value, not a comma list
+   "s"      Y000 [0..0] 'hole' is a fraction 0..1
+   5%       V005 [8..16] 'hole' takes a number — a '%' is a colour component
+   --x      Y000 [0..0] 'hole' is a fraction 0..1
+   foo      Y000 [0..0] 'hole' is a fraction 0..1
+   (1+2)    Y000 [0..0] 'hole' is a fraction 0..1
+   none     Y000 [0..0] 'hole' is a fraction 0..1
+   auto     Y000 [0..0] 'hole' is a fraction 0..1
+   2.5      Y000 [0..0] 'hole' is a fraction 0..1
+=== href on |box|
+   red      R000 [8..17] 'href' takes a quoted string — write href: "…"
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..18] 'href' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..16] 'href' takes a number — a '%' is a colour component
+   --x      OK
+   foo      R000 [8..17] 'href' takes a quoted string — write href: "…"
+   (1+2)    OK
+   none     R000 [8..18] 'href' takes a quoted string — write href: "…"
+   auto     R000 [8..18] 'href' takes a quoted string — write href: "…"
+   2.5      OK
+=== justify on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      R013 [8..20] 'justify' takes comma-separated values — 'justify: start, center, end'
+   1 2 3    R013 [8..22] 'justify' takes comma-separated values — 'justify: start, center, end'
+   1, 2     OK
+   "s"      OK
+   5%       V005 [8..19] 'justify' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== labels on |line|
+   red      R000 [9..20] 'labels' takes a quoted string — write labels: "…"
+   1 2      R013 [9..20] 'labels' takes comma-separated values — 'labels: "a", "b"'
+   1 2 3    R013 [9..22] 'labels' takes comma-separated values — 'labels: "a", "b"'
+   5%       V005 [9..19] 'labels' takes a number — a '%' is a colour component
+   foo      R000 [9..20] 'labels' takes a quoted string — write labels: "…"
+   none     R000 [9..21] 'labels' takes a quoted string — write labels: "…"
+   auto     R000 [9..21] 'labels' takes a quoted string — write labels: "…"
+=== layer on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..19] 'layer' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..17] 'layer' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== layout on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..20] 'layout' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..18] 'layout' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== legend on |box|
+   red      V011 [8..19] 'legend' is named but not built yet — see SPEC 24
+   1        V011 [8..17] 'legend' is named but not built yet — see SPEC 24
+   0        V011 [8..17] 'legend' is named but not built yet — see SPEC 24
+   -1       V011 [8..18] 'legend' is named but not built yet — see SPEC 24
+   1 2      V011 [8..19] 'legend' is named but not built yet — see SPEC 24
+   1 2 3    V011 [8..21] 'legend' is named but not built yet — see SPEC 24
+   1, 2     V011 [8..20] 'legend' is named but not built yet — see SPEC 24
+   "s"      V011 [8..19] 'legend' is named but not built yet — see SPEC 24
+   5%       V011 [8..18] 'legend' is named but not built yet — see SPEC 24
+   --x      V011 [8..19] 'legend' is named but not built yet — see SPEC 24
+   foo      V011 [8..19] 'legend' is named but not built yet — see SPEC 24
+   (1+2)    V011 [8..21] 'legend' is named but not built yet — see SPEC 24
+   none     V011 [8..20] 'legend' is named but not built yet — see SPEC 24
+   auto     V011 [8..20] 'legend' is named but not built yet — see SPEC 24
+   2.5      V011 [8..19] 'legend' is named but not built yet — see SPEC 24
+=== letter-spacing on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..28] 'letter-spacing' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..26] 'letter-spacing' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== line-spacing on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..26] 'line-spacing' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..24] 'line-spacing' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== marker on |line|
+   red      R000 [0..22] invalid marker value 'red'
+   1        R000 [0..20] marker requires an identifier value
+   0        R000 [0..20] marker requires an identifier value
+   -1       R000 [0..21] marker requires an identifier value
+   1 2      R000 [0..22] marker requires an identifier value
+   1 2 3    R000 [0..24] marker requires an identifier value
+   1, 2     V005 [9..21] 'marker' takes one value, not a comma list
+   "s"      R000 [0..22] marker requires an identifier value
+   5%       V005 [9..19] 'marker' takes a number — a '%' is a colour component
+   --x      R000 [0..22] marker requires an identifier value
+   foo      R000 [0..22] invalid marker value 'foo'
+   (1+2)    R000 [0..24] marker requires an identifier value
+   auto     R000 [0..23] invalid marker value 'auto'
+   2.5      R000 [0..22] marker requires an identifier value
+=== marker-end on |line|
+   red      R000 [0..26] invalid marker value 'red'
+   1        R000 [0..24] marker requires an identifier value
+   0        R000 [0..24] marker requires an identifier value
+   -1       R000 [0..25] marker requires an identifier value
+   1 2      R000 [0..26] marker requires an identifier value
+   1 2 3    R000 [0..28] marker requires an identifier value
+   1, 2     V005 [9..25] 'marker-end' takes one value, not a comma list
+   "s"      R000 [0..26] marker requires an identifier value
+   5%       V005 [9..23] 'marker-end' takes a number — a '%' is a colour component
+   --x      R000 [0..26] marker requires an identifier value
+   foo      R000 [0..26] invalid marker value 'foo'
+   (1+2)    R000 [0..28] marker requires an identifier value
+   auto     R000 [0..27] invalid marker value 'auto'
+   2.5      R000 [0..26] marker requires an identifier value
+=== marker-start on |line|
+   red      R000 [0..28] invalid marker value 'red'
+   1        R000 [0..26] marker requires an identifier value
+   0        R000 [0..26] marker requires an identifier value
+   -1       R000 [0..27] marker requires an identifier value
+   1 2      R000 [0..28] marker requires an identifier value
+   1 2 3    R000 [0..30] marker requires an identifier value
+   1, 2     V005 [9..27] 'marker-start' takes one value, not a comma list
+   "s"      R000 [0..28] marker requires an identifier value
+   5%       V005 [9..25] 'marker-start' takes a number — a '%' is a colour component
+   --x      R000 [0..28] marker requires an identifier value
+   foo      R000 [0..28] invalid marker value 'foo'
+   (1+2)    R000 [0..30] marker requires an identifier value
+   auto     R000 [0..29] invalid marker value 'auto'
+   2.5      R000 [0..28] marker requires an identifier value
+=== material on |feature-control|
+   1, 2     V005 [20..34] 'material' takes one value, not a comma list
+   5%       V005 [20..32] 'material' takes a number — a '%' is a colour component
+=== max-width on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..23] 'max-width' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..21] 'max-width' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== mirror on |box|
+   red      Y000 [0..21] 'mirror' takes x-axis, y-axis, a bearing, or none
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..20] 'mirror' takes one value, not a comma list
+   "s"      Y000 [0..21] 'mirror' takes x-axis, y-axis, a bearing, or none
+   5%       V005 [8..18] 'mirror' takes a number — a '%' is a colour component
+   --x      Y000 [0..21] 'mirror' takes x-axis, y-axis, a bearing, or none
+   foo      Y000 [0..21] 'mirror' takes x-axis, y-axis, a bearing, or none
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== modifiers on |feature-control|
+   5%       V005 [20..33] 'modifiers' takes a number — a '%' is a colour component
+=== multiple on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..22] 'multiple' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..20] 'multiple' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== number on |pin|
+   red      V005 [8..19] 'number' takes an integer
+   1 2      V005 [8..19] 'number' takes an integer
+   1 2 3    V005 [8..21] 'number' takes an integer
+   1, 2     V005 [8..20] 'number' takes one value, not a comma list
+   "s"      V005 [8..19] 'number' takes an integer
+   5%       V005 [8..18] 'number' takes an integer
+   --x      V005 [8..19] 'number' takes an integer
+   foo      V005 [8..19] 'number' takes an integer
+   (1+2)    V005 [8..21] 'number' takes an integer
+   none     V005 [8..20] 'number' takes an integer
+   auto     V005 [8..20] 'number' takes an integer
+   2.5      V005 [8..19] 'number' takes an integer
+=== of on |drawing|
+   red      Y000 [0..21] 'of' finds no marker 'red'
+   1        Y000 [0..19] a drawing needs at least one geometry child
+   0        Y000 [0..19] a drawing needs at least one geometry child
+   -1       Y000 [0..20] a drawing needs at least one geometry child
+   1 2      Y000 [0..21] a drawing needs at least one geometry child
+   1 2 3    Y000 [0..23] a drawing needs at least one geometry child
+   1, 2     V005 [12..20] 'of' takes one value, not a comma list
+   "s"      Y000 [0..21] a drawing needs at least one geometry child
+   5%       V005 [12..18] 'of' takes a number — a '%' is a colour component
+   --x      Y000 [0..21] a drawing needs at least one geometry child
+   foo      Y000 [0..21] 'of' finds no marker 'foo'
+   (1+2)    Y000 [0..23] a drawing needs at least one geometry child
+   none     Y000 [0..22] 'of' finds no marker 'none'
+   auto     Y000 [0..22] 'of' finds no marker 'auto'
+   2.5      Y000 [0..21] a drawing needs at least one geometry child
+=== on on |door|
+   1, 2     V005 [9..17] 'on' takes one value, not a comma list
+   5%       V005 [9..15] 'on' takes a number — a '%' is a colour component
+=== opacity on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       V005 [8..19] 'opacity' is a fraction 0..1
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..21] 'opacity' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..19] 'opacity' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      V005 [8..20] 'opacity' is a fraction 0..1
+=== padding on |box|
+   red      Y000 [0..22] expected a number or tuple, got identifier
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    Y000 [0..24] expected 1, 2, or 4 values, got 3
+   1, 2     V005 [8..21] 'padding' takes one value, not a comma list
+   "s"      Y000 [0..22] expected a number or tuple, got string
+   5%       V005 [8..19] 'padding' takes a number — a '%' is a colour component
+   --x      Y000 [0..22] var(--lini-x) is a visual variable; layout attrs require a number or tuple
+   foo      Y000 [0..22] expected a number or tuple, got identifier
+   (1+2)    OK
+   none     Y000 [0..23] expected a number or tuple, got identifier
+   auto     Y000 [0..23] expected a number or tuple, got identifier
+   2.5      OK
+=== path on |path|
+   red      R000 [9..18] 'path' takes a quoted string — write path: "…"
+   1, 2     V005 [9..19] 'path' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [9..17] 'path' takes a number — a '%' is a colour component
+   foo      R000 [9..18] 'path' takes a quoted string — write path: "…"
+   none     R000 [9..19] 'path' takes a quoted string — write path: "…"
+   auto     R000 [9..19] 'path' takes a quoted string — write path: "…"
+=== pattern on |box|
+   red      R000 [8..20] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   1        R000 [8..18] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   0        R000 [8..18] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   -1       R000 [8..19] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   1 2      R000 [8..20] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   1 2 3    R000 [8..22] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   1, 2     R000 [8..21] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   "s"      R000 [8..20] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   5%       V005 [8..19] 'pattern' takes a number — a '%' is a colour component
+   --x      R000 [8..20] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   foo      R000 [8..20] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   (1+2)    R000 [8..22] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   none     R000 [8..21] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   auto     R000 [8..21] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+   2.5      R000 [8..20] 'pattern' takes grid(cols, rows, dx, dy) or radial(count, radius)
+=== pin on |box|
+   red      Y000 [0..18] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   1        Y000 [0..16] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   0        Y000 [0..16] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   -1       Y000 [0..17] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   1 2      Y000 [0..18] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   1 2 3    Y000 [0..20] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   1, 2     V005 [8..17] 'pin' takes one value, not a comma list
+   "s"      Y000 [0..18] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   5%       V005 [8..15] 'pin' takes a number — a '%' is a colour component
+   --x      Y000 [0..18] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   foo      Y000 [0..18] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   (1+2)    Y000 [0..20] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   none     OK
+   auto     Y000 [0..19] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+   2.5      Y000 [0..18] 'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')
+=== pins on |J|
+   red      V005 [6..15] 'pins' takes a count ≥ 1
+   0        V005 [6..13] 'pins' takes a count ≥ 1
+   -1       V005 [6..14] 'pins' takes a count ≥ 1
+   1 2      V005 [6..15] 'pins' takes a count ≥ 1
+   1 2 3    V005 [6..17] 'pins' takes a count ≥ 1
+   1, 2     V005 [6..16] 'pins' takes one value, not a comma list
+   "s"      V005 [6..15] 'pins' takes a count ≥ 1
+   5%       V005 [6..14] 'pins' takes a count ≥ 1
+   --x      V005 [6..15] 'pins' takes a count ≥ 1
+   foo      V005 [6..15] 'pins' takes a count ≥ 1
+   (1+2)    V005 [6..17] 'pins' takes a count ≥ 1
+   none     V005 [6..16] 'pins' takes a count ≥ 1
+   auto     V005 [6..16] 'pins' takes a count ≥ 1
+   2.5      V005 [6..15] 'pins' takes a count ≥ 1
+=== place on |note|
+   red      V007 [9..19] 'place' is valid only in a 'layout: sequence'
+   1        V007 [9..17] 'place' is valid only in a 'layout: sequence'
+   0        V007 [9..17] 'place' is valid only in a 'layout: sequence'
+   -1       V007 [9..18] 'place' is valid only in a 'layout: sequence'
+   1 2      V007 [9..19] 'place' is valid only in a 'layout: sequence'
+   1 2 3    V007 [9..21] 'place' is valid only in a 'layout: sequence'
+   1, 2     V005 [9..20] 'place' takes one value, not a comma list
+   "s"      V007 [9..19] 'place' is valid only in a 'layout: sequence'
+   5%       V005 [9..18] 'place' takes a number — a '%' is a colour component
+   --x      V007 [9..19] 'place' is valid only in a 'layout: sequence'
+   foo      V007 [9..19] 'place' is valid only in a 'layout: sequence'
+   (1+2)    V007 [9..21] 'place' is valid only in a 'layout: sequence'
+   none     V007 [9..20] 'place' is valid only in a 'layout: sequence'
+   auto     V007 [9..20] 'place' is valid only in a 'layout: sequence'
+   2.5      V007 [9..19] 'place' is valid only in a 'layout: sequence'
+=== points on |line|
+   red      Y000 [0..22] expected a number or tuple, got identifier
+   1        Y000 [0..20] expected a 2-tuple, got 1 value(s)
+   0        Y000 [0..20] expected a 2-tuple, got 1 value(s)
+   -1       Y000 [0..21] expected a 2-tuple, got 1 value(s)
+   1 2 3    Y000 [0..24] expected a 2-tuple, got 3 value(s)
+   1, 2     Y000 [0..23] expected a 2-tuple, got 1 value(s)
+   "s"      Y000 [0..22] expected a number or tuple, got string
+   5%       V005 [9..19] 'points' takes a number — a '%' is a colour component
+   --x      Y000 [0..22] var(--lini-x) is a visual variable; layout attrs require a number or tuple
+   foo      Y000 [0..22] expected a number or tuple, got identifier
+   (1+2)    Y000 [0..24] expected a 2-tuple, got 1 value(s)
+   none     Y000 [0..23] expected a number or tuple, got identifier
+   auto     Y000 [0..23] expected a number or tuple, got identifier
+   2.5      Y000 [0..22] expected a 2-tuple, got 1 value(s)
+=== prefix on |R|
+   red      R000 [6..17] 'prefix' takes a quoted string — write prefix: "…"
+   1, 2     V005 [6..18] 'prefix' takes one value, not a comma list
+   5%       V005 [6..16] 'prefix' takes a number — a '%' is a colour component
+   foo      R000 [6..17] 'prefix' takes a quoted string — write prefix: "…"
+   none     R000 [6..18] 'prefix' takes a quoted string — write prefix: "…"
+   auto     R000 [6..18] 'prefix' takes a quoted string — write prefix: "…"
+=== project on link
+   red      R000 [0..23] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   1        R000 [0..21] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   0        R000 [0..21] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   -1       R000 [0..22] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   1 2      R000 [0..23] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   1 2 3    R000 [0..25] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   1, 2     V005 [9..22] 'project' takes one value, not a comma list
+   "s"      R000 [0..23] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   5%       V005 [9..20] 'project' takes a number — a '%' is a colour component
+   --x      R000 [0..23] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   foo      R000 [0..23] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   (1+2)    R000 [0..25] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   none     R000 [0..24] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   auto     R000 [0..24] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+   2.5      R000 [0..23] 'project' picks a dimension's axis — it belongs in a 'layout: drawing' (or its 'floorplan' dialect)
+=== radius on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..20] 'radius' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..18] 'radius' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
+   2.5      OK
+=== range on |axis|
+   1, 2     V005 [9..20] 'range' takes one value, not a comma list
+   5%       V005 [9..18] 'range' takes a number — a '%' is a colour component
+=== reference on |title-block|
+   red      R000 [16..30] 'reference' takes a quoted string — write reference: "…"
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [16..31] 'reference' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [16..29] 'reference' takes a number — a '%' is a colour component
+   --x      OK
+   foo      R000 [16..30] 'reference' takes a quoted string — write reference: "…"
+   (1+2)    OK
+   none     R000 [16..31] 'reference' takes a quoted string — write reference: "…"
+   auto     R000 [16..31] 'reference' takes a quoted string — write reference: "…"
+   2.5      OK
+=== revision on |title-block|
+   red      R000 [16..29] 'revision' takes a quoted string — write revision: "…"
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [16..30] 'revision' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [16..28] 'revision' takes a number — a '%' is a colour component
+   --x      OK
+   foo      R000 [16..29] 'revision' takes a quoted string — write revision: "…"
+   (1+2)    OK
+   none     R000 [16..30] 'revision' takes a quoted string — write revision: "…"
+   auto     R000 [16..30] 'revision' takes a quoted string — write revision: "…"
+   2.5      OK
+=== revolve on |sketch|
+   1, 2     V005 [11..24] 'revolve' takes one value, not a comma list
+   5%       V005 [11..22] 'revolve' takes a number — a '%' is a colour component
+=== rotate on |box|
+   red      OK
+   1        OK
+   0        OK
+   -1       OK
+   1 2      OK
+   1 2 3    OK
+   1, 2     V005 [8..20] 'rotate' takes one value, not a comma list
+   "s"      OK
+   5%       V005 [8..18] 'rotate' takes a number — a '%' is a colour component
+   --x      OK
+   foo      OK
+   (1+2)    OK
+   none     OK
+   auto     OK
