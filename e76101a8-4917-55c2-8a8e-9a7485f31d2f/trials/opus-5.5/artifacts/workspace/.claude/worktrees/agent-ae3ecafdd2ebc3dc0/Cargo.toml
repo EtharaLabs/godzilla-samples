@@ -1,0 +1,20 @@
+[package]
+name = "bimcraft-cli"
+version = "0.10.0"
+edition = "2021"
+
+[[bin]]
+name = "bimcraft-cli"
+path = "src/main.rs"
+
+[dependencies]
+
+[profile.release]
+opt-level = 3
+debug = false
+panic = "unwind"
+codegen-units = 16
+incremental = true
+
+[profile.dev]
+opt-level = 1
