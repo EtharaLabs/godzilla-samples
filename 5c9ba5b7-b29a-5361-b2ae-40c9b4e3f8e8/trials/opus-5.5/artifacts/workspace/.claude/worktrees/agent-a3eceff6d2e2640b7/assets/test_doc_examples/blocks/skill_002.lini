@@ -1,0 +1,7 @@
+a -> b                          // 1 link (labels boxes into existence)
+a -> b -> c                     // chain: 2 links, every hop marked
+a -> b & c                      // fan-out — shares one trunk at a's side
+a & b -> c                      // fan-in
+|group#g| [ |box#child| "C" ]
+a:right -> g.child:left "label" // forced sides, path endpoint, label
+client -> |cyl#db|              // capsule endpoint: declare + link in one statement

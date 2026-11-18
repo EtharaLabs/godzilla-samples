@@ -1,0 +1,19 @@
+{ layout: sequence }
+
+|icon#user|   "user"            // an actor — any node is a participant
+|box#browser| "Browser"
+|box#api|     "API"
+|cyl#db|      "Sessions"
+
+user    ->  browser "click login"
+browser ->  api     "POST /login"
+api     ->  db      "lookup"
+db      --> api     "record"
+
+|alt| "password ok" [           // a frame: its [ ] holds the branch's messages
+  api     --> browser "200 + cookie"
+  browser --> user    "dashboard"
+  |else| "wrong"
+  api     --> browser "401"
+]
+|note| "rate-limited" { place: over api db }

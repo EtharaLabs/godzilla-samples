@@ -1,0 +1,9 @@
+{ layout: drawing; }
+|rect#plate| { width: 120; height: 70; } [
+  |hole#pin| { width: 10; translate: -35 20; pattern: grid(2, 1, 70, 0); }
+  |hidden#bore| { draw: move(-20, -35) down(70); }   // dashed interior geometry
+]
+plate:left (-) plate:right { side: bottom; }   // → 120
+plate:left (-) plate.pin { side: top; }        // → 25
+plate.pin (o)                                  // → 2× ⌀10
+plate.pin.2 <- "THRU"                          // leader to the 2nd pattern copy

@@ -1,0 +1,20 @@
+{                                          // the stylesheet — setup only
+  layout: grid;  columns: repeat(2);  gap: 30;   // scene config (root declarations)
+  --brand: #ff6600;                        // a themeable colour variable
+  w = 120;  scale(n) = (100 * 1.2^n);      // bindings — baked numbers / functions
+  |box| { radius: 6; }                     // a rule: style every box
+  |-| { stroke: --gray-deep; }             // a rule: style every link
+  .hot { stroke: --red-deep; }             // a class definition
+  |svc::box| { fill: --teal-wash; stroke: --teal-ink; }  // a define: new type over a base
+  |room::group| { gap: 40; } [             // a define with a BODY: intrinsic children + links,
+    |box#in| "in"; |box#out| "out"         //   re-materialised per instance; ids local,
+    in -> out "flows"                      //   reachable from outside as `garden.out`
+  ]
+}
+
+|svc#api| "API"                            // instances — the canvas
+|cyl#db| "Postgres" { fill: --rose-wash; }
+|room#garden|
+api -> db "queries" .hot                   // a link with a label and a worn class
+users -> api                               // undeclared id → auto-creates |box#users| "users"
+garden.out -> api                          // a dot-path into a body

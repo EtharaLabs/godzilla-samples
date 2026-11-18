@@ -1,0 +1,34 @@
+{ layout: floorplan; unit: m; scale: 0.02 }        // 1 : 50 — thickness defaults 200 mm
+
+|wall#outer| {
+  draw: move(0, 0) right(7.2):north down(4.8):east left(7.2):south close():west;
+} [
+  |window#w1| { on: north; at: 2.7; width: 1.6 }
+  |door#entry| { on: south; at: 1.05; width: 0.95; swing: right }
+  // 'south' was drawn leftward, so 'at' counts from its east end and the pen's
+  // left is the outside — 'right' opens the door into the flat
+]
+|partition#bathwall| {
+  draw: move(4.9, 0) down(2.3):face right(2.3):side;   // the bathroom corner
+} [
+  |door| { on: side; at: 0.15; width: 0.8 }            // 900 mm and 'hinge: start' by default
+]
+
+|bed|    { rotate: 90; translate: 1.15 1.05 }
+|sofa|   { symbol: two; rotate: 90; translate: 0.6 3.4 }
+|dining| { symbol: round; translate: 3.3 3.3 }
+|rect#counter| { width: 0.6; height: 1.4; translate: 6.8 3.2;
+                 fill: --bg; stroke: --stroke-dark; stroke-width: 1 }
+|appliance| "F" { symbol: fridge; translate: 6.8 2.8 }
+|bath| { symbol: shower; translate: 6.6 0.6 }
+|bath| { symbol: toilet; rotate: 90; translate: 5.35 0.5 }
+|bath| { symbol: sink;   rotate: 90; translate: 6.85 1.6 }
+
+"STUDIO 27 m²" { translate: 2.2 2.2 }
+
+// Every dimension reads a clear span, face to face — what a listing plan
+// publishes. 'face' runs south, so its 'out' face is the living side's.
+outer:west-in (-) bathwall:face-out { side: top }     // → 4.75 — the living space
+bathwall:face-in (-) outer:east-in { side: top }      // → 2.15 — the bathroom
+outer:west-in (-) outer:east-in { side: top }         // → 7 — the shell, clear
+outer:north-in (-) outer:south-in { side: right }     // → 4.6

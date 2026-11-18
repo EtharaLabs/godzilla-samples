@@ -1,0 +1,13 @@
+{ layout: sequence; }
+|box#user| "Customer" { fill: --rose-wash; stroke: --rose-deep; } [
+  |icon| { symbol: user; fill: none; stroke: --rose-deep; }
+]
+|box#shop| "Storefront" { fill: --sky-wash; stroke: --sky-deep; }
+|cyl#db| "Orders" { fill: --orange-wash; stroke: --orange-deep; }
+
+user -> shop "place order"
+|loop| "each item" [
+  shop -> db "reserve stock"
+  db --> shop "in stock"
+]
+|note| "rate-limited" { place: over shop db; }

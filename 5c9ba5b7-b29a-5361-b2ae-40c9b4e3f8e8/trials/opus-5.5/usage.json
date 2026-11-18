@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "note": "The agent ran through the Claude subscription bridge and the judge through the Codex (ChatGPT) bridge: cost_usd figures are API list-price estimates from token counts (the agent's as Harbor reported it, the judge's as rewardkit reported it), not charges.",
+  "phases": {
+    "trajectory": {
+      "model": "opus-5.5",
+      "source": "agent/trajectory.json final_metrics",
+      "tokens": {
+        "input": 4954275353,
+        "cache_read": 4926035412,
+        "output": 11956365
+      },
+      "cost_usd": 1365.512879400001
+    },
+    "judge": {
+      "source": "verifier/judge/reward-details.json (rewardkit's usage)",
+      "agent": "codex",
+      "model": "openai/gpt-6.1-sol",
+      "sessions": 3,
+      "tokens": {
+        "input": 2709847,
+        "cache_read": 2333056,
+        "output": 27825,
+        "reasoning": 10424
+      },
+      "cost_usd": 1.265138
+    }
+  }
+}

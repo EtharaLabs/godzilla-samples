@@ -1,0 +1,9 @@
+{                                               // the stylesheet — setup only
+  layout: grid;  columns: repeat(3);  gap: 30;  // scene config
+  |box| { radius: 6; }                          // a rule — style every box
+  .hot { stroke-width: 2; }                     // a class
+}
+
+|box#server| "Server" .hot                      // the canvas, two instances
+|box#client| "Client"
+server -> client "requests"                     // a link, with a label

@@ -1,0 +1,18 @@
+|chart| "Cycle time (s)" { categories: "15 cm³", "30 cm³", "50 cm³" } [
+  |bars| "1.8 kW" { data: 9, 15, 24; fill: --sky }
+  |bars| "2.3 kW" { data: 7, 13, 20; fill: --amber }
+]
+
+|chart| "Injection profile" [
+  |axis#bar| "Pressure (bar)" { side: left; range: 0 1100 }
+  |axis#x|   "Speed (mm/s)"   { side: bottom; range: 0 133 }
+  |area| "Pressure" { axis: bar; fn: (x <= 93 ? 1000 : 1000 - 319*((x-93)/40)); fill: --teal }
+  |band| { range: 93 133; axis: x; fill: --red }
+  |mark| "1000 bar @ 93" { at: 93; axis: x; color: --muted }
+]
+
+|pie| "Spend" { hole: 0.5 } [
+  |slice| "Ads"    { value: 40 }
+  |slice| "SEO"    { value: 30 }
+  |slice| "Direct" { value: 30 }
+]

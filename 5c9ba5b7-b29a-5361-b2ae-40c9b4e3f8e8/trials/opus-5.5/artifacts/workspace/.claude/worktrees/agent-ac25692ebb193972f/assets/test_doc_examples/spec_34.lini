@@ -1,0 +1,5 @@
+{ ramp(s) = min(100, 25 + 1.572*(x/s) + 0.0142*(x/s)^2); }
+|chart| [
+  |area| "Steel"    { fn: ramp(1) }
+  |line| "Aluminum" { fn: ramp(1/0.7) }
+]

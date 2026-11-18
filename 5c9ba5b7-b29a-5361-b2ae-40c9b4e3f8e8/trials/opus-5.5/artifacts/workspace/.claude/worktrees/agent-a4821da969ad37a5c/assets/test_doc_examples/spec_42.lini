@@ -1,0 +1,11 @@
+{ layout: drawing }                            // ratio 1, unit mm, density 4 — the defaults
+
+|sketch#body| {
+  draw: move(-80, 0)
+        up(14) right(50):neck fillet(3):r1 up(8) right(60):mid fillet(3) down(8) right(50) down(14);
+  revolve: x-axis;                             // a turned part: half → whole, axis + edge lines
+}
+
+body:left (-) body:right { side: bottom }      // → 160
+body:neck (o) { side: left; tol: h6 }          // → ⌀28 h6 — the surface, doubled about the axis
+body:r1 (o)                                    // → R3 — the fillet knows its radius

@@ -1,0 +1,66 @@
+// Every built-in template — group, caption, footnote, badge, row, column,
+// table (with its auto-header), link — on one captioned board, in palette colours.
+{
+  direction: column; gap: 22; padding: 26;
+
+  |panel::group| {
+    direction: column; gap: 10; padding: 14; fill: --gray-wash; stroke: --gray-soft; radius: 8;
+  }
+  |tile::box| {
+    fill: --sky-soft; stroke: --sky-ink; color: --sky-ink; radius: 6;
+  }
+}
+
+|block| "Templates" { font-size: 18; font-weight: bold; }
+
+|row#upper| { gap: 22; align: start; } [
+  // group with a caption (top edge) and a footnote (bottom edge)
+  |panel#profile| [
+    |caption| "Profile"
+    |tile#name| "Ada Lovelace"
+    |tile#role| "Engineer" {
+      fill: --teal-soft; stroke: --teal-ink; color: --teal-ink;
+    }
+    |footnote| "since 1843"
+  ]
+  // row + column nested inside a group
+  |panel#nested| { direction: row; gap: 16; } [
+    |caption| "row + column"
+    |row| [
+      |tile#r1| "a" {
+        fill: --amber-soft; stroke: --amber-ink; color: --amber-ink;
+      }
+      |tile#r2| "b" {
+        fill: --amber-soft; stroke: --amber-ink; color: --amber-ink;
+      }
+    ]
+    |column| [
+      |tile#c1| "p" {
+        fill: --rose-soft; stroke: --rose-ink; color: --rose-ink;
+      }
+      |tile#c2| "q" {
+        fill: --rose-soft; stroke: --rose-ink; color: --rose-ink;
+      }
+    ]
+  ]
+]
+
+|row#lower| { gap: 22; align: start; } [
+  // a box whose content is text + a badge
+  |tile#svc| {
+    width: 150; height: 70; fill: --teal-soft; stroke: --teal-ink; color: --teal-ink;
+  } [
+    "Service"
+    |badge| "NEW"
+  ]
+  // a table draws dividers and flows bare text into its tracks
+  |table#basket| { columns: 80, 56, 70; stroke: --gray-ink; } [
+    "Fruit" "Qty" "Note"
+    "Apple" "12"  "fresh"
+    "Mango" "3"   "ripe"
+  ]
+  // link wraps a shape in <a href>
+  |tile#docs| "Docs" {
+    href: "https://example.com"; width: 96; height: 70; fill: --purple-soft; stroke: --purple-ink; color: --purple-ink;
+  }
+]

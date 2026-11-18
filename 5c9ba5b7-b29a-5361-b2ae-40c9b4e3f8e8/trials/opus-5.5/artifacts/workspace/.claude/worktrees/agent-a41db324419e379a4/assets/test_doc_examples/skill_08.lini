@@ -1,0 +1,34 @@
+{ layout: floorplan; unit: m; scale: 0.02 }     // 1:50 — 80 px per metre
+
+|wall#outer| {                                  // draw: is the CENTRELINE
+  draw: move(0, 0) right(7.2):north down(4.8):east
+        left(7.2):south close():west;
+} [                                             // openings ride the wall's [ ]
+  |window|     { on: north; at: 2.7; width: 1.6 }
+  |door#entry| "D1" { on: south; at: 1.05; width: 0.95; swing: right }
+  // 'south' runs leftward: 'at' counts from its EAST end, and the pen's left
+  // is the outside — 'right' is what opens the door into the flat
+]
+|partition#bathwall| {                          // ends ON the shell, never across an opening
+  draw: move(4.9, 0) down(2.3):face right(2.3):side
+} [
+  |door| { on: side; at: 0.15; width: 0.8 }     // opens into the bathroom
+]
+
+|rect#counter| { width: 0.6; height: 1.4; translate: 6.8 3.2;
+                 fill: --bg; stroke: --stroke-dark; stroke-width: 1 }
+|bed|    { rotate: 90; translate: 1.15 1.05 }   // head to the west wall
+|sofa|   { symbol: two; rotate: 90; translate: 0.6 3.4 }
+|dining| { symbol: round; translate: 3.3 3.3 }
+|appliance| "F" { symbol: fridge; translate: 6.8 2.8 }
+|bath| { symbol: shower; translate: 6.6 0.6 }
+|bath| { symbol: toilet; rotate: 90; translate: 5.35 0.5 }   // 0° backs WEST
+"STUDIO 27 m²" { translate: 2.2 2.2 }           // room names are plain sheet text
+
+// Clear spans, face to face. 'face' runs south, so its 'out' face is the
+// living side's and its 'in' face the bathroom's — read them the other way
+// round and each dimension eats the partition.
+outer:west-in (-) bathwall:face-out { side: top }   // → 4.75 — the living space
+bathwall:face-in (-) outer:east-in { side: top }    // → 2.15 — the bathroom
+outer:west-in (-) outer:east-in { side: top }       // → 7 — the shell, clear
+outer:north-in (-) outer:south-in { side: right }   // → 4.6

@@ -1,0 +1,6 @@
+anchor = id { "." id } [ "." index ] [ ":" point ]
+index  = a 1-based pattern-copy number                      (15.4)
+point  = center                                            (the default)
+       | top | bottom | left | right                       (side midpoints)
+       | top-left | top-right | bottom-left | bottom-right  (corners)
+       | segment                                            (authored in draw:, 15.3)

@@ -1,0 +1,64 @@
+// Styling — the cascade (element rules < classes < inline), reusable class
+// bundles, visual modifiers, and inherited typography. Palette colours.
+{
+  direction: column; gap: 20; padding: 26;
+
+  // element rules: the lowest-specificity layer, one per shape type
+  |box| { radius: 6; fill: --sky-wash; stroke: --sky-ink; color: --sky-ink; }
+  |oval| {
+    stroke: --teal-ink; stroke-width: 2; fill: --teal-wash; color: --teal-ink;
+  }
+  |alert::oval| {
+    stroke: --red; fill: --red-wash; color: --red-ink; width: 84; height: 46;
+  }
+
+  // class bundles, applied with .name
+  .thin { stroke-width: 1; }
+  .bold { font-weight: bold; }
+  .power { stroke: --red; stroke-width: 2.5; }
+  .warn { stroke: --orange; stroke-width: 2; }
+  .ghost { opacity: 0.35; }
+}
+
+|block| "Styles" { font-size: 18; font-weight: bold; }
+
+// element rule, then + a class, then + an inline block — each wins over the last
+|group#cascade| { gap: 14; align: center; } [
+  |caption| "cascade"
+  |box| "element"
+  |box| "+ class" .warn
+  |box| "+ inline" .warn {
+    fill: --amber-wash; stroke: --amber-ink; color: --amber-ink;
+  }
+  |alert| "alert"
+]
+
+|group#classes| { gap: 14; } [
+  |caption| "classes"
+  |box| "thin" .thin
+  |box| "bold" .bold
+  |box| "power" .power
+  |box| "warn" .warn
+  |box| "ghost" .ghost
+]
+
+|group#modifiers| { gap: 16; align: center; } [
+  |caption| "modifiers"
+  |box| "dashed" { stroke-style: dashed; }
+  |box| "dotted" { stroke-style: dotted; }
+  |box| "multiple" { multiple: 4; }
+  |box| "shadow" { shadow: 2 3 5; }
+  |box| "rotate" { rotate: -8; }
+]
+
+|group#text| { gap: 14; align: center; } [
+  |caption| "typography"
+  |box| "italic" { font-style: italic; }
+  |box| "serif" { font-family: serif; }
+  |box| "hsl" { color: hsl(280, 55%, 50%); }
+  |box| "upper" { text-transform: uppercase; }
+  |box| "under" { text-decoration: underline; }
+  |box| "shadow" { text-shadow: 1 1 2 --gray-ink; }
+  |box| "spaced" { letter-spacing: 3; }
+  |box| "two\nlines" { line-spacing: 12; }
+]

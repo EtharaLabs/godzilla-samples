@@ -1,0 +1,7 @@
+api -> db "query"
+|alt| "found" [
+  db --> api "row"
+  |else| "missing"
+  db --> api "404"
+]
+api --> user "done"

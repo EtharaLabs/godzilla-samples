@@ -1,0 +1,13 @@
+{
+  |room::group| {
+    gap: 10;
+  } [
+    |box#inlet|  "Inlet"
+    |box#outlet| "Outlet"
+    inlet -> outlet "flows"
+  ]
+}
+
+|room#garden|  "Garden"
+|room#kitchen| "Kitchen"
+garden.outlet -> kitchen.inlet "carries"

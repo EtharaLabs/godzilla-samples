@@ -1,0 +1,31 @@
+{
+  layout: grid;  columns: repeat(3);  gap: 40;  padding: 20;
+  fill: --bg;  clearance: 12;                   // clearance cascades to every link
+
+  |box| { radius: 4; }                          // round a touch less than the default 8
+  |-|  { stroke: #666; }                        // every link's wire
+  --accent: #0a84ff;
+  .loud { stroke: red; stroke-width: 2; }       // a link (or node) class — one vocabulary
+
+  |treat::box|  { radius: 5; }
+  |alert::oval| { stroke: red; width: 36; height: 36; }   // a circle
+  |room::group| {
+    gap: 8;
+  } [
+    |box#inlet|  "Inlet"
+    |box#outlet| "Outlet"
+    inlet -> outlet "flows"                      // an internal link, per-instance
+  ]
+}
+
+|oval#cat| "Cat" { cell: 1 1 }
+|group#kitchen| "Kitchen" { cell: 2 1; gap: 20 } [
+  |treat#bowl| "Bowl of oats"
+  |box#water| "Water"
+]
+|room#closet| "Closet" { cell: 1 2 }
+|room#fridge| "Fridge" { cell: 2 2 }
+
+cat:right -> kitchen.bowl:left "watches"
+kitchen.water -> closet .loud
+closet.outlet -> fridge.inlet "restocks"
