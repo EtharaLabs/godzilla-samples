@@ -1,0 +1,30 @@
+$ reinforce {"host": 100002, "cover": 50, "mesh": {"x": {"diameter": 10, "spacing": 150}, "hook": 400}}
+exit: 1
+line 1 (reinforce): reinforce: a hook of 400 mm turned up from the mesh x bars reaches past the top cover of a footing 400 mm thick
+$ reinforce {"host": 100002, "cover": 200, "mesh": {"x": {"diameter": 10, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: the mesh doesn't fit the footing's 400 mm thickness between the covers
+$ reinforce {"host": 100002, "cover": 50, "mesh": {}}
+exit: 1
+line 1 (reinforce): reinforce: nothing to reinforce with: give a `mesh` with `x` or `y` bars
+$ reinforce {"host": 100002, "cover": 50, "mesh": {"z": {"diameter": 10, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: `mesh`: unknown field `z`, expected one of `x`, `y`, `hook`
+$ reinforce {"host": 100002, "cover": 50, "bottom": {"count": 2, "diameter": 10}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom` isn't a parameter of a footing; it takes cover, grade, clearance and mesh
+$ reinforce {"host": 100002, "cover": 50, "mesh": {"x": {"diameter": 10, "spacing": 10}}}
+exit: 1
+line 1 (reinforce): reinforce: `mesh x` spacing 10 mm must be more than the 10 mm diameter, and up to 1000000000
+$ reinforce {"host": 100002, "cover": 650, "mesh": {"x": {"diameter": 10, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: the mesh x bars don't fit inside that cover
+$ reinforce {"host": 100002, "cover": 50, "mesh": {"x": {"diameter": 10, "spacing": 150}}, "check": "NBR 6118", "aggressiveness": 5}
+exit: 1
+line 1 (reinforce): reinforce: `aggressiveness` is the class 1 to 4 (I to IV)
+$ reinforce {"host": 100002, "cover": 50, "mesh": {"x": {"diameter": 10, "spacing": 15}}}
+exit: 1
+line 1 (reinforce): reinforce: mesh x bars of 10 mm each 14.9 mm leave 4.9 mm between them, less than the 20 mm clearance: widen the spacing
+$ reinforce {"host": 100002, "cover": 50, "mesh": {"y": {"diameter": 10, "spacing": 150}}, "clearance": 200}
+exit: 1
+line 1 (reinforce): reinforce: mesh y bars of 10 mm each 136.2 mm leave 126.2 mm between them, less than the 200 mm clearance: widen the spacing

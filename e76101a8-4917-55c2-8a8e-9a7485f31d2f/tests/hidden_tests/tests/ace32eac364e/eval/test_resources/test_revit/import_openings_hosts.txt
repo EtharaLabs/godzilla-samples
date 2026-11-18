@@ -1,0 +1,228 @@
+# a skylight, doors in walls left out and in a curtain wall, an overrun past the end, no room
+=== openings_hosts.rvt
+{
+ "elements": {
+  "count": 6,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-1",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-2",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-3",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-1",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-2",
+    "type": "Brick wall",
+    "type_guid": "GUID-4"
+   },
+   {
+    "area_m2": 18.58,
+    "boundary": [
+     [
+      0.0,
+      6096.0
+     ],
+     [
+      6096.0,
+      6096.0
+     ],
+     [
+      6096.0,
+      9144.0
+     ],
+     [
+      0.0,
+      9144.0
+     ]
+    ],
+    "category": "floor",
+    "guid": "GUID-5",
+    "id": 100003,
+    "level": "GUID-1",
+    "pattern_angle": 0.0,
+    "pattern_origin": [
+     0.0,
+     0.0
+    ],
+    "thickness": 152.4,
+    "top": [
+     0.0,
+     0.0
+    ],
+    "type": "Slab",
+    "type_guid": "GUID-6",
+    "volume_m3": 2.832
+   },
+   {
+    "at": [
+     5638.8,
+     0.0
+    ],
+    "category": "door",
+    "flip_facing": false,
+    "flip_hand": false,
+    "guid": "GUID-7",
+    "height": 2133.6,
+    "host": "GUID-3",
+    "id": 100004,
+    "level": "GUID-1",
+    "mark": "",
+    "offset": 5638.8,
+    "sill": 0.0,
+    "type": "Single-Flush",
+    "type_guid": "GUID-8",
+    "width": 914.4
+   },
+   {
+    "at": [
+     4114.8,
+     0.0
+    ],
+    "category": "door",
+    "flip_facing": false,
+    "flip_hand": false,
+    "guid": "GUID-9",
+    "height": 2133.6,
+    "host": "GUID-3",
+    "id": 100005,
+    "level": "GUID-1",
+    "mark": "",
+    "offset": 4114.8,
+    "sill": 0.0,
+    "type": "Imported door",
+    "type_guid": "GUID-10",
+    "width": 914.4
+   }
+  ],
+  "returned": 6
+ },
+ "open": {
+  "elements": {
+   "door": 2,
+   "floor": 1,
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "openings_hosts",
+  "path": "openings_hosts.rvt",
+  "skipped": [
+   "1 opening: its box overruns its wall, and it comes in as far as the wall goes (ids 273)",
+   "1 door left out, its host is a curtain wall, which BIMCraft has no element for (ids 272)",
+   "1 door left out, its host wall 190 was left out (ids 271)",
+   "1 wall left out, its location line is not level (ids 190)",
+   "1 wall left out, its type 'Glass' has no layers the reader can read (ids 191)",
+   "1 window left out, it is set in a roof or a floor (a skylight), and BIMCraft's windows stand in walls (ids 270)",
+   "1 window left out, its host wall 100 leaves no room for it (ids 274)"
+  ]
+ },
+ "project": {
+  "counts": {
+   "door": 2,
+   "floor": 1,
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "openings_hosts",
+  "types": {
+   "door": {
+    "Imported door": {
+     "height": 2133.6,
+     "sill": 0.0,
+     "width": 914.4
+    },
+    "Single-Flush": {
+     "height": 2133.6,
+     "sill": 0.0,
+     "width": 914.4
+    }
+   },
+   "floor": {
+    "Slab": {
+     "layers": [
+      {
+       "function": "structure",
+       "guid": "GUID-11",
+       "id": 999461,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 152.4
+    }
+   },
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-12",
+       "id": 999463,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-13",
+       "id": 999462,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}

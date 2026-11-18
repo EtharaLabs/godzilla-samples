@@ -1,0 +1,66 @@
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 1}}
+exit: 1
+line 1 (reinforce): reinforce: `bars x` is 1 bars along a face; it is 2 (the corners) to 1000
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 2000}}
+exit: 1
+line 1 (reinforce): reinforce: `bars x` is 2000 bars along a face; it is 2 (the corners) to 1000
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 9, "y": 9}}
+exit: 1
+line 1 (reinforce): reinforce: 9 x face bars of 16 mm leave 13.2 mm between them, less than the 20 mm clearance: use fewer or thinner bars
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16}, "ties": {"diameter": 6.3}}
+exit: 1
+line 1 (reinforce): reinforce: ties go with the stirrups: give a `stirrup` too
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16}, "stirrup": {"diameter": 5, "spacing": 150}, "ties": {"diameter": 6.3}}
+exit: 1
+line 1 (reinforce): reinforce: no tie to make: ties go across the section between bars that are not at a corner, so `bars` needs x or y over 2
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3, "y": 3}, "stirrup": {"diameter": 5, "spacing": 150}, "ties": {"diameter": 6.3, "hook": -1}}
+exit: 1
+line 1 (reinforce): reinforce: `ties hook` -1 mm must be 0 or more, up to 1000000000
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16}, "mesh": {}}
+exit: 1
+line 1 (reinforce): reinforce: `mesh` isn't a parameter of a column; it takes cover, grade, grade_stirrup, clearance, bars, stirrup, ties and anchor
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16}, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom` isn't a parameter of a column; it takes cover, grade, grade_stirrup, clearance, bars, stirrup, ties and anchor
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 150}, "anchor": {"below": -5}}
+exit: 1
+line 1 (reinforce): reinforce: `anchor below` -5 mm must be 0 or more, up to 1000000000
+$ reinforce {"host": 100002, "cover": 200, "bars": {"diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: the section is too narrow for that cover and stirrup
+$ reinforce {"host": 100002, "cover": 25}
+exit: 1
+line 1 (reinforce): reinforce: nothing to reinforce with: give `bars` or a `stirrup`
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "count": 8}}
+exit: 1
+line 1 (reinforce): reinforce: a rectangular column takes `x` and `y` bars along its faces, not `count`
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 150}, "bars": {"diameter": 16, "hook": 300}}
+exit: 1
+line 1 (reinforce): reinforce: a bars hook of 300 mm doesn't fit in a section 224.0 mm across between the bars
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3, "y": 3, "jog": {"by": 30, "from_top": 3000}}}
+exit: 1
+line 1 (reinforce): reinforce: the jog doesn't fit the bars: it starts 3000 mm below the top and runs 180 mm up, and the bars run from 25 to 2975 mm
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3, "y": 3, "jog": {"by": 30, "from_top": 100}}}
+exit: 1
+line 1 (reinforce): reinforce: the jog doesn't fit the bars: it starts 100 mm below the top and runs 180 mm up, and the bars run from 25 to 2975 mm
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3, "y": 3, "jog": {"by": 30, "from_top": 400, "slope": 0.5}}}
+exit: 1
+line 1 (reinforce): reinforce: `jog` slope 0.5 isn't between 1 and 50 mm along the column for each mm across
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3, "y": 3, "jog": {"by": 0, "from_top": 400}}}
+exit: 1
+line 1 (reinforce): reinforce: `jog by` must be over 0 and up to 1000000000 mm, got 0
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3, "y": 3, "jog": {"by": 100, "from_top": 800}}}
+exit: 1
+line 1 (reinforce): reinforce: after the jog two bars are 1.0 mm apart, less than the 20 mm clearance: give a smaller `by`, or fewer bars
+$ reinforce {"host": 100002, "cover": {"top": 1600, "bottom": 1600, "sides": 25}, "bars": {"diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: the column is too short for that cover
+$ reinforce {"host": 100002, "cover": 145, "bars": {"diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: the section is too narrow for the x face bars of 16 mm with that cover and stirrup
+$ reinforce {"host": 100002, "cover": {"top": 1500, "bottom": 1497, "sides": 25}, "bars": {"diameter": 16}, "stirrup": {"diameter": 5, "spacing": 150}}
+exit: 1
+line 1 (reinforce): reinforce: the column is too short for a stirrup inside that cover
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16}, "stirrup": {"diameter": 5, "spacing": 150, "ends": {"length": 0, "spacing": 100}}}
+exit: 1
+line 1 (reinforce): reinforce: `ends` length 0 mm must be over 0

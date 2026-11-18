@@ -1,0 +1,30 @@
+$ highrise {"storeys": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (highrise): highrise: `storeys` must be between 1 and 80
+$ highrise {"storeys": 81}
+exit: 1
+--- stdout
+--- stderr
+line 1 (highrise): highrise: `storeys` must be between 1 and 80
+$ highrise {"storeys": 2.5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (highrise): highrise: `storeys` must be a whole number, got 2.5
+$ highrise {"storeys": -1}
+exit: 1
+--- stdout
+--- stderr
+line 1 (highrise): highrise: `storeys` must be a whole number, got -1
+$ highrise {"floors": 2}
+exit: 1
+--- stdout
+--- stderr
+line 1 (highrise): highrise: unknown parameter `floors`
+$ highrise []
+exit: 1
+--- stdout
+--- stderr
+line 1 (highrise): highrise: params must be an object

@@ -1,0 +1,117 @@
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 6, "diameter": 25}}
+exit: 1
+line 1 (reinforce): reinforce: 6 bottom bars of 25 mm leave 0.0 mm between them, less than the 25 mm clearance: use fewer or thinner bars
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 3, "diameter": 16}, "clearance": 60}
+exit: 1
+line 1 (reinforce): reinforce: 3 bottom bars of 16 mm leave 51.0 mm between them, less than the 60 mm clearance: use fewer or thinner bars
+$ reinforce {"host": 100002, "cover": 100, "bottom": {"count": 1, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: the section is too narrow or too shallow for that cover and stirrup
+$ reinforce {"host": 100002, "cover": 25}
+exit: 1
+line 1 (reinforce): reinforce: nothing to reinforce with: give `bottom` or `top` bars, or a `stirrup`
+$ reinforce {"host": 100002, "cover": {"top": 230, "bottom": 230, "sides": 25}, "top": {"count": 2, "diameter": 16}, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: the bars at the top and the bottom meet: 8.0 mm between them, less than the 20 mm clearance
+$ reinforce {"host": 100002, "cover": 25, "mesh": {"x": {"diameter": 10, "spacing": 200}}}
+exit: 1
+line 1 (reinforce): reinforce: `mesh` isn't a parameter of a beam; it takes cover, grade, grade_stirrup, clearance, bottom, top, stirrup, skin and anchor
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "colour": "red"}
+exit: 1
+line 1 (reinforce): reinforce: `colour` isn't a parameter of a beam; it takes cover, grade, grade_stirrup, clearance, bottom, top, stirrup, skin and anchor
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 0, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom` count 0 isn't 1 to 1000
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 1}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom` diameter 1 mm isn't between 3 and 100 mm
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 200}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom` diameter 200 mm isn't between 3 and 100 mm
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom`: missing field `diameter`
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16, "colour": 1}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom`: unknown field `colour`, expected one of `count`, `diameter`, `hook`, `bent`
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 0}}
+exit: 1
+line 1 (reinforce): reinforce: `stirrup` spacing 0 mm must be more than the 5 mm diameter, and up to 1000000000
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 3}}
+exit: 1
+line 1 (reinforce): reinforce: `stirrup` spacing 3 mm must be more than the 5 mm diameter, and up to 1000000000
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 5.5}}
+exit: 1
+line 1 (reinforce): reinforce: that is more than the 1000 bars a command makes: widen a spacing or use fewer bars
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 150, "ends": {"length": -1, "spacing": 100}}}
+exit: 1
+line 1 (reinforce): reinforce: `ends` length -1 mm must be over 0
+$ reinforce {"host": 100002, "cover": 25, "stirrup": {"diameter": 5, "spacing": 150, "hook": -3}}
+exit: 1
+line 1 (reinforce): reinforce: `hook` -3 mm must be 0 or more, up to 1000000000
+$ reinforce {"host": 100002, "cover": -5, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `cover` must be over 0 and up to 1000000000 mm, got -5
+$ reinforce {"host": 100002, "cover": 1e+300, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `cover` must be over 0 and up to 1000000000 mm, got 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+$ reinforce {"host": 100002, "cover": "thick", "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `cover`: data did not match any variant of untagged enum CoverArg
+$ reinforce {"host": 100002, "cover": {"top": 25, "middle": 3}, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `cover`: data did not match any variant of untagged enum CoverArg
+$ reinforce {"host": 100002, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: no cover for the top: give `cover` in mm (a number, or top, bottom and sides), or give the host a Cobrimento parameter
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "grade": ""}
+exit: 1
+line 1 (reinforce): reinforce: a `grade` can't be blank
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "grade_stirrup": " "}
+exit: 1
+line 1 (reinforce): reinforce: a `grade` can't be blank
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "clearance": 0}
+exit: 1
+line 1 (reinforce): reinforce: `clearance` must be over 0 and up to 1000000000 mm, got 0
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16, "hook": 500}, "stirrup": {"diameter": 5, "spacing": 150}}
+exit: 1
+line 1 (reinforce): reinforce: a bottom hook of 500 mm doesn't fit inside the stirrup, which is 440.0 mm deep from the bars
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16, "hook": {"middle": 5}}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom hook` must be a length in mm, or {start, end}
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16, "hook": "x"}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom hook` must be a length in mm, or {start, end}
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "anchor": {"start": -1}}
+exit: 1
+line 1 (reinforce): reinforce: `anchor start` -1 mm must be 0 or more, up to 1000000000
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "skin": {"diameter": 8, "spacing": 5}}
+exit: 1
+line 1 (reinforce): reinforce: `skin` spacing 5 mm must be more than the 8 mm diameter, and up to 1000000000
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 4, "diameter": 16, "bent": {"count": 3}}}
+exit: 1
+line 1 (reinforce): reinforce: `bent` count 3 must be 1 to 2: the two bars at the corners stay straight to hold the stirrups, and the bottom row has 4
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16, "bent": {"count": 1}}}
+exit: 1
+line 1 (reinforce): reinforce: `bent` count 1 must be 1 to 0: the two bars at the corners stay straight to hold the stirrups, and the bottom row has 2
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 4, "diameter": 16, "bent": {"count": 1, "angle": 10}}}
+exit: 1
+line 1 (reinforce): reinforce: `bent` angle 10 degrees isn't between 15 and 75
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 4, "diameter": 16, "bent": {"count": 1, "top": 2800}}}
+exit: 1
+line 1 (reinforce): reinforce: the bent bars meet in the middle: each end takes 3234 mm of the 5950 mm: give a shorter `top` or a steeper `angle`
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 4, "diameter": 16, "bent": {"count": 1, "top": -1}}}
+exit: 1
+line 1 (reinforce): reinforce: `bent top` must be over 0 and up to 1000000000 mm, got -1
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 4, "diameter": 16}, "top": {"count": 2, "diameter": 12.5, "bent": {"count": 1}}}
+exit: 1
+line 1 (reinforce): reinforce: only bottom bars are bent up: put `bent` in `bottom`
+$ reinforce {"host": 100002, "cover": 25, "bottom": {"count": 4, "diameter": 16, "bent": {"count": 2}}, "top": {"count": 3, "diameter": 12.5}}
+exit: 1
+line 1 (reinforce): reinforce: a bent-up bar meets a top bar: 8.2 mm between them, less than the 20 mm clearance: bend up other bars or use fewer top bars
+$ reinforce {"host": 100002, "cover": {"top": 230, "bottom": 230, "sides": 25}, "bottom": {"count": 2, "diameter": 50}}
+exit: 1
+line 1 (reinforce): reinforce: a 50 mm bottom bar doesn't fit inside the stirrup, 40.0 mm deep
+$ reinforce {"host": 100002, "cover": {"top": 25, "bottom": 25, "sides": 50}, "bottom": {"count": 2, "diameter": 16}, "skin": {"diameter": 100, "spacing": 150}, "stirrup": {"diameter": 5, "spacing": 150}}
+exit: 1
+line 1 (reinforce): reinforce: the section is too narrow for skin bars with that cover and stirrup

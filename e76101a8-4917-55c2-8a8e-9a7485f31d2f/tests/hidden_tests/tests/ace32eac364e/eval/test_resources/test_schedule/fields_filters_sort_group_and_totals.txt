@@ -1,0 +1,22 @@
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"area_m2":18.0,"id":100007,"number":"1"}
+{"area_m2":30.0,"id":100008,"number":"10"}
+{"host":100002,"id":100009,"mark":"D2","offset":6000.0}
+{"host":100002,"id":100010,"mark":"1","offset":2000.0}
+{"host":100006,"id":100011,"mark":"2","offset":3000.0}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Number"],"elements":[[100008],[100007]],"id":100012,"name":"Rooms by Area","rows":[["Living",30.0,"10"],["Kitchen",18.0,"1"]],"totals":[null,48.0,null]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Number"],"elements":[[100007]],"id":100012,"name":"Rooms by Area","rows":[["Kitchen",18.0,"1"]],"totals":[null,18.0,null]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Number"],"elements":[[100008]],"id":100012,"name":"Rooms by Area","rows":[["Living",30.0,"10"]],"totals":[null,30.0,null]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Number"],"elements":[[100008]],"id":100012,"name":"Rooms by Area","rows":[["Living",30.0,"10"]],"totals":[null,30.0,null]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Type","Width","Count","Mark"],"elements":[[100011],[100009,100010]],"id":100013,"name":"Door Schedule","rows":[["Single 800 x 2100",800.0,1.0,"2"],["Single 900 x 2100",900.0,2.0,null]],"totals":[null,null,3.0,null]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Type","Width","Count","Mark"],"elements":[[100011],[100009,100010]],"id":100013,"name":"Door Schedule","rows":[["Single 800 x 2100",800.0,1.0,"2"],["Single 900 x 2100",900.0,2.0,null]],"totals":[null,null,3.0,null]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Mark","Type","Width","Height","Level","Wall"],"elements":[[100010],[100011],[100009]],"id":100013,"name":"Door Schedule","rows":[["1","Single 900 x 2100",900.0,2100.0,"Level 1",100002.0],["2","Single 800 x 2100",800.0,2100.0,"Level 1",100006.0],["D2","Single 900 x 2100",900.0,2100.0,"Level 1",100002.0]]}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Mark","Type","Width","Height","Level","Wall"],"elements":[[100009],[100011],[100010]],"id":100013,"name":"Door Schedule","rows":[["D2","Single 900 x 2100",900.0,2100.0,"Level 1",100002.0],["2","Single 800 x 2100",800.0,2100.0,"Level 1",100006.0],["1","Single 900 x 2100",900.0,2100.0,"Level 1",100002.0]]}
+{"count":2,"elements":[{"category":"schedule","fields":[{"name":"Name"},{"name":"Area","total":true},{"name":"Number"}],"filters":[{"field":"Area","op":"greater","value":20}],"guid":"GUID-1","id":100012,"name":"Rooms by Area","of":"room","sort":[{"descending":true,"field":"Area"}]},{"category":"schedule","guid":"GUID-2","id":100013,"name":"Door Schedule","of":"door","sort":[{"descending":true,"field":"Mark"}]}],"returned":2}
+{"count":1,"undone":"Schedule"}
+{"count":1,"undone":"Schedule"}
+{"available":["Mark","Type","Width","Height","Level","Wall","Family","Operation","Count","Phase Created","Phase Demolished","Design Option"],"category":"door","columns":["Type","Width","Count","Mark"],"elements":[[100011],[100009,100010]],"id":100013,"name":"Door Schedule","rows":[["Single 800 x 2100",800.0,1.0,"2"],["Single 900 x 2100",900.0,2.0,null]],"totals":[null,null,3.0,null]}
+--- stderr

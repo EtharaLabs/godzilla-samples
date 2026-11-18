@@ -1,0 +1,21 @@
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "x": 3}}
+exit: 1
+line 1 (reinforce): reinforce: a round column takes `count` bars round its circle, not `x` and `y`
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: a round column needs `bars` count: how many round its circle
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "count": 2}}
+exit: 1
+line 1 (reinforce): reinforce: `bars` count 2 isn't 3 to 1000
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "count": 60}}
+exit: 1
+line 1 (reinforce): reinforce: 60 bars of 16 mm leave 1.5 mm between them round the circle, less than the 20 mm clearance: use fewer or thinner bars
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "count": 8}, "stirrup": {"diameter": 5, "spacing": 150}, "ties": {"diameter": 5}}
+exit: 1
+line 1 (reinforce): reinforce: a round column has no ties: they go across a rectangular section
+$ reinforce {"host": 100002, "cover": 25, "bars": {"diameter": 16, "count": 8, "hook": 500}}
+exit: 1
+line 1 (reinforce): reinforce: a bars hook of 500 mm doesn't fit in a section 334.0 mm across between the bars
+$ reinforce {"host": 100002, "cover": 195, "bars": {"diameter": 16, "count": 8}}
+exit: 1
+line 1 (reinforce): reinforce: the section is too narrow for the bars of 16 mm with that cover and stirrup

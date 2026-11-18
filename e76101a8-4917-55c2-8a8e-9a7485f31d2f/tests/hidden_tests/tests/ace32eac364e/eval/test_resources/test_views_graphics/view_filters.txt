@@ -1,0 +1,18 @@
+exit: 0
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"host":100002,"id":100006,"mark":"1","offset":2000.0}
+{"host":100003,"id":100007,"mark":"1","offset":3000.0}
+{"area_m2":48.0,"id":100008,"number":"1"}
+{"base_offset":0.0,"category":"wall","end":[8000.0,0.0],"guid":"GUID-1","height":3000.0,"id":100002,"length":8000.0,"level":"GUID-2","room_bounding":true,"start":[0.0,0.0],"thickness":100.0,"top_level":"GUID-3","type":"Interior - 100mm","type_guid":"GUID-4"}
+{"categories":["wall"],"matches":[100002],"name":"Interior","rules":[{"field":"Type","op":"equals","value":"Interior - 100mm"}]}
+{"categories":["wall"],"matches":[100002,100004],"name":"Long","rules":[{"field":"Length","op":"greater","value":7000}]}
+{"categories":["door","window"],"matches":[100006,100007],"name":"Openings","rules":[]}
+{"categories":["wall"],"matches":[100002,100004],"name":"Long","rules":[{"field":"Length","op":"greater","value":7000}]}
+{"categories":["wall"],"matches":[100003,100005],"name":"Long","rules":[{"field":"Length","op":"less-or-equal","value":6000}]}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[{"cut":{"color":[200,0,0],"fill":[250,220,220]},"filter":"Interior"},{"filter":"Openings","halftone":true}],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 1","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100000,"visual_style":"shaded"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[{"filter":"Long","hidden":true}],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 2","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100001,"visual_style":"shaded"}
+{"deleted":true,"name":"Long"}
+{"background_grid":{"divisions":[5,5],"main":{"color":[230,230,230],"enabled":false,"pen":0},"rotation":0.0,"spacing":[1000.0,1000.0],"sub":{"color":[245,245,245],"enabled":false,"pen":0},"visible":true},"categories":{},"controlled":[],"detail":"fine","elements":{},"filters":[],"hidden":[],"hidden_elements":[],"layers":{},"name":"Level 2","options":{},"phase":null,"phase_filter":null,"scale":null,"template":null,"view":100001,"visual_style":"shaded"}
+{"count":2,"library":[{"guid":"GUID-5","id":999465,"kind":"view-filter","name":"Openings"},{"guid":"GUID-6","id":999467,"kind":"view-filter","name":"Interior"}],"parts":[]}
+--- stderr

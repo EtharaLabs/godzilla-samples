@@ -1,0 +1,59 @@
+$ modify {"id": 100003, "diameter": 200}
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: diameter 200 mm isn't between 3 and 100 mm
+$ modify {"id": 100003, "grade": " "}
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: a bar needs a steel grade
+$ modify {"id": 100003, "path": [[0, 0, 0]]}
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: a path needs 2 to 10000 points
+$ modify {"id": 100003, "path": [[0, 0, 0], [0, 0, 0]]}
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: its path has no length
+$ modify {"id": 100003, "path": [[0, 0, 0], [2e9, 0, 0]]}
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: a point of its path is not finite or reaches past 1000000000 mm
+$ modify {"id": 100003, "host": 100004}
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: wall 100004 is no host for bars; a beam, a column, a footing or a floor is
+$ modify {"id": 100003, "layer": "lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+exit: 1
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+--- stderr
+line 1 (modify): rebar 100003: layer is longer than 256 characters
+$ modify {"id": 100003, "diameter": 12, "grade": "CA-60", "layer": "x", "path": [[0, 0, 0], [500, 0, 0], [500, 500, 0]]}
+exit: 0
+{"ids": [100002]}
+{"ids": [100003]}
+{"ids": [100004]}
+{"category": "rebar", "diameter": 12.0, "grade": "CA-60", "guid": "GUID-1", "host": "GUID-2", "id": 100003, "layer": "x", "length": 1000.0, "level": "GUID-3", "path": [[0.0, 0.0, 0.0], [500.0, 0.0, 0.0], [500.0, 500.0, 0.0]], "weight_kg": 0.888}
+1 bars, 1 returned
+100003 x d=12.0 CA-60 L=1000.0 kg=0.888 [[0.0,0.0,0.0],[500.0,0.0,0.0],[500.0,500.0,0.0]]
+--- stderr
+

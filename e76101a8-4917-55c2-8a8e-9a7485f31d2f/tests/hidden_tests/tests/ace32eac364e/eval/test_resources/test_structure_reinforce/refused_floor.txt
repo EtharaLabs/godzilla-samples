@@ -1,0 +1,30 @@
+$ reinforce {"host": 100002, "cover": 90, "bottom": {"x": {"diameter": 8, "spacing": 150}}, "top": {"x": {"diameter": 8, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: the meshes at the top and the bottom meet: 4.0 mm between them, less than the 20 mm clearance
+$ reinforce {"host": 100002, "cover": 20, "bottom": {}}
+exit: 1
+line 1 (reinforce): reinforce: nothing to reinforce with: give a `bottom` or a `top` mesh with `x` or `y` bars
+$ reinforce {"host": 100002, "cover": 20, "stirrup": {"diameter": 5, "spacing": 150}, "bottom": {"x": {"diameter": 8, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: `stirrup` isn't a parameter of a floor; it takes cover, grade, clearance, bottom and top
+$ reinforce {"host": 100002, "cover": 20, "bottom": {"x": {"diameter": 8, "spacing": 150}, "hook": 300}}
+exit: 1
+line 1 (reinforce): reinforce: a hook of 300 mm doesn't fit the bottom x bars, which have 152.0 mm to the cover on the other face
+$ reinforce {"host": 100002, "cover": 20, "bottom": {"x": {"diameter": 8, "spacing": 150}, "hook": -1}}
+exit: 1
+line 1 (reinforce): reinforce: `hook` -1 mm must be 0 or more, up to 1000000000
+$ reinforce {"host": 100002, "cover": 20, "bottom": {"x": {"diameter": 8, "spacing": 1}}}
+exit: 1
+line 1 (reinforce): reinforce: `bottom x` spacing 1 mm must be more than the 8 mm diameter, and up to 1000000000
+$ reinforce {"host": 100002, "cover": 20, "top": {"y": {"diameter": 8, "spacing": 150}, "hook": 250}}
+exit: 1
+line 1 (reinforce): reinforce: a hook of 250 mm doesn't fit the top y bars, which have 152.0 mm to the cover on the other face
+$ reinforce {"host": 100002, "cover": 20}
+exit: 1
+line 1 (reinforce): reinforce: nothing to reinforce with: give a `bottom` or a `top` mesh with `x` or `y` bars
+$ reinforce {"host": 100002, "cover": {"top": 180, "bottom": 20, "sides": 20}, "bottom": {"x": {"diameter": 8, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: the mesh doesn't fit the floor's 200 mm thickness between the covers
+$ reinforce {"host": 100002, "cover": {"top": 20, "bottom": 180, "sides": 20}, "top": {"x": {"diameter": 8, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: the mesh doesn't fit the floor's 200 mm thickness between the covers

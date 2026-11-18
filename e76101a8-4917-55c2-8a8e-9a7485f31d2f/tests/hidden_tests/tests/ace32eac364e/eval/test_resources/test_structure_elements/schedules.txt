@@ -1,0 +1,30 @@
+exit: 0
+--- stdout
+{"ids":[100002]}
+{"ids":[100003]}
+{"ids":[100004]}
+{"id":100005}
+{"id":100006}
+{"ids":[100007,100008]}
+{"id":100009}
+{"id":100010}
+{"id":100011}
+{"category":"beam","name":"B 250 x 600","type":{"depth":600.0,"material":"Concrete","round":false,"width":250.0}}
+{"category":"stripfooting","name":"S 900 x 350","type":{"depth":350.0,"round":false,"width":900.0}}
+{"category":"structuralcolumn","name":"C 250 x 600","type":{"depth":600.0,"round":false,"width":250.0}}
+{"category":"footing","name":"F 1800","type":{"depth":1800.0,"round":false,"width":1800.0}}
+{"ids":[100012]}
+{"ids":[100013]}
+{"ids":[100014]}
+{"id":100015}
+{"id":100016}
+{"area_m2":30.0,"id":100017}
+{"area_m2":4.0,"id":100018}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"beam","columns":["Id","Type","Level","Length","Width","Depth"],"elements":[[100002],[100003],[100004],[100012],[100013]],"id":100019,"name":"B","rows":[[100002.0,"Beam 200 x 500","Level 1",6000.0,200.0,500.0],[100003.0,"Beam 150 x 400","Level 1",4044.75,150.0,400.0],[100004.0,"Steel Tube 150","Level 1",3287.86,150.0,150.0],[100012.0,"B 250 x 600","Level 1",6000.0,250.0,600.0],[100013.0,"Beam 200 x 500","Level 1",4123.11,200.0,500.0]]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"beam","columns":["Type","System","Length","Count"],"elements":[[100012],[100003],[100002,100013],[100004]],"id":100019,"name":"B","rows":[["B 250 x 600",null,6000.0,1.0],["Beam 150 x 400",null,4044.75,1.0],["Beam 200 x 500",null,null,2.0],["Steel Tube 150",null,3287.86,1.0]]}
+{"available":["Id","Type","Level","Length","Width","Depth","System","Count","Phase Created","Phase Demolished","Design Option"],"category":"stripfooting","columns":["Id","Type","Level","Length","Width","Depth"],"elements":[[100007],[100008],[100014]],"id":100020,"name":"S","rows":[[100007.0,"Strip 600 x 300","Level 1",6000.0,600.0,300.0],[100008.0,"Strip 600 x 300","Level 1",5000.0,600.0,300.0],[100014.0,"S 900 x 350","Level 1",3000.0,900.0,350.0]]}
+{"available":["Id","Type","Level","Width","Depth","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"structuralcolumn","columns":["Id","Type","Level","Width","Depth","Height"],"elements":[[100009],[100010],[100015]],"id":100021,"name":"C","rows":[[100009.0,"Concrete Round 400","Level 1",400.0,400.0,3000.0],[100010.0,"Concrete 200 x 500","Level 1",200.0,500.0,3000.0],[100015.0,"C 250 x 600","Level 1",250.0,600.0,3000.0]]}
+{"available":["Id","Type","Level","Width","Depth","Height","Count","Phase Created","Phase Demolished","Design Option"],"category":"column","columns":["Id","Type","Level","Width","Depth","Height"],"elements":[[100011]],"id":100022,"name":"A","rows":[[100011.0,"Rectangular 400 x 400","Level 1",400.0,400.0,3000.0]]}
+{"available":["Id","Type","Level","Width","Depth","Thickness","Count","Phase Created","Phase Demolished","Design Option"],"category":"footing","columns":["Id","Type","Level","Width","Depth","Thickness"],"elements":[[100005],[100006],[100016]],"id":100023,"name":"F","rows":[[100005.0,"Footing 1500 x 1500","Level 1",1500.0,1500.0,500.0],[100006.0,"Footing 1200 x 1200","Level 1",1200.0,1200.0,400.0],[100016.0,"F 1800","Level 1",1800.0,1800.0,400.0]]}
+{"available":["Id","Type","Level","Area","Thickness","Offset","Count","Structural","Phase Created","Phase Demolished","Design Option"],"category":"floor","columns":["Id","Structural","Offset"],"elements":[[100017],[100018]],"id":100024,"name":"Fl","rows":[[100017.0,true,3000.0],[100018.0,false,0.0]]}
+--- stderr

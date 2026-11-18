@@ -1,0 +1,137 @@
+# a roof by face with no type, profiles standing on a point or running back, a profile with no type
+=== roofs_more.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-1",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-2",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "area_m2": 18.58,
+    "boundary": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      6096.0,
+      0.0
+     ],
+     [
+      6096.0,
+      3048.0
+     ],
+     [
+      0.0,
+      3048.0
+     ]
+    ],
+    "category": "roof",
+    "guid": "GUID-3",
+    "id": 100002,
+    "level": "GUID-1",
+    "offset": 2743.2,
+    "outline": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      6096.0,
+      0.0
+     ],
+     [
+      6096.0,
+      3048.0
+     ],
+     [
+      0.0,
+      3048.0
+     ]
+    ],
+    "overhang": 0.0,
+    "ridge": 2743.2,
+    "slope": 0.0,
+    "type": "Imported - 152.4mm",
+    "type_guid": "GUID-4"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "roof": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "roofs_more",
+  "path": "roofs_more.rvt",
+  "skipped": [
+   "1 roof: it is a roof by face (over a mass, say), whose face is not read: it comes in as the footprint of its own box (ids 100)",
+   "1 roof left out, its profile does not run along a plan line (ids 101)",
+   "1 roof left out, its profile is not one upright plane running one way along its line (ids 102)",
+   "1 roof left out, its record does not name one roof type (ids 103)"
+  ]
+ },
+ "project": {
+  "counts": {
+   "roof": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "roofs_more",
+  "types": {
+   "roof": {
+    "Imported - 152.4mm": {
+     "layers": [
+      {
+       "function": "structure",
+       "guid": "GUID-5",
+       "id": 999466,
+       "material": "",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 152.4
+    }
+   }
+  }
+ }
+}

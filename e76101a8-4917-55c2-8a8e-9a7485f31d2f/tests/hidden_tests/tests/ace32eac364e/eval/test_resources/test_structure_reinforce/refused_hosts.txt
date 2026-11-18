@@ -1,0 +1,75 @@
+$ wall {"points": [[0, 0], [4000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: a wall can't be armed: a beam, a column, a footing or a floor can
+$ beam {"points": [[0, 0], [4000, 0]], "type": "Steel Tube 150"} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: a round beam isn't reinforced yet; a rectangular one is
+$ pipe {"points": [[0, 0], [4000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: a pipe can't be armed: a beam, a column, a footing or a floor can
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `host` (an element) or `hosts` (a list of them) is required
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 999999, "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: no element 999999
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": "x", "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `host` must be an element id or GUID, got "x"
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "hosts": [100002], "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: give `host` or `hosts`, not both
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"hosts": [], "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `hosts` is a list of 1 to 1000 elements
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"hosts": "all", "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: `hosts` is a list of 1 to 1000 elements
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"hosts": [100002, 999999], "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: no element 999999
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"hosts": [100002, "nope"], "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: "nope" is not an element id or GUID
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"hosts": [100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002, 100002,
+exit: 1
+line 1 (reinforce): reinforce: `hosts` is a list of 1 to 1000 elements
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "check": "NBR 9999"}
+exit: 1
+line 1 (reinforce): reinforce: `check` "NBR 9999" isn't one this knows: it is "NBR 6118"
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "aggressiveness": 2}
+exit: 1
+line 1 (reinforce): reinforce: `aggressiveness` and `fck` go with `check`: give `check` "NBR 6118"
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "check": "NBR 6118", "fck": 5}
+exit: 1
+line 1 (reinforce): reinforce: `fck` is the concrete's strength in MPa, 10 to 100
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "check": "NBR 6118", "aggressiveness": 0}
+exit: 1
+line 1 (reinforce): reinforce: `aggressiveness` is the class 1 to 4 (I to IV)
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "check": 6118}
+exit: 1
+line 1 (reinforce): reinforce: `check`: invalid type: integer `6118`, expected a string
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "preset": "nope"}
+exit: 1
+line 1 (reinforce): reinforce: there's no reinforcement preset `nope`
+$ beam {"points": [[0, 0], [6000, 0]]} ; reinforce {"host": 100002, "preset": 5}
+exit: 1
+line 1 (reinforce): reinforce: `preset` must be text of at most 256 characters, got 5
+$ floor {"boundary": [[0, 0], [40000, 0], [40000, 30000], [0, 30000]]} ; reinforce {"host": 100002, "cover": 20, "bottom": {"x": {"diameter": 8, "spacing": 28}}}
+exit: 1
+line 1 (reinforce): reinforce: that is more than the 1000 bars a command makes: widen a spacing or use fewer bars
+$ floor {"boundary": [[0, 0], [40000, 0], [40000, 30000], [0, 30000]]} ; reinforce {"host": 100002, "cover": 20, "bottom": {"x": {"diameter": 8, "spacing": 60}, "y": {"diameter": 8, "spacing": 60}}}
+exit: 1
+line 1 (reinforce): reinforce: that is more than the 1000 bars a command makes: widen a spacing or use fewer bars
+$ beam {"points": [[0, 0], [40, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}}
+exit: 1
+line 1 (reinforce): reinforce: the beam is too short for that cover
+$ beam {"points": [[0, 0], [40, 0]]} ; reinforce {"host": 100002, "cover": 25, "bottom": {"count": 2, "diameter": 16}, "anchor": {"start": 0, "end": 0}, "stirrup": {"diameter": 5, "spacing": 150}}
+exit: 1
+line 1 (reinforce): reinforce: the beam is too short for a stirrup inside that cover
+$ type {"category": "footing", "name": "F 2000 x 600", "width": 2000, "depth": 600}; footing {"at": [0, 0], "type": "F 2000 x 600", "angle": 30} ; reinforce {"host": 100002, "cover": {"top": 50, "bottom": 50, "sides": 300}, "mesh": {"y": {"diameter": 10, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: the footing is too small for that cover
+$ floor {"boundary": [[0, 0], [4000, 0], [4000, 3000], [0, 3000]]}; add_point {"id": 100002, "at": [2000, 1500], "z": -40} ; reinforce {"host": 100002, "cover": 20, "bottom": {"x": {"diameter": 8, "spacing": 150}}}
+exit: 1
+line 1 (reinforce): reinforce: a shaped floor's structure isn't level: give its type a variable layer over its structure (`type` with `variable: true` on its screed), or `reset_shape` it

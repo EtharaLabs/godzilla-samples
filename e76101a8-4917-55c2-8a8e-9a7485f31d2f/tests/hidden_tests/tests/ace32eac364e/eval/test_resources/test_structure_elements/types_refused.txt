@@ -1,0 +1,20 @@
+$ type {"category": "beam", "name": "Odd", "width": 100, "depth": 200, "material": "Unobtainium"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): beam type `Odd`: material `Unobtainium` isn't in the library; add it with `material`
+$ type {"category": "beam", "name": "Flat", "width": 100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): type: a new beam type needs `depth`
+$ type {"category": "beam", "name": "Zero", "width": 0, "depth": 10}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): beam type `Zero` width must be above zero, got 0
+$ type {"category": "kettle", "name": "P", "width": 10}
+exit: 1
+--- stdout
+--- stderr
+line 1 (type): type: `kettle` has no types; use wall, floor, ceiling, door, window, column, structural column, footing, beam, strip footing, pipe, conduit, cable tray, wire, down conductor, earthing conductor, cable, roof or railing

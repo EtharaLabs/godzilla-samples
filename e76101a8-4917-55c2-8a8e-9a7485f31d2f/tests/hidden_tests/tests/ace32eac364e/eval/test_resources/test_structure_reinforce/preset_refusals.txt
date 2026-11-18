@@ -1,0 +1,48 @@
+$ reinforcement_preset {"name": "A", "params": {"cover": 25}}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: `kind` (beam, column, footing, floor) is required for a new preset
+$ reinforcement_preset {"name": "A", "kind": "wall", "params": {"cover": 25}}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: reinforcement preset `A`: `kind` is one of beam, column, footing, floor, not `wall`
+$ reinforcement_preset {"name": "A", "kind": "beam"}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: `params` {…} is required for a new preset
+$ reinforcement_preset {"name": "A", "kind": "beam", "params": "x"}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: `params` must be an object of reinforce's parameters, got "x"
+$ reinforcement_preset {"name": "A", "kind": "beam", "params": {"mesh": {}}}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: reinforcement preset `A`: `mesh` isn't a parameter of a beam: cover, grade, grade_stirrup, clearance, bottom, top, stirrup, skin, anchor
+$ reinforcement_preset {"name": "A", "kind": "floor", "params": {"bars": {"diameter": 10}}}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: reinforcement preset `A`: `bars` isn't a parameter of a floor: cover, grade, grade_stirrup, clearance, bottom, top
+$ reinforcement_preset {"name": "A", "kind": "beam", "params": {"host": 100002}}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: reinforcement preset `A`: `host` isn't a parameter of a beam: cover, grade, grade_stirrup, clearance, bottom, top, stirrup, skin, anchor
+$ reinforcement_preset {"name": "A", "kind": "beam", "params": {"preset": "B"}}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: reinforcement preset `A`: `preset` isn't a parameter of a beam: cover, grade, grade_stirrup, clearance, bottom, top, stirrup, skin, anchor
+$ reinforcement_preset {"name": "A", "kind": "beam", "params": {"cover": 25}, "colour": 1}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: `colour` isn't one of its parameters: name, kind, params, rename, delete
+$ reinforcement_preset {"name": "A", "kind": "beam", "params": {"cover": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: reinforcement preset `A`: its params take more than 16384 bytes
+$ reinforcement_preset {"name": "A", "delete": true}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: there's no reinforcement preset `A`
+$ reinforcement_preset {"name": "A", "rename": "B"}
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: `kind` (beam, column, footing, floor) is required for a new preset
+$ rename onto another
+exit: 1
+line 1 (reinforcement_preset): reinforcement_preset: there's already a reinforcement preset `B`
+$ a beam preset on a column
+exit: 1
+line 1 (reinforce): reinforce: preset `V` is for a beam, and 100002 is a structuralcolumn
+$ a preset that does not fit
+exit: 1
+line 1 (reinforce): reinforce: 9 bottom bars of 25 mm leave -9.4 mm between them, less than the 25 mm clearance: use fewer or thinner bars
+$ a floor preset on a wall
+exit: 1
+line 1 (reinforce): reinforce: preset `L` is for a floor, and 100002 is a wall

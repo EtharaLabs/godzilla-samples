@@ -1,0 +1,11 @@
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"area_m2":18.0,"id":100007,"number":"1"}
+{"area_m2":30.0,"id":100008,"number":"10"}
+{"host":100002,"id":100009,"mark":"D2","offset":6000.0}
+{"host":100002,"id":100010,"mark":"1","offset":2000.0}
+{"host":100006,"id":100011,"mark":"2","offset":3000.0}
+--- stderr
+line 1 (schedule): schedule: calculated field `X`: `Name` is text, and a formula reads numbers

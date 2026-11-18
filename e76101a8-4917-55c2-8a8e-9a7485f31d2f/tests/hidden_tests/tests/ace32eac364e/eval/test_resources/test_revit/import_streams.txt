@@ -1,0 +1,889 @@
+# a schema with every kind of field that stops after the classes the records need, gzip members with header flags, reserved flags, junk, a member hidden in stored data, no trailers, and a paged partition
+=== schema_rich.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-1",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-2",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-3",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-1",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-2",
+    "type": "Brick wall",
+    "type_guid": "GUID-4"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "schema_rich",
+  "path": "schema_rich.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "schema_rich",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-5",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-6",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_flags.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-7",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-8",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-9",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-7",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-8",
+    "type": "Brick wall",
+    "type_guid": "GUID-10"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_flags",
+  "path": "gz_flags.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_flags",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-11",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-12",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_formats_flags.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-13",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-14",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-15",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-13",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-14",
+    "type": "Brick wall",
+    "type_guid": "GUID-16"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_formats_flags",
+  "path": "gz_formats_flags.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_formats_flags",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-17",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-18",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_reserved.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-19",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-20",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-21",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-19",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-20",
+    "type": "Brick wall",
+    "type_guid": "GUID-22"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_reserved",
+  "path": "gz_reserved.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_reserved",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-23",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-24",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_junk.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-25",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-26",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-27",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-25",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-26",
+    "type": "Brick wall",
+    "type_guid": "GUID-28"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_junk",
+  "path": "gz_junk.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_junk",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-29",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-30",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_hidden_member.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-31",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-32",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-33",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-31",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-32",
+    "type": "Brick wall",
+    "type_guid": "GUID-34"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_hidden_member",
+  "path": "gz_hidden_member.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_hidden_member",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-35",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-36",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_no_trailers.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-37",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-38",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-39",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-37",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-38",
+    "type": "Brick wall",
+    "type_guid": "GUID-40"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_no_trailers",
+  "path": "gz_no_trailers.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_no_trailers",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-41",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-42",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}
+=== gz_paged.rvt
+{
+ "elements": {
+  "count": 3,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-43",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-44",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "base_offset": 0.0,
+    "category": "wall",
+    "end": [
+     6096.0,
+     0.0
+    ],
+    "guid": "GUID-45",
+    "height": 3048.0,
+    "id": 100002,
+    "length": 6096.0,
+    "level": "GUID-43",
+    "room_bounding": true,
+    "start": [
+     0.0,
+     0.0
+    ],
+    "thickness": 228.6,
+    "top_level": "GUID-44",
+    "type": "Brick wall",
+    "type_guid": "GUID-46"
+   }
+  ],
+  "returned": 3
+ },
+ "open": {
+  "elements": {
+   "level": 2,
+   "wall": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "gz_paged",
+  "path": "gz_paged.rvt",
+  "skipped": []
+ },
+ "project": {
+  "counts": {
+   "wall": 1
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "gz_paged",
+  "types": {
+   "wall": {
+    "Brick wall": {
+     "layers": [
+      {
+       "function": "finish",
+       "guid": "GUID-47",
+       "id": 999466,
+       "material": "Brick",
+       "thickness": 76.2
+      },
+      {
+       "function": "structure",
+       "guid": "GUID-48",
+       "id": 999465,
+       "material": "Concrete",
+       "thickness": 152.4
+      }
+     ],
+     "thickness": 228.6
+    }
+   }
+  }
+ }
+}

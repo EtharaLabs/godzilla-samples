@@ -1,0 +1,226 @@
+# two levels at one height: what names no level and stands above them stands on none
+=== tie.rvt
+{
+ "elements": {
+  "count": 6,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-1",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-2",
+    "id": 100001,
+    "name": "Level 1b",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 9144.0,
+    "guid": "GUID-3",
+    "id": 100002,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "axis": [
+     [
+      0.0,
+      6096.0,
+      1524.0
+     ],
+     [
+      6096.0,
+      6096.0,
+      1524.0
+     ]
+    ],
+    "category": "pipe",
+    "depth": 152.4,
+    "end": [
+     6096.0,
+     6096.0
+    ],
+    "guid": "GUID-4",
+    "id": 100003,
+    "justify": "centre",
+    "length": 6096.0,
+    "level": "GUID-2",
+    "offset": 1524.0,
+    "round": true,
+    "start": [
+     0.0,
+     6096.0
+    ],
+    "type": "Pipe 152.4 mm",
+    "type_guid": "GUID-5",
+    "width": 152.4
+   },
+   {
+    "axis": [
+     [
+      0.0,
+      7620.0,
+      1524.0
+     ],
+     [
+      6096.0,
+      7620.0,
+      1524.0
+     ]
+    ],
+    "category": "duct",
+    "depth": 304.8,
+    "end": [
+     6096.0,
+     7620.0
+    ],
+    "guid": "GUID-6",
+    "id": 100004,
+    "justify": "centre",
+    "length": 6096.0,
+    "level": "GUID-2",
+    "offset": 1524.0,
+    "round": true,
+    "start": [
+     0.0,
+     7620.0
+    ],
+    "type": "Round duct 304.8 mm",
+    "type_guid": "GUID-7",
+    "width": 304.8
+   },
+   {
+    "angle": 0.0,
+    "at": [
+     152.4,
+     9296.4
+    ],
+    "category": "component",
+    "family": "Generic Models",
+    "family_guid": "GUID-8",
+    "guid": "GUID-9",
+    "height": 304.8,
+    "id": 100005,
+    "level": "GUID-2",
+    "offset": 1524.0,
+    "params": {
+     "Depth": 304.8,
+     "Height": 304.8,
+     "Width": 304.8
+    },
+    "type": "Imported",
+    "values": {
+     "Depth": 304.8,
+     "Height": 304.8,
+     "Width": 304.8
+    }
+   }
+  ],
+  "returned": 6
+ },
+ "open": {
+  "elements": {
+   "component": 1,
+   "duct": 1,
+   "level": 3,
+   "pipe": 1
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "tie",
+  "path": "tie.rvt",
+  "skipped": [
+   "1 duct: its system, type name and material are not read, and it is not turned about its line (ids 105)",
+   "1 generic model: comes in as a box of its record's box: its shape, its type and its connectors are not read (ids 106)",
+   "1 pipe: its diameter is the outside diameter its box gives; its system, type name and material are not read (ids 104)",
+   "1 column left out, it stands on no level (ids 103)",
+   "1 floor left out, it stands on no level (ids 100)",
+   "2 roofs left out, it stands on no level (ids 101, 102)",
+   "1 roof left out, its box is not the one its profile and its type's thickness square to each slope make (ids 108)",
+   "1 room left out, it stands on no level (ids 107)"
+  ]
+ },
+ "project": {
+  "counts": {
+   "component": 1,
+   "duct": 1,
+   "level": 3,
+   "pipe": 1
+  },
+  "families": {
+   "Generic Models": {
+    "category": "generic",
+    "connectors": [],
+    "parameters": [
+     "Width",
+     "Depth",
+     "Height"
+    ],
+    "types": [
+     "Imported"
+    ]
+   }
+  },
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 0.0,
+    "id": 100001,
+    "name": "Level 1b"
+   },
+   {
+    "elevation": 9144.0,
+    "id": 100002,
+    "name": "Level 2"
+   }
+  ],
+  "name": "tie",
+  "types": {
+   "runs": {
+    "duct": {
+     "Round duct 304.8 mm": {
+      "depth": 304.8,
+      "round": true,
+      "width": 304.8
+     }
+    },
+    "pipe": {
+     "Pipe 152.4 mm": {
+      "depth": 152.4,
+      "round": true,
+      "width": 152.4
+     }
+    }
+   }
+  }
+ }
+}

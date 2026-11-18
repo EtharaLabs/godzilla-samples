@@ -1,0 +1,115 @@
+$ beam {"points": [[0, 0], [0, 0]], "end_offset": 3000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (beam): beam 100002: its ends are one over the other; a beam runs along, and what stands is a column
+$ beam {"points": [[0, 0], [500, 0]], "end_offset": 3000}
+exit: 1
+--- stdout
+--- stderr
+line 1 (beam): beam 100002: it slopes 80.5°, more than the 75° a beam may; what stands is a column
+$ beam {"points": [[0, 0], [0, 0]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (beam): beam 100002: too short (0 mm)
+$ beam {"points": [[0, 0], [3000, 0]], "type": "Rectangular 400 x 400"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (beam): beam 100002: type `Rectangular 400 x 400` doesn't exist (there are: Beam 150 x 400, Beam 200 x 500, Steel Tube 150)
+$ beam {"points": [[0, 0], [3000, 0], [6000, 0]], "end_offset": 200}
+exit: 1
+--- stdout
+--- stderr
+line 1 (beam): beam: `end_offset` is the height of one run's end: give 2 points
+$ beam {"points": [[0, 0], [3000, 0]], "justify": "middle"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (beam): beam: `justify` is top, centre or bottom, not `middle`
+$ strip_footing {"points": [[0, 0], [0, 0]]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (strip_footing): stripfooting 100002: too short (0 mm)
+$ strip_footing {"points": [[0, 0], [3000, 0]], "type": "Beam 200 x 500"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (strip_footing): stripfooting 100002: type `Beam 200 x 500` doesn't exist (there are: Strip 600 x 300)
+$ footing {"at": [0, 0], "thickness": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (footing): footing: `thickness` must be above zero, got 0
+$ footing {"at": [0, 0], "thickness": -5}
+exit: 1
+--- stdout
+--- stderr
+line 1 (footing): footing: `thickness` must be above zero, got -5
+$ footing {"at": [0, 0], "type": "Concrete 300 x 300"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (footing): footing 100002: type `Concrete 300 x 300` doesn't exist (there are: Footing 1200 x 1200, Footing 1500 x 1500)
+$ footing {}
+exit: 1
+--- stdout
+--- stderr
+line 1 (footing): footing: `at` [x, y] is required
+$ footing {"at": [0, 0], "level": "Basement"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (footing): footing: no level or plan view named `Basement` (the levels are: Level 1, Level 2)
+$ column {"at": [0, 0], "type": "Concrete 300 x 300"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (column): column 100002: type `Concrete 300 x 300` doesn't exist (there are: Rectangular 400 x 400, Round 300)
+$ structural_column {"at": [0, 0], "type": "Rectangular 400 x 400"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (structural_column): structuralcolumn 100002: type `Rectangular 400 x 400` doesn't exist (there are: Concrete 200 x 500, Concrete 300 x 300, Concrete Round 400)
+$ column {"at": [0, 0], "top_level": "Roof"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (column): column: no level or plan view named `Roof` (the levels are: Level 1, Level 2)
+$ column {"at": [0, 0], "height": 0}
+exit: 1
+--- stdout
+--- stderr
+line 1 (column): column 100002 height must be above zero, got 0
+$ structural_column {"at": [0, 0], "height": -100}
+exit: 1
+--- stdout
+--- stderr
+line 1 (structural_column): structuralcolumn 100002 height must be above zero, got -100
+$ column {"at": [0]}
+exit: 1
+--- stdout
+--- stderr
+line 1 (column): column: `at` must be a point [x, y] in mm, got [0]
+$ column {"at": [0, 0], "angle": "x"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (column): column: `angle` must be a number in mm, got "x"
+$ structural_column {"at": [0, 0], "top_level": "Level 1"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (structural_column): structuralcolumn 100002: its top must be above its base
+$ column {"at": [0, 0], "level": "Level 2", "top_level": "Level 1"}
+exit: 1
+--- stdout
+--- stderr
+line 1 (column): column 100002: its top must be above its base
+$ structural_column {"at": [0, 0], "base_offset": 1e300}
+exit: 1
+--- stdout
+--- stderr
+line 1 (structural_column): structural_column: `base_offset` must be a number in mm, got 1e+300

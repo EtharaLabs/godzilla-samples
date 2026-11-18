@@ -1,0 +1,17 @@
+exit: 1
+--- stdout
+{"ids":[100002,100003,100004,100005]}
+{"ids":[100006]}
+{"area_m2":18.0,"id":100007,"number":"1"}
+{"area_m2":30.0,"id":100008,"number":"10"}
+{"host":100002,"id":100009,"mark":"D2","offset":6000.0}
+{"host":100002,"id":100010,"mark":"1","offset":2000.0}
+{"host":100006,"id":100011,"mark":"2","offset":3000.0}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Cost","Half Perimeter","Large","Cost + 10%"],"elements":[[100007],[100008]],"id":100012,"name":"Costs","rows":[["Kitchen",18.0,2160.0,9000.0,false,2376.0],["Living",30.0,3600.0,11000.0,true,3960.0]],"totals":[null,null,5760.0,null,null,null]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Cost","Half Perimeter","Large","Cost + 10%"],"elements":[[100008]],"id":100012,"name":"Costs","rows":[["Living",30.0,3600.0,11000.0,true,3960.0]],"totals":[null,null,3600.0,null,null,null]}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option"],"category":"room","columns":["Name","Area (m²)","Cost","Half Perimeter","Large","Cost + 10%"],"elements":[[100007]],"id":100012,"name":"Costs","rows":[["Kitchen",18.0,2160.0,9000.0,false,2376.0]],"totals":[null,null,2160.0,null,null,null]}
+{"name":"Rate","parameter":{"categories":["room"],"kind":"number"}}
+{"area_m2":30.0,"category":"room","enclosed":true,"guid":"GUID-1","id":100008,"level":"GUID-2","limit_offset":-300.0,"name":"Living","number":"10","params":{"Rate":100},"perimeter_m":22.0,"point":[2000.0,3000.0],"top_level":"GUID-3","unbounded_height":2700.0,"volume_m3":81.0}
+{"available":["Number","Name","Level","Area","Perimeter","Count","Unbounded Height","Volume","Phase Created","Phase Demolished","Design Option","Rate"],"category":"room","columns":["Name","Cost"],"elements":[[100008],[100007]],"id":100012,"name":"Costs","rows":[["Living",3000.0],["Kitchen",null]]}
+--- stderr
+line 1 (parameter): schedule 100012 (`Costs`): calculated field `Cost`: `Rate` isn't a field of rooms; there are: Number, Name, Level, Area, Perimeter, Count, Unbounded Height, Volume, Phase Created, Phase Demolished, Design Option

@@ -1,0 +1,54 @@
+$ rebar {"points": [[0, 0, 0]], "diameter": 10}
+exit: 1
+line 1 (rebar): rebar: `points` needs at least 2 points
+$ rebar {"points": [[5, 5, 5], [5, 5, 5]], "diameter": 10}
+exit: 1
+line 1 (rebar): rebar: the bar is too short: its points are all in one place
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]]}
+exit: 1
+line 1 (rebar): rebar: `diameter` in mm is required
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 2}
+exit: 1
+line 1 (rebar): rebar: `diameter` 2 mm isn't between 3 and 100 mm
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 101}
+exit: 1
+line 1 (rebar): rebar: `diameter` 101 mm isn't between 3 and 100 mm
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "grade": "  "}
+exit: 1
+line 1 (rebar): rebar: `grade` can't be blank
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "count": 0, "step": [0, 50, 0]}
+exit: 1
+line 1 (rebar): rebar: `count` is 1 to 1000 bars, and the bars' points together up to 10000
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "count": 1001, "step": [0, 50, 0]}
+exit: 1
+line 1 (rebar): rebar: `count` is 1 to 1000 bars, and the bars' points together up to 10000
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "count": 3}
+exit: 1
+line 1 (rebar): rebar: `step` [dx, dy, dz] is required for more than one bar
+$ rebar {"points": [[0, 0, 0], [10, 0, 0], [20, 0, 0], [30, 0, 0], [40, 0, 0], [50, 0, 0], [60, 0, 0], [70, 0, 0], [80, 0, 0], [90, 0, 0], [100, 0, 0]], "diameter": 10, "count": 1000, "step": [0, 50, 0]
+exit: 1
+line 1 (rebar): rebar: `count` is 1 to 1000 bars, and the bars' points together up to 10000
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "count": 3, "step": [0, 50]}
+exit: 1
+line 1 (rebar): rebar: `step` must be [dx, dy, dz] in mm, got [0,50]
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "host": 999999}
+exit: 1
+line 1 (rebar): rebar: no element 999999
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "host": "x"}
+exit: 1
+line 1 (rebar): rebar: `host` must be an element id or GUID, got "x"
+$ rebar {"points": [[0, 0], [1000, 0]], "diameter": 10}
+exit: 1
+line 1 (rebar): rebar: `points`: [0,0] is not a point [x, y, z] in mm
+$ rebar {"diameter": 10}
+exit: 1
+line 1 (rebar): rebar: `points` [[x, y, z], …] is required
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "level": "Level 9"}
+exit: 1
+line 1 (rebar): rebar: no level or plan view named `Level 9` (the levels are: Level 1, Level 2)
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": 10, "closed": "yes"}
+exit: 1
+line 1 (rebar): rebar: `closed` must be true or false, got "yes"
+$ rebar {"points": [[0, 0, 0], [1000, 0, 0]], "diameter": "thick"}
+exit: 1
+line 1 (rebar): rebar: `diameter` must be a number in mm, got "thick"

@@ -1,0 +1,69 @@
+# roofs by extrusion left out: a wrong box, an arc, a plane at 45 degrees, an open chain, 300 lines
+=== extrusion_odd.rvt
+{
+ "elements": {
+  "count": 2,
+  "elements": [
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 0.0,
+    "guid": "GUID-1",
+    "id": 100000,
+    "name": "Level 1",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   },
+   {
+    "category": "level",
+    "computation_height": 1200.0,
+    "elevation": 3048.0,
+    "guid": "GUID-2",
+    "id": 100001,
+    "name": "Level 2",
+    "view_range": {
+     "bottom": 0.0,
+     "cut": 1200.0,
+     "depth": 0.0,
+     "top": null
+    }
+   }
+  ],
+  "returned": 2
+ },
+ "open": {
+  "elements": {
+   "level": 2
+  },
+  "format": "Revit 2024",
+  "moved": null,
+  "name": "extrusion_odd",
+  "path": "extrusion_odd.rvt",
+  "skipped": [
+   "1 roof left out, its box is not the one its profile and its type's thickness square to each slope make (ids 100)",
+   "1 roof left out, its profile has 300 lines (ids 104)",
+   "1 roof left out, its profile has a line that is not a straight one the reader can read (an arc, or no curve in its data) (ids 101)",
+   "1 roof left out, its profile's lines do not make one open chain (ids 103)",
+   "1 roof left out, its profile's plane is not square to an axis, so its box does not say how far it is swept (ids 102)"
+  ]
+ },
+ "project": {
+  "levels": [
+   {
+    "elevation": 0.0,
+    "id": 100000,
+    "name": "Level 1"
+   },
+   {
+    "elevation": 3048.0,
+    "id": 100001,
+    "name": "Level 2"
+   }
+  ],
+  "name": "extrusion_odd"
+ }
+}

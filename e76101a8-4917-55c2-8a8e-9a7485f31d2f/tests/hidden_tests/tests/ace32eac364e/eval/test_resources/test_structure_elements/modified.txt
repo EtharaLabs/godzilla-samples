@@ -1,0 +1,40 @@
+$ modify {"id": 100002, "end_offset": 5000}
+exit: 0
+{"axis":[[0.0,0.0,-325.43],[6000.0,0.0,4674.57]],"category":"beam","depth":500.0,"end":[6000.0,0.0],"end_offset":5000.0,"guid":"GUID-1","id":100002,"justify":"top","length":7810.25,"level":"GUID-2","offset":0.0,"round":false,"start":[0.0,0.0],"type":"Beam 200 x 500","type_guid":"GUID-3","width":200.0}
+$ modify {"id": 100002, "end": [500, 0], "end_offset": 3000}
+exit: 1
+
+line 1 (modify): beam 100002: it slopes 80.5°, more than the 75° a beam may; what stands is a column
+$ modify {"id": 100002, "end": [0, 0]}
+exit: 1
+
+line 1 (modify): beam 100002: too short (0 mm)
+$ modify {"id": 100002, "type": "PVC 50"}
+exit: 1
+
+line 1 (modify): beam 100002: type `PVC 50` doesn't exist (there are: Beam 150 x 400, Beam 200 x 500, Steel Tube 150)
+$ modify {"id": 100002, "justify": "bottom", "system": "S", "type": "Beam 150 x 400"}
+exit: 0
+{"axis":[[0.0,0.0,200.0],[6000.0,0.0,200.0]],"category":"beam","depth":400.0,"end":[6000.0,0.0],"guid":"GUID-4","id":100002,"justify":"bottom","length":6000.0,"level":"GUID-5","offset":0.0,"round":false,"start":[0.0,0.0],"system":"S","type":"Beam 150 x 400","type_guid":"GUID-6","width":150.0}
+$ modify {"id": 100003, "type": "Rectangular 400 x 400"}
+exit: 1
+
+line 1 (modify): structuralcolumn 100003: type `Rectangular 400 x 400` doesn't exist (there are: Concrete 200 x 500, Concrete 300 x 300, Concrete Round 400)
+$ modify {"id": 100003, "top_level": null, "height": 2500, "angle": 45}
+exit: 0
+{"angle":45.0,"at":[0.0,0.0],"base_offset":0.0,"category":"structuralcolumn","depth":300.0,"guid":"GUID-7","height":2500.0,"id":100003,"level":"GUID-8","room_bounding":true,"round":false,"top_level":null,"type":"Concrete 300 x 300","type_guid":"GUID-9","width":300.0}
+$ modify {"id": 100004, "height": 600, "base_offset": -600, "type": "Footing 1500 x 1500"}
+exit: 0
+{"angle":0.0,"at":[0.0,0.0],"base_offset":-600.0,"category":"footing","depth":1500.0,"guid":"GUID-10","height":600.0,"id":100004,"level":"GUID-11","round":false,"top_level":null,"type":"Footing 1500 x 1500","type_guid":"GUID-12","width":1500.0}
+$ modify {"id": 100004, "type": "Concrete 300 x 300"}
+exit: 1
+
+line 1 (modify): footing 100004: type `Concrete 300 x 300` doesn't exist (there are: Footing 1200 x 1200, Footing 1500 x 1500)
+$ modify {"id": 100005, "start": [0, 0], "end": [0, 0]}
+exit: 1
+
+line 1 (modify): stripfooting 100005: too short (0 mm)
+$ modify {"id": 100005, "end_offset": 3000, "end": [100, 0]}
+exit: 1
+
+line 1 (modify): stripfooting 100005: it slopes 88.1°, more than the 75° a stripfooting may; what stands is a column
