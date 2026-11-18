@@ -1,0 +1,1474 @@
+//! The v2 routing contract tests (ROUTING.md, ROUTING-LOG.md stage 4):
+//! geometry assertions over routed polylines — turn counts, ordinates,
+//! crossings — never images. The Consequences table pins one test per row.
+
+use lini::testing::{
+    LaidOut, drawn_edges, laws, node_rect, route_sample, route_sample_with_ports, routes_str,
+};
+use lini::{Rule, Severity};
+
+type Routes = Vec<((String, String), Vec<(f64, f64)>)>;
+
+fn routes(src: &str) -> Routes {
+    routes_str(src).expect("compiles and routes")
+}
+
+fn path<'a>(routes: &'a Routes, from: &str, to: &str) -> &'a [(f64, f64)] {
+    &routes
+        .iter()
+        .find(|((a, b), _)| a == from && b == to)
+        .unwrap_or_else(|| panic!("no drawn route {from} -> {to}"))
+        .1
+}
+
+fn paths<'a>(routes: &'a Routes, from: &str, to: &str) -> Vec<&'a [(f64, f64)]> {
+    routes
+        .iter()
+        .filter(|((a, b), _)| a == from && b == to)
+        .map(|(_, p)| p.as_slice())
+        .collect()
+}
+
+/// Direction changes along an orthogonal polyline.
+fn turns(path: &[(f64, f64)]) -> usize {
+    let sign = |v: f64| {
+        if v > 0.0 {
+            1
+        } else if v < 0.0 {
+            -1
+        } else {
+            0
+        }
+    };
+    let dir = |a: (f64, f64), b: (f64, f64)| (sign(b.0 - a.0), sign(b.1 - a.1));
+    path.windows(3)
+        .filter(|w| dir(w[0], w[1]) != dir(w[1], w[2]))
+        .count()
+}
+
+fn orthogonal(p: &[(f64, f64)]) {
+    for s in p.windows(2) {
+        assert!(
+            s[0].0 == s[1].0 || s[0].1 == s[1].1,
+            "diagonal segment {s:?} in {p:?}"
+        );
+        assert!(s[0] != s[1], "zero-length segment in {p:?}");
+    }
+}
+
+fn report(src: &str) -> Vec<lini::Violation> {
+    lini::validate_str(src).expect("compiles")
+}
+
+fn crossings(src: &str) -> usize {
+    report(src)
+        .iter()
+        .filter(|v| v.rule == Rule::Crossing)
+        .count()
+}
+
+fn impossibles(src: &str) -> usize {
+    report(src)
+        .iter()
+        .filter(|v| v.rule == Rule::Impossible && v.severity == Severity::Warning)
+        .count()
+}
+
+// ── The Consequences table, one test per row (ROUTING.md §Consequences) ──
+
+#[test]
+fn facing_aligned_centres_draw_one_straight_wire() {
+    let r = routes(
+        "{ direction: row; gap: 100; clearance: 10 }\n\
+         |box#a| { width: 60; height: 60 }\n\
+         |box#b| { width: 60; height: 60 }\n\
+         a -> b\n",
+    );
+    let p = path(&r, "a", "b");
+    assert_eq!(p.len(), 2, "straight: {p:?}");
+    assert_eq!(p[0].1, p[1].1, "horizontal: {p:?}");
+}
+
+#[test]
+fn offset_within_windows_still_draws_straight() {
+    // b sits 20 lower: the centres differ but the port windows still meet,
+    // so the wire rides the shared window — straight, no jog.
+    let r = routes(
+        "{ direction: row; gap: 100; clearance: 10 }\n\
+         |box#a| { width: 60; height: 60 }\n\
+         |box#b| { width: 60; height: 60; translate: 0 20 }\n\
+         a -> b\n",
+    );
+    let p = path(&r, "a", "b");
+    assert_eq!(p.len(), 2, "windows overlap → straight: {p:?}");
+    assert_eq!(p[0].1, p[1].1);
+}
+
+#[test]
+fn offset_past_windows_jogs_once_on_the_gap_midline() {
+    // b sits 60 lower and the facing sides are held (unforced, the cheaper
+    // one-turn L via a's bottom wins — straight beats dogleg beats
+    // staircase): the windows can't meet, so the route doglegs once and the
+    // perpendicular run lands on the midline of the corridor between the
+    // two keep-outs.
+    let src = "{ direction: row; gap: 100; clearance: 10 }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#b| { width: 60; height: 60; translate: 0 60 }\n\
+               a:right -> b:left\n";
+    let r = routes(src);
+    let p = path(&r, "a", "b");
+    orthogonal(p);
+    assert_eq!(p.len(), 4, "one dogleg: {p:?}");
+    let laid = route_sample(src, 10.0);
+    let a = node_rect(&laid, "a").expect("a placed");
+    let b = node_rect(&laid, "b").expect("b placed");
+    let midline = ((a.2 + 10.0) + (b.0 - 10.0)) / 2.0;
+    assert!(
+        (p[1].0 - midline).abs() < 1e-9 && (p[2].0 - midline).abs() < 1e-9,
+        "jog on the gap midline {midline}: {p:?}"
+    );
+}
+
+#[test]
+fn offset_past_windows_without_forced_sides_takes_the_one_turn_l() {
+    // The same scene unforced: Law 3 prefers the single corner over the
+    // dogleg — turns cost real length.
+    let r = routes(
+        "{ direction: row; gap: 100; clearance: 10 }\n\
+         |box#a| { width: 60; height: 60 }\n\
+         |box#b| { width: 60; height: 60; translate: 0 60 }\n\
+         a -> b\n",
+    );
+    let p = path(&r, "a", "b");
+    orthogonal(p);
+    assert_eq!(turns(p), 1, "one corner beats the dogleg: {p:?}");
+}
+
+#[test]
+fn a_bundle_draws_parallel_rails_at_pitch_centred_on_the_midline() {
+    let src = "{ direction: row; gap: 100; clearance: 10 }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a -> b\na -> b\na -> b\na -> b\n";
+    let r = routes(src);
+    let rails = paths(&r, "a", "b");
+    assert_eq!(rails.len(), 4);
+    let mut ys: Vec<f64> = rails
+        .iter()
+        .map(|p| {
+            assert_eq!(p.len(), 2, "each rail straight: {p:?}");
+            p[0].1
+        })
+        .collect();
+    ys.sort_by(f64::total_cmp);
+    for w in ys.windows(2) {
+        assert!((w[1] - w[0] - 10.0).abs() < 1e-9, "rails at pitch: {ys:?}");
+    }
+    let laid = route_sample(src, 10.0);
+    let a = node_rect(&laid, "a").expect("a placed");
+    let centre = (a.1 + a.3) / 2.0;
+    let mean = ys.iter().sum::<f64>() / 4.0;
+    assert!(
+        (mean - centre).abs() < 1e-9,
+        "ladder centred on the aligned centres {centre}: {ys:?}"
+    );
+}
+
+#[test]
+fn a_wire_over_the_top_hugs_the_keepout_not_the_margin() {
+    // The wall forces a→b over the top; the run along the canvas edge rides
+    // exactly one clearance off the wall's body, not out in the margin.
+    let src = "{ direction: row; gap: 80; clearance: 10 }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#w| { width: 20; height: 200 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a -> b\n";
+    let r = routes(src);
+    let p = path(&r, "a", "b");
+    orthogonal(p);
+    let laid = route_sample(src, 10.0);
+    let w = node_rect(&laid, "w").expect("w placed");
+    // Bottom outranks top on the side rank, so the wire passes under; it
+    // rides the wall's keep-out edge exactly — walls charge no margin
+    // (near neighbours cluster instead), so the wire hugs the diagram,
+    // never the canvas margin.
+    let hug = w.3 + 10.0;
+    assert!(
+        p.windows(2)
+            .any(|s| s[0].1 == s[1].1 && (s[0].1 - hug).abs() < 1e-9),
+        "the crossing run hugs the keep-out at {hug}: {p:?}"
+    );
+}
+
+#[test]
+fn a_crossing_beats_the_orbit() {
+    // n→s commits a vertical rail through the middle; a→b still draws dead
+    // straight across it — one reported crossing, never a detour around the
+    // diagram.
+    let src = "{ layout: grid; columns: repeat(3, 60); rows: repeat(3, 60); gap: 30; clearance: 10 }\n\
+               |box#n| { cell: 2 1; width: 60; height: 60 }\n\
+               |box#a| { cell: 1 2; width: 60; height: 60 }\n\
+               |box#b| { cell: 3 2; width: 60; height: 60 }\n\
+               |box#s| { cell: 2 3; width: 60; height: 60 }\n\
+               n -> s\n\
+               a -> b\n";
+    let r = routes(src);
+    assert_eq!(path(&r, "n", "s").len(), 2, "n→s straight");
+    assert_eq!(path(&r, "a", "b").len(), 2, "a→b crosses, never orbits");
+    assert_eq!(crossings(src), 1, "one drawn crossing, reported");
+}
+
+// ── Forced sides, fans, self-loops, containment ──
+
+#[test]
+fn a_forced_side_is_honored_when_reachable() {
+    let src = "{ direction: row; gap: 60; clearance: 10 }\n\
+               |box#w| { width: 20; height: 200 }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a:left -> b\n";
+    let r = routes(src);
+    let p = path(&r, "a", "b");
+    let laid = route_sample(src, 10.0);
+    let a = node_rect(&laid, "a").expect("a placed");
+    assert_eq!(p[0].0, a.0, "leaves a's left side: {p:?}");
+}
+
+#[test]
+fn a_walled_forced_side_strays() {
+    // w sits 8px from a — inside a's clearance — so a's left punch is
+    // blocked and the forced link is reported and drawn as a stray.
+    let src = "{ layout: grid; columns: repeat(2, 60); rows: repeat(2, 60); gap: 8; clearance: 10 }\n\
+               |box#w| { cell: 1 1; width: 60; height: 60 }\n\
+               |box#a| { cell: 2 1; width: 60; height: 60 }\n\
+               |box#b| { cell: 2 2; width: 60; height: 60 }\n\
+               a:left -> b\n";
+    let r = routes(src);
+    assert!(
+        paths(&r, "a", "b").is_empty(),
+        "no lawful-looking wire for a blocked forced side"
+    );
+    assert_eq!(impossibles(src), 1);
+}
+
+/// A fan is one drawn line **until the split** (ROUTING.md Special nodes):
+/// its siblings share the port and the trunk, and part at one point — never
+/// two wires fanning straight out of the port a pitch apart (user-reported:
+/// links_medium's `cat -> bowl & water` peeled off at the mouth, its branch
+/// runs charged each other pitch they never owed across the split).
+#[test]
+fn fan_siblings_share_a_trunk_and_split_at_one_point() {
+    let src = "{ layout: grid; columns: repeat(2, 60); rows: repeat(2, 60); gap: 40; clearance: 10 }\n\
+               |box#a| { cell: 1 1; span: 1 2; width: 60; height: 60 }\n\
+               |box#b| { cell: 2 1; width: 60; height: 60 }\n\
+               |box#c| { cell: 2 2; width: 60; height: 60 }\n\
+               a -> b & c\n";
+    let r = routes(src);
+    let (pb, pc) = (path(&r, "a", "b"), path(&r, "a", "c"));
+    assert_eq!(pb[0], pc[0], "one fan, one port: {pb:?} vs {pc:?}");
+    assert_eq!(pb[1], pc[1], "one trunk, one split: {pb:?} vs {pc:?}");
+    let laid = route_sample(src, 10.0);
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+#[test]
+fn a_self_loop_wraps_the_top_right_corner() {
+    let src = "{ clearance: 10 }\n|box#a| { width: 80; height: 40 }\na -> a\n";
+    let r = routes(src);
+    let p = path(&r, "a", "a");
+    orthogonal(p);
+    let laid = route_sample(src, 10.0);
+    let a = node_rect(&laid, "a").expect("a placed");
+    let (cx, cy) = ((a.0 + a.2) / 2.0, (a.1 + a.3) / 2.0);
+    // Out the right side, around the keep-out corner, back in the top —
+    // both wall runs riding exactly one clearance off the body.
+    assert_eq!(
+        p,
+        &[
+            (a.2, cy),
+            (a.2 + 10.0, cy),
+            (a.2 + 10.0, a.1 - 10.0),
+            (cx, a.1 - 10.0),
+            (cx, a.1)
+        ],
+        "right → top around the keep-out corner"
+    );
+}
+
+#[test]
+fn a_self_loop_forced_onto_one_side_is_reported() {
+    let src = "{ clearance: 10 }\n|box#a| { width: 80; height: 40 }\na:top -> a:top\n";
+    assert!(paths(&routes(src), "a", "a").is_empty());
+    let rep = report(src);
+    assert!(
+        rep.iter()
+            .any(|v| v.rule == Rule::Impossible && v.detail.contains("one side")),
+        "{rep:?}"
+    );
+}
+
+#[test]
+fn a_containment_link_lands_on_the_parents_inner_side() {
+    let src = "{ clearance: 10 }\n\
+               |group#p| { padding: 30 } [ |box#c| { width: 40; height: 40 } ]\n\
+               p -> p.c\n";
+    let r = routes(src);
+    let p = path(&r, "p", "p.c");
+    orthogonal(p);
+    let laid = route_sample(src, 10.0);
+    let pr = node_rect(&laid, "p").expect("p placed");
+    let on_side = p[0].0 == pr.0 || p[0].0 == pr.2 || p[0].1 == pr.1 || p[0].1 == pr.3;
+    assert!(on_side, "p's end sits on p's own boundary: {p:?} vs {pr:?}");
+    for pt in p {
+        assert!(
+            pt.0 >= pr.0 && pt.0 <= pr.2 && pt.1 >= pr.1 && pt.1 <= pr.3,
+            "the wire stays inside the parent: {p:?}"
+        );
+    }
+}
+
+/// ROUTING.md Vocabulary — the landing body. A table tiles its interior, so
+/// every cell sits inside a neighbour's keep-out and has no side to call its
+/// own: the contact climbs to the card and carries the cell's row onto the
+/// card's edge. The wire leaves at the field's row and never crosses a cell.
+#[test]
+fn a_tiled_cell_leaves_its_card_at_that_cells_row() {
+    let src = "{ gap: 140; clearance: 16 }\n\
+               |entity#users| \"Users\" { columns: auto, auto } [\n\
+               |cell#uid| \"id\"; \"int\"\n\
+               \"email\" \"varchar\"\n\
+               ]\n\
+               |entity#orders| \"Orders\" { columns: auto, auto } [\n\
+               \"id\" \"int\"\n\
+               |cell#uref| \"user_id\"; \"int\"\n\
+               ]\n\
+               users.uid -< orders.uref\n";
+    let r = routes(src);
+    let p = path(&r, "users.uid", "orders.uref");
+    orthogonal(p);
+    assert!(laws(&route_sample(src, 16.0)).is_empty());
+    let laid = route_sample(src, 16.0);
+    for (end, card, field) in [
+        (p[0], "users", "users.uid"),
+        (p[p.len() - 1], "orders", "orders.uref"),
+    ] {
+        let c = node_rect(&laid, card).expect("card placed");
+        let f = node_rect(&laid, field).expect("field placed");
+        assert!(
+            end.0 == c.0 || end.0 == c.2,
+            "{field} lands on {card}'s own edge: {end:?} vs {c:?}"
+        );
+        assert!(
+            end.1 >= f.1 && end.1 <= f.3,
+            "{field} lands within its own row: {end:?} vs {f:?}"
+        );
+    }
+    for &(x, y) in p {
+        for card in ["users", "orders"] {
+            let c = node_rect(&laid, card).expect("card placed");
+            assert!(
+                x <= c.0 || x >= c.2 || y <= c.1 || y >= c.3,
+                "the wire never enters {card}: {p:?}"
+            );
+        }
+    }
+}
+
+/// The climb is a last resort: a child with room around it keeps its own
+/// contact, wherever its container's walls are.
+#[test]
+fn a_roomy_group_child_keeps_its_own_contact() {
+    let src = "{ direction: row; gap: 60; clearance: 10 }\n\
+               |group#g| [ |box#a| { width: 50; height: 50 } ]\n\
+               |box#b| { width: 50; height: 50 }\n\
+               g.a -> b\n";
+    let r = routes(src);
+    let p = path(&r, "g.a", "b");
+    let laid = route_sample(src, 10.0);
+    let a = node_rect(&laid, "g.a").expect("a placed");
+    let g = node_rect(&laid, "g").expect("g placed");
+    assert!(a.2 < g.2, "the group has room around its child");
+    assert_eq!(p[0].0, a.2, "the wire leaves a's own side: {p:?} vs {a:?}");
+}
+
+// ── The straight strategy (ROUTING.md §Strategies) ──
+
+#[test]
+fn routing_straight_draws_one_trimmed_oblique_segment() {
+    // `routing: straight` (SPEC §9): one segment between the body centres,
+    // trimmed to the boundaries — oblique is lawful here, and nothing is
+    // avoided or reported.
+    let src = "{ layout: grid; columns: repeat(2, 60); rows: repeat(2, 60); gap: 40; \
+               clearance: 10; routing: straight }\n\
+               |box#a| { cell: 1 1; width: 60; height: 60 }\n\
+               |box#b| { cell: 2 2; width: 60; height: 60 }\n\
+               a -> b\n";
+    let r = routes(src);
+    let p = path(&r, "a", "b");
+    assert_eq!(p.len(), 2, "one segment: {p:?}");
+    assert!(
+        p[0].0 != p[1].0 && p[0].1 != p[1].1,
+        "oblique, no avoidance: {p:?}"
+    );
+    let laid = route_sample(src, 10.0);
+    let a = node_rect(&laid, "a").expect("a placed");
+    let b = node_rect(&laid, "b").expect("b placed");
+    // The diagonal centres sit 45° apart, so the trim lands exactly on the
+    // facing corners — the stray's trim math, shared.
+    let close = |p: (f64, f64), q: (f64, f64)| (p.0 - q.0).abs() < 1e-9 && (p.1 - q.1).abs() < 1e-9;
+    assert!(close(p[0], (a.2, a.3)), "trimmed to a's corner: {p:?}");
+    assert!(close(p[1], (b.0, b.1)), "trimmed to b's corner: {p:?}");
+    assert_eq!(impossibles(src), 0);
+    assert_eq!(crossings(src), 0);
+}
+
+#[test]
+fn routing_straight_self_link_draws_the_rectangular_hook() {
+    let src = "{ clearance: 16; routing: straight }\n|box#a| { width: 80; height: 40 }\na -> a\n";
+    let r = routes(src);
+    let p = path(&r, "a", "a");
+    assert_eq!(p.len(), 4, "the rectangular self-hook: {p:?}");
+    let laid = route_sample(src, 16.0);
+    let a = node_rect(&laid, "a").expect("a placed");
+    assert!(
+        p.iter().all(|pt| pt.0 >= a.2),
+        "the hook hangs off the right side: {p:?}"
+    );
+    assert_eq!(p[0].0, a.2);
+    assert_eq!(p[3].0, a.2);
+}
+
+// ── The tightness sweep: right before impossible (ROUTING-LOG.md stage 6) ──
+
+/// A facing 4-bundle with the shared port window swept from roomy down past
+/// capacity: full clearance while it fits, uniform compression only when it
+/// cannot (never below half the clearance), and the stray appears exactly
+/// at the capacity boundary — no silent squeeze, no ugly detour.
+#[test]
+fn a_bundle_compresses_uniformly_then_strays_exactly_at_capacity() {
+    // Sides forced: unforced, the router lawfully spills the whole bundle
+    // over the top once the facing sides fill — a better outcome, but this
+    // sweep pins the capacity boundary itself.
+    let src = |h: u32| {
+        format!(
+            "{{ direction: row; gap: 100; clearance: 10 }}\n\
+             |box#a| {{ width: 60; height: {h} }}\n\
+             |box#b| {{ width: 60; height: {h} }}\n\
+             a:right -> b:left\na:right -> b:left\na:right -> b:left\na:right -> b:left\n"
+        )
+    };
+    for h in (30..=60).rev() {
+        let text = src(h);
+        // The drawn bbox carries the stroke, so the lawful window comes off
+        // the placed rect, not the declared height.
+        let a = node_rect(&route_sample(&text, 10.0), "a").expect("a placed");
+        let window = (a.3 - a.1) - 20.0;
+        let rails = routes(&text);
+        let report = report(&text);
+        let breaches: Vec<_> = report
+            .iter()
+            .filter(|v| v.severity == Severity::Warning && v.rule != Rule::Impossible)
+            .collect();
+        assert!(breaches.is_empty(), "h={h}: {breaches:?}");
+        if window < 15.0 {
+            // Fewer than 4 tracks at half clearance: the whole bundle
+            // strays (a bundle routes whole or not at all).
+            assert!(rails.is_empty(), "h={h}: past capacity, all stray");
+            assert_eq!(impossibles(&text), 4, "h={h}");
+            continue;
+        }
+        assert_eq!(rails.len(), 4, "h={h}: the bundle routes whole");
+        let mut ys: Vec<f64> = rails
+            .iter()
+            .map(|(_, p)| {
+                assert_eq!(p.len(), 2, "h={h}: rails stay straight: {p:?}");
+                p[0].1
+            })
+            .collect();
+        ys.sort_by(f64::total_cmp);
+        let expect = (window / 3.0).min(10.0);
+        for w in ys.windows(2) {
+            assert!(
+                (w[1] - w[0] - expect).abs() < 1e-9,
+                "h={h}: uniform pitch {expect}, got {ys:?}"
+            );
+        }
+    }
+}
+
+// ── The side-capacity sweep: a full side spills, then strays ──
+
+/// n wires from a west column onto one 30×30 target: its left side holds 3
+/// ports at half clearance, every side holds 12 — excess routes to other
+/// sides, then strays, and the ports that share the left side land in their
+/// wires' vertical order (no braid at the mouth).
+#[test]
+fn a_full_side_spills_to_other_sides_then_strays() {
+    let src = |n: usize| {
+        let mut s = String::from(
+            "{ layout: grid; columns: 40, 200, 40; rows: repeat(15, 34); gap: 10; clearance: 10 }\n\
+             |box#t| { cell: 2 8; width: 30; height: 30 }\n",
+        );
+        for i in 0..n {
+            s.push_str(&format!(
+                "|box#s{i}| {{ cell: 1 {}; width: 30; height: 30 }}\n",
+                i + 1
+            ));
+        }
+        for i in 0..n {
+            s.push_str(&format!("s{i} -> t\n"));
+        }
+        s
+    };
+    for n in [1, 3, 6, 12, 13, 14] {
+        let text = src(n);
+        let r = routes(&text);
+        let breaches: Vec<_> = report(&text)
+            .into_iter()
+            .filter(|v| v.severity == Severity::Warning && v.rule != Rule::Impossible)
+            .collect();
+        assert!(breaches.is_empty(), "n={n}: {breaches:?}");
+        let drawn = r.len();
+        assert_eq!(
+            drawn + impossibles(&text),
+            n,
+            "n={n}: every wire drawn or honestly reported"
+        );
+        assert_eq!(drawn, n.min(12), "n={n}: capacity is 12 ports");
+        // No braid at the mouth: ports on t's left side keep their wires'
+        // vertical order (source i sits above source j for i < j).
+        let laid = route_sample(&text, 10.0);
+        let t = node_rect(&laid, "t").expect("t placed");
+        let mut left: Vec<(f64, usize)> = r
+            .iter()
+            .filter(|((_, to), p)| to == "t" && p.last().unwrap().0 == t.0)
+            .map(|((from, _), p)| {
+                let i: usize = from[1..].parse().expect("source index");
+                (p.last().unwrap().1, i)
+            })
+            .collect();
+        left.sort_by(|a, b| a.0.total_cmp(&b.0));
+        let order: Vec<usize> = left.iter().map(|&(_, i)| i).collect();
+        let mut sorted = order.clone();
+        sorted.sort_unstable();
+        assert_eq!(order, sorted, "n={n}: left ports braid");
+    }
+}
+
+// ── The crossing torture: crossings arrive one at a time, never a wrap ──
+
+/// The corridor across the middle is progressively walled by longer and
+/// more committed rails: while a dodge over a short rail is cheaper than
+/// `4·clearance` the wire dodges, then crossings appear exactly one per
+/// rail — each drawn square-on and each reported — and the wire never orbits
+/// the diagram.
+#[test]
+fn crossings_appear_one_at_a_time_and_never_wrap() {
+    // `h` sets each rail's node height: 40 leaves a cheap hop over the rail;
+    // 160 walls the hop off (the orbit costs far more than a crossing).
+    let src = |rails: &[u32]| {
+        let cols = rails.len() + 2;
+        let mut s = format!(
+            "{{ layout: grid; columns: repeat({cols}, 60); rows: 160, 60, 160; \
+             gap: 30; clearance: 10 }}\n\
+             |box#a| {{ cell: 1 2; width: 60; height: 60 }}\n\
+             |box#b| {{ cell: {cols} 2; width: 60; height: 60 }}\n"
+        );
+        for (i, h) in rails.iter().enumerate() {
+            s.push_str(&format!(
+                "|box#n{i}| {{ cell: {c} 1; width: 60; height: {h} }}\n\
+                 |box#s{i}| {{ cell: {c} 3; width: 60; height: {h} }}\n\
+                 n{i} -> s{i}\n",
+                c = i + 2
+            ));
+        }
+        s.push_str("a -> b\n");
+        s
+    };
+    // Every rail costs exactly one crossing: a dodge over even a short rail
+    // needs two extra turns — already the crossing's whole price — plus
+    // length, so Law 3 crosses square-on and counts it (the consequences
+    // table's "crossing beats orbit", one rail at a time).
+    for (rails, expected) in [
+        (vec![], 0),
+        (vec![40], 1),
+        (vec![160], 1),
+        (vec![160, 40], 2),
+        (vec![160, 160], 2),
+        (vec![160, 160, 160], 3),
+    ] {
+        let text = src(&rails);
+        assert_eq!(
+            crossings(&text),
+            expected,
+            "rails {rails:?} force exactly {expected} crossing(s)"
+        );
+        assert_eq!(impossibles(&text), 0, "rails {rails:?}");
+        let breaches: Vec<_> = report(&text)
+            .into_iter()
+            .filter(|v| v.severity == Severity::Warning)
+            .collect();
+        assert!(breaches.is_empty(), "rails {rails:?}: {breaches:?}");
+        // Never a wrap: a → b stays inside the lane band, clear of the
+        // canvas margin above and below.
+        let r = routes(&text);
+        let laid = route_sample(&text, 10.0);
+        let a = node_rect(&laid, "a").expect("a placed");
+        for &(x, y) in path(&r, "a", "b") {
+            assert!(
+                y >= a.1 - 40.0 && y <= a.3 + 40.0 && x >= a.0,
+                "rails {rails:?}: the wire wraps: ({x}, {y})"
+            );
+        }
+    }
+}
+
+// ── Duplicate wires nest, never braid (ROUTING.md model step 5) ──
+
+/// Two wires between one endpoint pair detouring around a wall are exact
+/// parallels — no geometry forces an order, so the convention must pick one
+/// consistently at all three shared channels. A braid shows up as a
+/// self-inflicted crossing, whichever way the pair is declared.
+#[test]
+fn duplicate_detours_nest_without_crossing() {
+    let dims = "{ direction: row; gap: 50; clearance: 10 }\n\
+                |box#a| { width: 60; height: 60 }\n\
+                |box#wall| { width: 60; height: 140 }\n\
+                |box#b| { width: 60; height: 60 }\n";
+    for pair in ["a -> b\nb -> a\n", "a -> b\na -> b\n"] {
+        let src = format!("{dims}{pair}");
+        assert_eq!(crossings(&src), 0, "the pair braids: {pair:?}");
+        assert_eq!(impossibles(&src), 0);
+    }
+}
+
+/// The development sample keeps its header's promise: every routing pattern
+/// it stages — duplicates, detours, a fan, a self-loop — draws with zero
+/// crossings.
+#[test]
+fn links_simple_reports_zero_crossings() {
+    let src = include_str!("fixtures/routing/links_simple.lini");
+    assert_eq!(crossings(src), 0);
+}
+
+/// A bundle whose rails S-curve between two corridors keeps its pitch the
+/// whole way (user-reported: the round-two corridor read handed the second
+/// legs an anchor outside their lawful bounds, the preference-first order
+/// interleaved the trunk with the pocket, and the pairwise clamp collapsed
+/// all three trunk rails onto one ordinate).
+#[test]
+fn a_bundle_of_s_curves_keeps_pitch_on_both_legs() {
+    let src = "{ layout: grid; columns: repeat(3); gap: 35; clearance: 12; }\n\
+        |box#alpha| \"Alpha\" { cell: 1 1; }\n\
+        |group#north| { cell: 2 1; gap: 16; } [\n\
+          |caption| \"North\"\n\
+          |box#nn1| \"N1\"\n\
+          |box#nn2| \"N2\"\n\
+        ]\n\
+        |box#beta| \"Beta\" { cell: 3 1; }\n\
+        |group#west| { cell: 1 2; gap: 16; } [\n\
+          |caption| \"West\"\n\
+          |box#ww1| \"W1\"\n\
+          |box#ww2| \"W2\"\n\
+        ]\n\
+        |group#east| { cell: 3 2; padding: 16; gap: 16; } [\n\
+          |caption| \"East\"\n\
+          |box#ee1| \"E1\"\n\
+          |box#ee2| \"E2\"\n\
+        ]\n\
+        |group#south| { cell: 2 3; gap: 16; } [\n\
+          |caption| \"South\"\n\
+          |box#ss1| \"S1\"\n\
+        ]\n\
+        hub -> south.ss1 & west.ww1\n\
+        north.nn2 -> east.ee1\n\
+        north.nn2 -> east.ee1\n\
+        north.nn2 -> east.ee1\n";
+    let breaches: Vec<_> = report(src)
+        .into_iter()
+        .filter(|v| v.severity == Severity::Warning)
+        .collect();
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+/// Pitch never compresses where the void holds full clearance
+/// (user-reported: links_hard's w2 → s1 pair drew its middle legs 7.5
+/// apart beside gamma — the wall behind them is keep-out-backed, a rail
+/// may hug it, and 12 fits; the retired soft-boundary margin charged the
+/// pair half a clearance for free space no wire could reach).
+#[test]
+fn a_duplicate_pair_keeps_full_pitch_beside_a_keepout() {
+    let src = include_str!("fixtures/routing/links_hard.lini");
+    let r = routes(src);
+    let pair = paths(&r, "west.w2", "south.s1");
+    assert_eq!(pair.len(), 2, "both rails draw");
+    assert_eq!(pair[0].len(), pair[1].len(), "rails share one shape");
+    // Corresponding legs of the two rails stay a full clearance apart —
+    // every leg, not just the straights near the ports.
+    for (i, (a, b)) in pair[0].windows(2).zip(pair[1].windows(2)).enumerate() {
+        let (da, db) = (
+            (a[1].0 - a[0].0, a[1].1 - a[0].1),
+            (b[1].0 - b[0].0, b[1].1 - b[0].1),
+        );
+        let gap = if da.0 == 0.0 && db.0 == 0.0 {
+            (a[0].0 - b[0].0).abs()
+        } else if da.1 == 0.0 && db.1 == 0.0 {
+            (a[0].1 - b[0].1).abs()
+        } else {
+            continue;
+        };
+        assert!(
+            gap >= 12.0 - 1e-6,
+            "leg {i} of the pair compressed to {gap}: {:?} vs {:?}",
+            pair[0],
+            pair[1]
+        );
+    }
+}
+
+// ── Determinism (Law 4) ──
+
+/// A fan's ports land on their sides' centres when nothing contends there
+/// (user-reported: links_medium's `cat -> bowl & water` ports sat pinned
+/// at the top of their windows — the packed bowl↔dog band transmitted its
+/// pressure through the ladder's total order across a zero-sep boundary,
+/// an order two span-disjoint wires never owed each other).
+#[test]
+fn uncontended_fan_ports_take_their_side_centres() {
+    let src = include_str!("fixtures/routing/links_medium.lini");
+    let r = routes(src);
+    let laid = route_sample(src, 12.0);
+    for to in ["kitchen.bowl", "kitchen.water"] {
+        let rect = node_rect(&laid, to).expect("placed");
+        let centre = (rect.1 + rect.3) / 2.0;
+        let p = paths(&r, "cat", to)[0];
+        let port = p.last().unwrap().1;
+        assert!(
+            (port - centre).abs() < 1e-9,
+            "{to}: port {port} != side centre {centre}: {p:?}"
+        );
+    }
+}
+
+/// A fan's shared side is the fan's, not the lead sibling's (ROUTING.md
+/// Special nodes / Law 3): the source sits level between two stacked targets,
+/// so the lead alone is one turn cheaper leaving the **top** — and its sibling
+/// then pays three turns coming back down past the source. Priced over the
+/// group, the **right** side wins and the fan draws the tidy T.
+#[test]
+fn a_fans_shared_side_is_priced_over_the_whole_fan() {
+    let src = "{ gap: 40; clearance: 12; |group| { direction: column; gap: 36 } }\n\
+               |oval#cat| \"Cat\"\n\
+               |group#k| [\n  |box#bowl| \"Bowl\"\n  |box#water| \"Water\"\n]\n\
+               cat -> k.bowl & k.water\n";
+    let r = routes(src);
+    let laid = route_sample(src, 12.0);
+    let cat = node_rect(&laid, "cat").expect("placed");
+    let (top, right) = (cat.1, cat.2);
+    for to in ["k.bowl", "k.water"] {
+        let p = path(&r, "cat", to);
+        orthogonal(p);
+        assert!(
+            (p[0].0 - right).abs() < 1e-9,
+            "{to} leaves the fan-optimal right side, not {:?}: {p:?}",
+            p[0]
+        );
+        assert!(p[0].1 > top, "{to} leaves below the top corner: {p:?}");
+        // Two turns each — out, across the gutter, in. The top-side fan cost
+        // its second sibling three.
+        assert_eq!(turns(p), 2, "{to}: {p:?}");
+    }
+}
+
+// ── Root-layout scopes: nested ordinary wires route [SPEC 11/13/15, M6] ──
+
+#[test]
+fn a_nested_row_under_a_root_drawing_routes_its_wire() {
+    // The root drawing owns its own links (measures, mates), but a nested
+    // ordinary scope's wires belong to the router — they used to vanish.
+    let r = routes_str(
+        "{ layout: drawing; }\n\
+         |sketch#part| { draw: move(0, 0) right(60) down(30) left(60) close(); }\n\
+         |row#legend| { translate: 0 80; gap: 30; } [\n\
+           |box#a| \"A\"\n  |box#b| \"B\"\n  a -> b\n]\n",
+    )
+    .expect("compiles");
+    assert_eq!(r.len(), 1, "the nested wire routes: {r:?}");
+    assert_eq!(r[0].0, ("legend.a".to_string(), "legend.b".to_string()));
+}
+
+#[test]
+fn a_nested_row_under_a_root_sequence_routes_its_wire_with_its_own_label() {
+    // Routes, and wears its *own* label: the label pass must filter
+    // program links exactly like the request pass, or the sequence message's
+    // label lands on the routed wire (request::is_routed).
+    let src = "{ layout: sequence; }\n\
+         |box#a| \"A\"\n|box#b| \"B\"\na -> b \"hello\"\n\
+         |row#legend| { gap: 20; } [\n\
+           |box#x| \"X\"\n  |box#y| \"Y\"\n  x -> y \"wired\"\n]\n";
+    let r = routes_str(src).expect("compiles");
+    // Both draw: the engine-lowered message and the routed nested wire.
+    assert!(
+        r.iter()
+            .any(|(ep, _)| ep == &("legend.x".to_string(), "legend.y".to_string())),
+        "the nested wire routes: {r:?}"
+    );
+    let svg = lini::compile_str(src).expect("compile");
+    let link = svg
+        .find("data-from=\"legend.x\"")
+        .expect("the routed link group");
+    let group = &svg[link..link + svg[link..].find("</g>").unwrap()];
+    assert!(
+        group.contains("wired") && !group.contains("hello"),
+        "the routed wire wears its own label: {group}"
+    );
+}
+
+/// A tree of **anonymous** topics [SPEC 12]: desugar mints deterministic
+/// `lini-topic-N` ids and generates one branch fan per parent, and the scene
+/// routes every branch wire — silent wire loss (a fan naming an unminted child)
+/// is the bug this pins.
+#[test]
+fn anonymous_topics_mint_ids_and_wire_up() {
+    let src = "{ layout: tree; }\n\
+        |topic| \"Root\" [\n\
+          |topic| \"Goals\" [\n\
+            |topic| \"Q3\"\n\
+          ]\n\
+          |topic| \"Risks\"\n\
+        ]\n";
+    let out = lini::desugar_source(src).expect("desugar");
+    assert!(out.contains("#lini-topic-1"), "minted ids: {out}");
+    // The branch fans are present, endpoints dotted from each parent's scope.
+    assert!(
+        out.contains(
+            "lini-topic-1:bottom - lini-topic-1.lini-topic-1:top & lini-topic-1.lini-topic-2:top"
+        ),
+        "root fan: {out}"
+    );
+    // Three routed wires: Root→Goals, Root→Risks, Goals→Q3.
+    let routes = routes(src);
+    assert_eq!(routes.len(), 3, "three branch wires drawn: {routes:?}");
+}
+
+// ── The natural strategy: corridors, obstacles, laws (ROUTING.md The natural strategy) ──
+
+/// Law breaches above counted output and honest strays — what the natural
+/// arm (and the four laws) must keep silent on.
+fn breaches(src: &str) -> Vec<lini::Violation> {
+    report(src)
+        .into_iter()
+        .filter(|v| v.severity != Severity::Info && v.rule != Rule::Impossible)
+        .collect()
+}
+
+#[test]
+fn a_natural_wire_dodges_an_obstacle_at_margin() {
+    // A wall between the endpoints: the direct fit would pierce it, so the
+    // dodge threads vias around it — every sample keeps the natural margin
+    // (clearance / 2) from the wall — and the natural law arm passes.
+    let src = "{ direction: row; gap: 60; clearance: 10; routing: natural }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#wall| { width: 60; height: 200 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a -> b\n";
+    let found = breaches(src);
+    assert!(found.is_empty(), "{found:?}");
+    // And at every knob value the natural arm stays silent (the laws.rs
+    // sweep pattern, on the obstacle corridor).
+    for c in [6.0, 10.0, 16.0] {
+        let swept = lini::testing::laws(&route_sample(src, c));
+        let found: Vec<_> = swept
+            .iter()
+            .filter(|v| v.severity != Severity::Info && v.rule != Rule::Impossible)
+            .collect();
+        assert!(found.is_empty(), "at clearance {c}: {found:?}");
+    }
+    let r = routes(src);
+    let p = path(&r, "a", "b");
+    let laid = route_sample(src, 10.0);
+    let (x0, y0, x1, y1) = node_rect(&laid, "wall").expect("wall placed");
+    for s in p.windows(2) {
+        let dx = (x0 - s[0].0.max(s[1].0))
+            .max(s[0].0.min(s[1].0) - x1)
+            .max(0.0);
+        let dy = (y0 - s[0].1.max(s[1].1))
+            .max(s[0].1.min(s[1].1) - y1)
+            .max(0.0);
+        assert!(
+            (dx * dx + dy * dy).sqrt() >= 5.0 - 1e-6,
+            "sample window {s:?} inside the wall's margin"
+        );
+    }
+    // It actually dodges: the ports are level with the wall, so some sample
+    // clears the wall's top or bottom edge.
+    assert!(
+        p.iter().any(|q| q.1 < y0 || q.1 > y1),
+        "the curve never left the blocked straight line: {p:?}"
+    );
+}
+
+#[test]
+fn a_natural_bundle_draws_two_separated_parallel_curves() {
+    let src = "{ direction: row; gap: 80; clearance: 10; routing: natural }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a -> b\n\
+               a -> b\n";
+    let found = breaches(src);
+    assert!(found.is_empty(), "{found:?}");
+    let r = routes(src);
+    let rails = paths(&r, "a", "b");
+    assert_eq!(rails.len(), 2, "both members drawn");
+    assert_ne!(
+        rails[0], rails[1],
+        "members ride their own placed ordinates"
+    );
+    // Adjacent rails at pitch: no two sample windows pinch below clearance.
+    let mut min = f64::INFINITY;
+    for sa in rails[0].windows(2) {
+        for sb in rails[1].windows(2) {
+            let (ax0, ax1) = (sa[0].0.min(sa[1].0), sa[0].0.max(sa[1].0));
+            let (ay0, ay1) = (sa[0].1.min(sa[1].1), sa[0].1.max(sa[1].1));
+            let (bx0, bx1) = (sb[0].0.min(sb[1].0), sb[0].0.max(sb[1].0));
+            let (by0, by1) = (sb[0].1.min(sb[1].1), sb[0].1.max(sb[1].1));
+            let dx = (bx0 - ax1).max(ax0 - bx1).max(0.0);
+            let dy = (by0 - ay1).max(ay0 - by1).max(0.0);
+            min = min.min((dx * dx + dy * dy).sqrt());
+        }
+    }
+    assert!(min >= 10.0 - 1e-6, "rails pinch to {min}");
+}
+
+#[test]
+fn a_natural_fan_shares_its_trunk_stub_exactly() {
+    // `a -> b & c`: the trunk — the shared port and stub — is one drawn
+    // line; past the tip the siblings split smoothly, each a lawful wire.
+    let src = "{ layout: grid; columns: repeat(2, 80); rows: repeat(2, 80); gap: 40; \
+                 clearance: 10; routing: natural }\n\
+               |box#a| { cell: 1 1; span: 1 2; width: 60; height: 60 }\n\
+               |box#b| { cell: 2 1; width: 60; height: 60 }\n\
+               |box#c| { cell: 2 2; width: 60; height: 60 }\n\
+               a -> b & c\n";
+    let found = breaches(src);
+    assert!(found.is_empty(), "{found:?}");
+    let r = routes(src);
+    let (to_b, to_c) = (path(&r, "a", "b"), path(&r, "a", "c"));
+    assert_eq!(to_b[0], to_c[0], "one shared port");
+    assert_eq!(to_b[1], to_c[1], "one shared stub tip — the trunk is exact");
+    assert_ne!(to_b.last(), to_c.last(), "siblings split to their own ends");
+}
+
+#[test]
+fn a_natural_self_link_draws_a_smooth_hook() {
+    let src = "{ direction: row; gap: 60; clearance: 10; routing: natural }\n\
+               |box#a| { width: 80; height: 60 }\n\
+               a -> a\n";
+    let found = breaches(src);
+    assert!(found.is_empty(), "{found:?}");
+    let r = routes(src);
+    let p = path(&r, "a", "a");
+    let laid = route_sample(src, 10.0);
+    let (x0, y0, x1, _) = node_rect(&laid, "a").expect("a placed");
+    // Default sides right → top (ROUTING.md Special nodes).
+    assert_eq!(p[0].0, x1, "leaves the right side");
+    assert_eq!(p.last().unwrap().1, y0, "returns to the top side");
+    // A smooth hook, not a rounded rectangle: dense curve samples between
+    // the stubs, and never a doubling-back kink sharper than a right angle.
+    assert!(p.len() > 10, "sampled curve: {p:?}");
+    for w in p.windows(3) {
+        let u = (w[1].0 - w[0].0, w[1].1 - w[0].1);
+        let v = (w[2].0 - w[1].0, w[2].1 - w[1].1);
+        assert!(
+            u.0 * v.0 + u.1 * v.1 >= 0.0,
+            "kink at {:?} in the hook",
+            w[1]
+        );
+    }
+    let _ = x0;
+}
+
+#[test]
+fn natural_wires_cross_obliquely_and_the_report_counts_it() {
+    // Two natural wires forced across each other: the crossing is oblique
+    // (no square-on law for natural), counted once by the generic
+    // intersection — and the checker reconciles it, so the scene stays
+    // breach-free. The uneven widths keep the meet off the sample grid —
+    // a crossing exactly on a shared sample point is a touch, not counted,
+    // by engine and checker alike.
+    let src = "{ layout: grid; columns: repeat(3, 60); rows: repeat(3, 70); gap: 30; \
+                 clearance: 10; routing: natural }\n\
+               |box#n| { cell: 2 1; width: 60; height: 60 }\n\
+               |box#a| { cell: 1 2; width: 60; height: 50 }\n\
+               |box#b| { cell: 3 2; width: 80; height: 60 }\n\
+               |box#s| { cell: 2 3; width: 60; height: 80 }\n\
+               n -> s\n\
+               a -> b\n";
+    let found = breaches(src);
+    assert!(found.is_empty(), "{found:?}");
+    assert_eq!(crossings(src), 1, "one oblique crossing, reported");
+}
+
+#[test]
+fn a_natural_obstacle_scene_renders_byte_identically() {
+    let src = "{ direction: row; gap: 60; clearance: 10; routing: natural }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#wall| { width: 60; height: 200 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a -> b\n";
+    let svg = lini::compile_str(src).expect("compiles");
+    let routes = routes_str(src).expect("routes");
+    for _ in 0..2 {
+        assert_eq!(lini::compile_str(src).expect("recompile"), svg);
+        assert_eq!(routes_str(src).expect("reroute"), routes);
+    }
+}
+
+#[test]
+fn an_anonymous_container_routes_exactly_like_a_named_one() {
+    // Worlds are keyed by scene-node identity, never by path (ROUTING.md
+    // Model step 1): stripping a container's id must not move a single
+    // wire. Pre-fix, the anonymous interior was no world at all and its
+    // wires strayed or orbited outside.
+    let named = "|column#g| { gap: 40; padding: 20 } [\n\
+                   |box#a| \"A\"\n\
+                   |box#b| \"B\"\n\
+                   a -> b\n\
+                 ]\n";
+    let anon = named.replace("|column#g|", "|column|");
+    // Paths differ by the id prefix; the drawn geometry must not.
+    let geo = |r: Routes| r.into_iter().map(|(_, p)| p).collect::<Vec<_>>();
+    assert_eq!(geo(routes(named)), geo(routes(&anon)));
+}
+
+#[test]
+fn a_tree_in_an_anonymous_container_draws_every_branch_wire() {
+    // The de-id'd org chart: generated branch links route in the anonymous
+    // column's interior — four wires drawn, zero strays.
+    let src = "|column| \"Org\" { layout: tree; } [\n\
+                 |topic#ceo| \"CEO\" [\n\
+                   |topic#cto| \"CTO\" [ |topic#be| \"BE\"; |topic#fe| \"FE\" ]\n\
+                 ]\n\
+               ]\n";
+    let drawn = routes(src);
+    for (from, to) in [
+        ("ceo", "ceo.cto"),
+        ("ceo.cto", "ceo.cto.be"),
+        ("ceo.cto", "ceo.cto.fe"),
+    ] {
+        assert_eq!(paths(&drawn, from, to).len(), 1, "{from} -> {to} drawn");
+    }
+    let laid = route_sample(src, 12.0);
+    assert!(laid.strays.is_empty(), "no strays in an anonymous tree");
+}
+
+#[test]
+fn natural_routes_inside_an_anonymous_container() {
+    // Both strategies share worlds: the mindmap look survives a bare
+    // `|column|` wrapper.
+    let src = "|column| { layout: tree; direction: row; routing: natural } [\n\
+                 |topic#root| \"R\" [ |topic#one| \"1\"; |topic#two| \"2\" ]\n\
+               ]\n";
+    let laid = route_sample(src, 12.0);
+    assert!(laid.strays.is_empty(), "no strays");
+    assert!(
+        laid.links.iter().any(|l| !l.curve.is_empty()),
+        "branch wire drawn as a curve"
+    );
+}
+
+// ── Fixed ports (ROUTING.md Fixed ports) ──
+
+/// The validator's verdict above counted output and honest strays.
+fn law_breaches(laid: &LaidOut) -> Vec<lini::Violation> {
+    laws(laid)
+        .into_iter()
+        .filter(|v| v.severity != Severity::Info && v.rule != Rule::Impossible)
+        .collect()
+}
+
+fn stray_details(laid: &LaidOut) -> Vec<String> {
+    laid.link_report
+        .iter()
+        .filter(|v| v.rule == Rule::Impossible)
+        .map(|v| v.detail.clone())
+        .collect()
+}
+
+fn drawn_paths<'a>(laid: &'a LaidOut, from: &str, to: &str) -> Vec<&'a [(f64, f64)]> {
+    laid.links
+        .iter()
+        .filter(|l| l.seg_from == from && l.seg_to == to)
+        .map(|l| l.path.as_slice())
+        .collect()
+}
+
+const EPS: f64 = 1e-9;
+
+#[test]
+fn a_fixed_port_lands_exactly() {
+    let src = "{ direction: row; gap: 120; clearance: 8 }\n\
+               |box#a| { width: 60; height: 60 }\n\
+               |box#b| { width: 60; height: 60 }\n\
+               a -> b\n";
+    let a = node_rect(&route_sample(src, 8.0), "a").expect("a placed");
+    let port = a.1 + 10.0; // off-centre, near the corner — the waiver's row
+    let laid = route_sample_with_ports(src, 8.0, &[("a", "b", "a", "right", port)]);
+    let p = &drawn_paths(&laid, "a", "b")[0];
+    assert!(
+        (p[0].0 - a.2).abs() <= EPS && (p[0].1 - port).abs() <= EPS,
+        "{p:?}"
+    );
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+/// The two-source, one-target scene the fixed-port suite reuses: sources on
+/// the left column, `t` spanning the right.
+const TWO_ONTO_T: &str = "{ layout: grid; columns: 60, 200, 60; rows: 60, 60; gap: 20; clearance: 8 }\n\
+     |box#s1| { cell: 1 1; width: 60; height: 40 }\n\
+     |box#s2| { cell: 1 2; width: 60; height: 40 }\n\
+     |box#t| { cell: 3 1; span: 1 2; width: 60; height: 100 }\n\
+     s1 -> t\n\
+     s2 -> t\n";
+
+#[test]
+fn two_fixed_ports_on_one_side_take_their_own_wires() {
+    let t = node_rect(&route_sample(TWO_ONTO_T, 8.0), "t").expect("t placed");
+    let cy = (t.1 + t.3) / 2.0;
+    let (p1, p2) = (cy - 10.0, cy + 10.0);
+    let laid = route_sample_with_ports(
+        TWO_ONTO_T,
+        8.0,
+        &[("s1", "t", "t", "left", p1), ("s2", "t", "t", "left", p2)],
+    );
+    let w1 = drawn_paths(&laid, "s1", "t")[0]
+        .last()
+        .copied()
+        .expect("end");
+    let w2 = drawn_paths(&laid, "s2", "t")[0]
+        .last()
+        .copied()
+        .expect("end");
+    assert!(
+        (w1.0 - t.0).abs() <= EPS && (w1.1 - p1).abs() <= EPS,
+        "{w1:?}"
+    );
+    assert!(
+        (w2.0 - t.0).abs() <= EPS && (w2.1 - p2).abs() <= EPS,
+        "{w2:?}"
+    );
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+/// Three sources onto one side: the middle wire pinned to the side centre,
+/// the outer two free — they ladder around the fixed one at ≥ the pitch
+/// floor, and every law holds.
+const MIX_ONTO_T: &str = "{ layout: grid; columns: 60, 200, 60; rows: 40, 40, 40; gap: 16; clearance: 8 }\n\
+     |box#s1| { cell: 1 1; width: 60; height: 30 }\n\
+     |box#s2| { cell: 1 2; width: 60; height: 30 }\n\
+     |box#s3| { cell: 1 3; width: 60; height: 30 }\n\
+     |box#t| { cell: 3 2; width: 60; height: 60 }\n\
+     s1 -> t:left\n\
+     s2 -> t\n\
+     s3 -> t:left\n";
+
+fn mix_port(clearance: f64) -> (f64, Vec<(f64, f64)>) {
+    let t = node_rect(&route_sample(MIX_ONTO_T, clearance), "t").expect("t placed");
+    (((t.1 + t.3) / 2.0), vec![(t.0, t.1), (t.2, t.3)])
+}
+
+#[test]
+fn a_free_wire_ladders_around_a_fixed_port() {
+    let (cy, t) = mix_port(8.0);
+    let laid = route_sample_with_ports(MIX_ONTO_T, 8.0, &[("s2", "t", "t", "left", cy)]);
+    let ends: Vec<(String, (f64, f64))> = laid
+        .links
+        .iter()
+        .map(|l| (l.seg_from.clone(), *l.path.last().expect("end")))
+        .collect();
+    assert_eq!(ends.len(), 3, "{ends:?}");
+    for (_, e) in &ends {
+        assert!(
+            (e.0 - t[0].0).abs() <= EPS,
+            "all land on t's left: {ends:?}"
+        );
+    }
+    let pinned = ends.iter().find(|(f, _)| f == "s2").expect("s2 drawn").1;
+    assert!(
+        (pinned.1 - cy).abs() <= EPS,
+        "s2 lands on its port: {pinned:?}"
+    );
+    for (f, e) in &ends {
+        if f != "s2" {
+            assert!(
+                (e.1 - cy).abs() >= 4.0 - EPS,
+                "{f} keeps the floor: {ends:?}"
+            );
+        }
+    }
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+#[test]
+fn same_point_landings_merge_into_one_implicit_fan() {
+    let src = "{ layout: grid; columns: 60, 160, 40; rows: 50, 50; gap: 20; clearance: 8 }\n\
+               |box#a| { cell: 1 1; width: 60; height: 40 }\n\
+               |box#b| { cell: 1 2; width: 60; height: 40 }\n\
+               |box#p| { cell: 3 1; span: 1 2; width: 40; height: 40 }\n\
+               a - p\n\
+               b - p\n";
+    let p = node_rect(&route_sample(src, 8.0), "p").expect("p placed");
+    let cy = (p.1 + p.3) / 2.0;
+    let ports = [("a", "p", "p", "left", cy), ("b", "p", "p", "left", cy)];
+    let laid = route_sample_with_ports(src, 8.0, &ports);
+    let wa = drawn_paths(&laid, "a", "p")[0]
+        .last()
+        .copied()
+        .expect("end");
+    let wb = drawn_paths(&laid, "b", "p")[0]
+        .last()
+        .copied()
+        .expect("end");
+    assert_eq!(wa, wb, "one shared fixed port");
+    assert!((wa.1 - cy).abs() <= EPS, "{wa:?}");
+    let fans: Vec<Option<u32>> = laid.links.iter().map(|l| l.fan_to).collect();
+    assert_eq!(fans[0], fans[1], "one fan group: {fans:?}");
+    assert!(fans[0].is_some(), "the merge is a fan, not a coincidence");
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "shared lead is a trunk: {breaches:?}");
+}
+
+/// The schematic face of the trunk (ROUTING.md Fixed ports, [SPEC 16.5]):
+/// two wires landing on **one pin**, their far ends beyond one shared
+/// corner, draw one lead out of the port and part at a single point — the
+/// T a junction dot marks. The implicit fan is the `&` fan's geometry
+/// exactly, so it goes through the same machinery: the second wire used to
+/// stray, its trunk asking the ledger for a track its sibling already held.
+#[test]
+fn same_pin_landings_draw_one_lead_before_the_split() {
+    let src = "{ layout: grid; columns: repeat(2, 60); rows: repeat(2, 60); gap: 24; clearance: 10 }\n\
+               |box#a| { cell: 1 1; span: 1 2; width: 60; height: 60 }\n\
+               |box#b| { cell: 2 1; width: 60; height: 60 }\n\
+               |box#c| { cell: 2 2; width: 60; height: 60 }\n\
+               a - b\n\
+               a - c\n";
+    let a = node_rect(&route_sample(src, 10.0), "a").expect("a placed");
+    let pin = (a.1 + a.3) / 2.0;
+    let ports = [("a", "b", "a", "right", pin), ("a", "c", "a", "right", pin)];
+    let laid = route_sample_with_ports(src, 10.0, &ports);
+    let (pb, pc) = (&drawn_paths(&laid, "a", "b"), &drawn_paths(&laid, "a", "c"));
+    assert_eq!(pb.len(), 1, "both wires draw: {:?}", stray_details(&laid));
+    assert_eq!(pc.len(), 1, "both wires draw: {:?}", stray_details(&laid));
+    assert_eq!(pb[0][0], pc[0][0], "one pin, one landing");
+    assert_eq!(pb[0][1], pc[0][1], "one lead, one split: {pb:?} vs {pc:?}");
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+#[test]
+fn a_fan_across_two_different_fixed_ports_strays_named() {
+    let src = "{ layout: grid; columns: 60, 160, 60; rows: 50, 50; gap: 20; clearance: 8 }\n\
+               |box#x| { cell: 1 1; span: 1 2; width: 60; height: 40 }\n\
+               |box#a| { cell: 3 1; width: 60; height: 40 }\n\
+               |box#b| { cell: 3 2; width: 60; height: 40 }\n\
+               x -> a & b\n";
+    let x = node_rect(&route_sample(src, 8.0), "x").expect("x placed");
+    let cy = (x.1 + x.3) / 2.0;
+    let ports = [
+        ("x", "a", "x", "right", cy - 8.0),
+        ("x", "b", "x", "right", cy + 8.0),
+    ];
+    let laid = route_sample_with_ports(src, 8.0, &ports);
+    assert!(drawn_paths(&laid, "x", "a").is_empty());
+    assert!(drawn_paths(&laid, "x", "b").is_empty());
+    let details = stray_details(&laid);
+    assert_eq!(details.len(), 2, "{details:?}");
+    for d in &details {
+        assert!(d.contains("two different fixed ports"), "{d}");
+    }
+}
+
+#[test]
+fn fixed_ports_closer_than_min_pitch_stray_the_later_wire() {
+    let t = node_rect(&route_sample(TWO_ONTO_T, 8.0), "t").expect("t placed");
+    let cy = (t.1 + t.3) / 2.0;
+    let laid = route_sample_with_ports(
+        TWO_ONTO_T,
+        8.0,
+        &[
+            ("s1", "t", "t", "left", cy),
+            ("s2", "t", "t", "left", cy + 2.0),
+        ],
+    );
+    let first = drawn_paths(&laid, "s1", "t");
+    assert_eq!(first.len(), 1, "the earlier landing stands");
+    let end = first[0].last().expect("end");
+    assert!((end.1 - cy).abs() <= EPS, "{end:?}");
+    assert!(drawn_paths(&laid, "s2", "t").is_empty(), "the later strays");
+    let details = stray_details(&laid);
+    assert_eq!(details.len(), 1, "{details:?}");
+    assert!(
+        details[0].contains("closer than the minimum pitch"),
+        "{details:?}"
+    );
+    let breaches = law_breaches(&laid);
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+#[test]
+fn a_blocked_fixed_port_strays_named() {
+    // `w` sits tight against `a`'s right flank, covering the pinned row;
+    // the free centre row routes fine, the pinned landing cannot exist.
+    let src = "{ layout: grid; columns: 60, 20, 60; gap: 4; clearance: 8 }\n\
+               |box#a| { cell: 1 1; width: 60; height: 100 }\n\
+               |box#w| { cell: 2 1; width: 20; height: 40; translate: 0 24 }\n\
+               |box#b| { cell: 3 1; width: 60; height: 100 }\n\
+               a -> b\n";
+    let plain = route_sample(src, 8.0);
+    assert!(stray_details(&plain).is_empty(), "the free wire routes");
+    let w = node_rect(&plain, "w").expect("w placed");
+    let port = (w.1 + w.3) / 2.0; // squarely behind the blocker
+    let laid = route_sample_with_ports(src, 8.0, &[("a", "b", "a", "right", port)]);
+    assert!(drawn_paths(&laid, "a", "b").is_empty(), "no lawful landing");
+    let details = stray_details(&laid);
+    assert_eq!(details.len(), 1, "{details:?}");
+    assert!(details[0].contains("fixed port blocked"), "{details:?}");
+}
+
+#[test]
+fn fixed_port_routing_is_deterministic() {
+    let (cy, _) = mix_port(8.0);
+    let ports = [("s2", "t", "t", "left", cy)];
+    let run = || {
+        route_sample_with_ports(MIX_ONTO_T, 8.0, &ports)
+            .links
+            .iter()
+            .map(|l| l.path.clone())
+            .collect::<Vec<_>>()
+    };
+    let baseline = run();
+    for _ in 0..25 {
+        assert_eq!(run(), baseline);
+    }
+}
+
+/// The laws sweep with fixed ports in play, down to the low-clearance end:
+/// at every knob value the validator stays silent above counted output, and
+/// every declared edge is drawn or honestly reported.
+#[test]
+fn fixed_ports_hold_the_laws_across_the_clearance_sweep() {
+    let (cy, _) = mix_port(8.0);
+    let ports = [("s2", "t", "t", "left", cy)];
+    for c in [6.0, 8.0, 9.0, 10.0, 12.0, 13.0, 16.0] {
+        let laid = route_sample_with_ports(MIX_ONTO_T, c, &ports);
+        let breaches = law_breaches(&laid);
+        assert!(breaches.is_empty(), "clearance {c}: {breaches:?}");
+        let impossible = laid
+            .link_report
+            .iter()
+            .filter(|v| v.rule == Rule::Impossible)
+            .count();
+        assert_eq!(
+            drawn_edges(&laid) + impossible,
+            3,
+            "clearance {c}: every edge drawn or reported"
+        );
+    }
+}
+
+// ── The track quantum (ROUTING.md §Vocabulary) ──
+
+/// A schematic scope states the fine pitch as its world's **track quantum**
+/// [SPEC 16.1], so a bare run between two gridded parts bends on their grid
+/// rather than on whatever midline their two ink-sized bodies leave.
+/// Preference only: every law still holds.
+#[test]
+fn a_schematic_worlds_interior_runs_land_on_its_track_quantum() {
+    // The fine pitch [SPEC 10.5]; the scope places every part on it.
+    const PITCH: f64 = 20.0;
+    // Two anchors of unequal width, so the corridor between them is anchored
+    // nowhere near a grid line, and a second wire whose pins the alignment
+    // pass did not pair, so it must cross that corridor.
+    let src = "|schematic#s| { gap: 200 } [\n\
+               \x20 |component#u1| [ |pin#a| { side: right }; |pin#b| { side: right }; \
+               |pin#x| { side: right } ]\n\
+               \x20 |component#u2| \"WIDE PART NAME\" { cell: 2 1 } [ \
+               |pin#c| \"LONGNAME\" { side: left }; |pin#d| \"OTHERNAME\" { side: left } ]\n\
+               \x20 u1.a - u2.c\n\
+               \x20 u1.x - u2.d\n]\n";
+    let routes = routes(src);
+    let jog = path(&routes, "s.u1.x", "s.u2.d");
+    orthogonal(jog);
+    assert_eq!(jog.len(), 4, "across, over, across: {jog:?}");
+    assert_eq!(jog[1].0, jog[2].0, "one crossbar: {jog:?}");
+    let bar = jog[1].0;
+    assert_eq!(bar, (bar / PITCH).round() * PITCH, "off the lattice: {bar}");
+    let midline = (jog[0].0 + jog[3].0) / 2.0;
+    assert_ne!(
+        (midline / PITCH).round() * PITCH,
+        midline,
+        "the corridor's own anchor is on the grid, so this proves nothing"
+    );
+    assert!(
+        jog[0].0 < bar && bar < jog[3].0,
+        "and still inside the corridor: {jog:?}"
+    );
+    let breaches: Vec<_> = report(src)
+        .into_iter()
+        .filter(|v| v.severity != Severity::Info)
+        .collect();
+    assert!(breaches.is_empty(), "{breaches:?}");
+}
+
+/// The quantum is the **scope's** grid, counted from the scope's own origin
+/// (ROUTING.md §Vocabulary, [SPEC 16.1]): a sheet its parent seated off the
+/// scene's lattice keeps its own, and its bare runs bend on the lines its
+/// parts stand on — never a hair off them.
+#[test]
+fn a_nested_worlds_runs_round_to_the_scopes_own_offset_lattice() {
+    const PITCH: f64 = 20.0;
+    // The same two parts and crossbar, inside a region a `gap: 7` row seats
+    // off the grid behind a shim.
+    let src = "{ |region::group| { layout: schematic; gap: 200 } }\n\
+               |row| { gap: 11; padding: 3 } [\n\
+               \x20 |block#shim| { width: 33; height: 11 }\n\
+               \x20 |region#s| [\n\
+               \x20   |component#u1| [ |pin#a| { side: right }; |pin#b| { side: right }; \
+               |pin#x| { side: right } ]\n\
+               \x20   |component#u2| \"WIDE PART NAME\" { cell: 2 1 } [ \
+               |pin#c| \"LONGNAME\" { side: left }; |pin#d| \"OTHERNAME\" { side: left } ]\n\
+               \x20   u1.a - u2.c\n\
+               \x20   u1.x - u2.d\n\
+               \x20 ]\n]\n";
+    let laid = route_sample(src, 10.0);
+    let jog = laid
+        .links
+        .iter()
+        .find(|l| l.seg_from == "s.u1.x" && l.seg_to == "s.u2.d")
+        .map(|l| l.path.as_slice())
+        .expect("the jog");
+    orthogonal(jog);
+    assert_eq!(jog.len(), 4, "across, over, across: {jog:?}");
+    let bar = jog[1].0;
+    // The scope's origin is where the row put it — off the scene's grid.
+    let (rx, _, _, _) = node_rect(&laid, "s").expect("the region");
+    let region = laid.nodes[0]
+        .children
+        .iter()
+        .find(|n| n.id.as_deref() == Some("s"))
+        .expect("the region node");
+    let origin = laid.nodes[0].cx + region.cx;
+    assert!(
+        (origin / PITCH).round() * PITCH != origin,
+        "the seat is on the scene's grid, so this proves nothing: {origin} (rect from {rx})"
+    );
+    let phase = (bar - origin) / PITCH;
+    assert!(
+        (phase - phase.round()).abs() < 1e-9,
+        "the crossbar is off the scope's own lattice: {bar} from origin {origin}"
+    );
+}

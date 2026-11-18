@@ -1,0 +1,487 @@
+//! Drawing anchors [SPEC 15.2], against **seated** placed geometry: a side or
+//! corner sits on the node's geometry bbox (stroke excluded), `center` is its
+//! centre, no point is the node's **origin** (`cap || barrel` is
+//! origin-to-origin), and an authored `:segment` reads what the pen
+//! collected. Every anchor reduces to a representative point in the drawing's
+//! frame; sides and named edges additionally carry an **outward** unit normal
+//! (what a mate seats along, what sets a dimension's axis) and the line-like
+//! anchors a direction (what the angle op reads). Rotation is honoured: a
+//! part's `rotate:` turns its anchors with it. A `pattern:`ed node's anchors
+//! read **one copy's geometry at the pattern's datum** — the point drafting
+//! locates [SPEC 15.2/15.4].
+
+use super::super::ir::{Bbox, PlacedNode};
+use super::geometry::{MirrorAxis, P};
+use super::{Segment, chrome};
+use crate::ast::Side;
+use crate::error::Error;
+use crate::layout::geom::dot;
+use crate::layout::geom::rotate;
+use crate::resolve::ResolvedEndpoint;
+
+/// Where an endpoint's anchor sits on its node — resolved against the node's
+/// vocabulary, not yet reduced to a point.
+pub(super) enum Spot {
+    /// No anchor — the node's origin [SPEC 15.1].
+    Origin,
+    /// A side midpoint — directed, outward along its axis.
+    Side(Side),
+    /// A bbox corner — carries its outward unit diagonal.
+    Corner(P),
+    Center,
+    /// An authored pen segment, in the node's local frame (scaled).
+    Segment(Segment),
+}
+
+/// A resolved anchor: the scope-level child it belongs to (what a mate
+/// moves), the node the anchor sits on (a feature, after the dot-path walk),
+/// that node's accumulated frame in the drawing, and the spot itself.
+pub(super) struct Anchor<'a> {
+    pub child: usize,
+    pub node: &'a PlacedNode,
+    /// The node's origin in the drawing frame (rotations accumulated) — the
+    /// **displayed** position, a broken parent's compression included.
+    pub origin: P,
+    /// The origin with every ancestor's `break:` undone [SPEC 15.3] — where
+    /// the feature sits on the unbroken model; equals `origin` without one.
+    pub model_origin: P,
+    /// The accumulated rotation, degrees — local geometry turns by it.
+    pub rot: f64,
+    pub spot: Spot,
+}
+
+/// Resolve an endpoint against the drawing's placed children. `scope` is the
+/// drawing's dot-path (`""` at the root); the endpoint's path is scene-rooted.
+/// `noun` names the statement kind in errors ("mate", "dimension", "leader").
+pub(super) fn resolve<'a>(
+    kids: &'a [PlacedNode],
+    scope: &str,
+    ep: &ResolvedEndpoint,
+    noun: &str,
+) -> Result<Anchor<'a>, Error> {
+    let rel = super::rel_path(&ep.path, scope);
+    let mut segs = rel.split('.');
+    let first = segs.next().expect("an endpoint path is non-empty");
+    // Anonymous containers are scope-transparent [SPEC 9]: a segment may sit
+    // inside an id-less wrapper, whose placed hops still carry position — the
+    // descent returns every hop down to the named node.
+    let first_hops = descend(kids, first)
+        .ok_or_else(|| Error::at(ep.span, format!("{noun} endpoint '{rel}' not placed")))?;
+    let child = kids
+        .iter()
+        .position(|k| std::ptr::eq(k, first_hops[0]))
+        .expect("descend starts among kids");
+
+    // Walk into features, accumulating origin and rotation — each level renders
+    // as translate(cx, cy) rotate(deg), so a parent's turn carries its subtree.
+    // A broken ancestor slid every position in its frame through its view map
+    // (`ride_view`, [SPEC 15.3]); the model origin inverts that per hop —
+    // carrying the active view and the walked model position — so values stay
+    // true at any depth. The view deactivates exactly where the ride stopped:
+    // a turned child (positions inside leave the break frame).
+    let mut hops = first_hops.into_iter();
+    let mut node = hops.next().expect("a descent is non-empty");
+    let mut origin = (node.cx, node.cy);
+    let mut model_origin = origin;
+    let mut rot = node.rotation;
+    // (the map, walked model position, walked displayed position) — both
+    // accumulate in the broken sketch's frame, mirroring `ride_view`.
+    let mut view: Option<(&super::breaks::ViewMap, P, P)> = None;
+    let mut step = |node: &mut &'a PlacedNode,
+                    next: &'a PlacedNode,
+                    view: &mut Option<(&'a super::breaks::ViewMap, P, P)>| {
+        // A broken profile slid the positions in its own frame, and the walk
+        // unmaps them back. A replication carrier's children are not in that
+        // frame: they are whole copies of the broken body, each placed at a
+        // model offset the ride never touched — reading the view off one
+        // counted the break twice.
+        if let Some(geo) = node.sketch.as_ref()
+            && !geo.view.is_identity()
+            && crate::layout::pattern::replicas(node).is_none()
+        {
+            *view = Some((&geo.view, (0.0, 0.0), (0.0, 0.0)));
+        }
+        let d_local = (next.cx, next.cy);
+        let m_local = match view {
+            Some((v, bm, bd)) => {
+                let da = (bd.0 + d_local.0, bd.1 + d_local.1);
+                let ma = v.unmap(da);
+                let local = (ma.0 - bm.0, ma.1 - bm.1);
+                *bm = ma;
+                *bd = da;
+                local
+            }
+            None => d_local,
+        };
+        let local = rotate(d_local, rot);
+        origin = (origin.0 + local.0, origin.1 + local.1);
+        let m = rotate(m_local, rot);
+        model_origin = (model_origin.0 + m.0, model_origin.1 + m.1);
+        if next.rotation != 0.0 {
+            *view = None;
+        }
+        rot += next.rotation;
+        *node = next;
+    };
+    for next in hops.by_ref() {
+        step(&mut node, next, &mut view);
+    }
+    for seg in segs {
+        // Under a `pattern:` carrier the children are its (id-less) copies —
+        // a copy is picked by its numeric index (`ep.copy`, below), never by
+        // id, so the walk won't descend into them; that is also the only
+        // placed divergence from the source tree the path resolved against.
+        let more = (crate::layout::pattern::replicas(node).is_none())
+            .then(|| descend(&node.children, seg))
+            .flatten()
+            .ok_or_else(|| {
+                Error::at(
+                    ep.span,
+                    format!(
+                        "'{rel}' sits inside a replication — a copy is addressed by its index (SPEC 15.4)"
+                    ),
+                )
+            })?;
+        for next in more {
+            step(&mut node, next, &mut view);
+        }
+    }
+
+    let last = rel.rsplit('.').next().expect("non-empty");
+
+    // The numeric copy segment [SPEC 15.4]: 1-based over the placed copies —
+    // grid copies row-major from the seed, radial clockwise from bearing 0,
+    // exactly the order `pattern::expand` placed them. The hop rides `step`,
+    // so a broken ancestor's view still unwinds to the model position.
+    if let Some(k) = ep.copy {
+        if crate::layout::pattern::replicas(node).is_none() {
+            return Err(Error::at(
+                ep.span,
+                format!("'{last}' has no copies — a numeric segment picks a replication copy"),
+            ));
+        }
+        let copies: Vec<&PlacedNode> = node
+            .children
+            .iter()
+            .filter(|c| !chrome::is_chrome(&c.attrs))
+            .collect();
+        if k == 0 || k > copies.len() {
+            return Err(Error::at(
+                ep.span,
+                format!(
+                    "no copy '{last}.{k}' — the replication places {}",
+                    copies.len()
+                ),
+            ));
+        }
+        step(&mut node, copies[k - 1], &mut view);
+    }
+    let spot = spot(node, ep, last)?;
+    Ok(Anchor {
+        child,
+        node,
+        origin,
+        model_origin,
+        rot,
+        spot,
+    })
+}
+
+/// The placed hops from `kids` down to the node `seg` names — one hop for a
+/// direct child, more when the target sits inside **anonymous** containers
+/// (scope-transparent, [SPEC 9]); each hop carries its own frame, so the walk
+/// accumulates them all. Deterministic: ids are unique within a transparent
+/// scope (resolve's duplicate-id check keys full transparent paths).
+fn descend<'a>(kids: &'a [PlacedNode], seg: &str) -> Option<Vec<&'a PlacedNode>> {
+    if let Some(k) = kids.iter().find(|k| k.id.as_deref() == Some(seg)) {
+        return Some(vec![k]);
+    }
+    for anon in kids.iter().filter(|k| k.id.is_none()) {
+        if let Some(mut chain) = descend(&anon.children, seg) {
+            chain.insert(0, anon);
+            return Some(chain);
+        }
+    }
+    None
+}
+
+/// The anchor's spot in the node's own frame: the endpoint's side, corner,
+/// `center`, authored segment, or (bare) the origin.
+fn spot(node: &PlacedNode, ep: &ResolvedEndpoint, node_name: &str) -> Result<Spot, Error> {
+    if let Some(side) = ep.side {
+        return Ok(Spot::Side(side));
+    }
+    let Some(point) = &ep.point else {
+        return Ok(Spot::Origin);
+    };
+    let d = std::f64::consts::FRAC_1_SQRT_2;
+    match point.as_str() {
+        "center" => return Ok(Spot::Center),
+        "top-left" => return Ok(Spot::Corner((-d, -d))),
+        "top-right" => return Ok(Spot::Corner((d, -d))),
+        "bottom-left" => return Ok(Spot::Corner((-d, d))),
+        "bottom-right" => return Ok(Spot::Corner((d, d))),
+        _ => {}
+    }
+    // An authored `:segment` [SPEC 15.3]: what the pen collected — model
+    // coordinates, mapped here to the **displayed** position (a `break:`
+    // slides the kept pieces; without one the map is identity).
+    let segments = node
+        .sketch
+        .as_ref()
+        .map(|s| s.segments.as_slice())
+        .unwrap_or(&[]);
+    let Some((_, segment)) = segments.iter().find(|(n, _)| n == point) else {
+        let mut msg = format!("no segment ':{point}' on '{node_name}'");
+        let near: Vec<String> =
+            crate::suggest::nearest(point, segments.iter().map(|(n, _)| n.as_str()), 2)
+                .iter()
+                .map(|n| format!(":{n}"))
+                .collect();
+        msg.push_str(&crate::suggest::did_you_mean(&near));
+        return Err(Error::at(ep.span, msg));
+    };
+    let view = &node.sketch.as_ref().expect("segments imply a sketch").view;
+    Ok(Spot::Segment(view.segment(*segment)))
+}
+
+impl Anchor<'_> {
+    /// The node whose shape the anchor reads: the node itself — or, on a
+    /// replication carrier, **one copy** (the seed's shape at the datum; a
+    /// radial ring reads the same shape about its centre) [SPEC 15.2]. Through
+    /// stacked replications alike: a `mirror:`ed `pattern:` holds carriers, and
+    /// only the copy at the end of that chain is a drawn shape.
+    pub fn feature(&self) -> &PlacedNode {
+        crate::layout::pattern::one_copy(self.node).map_or(self.node, |(copy, _)| copy)
+    }
+
+    /// The node's geometry bbox, local — the drawn shape, stroke excluded
+    /// [SPEC 15.1]; one copy's shape for a patterned node.
+    pub fn geometry_box(&self) -> Bbox {
+        super::geometry_box(self.feature())
+    }
+
+    /// The representative point, node-local [SPEC 15.2]: a point is itself, an
+    /// edge or arc its midpoint, a bbox name its bbox point.
+    pub fn local_point(&self) -> P {
+        let g = self.geometry_box();
+        let (cx, cy) = g.center();
+        match &self.spot {
+            Spot::Origin => (0.0, 0.0),
+            Spot::Center => (cx, cy),
+            Spot::Side(side) => side_mid(&g, *side),
+            Spot::Corner((dx, dy)) => (
+                if *dx < 0.0 { g.min_x } else { g.max_x },
+                if *dy < 0.0 { g.min_y } else { g.max_y },
+            ),
+            Spot::Segment(p) => match *p {
+                Segment::Point(p) => p,
+                Segment::Arc { mid, .. } => mid,
+                Segment::Circle { center, .. } => center,
+                Segment::Edge(a, b) => ((a.0 + b.0) / 2.0, (a.1 + b.1) / 2.0),
+            },
+        }
+    }
+
+    /// The representative point in the drawing frame — the **displayed**
+    /// position (a `break:` compresses the view; [SPEC 15.3]).
+    pub fn point(&self) -> P {
+        self.to_world(self.local_point())
+    }
+
+    /// An **edge** anchor's two ends in the drawing frame — where a dimension's
+    /// extension line may spring from instead of the midpoint [SPEC 15.2]:
+    /// the witness line leaves the corner nearest the dim line, never travels
+    /// the face. `None` for every anchor that is not a named edge (a point, an
+    /// arc, a bbox name), whose extension line springs from its point.
+    pub fn edge_ends(&self) -> Option<(P, P)> {
+        match &self.spot {
+            Spot::Segment(Segment::Edge(a, b)) => Some((self.to_world(*a), self.to_world(*b))),
+            _ => None,
+        }
+    }
+
+    /// The representative point with any `break:` undone — the node's own and
+    /// every ancestor's — what measured values read: *dimensions stay true*
+    /// [SPEC 15.3/15.6].
+    pub fn model_point(&self) -> P {
+        self.model_world(self.local_point())
+    }
+
+    /// A displayed node-local point on the unbroken model, world frame.
+    pub fn model_world(&self, local_disp: P) -> P {
+        let r = rotate(self.unmap_local(local_disp), self.rot);
+        (self.model_origin.0 + r.0, self.model_origin.1 + r.1)
+    }
+
+    /// The feature's break view map, if it has one.
+    fn view(&self) -> Option<&super::breaks::ViewMap> {
+        let v = &self.feature().sketch.as_ref()?.view;
+        (!v.is_identity()).then_some(v)
+    }
+
+    /// Node-local model → displayed under the feature's break map.
+    pub fn map_local(&self, p: P) -> P {
+        self.view().map_or(p, |v| v.map(p))
+    }
+
+    /// Node-local displayed → model — the unbroken position.
+    pub fn unmap_local(&self, p: P) -> P {
+        self.view().map_or(p, |v| v.unmap(p))
+    }
+
+    /// The unit direction `a` → `b` of an edge anchor — the zero vector when
+    /// its two ends coincide, as before (a zero-length edge names no
+    /// direction, and the readings below fall through on it).
+    fn edge_unit(a: P, b: P) -> P {
+        crate::layout::geom::unit((b.0 - a.0, b.1 - a.1)).unwrap_or((0.0, 0.0))
+    }
+
+    /// The **outward** unit normal of a directed anchor (a side, a named
+    /// edge), in the drawing frame — what a mate seats along and what sets a
+    /// dimension's axis. `None` for the point anchors.
+    pub fn outward(&self) -> Option<P> {
+        let local = match &self.spot {
+            Spot::Side(side) => side.outward(),
+            Spot::Segment(Segment::Edge(a, b)) => {
+                let t = Self::edge_unit(*a, *b);
+                // Outward = the **left of the pen's travel** [SPEC 15.5]: a
+                // profile drawn the natural way (material on the pen's right —
+                // axis, up, across, down) faces every edge outward, interior
+                // shoulders included — where an away-from-centre guess flips.
+                (t.1, -t.0)
+            }
+            _ => return None,
+        };
+        Some(rotate(local, self.rot))
+    }
+
+    /// A seat's default **facing side** [SPEC 15.5]: the bbox side whose
+    /// outward — read after the node's `rotate:` — most opposes the target
+    /// face's `normal`; its midpoint in the drawing frame is where the
+    /// annotation touches down.
+    pub fn facing_side_point(&self, normal: P) -> P {
+        let facing = [Side::Top, Side::Bottom, Side::Left, Side::Right]
+            .into_iter()
+            .min_by(|a, b| {
+                let along = |s: Side| {
+                    let o = rotate(s.outward(), self.rot);
+                    dot(o, normal)
+                };
+                along(*a).total_cmp(&along(*b))
+            })
+            .expect("four sides");
+        self.to_world(side_mid(&self.geometry_box(), facing))
+    }
+
+    /// A line-like anchor's unit direction in the drawing frame — what the
+    /// angle op measures [SPEC 15.6]: a named edge, a `|line|`'s run, a bbox
+    /// side (the edge along it). `None` for the point anchors.
+    pub fn direction(&self) -> Option<P> {
+        if let Spot::Segment(Segment::Edge(a, b)) = &self.spot {
+            return Some(rotate(Self::edge_unit(*a, *b), self.rot));
+        }
+        if let Spot::Side(side) = &self.spot {
+            let along = match side {
+                Side::Top | Side::Bottom => (1.0, 0.0),
+                Side::Left | Side::Right => (0.0, 1.0),
+            };
+            return Some(rotate(along, self.rot));
+        }
+        // A whole `|line|` / `|centerline|` is line-like [SPEC 15.6]: its run
+        // from first to last drawn point.
+        if matches!(self.spot, Spot::Origin | Spot::Center)
+            && self.feature().kind == crate::resolve::NodeKind::Line
+            && let Ok(Some(pts)) = super::super::primitives::attr_points(
+                &self.feature().attrs,
+                "points",
+                self.node.span,
+            )
+            && pts.len() >= 2
+        {
+            let (a, b) = (pts[0], pts[pts.len() - 1]);
+            return Some(rotate(Self::edge_unit(a, b), self.rot));
+        }
+        None
+    }
+
+    /// A round-by-construction anchor's **diameter**, px [SPEC 15.6]: a named
+    /// `circle()` segment, or an `|oval|`-lineage node drawn as a circle —
+    /// never guessed from coordinates.
+    pub fn round_diameter(&self) -> Option<f64> {
+        if let Spot::Segment(p) = &self.spot {
+            return match p {
+                Segment::Circle { r, .. } => Some(2.0 * r),
+                _ => None,
+            };
+        }
+        let f = self.feature();
+        if f.kind != crate::resolve::NodeKind::Oval {
+            return None;
+        }
+        let g = self.geometry_box();
+        ((g.w() - g.h()).abs() < 1e-6).then(|| g.w())
+    }
+
+    /// The sketch's `mirror:` axes — the unary mirrored readings [SPEC 15.6].
+    pub fn mirrors(&self) -> &[MirrorAxis] {
+        self.node
+            .sketch
+            .as_ref()
+            .map(|s| s.mirrors.as_slice())
+            .unwrap_or(&[])
+    }
+
+    /// Whether the anchored profile is a `revolve:` — the `⌀` station and
+    /// full-span readings require it [SPEC 15.6].
+    pub fn revolved(&self) -> bool {
+        self.node.sketch.as_ref().is_some_and(|s| s.revolved)
+    }
+
+    /// The anchored node's copy count — the dimension text's `N×` prefix
+    /// [SPEC 15.6], off whichever replications made the copies: stacked ones
+    /// multiply, so a mirrored 2-hole pattern reads `4×`.
+    pub fn replica_count(&self) -> Option<usize> {
+        Some(crate::layout::pattern::one_copy(self.node)?.1)
+    }
+
+    /// Node-local → drawing frame.
+    pub fn to_world(&self, p: P) -> P {
+        let r = rotate(p, self.rot);
+        (self.origin.0 + r.0, self.origin.1 + r.1)
+    }
+
+    /// Drawing frame → node-local.
+    pub fn to_local(&self, p: P) -> P {
+        rotate((p.0 - self.origin.0, p.1 - self.origin.1), -self.rot)
+    }
+}
+
+/// An endpoint as the author wrote it — scope-relative path plus its anchor;
+/// how mates and dimensions spell an endpoint in an error.
+pub(super) fn spell(ep: &ResolvedEndpoint, scope: &str) -> String {
+    let mut s = super::rel_path(&ep.path, scope).to_string();
+    if let Some(k) = ep.copy {
+        s.push('.');
+        s.push_str(&k.to_string());
+    }
+    if let Some(side) = ep.side {
+        s.push(':');
+        s.push_str(side.name());
+    } else if let Some(p) = &ep.point {
+        s.push(':');
+        s.push_str(p);
+    }
+    s
+}
+
+/// A side's midpoint on a local box — its representative point [SPEC 15.2].
+fn side_mid(g: &Bbox, side: Side) -> P {
+    let (cx, cy) = g.center();
+    match side {
+        Side::Top => (cx, g.min_y),
+        Side::Bottom => (cx, g.max_y),
+        Side::Left => (g.min_x, cy),
+        Side::Right => (g.max_x, cy),
+    }
+}

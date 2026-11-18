@@ -1,0 +1,485 @@
+//! The property-validation pass and the lint warnings [SPEC 17/21]: one insta
+//! family per diagnostic, snapshotting the exact CLI-rendered message, plus
+//! the silent cases that gate false positives.
+
+fn diags(src: &str) -> String {
+    lini::lint_str(src)
+        .expect("parse")
+        .iter()
+        .map(|d| d.display_with_source(src, "test.lini").to_string())
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+#[track_caller]
+fn assert_silent(src: &str) {
+    let d = diags(src);
+    assert!(d.is_empty(), "expected no diagnostics, got:\n{d}");
+}
+
+// ── Unknown property name — an error, everywhere ──
+
+#[test]
+fn unknown_property_suggests_the_nearest_name() {
+    insta::assert_snapshot!(
+        diags("|box#a| { colr: red; }\n"),
+        @"test.lini:1:11: error: unknown property 'colr'; did you mean 'color'?"
+    );
+}
+
+#[test]
+fn unknown_property_errors_even_in_a_class_rule() {
+    insta::assert_snapshot!(
+        diags("{ .hot { colr: red; } }\n|box#a| .hot\n"),
+        @"test.lini:1:10: error: unknown property 'colr'; did you mean 'color'?"
+    );
+}
+
+// ── Misused property, wearer statically known — an error with a correction ──
+
+#[test]
+fn type_owned_property_on_the_wrong_type_errors() {
+    insta::assert_snapshot!(
+        diags("|box#a| { points: 0 0, 1 1; }\n"),
+        @"test.lini:1:11: error: 'points' has no meaning on '|box|' — it reads on '|line|' / '|poly|'"
+    );
+}
+
+#[test]
+fn misuse_errors_in_an_element_rule_too() {
+    insta::assert_snapshot!(
+        diags("{ |box| { symbol: heart; } }\n|box#a|\n"),
+        @"test.lini:1:11: error: 'symbol' has no meaning on '|box|' — it reads on '|icon|' / '|surface-finish|' / '|label|' / the discrete parts ('|R|', '|C|', …) / '|door|' / '|bed|' / '|sofa|' / '|dining|' / '|bath|' / '|appliance|'"
+    );
+}
+
+#[test]
+fn series_data_off_a_series_errors() {
+    insta::assert_snapshot!(
+        diags("|box#a| { data: 1, 2; }\n"),
+        @"test.lini:1:11: error: 'data' has no meaning on '|box|' — it reads on a chart series"
+    );
+}
+
+#[test]
+fn cell_off_a_grid_errors_with_the_context() {
+    insta::assert_snapshot!(
+        diags("|row#r| [ |box#a| { cell: 2 1; } ]\n"),
+        @"test.lini:1:21: error: 'cell' places a grid or schematic child — this box sits in a 'layout: flow'"
+    );
+}
+
+#[test]
+fn cell_in_a_grid_is_silent() {
+    assert_silent("{ layout: grid; columns: 80, 80; }\n|box#a| { cell: 2 1; }\n");
+}
+
+#[test]
+fn cell_in_a_schematic_is_silent() {
+    // [SPEC 16.1] `cell:` also places on the schematic engine's own ordinal
+    // track grid — and promotes a satellite to an anchor.
+    assert_silent("|schematic#s| [ |R#r1| \"1k\" { cell: 2 1; } ]\n");
+}
+
+#[test]
+fn span_in_a_schematic_still_errors() {
+    // Schematic tracks have no spans — the gate stays grid-only.
+    insta::assert_snapshot!(
+        diags("|schematic#s| [ |R#r1| \"1k\" { span: 2; } ]\n"),
+        @"test.lini:1:31: error: 'span' spans grid tracks — this box sits in a 'layout: schematic'"
+    );
+}
+
+#[test]
+fn cell_stays_silent_when_a_rule_could_set_the_layout() {
+    // A stylesheet rule injects `layout:` — the parent's layout is no longer
+    // statically known, so the strict check stands down.
+    assert_silent(
+        "{ |row| { layout: grid; columns: 80, 80; } }\n|row#r| [ |box#a| { cell: 2 1; } ]\n",
+    );
+}
+
+#[test]
+fn sequence_placement_off_a_sequence_errors() {
+    insta::assert_snapshot!(
+        diags("|row#r| [ |note#n| \"hi\" { place: over a; } ]\n"),
+        @"test.lini:1:27: error: 'place' is valid only in a 'layout: sequence'"
+    );
+}
+
+#[test]
+fn density_off_the_root_errors() {
+    insta::assert_snapshot!(
+        diags("|box#a| { density: 2; }\n"),
+        @"test.lini:1:11: error: 'density' is scene config — set it in the root block"
+    );
+}
+
+#[test]
+fn container_scoped_property_reads_on_a_matching_root() {
+    // `unit:` is `|drawing|`-owned; a `layout: drawing` root is that scope.
+    assert_silent("{ layout: drawing; unit: mm; }\n|rect#p| { width: 40; height: 20; }\n");
+}
+
+#[test]
+fn a_floorplan_scope_reads_the_drawing_surface_and_its_own() {
+    // A floorplan **is** a drawing [SPEC 15.11], so the `|drawing|`-owned
+    // scope properties read there — on the root form and on the node form —
+    // and its own `thickness:` reads beside them.
+    assert_silent(
+        "{ layout: floorplan; unit: m; scale: 0.02; thickness: 0.15; }\n\
+         |wall#w| { draw: move(0, 0) right(7.2):north; }\n",
+    );
+    assert_silent(
+        "|floorplan#f| { unit: m; thickness: 0.15; } [\n\
+         |wall#w| { draw: move(0, 0) right(7.2):north; thickness: 0.1; }\n]\n",
+    );
+    // The dialect's own vocabulary stays its own: a plain box cannot mean it.
+    insta::assert_snapshot!(
+        diags("|box#a| { thickness: 0.15; }\n"),
+        @"test.lini:1:11: error: 'thickness' has no meaning on '|box|' — it reads on '|floorplan|' / '|wall|'"
+    );
+    insta::assert_snapshot!(
+        diags("|box#a| { steps: 4; }\n"),
+        @"test.lini:1:11: error: 'steps' has no meaning on '|box|' — it reads on '|stairs|'"
+    );
+}
+
+#[test]
+fn layout_owned_property_off_its_root_layout_errors() {
+    // A layout-owned property reads on the root only when the root runs that
+    // layout — `activation:` on a flow root is the same misuse as on a node.
+    insta::assert_snapshot!(
+        diags("{ layout: flow; activation: none; }\n|box#a| \"x\"\n"),
+        @"test.lini:1:17: error: 'activation' has no meaning on the root block — it reads on a 'layout: sequence'"
+    );
+    assert_silent("{ layout: sequence; activation: none; }\n|box#a| \"x\"\na -> b \"m\"\n");
+}
+
+// ── Class rules: CSS semantics — inert is fine, dead-everywhere warns ──
+
+#[test]
+fn a_class_dead_on_every_wearer_warns() {
+    insta::assert_snapshot!(
+        diags("{ .geo { points: 0 0, 5 5; } }\n|box#a| .geo\n"),
+        @"test.lini:1:10: warning: '.geo { points: … }' is inert on every wearer"
+    );
+}
+
+#[test]
+fn a_class_usable_by_one_wearer_is_silent() {
+    assert_silent("{ .geo { points: 0 0, 5 5; } }\n|box#a| .geo\n|line#l| .geo\n");
+}
+
+#[test]
+fn a_text_valid_class_worn_only_by_text_is_live() {
+    // A text leaf is a wearer [SPEC 3]: a text-valid property is live on it, so
+    // the class is neither dead nor never-worn.
+    assert_silent("{ .card-title { font-size: 17; } }\n\"Starter\" .card-title\n");
+}
+
+#[test]
+fn a_box_only_class_worn_only_by_text_warns_dead() {
+    // The class-polymorphism law: `padding` is inert on the only wearer (text),
+    // so it warns dead-on-every-wearer.
+    insta::assert_snapshot!(
+        diags("{ .card { padding: 40; } }\n\"Starter\" .card\n"),
+        @"test.lini:1:11: warning: '.card { padding: … }' is inert on every wearer"
+    );
+}
+
+#[test]
+fn a_never_worn_class_warns() {
+    insta::assert_snapshot!(
+        diags("{ .hot { fill: red; } }\n|box#a|\n"),
+        @"test.lini:1:3: warning: class '.hot' is never worn"
+    );
+}
+
+// ── Malformed values the ledger judges statically ──
+
+#[test]
+fn opacity_out_of_range_errors() {
+    insta::assert_snapshot!(
+        diags("|box#a| { opacity: 3; }\n"),
+        @"test.lini:1:11: error: 'opacity' is a fraction 0..1"
+    );
+}
+
+#[test]
+fn wavy_on_a_node_errors() {
+    // `wavy` is link-only by design [SPEC 17]; a link keeps it.
+    insta::assert_snapshot!(
+        diags("|box#a| { stroke-style: wavy; }\n"),
+        @"test.lini:1:11: error: 'wavy' waves a link's wire — a shape's outline takes solid, dashed, dotted, center, or phantom"
+    );
+    assert_eq!(
+        diags("|box#a|\n|box#b|\na -> b { stroke-style: wavy; }\n"),
+        ""
+    );
+}
+
+#[test]
+fn translate_arity_errors() {
+    insta::assert_snapshot!(
+        diags("|box#a| { translate: 5; }\n"),
+        @"test.lini:1:11: error: 'translate' takes 'x y'"
+    );
+}
+
+#[test]
+fn a_comma_list_on_a_one_value_property_errors() {
+    insta::assert_snapshot!(
+        diags("|box#a| { padding: 4, 5; }\n"),
+        @"test.lini:1:11: error: 'padding' takes one value, not a comma list"
+    );
+}
+
+#[test]
+fn an_unknown_color_name_errors() {
+    // [SPEC 2/21] a bare word in a colour slot is a CSS colour name; the Lini
+    // palette's hues are `--vars`, so a bare `rose` is not one.
+    insta::assert_snapshot!(
+        diags("|box#a| { fill: xyzzy; }\n"),
+        @"test.lini:1:11: error: invalid color 'xyzzy'"
+    );
+    insta::assert_snapshot!(
+        diags("|box#a| { color: rose; }\n"),
+        @"test.lini:1:11: error: invalid color 'rose'"
+    );
+    // A stop inside a paint is judged like any colour.
+    insta::assert_snapshot!(
+        diags("|box#a| { fill: gradient(xyzzy, red); }\n"),
+        @"test.lini:1:11: error: invalid color 'xyzzy'"
+    );
+    // The forms that *are* colours stay silent — a CSS name (any case), the
+    // paint keywords, a palette var, a hex.
+    assert_silent(
+        "|box#a| { fill: darkslategray; stroke: currentColor; color: none }\n         |box#b| { fill: --rose-soft; stroke: #f80 }\n",
+    );
+}
+
+#[test]
+fn pins_and_number_take_counts() {
+    // [SPEC 16.2/21] both are counts — a non-number, a fraction, or a pin
+    // count below 1 is a value-shape error.
+    insta::assert_snapshot!(
+        diags("|schematic#s| [ |J#j1| { pins: 0 } ]\n"),
+        @"test.lini:1:26: error: 'pins' takes a count ≥ 1"
+    );
+    insta::assert_snapshot!(
+        diags("|schematic#s| [ |J#j1| { pins: two } ]\n"),
+        @"test.lini:1:26: error: 'pins' takes a count ≥ 1"
+    );
+    insta::assert_snapshot!(
+        diags("|schematic#s| [ |component#u1| [ |pin#a| { number: 1.5 } ] ]\n"),
+        @"test.lini:1:44: error: 'number' takes an integer"
+    );
+    assert_silent("|schematic#s| [ |J#j1| { pins: 4 } ]\n");
+    assert_silent("|schematic#s| [ |component#u1| [ |pin#a| { number: 3 } ] ]\n");
+}
+
+#[test]
+fn an_href_never_runs_code() {
+    // [SPEC 17/21] a clicked script URL runs in whatever page serves the SVG —
+    // on a node, a link, or through a rule alike.
+    insta::assert_snapshot!(
+        diags("|box#a| { href: \"javascript:alert(1)\" }\n"),
+        @"test.lini:1:11: error: 'href' links to a page — a 'javascript:' URL runs code when clicked"
+    );
+    insta::assert_snapshot!(
+        diags("|box#a|\n|box#b|\na -> b { href: \"data:text/html,x\" }\n"),
+        @"test.lini:3:10: error: 'href' links to a page — a 'data:' URL runs code when clicked"
+    );
+    insta::assert_snapshot!(
+        diags("{ |k::box| { href: \"VBScript:x\" } }\n|k#a|\n"),
+        @"test.lini:1:14: error: 'href' links to a page — a 'vbscript:' URL runs code when clicked"
+    );
+    // Read the way a browser reads it: case, padding, and a tab inside the
+    // scheme do not hide it.
+    insta::assert_snapshot!(
+        diags("|box#a| { href: \" Java\\tScript:alert(1)\" }\n"),
+        @"test.lini:1:11: error: 'href' links to a page — a 'javascript:' URL runs code when clicked"
+    );
+    // Pages, mail, fragments, relative paths, app links — all fine.
+    assert_silent(
+        "|box#a| { href: \"https://lini.rs\" }\n|box#b| { href: \"mailto:a@b.c\" }\n|box#c| { href: \"#top\" }\n|box#d| { href: \"docs/javascript.html\" }\n|box#e| { href: \"obsidian://open?file=x\" }\n",
+    );
+}
+
+// ── The auto-create near-miss warning [SPEC 3/20] ──
+
+#[test]
+fn a_near_miss_auto_create_warns_toward_the_target() {
+    insta::assert_snapshot!(
+        diags("|box#cat| \"cat\"\ncta -> bird\n"),
+        @"test.lini:2:1: warning: 'cta' auto-creates a new box; did you mean 'cat'?"
+    );
+}
+
+#[test]
+fn a_case_slip_warns_even_past_the_typo_distance() {
+    insta::assert_snapshot!(
+        diags("|box#cat|\nCAT -> dog\n"),
+        @"test.lini:2:1: warning: 'CAT' auto-creates a new box; did you mean 'cat'?"
+    );
+}
+
+#[test]
+fn distinct_implicit_names_stay_silent() {
+    // The all-implicit hello-world draws no noise [SPEC 3].
+    assert_silent("cat -> dog -> bird\n");
+}
+
+#[test]
+fn short_distinct_ids_stay_silent() {
+    // `a`/`b` are within edit distance 2 but not typos of each other — the
+    // near-miss distance must be shorter than the id itself.
+    assert_silent("|box#a| \"A\"\na -> b\n");
+}
+
+#[test]
+fn a_near_miss_of_a_previously_created_name_warns() {
+    // `serverr` is a typo of the previously auto-created `server`; the
+    // numbered sibling `server2` is a family, not a typo — it stays silent.
+    insta::assert_snapshot!(
+        diags("server -> db\nserver2 -> serverr\n"),
+        @"test.lini:2:12: warning: 'serverr' auto-creates a new box; did you mean 'server'?"
+    );
+}
+
+// ── Tree structure errors [SPEC 12/20] — hard compile errors on the nested AST ──
+
+fn tree_err(src: &str) -> String {
+    lini::check(src)
+        .expect_err("expected a tree structure error")
+        .message
+}
+
+#[test]
+fn topic_outside_a_tree_errors() {
+    insta::assert_snapshot!(
+        tree_err("|box#b| [\n  |topic#a| \"A\"\n]\n"),
+        @"'|topic|' builds a tree — it belongs in a 'layout: tree'"
+    );
+}
+
+#[test]
+fn a_tree_with_no_root_topic_errors() {
+    insta::assert_snapshot!(
+        tree_err("|column#o| { layout: tree } [\n  |box#x|\n]\n"),
+        @"a tree needs exactly one root '|topic|'"
+    );
+}
+
+#[test]
+fn a_tree_with_two_roots_errors_on_the_second() {
+    insta::assert_snapshot!(
+        tree_err("|column#o| { layout: tree } [\n  |topic#a| \"A\"\n  |topic#b| \"B\"\n]\n"),
+        @"a tree has one root — '|topic|' 'B' is a second"
+    );
+}
+
+#[test]
+fn a_bilateral_top_side_errors() {
+    // `top`/`bottom` has no meaning in a left/right split [SPEC 12/20].
+    insta::assert_snapshot!(
+        tree_err(
+            "|column#o| { layout: tree; direction: bilateral } [\n  |topic#r| \"R\" [\n    |topic#a| \"A\" { side: top }\n  ]\n]\n"
+        ),
+        @"a bilateral tree grows left and right — 'side' takes left or right"
+    );
+}
+
+#[test]
+fn a_side_on_a_row_tree_errors() {
+    // `side:` picks a bilateral half; a one-direction tree has none [SPEC 12/20].
+    insta::assert_snapshot!(
+        tree_err(
+            "|column#o| { layout: tree; direction: row } [\n  |topic#r| \"R\" [\n    |topic#a| \"A\" { side: left }\n  ]\n]\n"
+        ),
+        @"'side' picks a bilateral branch's half — this tree has one growth direction"
+    );
+}
+
+#[test]
+fn a_deeper_bilateral_side_errors() {
+    // The override is a first-level topic's; a deeper `side:` cannot repick its
+    // half [SPEC 12/20].
+    insta::assert_snapshot!(
+        tree_err(
+            "|column#o| { layout: tree; direction: bilateral } [\n  |topic#r| \"R\" [\n    |topic#a| \"A\" [ |topic#b| \"B\" { side: left } ]\n  ]\n]\n"
+        ),
+        @"'side' picks a bilateral branch's half — this tree has one growth direction"
+    );
+}
+
+#[test]
+fn a_first_level_bilateral_side_override_is_silent() {
+    let src = "|column#o| { layout: tree; direction: bilateral } [\n  |topic#r| \"R\" [\n    |topic#a| \"A\" { side: left }\n    |topic#b| \"B\"\n  ]\n]\n";
+    assert!(
+        lini::check(src).is_ok(),
+        "a first-level side override should compile"
+    );
+    assert_silent(src);
+}
+
+#[test]
+fn a_well_formed_tree_is_silent() {
+    let src = "|column#o| { layout: tree } [\n  |topic#a| \"A\" [\n    |topic#b| \"B\"\n  ]\n]\n";
+    assert!(lini::check(src).is_ok(), "a valid tree should compile");
+    assert_silent(src);
+}
+
+#[test]
+fn scoped_topic_ids_stay_legal_across_sealed_bodies() {
+    // Topic nesting is preserved, so two `#note`s in different topic bodies are
+    // distinct by their dot-path — no duplicate-id error [SPEC 9/12].
+    let src = "{ layout: tree; }\n\
+        |topic#root| \"R\" [\n\
+          |topic#a| \"A\" [ |topic#note| \"n1\" ]\n\
+          |topic#b| \"B\" [ |topic#note| \"n2\" ]\n\
+        ]\n";
+    assert!(
+        lini::check(src).is_ok(),
+        "scoped duplicate ids should compile"
+    );
+}
+
+// ── `format:` ownership [SPEC 17, CHART-DRAW Stages 1 + 8] ──
+
+#[test]
+fn format_reads_on_its_owners_not_a_plain_box() {
+    // `format` is a dual-channel property [SPEC 17, beta Stage 0]: engine-read
+    // on the chart leg, scope-link on the drawing leg (drawing scope → `(-)`
+    // rule → class → the dim's block). It reads on those owners — a drawing
+    // scope carries it as config — but a plain box cannot mean it, so it errors
+    // (no silent inert). Unlike `clearance`, it is not universal scene config.
+    assert_silent(
+        "|drawing| { format: decimal 2 } [\n|sketch| { draw: move(0,0) right(10) down(10) }\n]\n",
+    );
+    insta::assert_snapshot!(
+        diags("|box#a| { format: decimal 2; }\n"),
+        @"test.lini:1:11: error: 'format' has no meaning on '|box|' — it reads on '|chart|' / '|pie|' / '|axis|' / a chart series / '|drawing|' / a '(-)' dimension"
+    );
+}
+
+#[test]
+fn format_on_an_axis_is_silent() {
+    assert_silent("|chart| [\n|axis| { format: decimal 2 }\n|bars| { data: 1, 2 }\n]\n");
+}
+
+// ── Per-datum paint lists [SPEC 14.6, CHART-DRAW Stage 2] ──
+
+#[test]
+fn paint_list_on_a_series_is_silent_but_box_and_line_still_error() {
+    assert_silent("|chart| [\n|bars| { data: 1, 2; fill: auto, --red }\n]\n");
+    insta::assert_snapshot!(
+        diags("|box#a| { fill: red, blue; }\n"),
+        @"test.lini:1:11: error: 'fill' takes one value, not a comma list"
+    );
+    insta::assert_snapshot!(
+        diags("|chart| [\n|line| { data: 1, 2; stroke: red, blue }\n]\n"),
+        @"test.lini:2:22: error: a '|line|' is one shape with one paint — per-datum lists read on '|bars|' / '|dots|'"
+    );
+}

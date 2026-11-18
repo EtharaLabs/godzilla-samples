@@ -1,0 +1,679 @@
+//! Channel graph — the free space between keep-outs, decomposed for routing
+//! (ROUTING.md model step 2).
+//!
+//! Two independent sweeps: **V-channels** are maximal free rectangles for
+//! vertical travel (x-strips between keep-out edges, equal free y-intervals
+//! merged across strips); **H-channels** are the transpose. Both partition
+//! the same free space, so every link run lives in exactly one channel of its
+//! orientation. A **cell** is an H∩V overlap; cells are the graph's vertices,
+//! and two cells connect iff they abut in a shared channel. Pure geometry: no
+//! link knowledge, identical output for identical input — capacity and load
+//! live in the [`super::ledger`].
+//!
+//! The sweep may slice one free corridor into several parallel channels — a
+//! far-away node's edge cuts the strip list globally. A run cares about the
+//! **corridor**: the void's true walls for its span, reassembled by walking
+//! across shared boundaries into every same-axis channel free over the whole
+//! span ([`ChannelGraph::corridor`]). Anchors, usable width, and capacity all
+//! read the corridor, never the fragment — otherwise a fragment's midline
+//! poses as "halfway between the nodes" and its phantom soft margins compress
+//! pitch in a void with room to spare.
+
+use super::rect::Rect;
+use std::collections::HashMap;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Axis {
+    H,
+    V,
+}
+
+impl Axis {
+    /// Dense id — the routing stages' map key.
+    pub fn index(self) -> u8 {
+        match self {
+            Axis::H => 0,
+            Axis::V => 1,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Channel {
+    pub rect: Rect,
+    pub axis: Axis,
+    /// Per wall: whether it is the **open canvas bound** of the root world —
+    /// not geometry, just where the decomposition stopped. Runs never lack
+    /// lanes against an open wall: the margin holds any overflow, pitched
+    /// outward from the scene. Group walls are real and never open.
+    pub outer: [bool; 2],
+}
+
+impl Channel {
+    /// The channel walls on the ordinate axis.
+    pub fn walls(&self) -> (f64, f64) {
+        match self.axis {
+            Axis::V => (self.rect.x0, self.rect.x1),
+            Axis::H => (self.rect.y0, self.rect.y1),
+        }
+    }
+
+    /// The channel extent on the travel axis.
+    pub fn travel(&self) -> (f64, f64) {
+        match self.axis {
+            Axis::V => (self.rect.y0, self.rect.y1),
+            Axis::H => (self.rect.x0, self.rect.x1),
+        }
+    }
+}
+
+/// The void a run really lives in: the walls that bound its span once every
+/// same-axis channel free over the whole span is walked across (ROUTING.md
+/// model steps 2/5). One decision surface for three consumers — the anchor
+/// preference, the usable ordinate range, and capacity — so a fragment of a
+/// corridor can never pose as the corridor.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Corridor {
+    pub walls: (f64, f64),
+    /// Whether each final wall is the root world's open canvas bound.
+    pub outer: [bool; 2],
+    /// The same-axis channels the corridor absorbs — the committed-load set.
+    pub chans: Vec<usize>,
+}
+
+impl Corridor {
+    /// Where a lone run in this corridor sits (ROUTING.md model step 5): the
+    /// midline between two keep-out walls — a bend between two nodes lands
+    /// halfway between them — or hugging the keep-out wall when the other
+    /// wall is the canvas edge. Placement's interior-run preference and the
+    /// ledger's committed-ordinate estimate share this one anchor.
+    pub fn anchor(&self) -> f64 {
+        match self.outer {
+            [false, true] => self.walls.0,
+            [true, false] => self.walls.1,
+            _ => (self.walls.0 + self.walls.1) / 2.0,
+        }
+    }
+
+    /// The ordinate range runs may use: the corridor walls, whole. A wall a
+    /// same-axis neighbour still abuts somewhere over the span used to cost
+    /// half a clearance here; separation across a shared boundary is owned
+    /// by placement instead — near runs in abutting corridors cluster
+    /// ([`super::place`]) and the ladder holds their pitch, so the wall
+    /// charges nothing and a run may hug whatever bounds its corridor.
+    pub fn usable(&self) -> (f64, f64) {
+        self.walls
+    }
+
+    /// The corridor a clamped run effectively inhabits: walls intersected
+    /// with `[lo, hi]`, a clipped side losing its open-canvas flag — the
+    /// clip *is* geometry (a corner clamp, a neighbour's travel edge), so
+    /// the anchor treats it as a real wall, not the decomposition's edge.
+    /// Keeps the anchor rule one function when a run's lawful range is
+    /// narrower than the walk's reach.
+    pub fn clipped(&self, lo: f64, hi: f64) -> Corridor {
+        Corridor {
+            walls: (self.walls.0.max(lo), self.walls.1.min(hi)),
+            outer: [
+                self.outer[0] && lo <= self.walls.0,
+                self.outer[1] && hi >= self.walls.1,
+            ],
+            chans: self.chans.clone(),
+        }
+    }
+}
+
+/// One H∩V overlap: the graph vertex. Runs turn inside cells.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Cell {
+    pub rect: Rect,
+    /// Index into `ChannelGraph::h`.
+    pub h: usize,
+    /// Index into `ChannelGraph::v`.
+    pub v: usize,
+}
+
+/// Adjacency between two cells abutting in `channel` — the run between them.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Edge {
+    pub a: usize,
+    pub b: usize,
+    pub axis: Axis,
+    pub channel: usize,
+}
+
+/// The same-axis channels sharing a boundary with one channel, in index order
+/// — the candidate set [`ChannelGraph::corridor`]'s walk filters by span.
+/// *Which* channels touch is pure geometry, fixed for the graph's life; which
+/// of them cover a given span is the only per-query part. Splitting the two is
+/// what keeps the walk off a scan of every channel per step.
+#[derive(Clone, Debug, PartialEq, Default)]
+struct Abut {
+    /// Channels whose upper wall is this one's lower wall.
+    below: Vec<usize>,
+    /// …and whose lower wall is this one's upper.
+    above: Vec<usize>,
+}
+
+/// [`ChannelGraph::corridor`]'s memo. The walk is a pure function of the graph
+/// and `(axis, chan, lo, hi)`, and the search asks the same question over and
+/// over — a sheet's route puts ~50k queries through ~900 distinct ones — so it
+/// is answered once each. A cache, not state: it compares equal to any other,
+/// clones empty, and never reaches `Debug`, so an equal graph stays equal
+/// however each was queried.
+#[derive(Default)]
+struct Memo(std::cell::RefCell<HashMap<(u8, usize, u64, u64), Corridor>>);
+
+impl Clone for Memo {
+    fn clone(&self) -> Self {
+        Memo::default()
+    }
+}
+impl PartialEq for Memo {
+    fn eq(&self, _: &Self) -> bool {
+        true
+    }
+}
+impl std::fmt::Debug for Memo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Memo(..)")
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ChannelGraph {
+    pub h: Vec<Channel>,
+    pub v: Vec<Channel>,
+    pub cells: Vec<Cell>,
+    pub edges: Vec<Edge>,
+    pub adj: Vec<Vec<(usize, Axis, usize)>>,
+    /// Per `h` / `v` channel, its abutting neighbours — derived from that list
+    /// alone, so neither is independent state.
+    h_abut: Vec<Abut>,
+    v_abut: Vec<Abut>,
+    corridors: Memo,
+}
+
+/// Every channel's abutting neighbours, by exact wall equality — the test the
+/// walk used to make inline, hoisted out of it.
+fn abutments(list: &[Channel]) -> Vec<Abut> {
+    let walls: Vec<(f64, f64)> = list.iter().map(Channel::walls).collect();
+    walls
+        .iter()
+        .map(|&(w0, w1)| Abut {
+            below: (0..walls.len()).filter(|&j| walls[j].1 == w0).collect(),
+            above: (0..walls.len()).filter(|&j| walls[j].0 == w1).collect(),
+        })
+        .collect()
+}
+
+impl ChannelGraph {
+    /// The corridor around channel `chan` of `axis` for a run spanning
+    /// `[lo, hi]`: the walls grown across shared boundaries into every
+    /// same-axis channel free over the whole span, out to the void's true
+    /// walls. The span is clamped to the channel's own travel extent first —
+    /// an end segment's tail inside its own endpoint's keep-out never blocks
+    /// the walk. Wall coordinates come from one sweep-edge list, so the
+    /// abutting test is exact equality, as in [`soften`].
+    pub fn corridor(&self, axis: Axis, chan: usize, lo: f64, hi: f64) -> Corridor {
+        // Keyed on the raw bits, so the memo asks the same equality the walk
+        // does — two spellings of one float would only cost a second entry.
+        let key = (axis.index(), chan, lo.to_bits(), hi.to_bits());
+        if let Some(hit) = self.corridors.0.borrow().get(&key) {
+            return hit.clone();
+        }
+        let found = self.walk_corridor(axis, chan, lo, hi);
+        self.corridors.0.borrow_mut().insert(key, found.clone());
+        found
+    }
+
+    fn walk_corridor(&self, axis: Axis, chan: usize, lo: f64, hi: f64) -> Corridor {
+        let (list, abut) = match axis {
+            Axis::H => (&self.h, &self.h_abut),
+            Axis::V => (&self.v, &self.v_abut),
+        };
+        let (t0, t1) = list[chan].travel();
+        let (lo, hi) = (lo.max(t0).min(t1), hi.min(t1).max(t0));
+        let covers = |&j: &usize| {
+            let (a, b) = list[j].travel();
+            a <= lo && hi <= b
+        };
+        // A corridor is a handful of channels; sizing for that keeps the
+        // hottest walk in routing from reallocating its way out.
+        let mut chans = Vec::with_capacity(4);
+        chans.push(chan);
+        let (mut low, mut high) = (chan, chan);
+        while let Some(&j) = abut[low].below.iter().find(|j| covers(j)) {
+            low = j;
+            chans.push(j);
+        }
+        while let Some(&j) = abut[high].above.iter().find(|j| covers(j)) {
+            high = j;
+            chans.push(j);
+        }
+        chans.sort_unstable();
+        Corridor {
+            walls: (list[low].walls().0, list[high].walls().1),
+            outer: [list[low].outer[0], list[high].outer[1]],
+            chans,
+        }
+    }
+
+    /// Decompose the free space — `bounds` minus `keepouts` — into channels,
+    /// cells, and adjacencies. Keep-outs may overlap each other and `bounds`.
+    /// `open` marks `bounds` as the root world's canvas bound rather than a
+    /// container wall: channel walls lying on it are open outward.
+    pub fn build(bounds: Rect, keepouts: &[Rect], open: bool) -> ChannelGraph {
+        let blocks: Vec<Rect> = keepouts
+            .iter()
+            .filter_map(|k| k.intersect(&bounds))
+            .collect();
+
+        let mut v = sweep_channels(bounds, &blocks, Axis::V);
+        let mut h = {
+            let tb = transpose(bounds);
+            let tblocks: Vec<Rect> = blocks.iter().map(|b| transpose(*b)).collect();
+            let mut h: Vec<Channel> = sweep_channels(tb, &tblocks, Axis::V)
+                .into_iter()
+                .map(|c| Channel {
+                    rect: transpose(c.rect),
+                    axis: Axis::H,
+                    outer: [false, false],
+                })
+                .collect();
+            h.sort_by(|a, b| pos_order(a.rect, b.rect));
+            h
+        };
+        if open {
+            for c in &mut v {
+                c.outer = [c.rect.x0 == bounds.x0, c.rect.x1 == bounds.x1];
+            }
+            for c in &mut h {
+                c.outer = [c.rect.y0 == bounds.y0, c.rect.y1 == bounds.y1];
+            }
+        }
+
+        let mut cells = Vec::new();
+        for (vi, vc) in v.iter().enumerate() {
+            for (hi, hc) in h.iter().enumerate() {
+                if let Some(rect) = vc.rect.intersect(&hc.rect) {
+                    cells.push(Cell { rect, h: hi, v: vi });
+                }
+            }
+        }
+        cells.sort_by(|a, b| pos_order(a.rect, b.rect));
+
+        let mut edges = Vec::new();
+        for (hi, _) in h.iter().enumerate() {
+            let mut row: Vec<usize> = (0..cells.len()).filter(|&i| cells[i].h == hi).collect();
+            row.sort_by(|&a, &b| cells[a].rect.x0.total_cmp(&cells[b].rect.x0));
+            for w in row.windows(2) {
+                edges.push(Edge {
+                    a: w[0],
+                    b: w[1],
+                    axis: Axis::H,
+                    channel: hi,
+                });
+            }
+        }
+        for (vi, _) in v.iter().enumerate() {
+            let mut col: Vec<usize> = (0..cells.len()).filter(|&i| cells[i].v == vi).collect();
+            col.sort_by(|&a, &b| cells[a].rect.y0.total_cmp(&cells[b].rect.y0));
+            for w in col.windows(2) {
+                edges.push(Edge {
+                    a: w[0],
+                    b: w[1],
+                    axis: Axis::V,
+                    channel: vi,
+                });
+            }
+        }
+
+        let mut adj = vec![Vec::new(); cells.len()];
+        for e in &edges {
+            adj[e.a].push((e.b, e.axis, e.channel));
+            adj[e.b].push((e.a, e.axis, e.channel));
+        }
+
+        ChannelGraph {
+            h_abut: abutments(&h),
+            v_abut: abutments(&v),
+            h,
+            v,
+            cells,
+            edges,
+            adj,
+            corridors: Memo::default(),
+        }
+    }
+}
+
+fn transpose(r: Rect) -> Rect {
+    Rect::new(r.y0, r.x0, r.y1, r.x1)
+}
+
+/// Reading order — the total tie-free order every channel/cell list uses.
+fn pos_order(a: Rect, b: Rect) -> std::cmp::Ordering {
+    a.x0.total_cmp(&b.x0).then(a.y0.total_cmp(&b.y0))
+}
+
+/// The x-sweep: strips between keep-out edges; per strip the free y-intervals;
+/// identical intervals merge across contiguous strips into maximal rectangles.
+fn sweep_channels(bounds: Rect, blocks: &[Rect], axis: Axis) -> Vec<Channel> {
+    let mut xs = vec![bounds.x0, bounds.x1];
+    for b in blocks {
+        xs.push(b.x0);
+        xs.push(b.x1);
+    }
+    xs.sort_by(f64::total_cmp);
+    xs.dedup();
+
+    // Channels still growing rightward: (y0, y1, x where they started).
+    let mut open: Vec<(f64, f64, f64)> = Vec::new();
+    let mut out = Vec::new();
+    let close =
+        |open: &mut Vec<(f64, f64, f64)>, frees: &[(f64, f64)], x: f64, out: &mut Vec<Channel>| {
+            open.retain(|&(y0, y1, x0)| {
+                let alive = frees.contains(&(y0, y1));
+                if !alive {
+                    out.push(Channel {
+                        rect: Rect::new(x0, y0, x, y1),
+                        axis,
+                        outer: [false, false],
+                    });
+                }
+                alive
+            });
+        };
+
+    for w in xs.windows(2) {
+        let (s0, s1) = (w[0], w[1]);
+        if s1 <= s0 {
+            continue;
+        }
+        let mut spans: Vec<(f64, f64)> = blocks
+            .iter()
+            .filter(|b| b.x0 < s1 && b.x1 > s0)
+            .map(|b| (b.y0, b.y1))
+            .collect();
+        let frees = free_intervals(bounds.y0, bounds.y1, &mut spans);
+        close(&mut open, &frees, s0, &mut out);
+        for &(y0, y1) in &frees {
+            if !open.iter().any(|&(a, b, _)| (a, b) == (y0, y1)) {
+                open.push((y0, y1, s0));
+            }
+        }
+    }
+    close(&mut open, &[], bounds.x1, &mut out);
+
+    out.sort_by(|a, b| pos_order(a.rect, b.rect));
+    out
+}
+
+/// The positive-width gaps of `[lo, hi]` not covered by `spans`.
+fn free_intervals(lo: f64, hi: f64, spans: &mut [(f64, f64)]) -> Vec<(f64, f64)> {
+    spans.sort_by(|a, b| a.0.total_cmp(&b.0));
+    let mut frees = Vec::new();
+    let mut cur = lo;
+    for &(s0, s1) in spans.iter() {
+        let (s0, s1) = (s0.max(lo), s1.min(hi));
+        if s1 <= s0 {
+            continue;
+        }
+        if s0 > cur {
+            frees.push((cur, s0));
+        }
+        cur = cur.max(s1);
+    }
+    if hi > cur {
+        frees.push((cur, hi));
+    }
+    frees
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn channel(axis: Axis, x0: f64, y0: f64, x1: f64, y1: f64) -> Channel {
+        Channel {
+            rect: Rect::new(x0, y0, x1, y1),
+            axis,
+            outer: [false, false],
+        }
+    }
+
+    /// Two full-height side walls with a small block at the top splitting
+    /// the corridor's sweep into three V fragments.
+    fn split_corridor() -> ChannelGraph {
+        ChannelGraph::build(
+            Rect::new(0.0, 0.0, 200.0, 100.0),
+            &[
+                Rect::new(0.0, 0.0, 40.0, 100.0),
+                Rect::new(160.0, 0.0, 200.0, 100.0),
+                Rect::new(90.0, 0.0, 110.0, 20.0),
+            ],
+            false,
+        )
+    }
+
+    fn v_chan(g: &ChannelGraph, x0: f64, x1: f64) -> usize {
+        g.v.iter()
+            .position(|c| c.rect.x0 == x0 && c.rect.x1 == x1)
+            .expect("V channel")
+    }
+
+    #[test]
+    fn a_fragmented_corridor_reassembles_to_the_voids_walls() {
+        let g = split_corridor();
+        let west = v_chan(&g, 40.0, 90.0);
+        // A span below the top block sees the whole void: hard wall to hard
+        // wall, every fragment absorbed, midline anchor, no margins.
+        let c = g.corridor(Axis::V, west, 30.0, 90.0);
+        assert_eq!(c.walls, (40.0, 160.0));
+        assert_eq!(c.anchor(), 100.0);
+        assert_eq!(c.usable(), (40.0, 160.0));
+        assert_eq!(c.chans.len(), 3);
+        // Growth works from any fragment of the void.
+        let mid = v_chan(&g, 90.0, 110.0);
+        assert_eq!(g.corridor(Axis::V, mid, 30.0, 90.0).walls, (40.0, 160.0));
+    }
+
+    #[test]
+    fn a_partial_neighbour_stops_the_walk_and_charges_nothing() {
+        let g = split_corridor();
+        let west = v_chan(&g, 40.0, 90.0);
+        // The span reaches beside the top block: the middle fragment covers
+        // only y ≥ 20, so the wall at 90 stands. It charges no margin —
+        // placement clusters near runs across the shared boundary and the
+        // ladder owns their pitch.
+        let c = g.corridor(Axis::V, west, 10.0, 90.0);
+        assert_eq!(c.walls, (40.0, 90.0));
+        assert_eq!(c.usable(), (40.0, 90.0));
+    }
+
+    #[test]
+    fn an_end_spans_keepout_tail_never_blocks_the_walk() {
+        // The pcb shape: an east wall, two west boxes, an end run whose span
+        // pokes into the east wall's keep-out (the lawful end-segment tail).
+        // The walk clamps to the channel's travel extent, so the corridor
+        // still opens to the whole west void.
+        let g = ChannelGraph::build(
+            Rect::new(0.0, 0.0, 200.0, 150.0),
+            &[
+                Rect::new(160.0, 0.0, 200.0, 150.0),
+                Rect::new(0.0, 20.0, 40.0, 60.0),
+                Rect::new(0.0, 90.0, 40.0, 130.0),
+            ],
+            false,
+        );
+        let row =
+            g.h.iter()
+                .position(|c| c.rect == Rect::new(40.0, 90.0, 160.0, 130.0))
+                .expect("the lower row fragment");
+        let c = g.corridor(Axis::H, row, 100.0, 170.0);
+        assert_eq!(c.walls, (0.0, 150.0));
+        assert_eq!(c.outer, [false, false]);
+    }
+
+    #[test]
+    fn empty_scene_is_one_channel_per_axis_one_cell_no_edges() {
+        let b = Rect::new(0.0, 0.0, 100.0, 100.0);
+        let g = ChannelGraph::build(b, &[], false);
+        assert_eq!(g.v, vec![channel(Axis::V, 0.0, 0.0, 100.0, 100.0)]);
+        assert_eq!(g.h, vec![channel(Axis::H, 0.0, 0.0, 100.0, 100.0)]);
+        assert_eq!(
+            g.cells,
+            vec![Cell {
+                rect: b,
+                h: 0,
+                v: 0
+            }]
+        );
+        assert_eq!(g.edges, Vec::new());
+    }
+
+    #[test]
+    fn single_box_yields_the_ring() {
+        let b = Rect::new(0.0, 0.0, 100.0, 100.0);
+        let g = ChannelGraph::build(b, &[Rect::new(40.0, 40.0, 60.0, 60.0)], false);
+        let rects = |cs: &[Channel]| cs.iter().map(|c| c.rect).collect::<Vec<_>>();
+        assert_eq!(
+            rects(&g.v),
+            vec![
+                Rect::new(0.0, 0.0, 40.0, 100.0),
+                Rect::new(40.0, 0.0, 60.0, 40.0),
+                Rect::new(40.0, 60.0, 60.0, 100.0),
+                Rect::new(60.0, 0.0, 100.0, 100.0),
+            ]
+        );
+        assert_eq!(
+            rects(&g.h),
+            vec![
+                Rect::new(0.0, 0.0, 100.0, 40.0),
+                Rect::new(0.0, 40.0, 40.0, 60.0),
+                Rect::new(0.0, 60.0, 100.0, 100.0),
+                Rect::new(60.0, 40.0, 100.0, 60.0),
+            ]
+        );
+        // The ring: 4 corner cells + 4 side cells, connected in a cycle.
+        assert_eq!(g.cells.len(), 8);
+        assert_eq!(g.edges.len(), 8);
+        let free: f64 = g.cells.iter().map(|c| c.rect.w() * c.rect.h()).sum();
+        assert_eq!(free, 100.0 * 100.0 - 20.0 * 20.0);
+    }
+
+    #[test]
+    fn between_channel_carries_the_gap_width() {
+        let b = Rect::new(0.0, 0.0, 200.0, 100.0);
+        let g = ChannelGraph::build(
+            b,
+            &[
+                Rect::new(10.0, 10.0, 80.0, 90.0),
+                Rect::new(104.0, 10.0, 180.0, 90.0),
+            ],
+            false,
+        );
+        // The gap between the two keep-outs is one V-channel, wall to wall.
+        let between =
+            g.v.iter()
+                .find(|c| c.rect == Rect::new(80.0, 0.0, 104.0, 100.0))
+                .expect("between-channel exists");
+        assert_eq!(between.walls(), (80.0, 104.0));
+    }
+
+    #[test]
+    fn group_interior_decomposes_around_children() {
+        let interior = Rect::new(0.0, 0.0, 120.0, 80.0);
+        let g = ChannelGraph::build(
+            interior,
+            &[
+                Rect::new(10.0, 10.0, 50.0, 70.0),
+                Rect::new(70.0, 10.0, 110.0, 70.0),
+            ],
+            false,
+        );
+        assert!(
+            g.v.iter()
+                .any(|c| c.rect == Rect::new(50.0, 0.0, 70.0, 80.0))
+        );
+        // Free space partitions exactly.
+        let free: f64 = g.cells.iter().map(|c| c.rect.w() * c.rect.h()).sum();
+        assert_eq!(free, 120.0 * 80.0 - 2.0 * (40.0 * 60.0));
+    }
+
+    #[test]
+    fn overlapping_keepouts_block_as_their_union() {
+        let b = Rect::new(0.0, 0.0, 120.0, 100.0);
+        let g = ChannelGraph::build(
+            b,
+            &[
+                Rect::new(20.0, 0.0, 60.0, 100.0),
+                Rect::new(50.0, 0.0, 90.0, 100.0),
+            ],
+            false,
+        );
+        assert_eq!(
+            g.v,
+            vec![
+                channel(Axis::V, 0.0, 0.0, 20.0, 100.0),
+                channel(Axis::V, 90.0, 0.0, 120.0, 100.0),
+            ]
+        );
+        // Two disconnected side cells, no edges between them.
+        assert_eq!(g.cells.len(), 2);
+        assert_eq!(g.edges, Vec::new());
+    }
+
+    #[test]
+    fn keepout_flush_to_bounds_leaves_no_sliver() {
+        let b = Rect::new(0.0, 0.0, 100.0, 100.0);
+        let g = ChannelGraph::build(b, &[Rect::new(0.0, 40.0, 50.0, 60.0)], false);
+        assert!(g.v.iter().all(|c| c.rect.w() > 0.0));
+        assert!(g.h.iter().all(|c| c.rect.h() > 0.0));
+        assert!(g.cells.iter().all(|c| c.rect.w() > 0.0 && c.rect.h() > 0.0));
+    }
+
+    #[test]
+    fn keepout_outside_bounds_is_clamped_away() {
+        let b = Rect::new(0.0, 0.0, 100.0, 100.0);
+        let g = ChannelGraph::build(b, &[Rect::new(-30.0, -30.0, -10.0, 200.0)], false);
+        assert_eq!(g.v, vec![channel(Axis::V, 0.0, 0.0, 100.0, 100.0)]);
+    }
+
+    #[test]
+    fn build_is_deterministic_across_100_runs() {
+        let b = Rect::new(0.0, 0.0, 300.0, 200.0);
+        let keepouts = [
+            Rect::new(40.0, 40.0, 90.0, 90.0),
+            Rect::new(120.0, 30.0, 180.0, 170.0),
+            Rect::new(210.0, 80.0, 260.0, 140.0),
+            Rect::new(60.0, 120.0, 110.0, 160.0),
+        ];
+        let first = ChannelGraph::build(b, &keepouts, false);
+        for _ in 0..100 {
+            assert_eq!(ChannelGraph::build(b, &keepouts, false), first);
+        }
+    }
+
+    #[test]
+    fn cells_abut_along_their_shared_channel() {
+        let b = Rect::new(0.0, 0.0, 100.0, 100.0);
+        let g = ChannelGraph::build(b, &[Rect::new(40.0, 40.0, 60.0, 60.0)], false);
+        for e in &g.edges {
+            let (a, b) = (&g.cells[e.a], &g.cells[e.b]);
+            match e.axis {
+                Axis::H => {
+                    assert_eq!(a.h, b.h);
+                    assert_eq!(e.channel, a.h);
+                    assert_eq!(a.rect.x1, b.rect.x0, "H-neighbours touch in x");
+                }
+                Axis::V => {
+                    assert_eq!(a.v, b.v);
+                    assert_eq!(e.channel, a.v);
+                    assert_eq!(a.rect.y1, b.rect.y0, "V-neighbours touch in y");
+                }
+            }
+        }
+    }
+}

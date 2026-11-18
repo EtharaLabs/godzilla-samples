@@ -1,0 +1,430 @@
+//! The pen's geometry [SPEC 15.3]: subpaths of segments, mirror reflection, and
+//! the fold to an SVG `d`. Coordinates are the sketch's own frame — y grows
+//! down, the core orientation — and bearings are visual: 0 = up, clockwise.
+
+use super::super::ir::Bbox;
+use super::annotate::Axis;
+use crate::layout::geom::{dot, unit};
+use crate::math;
+use crate::path_data;
+
+/// The plane primitives are layout-level — the schematic engine's stacking
+/// shares them [SPEC 16]; the drawing's own conventions extend them below.
+pub use crate::layout::geom::{Frame, P, project, rotate_about};
+
+/// One drawn segment. `from`/`to` chain through a subpath; an arc is circular
+/// (SVG `A r r 0 large sweep`), `sweep: true` = clockwise on screen.
+#[derive(Debug, Clone, Copy)]
+pub enum PathSeg {
+    Line {
+        from: P,
+        to: P,
+    },
+    Arc {
+        from: P,
+        to: P,
+        r: f64,
+        large: bool,
+        sweep: bool,
+    },
+    Cubic {
+        from: P,
+        c1: P,
+        c2: P,
+        to: P,
+    },
+}
+
+impl PathSeg {
+    pub fn from(&self) -> P {
+        match *self {
+            PathSeg::Line { from, .. }
+            | PathSeg::Arc { from, .. }
+            | PathSeg::Cubic { from, .. } => from,
+        }
+    }
+
+    pub fn to(&self) -> P {
+        match *self {
+            PathSeg::Line { to, .. } | PathSeg::Arc { to, .. } | PathSeg::Cubic { to, .. } => to,
+        }
+    }
+
+    /// The segment reflected across a line through the origin with unit
+    /// direction `u`. An arc's sweep flips — reflection reverses handedness.
+    pub fn reflect(&self, u: P) -> PathSeg {
+        let m = |p: P| reflect_point(p, u);
+        match *self {
+            PathSeg::Line { from, to } => PathSeg::Line {
+                from: m(from),
+                to: m(to),
+            },
+            PathSeg::Arc {
+                from,
+                to,
+                r,
+                large,
+                sweep,
+            } => PathSeg::Arc {
+                from: m(from),
+                to: m(to),
+                r,
+                large,
+                sweep: !sweep,
+            },
+            PathSeg::Cubic { from, c1, c2, to } => PathSeg::Cubic {
+                from: m(from),
+                c1: m(c1),
+                c2: m(c2),
+                to: m(to),
+            },
+        }
+    }
+
+    /// The segment walked the other way (endpoints swapped; an arc's sweep
+    /// flips, a cubic swaps its controls).
+    pub(in crate::layout) fn reverse(&self) -> PathSeg {
+        match *self {
+            PathSeg::Line { from, to } => PathSeg::Line { from: to, to: from },
+            PathSeg::Arc {
+                from,
+                to,
+                r,
+                large,
+                sweep,
+            } => PathSeg::Arc {
+                from: to,
+                to: from,
+                r,
+                large,
+                sweep: !sweep,
+            },
+            PathSeg::Cubic { from, c1, c2, to } => PathSeg::Cubic {
+                from: to,
+                c1: c2,
+                c2: c1,
+                to: from,
+            },
+        }
+    }
+}
+
+/// One subpath: a chained run of segments; `closed` emits the `Z` (a fused
+/// mirror or a `close()`).
+#[derive(Debug, Clone)]
+pub struct Subpath {
+    pub segs: Vec<PathSeg>,
+    pub closed: bool,
+}
+
+/// A mirror item [SPEC 15.3]: an axis through the pen origin, kept as its
+/// **bearing** (0 = up, clockwise; `x-axis` = 90, `y-axis` = 0).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct MirrorAxis {
+    pub bearing: f64,
+}
+
+impl MirrorAxis {
+    /// The axis line's unit direction vector.
+    pub fn dir(self) -> P {
+        bearing_dir(self.bearing)
+    }
+}
+
+/// A bearing's unit vector — 0 = up = (0, −1), 90 = right, clockwise [SPEC 15.3].
+/// The cardinals are exact, not `sin`/`cos` approximations: their coordinates
+/// feed measured values ([SPEC 15.6]), where 1e-16 noise would surface.
+pub fn bearing_dir(deg: f64) -> P {
+    let norm = deg.rem_euclid(360.0);
+    if norm == 0.0 {
+        (0.0, -1.0)
+    } else if norm == 90.0 {
+        (1.0, 0.0)
+    } else if norm == 180.0 {
+        (0.0, 1.0)
+    } else if norm == 270.0 {
+        (-1.0, 0.0)
+    } else {
+        crate::layout::geom::polar((0.0, 0.0), 1.0, deg.to_radians())
+    }
+}
+
+/// A vector's bearing, the inverse of [`bearing_dir`].
+pub fn dir_bearing(v: P) -> f64 {
+    let deg = math::atan2(v.0, -v.1).to_degrees();
+    if deg < 0.0 { deg + 360.0 } else { deg }
+}
+
+/// Reflect `p` across the line through the origin with unit direction `u`.
+pub fn reflect_point(p: P, u: P) -> P {
+    let d = dot(p, u);
+    (2.0 * d * u.0 - p.0, 2.0 * d * u.1 - p.1)
+}
+
+/// The drafting-coordinate tolerance: below this two px coordinates are the
+/// same point — a mirror seam that needs no segment, a feature sitting **on**
+/// the axis rather than off it [SPEC 15.3].
+pub const SEAM_EPS: f64 = 1e-9;
+
+/// Apply one mirror item to every subpath [SPEC 15.3]: a **closed** subpath is
+/// duplicated (a reflected second copy); an **open** one is **fused** — the
+/// reflection walked back end-to-start, straight seam segments where an
+/// endpoint sits off the axis — and becomes closed. Returns whether any
+/// subpath fused (the auto-centerline cue, stage 3).
+pub fn mirror(subs: &mut Vec<Subpath>, axis: MirrorAxis) -> bool {
+    let u = axis.dir();
+    let mut fused = false;
+    let mut out = Vec::with_capacity(subs.len() * 2);
+    for sub in subs.drain(..) {
+        if sub.segs.is_empty() {
+            continue;
+        }
+        if sub.closed {
+            let copy = Subpath {
+                segs: sub.segs.iter().map(|s| s.reflect(u)).collect(),
+                closed: true,
+            };
+            out.push(sub);
+            out.push(copy);
+            continue;
+        }
+        fused = true;
+        let a = sub.segs.first().expect("non-empty").from();
+        let b = sub.segs.last().expect("non-empty").to();
+        let (a2, b2) = (reflect_point(a, u), reflect_point(b, u));
+        let mut segs = sub.segs.clone();
+        if dist(b, b2) > SEAM_EPS {
+            segs.push(PathSeg::Line { from: b, to: b2 });
+        }
+        segs.extend(sub.segs.iter().rev().map(|s| s.reflect(u).reverse()));
+        if dist(a2, a) > SEAM_EPS {
+            segs.push(PathSeg::Line { from: a2, to: a });
+        }
+        out.push(Subpath { segs, closed: true });
+    }
+    *subs = out;
+    fused
+}
+
+pub fn dist(a: P, b: P) -> f64 {
+    math::hypot(a.0 - b.0, a.1 - b.1)
+}
+
+/// The ISO reading angle for text riding a line in direction `dir` [SPEC 15.6]:
+/// the line's own angle folded into [-90, 90) so the text reads from the
+/// bottom / right — a vertical line's text turns exactly −90.
+pub fn iso_text_angle(dir: P) -> f64 {
+    iso_upright(math::atan2(dir.1, dir.0).to_degrees())
+}
+
+/// The same rule stated on an angle already in degrees — what a label turned by
+/// its own node's frame folds through to stay readable ([SPEC 15.11]'s fixture
+/// and opening labels, which share 15.6's rule).
+pub fn iso_upright(deg: f64) -> f64 {
+    let mut theta = deg % 180.0;
+    if theta < -90.0 {
+        theta += 180.0;
+    } else if theta >= 90.0 {
+        theta -= 180.0;
+    }
+    theta
+}
+
+/// A circular arc segment's centre — the SVG centre parameterization for the
+/// pen's `(r, large, sweep)` encoding. The centre sits off the chord midpoint
+/// along its perpendicular, on the side the flags pick: for a minor arc the
+/// sweep side, flipped when `large`.
+pub fn arc_center(from: P, to: P, r: f64, large: bool, sweep: bool) -> P {
+    let chord = dist(from, to).max(1e-12);
+    let m = ((from.0 + to.0) / 2.0, (from.1 + to.1) / 2.0);
+    let dhat = ((to.0 - from.0) / chord, (to.1 - from.1) / chord);
+    let perp = (-dhat.1, dhat.0);
+    let h = (r * r - (chord / 2.0) * (chord / 2.0)).max(0.0).sqrt();
+    let sign = if sweep != large { 1.0 } else { -1.0 };
+    (m.0 + perp.0 * h * sign, m.1 + perp.1 * h * sign)
+}
+
+/// The circle's unit tangent at `p` about `centre` — SVG sweep 1 walks the
+/// increasing angle (clockwise on screen, y down), so `sweep: false` reverses
+/// it. The pen's corner headings, the edge law's tangent test and the leader
+/// raycast's crossing angle all read this one.
+pub fn arc_tangent(p: P, centre: P, sweep: bool) -> P {
+    let v = (p.0 - centre.0, p.1 - centre.1);
+    // A point *at* the centre has no tangent — the zero vector, as before.
+    let t = if sweep { (-v.1, v.0) } else { (v.1, -v.0) };
+    unit(t).unwrap_or((0.0, 0.0))
+}
+
+/// The minor arc's midpoint — on the far side of the chord from the centre;
+/// for a semicircle, a quarter-turn from the start in the sweep direction.
+pub fn arc_mid(centre: P, chord_mid: P, r: f64, from: P, sweep: bool) -> P {
+    let v = (chord_mid.0 - centre.0, chord_mid.1 - centre.1);
+    let len = dist(v, (0.0, 0.0));
+    if len > 1e-9 {
+        (centre.0 + v.0 / len * r, centre.1 + v.1 / len * r)
+    } else {
+        rotate_about(from, centre, if sweep { 90.0 } else { -90.0 })
+    }
+}
+
+/// Multiply every coordinate (and arc radius) by `s` — the node's own `scale:`
+/// applied to the folded output, exact for lines and circular arcs [SPEC 15.1].
+pub fn scale(subs: &mut [Subpath], s: f64) {
+    let m = |p: P| (p.0 * s, p.1 * s);
+    for sub in subs {
+        for seg in &mut sub.segs {
+            *seg = match *seg {
+                PathSeg::Line { from, to } => PathSeg::Line {
+                    from: m(from),
+                    to: m(to),
+                },
+                PathSeg::Arc {
+                    from,
+                    to,
+                    r,
+                    large,
+                    sweep,
+                } => PathSeg::Arc {
+                    from: m(from),
+                    to: m(to),
+                    r: r * s,
+                    large,
+                    sweep,
+                },
+                PathSeg::Cubic { from, c1, c2, to } => PathSeg::Cubic {
+                    from: m(from),
+                    c1: m(c1),
+                    c2: m(c2),
+                    to: m(to),
+                },
+            };
+        }
+    }
+}
+
+/// Fold subpaths to an SVG `d` — absolute commands, deterministic number
+/// formatting, even-odd fill semantics left to the emitter.
+pub fn to_d(subs: &[Subpath]) -> String {
+    let mut d = String::new();
+    for sub in subs {
+        if sub.segs.is_empty() {
+            continue;
+        }
+        if !d.is_empty() {
+            d.push(' ');
+        }
+        let start = sub.segs[0].from();
+        d.push_str(&format!("M {} {}", n(start.0), n(start.1)));
+        // A closed subpath's trailing straight seam back to the start is what
+        // `Z` draws — skip the redundant `L` (a filleted seam is an arc and
+        // stays).
+        let count = sub.segs.len();
+        let skip_last = |i: usize, seg: &PathSeg| {
+            sub.closed
+                && i + 1 == count
+                && matches!(seg, PathSeg::Line { .. })
+                && dist(seg.to(), start) < SEAM_EPS
+        };
+        for (i, seg) in sub.segs.iter().enumerate() {
+            if skip_last(i, seg) {
+                continue;
+            }
+            match *seg {
+                PathSeg::Line { to, .. } => d.push_str(&format!(" L {} {}", n(to.0), n(to.1))),
+                PathSeg::Arc {
+                    to,
+                    r,
+                    large,
+                    sweep,
+                    ..
+                } => d.push_str(&format!(
+                    " A {} {} 0 {} {} {} {}",
+                    n(r),
+                    n(r),
+                    u8::from(large),
+                    u8::from(sweep),
+                    n(to.0),
+                    n(to.1)
+                )),
+                PathSeg::Cubic { c1, c2, to, .. } => d.push_str(&format!(
+                    " C {} {} {} {} {} {}",
+                    n(c1.0),
+                    n(c1.1),
+                    n(c2.0),
+                    n(c2.1),
+                    n(to.0),
+                    n(to.1)
+                )),
+            }
+        }
+        if sub.closed {
+            d.push_str(" Z");
+        }
+    }
+    d
+}
+
+/// The drawn geometry's bbox — the path extent, **stroke excluded** (the
+/// measurement box, [SPEC 15.1]); layout inflates it for paint.
+pub fn geometry_bbox(d: &str) -> Bbox {
+    Bbox::from_points(&path_data::extent_points(d))
+}
+
+/// The drawing's own frames [SPEC 15.6]: the dim's measure frame is
+/// [`crate::layout::geom::Frame`] oriented so **−n is the ISO reading's
+/// "above the line"** (text lifts toward −n, whatever the angle).
+impl Frame {
+    /// The two row axes — exact unit vectors, so the packed paths stay
+    /// byte-identical to the axis-matched arithmetic.
+    pub(in crate::layout::drawing) fn axis(axis: Axis) -> Frame {
+        match axis {
+            Axis::Horizontal => Frame {
+                u: (1.0, 0.0),
+                n: (0.0, 1.0),
+            },
+            Axis::Vertical => Frame {
+                u: (0.0, 1.0),
+                n: (1.0, 0.0),
+            },
+        }
+    }
+
+    /// An aligned frame along `dir` — folded to the ISO reading direction, so
+    /// the text and its "above" side are order-independent.
+    pub fn of(dir: P) -> Frame {
+        let theta = iso_text_angle(dir);
+        let (s, c) = theta.to_radians().sin_cos();
+        Frame {
+            u: (c, s),
+            n: (-s, c),
+        }
+    }
+
+    /// The ISO text seat above a point on a line along `u` [SPEC 15.6]: the
+    /// value's centre lifted `fs/2 + 2` toward the reading's "above" (−n),
+    /// turned with the line — the one placement dims and the diametral line
+    /// share.
+    pub fn text_seat(&self, at: P, fs: f64) -> (P, f64) {
+        let lift = fs / 2.0 + 2.0;
+        (
+            (at.0 - self.n.0 * lift, at.1 - self.n.1 * lift),
+            iso_text_angle(self.u),
+        )
+    }
+}
+
+/// Deterministic coordinate formatting: at most 3 decimals, trailing zeros
+/// trimmed — byte-stable output at drafting precision.
+pub fn n(v: f64) -> String {
+    let r = (v * 1000.0).round() / 1000.0;
+    // Avoid "-0".
+    let r = if r == 0.0 { 0.0 } else { r };
+    let mut s = format!("{r:.3}");
+    while s.ends_with('0') {
+        s.pop();
+    }
+    if s.ends_with('.') {
+        s.pop();
+    }
+    s
+}

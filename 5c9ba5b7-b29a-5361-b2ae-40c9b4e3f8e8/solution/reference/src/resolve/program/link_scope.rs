@@ -1,0 +1,323 @@
+//! The link-scope cascade [SPEC 9, 15]: a link's base layer, the container
+//! chain it matches descendant rules against, and the drawing-scope predicates.
+
+use super::*;
+use scene::ScopeStep;
+
+// ─────────────────────────── Render inputs ───────────────────────────
+
+/// The generated class a schematic scope's wires wear when the scope is
+/// written **inside** the file [SPEC 16.5/18]. The root's `.lini-link` rule
+/// states only the root's dress, so a nested sheet's wires would each inline
+/// their whole dress; wearing this class instead lets the dress ride one
+/// rule, exactly as a mindmap's branch hue does.
+pub(crate) const SCHEMATIC_WIRE_CLASS: &str = "lini-schematic-wire";
+
+/// A link's baked base layers [SPEC 10.5] — the lowest-specificity layer, below
+/// the scope cascade, class rules, and its own block. The values live in the one
+/// tuning home (`ledger::defaults`); resolved once per file, then layered per
+/// link by [`link_scope`].
+pub(super) struct LinkBases {
+    /// Every link's base.
+    every: Vec<(String, ResolvedValue)>,
+    /// …plus this, for a link a schematic scope's laws reach.
+    schematic: Vec<(String, ResolvedValue)>,
+}
+
+pub(super) fn baked_link_defaults(vars: &VarTable, funcs: &FuncTable) -> Result<LinkBases, Error> {
+    use crate::ledger::defaults;
+    Ok(LinkBases {
+        every: bake(&defaults::link_defaults(), vars, funcs)?,
+        schematic: bake(&defaults::schematic_link_defaults(), vars, funcs)?,
+    })
+}
+
+fn bake(
+    decls: &[crate::syntax::ast::Decl],
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<Vec<(String, ResolvedValue)>, Error> {
+    decls
+        .iter()
+        .map(|d| {
+            Ok((
+                d.name.clone(),
+                resolve_groups(&d.groups, d.span, vars, funcs)?,
+            ))
+        })
+        .collect()
+}
+
+/// The container chain from the scene root down to `scope` (each segment an
+/// id), stopping at the first missing segment — the **by-resolved-path**
+/// lookup the containment-link cascade uses ([`link_ancestors`]). A segment
+/// may sit inside an id-less wrapper (an unnamed `|page|`, a `|group|`): the
+/// walk descends through it and keeps the wrapper in the chain. A link's own
+/// written chain never comes from here — the scene walk records it exactly
+/// ([`ScopeStep`]), anonymous wrappers included.
+fn scope_chain<'a>(nodes: &'a [ResolvedInst], scope: &[String]) -> Vec<&'a ResolvedInst> {
+    let mut out = Vec::new();
+    let mut cur = nodes;
+    for seg in scope {
+        match scene::find_in_scope(cur, seg, &mut out) {
+            Some(n) => {
+                out.push(n);
+                cur = &n.children;
+            }
+            None => break,
+        }
+    }
+    out
+}
+
+/// The selector identity of a resolved container [SPEC 4]: its worn `.lini-*` type
+/// classes (the type chain plus its primitive) and user classes, and its id — what a
+/// descendant `|table| |-|` matches against.
+fn inst_facts(inst: &ResolvedInst) -> NodeFacts {
+    let mut classes: Vec<String> = inst
+        .type_chain
+        .iter()
+        .map(|t| format!("lini-{t}"))
+        .collect();
+    classes.push(format!("lini-{}", inst.kind.as_str()));
+    classes.extend(inst.applied_styles.iter().cloned());
+    NodeFacts {
+        classes,
+        id: inst.id.clone(),
+    }
+}
+
+/// Whether a link's scope is a drawing [SPEC 15] — its immediate container (or
+/// the root, for top-level links) resolved `layout: drawing`. Gates the drawing
+/// statements: the measuring ops, `||`, `tol:`, and the wider anchor set.
+fn scope_is_drawing(chain: &[ScopeStep], root_attrs: &AttrMap) -> bool {
+    let attrs = chain.last().map_or(root_attrs, |s| &s.attrs);
+    is_drawing(attrs)
+}
+
+/// **Who owns this link statement's reading** [SPEC 16.5] — resolve's carrier
+/// for what desugar carries as `Nest::schematic`, and the one scope question
+/// the wire laws and the schematic dress both ask.
+///
+/// Stated once, as the walk: each container answers for itself if it can — a
+/// schematic scope claims the statements written inside it, another **engine
+/// that reads its own body's statements**
+/// ([`crate::desugar::STATEMENT_ENGINES`]) claims them back — and anything
+/// else passes its enclosing answer straight through, so a `|row|` inside a
+/// sheet (which reads no statement of its own) is transparent to the laws.
+/// Unlike desugar's twin this needs no `|mindmap|` clause: by resolve the
+/// mindmap seat has stamped its `layout: tree` on the scope, so the ident read
+/// sees it.
+///
+/// `Engine` and `Plain` were one answer until the fix wave, and telling them
+/// apart is what closes the cross-scope short: a statement no engine owns is
+/// read by the sheet's laws exactly where it reaches into one, while a sealed
+/// engine's body is nobody's to re-read ([`links::Owner`]).
+pub(super) fn statement_owner(chain: &[ScopeStep], root_attrs: &AttrMap) -> links::Owner {
+    let step = |prev, attrs: &AttrMap| {
+        if is_schematic(attrs) {
+            links::Owner::Sheet
+        } else if seals_schematic(attrs) {
+            links::Owner::Engine
+        } else {
+            prev
+        }
+    };
+    let mut owner = step(links::Owner::Plain, root_attrs);
+    for s in chain {
+        owner = step(owner, &s.attrs);
+    }
+    owner
+}
+
+/// The container a statement was **written in** [SPEC 9] — the chain's
+/// innermost step (anonymous ones included), else the scene root. Its span is
+/// the identity a layout engine collects its own links by and its `layout:` the
+/// scope's wiring strategy; both are answered here, once, because a dot-path
+/// cannot answer either for an anonymous container ([`LinkOwner`]).
+pub(super) fn written_in(chain: &[ScopeStep], root_attrs: &AttrMap) -> crate::resolve::LinkOwner {
+    let (span, attrs) = match chain.last() {
+        Some(step) => (Some(step.span), &step.attrs),
+        None => (None, root_attrs),
+    };
+    crate::resolve::LinkOwner {
+        span,
+        layout: match attrs.get("layout") {
+            Some(ResolvedValue::Ident(l)) => Some(l.clone()),
+            _ => None,
+        },
+    }
+}
+
+/// Whether a container's own engine owns the reading of its body's statements
+/// — the resolved-attrs twin of `desugar::seals_schematic_scope`, over the one
+/// engine list.
+fn seals_schematic(attrs: &AttrMap) -> bool {
+    matches!(attrs.get("layout"), Some(ResolvedValue::Ident(l))
+        if crate::desugar::STATEMENT_ENGINES.contains(&l.as_str()))
+}
+
+/// A link scope's drawing classification [SPEC 15/20]: whether the immediate
+/// container is a drawing, and — when it is not but a drawing encloses it —
+/// that container's display type, so a mate written inside a `|row|` in a
+/// drawing errors "a '|row|' places its own children".
+pub(super) fn link_scope_kind(
+    nodes: &[ResolvedInst],
+    root_attrs: &AttrMap,
+    chain: &[ScopeStep],
+) -> links::LinkScope {
+    let drawing = scope_is_drawing(chain, root_attrs);
+    let flow_in_drawing = if drawing {
+        None
+    } else {
+        let enclosed = is_drawing(root_attrs)
+            || chain
+                .iter()
+                .take(chain.len().saturating_sub(1))
+                .any(|s| is_drawing(&s.attrs));
+        match (enclosed, chain.last()) {
+            (true, Some(container)) => Some(container.display_type.clone()),
+            _ => None,
+        }
+    };
+    // A detail scope [SPEC 15.8] — a `|drawing| { of: <magnifier> }` — re-lays
+    // its geometry from the source at layout, so its endpoints defer. A section
+    // (`of:` a `|plane|`) authors its geometry, so it resolves normally.
+    let detail = chain.last().is_some_and(
+        |s| matches!(s.attrs.get("of"), Some(ResolvedValue::Ident(id)) if is_magnifier(nodes, id.as_str())),
+    );
+    links::LinkScope {
+        drawing,
+        flow_in_drawing,
+        detail,
+    }
+}
+
+/// Whether a node with id `id` anywhere in the scene is a `|magnifier|`
+/// [SPEC 15.8] — the `of:` reference a detail scope's deferral keys on.
+fn is_magnifier(nodes: &[ResolvedInst], id: &str) -> bool {
+    nodes.iter().any(|n| {
+        (n.id.as_deref() == Some(id) && n.type_chain.iter().any(|t| t == "magnifier"))
+            || is_magnifier(&n.children, id)
+    })
+}
+
+/// A link's scope inputs: its `base` layer — the baked defaults plus the nearest
+/// scope's config props (`clearance` / `routing` [SPEC 9], root → container
+/// chain, nearest winning; geometry, not paint, so they live on a container's
+/// own block — unlike the wire and label look, which come from `|-|` rules) — and the
+/// `ancestors` its descendant `|…| |-|` rules match against. The chain is the
+/// link's **written** container chain, anonymous wrappers included — config on
+/// a bare `|column|` cascades exactly as on a named one. A root-scope link
+/// passes an empty chain.
+pub(super) fn link_scope(
+    baked: &LinkBases,
+    root_attrs: &AttrMap,
+    chain: &[ScopeStep],
+    owner: links::Owner,
+) -> (Vec<(String, ResolvedValue)>, Vec<NodeFacts>) {
+    let mut base = baked.every.clone();
+    // A link's labels are measured, so the text props measurement reads must
+    // reach it the way they reach a node — down the tree, nearest ancestor
+    // wins [SPEC 4/6]. Without this a scope's `font-family:` restyles every
+    // label through native CSS inheritance while layout still measures the
+    // default face, and the box no longer fits the glyphs. Seated first, so
+    // the two chrome seats below (the derived size, the normal weight) win the
+    // pair the link's own dress owns.
+    for prop in properties::measured_text() {
+        let nearest = chain
+            .iter()
+            .rev()
+            .find_map(|s| s.attrs.get(prop))
+            .or_else(|| root_attrs.get(prop));
+        if let Some(v) = nearest {
+            base.push((prop.to_string(), v.clone()));
+        }
+    }
+    // A link label's size derives from the scope's **inherited** body size
+    // [SPEC 6/9] — 11 at the default 15 — so one `font-size:` scales the whole
+    // scene. Base-layer seat: any authored `font-size` (`|-|`, a class, the
+    // link's block) wins absolutely; the drawing's own 12 (below) overrides it
+    // too, drafting text being a sheet convention.
+    let inherited = chain
+        .iter()
+        .rev()
+        .find_map(|s| s.attrs.number("font-size"))
+        .or_else(|| root_attrs.number("font-size"))
+        .unwrap_or(consts::ROOT_FONT_SIZE);
+    base.push((
+        "font-size".to_string(),
+        ResolvedValue::Number(inherited * consts::LINK_FONT_AT_ROOT / consts::ROOT_FONT_SIZE),
+    ));
+    // …and a label reads at the **link weight** [SPEC 9] — stated as the very
+    // var the `.lini-link-label` rule renders, so the two can only ever agree:
+    // measurement reads it as regular and the class-diff sees its own value,
+    // inlining nothing. The same base-layer seat as the size, and for the same
+    // reason — it pins the pair the label's dress owns, so a scope's heavier
+    // body weight never measures a label the rule then draws light, while
+    // `|-| { font-weight: … }` still wins both.
+    base.push((
+        "font-weight".to_string(),
+        ResolvedValue::live("link-font-weight"),
+    ));
+    // The drafting line-weight contrast [SPEC 15.1]: geometry keeps stroke 2,
+    // a drawing's links thin to 1. A **scope default**, not a rule — it rides
+    // the base layer below every user rule, so a plain `|-| { stroke-width: … }`
+    // overrides it. The same immediate-scope predicate as the mate gate: a
+    // `|row|` nested in a drawing owns ordinary routed links, weight 2.
+    if scope_is_drawing(chain, root_attrs) {
+        base.push((
+            "stroke-width".to_string(),
+            ResolvedValue::Number(consts::DRAWING_LINK_STROKE_WIDTH),
+        ));
+        // …and its annotation text reads at the caption size, 12 — the same
+        // base-layer seat, so a plain `|-| { font-size: … }` still wins.
+        base.push((
+            "font-size".to_string(),
+            ResolvedValue::Number(consts::DRAWING_LINK_FONT_SIZE),
+        ));
+        // …and its dimensions stand off by the sheet clearance [SPEC 15.6],
+        // not the routing 16 — the scope's config (below) and every user rule
+        // still override it.
+        base.push((
+            "clearance".to_string(),
+            ResolvedValue::Number(consts::DIM_CLEARANCE),
+        ));
+    }
+    // A schematic wire wears the classic dress [SPEC 16.5/16.6] — green, thin,
+    // and bending **square** — seated on the same base layer as the drawing's
+    // line weight above, so `|-| { stroke: … }` or a per-wire block still wins.
+    // The reaching carrier, not the immediate scope: the sheet's laws already
+    // reach a `|row|` nested in it, and its wires are the same wires.
+    if owner == links::Owner::Sheet {
+        base.extend(baked.schematic.iter().cloned());
+    }
+    for prop in properties::scope_link_props() {
+        let nearest = chain
+            .iter()
+            .rev()
+            .find_map(|s| s.attrs.get(prop))
+            .or_else(|| root_attrs.get(prop));
+        if let Some(v) = nearest {
+            base.push((prop.to_string(), v.clone()));
+        }
+    }
+    let mut ancestors: Vec<NodeFacts> = scene::root_facts(root_attrs).into_iter().collect();
+    ancestors.extend(chain.iter().map(|s| s.facts.clone()));
+    (base, ancestors)
+}
+
+/// The ancestor facts a link's descendant `|…| |-|` rules match against, for the
+/// container chain down to `scope` — the root's synthetic fact (the file is the
+/// root container [SPEC 1], so `|drawing| |-|` reaches a root drawing's links)
+/// then each container's identity. Shared by [`link_scope`] (the written scope)
+/// and the containment-link cascade (the outer endpoint's chain, [SPEC 9]).
+pub(super) fn link_ancestors(
+    nodes: &[ResolvedInst],
+    root_attrs: &AttrMap,
+    scope: &[String],
+) -> Vec<NodeFacts> {
+    let mut ancestors: Vec<NodeFacts> = scene::root_facts(root_attrs).into_iter().collect();
+    ancestors.extend(scope_chain(nodes, scope).iter().map(|n| inst_facts(n)));
+    ancestors
+}

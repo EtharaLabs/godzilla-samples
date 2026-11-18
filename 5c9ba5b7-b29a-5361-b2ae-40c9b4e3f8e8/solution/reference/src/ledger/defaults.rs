@@ -1,0 +1,1135 @@
+//! Every built-in default, expressed as parser-shaped [`Decl`]s. This is the one
+//! place Lini's look is tuned; desugar lowers these into `.lini-*` class defs and
+//! the global block, and `resolve` reads [`link_defaults`] as the baked link base.
+//! Visual `--lini-*` colours stay live `--var` references (render emits their
+//! defaults as `@layer` CSS).
+
+use super::consts;
+use crate::expr::FuncTable;
+use crate::resolve::{AttrMap, NodeKind, VarTable};
+use crate::span::Span;
+use crate::syntax::ast::{Decl, Value};
+
+/// A sequence's default `gap: row col` [SPEC 13] — the message pitch (rows) and the
+/// participant spacing (columns) — a time axis's own rhythm, not the flow gutter's `36`.
+/// Shared by the `|sequence|` template and the root `{ layout: sequence }` form.
+pub(crate) const SEQ_GAP_ROW: f64 = 32.0;
+pub(crate) const SEQ_GAP_COL: f64 = 32.0;
+
+/// A tree's default `gap: generation sibling` [SPEC 12] — the generation
+/// distance and sibling separation. Wider than the generic `36`: an org chart
+/// breathes, and its branch connectors need room to clear the cards at the
+/// default link clearance (the flow gutter is too tight there). Injected
+/// on a `layout: tree` scope that authors no `gap`; the user's own `gap` wins.
+pub(crate) const TREE_GAP_GEN: f64 = 64.0;
+pub(crate) const TREE_GAP_SIB: f64 = 48.0;
+
+/// A schematic's default `gap` [SPEC 16.1] — the scope's **coarse lattice
+/// pitch**, five fine pitches. It is the column and row pitch every part
+/// centre lands on, not the space between two tracks: a discrete plus the lead
+/// each side of it, so a column of them reads as a column. Shared by the
+/// `|schematic|` template and the root `{ layout: schematic }` form.
+///
+/// Held at 100 by eye against `fadec.pdf` and `even.pdf`, having rendered 80,
+/// 120 and 140 and read them: at 80 the showroom strays nine times and a value
+/// lands on the next symbol; at 120 and 160 — the *even* multiples, which would
+/// put a two-column corridor's midline on a fine line — the coarse cell is the
+/// collision unit, so a body seated straight out off a pin swallows a whole
+/// cell of its neighbours' rows and a rail of net names is pushed off its own
+/// pins; 140 draws a block half again as wide as the reference's. The midline
+/// gain is theoretical in the showroom besides: every interior run there rides
+/// a part column or a pin row, not a corridor between two columns.
+pub(crate) const SCH_GAP: f64 = 100.0;
+
+/// A chart's / pie's default `gap` [SPEC 14.1/14.6] — the clear space between
+/// the plot and the title / legend that sit outside it, overriding the
+/// `|block|` base `gap: 36` (a chart arranges no children, so the flow gutter
+/// means nothing here). Wider than the 10 it started at: a title reads as a
+/// caption over its plot, not a line pinned to it. The user tunes it
+/// (`gap: 0` ≈ touching); the daylight *inside* the plot — text off what it
+/// labels — is `clearance` ([`consts::CHART_CLEARANCE`]).
+pub(crate) const CHART_GAP: f64 = 15.0;
+
+/// The `|mindmap|` depth ramp + wrap cap [SPEC 8] — one obvious table, retuned
+/// by eye. The root tier rides the `.lini-mindmap` bundle (the node *is* the
+/// root topic); levels 1 and 2+ ride the generated `.lini-mindmap .lini-level-N`
+/// rules ([`crate::desugar::tree::mindmap_rules`]).
+pub(crate) const MINDMAP_ROOT_FONT: f64 = 17.0;
+pub(crate) const MINDMAP_BRANCH_FONT: f64 = 15.0;
+pub(crate) const MINDMAP_SUB_FONT: f64 = 14.0;
+pub(crate) const MINDMAP_LEAF_FONT: f64 = 13.0;
+/// The topic wrap cap [SPEC 8]: a long label wraps into a card instead of
+/// stretching an arm.
+pub(crate) const MINDMAP_MAX_WIDTH: f64 = 160.0;
+
+fn decl(name: &str, values: Vec<Value>) -> Decl {
+    Decl {
+        name: name.into(),
+        groups: vec![values],
+        span: Span::empty(),
+    }
+}
+fn n(name: &str, v: f64) -> Decl {
+    decl(name, vec![Value::Number(v)])
+}
+fn id(name: &str, v: &str) -> Decl {
+    decl(name, vec![Value::Ident(v.into())])
+}
+fn var(name: &str, v: &str) -> Decl {
+    decl(name, vec![Value::Var(v.into())])
+}
+fn pair(name: &str, a: f64, b: f64) -> Decl {
+    decl(name, vec![Value::Number(a), Value::Number(b)])
+}
+fn quad(name: &str, t: f64, r: f64, b: f64, l: f64) -> Decl {
+    decl(
+        name,
+        vec![
+            Value::Number(t),
+            Value::Number(r),
+            Value::Number(b),
+            Value::Number(l),
+        ],
+    )
+}
+
+/// Root defaults specific to a root `{ layout: X }` engine, layered over [`root_defaults`]
+/// (the user's own decls still win). A root sequence breathes like a `|sequence|` node — it
+/// gets the same `gap`. The default lives here, so the layout core stays dumb.
+pub(crate) fn root_layout_defaults(layout: Option<&str>) -> Vec<Decl> {
+    match layout {
+        Some("sequence") => vec![pair("gap", SEQ_GAP_ROW, SEQ_GAP_COL)],
+        Some("tree") => vec![pair("gap", TREE_GAP_GEN, TREE_GAP_SIB)],
+        // A root sheet **is** a `|schematic|` scope [SPEC 16.6] — same track
+        // spacing, same clearance, same `--lini-sheet` wash — so it takes that
+        // bundle rather than restating it; only `layout:`, which the root
+        // already carries, drops out. The user's own decls still win.
+        Some("schematic") => template_bundle("schematic")
+            .into_iter()
+            .filter(|d| d.name != "layout")
+            .collect(),
+        // (Any *other* container that opts into the engine takes
+        // [`schematic_scope_config`] alone — its own paint is its own.)
+        // A drawing root's px-per-unit is the desugar scale fold's job
+        // [SPEC 15.1/18] — ratio × unit × density, stamped per scope.
+        _ => Vec::new(),
+    }
+}
+
+/// The card-content gutter [SPEC 11] — the space between an icon and its label
+/// inside a closed shape. Tighter than the container default `36`: these are one
+/// node's parts, not arranged siblings, and a Phosphor glyph carries margin of its
+/// own, so the perceived gap runs wider than the number.
+pub(crate) const CARD_GAP: f64 = 12.0;
+
+/// The card-content carve [SPEC 11]: a closed shape's — and a `|topic|`'s —
+/// children are card content (an icon over its label), not arranged nodes. They
+/// **stack**, at the tighter [`CARD_GAP`]. Every member of the class takes this
+/// one bundle; the root, `|block|`, `|group|`, and the frameless wrappers are
+/// containers, and keep the flow defaults (`row`, `36`).
+fn card_content() -> Vec<Decl> {
+    vec![id("direction", "column"), n("gap", CARD_GAP)]
+}
+
+/// The card-content class itself — who wears [`card_content`]. Stated **once**,
+/// here, because two readers need the same answer: the bundles below, and the
+/// drawing scope's "did this node ask for a layout of its own?" test
+/// ([`crate::layout::owns_layout`]) — a card's stacking default is the type's,
+/// not a request to arrange, so it must never seal a drawing scope
+/// ([SPEC 15.1]). `|row|` / `|column|` state `direction` too and are *not*
+/// cards: they are the frameless wrappers, and they do seal.
+///
+/// Only the types that **declare** the bundle are named — a derived one carries
+/// its base in the chain (`|rect|` → `box`, `|balloon|` / `|hole|` → the `Oval`
+/// kind, `|mindmap|` → `topic`, a user's `|card::box|` → `box`).
+pub(crate) fn is_card(kind: NodeKind, type_chain: &[String]) -> bool {
+    matches!(
+        kind,
+        NodeKind::Oval | NodeKind::Hex | NodeKind::Cyl | NodeKind::Diamond | NodeKind::Slant
+    ) || type_chain
+        .iter()
+        .any(|t| matches!(t.as_str(), "box" | "topic"))
+}
+
+/// A primitive's complete default set (paint + geometry).
+pub fn primitive_bundle(kind: NodeKind) -> Vec<Decl> {
+    use NodeKind::*;
+    // Closed, content-sized primitives share paint + box-model defaults.
+    let sized = || {
+        let mut b = vec![
+            var("fill", "fill"),
+            var("stroke", "stroke"),
+            n("stroke-width", 2.0),
+            n("padding", 20.0),
+        ];
+        b.extend(card_content());
+        b
+    };
+    match kind {
+        // The bare rectangle [SPEC 7]: frameless, no padding — like a `div`.
+        // It keeps the default `stroke-width` (invisible while `stroke: none`, so
+        // bbox geometry is unchanged from the old `|plain|`, and a styled `|block|`
+        // gets a sensible 2px border); the `|box|` template lifts paint/radius/
+        // padding back on top.
+        Block => vec![
+            id("fill", "none"),
+            id("stroke", "none"),
+            n("stroke-width", 2.0),
+            n("padding", 0.0),
+            n("gap", 36.0),
+        ],
+        Oval | Hex | Cyl | Diamond => sized(),
+        Slant => {
+            let mut b = sized();
+            b.push(n("skew", 15.0));
+            b
+        }
+        // Geometry-sized closed shapes: paint only, no box model.
+        Poly | Path => vec![
+            var("fill", "fill"),
+            var("stroke", "stroke"),
+            n("stroke-width", 2.0),
+        ],
+        // The sketch pen [SPEC 15.3] paints like them, but its object lines
+        // read the full drafting tone — black on white [SPEC 10.1].
+        Sketch => vec![
+            var("fill", "fill"),
+            var("stroke", "stroke-dark"),
+            n("stroke-width", 2.0),
+        ],
+        Line => vec![
+            id("fill", "none"),
+            var("stroke", "stroke"),
+            n("stroke-width", 2.0),
+        ],
+        // Phosphor icon: painted like a box (fill body, stroke line) at a
+        // counter-scaled stroke-width; defaults to a soft-grey duotone at 32px.
+        Icon => vec![
+            var("fill", "icon-fill"),
+            var("stroke", "stroke"),
+            n("stroke-width", 2.0),
+            n("width", 32.0),
+            n("height", 32.0),
+        ],
+        // Text is structural (render's `lini-text` rule); Image requires src/dims.
+        Text | Image => Vec::new(),
+    }
+}
+
+/// A built-in template's delta over its base [SPEC 8]. Empty for a non-template.
+pub fn template_bundle(name: &str) -> Vec<Decl> {
+    match name {
+        // The default node: a rounded, framed card over the bare `|block|` base.
+        // A card, so its interior is card content ([`card_content`]) — the base's
+        // container `direction` / `gap` do not reach a `|box|` (nor a `|rect|`).
+        "box" => {
+            let mut b = vec![
+                var("fill", "fill"),
+                var("stroke", "stroke"),
+                n("stroke-width", 2.0),
+                n("padding", 20.0),
+                n("radius", 8.0),
+            ];
+            b.extend(card_content());
+            b
+        }
+        "rect" => vec![n("radius", 0.0)],
+        "group" => vec![
+            var("stroke", "group-stroke"),
+            id("stroke-style", "dashed"),
+            n("stroke-width", 1.0),
+            var("fill", "group-fill"),
+            n("radius", 8.0),
+            n("padding", 20.0),
+        ],
+        "caption" => vec![
+            decl(
+                "pin",
+                vec![Value::Ident("top".into()), Value::Ident("left".into())],
+            ),
+            pair("translate", 0.0, -20.0),
+            var("color", "caption-color"),
+            pair(
+                "font-scale",
+                consts::CAPTION_FONT_AT_ROOT,
+                consts::ROOT_FONT_SIZE,
+            ),
+            var("font-weight", "caption-font-weight"),
+        ],
+        "footnote" => vec![
+            id("pin", "bottom"),
+            pair("translate", 0.0, 19.0),
+            pair(
+                "font-scale",
+                consts::CAPTION_FONT_AT_ROOT,
+                consts::ROOT_FONT_SIZE,
+            ),
+            var("color", "footer-color"),
+        ],
+        // A schematic scope's caption [SPEC 16.6]: inside the frame it names,
+        // one small step in from the top-left corner — a sheet titles its
+        // blocks within them, where a tiled page leaves no gutter to hold a
+        // name — and a block title, so it reads above the sheet's body text
+        // and heavier than it. The seat and the colour ride the chain.
+        "sheet-caption" => vec![
+            pair("translate", 10.0, 10.0),
+            pair(
+                "font-scale",
+                consts::SHEET_CAPTION_FONT_AT_ROOT,
+                consts::ROOT_FONT_SIZE,
+            ),
+            id("font-weight", "semibold"),
+        ],
+        "badge" => vec![
+            decl(
+                "pin",
+                vec![Value::Ident("top".into()), Value::Ident("right".into())],
+            ),
+            pair("translate", 6.0, -6.0),
+            n("radius", 8.0),
+            pair("padding", 2.0, 6.0),
+            decl(
+                "shadow",
+                vec![Value::Number(2.0), Value::Number(3.0), Value::Number(3.0)],
+            ),
+            var("fill", "accent"),
+            var("color", "accent-text"),
+            n("font-size", 11.0),
+            id("font-weight", "normal"),
+        ],
+        // Frameless flow wrappers over |block| [SPEC 8]: the engine is flow by
+        // default, so these only set the orientation. |grid| is the grid sibling.
+        "row" => vec![id("direction", "row")],
+        "column" => vec![id("direction", "column")],
+        "grid" => vec![id("layout", "grid")],
+        // Chart containers [SPEC 14.1]: the layout preset is the whole bundle,
+        // exactly as `table` is `grid + gap-fill`. The chart layout reads everything
+        // else (sizes, scales, paint) from the node and its children at layout time.
+        // `gap` is the clear space between the plot and the title / legend that sit
+        // outside it [SPEC 14.6], overriding the `|block|` base `gap: 36`; the
+        // user tunes it (`gap: 0` ≈ touching).
+        "chart" => vec![id("layout", "chart"), n("gap", CHART_GAP)],
+        "pie" => vec![id("layout", "pie"), n("gap", CHART_GAP)],
+        // Sequences [SPEC 13]: the layout preset + the message pitch / participant spacing
+        // (`gap`, a time axis's own rhythm, not the flow gutter), plus the note / frame / separator
+        // looks, all reusing scene role variables (no new ones). Participants are ordinary
+        // boxes and keep their own type's paint. (A root `{ layout: sequence }` picks up the
+        // same `gap` default in `desugar`.)
+        "sequence" => vec![
+            id("layout", "sequence"),
+            pair("gap", SEQ_GAP_ROW, SEQ_GAP_COL),
+        ],
+        // The note card [SPEC 8] — one type in every layout: shape-like padding
+        // in flow / grid, compacted inside a sequence / drawing by the built-in
+        // scoped rules ([`scoped_rules`]), sheet-space in a scaled view.
+        "note" => vec![
+            var("fill", "fill"),
+            var("stroke", "stroke"),
+            n("padding", 20.0),
+            n("scale", 1.0),
+        ],
+        // The tree's structural node [SPEC 12/8]: a compact framed card over the
+        // bare |block| base — like |box|'s paint tier so a bare topic reads, at a
+        // tighter card padding. The tree engine reads topic nesting for structure.
+        "topic" => {
+            let mut b = vec![
+                var("fill", "fill"),
+                var("stroke", "stroke"),
+                n("stroke-width", 2.0),
+                n("radius", 8.0),
+                pair("padding", 8.0, 14.0),
+            ];
+            // A topic is a card too — its `[ ]` content stacks ([`card_content`]).
+            b.extend(card_content());
+            b
+        }
+        // The mindmap root card [SPEC 8]: the node **is** the visible root
+        // topic, so its bundle carries the ramp's root tier and the wrap cap.
+        // The scope trio (`layout: tree; direction: bilateral; routing:
+        // natural`) is not paint — desugar seats the node in a generated tree
+        // scope and lowers `routing: natural` as a generated rule, both shown
+        // by `lini desugar` ([`crate::desugar::tree`]).
+        "mindmap" => vec![
+            n("max-width", MINDMAP_MAX_WIDTH),
+            n("font-size", MINDMAP_ROOT_FONT),
+            id("font-weight", "semibold"),
+        ],
+        // The assembly balloon [SPEC 8, 15.8]: a numbered circle a leader points
+        // from; sheet-space like all annotation chrome.
+        "balloon" => vec![
+            n("width", 16.0),
+            var("fill", "fill"),
+            var("stroke", "stroke"),
+            n("font-size", 11.0),
+            n("scale", 1.0),
+        ],
+        // The datum layout [SPEC 12]: frameless, and padding-free like the
+        // drawing built on it — the placed geometry is the content.
+        "stack" => vec![id("layout", "stack"), n("padding", 0.0)],
+        // Drawings [SPEC 15]: the container (frameless — the geometry and its
+        // annotations are the content)…
+        // A drawing's px-per-unit is stamped by the desugar scale fold
+        // [SPEC 15.1/18]; its `scale:` is the drafting ratio, default 1.
+        "drawing" => vec![id("layout", "drawing"), n("padding", 0.0)],
+        // …the round hole — `width:` (required) is its diameter; it punches by
+        // paint order and draws its own centre marks [SPEC 15.4]…
+        "hole" => vec![var("fill", "bg"), var("stroke", "stroke-dark")],
+        // The ISO 1302 surface-texture symbol [SPEC 15.9]: dimension-linework
+        // paint at the annotation font, sheet-space like every drafting
+        // symbol; `symbol:` picks the vee variant.
+        "surface-finish" => vec![
+            id("symbol", "basic"),
+            var("stroke", "stroke-dark"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+            n("font-size", 12.0),
+            n("scale", 1.0),
+        ],
+        // The GD&T frame and the framed datum letter [SPEC 15.9]: annotation
+        // linework, the annotation font, a `--bg` back so the boxed cells
+        // mask whatever they ride (`|control|` rows carry no bundle — the
+        // frame paints them).
+        "feature-control" | "datum" => vec![
+            var("stroke", "stroke-dark"),
+            n("stroke-width", 1.0),
+            var("fill", "bg"),
+            n("font-size", 12.0),
+            n("scale", 1.0),
+        ],
+        // …and the dash-dot chrome types [SPEC 15.7]. `|breakline|` is the break
+        // cut's generated zigzag / S edge — solid, annotation-weight.
+        "centerline" => vec![
+            id("stroke-style", "center"),
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        "pitch-circle" => vec![
+            id("stroke-style", "center"),
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        "breakline" => vec![
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // Hidden interior geometry [SPEC 15.7]: a dashed, unfilled pen profile
+        // on its own child — the one-node-one-stroke-style law. Thin, like the
+        // hidden-edge convention. (`|shoulder|`, the revolve’s edge line, is a
+        // real visible edge and keeps the |line| base's geometry weight.)
+        "hidden" => vec![
+            id("stroke-style", "dashed"),
+            var("stroke", "stroke-dark"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // The revolve's shoulder lines are **real profile edges** [SPEC 15.3]
+        // — they complete the pen's outline, so they carry its tone.
+        "shoulder" => vec![var("stroke", "stroke-dark")],
+        // A thread's ISO 6410 thin lines [SPEC 15.3/15.4]: the minor line
+        // beside a dressed run, the ¾ arc on a round view — continuous, the
+        // support tone, like extension lines.
+        "threadline" => vec![
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // Sections & details [SPEC 15.8]. The plane line is thin
+        // dash-dot chrome (its thick ends / arrows / letter fill from the
+        // view); the detail marker a thin outlined circle, its letter set at
+        // the rim.
+        "plane" => vec![
+            id("stroke-style", "center"),
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        "magnifier" => vec![
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // A projection construction line [SPEC 15.8]: the thin support-tone line a
+        // sheet's cross-view link generates between two views' anchors — styleable
+        // / removable scope-wide (`|projection| { stroke: none }`), like all chrome.
+        "projection" => vec![
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // The ISO 5457 sheet [SPEC 15.8]: mm dimensions (A4 portrait unless
+        // `sheet:` says otherwise); its px-per-mm is the root `density:`,
+        // stamped by the desugar scale fold — a page carries no `scale:` of
+        // its own. The trimmed sheet has no stroke (the |frame| child draws
+        // the border), so its box is the exact trimmed size.
+        "page" => vec![
+            var("fill", "bg"),
+            n("stroke-width", 0.0),
+            n("width", consts::A4.0),
+            n("height", consts::A4.1),
+        ],
+        // The ISO 7200 title block [SPEC 15.8]: a |table| the page seats flush
+        // inside its frame's bottom-right corner — compact, thin-ruled, sharp.
+        // Sharp corners: the chain reaches this through `|table|` → `|group|`,
+        // whose 8 would round the block [SPEC 8].
+        "title-block" => vec![
+            n("font-size", 14.0),
+            id("font-weight", "semibold"),
+            n("stroke-width", 1.0),
+            n("radius", 0.0),
+        ],
+        // A title-block field caption [SPEC 15.8]: the muted footer tone, a step
+        // down from the value it labels — quieter in both channels, so the value
+        // reads first. A type (not inline style), so its font states once as a
+        // `.lini-field` class rule.
+        "field" => vec![
+            n("font-size", 12.0),
+            id("font-weight", "normal"),
+            var("color", "footer-color"),
+        ],
+        // …and the sheet's generated furniture: the thick border, the zone
+        // reference labels, and the thin dividers / centring marks.
+        "frame" => vec![
+            id("fill", "none"),
+            var("stroke", "stroke"),
+            n("stroke-width", 2.0),
+        ],
+        "zone" => vec![n("font-size", 11.0), var("color", "stroke-light")],
+        "tick" => vec![
+            var("stroke", "stroke"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // ── Floorplans [SPEC 8/15.11] — the architectural dialect. The scope
+        // is the drawing container in another vocabulary, so it takes the
+        // `|drawing|` bundle whole and states only the engine name; every
+        // `|drawing|`-scoped rule still reaches it (the chain is
+        // `.lini-floorplan .lini-drawing .lini-block`).
+        "floorplan" => vec![id("layout", "floorplan")],
+        // A wall run: a `|sketch|` whose `draw:` traces the **centreline**, the
+        // outline it grows into taking the paint — solid `--stroke-dark`, the
+        // poché read. Its `thickness:` is not here: a true-size default is
+        // physical millimetres, converted through the scope's `unit:` where it
+        // is read, never a drawing-unit literal in a class rule [SPEC 15.11].
+        "wall" => vec![var("fill", "stroke-dark"), id("stroke", "none")],
+        // The dialect's generated chrome [SPEC 15.7/15.11]: an opening's leaf
+        // and swing arc, a window's sill pair, a flight's treads and up arrow
+        // — annotation-thin, the support tone, one rule each and a class on
+        // every wearer.
+        "door-leaf" | "door-swing" | "window-sill" | "stair-tread" | "stair-arrow" => vec![
+            var("stroke", "stroke-light"),
+            n("stroke-width", 1.0),
+            id("fill", "none"),
+        ],
+        // (`|door|` / `|window|` are deliberately absent — an opening's
+        // defaults are either true-size (`width:` 900 mm / 1200 mm) or a pose
+        // the reader falls back to (`hinge: start`, `swing: left`), and a pose
+        // stated as a class rule could not be told from an authored one, which
+        // is exactly what the sliding-door gate reads [SPEC 21].)
+        //
+        // The six fixtures [SPEC 15.11]: a thin outline over the paper tone, so
+        // furniture masks what it overlaps. `symbol:` variants and their
+        // true-size bodies ride the family table, not a class rule.
+        "bed" | "sofa" | "dining" | "bath" | "appliance" | "stairs" => vec![
+            var("stroke", "stroke-dark"),
+            n("stroke-width", 1.0),
+            var("fill", "bg"),
+        ],
+        // ── Schematics [SPEC 8/16] — the classic sheet's part looks, each a
+        // `light-dark()` role variable so a theme retunes the whole family.
+        // The generic pin-bearing part: an IC / module / relay body — pale
+        // yellow, dark-red outline, sharp corners, ref prefix U.
+        "component" => vec![
+            var("fill", "component-fill"),
+            var("stroke", "component-stroke"),
+            n("stroke-width", consts::SCH_STROKE_WIDTH),
+            n("radius", 0.0),
+            n("padding", 8.0),
+            decl("prefix", vec![Value::String("U".into())]),
+        ],
+        // A component terminal [SPEC 16.2]: one pin row — its height IS the
+        // pin pitch (rows stack at gap 0 → exact 20-centre spacing), its text
+        // the pin name inside the body. No `side:` default — the bilateral
+        // split reads its *absence* [SPEC 16.2].
+        "pin" => vec![
+            n("height", consts::PIN_PITCH),
+            n("padding", 0.0),
+            n("font-size", 11.0),
+            n("gap", 0.0),
+        ],
+        // An empty rail slot between two pins [SPEC 16.2]: one pitch square,
+        // whichever way its rail runs.
+        "space" => vec![
+            n("width", consts::PIN_PITCH),
+            n("height", consts::PIN_PITCH),
+        ],
+        // The net tag [SPEC 16.4]: teal ink, small text; `shape:` picks the
+        // outline (`plain` draws none).
+        "label" => vec![
+            id("shape", "plain"),
+            n("font-size", 11.0),
+            var("color", "label-ink"),
+            // A symbol label lays its drawing and its text out in a row
+            // [SPEC 16.4], so this is the gap between them — the generic
+            // container 20 sets a ground or a power flag adrift of the net it
+            // names. Inert on a label that is only text (one child, no gap).
+            n("gap", 4.0),
+        ],
+        // The connection dot [SPEC 16.5] — generated chrome at ≥3-way meets;
+        // diameter = 2 × the junction radius constant.
+        "junction" => vec![
+            var("fill", "wire"),
+            id("stroke", "none"),
+            n("width", consts::JUNCTION_RADIUS * 2.0),
+        ],
+        // The connector: numbered nameless pins (`pins: N` generates them).
+        "J" => vec![decl("prefix", vec![Value::String("J".into())])],
+        // The amplifier triangle keeps the component's U prefix but a
+        // symbol body (no box paint) — the discrete look.
+        "opamp" => vec![
+            id("fill", "none"),
+            id("stroke", "none"),
+            decl("prefix", vec![Value::String("U".into())]),
+        ],
+        // The built-in ground / no-connect defines [SPEC 16.4].
+        "gnd" => vec![id("symbol", "gnd")],
+        "nc" => vec![id("symbol", "nc")],
+        // A frame: a dashed, rounded rectangle around a span of messages. `padding` insets
+        // the border from the messages it spans (vertical) and the lifelines (horizontal).
+        "loop" | "opt" | "alt" => vec![
+            id("fill", "none"),
+            var("stroke", "group-stroke"),
+            id("stroke-style", "dashed"),
+            n("stroke-width", 1.0),
+            n("radius", 4.0),
+            n("padding", 24.0),
+            n("font-size", 12.0),
+        ],
+        // An |alt| compartment separator: the same dashed line, no body radius.
+        "else" => vec![
+            id("fill", "none"),
+            var("stroke", "group-stroke"),
+            id("stroke-style", "dashed"),
+            n("stroke-width", 1.0),
+            n("font-size", 12.0),
+        ],
+        // A bar's corners are softly rounded by default [SPEC 14.2]; `stroke: auto`
+        // is the outlined-look sentinel ([SPEC 10]) — the chart draws a deep edge of the soft
+        // fill, while an explicit `stroke: none` (overriding `auto`) removes it. Both ride
+        // the class so the user overrides them (`radius: 0` square, `stroke: none` flat).
+        "bars" => vec![n("radius", 2.0), id("stroke", "auto")],
+        // A pie slice shares the outlined look [SPEC 14.6]: `stroke: auto` gives
+        // it a deep edge of its soft fill unless `stroke: none` opts out.
+        "slice" => vec![id("stroke", "auto")],
+        // A `|mark|` annotation point shows a dot by default [SPEC 14.5]; the
+        // marker cascade then distinguishes that default (and `marker: dot`) from an
+        // explicit `marker: none`, which resolve would otherwise collapse together.
+        "mark" => vec![id("marker", "dot")],
+        // A larger icon meant to stand alone as a node, with room for a short
+        // label: the icon primitive at 64px with a little padding. Defaults to
+        // `fit: contain` so the glyph fills that box rather than floating small
+        // inside Phosphor's margin like a bare `|icon|` [SPEC 8]. A `|sign|` sits
+        // among ordinary nodes and takes their `stroke-width: 2`, matching the
+        // diagram's line weight (the same weight a bare `|icon|` keeps).
+        "sign" => vec![
+            n("width", 64.0),
+            n("height", 64.0),
+            n("padding", 4.0),
+            n("stroke-width", 2.0),
+            id("fit", "contain"),
+        ],
+        // A ruled grid [SPEC 8]: hairline `gap-fill` gutters fill the 1px gaps
+        // between cells, the group border frames the whole. `padding: 0` on the
+        // table itself — each cell's inset comes from the shipped `|table| |block|`
+        // rule (desugar::classes), since body cells are now `|block|`s. Cells
+        // `stretch` on both axes so every cell fills its track (backgrounds fill,
+        // text has room); the user's own `align`/`justify` are distributed to the
+        // cells to place their text (desugar::mod).
+        "table" => vec![
+            id("layout", "grid"),
+            id("align", "stretch"),
+            id("justify", "stretch"),
+            n("gap", 1.0),
+            var("gap-fill", "stroke"),
+            n("padding", 0.0),
+            id("fill", "none"),
+            var("stroke", "stroke"),
+            // A touch heavier than the group base (1) so the frame and its gutters —
+            // and an |entity|, which builds on this — read crisply [SPEC 8].
+            n("stroke-width", 2.0),
+            id("stroke-style", "solid"),
+            n("font-size", 14.0),
+            id("font-weight", "normal"),
+            // A table is sheet furniture: in a scaled drawing view it keeps its
+            // size, like notes and balloons [SPEC 15.1].
+            n("scale", 1.0),
+        ],
+        // A table cell [SPEC 8]: a frameless `|block|` carrying the text-to-gutter
+        // inset. Body cells wrap in it; `|header|` / `|footer|` build on it. Only the
+        // caption (a plain `|block|`) is left uninset. Override with `|cell| { … }`
+        // or, per table, `|table| |cell| { … }`.
+        "cell" => vec![pair("padding", 4.0, 8.0)],
+        // A table header cell [SPEC 8]: a `|cell|` with the fill band and `bold`
+        // weight. It fills its track and takes its inset / text alignment from the
+        // `|cell|` + `|table|` defaults. The cascade overrides via `|table| |header| { … }`.
+        "header" => vec![var("fill", "header-fill"), id("font-weight", "semibold")],
+        // A table footer cell [SPEC 8]: a `|cell|`, muted text, no fill.
+        "footer" => vec![var("color", "footer-color")],
+        // An ER / database entity [SPEC 8]: a two-column table; its label lowers to a
+        // spanning header (desugar) and its body cells default to left-aligned (in
+        // `distribute_cell_alignment`, so the title header stays centred and filled).
+        // Everything else is the |table| base.
+        // Comma-shaped groups: `columns` is a track **list** [SPEC 2].
+        "entity" => vec![Decl {
+            name: "columns".into(),
+            groups: vec![
+                vec![Value::Ident("auto".into())],
+                vec![Value::Ident("auto".into())],
+            ],
+            span: Span::empty(),
+        }],
+        // The schematic scope [SPEC 16.6]: `|block|` + the engine, at the track
+        // spacing, on the sheet wash — and the one statement of it, which
+        // `root_layout_defaults` takes for a root `{ layout: schematic }` rather
+        // than restating. The parts' own looks ride their type bundles and the
+        // generated chrome classes.
+        "schematic" => {
+            let mut v = vec![id("layout", "schematic")];
+            v.extend(schematic_scope_config());
+            v.push(var("fill", "sheet"));
+            v
+        }
+        _ => Vec::new(),
+    }
+}
+
+/// The generated projection line's default paint [SPEC 8/15.8] as a resolved
+/// [`AttrMap`], read by the render layer's `.lini-projection` default emitter.
+/// Its tone/weight has **one** home — `template_bundle("projection")` — resolved
+/// here (its values are static: a live `--var`, a number, an ident, so empty
+/// var/func tables suffice), never restated as literals in render.
+pub fn projection_default_attrs() -> AttrMap {
+    let mut attrs = AttrMap::new();
+    let resolved = crate::resolve::value::resolve_bundle(
+        &template_bundle("projection"),
+        &VarTable::new(),
+        &FuncTable::new(),
+    )
+    .expect("the projection default bundle is static and always resolves");
+    for (name, value) in resolved {
+        attrs.insert(name, value);
+    }
+    attrs
+}
+
+/// The generated schematic chrome classes [SPEC 16/18] — each a shared look
+/// stated once as a CSS rule, worn by desugar's generated children (stubs,
+/// symbol linework, readouts, tag outlines). The looks live here, in the one
+/// tuning home, riding the role variables so a theme retunes the family.
+#[derive(Clone, Copy)]
+pub enum SchChrome {
+    /// Part symbol linework — discrete bodies, the opamp triangle.
+    SymbolLine,
+    /// A part symbol's **solid** detail — a capacitor's plates, a transistor's
+    /// base bar and arrowhead: filled in the linework's own ink [SPEC 16.3].
+    SymbolSolid,
+    /// A label's symbol linework (gnd, power, …) — the tag ink.
+    TagLine,
+    /// A label symbol's solid detail, in the tag ink. The tag half of the same
+    /// line/solid split the part symbols take — no built-in label symbol
+    /// carries filled detail today, so nothing wears it and SPEC 18 lists no
+    /// hook for it; a filled one lands here rather than in a second mechanism.
+    TagSolid,
+    /// A pin's stub lead.
+    PinStub,
+    /// The pin-number readout, outside beside the stub.
+    PinNumber,
+    /// The ref readout (U7, R1…) — chrome, so it reads semibold.
+    Ref,
+    /// The part name / value readout.
+    PartValue,
+    /// A shaped tag's outline (`shape:` ≠ `plain`).
+    TagOutline,
+    /// The `round` tag — a stadium (radius caps at half-height).
+    TagRound,
+    /// A **flag** tag (`shape: left | right | both`) — the room its drawn
+    /// point sits in, reserved on **the pointed side only**, so a one-ended
+    /// flag hugs its text at the flat end; the outline itself is chrome the
+    /// layout fills.
+    TagFlagLeft,
+    TagFlagRight,
+    TagFlagBoth,
+    /// A **net run** (`shape: plain`, no symbol) — the length of trace its
+    /// text names [SPEC 16.4]. The floor rides `width` and the daylight the
+    /// text keeps off the run's ends rides `padding`, so SPEC 5's ordinary
+    /// width law grows it for a longer name and a `width:` of the author's
+    /// raises the floor.
+    NetRun,
+    /// …the same run stood on end, for a wire leaving a pin vertically.
+    NetRunTurned,
+}
+
+impl SchChrome {
+    pub const ALL: &'static [SchChrome] = &[
+        SchChrome::SymbolLine,
+        SchChrome::SymbolSolid,
+        SchChrome::TagLine,
+        SchChrome::TagSolid,
+        SchChrome::PinStub,
+        SchChrome::PinNumber,
+        SchChrome::Ref,
+        SchChrome::PartValue,
+        SchChrome::TagOutline,
+        SchChrome::TagRound,
+        SchChrome::TagFlagLeft,
+        SchChrome::TagFlagRight,
+        SchChrome::TagFlagBoth,
+        SchChrome::NetRun,
+        SchChrome::NetRunTurned,
+    ];
+
+    /// The bare class name (worn as `lini-<name>`).
+    pub fn class_name(self) -> &'static str {
+        match self {
+            SchChrome::SymbolLine => "sch-line",
+            SchChrome::SymbolSolid => "sch-solid",
+            SchChrome::TagLine => "sch-tag-line",
+            SchChrome::TagSolid => "sch-tag-solid",
+            SchChrome::PinStub => "pin-stub",
+            SchChrome::PinNumber => "pin-number",
+            SchChrome::Ref => "ref",
+            SchChrome::PartValue => "part-value",
+            SchChrome::TagOutline => "tag-outline",
+            SchChrome::TagRound => "tag-round",
+            SchChrome::TagFlagLeft => "tag-flag-left",
+            SchChrome::TagFlagRight => "tag-flag-right",
+            SchChrome::TagFlagBoth => "tag-flag-both",
+            SchChrome::NetRun => "net-run",
+            SchChrome::NetRunTurned => "net-run-turned",
+        }
+    }
+}
+
+/// One chrome class's rule body [SPEC 16.6].
+pub fn sch_chrome_decls(chrome: SchChrome) -> Vec<Decl> {
+    match chrome {
+        SchChrome::SymbolLine | SchChrome::PinStub => vec![
+            id("fill", "none"),
+            var("stroke", "component-stroke"),
+            n("stroke-width", consts::SCH_STROKE_WIDTH),
+        ],
+        SchChrome::TagLine => vec![
+            id("fill", "none"),
+            var("stroke", "label-ink"),
+            n("stroke-width", consts::SCH_STROKE_WIDTH),
+        ],
+        // The solid detail is the same ink, filled: no outline of its own, or
+        // a plate would draw half a stroke wider than it is.
+        SchChrome::SymbolSolid => vec![var("fill", "component-stroke"), id("stroke", "none")],
+        SchChrome::TagSolid => vec![var("fill", "label-ink"), id("stroke", "none")],
+        SchChrome::PinNumber => vec![
+            var("color", "pin-number"),
+            n("font-size", consts::PIN_NUMBER_FONT),
+        ],
+        SchChrome::Ref => vec![
+            n("font-size", consts::REF_FONT),
+            id("font-weight", "semibold"),
+        ],
+        SchChrome::PartValue => vec![n("font-size", consts::REF_FONT)],
+        SchChrome::TagOutline => vec![
+            var("stroke", "label-ink"),
+            n("stroke-width", consts::SCH_STROKE_WIDTH),
+            pair("padding", 2.0, 6.0),
+        ],
+        SchChrome::TagRound => vec![n("radius", 99.0)],
+        // Only the pointed end reserves its nose [SPEC 16.4]: a `shape: right`
+        // tag is flat on the left, so padding it there would set the text
+        // adrift of an edge that has no point to clear.
+        SchChrome::TagFlagLeft => vec![quad("padding", 2.0, 6.0, 2.0, 6.0 + consts::TAG_POINT)],
+        SchChrome::TagFlagRight => vec![quad("padding", 2.0, 6.0 + consts::TAG_POINT, 2.0, 6.0)],
+        SchChrome::TagFlagBoth => vec![pair("padding", 2.0, 6.0 + consts::TAG_POINT)],
+        // A net run is the trace its name sits over [SPEC 16.4]: the run
+        // floor on the wire's own axis, the text's clear space at the two
+        // ends, and **no box size of its own across** — the run is as thick
+        // as the text is, so the wire lands on its middle.
+        SchChrome::NetRun => vec![
+            n("width", consts::NET_LABEL_RUN),
+            pair("padding", 0.0, consts::NET_LABEL_OFFSET),
+        ],
+        SchChrome::NetRunTurned => vec![
+            n("height", consts::NET_LABEL_RUN),
+            pair("padding", consts::NET_LABEL_OFFSET, 0.0),
+        ],
+    }
+}
+
+/// Scene/root config defaults — prepended to the global block (user decls override).
+pub fn root_defaults() -> Vec<Decl> {
+    vec![
+        id("layout", "flow"),
+        n("padding", 20.0),
+        n("gap", 36.0),
+        n("font-size", consts::ROOT_FONT_SIZE),
+    ]
+}
+
+/// The baked link base [SPEC 10.5]: a link's lowest-specificity layer, resolved
+/// per link below the scope's `link*` / `clearance` / `routing` cascade, the
+/// class rules, and the link's own block.
+/// A link label's size at the default body size — `LINK_FONT_AT_ROOT` at
+/// `ROOT_FONT_SIZE`, scaling with an inherited `font-size:` [SPEC 6/9]. The
+/// derived seat is pushed in `link_scope`, not here: the ratio needs the
+/// scope's inherited size, which only the scope chain knows.
+pub fn link_defaults() -> Vec<Decl> {
+    vec![
+        n("stroke-width", 2.0),
+        n("clearance", consts::DEFAULT_CLEARANCE),
+    ]
+}
+
+/// The engine config a `layout: schematic` scope needs **wherever it is
+/// written** [SPEC 16.6]: the track spacing, and the tighter `clearance` the
+/// sheet's baked constants (pin pitch, stub, seat gap) are tuned to. The
+/// `|schematic|` template states it as part of its bundle and a root
+/// `{ layout: schematic }` through [`root_layout_defaults`]; desugar hands it
+/// to any other container that declares the layout, so opting into the engine
+/// is one decision, never two.
+pub(crate) fn schematic_scope_config() -> Vec<Decl> {
+    vec![n("gap", SCH_GAP), n("clearance", consts::SCH_CLEARANCE)]
+}
+
+/// The schematic scope's link base [SPEC 16.5/16.6] — the wire's classic dress,
+/// layered over [`link_defaults`] on that same lowest layer, so every user rule
+/// (`|-| { … }`, a class, the link's own block) still wins it back. A **scope
+/// default, not a class rule**, for that reason: a class would out-specify the
+/// author. `clearance` is not here — it is the scope's own config, and rides the
+/// container's block (`template_bundle("schematic")` / `root_layout_defaults`)
+/// with every other `scope_link_props` entry.
+pub fn schematic_link_defaults() -> Vec<Decl> {
+    vec![
+        var("stroke", "wire"),
+        n("stroke-width", consts::SCH_STROKE_WIDTH),
+        n("corner-radius", 0.0),
+        // A sheet has no wire text but net names [SPEC 16.5], so a wire's ink is
+        // the net tag's — the same `--lini-label-ink` the `|label|` bundle above
+        // wears, so the two spellings of one net name read alike and a theme
+        // retunes both from one place. `color`, not `fill`: it is the label's
+        // ink, inherited by the `<text>`, never the wire's own paint.
+        var("color", "label-ink"),
+        // …and the same weight, for the same reason: a diagram label reads
+        // light against its wire, but a net name is body text on a sheet.
+        var("font-weight", "font-weight"),
+    ]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::resolve::NodeKind;
+    use crate::syntax::ast::Value;
+
+    fn has(decls: &[Decl], name: &str) -> bool {
+        decls.iter().any(|d| d.name == name)
+    }
+    fn num(decls: &[Decl], name: &str) -> Option<f64> {
+        decls
+            .iter()
+            .find(|d| d.name == name)
+            .and_then(|d| match d.groups.first()?.first()? {
+                Value::Number(n) => Some(*n),
+                _ => None,
+            })
+    }
+    fn ident(decls: &[Decl], name: &str) -> Option<String> {
+        decls
+            .iter()
+            .find(|d| d.name == name)
+            .and_then(|d| match d.groups.first()?.first()? {
+                Value::Ident(s) => Some(s.clone()),
+                _ => None,
+            })
+    }
+    fn var(decls: &[Decl], name: &str) -> Option<String> {
+        decls
+            .iter()
+            .find(|d| d.name == name)
+            .and_then(|d| match d.groups.first()?.first()? {
+                Value::Var(s) => Some(s.clone()),
+                _ => None,
+            })
+    }
+
+    #[test]
+    fn block_is_bare_and_box_template_carries_the_paint() {
+        // The bare primitive: frameless, no padding, just the container gap.
+        let block = primitive_bundle(NodeKind::Block);
+        assert_eq!(num(&block, "padding"), Some(0.0));
+        assert_eq!(num(&block, "gap"), Some(36.0));
+        assert!(!has(&block, "radius"));
+        // The |box| template lifts the framed-card paint back on top.
+        let boxt = template_bundle("box");
+        assert_eq!(num(&boxt, "radius"), Some(8.0));
+        assert_eq!(num(&boxt, "padding"), Some(20.0));
+        assert_eq!(num(&boxt, "stroke-width"), Some(2.0));
+        assert!(has(&boxt, "fill") && has(&boxt, "stroke"));
+    }
+
+    /// [SPEC 11]: exactly the types [`is_card`] names wear [`card_content`] —
+    /// the class the bundles build and the class `layout::owns_layout` reads
+    /// are the same class, so a card can never both stack and seal a drawing
+    /// scope. `|column|` states the same `direction` and is *not* a card; the
+    /// `gap` is what tells them apart, so the pair is asserted together.
+    #[test]
+    fn the_card_content_class_is_one_class() {
+        let stacks = |b: &[Decl]| {
+            ident(b, "direction").as_deref() == Some("column") && num(b, "gap") == Some(CARD_GAP)
+        };
+        for kind in NodeKind::ALL {
+            assert_eq!(
+                stacks(&primitive_bundle(kind)),
+                is_card(kind, &[]),
+                "primitive |{}|",
+                kind.as_str()
+            );
+        }
+        for (name, _) in crate::desugar::types::TEMPLATES {
+            let chain = [(*name).to_string()];
+            assert_eq!(
+                stacks(&template_bundle(name)),
+                is_card(NodeKind::Block, &chain),
+                "template |{name}|"
+            );
+        }
+        // The wrapper that states `direction: column` and is not card content.
+        assert!(!is_card(NodeKind::Block, &["column".to_string()]));
+        assert_eq!(
+            ident(&template_bundle("column"), "direction").as_deref(),
+            Some("column")
+        );
+    }
+
+    #[test]
+    fn slant_carries_skew_icon_carries_size() {
+        assert_eq!(num(&primitive_bundle(NodeKind::Slant), "skew"), Some(15.0));
+        let icon = primitive_bundle(NodeKind::Icon);
+        assert_eq!(num(&icon, "width"), Some(32.0));
+        assert_eq!(num(&icon, "height"), Some(32.0));
+    }
+
+    #[test]
+    fn group_template_is_a_dashed_frame() {
+        let g = template_bundle("group");
+        assert!(g.iter().any(|d| d.name == "stroke-style"));
+        assert_eq!(num(&g, "stroke-width"), Some(1.0));
+        assert!(template_bundle("oval").is_empty());
+    }
+
+    #[test]
+    fn the_title_block_reads_loud_thin_and_square() {
+        // [SPEC 8]: the ISO 7200 block's **values** carry the sheet's identity,
+        // so they read at 14 semibold while the `|field|` captions labelling
+        // them stay quieter in size, weight, and tone. Its `radius: 0` is not
+        // dead: the chain runs `|table|` → `|group|`, whose 8 would round it.
+        let tb = template_bundle("title-block");
+        assert_eq!(num(&tb, "font-size"), Some(14.0));
+        assert_eq!(ident(&tb, "font-weight").as_deref(), Some("semibold"));
+        assert_eq!(num(&tb, "stroke-width"), Some(1.0));
+        assert_eq!(num(&tb, "radius"), Some(0.0));
+        assert_eq!(num(&template_bundle("group"), "radius"), Some(8.0));
+        let f = template_bundle("field");
+        assert_eq!(num(&f, "font-size"), Some(12.0));
+        assert_eq!(ident(&f, "font-weight").as_deref(), Some("normal"));
+    }
+
+    #[test]
+    fn chart_templates_set_the_gap_and_bars_round() {
+        // The chart/pie templates override the |block| base gap with the title/legend
+        // gutter default; |bars| carries the default corner radius on its class.
+        assert_eq!(num(&template_bundle("chart"), "gap"), Some(CHART_GAP));
+        assert_eq!(num(&template_bundle("pie"), "gap"), Some(CHART_GAP));
+        assert_eq!(num(&template_bundle("bars"), "radius"), Some(2.0));
+    }
+
+    #[test]
+    fn flow_sugars_set_direction_and_grid_sets_layout() {
+        let dir = |t: &str| match template_bundle(t).iter().find(|d| d.name == "direction") {
+            Some(d) => match d.groups.first().and_then(|g| g.first()) {
+                Some(Value::Ident(s)) => Some(s.clone()),
+                _ => None,
+            },
+            None => None,
+        };
+        assert_eq!(dir("row").as_deref(), Some("row"));
+        assert_eq!(dir("column").as_deref(), Some("column"));
+        assert!(!has(&template_bundle("row"), "layout"));
+        assert_eq!(num(&template_bundle("grid"), "radius"), None);
+        assert!(template_bundle("grid")
+            .iter()
+            .any(|d| d.name == "layout"
+                && matches!(d.groups.first().and_then(|g| g.first()), Some(Value::Ident(s)) if s == "grid")));
+    }
+
+    #[test]
+    fn schematic_template_and_root_share_the_engine_and_gap() {
+        // [SPEC 16.6] `|schematic|` is `|block|` + the engine; a root
+        // `{ layout: schematic }` picks up the same track spacing.
+        let sch = template_bundle("schematic");
+        assert_eq!(ident(&sch, "layout").as_deref(), Some("schematic"));
+        assert_eq!(num(&sch, "gap"), Some(SCH_GAP));
+        assert_eq!(
+            num(&root_layout_defaults(Some("schematic")), "gap"),
+            Some(SCH_GAP)
+        );
+        assert_eq!(
+            crate::desugar::types::template_base("schematic"),
+            Some("block")
+        );
+    }
+
+    #[test]
+    fn root_default_layout_is_flow() {
+        assert!(root_defaults()
+            .iter()
+            .any(|d| d.name == "layout"
+                && matches!(d.groups.first().and_then(|g| g.first()), Some(Value::Ident(s)) if s == "flow")));
+    }
+
+    #[test]
+    fn root_and_link_defaults_are_present() {
+        assert_eq!(num(&root_defaults(), "padding"), Some(20.0));
+        assert_eq!(num(&root_defaults(), "font-size"), Some(15.0));
+        assert_eq!(num(&link_defaults(), "clearance"), Some(16.0));
+        // No baked font-size: a label's size derives from the scope's
+        // inherited body size in `link_scope` [SPEC 6/9].
+        assert!(!has(&link_defaults(), "font-size"));
+    }
+
+    #[test]
+    fn header_footer_entity_footnote_bundles() {
+        // The header cell: a filled, bold band [SPEC 8] — it fills its track and
+        // takes its alignment from the |table| cell defaults, so it carries no
+        // align/justify of its own.
+        let h = template_bundle("header");
+        assert!(!has(&h, "justify") && !has(&h, "align"));
+        assert_eq!(var(&h, "fill").as_deref(), Some("header-fill"));
+        assert_eq!(ident(&h, "font-weight").as_deref(), Some("semibold"));
+        // The footer cell: muted text, no fill, no align of its own.
+        let f = template_bundle("footer");
+        assert!(!has(&f, "justify") && !has(&f, "align"));
+        assert_eq!(var(&f, "color").as_deref(), Some("footer-color"));
+        assert!(!has(&f, "fill"));
+        // The entity: two auto columns over the |table| base (body cells are
+        // left-aligned by the entity path in `distribute_cell_alignment`, not the bundle).
+        let e = template_bundle("entity");
+        assert!(has(&e, "columns"));
+        assert!(!has(&e, "align"));
+        // The footnote (the renamed old footer): still the pinned bottom caption.
+        let foot = template_bundle("footnote");
+        assert_eq!(ident(&foot, "pin").as_deref(), Some("bottom"));
+        // Chrome text scales with the inherited body size [SPEC 6]: the
+        // bundle carries the ratio marker, not an absolute.
+        assert!(!has(&foot, "font-size") && has(&foot, "font-scale"));
+    }
+}

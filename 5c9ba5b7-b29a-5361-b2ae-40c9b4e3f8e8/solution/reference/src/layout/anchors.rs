@@ -1,0 +1,184 @@
+//! Out-of-flow positioning for children inside a parent's bbox [SPEC 5].
+//!
+//! `pin` lifts a child out of the flow and centers its bbox on a named point of
+//! the parent — `center`, an edge midpoint, or a corner. `translate` then nudges
+//! any node (flow or pinned) after placement, reshaping nothing. There are no
+//! compound anchor names and no numeric coordinate property: a corner falls out
+//! of the two-word value, and exact coords are `pin: center` + `translate: x y`.
+
+use super::ir::{Bbox, PlacedNode};
+use super::values::as_pair;
+use crate::error::Error;
+use crate::resolve::{AttrMap, ResolvedValue};
+use crate::span::Span;
+
+/// A parent anchor a pinned child centers on, as signed fractions of the parent
+/// bbox measured from its center: `center` = (0, 0), `top` = (0, -0.5),
+/// `top right` = (0.5, -0.5), and so on.
+#[derive(Clone, Copy)]
+pub struct Pin {
+    pub fx: f64,
+    pub fy: f64,
+}
+
+/// A child's layout role, by how it is positioned.
+#[derive(Clone, Copy, PartialEq)]
+pub enum Role {
+    /// No `pin` (or `pin: none`) — laid out by the container's `layout`.
+    Flow,
+    /// `pin:` set — an out-of-flow overlay; the parent does not grow for it.
+    Pinned,
+}
+
+impl Pin {
+    /// The child's local origin (`cx`, `cy`) that lands its **matching** anchor
+    /// point on the parent's — so the child sits flush, corner on corner and
+    /// edge on edge, never straddling. `pin: center` is centre-to-centre;
+    /// `pin: top left` puts the child's top-left corner on the parent's.
+    pub fn target(self, parent: Bbox, child: Bbox) -> (f64, f64) {
+        let px = (parent.min_x + parent.max_x) / 2.0 + self.fx * parent.w();
+        let py = (parent.min_y + parent.max_y) / 2.0 + self.fy * parent.h();
+        let cbx = (child.min_x + child.max_x) / 2.0;
+        let cby = (child.min_y + child.max_y) / 2.0;
+        // Offset the child's own matching point (same fractions of its bbox)
+        // back to the parent point — flush, not centred on it.
+        (
+            px - cbx - self.fx * child.w(),
+            py - cby - self.fy * child.h(),
+        )
+    }
+}
+
+/// Read a child's `pin` [SPEC 5]. `None` for an absent `pin` or `pin: none` (a
+/// flow child); `Some(Pin)` for a named anchor; an error otherwise.
+pub fn read_pin(attrs: &AttrMap, span: Span) -> Result<Option<Pin>, Error> {
+    let Some(v) = attrs.get("pin") else {
+        return Ok(None);
+    };
+    let bad = || {
+        Error::at(
+            span,
+            "'pin' expects none, center, an edge (top/bottom/left/right), or a corner (e.g. 'top right')",
+        )
+    };
+    match v {
+        ResolvedValue::Ident(s) => Ok(match s.as_str() {
+            "none" => None,
+            "center" => Some(Pin { fx: 0.0, fy: 0.0 }),
+            "top" => Some(Pin { fx: 0.0, fy: -0.5 }),
+            "bottom" => Some(Pin { fx: 0.0, fy: 0.5 }),
+            "left" => Some(Pin { fx: -0.5, fy: 0.0 }),
+            "right" => Some(Pin { fx: 0.5, fy: 0.0 }),
+            _ => return Err(bad()),
+        }),
+        // A corner: a vertical edge then a horizontal one (`top right`).
+        ResolvedValue::Tuple(parts) if parts.len() == 2 => {
+            let fy = match ident(&parts[0]) {
+                Some("top") => -0.5,
+                Some("bottom") => 0.5,
+                _ => return Err(bad()),
+            };
+            let fx = match ident(&parts[1]) {
+                Some("left") => -0.5,
+                Some("right") => 0.5,
+                _ => return Err(bad()),
+            };
+            Ok(Some(Pin { fx, fy }))
+        }
+        _ => Err(bad()),
+    }
+}
+
+/// Whether a child is pinned — `pin` present and not `none`. A cheap check for
+/// paint order; [`read_pin`] is the validating reader.
+pub fn is_pinned(attrs: &AttrMap) -> bool {
+    crate::resolve::pins_out_of_flow(attrs.get("pin"))
+}
+
+/// Classify a child from its positioning attrs.
+pub fn child_role(attrs: &AttrMap, span: Span) -> Result<Role, Error> {
+    Ok(match read_pin(attrs, span)? {
+        None => Role::Flow,
+        Some(_) => Role::Pinned,
+    })
+}
+
+/// Seat an engine scope's out-of-flow overlays onto `anchor_box` [SPEC 5]: each
+/// pinned child lands flush on its named anchor point, then takes its own
+/// `translate:` nudge. The scope never grows for them (the caller sizes to its
+/// flow content; `finish` still includes the overlay in the canvas), and the
+/// nudge is chrome **anatomy** — sheet-space, never a view scale [SPEC 15.1].
+/// The one seat for every engine that arranges its own children: a drawing's
+/// title footnote, a schematic's sheet notes.
+pub fn place_pinned(kids: &mut [PlacedNode], anchor_box: Bbox) -> Result<(), Error> {
+    for k in kids.iter_mut().filter(|k| is_pinned(&k.attrs)) {
+        seat(k, anchor_box)?;
+        nudge(k, SHEET_SPACE)?;
+    }
+    Ok(())
+}
+
+/// Re-seat a node's own pinned overlays after **its own box changed size** —
+/// a grid cell stretched to fill its track, a flex child grown to fill the
+/// cross axis. `pin` answers to the parent's drawn box [SPEC 5], and a box
+/// grown after its interior was laid out leaves that answer stale: a group's
+/// caption stays glued to the content it was measured around instead of
+/// riding to the corner it names, and the wider the track the further adrift
+/// it reads. Seating recomputes `cx`/`cy` from the pin and re-applies the one
+/// nudge, so the second answer simply replaces the first.
+pub fn reseat_overlays(node: &mut PlacedNode) -> Result<(), Error> {
+    // The **drawn** box, which a painted outline straddles: the bbox holds
+    // the stroke, and a pin answers to the shape inside it — the same box an
+    // explicit `width`/`height` names [SPEC 5].
+    let drawn = node.bbox.inflate(-node.attrs.half_stroke());
+    place_pinned(&mut node.children, drawn)
+}
+
+/// Land one child flush on its `pin` anchor of `anchor_box` [SPEC 5], reporting
+/// whether it was pinned — `false` leaves it untouched for the caller's own
+/// flow to place. The one seat: a box arranger's overlay, a tree's content, an
+/// engine scope's chrome all land through here.
+pub fn seat(k: &mut PlacedNode, anchor_box: Bbox) -> Result<bool, Error> {
+    let Some(pin) = read_pin(&k.attrs, k.span)? else {
+        return Ok(false);
+    };
+    let (cx, cy) = pin.target(anchor_box, k.bbox);
+    k.cx = cx;
+    k.cy = cy;
+    Ok(true)
+}
+
+/// The nudge scale for **chrome anatomy** — sheet-space, never a view scale
+/// [SPEC 15.1]: a pinned overlay's `translate:`, and every interior a
+/// schematic or a mindmap places (a schematic's interior never rides one,
+/// [SPEC 16.6]).
+pub const SHEET_SPACE: f64 = 1.0;
+
+/// `translate:` — the post-placement nudge [SPEC 5], applied once placement is
+/// final so it shifts the child (and its subtree, via `cx`/`cy`) without
+/// reflowing siblings or growing the parent. `scale` is the units the nudge is
+/// read in: a **flow** child's translate is a position in the parent's `scale:`
+/// [SPEC 15.1], a **pinned** overlay's is chrome anatomy and rides sheet-space
+/// at `1.0`.
+pub fn nudge(k: &mut PlacedNode, scale: f64) -> Result<(), Error> {
+    if let Some((dx, dy)) = translate(&k.attrs, k.span)? {
+        k.cx += dx * scale;
+        k.cy += dy * scale;
+    }
+    Ok(())
+}
+
+/// `translate: x y` — a post-placement shift of the node, or `None` if unset.
+pub fn translate(attrs: &AttrMap, span: Span) -> Result<Option<(f64, f64)>, Error> {
+    match attrs.get("translate") {
+        Some(v) => Ok(Some(as_pair(v, span)?)),
+        None => Ok(None),
+    }
+}
+
+fn ident(v: &ResolvedValue) -> Option<&str> {
+    match v {
+        ResolvedValue::Ident(s) => Some(s.as_str()),
+        _ => None,
+    }
+}

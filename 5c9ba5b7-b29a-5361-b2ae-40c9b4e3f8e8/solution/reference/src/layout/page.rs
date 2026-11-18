@@ -1,0 +1,469 @@
+//! The `|page|` sheet at layout [SPEC 15.8]. Desugar generated the ISO 5457
+//! furniture as pinned chrome children (`|frame|` / `|zone|` / `|tick|`) and
+//! marked the `|title-block|`; once the sheet is sized, `finish` gives the
+//! furniture its geometry — the frame at the margins, the zone dividers and
+//! labels in the margin band (the divisions derive from the children desugar
+//! counted, so the two always agree), the four centring marks — and seats any
+//! title block flush inside the frame's bottom-right corner. The content area is the frame
+//! inset by 5 mm: `padded_attrs` folds that into the page's padding for the
+//! arrange pass (`padding:` adds, per the spec).
+
+use super::anchors;
+use super::ir::{Bbox, PlacedNode};
+use super::primitives;
+use crate::error::Error;
+use crate::ledger::consts::SHEET_MARGIN;
+use crate::resolve::{AttrMap, ResolvedValue};
+use crate::span::Span;
+
+/// The content area's inset from the frame line, mm [SPEC 15.8].
+const CONTENT_CLEAR: f64 = 5.0;
+/// A centring mark crosses the frame line into the drawing area by this much.
+const MARK_INTO: f64 = 5.0;
+
+pub(super) fn is_page(type_chain: &[String]) -> bool {
+    type_chain.iter().any(|t| t == "page")
+}
+
+/// The page's padding for the arrange pass: the user's own plus the content
+/// area's inset from the sheet edge — frame margin + 5 mm clear, at the
+/// page's px-per-mm scale [SPEC 15.8].
+pub(super) fn padded_attrs(attrs: &AttrMap, scale: f64, span: Span) -> Result<AttrMap, Error> {
+    let pad = primitives::padding(attrs, span)?;
+    let inset = (SHEET_MARGIN + CONTENT_CLEAR) * scale;
+    let mut out = attrs.clone();
+    let n = ResolvedValue::Number;
+    out.insert(
+        "padding",
+        ResolvedValue::Tuple(vec![
+            n(pad.top + inset),
+            n(pad.right + inset),
+            n(pad.bottom + inset),
+            n(pad.left + inset),
+        ]),
+    );
+    Ok(out)
+}
+
+/// One chrome child's parsed marker.
+enum Marker<'a> {
+    Frame,
+    Tick(&'a str, usize),
+    Mark(&'a str),
+    Zone(&'a str, usize),
+}
+
+fn marker(attrs: &AttrMap) -> Option<Marker<'_>> {
+    match attrs.get("chrome")? {
+        ResolvedValue::Ident(k) if k == "frame" => Some(Marker::Frame),
+        ResolvedValue::Tuple(items) => match items.as_slice() {
+            [
+                ResolvedValue::Ident(k),
+                ResolvedValue::Ident(e),
+                ResolvedValue::Number(i),
+            ] if k == "tick" => Some(Marker::Tick(e, *i as usize)),
+            [ResolvedValue::Ident(k), ResolvedValue::Ident(e)] if k == "mark" => {
+                Some(Marker::Mark(e))
+            }
+            [
+                ResolvedValue::Ident(k),
+                ResolvedValue::Ident(e),
+                ResolvedValue::Number(i),
+            ] if k == "zone" => Some(Marker::Zone(e, *i as usize)),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// Position the sheet furniture and seat the title block, in the page's own
+/// frame (origin at its centre), once its box is known.
+pub(super) fn finish(children: &mut [PlacedNode], sheet: Bbox, s: f64) {
+    let (w, h) = (sheet.w(), sheet.h());
+    let (x0, y0, x1, y1) = (-w / 2.0, -h / 2.0, w / 2.0, h / 2.0);
+    let (fx0, fy0) = (x0 + SHEET_MARGIN * s, y0 + SHEET_MARGIN * s);
+    let (fx1, fy1) = (x1 - SHEET_MARGIN * s, y1 - SHEET_MARGIN * s);
+
+    // The zone divisions come from what desugar generated — labels per edge.
+    let cells = |edge: &str| {
+        children
+            .iter()
+            .filter(|c| matches!(marker(&c.attrs), Some(Marker::Zone(e, _)) if e == edge))
+            .count()
+            .max(1)
+    };
+    let (cols, rows) = (cells("top"), cells("left"));
+
+    for c in children.iter_mut() {
+        let half = c.attrs.number("stroke-width").unwrap_or(0.0) / 2.0;
+        let set_line = |c: &mut PlacedNode, a: (f64, f64), b: (f64, f64)| {
+            let point = |p: (f64, f64)| {
+                ResolvedValue::Tuple(vec![ResolvedValue::Number(p.0), ResolvedValue::Number(p.1)])
+            };
+            c.attrs
+                .insert("points", ResolvedValue::List(vec![point(a), point(b)]));
+            c.cx = 0.0;
+            c.cy = 0.0;
+            // Butt caps end exactly at the endpoint, so a tick may run the
+            // full band to the trimmed edge; only the bbox (stroke inflated
+            // sideways) clamps to the sheet, keeping the canvas exact.
+            let b = Bbox {
+                min_x: a.0.min(b.0),
+                min_y: a.1.min(b.1),
+                max_x: a.0.max(b.0),
+                max_y: a.1.max(b.1),
+            }
+            .inflate(half);
+            c.bbox = Bbox {
+                min_x: b.min_x.max(x0),
+                min_y: b.min_y.max(y0),
+                max_x: b.max_x.min(x1),
+                max_y: b.max_y.min(y1),
+            };
+        };
+        match marker(&c.attrs) {
+            Some(Marker::Frame) => {
+                c.cx = (fx0 + fx1) / 2.0;
+                c.cy = (fy0 + fy1) / 2.0;
+                c.bbox = Bbox::centered(fx1 - fx0, fy1 - fy0).inflate(half);
+            }
+            Some(Marker::Tick(edge, i)) => {
+                // The sheet-edge end pulls in by the half-stroke, so the cap
+                // stays on the paper and the canvas is exactly the sheet.
+                let (a, b) = match edge {
+                    "top" => {
+                        let x = x0 + (i as f64) * w / cols as f64;
+                        ((x, y0), (x, fy0))
+                    }
+                    "bottom" => {
+                        let x = x0 + (i as f64) * w / cols as f64;
+                        ((x, fy1), (x, y1))
+                    }
+                    "left" => {
+                        let y = y0 + (i as f64) * h / rows as f64;
+                        ((x0, y), (fx0, y))
+                    }
+                    _ => {
+                        let y = y0 + (i as f64) * h / rows as f64;
+                        ((fx1, y), (x1, y))
+                    }
+                };
+                set_line(c, a, b);
+            }
+            Some(Marker::Mark(edge)) => {
+                let (a, b) = match edge {
+                    "top" => ((0.0, y0), (0.0, fy0 + MARK_INTO * s)),
+                    "bottom" => ((0.0, fy1 - MARK_INTO * s), (0.0, y1)),
+                    "left" => ((x0, 0.0), (fx0 + MARK_INTO * s, 0.0)),
+                    _ => ((fx1 - MARK_INTO * s, 0.0), (x1, 0.0)),
+                };
+                set_line(c, a, b);
+            }
+            Some(Marker::Zone(edge, i)) => {
+                let (cx, cy) = match edge {
+                    "top" => (x0 + (i as f64 + 0.5) * w / cols as f64, (y0 + fy0) / 2.0),
+                    "bottom" => (x0 + (i as f64 + 0.5) * w / cols as f64, (y1 + fy1) / 2.0),
+                    "left" => ((x0 + fx0) / 2.0, y0 + (i as f64 + 0.5) * h / rows as f64),
+                    _ => ((x1 + fx1) / 2.0, y0 + (i as f64 + 0.5) * h / rows as f64),
+                };
+                c.cx = cx;
+                c.cy = cy;
+            }
+            None => {
+                // Seat a pinned title block flush inside the frame corner —
+                // the pin put it on the sheet corner; the margins pull it in.
+                if c.type_chain.iter().any(|t| t == "title-block") {
+                    c.cx -= SHEET_MARGIN * s;
+                    c.cy -= SHEET_MARGIN * s;
+                }
+            }
+        }
+    }
+    lift_clear_of_title_block(children, fy0 + CONTENT_CLEAR * s, CONTENT_CLEAR * s);
+}
+
+/// The content stays centred on the sheet; only a view whose box would run
+/// under the seated title block lifts the page's flow content clear of it —
+/// by the overlap plus the content clear, and no further than the content
+/// area's top allows [SPEC 15.8]. Pinned children and the furniture stay.
+fn lift_clear_of_title_block(children: &mut [PlacedNode], content_top: f64, clear: f64) {
+    let is_block = |c: &PlacedNode| c.type_chain.iter().any(|t| t == "title-block");
+    let is_flow = |c: &PlacedNode| !anchors::is_pinned(&c.attrs) && marker(&c.attrs).is_none();
+    let Some(block) = children.iter().find(|c| is_block(c)) else {
+        return;
+    };
+    let block_left = block.cx + block.bbox.min_x;
+    let block_top = block.cy + block.bbox.min_y - clear;
+    let mut overlap = 0.0_f64;
+    let mut room = f64::INFINITY;
+    for c in children.iter().filter(|c| is_flow(c)) {
+        let (right, top, bottom) = (
+            c.cx + c.bbox.max_x,
+            c.cy + c.bbox.min_y,
+            c.cy + c.bbox.max_y,
+        );
+        if right > block_left && bottom > block_top {
+            overlap = overlap.max(bottom - block_top);
+        }
+        room = room.min(top - content_top);
+    }
+    let lift = overlap.min(room.max(0.0));
+    if lift > 0.0 {
+        for c in children.iter_mut().filter(|c| is_flow(c)) {
+            c.cy -= lift;
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::super::drawing::testutil::{by_id, laid, texts};
+    use super::*;
+    use crate::resolve::NodeKind;
+
+    use crate::testutil::desugar_err as compile_err;
+
+    #[test]
+    fn sheet_desugars_to_mm_dims_with_iso_orientation() {
+        // A3 defaults landscape: 420 × 297 mm at 4 px/mm.
+        let l = laid("|page#p| { sheet: a3 }\n\"x\"\n");
+        let p = by_id(&l.nodes, "p");
+        assert_eq!((p.bbox.w(), p.bbox.h()), (1680.0, 1188.0));
+        // A4 defaults portrait; the keyword overrides.
+        let l = laid("|page#p| { sheet: a4 }\n\"x\"\n");
+        assert_eq!(by_id(&l.nodes, "p").bbox.w(), 840.0);
+        let l = laid("|page#p| { sheet: a4 landscape }\n\"x\"\n");
+        assert_eq!(by_id(&l.nodes, "p").bbox.w(), 1188.0);
+        // Explicit dims override through the ordinary slot.
+        let l = laid("|page#p| { sheet: a4; width: 300 }\n\"x\"\n");
+        assert_eq!(by_id(&l.nodes, "p").bbox.w(), 1200.0);
+    }
+
+    #[test]
+    fn bad_sheet_values_error_with_a_hint() {
+        assert_eq!(
+            compile_err("|page#p| { sheet: a9 }\n"),
+            "'sheet' takes a size — a5…a0 (ISO) or a…e (ANSI) — and an optional portrait / landscape; did you mean 'a0'?"
+        );
+        assert_eq!(
+            compile_err("|page#p| { sheet: a4 portrai }\n"),
+            "'sheet' takes a size — a5…a0 (ISO) or a…e (ANSI) — and an optional portrait / landscape; did you mean 'portrait'?"
+        );
+    }
+
+    #[test]
+    fn the_furniture_lands_on_the_iso_anatomy() {
+        // A4 portrait: 210 × 297 → 4 × 6 zones [SPEC 15.8].
+        let l = laid("|page#p| { sheet: a4 }\n\"x\"\n");
+        let p = by_id(&l.nodes, "p");
+        let frame = p
+            .children
+            .iter()
+            .find(|c| c.type_chain.iter().any(|t| t == "frame"))
+            .expect("the frame");
+        // Margins ×4 px/mm: 40 on every side; half-stroke inflates.
+        let s = 4.0;
+        assert!(frame.cx.abs() < 1e-9);
+        assert!((frame.bbox.w() - (840.0 - 2.0 * SHEET_MARGIN * s + 2.0)).abs() < 1e-9);
+        let zone = |edge: &str| {
+            p.children
+                .iter()
+                .filter(|c| matches!(marker(&c.attrs), Some(Marker::Zone(e, _)) if e == edge))
+                .count()
+        };
+        assert_eq!((zone("top"), zone("left")), (4, 6));
+        // Numbers along the top, letters down the sides.
+        let all = texts(&l.nodes);
+        assert!(all.iter().any(|(t, ..)| t == "4"));
+        assert!(all.iter().any(|(t, ..)| t == "F"));
+    }
+
+    #[test]
+    fn a_title_block_seats_flush_inside_the_frame_corner() {
+        let l = laid(
+            "|page#p| { sheet: a4 landscape } [\n  |title-block#tb| { columns: 40, auto } [ \"Part\" \"X\" ]\n]\n",
+        );
+        let p = by_id(&l.nodes, "p");
+        let tb = by_id(&l.nodes, "tb");
+        let s = 4.0;
+        // Its right/bottom edges sit on the frame line, margins in from the sheet.
+        let right = tb.cx + tb.bbox.max_x;
+        let bottom = tb.cy + tb.bbox.max_y;
+        assert!(
+            (right - (p.bbox.w() / 2.0 - SHEET_MARGIN * s)).abs() < 1e-6,
+            "flush right: {right}"
+        );
+        assert!(
+            (bottom - (p.bbox.h() / 2.0 - SHEET_MARGIN * s)).abs() < 1e-6,
+            "flush bottom: {bottom}"
+        );
+    }
+
+    /// Content is centred on the sheet and ignores the block until a view
+    /// would run under it; then the page's flow content lifts by the overlap
+    /// plus the content clear — no further [SPEC 15.8].
+    #[test]
+    fn a_view_lifts_clear_of_the_title_block_only_when_it_would_run_under_it() {
+        let sheet = |h: u32| {
+            format!(
+                "|page#p| {{ sheet: a5 landscape }} [\n  |rect#v| {{ width: 170; height: {h}; }}\n  |title-block#tb| {{ title: \"T\" }}\n]\n"
+            )
+        };
+        let short = laid(&sheet(20));
+        assert!(
+            by_id(&short.nodes, "v").cy.abs() < 1e-9,
+            "a short view stays centred"
+        );
+
+        let tall = laid(&sheet(105));
+        let (v, tb) = (by_id(&tall.nodes, "v"), by_id(&tall.nodes, "tb"));
+        let bottom = v.cy + v.bbox.max_y;
+        let block_top = tb.cy + tb.bbox.min_y;
+        let clear = CONTENT_CLEAR * 4.0;
+        assert!(v.cy < 0.0, "a tall view lifts");
+        assert!(
+            (block_top - bottom - clear).abs() < 1e-6,
+            "lifted exactly clear of the block: bottom {bottom}, block top {block_top}"
+        );
+    }
+
+    #[test]
+    fn ansi_sheets_are_the_same_sugar_in_other_millimetres() {
+        // ANSI B defaults landscape: 431.8 × 279.4 mm at 4 px/mm; the letter
+        // sizes ride the exact ISO mechanism [SPEC 15.8].
+        let l = laid("|page#p| { sheet: b }\n\"x\"\n");
+        let p = by_id(&l.nodes, "p");
+        assert_eq!((p.bbox.w(), p.bbox.h()), (431.8 * 4.0, 279.4 * 4.0));
+        let a = laid("|page#p| { sheet: a }\n\"x\"\n");
+        assert_eq!(
+            by_id(&a.nodes, "p").bbox.w(),
+            215.9 * 4.0,
+            "ANSI A portrait"
+        );
+    }
+
+    #[test]
+    fn the_reference_band_reads_alike_on_every_side() {
+        // Each letter is centred in the margin between the frame and the
+        // trimmed edge, so the two side bands mirror [SPEC 15.8].
+        let l = laid("|page#p| { sheet: a4 }\n\"x\"\n");
+        let p = by_id(&l.nodes, "p");
+        let s = 4.0;
+        let zone = |edge: &'static str| {
+            p.children
+                .iter()
+                .find(|c| matches!(marker(&c.attrs), Some(Marker::Zone(e, _)) if e == edge))
+                .unwrap_or_else(|| panic!("a {edge} zone label"))
+                .cx
+        };
+        let band = p.bbox.w() / 2.0 - SHEET_MARGIN * s / 2.0;
+        assert!(
+            (zone("left") + band).abs() < 1e-9 && (zone("right") - band).abs() < 1e-9,
+            "letters centred in their bands: {} / {}",
+            zone("left"),
+            zone("right")
+        );
+    }
+
+    #[test]
+    fn a_lone_sheet_hugs_the_canvas() {
+        // Only-pages content drops the root's padding to 0 — the paper is the
+        // margin [SPEC 15.8]; other content keeps the scene default, and the
+        // user's own padding still wins.
+        let l = laid("|page#p| { sheet: a4 landscape }\n");
+        assert_eq!((l.viewbox.w, l.viewbox.h), (1188.0, 840.0));
+        let framed = laid("|page#p| { sheet: a4 landscape }\n|box| \"beside\"\n");
+        assert!(
+            framed.viewbox.w > 1188.0,
+            "mixed content keeps the scene frame"
+        );
+        let padded = laid("{ padding: 12 }\n|page#p| { sheet: a4 landscape }\n");
+        assert_eq!(padded.viewbox.w, 1188.0 + 24.0, "the user's padding wins");
+    }
+
+    fn projection_lines(l: &super::super::LaidOut) -> Vec<&PlacedNode> {
+        l.nodes
+            .iter()
+            .filter(|n| n.type_chain.iter().any(|t| t == "projection"))
+            .collect()
+    }
+
+    fn line_points(n: &PlacedNode) -> Vec<(f64, f64)> {
+        match n.attrs.get("points") {
+            Some(ResolvedValue::List(items)) => items
+                .iter()
+                .map(|p| match p {
+                    ResolvedValue::Tuple(xy) => {
+                        (xy[0].as_number().unwrap(), xy[1].as_number().unwrap())
+                    }
+                    other => panic!("point: {other:?}"),
+                })
+                .collect(),
+            other => panic!("points: {other:?}"),
+        }
+    }
+
+    // Two ⌀13 views one above the other on a sheet, datums aligned by
+    // `align: origin`, tied at their tops [SPEC 15.8].
+    const TWO_VIEWS: &str = "|page| { direction: row; align: origin; gap: 40 } [\n  \
+        |drawing#a| { scale: 2 } [ |oval#c| { width: 13; height: 13 } ]\n  \
+        |drawing#b| { scale: 2 } [ |oval#d| { width: 13; height: 13 } ]\n  \
+        a.c:top - b.d:top\n]\n";
+
+    #[test]
+    fn a_projection_line_never_breaks_the_pages_only_physical_size() {
+        // The generated `|projection|` chrome lands as a top-level sibling of
+        // the page; a pages-only sheet still prints true-scale mm
+        // [SPEC 15.8/18] — chrome is not drawn content.
+        let l = laid(TWO_VIEWS);
+        assert!(
+            l.physical.is_some(),
+            "pages-only with a projection line stays physical"
+        );
+    }
+
+    #[test]
+    fn a_projection_link_lowers_to_one_straight_line_on_the_aligned_anchors() {
+        let l = laid(TWO_VIEWS);
+        let proj = projection_lines(&l);
+        assert_eq!(proj.len(), 1, "one projection line");
+        let p = proj[0];
+        assert_eq!(p.kind, NodeKind::Line);
+        let pts = line_points(p);
+        assert_eq!(pts.len(), 2, "a straight two-point line");
+        // `align: origin` levels the datums, so the two `:top` anchors — ⌀13 at
+        // scale 2, 13 px above each datum — share a y: the line is horizontal.
+        assert!(
+            (pts[0].1 - pts[1].1).abs() < 1e-6,
+            "the projection line is horizontal: {pts:?}"
+        );
+        // …and spans the gap between the stacked views (distinct x).
+        assert!(
+            (pts[0].0 - pts[1].0).abs() > 1.0,
+            "the line spans between the two views: {pts:?}"
+        );
+    }
+
+    #[test]
+    fn a_projection_line_restyles_through_the_cascade() {
+        // A `|projection| { }` rule reaches the generated line, scope-wide.
+        let l = laid(&format!(
+            "{{ |projection| {{ stroke-width: 3 }} }}\n{TWO_VIEWS}"
+        ));
+        let p = projection_lines(&l);
+        assert_eq!(p[0].attrs.number("stroke-width"), Some(3.0));
+    }
+
+    #[test]
+    fn page_content_flows_inside_the_frame_and_chrome_stays_out_of_flow() {
+        // One box: it centres in the content area — the frame inset by 5 mm on
+        // every side, so the sheet's centre is the content's.
+        let l = laid("|page#p| { sheet: a4 } [ |box#card| \"hi\" ]\n");
+        let card = by_id(&l.nodes, "card");
+        assert!(
+            card.cx.abs() < 1e-9,
+            "content centres on the sheet: {}",
+            card.cx
+        );
+    }
+}

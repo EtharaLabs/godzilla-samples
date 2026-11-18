@@ -1,0 +1,672 @@
+//! Value resolution: map a declaration's value groups into the
+//! layout/render [`ResolvedValue`].
+//!
+//! Values are space-separated scalar groups, comma-separated into a list
+//! [SPEC 2]: `at: 100 50` is one group of two, `points: 0 0, 10 10` is two
+//! groups of two. One scalar stays a scalar, a multi-scalar group becomes a
+//! `Tuple`, and several groups become a `List` of those. Layout (`as_pair`,
+//! `expand_box_value`) and render (`format_value`) read exactly that shape.
+//!
+//! A `--name` reference resolves to a `LiveVar` that prints `var(--lini-name)`;
+//! these are visual vars only [SPEC 10.2], never layout numbers.
+
+use super::ir::{ResolvedCall, ResolvedValue, VarTable};
+use super::pattern;
+use crate::error::Error;
+use crate::expr::{self, Env, Expr, FuncTable, Value as ExprValue};
+use crate::ledger::properties;
+use crate::span::Span;
+use crate::syntax::ast::{Call, Value};
+
+fn from_expr(v: ExprValue) -> ResolvedValue {
+    match v {
+        ExprValue::Number(n) => ResolvedValue::Number(n),
+        ExprValue::Point(x, y) => {
+            ResolvedValue::Tuple(vec![ResolvedValue::Number(x), ResolvedValue::Number(y)])
+        }
+    }
+}
+
+/// Fold an expression body to a value, in a plain (non-geometry) context.
+fn fold_expr(body: &str, span: Span, funcs: &FuncTable) -> Result<ExprValue, Error> {
+    let expr = Expr::parse(body).map_err(|e| Error::at(span, e.0))?;
+    expr.eval(&Env::new(), funcs)
+        .map_err(|e| Error::at(span, e.0))
+}
+
+/// Evaluate a compute call (`scale(3)`, `min(a, b)`) to a number / point: each arg
+/// folds to an expression value, then the engine applies the math builtin or user
+/// function [SPEC 10.7].
+fn fold_call(c: &Call, span: Span, funcs: &FuncTable) -> Result<ExprValue, Error> {
+    let mut args = Vec::with_capacity(c.args.len());
+    for a in &c.args {
+        args.push(fold_arg(a, span, funcs)?);
+    }
+    expr::call(funcs, &c.name, &args).map_err(|e| Error::at(span, e.0))
+}
+
+fn fold_arg(v: &Value, span: Span, funcs: &FuncTable) -> Result<ExprValue, Error> {
+    match v {
+        Value::Number(n) => Ok(ExprValue::Number(*n)),
+        Value::Expr(s) => fold_expr(s, span, funcs),
+        // A bare name is a binding / constant read like `pi` [SPEC 10.7].
+        Value::Ident(s) => fold_expr(s, span, funcs),
+        Value::Call(c) if !properties::is_builder_call(&c.name) => fold_call(c, span, funcs),
+        _ => Err(Error::at(
+            span,
+            "a computed argument must be a number, an expression, a bound name, or a compute call",
+        )),
+    }
+}
+
+/// Resolve a declaration's comma-separated value groups into one value: one
+/// group collapses to a scalar or `Tuple`, several groups form a `List`.
+pub fn resolve_groups(
+    groups: &[Vec<Value>],
+    span: Span,
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    if let [only] = groups {
+        return resolve_group(only, span, vars, funcs);
+    }
+    let mut items = Vec::with_capacity(groups.len());
+    for g in groups {
+        items.push(resolve_group(g, span, vars, funcs)?);
+    }
+    Ok(ResolvedValue::List(items))
+}
+
+/// Resolve a **property** declaration's value [SPEC 2]: like [`resolve_groups`],
+/// but a string-valued property (`title`, `href`, `src`, `path`) must be a quoted
+/// string — a bare word there is an identifier, so it is an error. Variable
+/// declarations and internal defaults call [`resolve_groups`] directly.
+pub fn resolve_property(
+    name: &str,
+    groups: &[Vec<Value>],
+    span: Span,
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    // Two shapes keep their calls **structured** instead of folding them to
+    // numbers: `draw:` holds pen items for the sketch fold [SPEC 15.3], and
+    // `pattern:` holds its `grid(…)` / `radial(…)` replication call [SPEC 15.4].
+    match properties::get(name).map(|p| &p.shape) {
+        Some(properties::Shape::Pen) => return resolve_pen(groups, span, funcs),
+        Some(properties::Shape::Pattern) => return resolve_pattern(groups, span, funcs),
+        _ => {}
+    }
+    let value = resolve_groups(groups, span, vars, funcs)?;
+    if properties::is_string_valued(name) && has_bare_ident(&value) {
+        return Err(Error::at(
+            span,
+            format!("'{name}' takes a quoted string — write {name}: \"…\""),
+        ));
+    }
+    // `hatch()` is the section-line texture, a `fill`-only paint [SPEC 10.3].
+    if name != "fill" && matches!(&value, ResolvedValue::Call(c) if c.name == "hatch") {
+        return Err(Error::at(
+            span,
+            "'hatch' is a fill — 'stroke' takes a colour or gradient",
+        ));
+    }
+    apply_comma_law(name, value, span)
+}
+
+/// The comma law [SPEC 2]: a list-shaped property (ledger `shape` column) reads
+/// across comma-groups. A single group normalizes to a one-item `List`, so every
+/// reader sees one shape — and a space-separated legacy list is rejected here
+/// with the migration spelling when the list's items are scalars by definition
+/// (strings, keywords, tracks). Number lists pass through: their readers decide,
+/// since `data:` / `points:` items are legitimately `x y` pairs [SPEC 14.3].
+fn apply_comma_law(name: &str, value: ResolvedValue, span: Span) -> Result<ResolvedValue, Error> {
+    use properties::Shape;
+    let Some(Shape::List(kind)) = properties::get(name).map(|p| &p.shape) else {
+        return Ok(value);
+    };
+    let items = match value {
+        ResolvedValue::List(items) => items,
+        one => vec![one],
+    };
+    let example = kind.list_example();
+    if !example.is_empty() && items.iter().any(|i| matches!(i, ResolvedValue::Tuple(_))) {
+        return Err(properties::legacy_list_error(name, example, span));
+    }
+    Ok(ResolvedValue::List(items))
+}
+
+/// Resolve a built-in default bundle ([`crate::ledger::defaults`]) to its
+/// name → value pairs — one loop over [`resolve_property`], shared by the link
+/// projection cascade and the render-layer generated default (which resolves a
+/// static bundle with empty tables).
+pub fn resolve_bundle(
+    decls: &[crate::syntax::ast::Decl],
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<Vec<(String, ResolvedValue)>, Error> {
+    decls
+        .iter()
+        .map(|d| {
+            Ok((
+                d.name.clone(),
+                resolve_property(&d.name, &d.groups, d.span, vars, funcs)?,
+            ))
+        })
+        .collect()
+}
+
+/// A `draw:` value [SPEC 15.3]: one run of pen items — calls (optionally naming
+/// their segment) and freestanding `:segment` points — kept structured; only the
+/// call **arguments** fold (numbers, expressions, compute calls).
+fn resolve_pen(
+    groups: &[Vec<Value>],
+    span: Span,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    let [group] = groups else {
+        return Err(Error::at(
+            span,
+            "'draw' is one run of pen calls — commas belong inside call arguments",
+        ));
+    };
+    let mut items = Vec::with_capacity(group.len());
+    for v in group {
+        items.push(match v {
+            Value::Call(c) => ResolvedValue::PenCall {
+                call: fold_call_args(c, span, funcs)?,
+                segment: None,
+            },
+            Value::NamedCall(c, segment) => ResolvedValue::PenCall {
+                call: fold_call_args(c, span, funcs)?,
+                segment: Some(segment.clone()),
+            },
+            _ => {
+                return Err(Error::at(
+                    span,
+                    "'draw' holds pen calls and ':segment' points — see SPEC 15.3",
+                ));
+            }
+        });
+    }
+    Ok(ResolvedValue::Tuple(items))
+}
+
+/// A `pattern:` value [SPEC 15.4]: exactly one replication call, kept
+/// structured for the layout replicator; its args fold to numbers and the
+/// whole call is read against [`pattern::Pattern`]'s law here, so a malformed
+/// one errors at the declaration it was written on.
+fn resolve_pattern(
+    groups: &[Vec<Value>],
+    span: Span,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    let [group] = groups else {
+        return Err(pattern::usage(span));
+    };
+    let [Value::Call(c)] = group.as_slice() else {
+        return Err(pattern::usage(span));
+    };
+    let call = fold_call_args(c, span, funcs)?;
+    pattern::Pattern::read(&call, span)?;
+    Ok(ResolvedValue::Call(call))
+}
+
+/// Fold a structured call's arguments to numbers, keeping the call itself.
+fn fold_call_args(c: &Call, span: Span, funcs: &FuncTable) -> Result<ResolvedCall, Error> {
+    let mut args = Vec::with_capacity(c.args.len());
+    for a in &c.args {
+        args.push(from_expr(fold_arg(a, span, funcs)?));
+    }
+    Ok(ResolvedCall {
+        name: c.name.clone(),
+        args,
+    })
+}
+
+/// Whether a resolved value is, or contains, a bare identifier (an unquoted word) —
+/// the test for a string-valued property given a non-string.
+fn has_bare_ident(value: &ResolvedValue) -> bool {
+    match value {
+        ResolvedValue::Ident(_) => true,
+        ResolvedValue::Tuple(items) | ResolvedValue::List(items) => {
+            items.iter().any(has_bare_ident)
+        }
+        _ => false,
+    }
+}
+
+/// One space-separated group: a lone scalar stays a scalar, several become a
+/// `Tuple`.
+fn resolve_group(
+    group: &[Value],
+    span: Span,
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    match group {
+        [] => Err(Error::at(span, "empty value group")),
+        [only] => resolve_scalar(only, span, vars, funcs),
+        many => {
+            let mut items = Vec::with_capacity(many.len());
+            for v in many {
+                items.push(resolve_scalar(v, span, vars, funcs)?);
+            }
+            Ok(ResolvedValue::Tuple(items))
+        }
+    }
+}
+
+fn resolve_scalar(
+    v: &Value,
+    span: Span,
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    Ok(match v {
+        Value::Number(n) => ResolvedValue::Number(*n),
+        Value::Percent(n) => ResolvedValue::Percent(*n),
+        Value::String(s) => ResolvedValue::String(s.clone()),
+        Value::Hex(h) => ResolvedValue::Hex(h.clone()),
+        // A bare name that is a scalar binding reads as its value [SPEC 10.7];
+        // any other bare word is a keyword, a colour, or an id.
+        Value::Ident(s) if funcs.is_scalar(s) => from_expr(fold_expr(s, span, funcs)?),
+        Value::Ident(s) => ResolvedValue::Ident(s.clone()),
+        // `--name` → a live `var(--lini-name)`; visual-only [SPEC 10.2].
+        Value::Var(name) => ResolvedValue::live(name.clone()),
+        // A colour / track builder stays a typed Call; any other call is compute.
+        Value::Call(c) if properties::is_builder_call(&c.name) => {
+            resolve_call(c, span, vars, funcs)?
+        }
+        Value::Call(c) => from_expr(fold_call(c, span, funcs)?),
+        // A (…) expression folds to a number / point [SPEC 10.7].
+        Value::Expr(s) => from_expr(fold_expr(s, span, funcs)?),
+        // A space-group in one call-arg slot (`hatch(45 -45, 6)`) [SPEC 10.3].
+        Value::Tuple(items) => {
+            let mut out = Vec::with_capacity(items.len());
+            for item in items {
+                out.push(resolve_scalar(item, span, vars, funcs)?);
+            }
+            ResolvedValue::Tuple(out)
+        }
+        // Pen items are parsed only inside `draw:`, which resolves above.
+        Value::NamedCall(..) => {
+            return Err(Error::at(
+                span,
+                "a ':segment' pen item belongs in a 'draw:' value",
+            ));
+        }
+    })
+}
+
+fn resolve_call(
+    c: &Call,
+    span: Span,
+    vars: &VarTable,
+    funcs: &FuncTable,
+) -> Result<ResolvedValue, Error> {
+    let mut args = Vec::with_capacity(c.args.len());
+    for a in &c.args {
+        args.push(resolve_scalar(a, span, vars, funcs)?);
+    }
+    // `oklch()` is the palette's own colour space [SPEC 2/10.2]: fold it to a hex
+    // at compile time so it renders in browsers, resvg, and email alike.
+    if c.name == "oklch" {
+        return resolve_oklch(&args, span);
+    }
+    // The component colour calls [SPEC 2/10.1] pass through to CSS verbatim, so
+    // their channels are judged here — beside `oklch`'s own range gate — rather
+    // than shipping a renderer a colour it silently drops.
+    if matches!(c.name.as_str(), "rgb" | "rgba" | "hsl" | "hsla") {
+        validate_components(&c.name, &args, span)?;
+    }
+    // Gradients [SPEC 10.3] stay a Call for the renderer to intern as a `url(#…)`
+    // def; validate the shape here so a malformed one errors with a span rather than
+    // emitting invalid CSS.
+    if matches!(
+        c.name.as_str(),
+        "gradient" | "linear-gradient" | "radial-gradient"
+    ) {
+        validate_gradient(&c.name, &args, span)?;
+    }
+    Ok(ResolvedValue::Call(ResolvedCall {
+        name: c.name.clone(),
+        args,
+    }))
+}
+
+/// `rgb()` / `rgba()` / `hsl()` / `hsla()` channel ranges [SPEC 2/21]: a
+/// percentage is 0..100 everywhere; a bare number is 0..255 for an RGB channel,
+/// 0..100 for a saturation / lightness, 0..1 for an alpha — and a hue is an
+/// angle, which wraps. A channel that is neither a number nor a percentage (a
+/// `--var`) is not this pass's to judge.
+fn validate_components(name: &str, args: &[ResolvedValue], span: Span) -> Result<(), Error> {
+    let hsl = name.starts_with("hsl");
+    let ok = |i: usize, v: &ResolvedValue| match v {
+        ResolvedValue::Percent(p) => (0.0..=100.0).contains(p),
+        ResolvedValue::Number(n) => match (hsl, i) {
+            (_, 3) => (0.0..=1.0).contains(n),
+            (true, 0) => true,
+            (true, _) => (0.0..=100.0).contains(n),
+            (false, _) => (0.0..=255.0).contains(n),
+        },
+        _ => true,
+    };
+    if args.iter().enumerate().all(|(i, v)| ok(i, v)) {
+        return Ok(());
+    }
+    let spelled: Vec<String> = args
+        .iter()
+        .map(|a| match a {
+            ResolvedValue::Number(n) => crate::render::values::num(*n),
+            ResolvedValue::Percent(p) => format!("{}%", crate::render::values::num(*p)),
+            _ => "…".to_string(),
+        })
+        .collect();
+    Err(Error::at(
+        span,
+        format!("{name}({}): component out of range", spelled.join(",")),
+    )
+    .code(crate::error::Code::COLOR_RANGE))
+}
+
+/// A gradient needs ≥ 2 colour stops; `linear-gradient` additionally takes a
+/// leading numeric angle [SPEC 10.3]. Shape only — the renderer interns it.
+fn validate_gradient(name: &str, args: &[ResolvedValue], span: Span) -> Result<(), Error> {
+    let stops = if name == "linear-gradient" {
+        if !matches!(args.first(), Some(ResolvedValue::Number(_))) {
+            return Err(Error::at(
+                span,
+                "linear-gradient needs an angle first, then ≥ 2 colour stops — e.g. linear-gradient(135, --teal, --sky)",
+            ));
+        }
+        &args[1..]
+    } else {
+        args
+    };
+    if stops.len() < 2 {
+        return Err(Error::at(
+            span,
+            format!("{name}() needs at least two colour stops"),
+        ));
+    }
+    Ok(())
+}
+
+/// Evaluate `oklch(L, C, H)` / `oklch(L, C, H, A)` to a `#rrggbb[aa]` literal. L and
+/// A are 0..1 (a `%` is accepted too), C is the chroma, H is in degrees.
+fn resolve_oklch(args: &[ResolvedValue], span: Span) -> Result<ResolvedValue, Error> {
+    let frac = |v: &ResolvedValue| match v {
+        ResolvedValue::Number(n) => Some(*n),
+        ResolvedValue::Percent(p) => Some(p / 100.0),
+        _ => None,
+    };
+    let num = |v: &ResolvedValue| match v {
+        ResolvedValue::Number(n) => Some(*n),
+        _ => None,
+    };
+    let bad = || {
+        Error::at(
+            span,
+            "oklch expects (L, C, H) or (L, C, H, A) — L and A in 0..1, C ≥ 0, H in degrees",
+        )
+    };
+    let (l, c, h, a) = match args {
+        [l, c, h] => (
+            frac(l).ok_or_else(bad)?,
+            num(c).ok_or_else(bad)?,
+            num(h).ok_or_else(bad)?,
+            None,
+        ),
+        [l, c, h, a] => (
+            frac(l).ok_or_else(bad)?,
+            num(c).ok_or_else(bad)?,
+            num(h).ok_or_else(bad)?,
+            Some(frac(a).ok_or_else(bad)?),
+        ),
+        _ => return Err(bad()),
+    };
+    if !(0.0..=1.0).contains(&l) || c < 0.0 || a.is_some_and(|a| !(0.0..=1.0).contains(&a)) {
+        return Err(bad());
+    }
+    let mut hex = crate::palette::oklch::oklch_to_hex(l, c, h);
+    if let Some(a) = a {
+        hex.push_str(&format!("{:02x}", (a * 255.0).round() as u8));
+    }
+    Ok(ResolvedValue::Hex(hex))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn novars() -> VarTable {
+        VarTable::new()
+    }
+
+    fn resolve(groups: &[Vec<Value>]) -> ResolvedValue {
+        resolve_groups(groups, Span::empty(), &novars(), &FuncTable::new()).expect("resolve")
+    }
+
+    fn resolve_with(groups: &[Vec<Value>], funcs: &FuncTable) -> ResolvedValue {
+        resolve_groups(groups, Span::empty(), &novars(), funcs).expect("resolve")
+    }
+
+    #[test]
+    fn group_expression_folds_to_a_number() {
+        let v = resolve(&[vec![Value::Expr("8 * 2".into())]]);
+        assert!(matches!(v, ResolvedValue::Number(n) if n == 16.0));
+    }
+
+    #[test]
+    fn a_user_function_call_folds() {
+        let mut funcs = FuncTable::new();
+        funcs.insert(
+            "scale".into(),
+            vec!["n".into()],
+            Expr::parse("100 * 1.2 ^ n").unwrap(),
+        );
+        let v = resolve_with(
+            &[vec![Value::Call(Call {
+                name: "scale".into(),
+                args: vec![Value::Number(0.0)],
+            })]],
+            &funcs,
+        );
+        assert!(matches!(v, ResolvedValue::Number(n) if n == 100.0));
+    }
+
+    #[test]
+    fn a_computed_argument_in_a_builder_folds() {
+        // `repeat(3, `80 * 2`)` — repeat stays a Call, its computed arg folds to 160.
+        let v = resolve(&[vec![Value::Call(Call {
+            name: "repeat".into(),
+            args: vec![Value::Number(3.0), Value::Expr("80 * 2".into())],
+        })]]);
+        match v {
+            ResolvedValue::Call(c) => {
+                assert_eq!(c.name, "repeat");
+                assert!(matches!(c.args[1], ResolvedValue::Number(n) if n == 160.0));
+            }
+            other => panic!("expected a repeat call, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn an_unknown_function_errors() {
+        let r = resolve_groups(
+            &[vec![Value::Call(Call {
+                name: "nope".into(),
+                args: vec![],
+            })]],
+            Span::empty(),
+            &novars(),
+            &FuncTable::new(),
+        );
+        assert!(r.is_err());
+    }
+
+    #[test]
+    fn single_scalar_stays_scalar() {
+        let v = resolve(&[vec![Value::Number(5.0)]]);
+        assert!(matches!(v, ResolvedValue::Number(n) if n == 5.0));
+    }
+
+    #[test]
+    fn space_separated_group_becomes_a_tuple() {
+        // `at: 100 50` — one group, two scalars.
+        let v = resolve(&[vec![Value::Number(100.0), Value::Number(50.0)]]);
+        match v {
+            ResolvedValue::Tuple(items) => assert_eq!(items.len(), 2),
+            other => panic!("expected tuple, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn comma_groups_become_a_list_of_tuples() {
+        // `points: 0 0, 10 10`.
+        let v = resolve(&[
+            vec![Value::Number(0.0), Value::Number(0.0)],
+            vec![Value::Number(10.0), Value::Number(10.0)],
+        ]);
+        match v {
+            ResolvedValue::List(items) => {
+                assert_eq!(items.len(), 2);
+                assert!(matches!(&items[0], ResolvedValue::Tuple(t) if t.len() == 2));
+            }
+            other => panic!("expected list, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn mixed_track_list_keeps_idents_and_calls() {
+        // `columns: auto 40 repeat(2)` — one group of three mixed scalars.
+        let v = resolve(&[vec![
+            Value::Ident("auto".into()),
+            Value::Number(40.0),
+            Value::Call(Call {
+                name: "repeat".into(),
+                args: vec![Value::Number(2.0)],
+            }),
+        ]]);
+        match v {
+            ResolvedValue::Tuple(items) => {
+                assert!(matches!(items[0], ResolvedValue::Ident(_)));
+                assert!(matches!(items[1], ResolvedValue::Number(_)));
+                assert!(matches!(items[2], ResolvedValue::Call(_)));
+            }
+            other => panic!("expected tuple, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn var_reference_resolves_to_a_live_var() {
+        let v = resolve(&[vec![Value::Var("accent".into())]]);
+        assert!(matches!(v, ResolvedValue::LiveVar { name, .. } if name == "accent"));
+    }
+
+    #[test]
+    fn call_resolves_its_arguments() {
+        let v = resolve(&[vec![Value::Call(Call {
+            name: "rgb".into(),
+            args: vec![Value::Number(1.0), Value::Number(2.0), Value::Number(3.0)],
+        })]]);
+        match v {
+            ResolvedValue::Call(c) => {
+                assert_eq!(c.name, "rgb");
+                assert_eq!(c.args.len(), 3);
+            }
+            other => panic!("expected call, got {:?}", other),
+        }
+    }
+
+    fn oklch(args: Vec<Value>) -> Result<ResolvedValue, Error> {
+        resolve_groups(
+            &[vec![Value::Call(Call {
+                name: "oklch".into(),
+                args,
+            })]],
+            Span::empty(),
+            &novars(),
+            &FuncTable::new(),
+        )
+    }
+
+    #[test]
+    fn oklch_folds_to_a_hex() {
+        // oklch(1, 0, 0) is white.
+        let v = oklch(vec![
+            Value::Number(1.0),
+            Value::Number(0.0),
+            Value::Number(0.0),
+        ])
+        .unwrap();
+        assert!(matches!(v, ResolvedValue::Hex(h) if h == "ffffff"));
+    }
+
+    #[test]
+    fn oklch_with_alpha_folds_to_hex8() {
+        let v = oklch(vec![
+            Value::Number(0.0),
+            Value::Number(0.0),
+            Value::Number(0.0),
+            Value::Number(1.0),
+        ])
+        .unwrap();
+        assert!(matches!(v, ResolvedValue::Hex(h) if h == "000000ff"));
+    }
+
+    #[test]
+    fn oklch_bad_arity_errors() {
+        assert!(oklch(vec![Value::Number(0.5), Value::Number(0.1)]).is_err());
+    }
+
+    #[test]
+    fn oklch_out_of_range_lightness_errors() {
+        assert!(
+            oklch(vec![
+                Value::Number(1.5),
+                Value::Number(0.1),
+                Value::Number(180.0)
+            ])
+            .is_err()
+        );
+    }
+
+    fn grad(name: &str, args: Vec<Value>) -> Result<ResolvedValue, Error> {
+        resolve_groups(
+            &[vec![Value::Call(Call {
+                name: name.into(),
+                args,
+            })]],
+            Span::empty(),
+            &novars(),
+            &FuncTable::new(),
+        )
+    }
+
+    #[test]
+    fn valid_gradient_stays_a_call() {
+        let v = grad(
+            "gradient",
+            vec![Value::Var("teal".into()), Value::Var("sky".into())],
+        )
+        .unwrap();
+        assert!(matches!(v, ResolvedValue::Call(c) if c.name == "gradient"));
+    }
+
+    #[test]
+    fn gradient_with_one_stop_errors() {
+        assert!(grad("gradient", vec![Value::Var("teal".into())]).is_err());
+    }
+
+    #[test]
+    fn linear_gradient_without_angle_errors() {
+        assert!(
+            grad(
+                "linear-gradient",
+                vec![Value::Var("teal".into()), Value::Var("sky".into())],
+            )
+            .is_err()
+        );
+    }
+}

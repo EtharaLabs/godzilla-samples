@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Latest stable, the same channel rust-toolchain.toml selects, so CI and
+      # local stay in step. If a rustfmt/clippy release ever shifts a rule,
+      # re-run `cargo fmt --all` / fix the lint — no version to bump here.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      # `tests/playground.rs` runs the page's tokenizer in node and diffs it
+      # against `lini::highlight_html`. `LINI_JS_REQUIRED=1` turns its local
+      # skip into a failure, so a missing node reports as a missing node rather
+      # than as a green run that compared nothing.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features
+      - run: cargo build --verbose
+      - run: LINI_JS_REQUIRED=1 cargo test --verbose
+
+  # The browser artifact must compile every sample to the same bytes the binary
+  # does (`tests/wasm.rs`). Its own job: it needs a wasm target, node, and two
+  # tools the main suite has no use for. `LINI_WASM_REQUIRED=1` turns the test's
+  # local skip into a failure, so a broken toolchain here reports as a broken
+  # toolchain rather than as a green run that checked nothing.
+  wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # The CLI must match the `wasm-bindgen` crate exactly; `cargo xtask wasm`
+      # checks that and says so, but installing the pinned version is cheaper
+      # than debugging the mismatch.
+      - run: cargo install wasm-bindgen-cli --version 0.2.127 --locked
+      - run: sudo apt-get update && sudo apt-get install -y binaryen
+      - run: cargo xtask wasm
+      - run: LINI_WASM_REQUIRED=1 cargo test --test wasm -- --nocapture

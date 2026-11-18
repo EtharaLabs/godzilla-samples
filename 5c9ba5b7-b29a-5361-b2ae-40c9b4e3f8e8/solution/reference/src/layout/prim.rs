@@ -1,0 +1,379 @@
+//! `PlacedNode` **builders** for a layout engine's lowered primitives — shared by
+//! charts [SPEC 14.9] and sequences [SPEC 13]. Every bar, gridline, lifeline,
+//! arrow, label, frame, and note is built through these — never an open-coded
+//! `PlacedNode` — so lowering stays one mechanism and the render emitters
+//! (`emit_rect` / `emit_line` / the text path) draw them unchanged. (Distinct from
+//! `layout::primitives`, which *sizes* primitives.)
+
+use crate::font::{Font, Kind};
+use crate::layout::geom;
+use crate::layout::{Bbox, PlacedNode, approx_height, approx_width};
+use crate::resolve::{AttrMap, MarkerKind, Markers, NodeKind, ResolvedInst, ResolvedValue};
+use crate::span::Span;
+use std::f64::consts::TAU;
+
+fn node(kind: NodeKind, bbox: Bbox) -> PlacedNode {
+    PlacedNode {
+        id: None,
+        kind,
+        type_chain: Vec::new(),
+        applied_styles: Vec::new(),
+        label: None,
+        attrs: AttrMap::new(),
+        own_style: AttrMap::new(),
+        markers: Markers::default(),
+        cx: 0.0,
+        cy: 0.0,
+        bbox,
+        rotation: 0.0,
+        children: Vec::new(),
+        gutters: Vec::new(),
+        links: Vec::new(),
+        sketch: None,
+        origin: (0.0, 0.0),
+        span: Span::empty(),
+    }
+}
+
+fn ident(s: &str) -> ResolvedValue {
+    ResolvedValue::Ident(s.to_string())
+}
+
+/// A filled rectangle (a bar, a band shade, a legend swatch) centred at (cx, cy).
+/// Stroke off and width 0 so the drawn rect matches the bbox exactly; `opacity` lets a
+/// band wash or an overlay bar read through (omitted at 1, so opaque rects don't churn).
+pub fn rect(cx: f64, cy: f64, w: f64, h: f64, fill: ResolvedValue, opacity: f64) -> PlacedNode {
+    let mut n = node(NodeKind::Block, Bbox::centered(w, h));
+    n.cx = cx;
+    n.cy = cy;
+    n.attrs.insert("fill", fill);
+    n.attrs.insert("stroke", ident("none"));
+    n.attrs.insert("stroke-width", ResolvedValue::Number(0.0));
+    if (opacity - 1.0).abs() > 1e-9 {
+        n.attrs.insert("opacity", ResolvedValue::Number(opacity));
+    }
+    n
+}
+
+/// A `w`×`h` filled primitive centred at (cx, cy), stroke off and width 0 so the drawn
+/// shape matches the bbox exactly. The shared body of [`oval`] and [`marker`].
+fn filled(kind: NodeKind, cx: f64, cy: f64, w: f64, h: f64, fill: ResolvedValue) -> PlacedNode {
+    let mut n = node(kind, Bbox::centered(w, h));
+    n.cx = cx;
+    n.cy = cy;
+    n.attrs.insert("fill", fill);
+    n.attrs.insert("stroke", ident("none"));
+    n.attrs.insert("stroke-width", ResolvedValue::Number(0.0));
+    n
+}
+
+/// A filled ellipse (a dot, a bubble) centred at (cx, cy).
+pub fn oval(cx: f64, cy: f64, w: f64, h: f64, fill: ResolvedValue) -> PlacedNode {
+    filled(NodeKind::Oval, cx, cy, w, h, fill)
+}
+
+/// A centred chart point marker [SPEC 14.2]: a filled round point (`dot` / `circle`)
+/// or a rhombus (`diamond`), `w`×`h` at (cx, cy). The kind picks the shape; the caller
+/// sizes it (a line vertex by the kind, a `|dots|` by its `width`). The **one** place a
+/// chart point marker is built — line/area vertices, `|dots|`, and `|mark|` points all
+/// route through it, so dot/circle/diamond never diverge. `arrow` / `crow` never reach
+/// here (rejected at parse, [SPEC 21]); any non-diamond draws round.
+pub fn marker(
+    kind: MarkerKind,
+    cx: f64,
+    cy: f64,
+    w: f64,
+    h: f64,
+    fill: ResolvedValue,
+) -> PlacedNode {
+    let shape = if matches!(kind, MarkerKind::Diamond) {
+        NodeKind::Diamond
+    } else {
+        NodeKind::Oval
+    };
+    filled(shape, cx, cy, w, h, fill)
+}
+
+/// A drawing annotation's filled marker head [SPEC 15.6/15.7] — the slender
+/// dimension arrow, the surface-seated datum triangle — classed
+/// `lini-marker lini-marker-{variant}`, so the shared `.lini-marker` rule
+/// paints it (fill = the link stroke, stroke off) and only a recoloured
+/// statement inlines anything — exactly how link markers ride the sheet
+/// [SPEC 18].
+pub fn dim_marker(variant: &str, points: Vec<(f64, f64)>, fill: ResolvedValue) -> PlacedNode {
+    let bbox = Bbox::from_points(&points);
+    let pts = points
+        .into_iter()
+        .map(|(x, y)| {
+            ResolvedValue::Tuple(vec![ResolvedValue::Number(x), ResolvedValue::Number(y)])
+        })
+        .collect();
+    let mut n = node(NodeKind::Poly, bbox);
+    n.type_chain = vec!["marker".into(), format!("marker-{variant}")];
+    n.attrs.insert("points", ResolvedValue::List(pts));
+    n.attrs.insert("fill", fill);
+    n.attrs.insert("stroke", ident("none"));
+    n
+}
+
+/// The schematic connection dot [SPEC 16.5] — generated `|junction|` chrome at
+/// a wire meet, `radius` in sheet space. It sets **no** paint: the shared
+/// `.lini-junction` rule states its whole look (fill = the wire role, stroke
+/// off), so the element authors no `style=` diff at all and a `|junction| { … }`
+/// rule can restyle or remove every dot on the sheet [SPEC 18].
+pub fn junction_dot(cx: f64, cy: f64, radius: f64) -> PlacedNode {
+    let mut n = node(NodeKind::Oval, Bbox::centered(radius * 2.0, radius * 2.0));
+    n.cx = cx;
+    n.cy = cy;
+    n.type_chain = vec!["junction".into()];
+    n
+}
+
+/// A filled polygon (an area's body) through `points`. Stroke off; `opacity` lets
+/// overlapping areas read through.
+pub fn poly(points: Vec<(f64, f64)>, fill: ResolvedValue, opacity: f64) -> PlacedNode {
+    let bbox = Bbox::from_points(&points);
+    let pts = points
+        .into_iter()
+        .map(|(x, y)| {
+            ResolvedValue::Tuple(vec![ResolvedValue::Number(x), ResolvedValue::Number(y)])
+        })
+        .collect();
+    let mut n = node(NodeKind::Poly, bbox);
+    n.attrs.insert("points", ResolvedValue::List(pts));
+    n.attrs.insert("fill", fill);
+    n.attrs.insert("stroke", ident("none"));
+    n.attrs.insert("stroke-width", ResolvedValue::Number(0.0));
+    n.attrs.insert("opacity", ResolvedValue::Number(opacity));
+    n
+}
+
+/// An annular-sector filled polygon (a pie / donut slice — [SPEC 14.7] — or a
+/// radial bar, [SPEC 12]): radius `r0`→`r1` over angles `[a_lo, a_hi]` (0 straight up,
+/// increasing clockwise). The arcs are segmented finely enough to read smooth at any
+/// size; `r0 ≈ 0` collapses the inner edge to the centre (a full wedge). `opacity` lets
+/// overlapping wedges read through.
+#[allow(clippy::too_many_arguments)]
+pub fn wedge(
+    cx: f64,
+    cy: f64,
+    r0: f64,
+    r1: f64,
+    a_lo: f64,
+    a_hi: f64,
+    fill: ResolvedValue,
+    opacity: f64,
+) -> PlacedNode {
+    let span = a_hi - a_lo;
+    let steps = (span.abs() / TAU * 64.0).ceil().max(2.0) as usize; // ~one segment / 6°
+    let at = |r: f64, a: f64| geom::polar((cx, cy), r, a);
+    let mut pts: Vec<(f64, f64)> = (0..=steps)
+        .map(|k| at(r1, a_lo + span * k as f64 / steps as f64))
+        .collect();
+    if r0 <= 0.5 {
+        pts.push((cx, cy));
+    } else {
+        pts.extend((0..=steps).map(|k| at(r0, a_hi - span * k as f64 / steps as f64)));
+    }
+    poly(pts, fill, opacity)
+}
+
+/// A polyline (a gridline or a line series) through `points`, with the given stroke
+/// colour and width.
+pub fn line(points: Vec<(f64, f64)>, stroke: ResolvedValue, width: f64) -> PlacedNode {
+    let bbox = Bbox::from_points(&points);
+    let pts = points
+        .into_iter()
+        .map(|(x, y)| {
+            ResolvedValue::Tuple(vec![ResolvedValue::Number(x), ResolvedValue::Number(y)])
+        })
+        .collect();
+    let mut n = node(NodeKind::Line, bbox);
+    n.attrs.insert("points", ResolvedValue::List(pts));
+    n.attrs.insert("fill", ident("none"));
+    n.attrs.insert("stroke", stroke);
+    n.attrs.insert("stroke-width", ResolvedValue::Number(width));
+    n
+}
+
+/// A filled shape through a raw SVG path `d` (absolute coords baked in, like [`line`] /
+/// [`poly`]; the node stays at the origin). For a composed outline a `rect` / `poly`
+/// can't state — a frame's banner tab or a note's folded corner [SPEC 13]. `bbox` is
+/// its absolute bounds, so the enclosing engine sizes correctly.
+pub fn path(d: String, fill: ResolvedValue, bbox: Bbox) -> PlacedNode {
+    let mut n = node(NodeKind::Path, bbox);
+    n.attrs.insert("path", ResolvedValue::String(d));
+    n.attrs.insert("fill", fill);
+    n.attrs.insert("stroke", ident("none"));
+    n.attrs.insert("stroke-width", ResolvedValue::Number(0.0));
+    n
+}
+
+/// A drafting glyph [SPEC 15.9]: an `Icon`-kind leaf classed `drafting-glyph`,
+/// so the render emitter draws the named registry paths — in **natural
+/// units**: the bbox height *is* the glyph height (the caller derives it from
+/// the annotation font), and `sw` is the statement's stroke width, emitted
+/// unscaled so the linework weighs exactly like the dimension lines beside it.
+pub fn glyph(
+    symbol: &str,
+    cx: f64,
+    cy: f64,
+    w: f64,
+    h: f64,
+    stroke: ResolvedValue,
+    sw: f64,
+) -> PlacedNode {
+    let mut n = node(NodeKind::Icon, Bbox::centered(w, h));
+    n.cx = cx;
+    n.cy = cy;
+    n.type_chain = vec!["drafting-glyph".into()];
+    n.attrs
+        .insert("symbol", ResolvedValue::Ident(symbol.into()));
+    n.attrs.insert("stroke", stroke);
+    n.attrs.insert("stroke-width", ResolvedValue::Number(sw));
+    n.attrs.insert("fill", ident("none"));
+    n
+}
+
+/// A transparent group wrapping `children` (e.g. a tooltip card's box + text), tagged
+/// with `type_chain` so it carries `.lini-{name}` classes. `bbox` is its absolute bounds
+/// (the children are positioned absolutely; the group keeps `cx`/`cy` at the origin).
+pub fn group(children: Vec<PlacedNode>, type_chain: Vec<String>, bbox: Bbox) -> PlacedNode {
+    let mut n = node(NodeKind::Block, bbox);
+    n.type_chain = type_chain;
+    n.children = children;
+    n
+}
+
+/// The container shell for a **layout-owning engine** (chart, pie, sequence): a `Block`
+/// carrying the node's identity, classes, and paint, with the lowered primitives as its
+/// pre-positioned `children`. The one place that shell is built, so the engines don't each
+/// open-code a `PlacedNode`.
+pub fn container(inst: &ResolvedInst, bbox: Bbox, children: Vec<PlacedNode>) -> PlacedNode {
+    PlacedNode {
+        id: inst.id.clone(),
+        kind: NodeKind::Block,
+        type_chain: inst.type_chain.clone(),
+        applied_styles: inst.applied_styles.clone(),
+        label: None,
+        attrs: inst.attrs.clone(),
+        own_style: AttrMap::new(),
+        markers: inst.markers.clone(),
+        cx: 0.0,
+        cy: 0.0,
+        bbox,
+        rotation: inst.attrs.number("rotate").unwrap_or(0.0),
+        children,
+        gutters: Vec::new(),
+        links: Vec::new(),
+        sketch: None,
+        origin: (0.0, 0.0),
+        span: inst.span,
+    }
+}
+
+/// Text whose size / weight come from a `.lini-{class}` **stylesheet rule** rather than
+/// inline `style=` — for a sequence message label and the like, mirroring how a link label
+/// rides `.lini-link-label`. `size` only bounds the bbox (so the engine measures the label);
+/// the class states the rendered font. Centred at (cx, cy); `.lini-text` gives the anchors.
+pub fn text_classed(
+    content: &str,
+    cx: f64,
+    cy: f64,
+    size: f64,
+    class: &str,
+    font: Font,
+) -> PlacedNode {
+    let bbox = Bbox::centered(
+        approx_width(content, font, size, 0.0),
+        approx_height(content, size, 0.0),
+    );
+    let mut n = node(NodeKind::Text, bbox);
+    n.cx = cx;
+    n.cy = cy;
+    n.label = Some(content.to_string());
+    n.type_chain = vec![class.to_string()];
+    n
+}
+
+/// The caption size a drawing's annotation text reads at [SPEC 15.1] — the
+/// `.lini-dim-text` class states it, so no dim / leader / callout leaf inlines it.
+const DIM_TEXT_SIZE: f64 = crate::ledger::consts::DRAWING_LINK_FONT_SIZE;
+
+/// Dimension / leader / callout text [SPEC 15.6/17]: a `.lini-dim-text` leaf.
+/// The class states the font (12 px, normal weight), so a leaf at that default
+/// inlines nothing; only a size that differs — a `tol:` deviation stack, a
+/// restyled link — carries an inline `font-size` override (a statement's own
+/// text styling still inlines, [SPEC 18]).
+pub fn dim_text(content: &str, cx: f64, cy: f64, size: f64, kind: Kind) -> PlacedNode {
+    let mut n = text_classed(content, cx, cy, size, "dim-text", Font::regular(kind));
+    if (size - DIM_TEXT_SIZE).abs() > 1e-9 {
+        set(&mut n, "font-size", ResolvedValue::Number(size));
+    }
+    n
+}
+
+/// A plain text leaf that **inherits** its font from the enclosing `<g>` — no
+/// class, no inline [SPEC 18]. For text under a box that already states the font
+/// (a title `|footnote|`), so nothing is stated twice. `size` bounds the bbox.
+pub fn text_plain(content: &str, cx: f64, cy: f64, size: f64, kind: Kind) -> PlacedNode {
+    let bbox = Bbox::centered(
+        approx_width(content, Font::regular(kind), size, 0.0),
+        approx_height(content, size, 0.0),
+    );
+    let mut n = node(NodeKind::Text, bbox);
+    n.cx = cx;
+    n.cy = cy;
+    n.label = Some(content.to_string());
+    n
+}
+
+/// The drawn width of a centred label, for laying out legends and right-aligned
+/// ticks (compile-time text measurement, [SPEC 5]).
+pub fn text_width(content: &str, size: f64, font: Font) -> f64 {
+    approx_width(content, font, size, 0.0)
+}
+
+/// The drawn height of a label, for collision-testing inline labels [SPEC 14.8].
+pub fn text_height(content: &str, size: f64) -> f64 {
+    approx_height(content, size, 0.0)
+}
+
+/// Attach a native `<title>` — the baked-safe tooltip floor [SPEC 14.8],
+/// emitted by `render_node` on any node carrying a `hint:`.
+pub fn set_hint(n: &mut PlacedNode, hint: String) {
+    n.attrs.insert("hint", ResolvedValue::String(hint));
+}
+
+/// Draw a `stroke:` outline on a fill shape [SPEC 14.6]: replace the builder's
+/// `stroke: none` / width-0 default with `color` at `width`. The one place a chart
+/// shape gains an outline — reused by bars, slices, and bubbles (an area's outline is
+/// its own top edge, a `prim::line`), so `stroke:` never bleeds into the fill.
+pub fn outline(n: &mut PlacedNode, color: ResolvedValue, width: f64) {
+    n.attrs.insert("stroke", color);
+    n.attrs.insert("stroke-width", ResolvedValue::Number(width));
+}
+
+/// Round a rect's corners [SPEC 14.2]: set the `radius` the `Block` renderer reads
+/// (`emit_rect` → `rx`/`ry`). Skipped at 0 so a square shape's attrs don't churn. Shared
+/// by bars, the legend swatches, and the tooltip card.
+pub fn round(n: &mut PlacedNode, radius: f64) {
+    if radius > 0.0 {
+        n.attrs.insert("radius", ResolvedValue::Number(radius));
+    }
+}
+
+/// Set a text prop on both `attrs` (so layout measures with it) and `own_style` (so
+/// render emits it, beating the inherited `.lini` value).
+/// A classed leaf's **own** colour [SPEC 18] — the one property a chart text
+/// still states for itself (a band tick tinted its fill, a mark its stroke),
+/// its font riding the class rule. Sets the emitted `style=` too, which a bare
+/// `attrs` insert does not.
+pub fn set_color(n: &mut PlacedNode, color: ResolvedValue) {
+    set(n, "color", color);
+}
+
+fn set(n: &mut PlacedNode, name: &str, v: ResolvedValue) {
+    n.attrs.insert(name, v.clone());
+    n.own_style.insert(name, v);
+}

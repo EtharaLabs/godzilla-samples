@@ -1,0 +1,361 @@
+//! The drawing layout family [SPEC 15]. The **sketch pen** (`pen`, `geometry`)
+//! folds `draw:` profiles in any layout; the **engine** (`engine`, `mates`,
+//! `anchors`, `chrome`) is the `layout: drawing` scope itself — datum
+//! placement, features, mates, the generated chrome; the **annotations**
+//! (`annotate`, `dims`, `round`, `angle`, `leaders`, `compose`, `outline`) lower the
+//! scope's measuring and leader links onto the seated geometry.
+
+pub(crate) mod anchors;
+mod angle;
+pub(crate) mod annotate;
+pub(crate) mod breaks;
+pub(crate) mod chrome;
+mod compose;
+mod corner;
+mod dims;
+pub(crate) mod edges;
+mod engine;
+mod frames;
+pub(crate) mod geometry;
+mod halo;
+mod leaders;
+mod mates;
+mod outline;
+pub(crate) mod pen;
+mod round;
+pub(crate) mod section;
+pub(crate) mod symbols;
+pub(crate) mod threads;
+
+pub(super) use engine::{layout_node, layout_root};
+
+use super::ir::Bbox;
+use crate::error::{Code, Error};
+use crate::resolve::{Program, ResolvedInst};
+use geometry::P;
+
+/// A folded sketch's annotation geometry, carried on its placed node
+/// [SPEC 15.2/15.6]: the authored `:segment`s (model coordinates — a
+/// `break:` never moves them), the applied `mirror:` axes (the unary
+/// mirrored readings), the drawn outline (leader tips ray-cast onto it —
+/// displayed, clipped at any break), and the break **view map** (identity
+/// without one). Everything is in the node's local frame, scaled.
+pub struct SketchGeo {
+    pub segments: Vec<(String, Segment)>,
+    pub mirrors: Vec<geometry::MirrorAxis>,
+    /// Whether the profile is a `revolve:` — the `⌀` station readings gate on
+    /// it ([SPEC 15.6]; a merely mirrored span is a width, not a diameter).
+    pub revolved: bool,
+    /// The composed spec per `thread:` group — a leader onto one of these
+    /// reads its `M⌀×pitch` ([SPEC 15.7]; an authored label follows it).
+    pub threads: Vec<threads::ThreadSpec>,
+    pub outline: Vec<geometry::Subpath>,
+    pub view: breaks::ViewMap,
+}
+
+/// What an authored `:segment` addresses [SPEC 15.2] — the pen's output
+/// vocabulary, produced by the fold and consumed by the anchors.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Segment {
+    /// A freestanding name — the pen's point there.
+    Point(P),
+    /// A straight run (or a chamfer bevel, or a `close()` seam) — carries its
+    /// direction for dimension axes.
+    Edge(P, P),
+    /// An arc (drawn, tangent, or a fillet) — a point on it plus its radius,
+    /// the `R` reading.
+    Arc { mid: P, r: f64 },
+    /// A `circle(r)` subpath — round by construction, the `⌀` reading.
+    Circle { center: P, r: f64 },
+}
+
+impl Segment {
+    /// The segment under the node's own `scale:` — a uniform coordinate map,
+    /// so directions survive and radii multiply.
+    pub(super) fn scaled(self, s: f64) -> Self {
+        let m = |p: P| (p.0 * s, p.1 * s);
+        match self {
+            Segment::Point(p) => Segment::Point(m(p)),
+            Segment::Edge(a, b) => Segment::Edge(m(a), m(b)),
+            Segment::Arc { mid, r } => Segment::Arc {
+                mid: m(mid),
+                r: r * s,
+            },
+            Segment::Circle { center, r } => Segment::Circle {
+                center: m(center),
+                r: r * s,
+            },
+        }
+    }
+}
+
+/// Whether the container at `scope` is a `layout: drawing` — its links are the
+/// engine's (dimensions, leaders, mates), so the router and the declared-edge
+/// count skip them, exactly as a sequence scope's messages are skipped.
+pub(crate) fn is_drawing_scope(program: &Program, scope: &str) -> bool {
+    super::scope_attrs(program, scope).is_some_and(crate::resolve::is_drawing)
+}
+
+/// A projection link's endpoint anchor in **scene** coordinates [SPEC 15.8]:
+/// the anchor walk descends the placed tree from the scene root (through the
+/// scope-transparent `|page|`), so the accumulated origin lands the point in
+/// sheet space — where the straight `|projection|` line is drawn, after the
+/// views have placed.
+pub(crate) fn project_anchor(
+    nodes: &[super::PlacedNode],
+    ep: &crate::resolve::ResolvedEndpoint,
+) -> Result<P, Error> {
+    Ok(anchors::resolve(nodes, "", ep, "projection")?.point())
+}
+
+/// A scene-rooted endpoint path relative to its drawing scope (`""` = root) —
+/// the anchor walk's reader and the mate error spellings. One definition, in
+/// the module that owns the path vocabulary; the schematic wire laws spell a
+/// path with the same one.
+pub(super) use crate::resolve::scene::rel_path;
+
+/// Sheet content [SPEC 15]: placed and styled per its own type, never a part —
+/// text, notes, balloons, drafting symbols, the title footnote (tables seal
+/// via `layout: grid`).
+pub(super) fn is_sheet(kind: crate::resolve::NodeKind, type_chain: &[String]) -> bool {
+    kind == crate::resolve::NodeKind::Text
+        || symbols::drafting_type(type_chain).is_some()
+        || type_chain.iter().any(|t| {
+            matches!(
+                t.as_str(),
+                "note" | "balloon" | "table" | "footnote" | "caption" | "page"
+            )
+        })
+}
+
+/// The tree surface the sheet test walks — the resolved and the placed tree
+/// carry the same shape, and the engine asks the question of both.
+pub(in crate::layout) trait SheetView: Sized {
+    fn kind(&self) -> crate::resolve::NodeKind;
+    fn types(&self) -> &[String];
+    fn attrs(&self) -> &crate::resolve::AttrMap;
+    fn kids(&self) -> &[Self];
+}
+
+impl SheetView for ResolvedInst {
+    fn kind(&self) -> crate::resolve::NodeKind {
+        self.kind
+    }
+    fn types(&self) -> &[String] {
+        &self.type_chain
+    }
+    fn attrs(&self) -> &crate::resolve::AttrMap {
+        &self.attrs
+    }
+    fn kids(&self) -> &[Self] {
+        &self.children
+    }
+}
+
+impl SheetView for super::PlacedNode {
+    fn kind(&self) -> crate::resolve::NodeKind {
+        self.kind
+    }
+    fn types(&self) -> &[String] {
+        &self.type_chain
+    }
+    fn attrs(&self) -> &crate::resolve::AttrMap {
+        &self.attrs
+    }
+    fn kids(&self) -> &[Self] {
+        &self.children
+    }
+}
+
+/// A **bundle** [SPEC 15.5]: a layout-owning wrapper whose children are all
+/// sheet content (a `|column|` of finish over frame) — sheet like its
+/// children, so it seats whole, never grounds a mate, and reports one union
+/// extent to the packer.
+pub(in crate::layout) fn is_bundle<T: SheetView>(n: &T) -> bool {
+    super::owns_layout(n.kind(), n.types(), n.attrs())
+        && !n.kids().is_empty()
+        && n.kids().iter().all(sheet_node)
+}
+
+/// Sheet content, tree-aware: a sheet leaf or a bundle of them [SPEC 15/15.5].
+pub(in crate::layout) fn sheet_node<T: SheetView>(n: &T) -> bool {
+    is_sheet(n.kind(), n.types()) || is_bundle(n)
+}
+
+/// A part's own bbox in a drawing scope [SPEC 15.4]: `|hole|` / `|pitch-circle|`
+/// are round — `width:` (required) is the diameter — and every other shape
+/// sizes as a leaf: a part's features never grow it, they overhang.
+/// Half a node's stroke width — the paint reach either side of its drawn
+/// geometry ([`crate::resolve::AttrMap::half_stroke`]: an unpainted
+/// `stroke: none` reaches nothing).
+pub(in crate::layout) fn half_stroke(attrs: &crate::resolve::AttrMap) -> f64 {
+    attrs.half_stroke()
+}
+
+/// A placed node's drawn shape, stroke excluded — the box anchors, default
+/// outlines, and pinned placement read [SPEC 15.1]. A nested `|drawing|` is
+/// one rigid body whose geometry bbox is its **parts' union** [SPEC 15.8] —
+/// the container itself paints nothing, so each part's own painted stroke is
+/// excluded where it lies, never approximated by the container's.
+fn geometry_box(n: &super::ir::PlacedNode) -> Bbox {
+    if crate::resolve::is_drawing(&n.attrs) {
+        let mut parts: Option<Bbox> = None;
+        for c in n
+            .children
+            .iter()
+            .filter(|c| is_geometry(c) && !chrome::is_chrome(&c.attrs))
+        {
+            let g = geometry_box(c).shifted(c.cx, c.cy);
+            parts = Some(match parts {
+                Some(b) => b.union(g),
+                None => g,
+            });
+        }
+        if let Some(b) = parts {
+            return b;
+        }
+    }
+    n.bbox.inflate(-half_stroke(&n.attrs))
+}
+
+/// The drawn-geometry base class [SPEC 15.1/15.6]: a scope child that is
+/// real drawn geometry — not sheet content, not a pinned overlay. Callers
+/// layer only their genuine extras (chrome, annotation ink, line types).
+fn is_geometry(n: &super::ir::PlacedNode) -> bool {
+    !sheet_node(n) && !super::anchors::is_pinned(&n.attrs)
+}
+
+pub(super) fn part_bbox(inst: &ResolvedInst, own: f64) -> Result<Bbox, Error> {
+    if let Some(ty) = inst
+        .type_chain
+        .iter()
+        .find(|t| *t == "hole" || *t == "pitch-circle" || *t == "magnifier")
+        && !chrome::is_chrome(&inst.attrs)
+    {
+        let Some(w) = inst.attrs.number("width") else {
+            return Err(Error::at(
+                inst.span,
+                format!("'|{ty}|' requires 'width' — its diameter"),
+            )
+            .code(Code::MISSING_REQUIRED));
+        };
+        let sw = inst.attrs.number("stroke-width").unwrap_or(0.0);
+        return Ok(Bbox::centered(w * own, w * own).inflate(sw / 2.0));
+    }
+    super::primitives::leaf_bbox(inst, own)
+}
+
+/// Datum placement [SPEC 15.1/15.4]: every child's **origin** lands on the
+/// parent's datum, offset only by `translate:` (drawing units × the parent's
+/// scale). A broken parent's view map acts on **every position in its
+/// frame** — features, their sub-features, a pattern's copies — so the whole
+/// population rides the displayed pieces [SPEC 15.3] (model positions unmap
+/// in the anchor walk). Chrome children stay at the datum (their geometry is
+/// filled by [`chrome::fill`]); pinned sheet content is re-placed by the
+/// engine after the extent is known.
+pub(super) fn place_features(
+    children: &mut [super::PlacedNode],
+    scale: f64,
+    view: Option<&breaks::ViewMap>,
+) -> Result<(), Error> {
+    for c in children.iter_mut() {
+        // An **opening** is placed by `on:` / `at:` alone [SPEC 15.11] — its
+        // wall seated it on the segment as it folded, exactly as chrome takes
+        // its geometry from the shape that generated it.
+        if chrome::is_chrome(&c.attrs) || super::floorplan::is_opening(&c.type_chain) {
+            continue;
+        }
+        let (dx, dy) = super::anchors::translate(&c.attrs, c.span)?.unwrap_or((0.0, 0.0));
+        let m = (dx * scale, dy * scale);
+        let p = match view {
+            Some(v) => v.map(m),
+            None => m,
+        };
+        c.cx = p.0;
+        c.cy = p.1;
+        if let Some(v) = view {
+            ride_view(c, v, m, p);
+        }
+    }
+    Ok(())
+}
+
+/// Slide a subtree's descendant positions through the broken ancestor's view
+/// map: a descendant at model offset `d` in the ancestor's frame displays at
+/// `map(base + d)`. Recursion stops where positions leave that frame — a
+/// turned child (its interior axes no longer align with the break axis), a
+/// layout-owning child (sealed, arranged by its own engine), or a child with
+/// its own break (its own view world, rigid from outside); each still rides
+/// as one box. Chrome stays with whatever generated it.
+fn ride_view(node: &mut super::PlacedNode, v: &breaks::ViewMap, base_model: P, base_disp: P) {
+    if node.rotation != 0.0
+        || super::owns_layout(node.kind, &node.type_chain, &node.attrs)
+        || node.sketch.as_ref().is_some_and(|g| !g.view.is_identity())
+    {
+        return;
+    }
+    for c in node.children.iter_mut() {
+        if chrome::is_chrome(&c.attrs) {
+            continue;
+        }
+        let m = (base_model.0 + c.cx, base_model.1 + c.cy);
+        let d = v.map(m);
+        c.cx = d.0 - base_disp.0;
+        c.cy = d.1 - base_disp.1;
+        ride_view(c, v, m, d);
+    }
+    // A replication carrier's bbox is its copies' union (`pattern::expand`) —
+    // re-union it around the ridden positions.
+    if super::pattern::replicas(node).is_some() {
+        node.bbox = super::pattern::carrier_bbox(&node.children);
+    }
+}
+
+/// The one compile pipeline the drawing tests drive — source → `LaidOut` (or
+/// the layout error), plus the tree lookups every assertion needs.
+#[cfg(test)]
+pub(super) mod testutil {
+    use super::super::PlacedNode;
+    use crate::resolve::NodeKind;
+
+    /// The drawing sweeps compile sheets that embed committed images, so
+    /// they resolve against `samples/` [SPEC 7]; inline sources carry none
+    /// and never notice.
+    pub use crate::testutil::{laid_in_samples as laid, layout_err_in_samples as layout_err};
+
+    pub fn by_id<'a>(nodes: &'a [PlacedNode], id: &str) -> &'a PlacedNode {
+        crate::testutil::placed_by_id(nodes, id).0
+    }
+
+    /// Every placed text leaf, depth-first: (content, world cx, world cy,
+    /// rotation).
+    pub fn texts(nodes: &[PlacedNode]) -> Vec<(String, f64, f64, f64)> {
+        fn walk(nodes: &[PlacedNode], ox: f64, oy: f64, out: &mut Vec<(String, f64, f64, f64)>) {
+            for n in nodes {
+                if n.kind == NodeKind::Text
+                    && let Some(t) = &n.label
+                {
+                    out.push((t.clone(), ox + n.cx, oy + n.cy, n.rotation));
+                }
+                walk(&n.children, ox + n.cx, oy + n.cy, out);
+            }
+        }
+        let mut out = Vec::new();
+        walk(nodes, 0.0, 0.0, &mut out);
+        out
+    }
+
+    /// The one text node with this content — its (cx, cy, rotation).
+    pub fn text_at(nodes: &[PlacedNode], content: &str) -> (f64, f64, f64) {
+        let all = texts(nodes);
+        let hits: Vec<_> = all.iter().filter(|(t, ..)| t == content).collect();
+        match hits.as_slice() {
+            [one] => (one.1, one.2, one.3),
+            _ => panic!(
+                "expected one '{content}', found {}: {:?}",
+                hits.len(),
+                all.iter().map(|(t, ..)| t).collect::<Vec<_>>()
+            ),
+        }
+    }
+}

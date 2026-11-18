@@ -1,0 +1,480 @@
+//! Linear dimensions [SPEC 15.6] — `(-)` spans and chains — and the shared
+//! **stacked-dim anatomy** every span reading lowers through: extension
+//! lines springing from the anchors, the dim line on its packed row (or, for
+//! an **aligned** dim, standing off its own span), drafting-slender arrows
+//! (flipped outside a narrow span), ISO-aligned text. Measured values are
+//! anchor distances in drawing units — pre-scale, on the unbroken model.
+//! The axis is inferred from the anchors (directed normal / true aligned
+//! span) with `project:` the override. The `(o)` readings live in `round`.
+
+use super::super::ir::{Bbox, PlacedNode};
+use super::anchors;
+use super::annotate::{Axis, Ctx, Paint, Rows, SeatLine, away, corner_pull, stack_side};
+use super::compose::{self, DimText, Glyph};
+use super::geometry::{Frame, P, dist};
+use super::symbols::CarriedStack;
+use crate::ast::Side;
+use crate::error::{Code, Error};
+use crate::layout::geom::{cross, dot, scale, sub, unit};
+use crate::ledger::consts::{ARROW_HALF, ARROW_LEN, EXT_GAP, EXT_OVERSHOOT};
+use crate::math;
+use crate::resolve::{AttrMap, ResolvedLink, ResolvedText, ResolvedValue};
+use crate::span::Span;
+
+/// Below this, a unit axis component reads as zero — the horizontal /
+/// vertical classification and the parallel test [SPEC 15.6].
+const AXIS_EPS: f64 = 1e-6;
+
+/// The stub the flipped-outside arrows and the dim line run past the span.
+const STUB: f64 = 2.0;
+
+/// `a (-) b` (and chains — each hop its own dim) [SPEC 15.6]. A hop's label
+/// **replaces** its number; labels map to hops in order. A chain **shares
+/// one row**: its hops seat as one unit (their union interval), so a flipped
+/// narrow hop's outside arrow abutting its neighbour tip-to-tip at the
+/// shared extension line — drafting-normal — never splits the row.
+pub(super) fn linear(
+    ctx: &Ctx,
+    w: &ResolvedLink,
+    rows: &mut Rows,
+    stack: &CarriedStack,
+) -> Result<Vec<PlacedNode>, Error> {
+    let paint = Paint::of_link(ctx, w);
+    let mut hops = Vec::new();
+    for hop in 0..w.endpoints.len() - 1 {
+        let (ea, eb) = (&w.endpoints[hop], &w.endpoints[hop + 1]);
+        let a = anchors::resolve(ctx.kids, ctx.scope, ea, "dimension")?;
+        let b = anchors::resolve(ctx.kids, ctx.scope, eb, "dimension")?;
+        let (pa, pb) = (a.point(), b.point());
+        let spell = |ep| anchors::spell(ep, ctx.scope);
+
+        // The axis [SPEC 15.6]: a directed anchor sets it — its outward
+        // normal; two directed must be parallel; two points read the true
+        // **aligned** span; `project:` overrides the point readings and must
+        // agree with a directed anchor.
+        let directed = match (a.outward(), b.outward()) {
+            (Some(x), Some(y)) => {
+                if cross(x, y).abs() > AXIS_EPS {
+                    return Err(Error::at(
+                        w.span,
+                        format!(
+                            "'{} (-) {}' — perpendicular faces have no shared normal; the angle between edges is '(<)'",
+                            spell(ea),
+                            spell(eb)
+                        ),
+                    ));
+                }
+                Some((x, ea))
+            }
+            (Some(x), None) => Some((x, ea)),
+            (None, Some(y)) => Some((y, eb)),
+            (None, None) => None,
+        };
+        let span_dir = {
+            let d = (pb.0 - pa.0, pb.1 - pa.1);
+            (math::hypot(d.0, d.1) > AXIS_EPS)
+                .then(|| unit(d))
+                .flatten()
+        };
+        let project = project_attr(&w.attrs, w.span)?;
+        // The measure direction `u` — the dim line runs along it — and
+        // whether the value is the true aligned distance (two points, no
+        // projection to flatten it).
+        let (u, true_aligned) = match (directed, project) {
+            (Some((n, ep)), p) => {
+                if let Some(p) = p {
+                    let pu = p.dir(span_dir).unwrap_or(n);
+                    if cross(n, pu).abs() > AXIS_EPS {
+                        return Err(Error::at(
+                            w.span,
+                            format!(
+                                "'project: {}' conflicts with '{}' — the directed anchor reads {}",
+                                p.name(),
+                                spell(ep),
+                                reading(n)
+                            ),
+                        )
+                        .code(Code::PROJECT_AXIS));
+                    }
+                }
+                (n, false)
+            }
+            (None, Some(p)) => match p.dir(span_dir) {
+                Some(d) => (d, p == Project::Aligned),
+                None => ((1.0, 0.0), false),
+            },
+            (None, None) => match span_dir {
+                Some(d) => (d, true),
+                None => ((1.0, 0.0), false),
+            },
+        };
+
+        // Extension lines land at the displayed anchors; the value reads the
+        // unbroken model — a `break:` never changes a dimension [SPEC 15.3].
+        let (am, bm) = (a.model_point(), b.model_point());
+        let value = if true_aligned {
+            dist(am, bm)
+        } else {
+            dot(sub(bm, am), u).abs()
+        } / ctx.scale;
+        let label = w.texts.get(hop);
+        let text = compose::compose(
+            Glyph::None,
+            value,
+            None,
+            label.map(|t| t.text.as_str()),
+            None,
+            &w.attrs,
+            w.span,
+        )?;
+        let clearance = dim_clearance(&w.attrs);
+        // Seat: horizontal / vertical dims pack into side rows; an aligned
+        // dim packs along its own span's normal, on the side facing away
+        // from the geometry centre — the extent's bbox centre [SPEC 15.6].
+        let (frame, seat) = match axis_of(u) {
+            Some(axis) => {
+                let side = stack_side(&w.attrs, axis, corner_pull(&a, &b, axis), w.span)?;
+                (Frame::axis(axis), Seat::Row(side))
+            }
+            None => {
+                let frame = Frame::of(u);
+                let away_pos = away(
+                    &w.attrs,
+                    span_dir.unwrap_or(u),
+                    ((pa.0 + pb.0) / 2.0, (pa.1 + pb.1) / 2.0),
+                    ctx.extent.center(),
+                    frame.n,
+                    w.span,
+                )?;
+                (frame, Seat::Aligned(away_pos))
+            }
+        };
+        hops.push(Stacked {
+            frame,
+            a: pa,
+            b: pb,
+            edges: [a.edge_ends(), b.edge_ends()],
+            text,
+            seat,
+            clearance,
+            label,
+        });
+    }
+
+    let mut out = Vec::new();
+    let row_key = |h: &Stacked| match h.seat {
+        Seat::Row(side) => Some((side, h.frame)),
+        Seat::Aligned(_) => None,
+    };
+    let one_row = hops.len() > 1
+        && row_key(&hops[0]).is_some()
+        && hops.iter().all(|h| row_key(h) == row_key(&hops[0]));
+    if one_row {
+        let plans: Vec<Plan> = hops.iter().map(|h| plan(h, &paint)).collect();
+        let union = plans
+            .iter()
+            .map(|p| p.interval)
+            .reduce(|u, iv| (u.0.min(iv.0), u.1.max(iv.1)))
+            .expect("hops non-empty");
+        let Seat::Row(side) = hops[0].seat else {
+            unreachable!("one_row is row-seated");
+        };
+        let carried = carried_band(hops.iter().zip(&plans), &paint, stack);
+        let line_c = rows.seat(
+            rows.side_line(side),
+            union,
+            hops[0].clearance,
+            &paint,
+            carried,
+        );
+        for (h, p) in hops.into_iter().zip(plans) {
+            out.extend(at_row(h, &p, line_c, &paint));
+        }
+    } else {
+        for h in hops {
+            out.extend(stacked(h, rows, &paint, stack));
+        }
+    }
+    Ok(out)
+}
+
+/// Where a dim's line seats [SPEC 15.6]: a packed side row (horizontal /
+/// vertical), or — aligned — packed along its own span's normal, on the
+/// away side (`true` = the frame's +n side). Both route through the one
+/// row packer.
+#[derive(Clone, Copy, PartialEq)]
+pub(super) enum Seat {
+    Row(Side),
+    Aligned(bool),
+}
+
+/// One stacked dimension: extension lines springing from the anchors, the
+/// dim line on its seat, slender arrows, ISO-aligned text above the line —
+/// flipped outside when the span is too narrow [SPEC 15.6].
+pub(super) struct Stacked<'a> {
+    pub frame: Frame,
+    pub a: P,
+    pub b: P,
+    /// Each anchor's edge ends, when it is a named **edge** [SPEC 15.2] — its
+    /// extension line springs from whichever end the dim line is nearer, not
+    /// from the representative point the arrows and the value read.
+    pub edges: [Option<(P, P)>; 2],
+    pub text: DimText,
+    pub seat: Seat,
+    /// The dim's resolved stand-off minimum [SPEC 15.6] — the cascade's value
+    /// (drawing default → `(-)` rule → class → the dim's block).
+    pub clearance: f64,
+    /// The authored label, if any — its `translate:` / `rotate:` override the
+    /// auto text placement (the styled-label form).
+    pub label: Option<&'a ResolvedText>,
+}
+
+pub(super) fn stacked(
+    s: Stacked,
+    rows: &mut Rows,
+    paint: &Paint,
+    stack: &CarriedStack,
+) -> Vec<PlacedNode> {
+    let p = plan(&s, paint);
+    let carried = carried_band(std::iter::once((&s, &p)), paint, stack);
+    let at = match s.seat {
+        Seat::Row(side) => rows.side_line(side),
+        Seat::Aligned(away_pos) => SeatLine::span(s.frame, away_pos, (s.a, s.b)),
+    };
+    let line_c = rows.seat(at, p.interval, s.clearance, paint, carried);
+    at_row(s, &p, line_c, paint)
+}
+
+/// A carrying statement's painted box relative to its row line [SPEC 15.9]:
+/// the value texts probed at a **zero line** (the seat's offset from the line
+/// is constant), the stack's one measured box hung below them — what
+/// `Rows::seat` folds into the band, and exactly where `CarriedStack::seat`
+/// will put the stack once the row is real.
+fn carried_band<'a>(
+    hops: impl Iterator<Item = (&'a Stacked<'a>, &'a Plan)>,
+    paint: &Paint,
+    stack: &CarriedStack,
+) -> Option<Bbox> {
+    if stack.is_empty() {
+        return None;
+    }
+    let probe: Vec<PlacedNode> = hops
+        .flat_map(|(s, p)| value_texts(s, p, 0.0, paint))
+        .collect();
+    let seat = super::symbols::seat_of(&probe);
+    Some(stack.box_below(seat)?.union(seat))
+}
+
+/// A dimension's resolved `clearance` [SPEC 15.6]: the ordinary cascade — the
+/// drawing scope's base default rides the link attrs, so the fallback here
+/// only restates it.
+pub(super) fn dim_clearance(attrs: &AttrMap) -> f64 {
+    attrs
+        .number("clearance")
+        .unwrap_or(crate::ledger::consts::DIM_CLEARANCE)
+}
+
+/// The `project:` override [SPEC 15.6].
+#[derive(Clone, Copy, PartialEq)]
+enum Project {
+    Horizontal,
+    Vertical,
+    Aligned,
+}
+
+impl Project {
+    /// The projected measure direction; `aligned` needs a span to align to.
+    fn dir(self, span_dir: Option<P>) -> Option<P> {
+        match self {
+            Project::Horizontal => Some((1.0, 0.0)),
+            Project::Vertical => Some((0.0, 1.0)),
+            Project::Aligned => span_dir,
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Project::Horizontal => "horizontal",
+            Project::Vertical => "vertical",
+            Project::Aligned => "aligned",
+        }
+    }
+}
+
+fn project_attr(attrs: &AttrMap, span: Span) -> Result<Option<Project>, Error> {
+    match attrs.get("project") {
+        None => Ok(None),
+        Some(ResolvedValue::Ident(s)) if s == "horizontal" => Ok(Some(Project::Horizontal)),
+        Some(ResolvedValue::Ident(s)) if s == "vertical" => Ok(Some(Project::Vertical)),
+        Some(ResolvedValue::Ident(s)) if s == "aligned" => Ok(Some(Project::Aligned)),
+        Some(_) => Err(Error::at(
+            span,
+            "'project' takes horizontal, vertical, or aligned",
+        )),
+    }
+}
+
+/// A directed anchor's reading, for the `project:` conflict message.
+fn reading(n: P) -> &'static str {
+    match axis_of(n) {
+        Some(Axis::Horizontal) => "horizontal",
+        Some(Axis::Vertical) => "vertical",
+        None => "along its face's normal",
+    }
+}
+
+/// A unit measure direction's row axis — `None` is the aligned case.
+fn axis_of(u: P) -> Option<Axis> {
+    if u.1.abs() < AXIS_EPS {
+        Some(Axis::Horizontal)
+    } else if u.0.abs() < AXIS_EPS {
+        Some(Axis::Vertical)
+    } else {
+        None
+    }
+}
+
+/// A dim's row footprint before seating: the packed interval (text included),
+/// where the text sits along the line, and whether it fits inside the span.
+struct Plan {
+    interval: (f64, f64),
+    text_u: f64,
+    fits: bool,
+    /// The span's ends along the frame — the anatomy's own reference points.
+    u_lo: f64,
+    u_hi: f64,
+}
+
+fn plan(s: &Stacked, paint: &Paint) -> Plan {
+    let (ua, ub) = (s.frame.u(s.a), s.frame.u(s.b));
+    let (u_lo, u_hi) = (ua.min(ub), ua.max(ub));
+    let arrow_len = ARROW_LEN * paint.sw;
+    let tw = s.text.width(paint.fs, paint.font);
+    let span = u_hi - u_lo;
+    let fits = span >= 2.0 * arrow_len + tw + 6.0;
+    // A narrow span flips its arrows outside the extension lines; the value
+    // stays **inside** while it still reads there (drafting's middle form —
+    // chained narrow hops keep their numbers apart), and only a span too
+    // tight even for the bare text slides it past the nearer line.
+    let reach = arrow_len + STUB;
+    let (interval, text_u) = if fits {
+        ((u_lo, u_hi), (u_lo + u_hi) / 2.0)
+    } else if span >= tw + 4.0 {
+        ((u_lo - reach, u_hi + reach), (u_lo + u_hi) / 2.0)
+    } else if s.frame.u.0.abs() >= s.frame.u.1.abs() {
+        (
+            (u_lo - reach, u_hi + reach + 4.0 + tw),
+            u_hi + reach + 4.0 + tw / 2.0,
+        )
+    } else {
+        (
+            (u_lo - reach - 4.0 - tw, u_hi + reach),
+            u_lo - reach - 4.0 - tw / 2.0,
+        )
+    };
+    Plan {
+        interval,
+        text_u,
+        fits,
+        u_lo,
+        u_hi,
+    }
+}
+
+/// Lower one dim's anatomy onto its seated line.
+fn at_row(s: Stacked, p: &Plan, line_c: f64, paint: &Paint) -> Vec<PlacedNode> {
+    let sw = paint.sw;
+    let f = s.frame;
+    let (u_lo, u_hi) = (p.u_lo, p.u_hi);
+    let arrow_len = ARROW_LEN * sw;
+    let fits = p.fits;
+
+    let mut out = Vec::new();
+    // Extension lines spring from the anchor points exactly [SPEC 15.2] — an
+    // edge anchor's from the end the dim line is nearer — with a small gap,
+    // and overshoot past the dim line.
+    for (p, edge) in [(s.a, s.edges[0]), (s.b, s.edges[1])] {
+        let p = foot(p, edge, line_c, &f);
+        let toward = (line_c - f.cross(p)).signum();
+        let c0 = f.cross(p) + EXT_GAP * toward;
+        let c1 = line_c + EXT_OVERSHOOT * toward;
+        if (c1 - c0) * toward > 0.0 {
+            out.push(paint.ext(vec![f.pt(f.u(p), c0), f.pt(f.u(p), c1)]));
+        }
+    }
+    // The dim line — stopped short of the arrow tips (a butt-capped stroke
+    // ending exactly at the tip blunts it, the same fix links carry); it runs
+    // past the span when the arrows flip outside.
+    let trim = 2.0 * sw;
+    let (l0, l1) = if fits {
+        (u_lo + trim, u_hi - trim)
+    } else {
+        (u_lo - arrow_len - STUB, u_hi + arrow_len + STUB)
+    };
+    out.push(paint.dim(vec![f.pt(l0, line_c), f.pt(l1, line_c)]));
+    // Slender arrows: tips on the extension lines; bodies inside the span,
+    // or outside pointing in when flipped.
+    let along = f.u;
+    let flip = if fits { -1.0 } else { 1.0 };
+    out.push(arrow(f.pt(u_lo, line_c), scale(along, flip), paint));
+    out.push(arrow(f.pt(u_hi, line_c), scale(along, -flip), paint));
+    out.extend(value_texts(&s, p, line_c, paint));
+    out
+}
+
+/// Where one extension line springs from [SPEC 15.2]. A named **edge** offers
+/// its two ends and the witness line leaves the one the dim line is nearer —
+/// the drafting convention, and what keeps it off the face it would otherwise
+/// travel (a wall opening shows straight through such a line, [SPEC 15.11]).
+/// Every other anchor springs from its representative point, which is also what
+/// the arrows and the measured value read either way.
+fn foot(point: P, edge: Option<(P, P)>, line_c: f64, f: &Frame) -> P {
+    let Some((a, b)) = edge else { return point };
+    if (f.cross(a) - line_c).abs() <= (f.cross(b) - line_c).abs() {
+        a
+    } else {
+        b
+    }
+}
+
+/// The dim's ISO-aligned value texts above the line [SPEC 15.6]: turned with
+/// the line, reading from the bottom / right (the frame's −n is that
+/// "above"), the authored label's `translate:` / `rotate:` overriding. The
+/// one placement the row's carried-band probe (at a zero line) and the
+/// lowered row share.
+fn value_texts(s: &Stacked, p: &Plan, line_c: f64, paint: &Paint) -> Vec<PlacedNode> {
+    let (mut centre, mut rot) = s.frame.text_seat(s.frame.pt(p.text_u, line_c), paint.fs);
+    if let Some(t) = s.label {
+        if let Some(r) = t.attrs.number("rotate") {
+            rot = r;
+        }
+        if let Ok(Some((dx, dy))) = super::super::anchors::translate(&t.attrs, Span::empty()) {
+            centre = (centre.0 + dx, centre.1 + dy);
+        }
+    }
+    s.text.nodes(centre, rot, paint.fs, paint.font)
+}
+
+/// The drafting-slender arrowhead [SPEC 15.6]: ≈ 3 : 1, filled with the dim's
+/// stroke and sized by its stroke-width; `dir` is where the tip points.
+pub(super) fn arrow(tip: P, dir: P, paint: &Paint) -> PlacedNode {
+    let (l, w) = (ARROW_LEN * paint.sw, ARROW_HALF * paint.sw);
+    let base = (tip.0 - dir.0 * l, tip.1 - dir.1 * l);
+    let perp = (-dir.1, dir.0);
+    paint.head(
+        "dim",
+        vec![
+            tip,
+            (base.0 + perp.0 * w, base.1 + perp.1 * w),
+            (base.0 - perp.0 * w, base.1 - perp.1 * w),
+        ],
+    )
+}
+
+/// The span projected on the dim's axis, px.
+pub(super) fn span_on(a: P, b: P, axis: Axis) -> f64 {
+    match axis {
+        Axis::Horizontal => (b.0 - a.0).abs(),
+        Axis::Vertical => (b.1 - a.1).abs(),
+    }
+}

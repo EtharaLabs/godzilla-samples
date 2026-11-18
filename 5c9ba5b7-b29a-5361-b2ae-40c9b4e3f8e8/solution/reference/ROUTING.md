@@ -1,0 +1,516 @@
+# The Routing Contract
+
+Lini routes links over a **finished, immutable layout**. Routing never moves a
+node, never grows a gap, and no later pass repairs what it draws: every
+decision is made once, in one place, and stands. This document is the source
+of truth for routing — two halves: the **laws**, judgeable on the rendered
+output, and the **model**, the one way routes are produced, so the same
+diagram can never route two different ways.
+
+`SPEC.md` §9 owns link *syntax*; this document owns link *geometry*.
+
+---
+
+## Strategies
+
+`routing:` selects a strategy per scope and cascades like `clearance`:
+
+| Strategy | Status | Shape |
+|---|---|---|
+| `orthogonal` | the default — specified below | horizontal/vertical runs, corners rounded at render time |
+| `natural` | specified below | direct smooth curves: straight stubs, one spline, gentle dodges — crossings free |
+| `straight` | built — sequence messages | one segment between caller-supplied anchors |
+
+Every strategy consumes the same input (the placed scene, the expanded link
+requests) and produces the same output (drawn wires, a report, strays), sharing
+one spine — request expansion, markers, labels, stray drawing. Only geometry
+construction differs, so a new diagram family adds a strategy module, never a
+refactor. **Validation is per strategy**: the law checker judges orthogonal
+wires against the four laws; a `natural` wire is judged by its own arm
+(§The natural strategy); `straight` wires are skipped — lawfully oblique,
+avoiding nothing.
+
+**`straight`** is the trivial strategy: each link is one segment between two
+anchors its caller supplies (plus the rectangular self-hook), trimmed to the
+endpoint bodies. It avoids nothing; markers and labels ride it like any wire.
+A `layout: sequence` scope routes its messages through `straight` — sequence
+layout owns *where* (column x, row y), the strategy owns the wire. A
+user-selected `routing: straight` scope has no caller-supplied anchors: the
+segment runs body centre to body centre, trimmed to both boundaries. It
+produces no strays and no report.
+
+## The natural strategy
+
+`natural` draws **direct smooth curves** — the mindmap's branch look,
+available to any routed scope. Where `orthogonal` is the drafting table,
+`natural` is the freehand pen: a wire is one smooth stroke from side to
+side, bending only for what it would otherwise hit. It is **curve-first**:
+no channels, no search, no capacity, no ledger — once sides and ports are
+fixed, a wire's geometry reads only the placed scene and its own endpoints,
+never another wire's route. Its laws are fewer and looser than the
+orthogonal four — branches and simple diagrams want freedom, not
+guarantees; a scene that needs guarantees routes `orthogonal` — but they
+are judged the same way, on the output alone:
+
+1. **Contact** — orthogonal Law 2, shared verbatim: every end lands on a
+   side, perpendicular, inside the port window, straight for at least its
+   marker — and no longer: the stub exists for the marker alone (a hair
+   when unmarked), so the curve begins at the port and a wire never runs
+   straight and then turns. A lone landing takes the **side's centre**;
+   landings sharing a side spread around it at ≥ pitch, ordered along the
+   side as their far ends lie — no braiding at the mouth. On a laid-out
+   tree this yields the classic horizontal-tangent S-curve.
+2. **Smoothness** — a wire is its two straight stubs joined by one
+   G1-continuous cubic spline: no corner at any point, ever. Natural
+   geometry is born a curve, never lowered from a polyline, so an
+   orthogonal elbow cannot show through by construction.
+3. **Directness** — when both ends' sides face the chord (stub tip to stub
+   tip) — every heuristic side does, and so do a tree's stamped sides —
+   the undodged curve's projection onto that chord advances
+   monotonically: a natural wire never doubles back, never orbits. A
+   dodge swings exactly as wide as its vias require, a side forced
+   *away* from the chord as far as its turn-around requires; a self-loop
+   is a smooth round loop by the same machinery (both ends forced onto
+   one side draws the same-side loop — natural has no stray to fall back
+   on).
+4. **Respect** — the only obstacle law, and smoothness outranks it. From
+   every solid body in its world the wire keeps ≥ **margin** —
+   `clearance / 2`, natural's one derived number — or the wire-body pair
+   is named in the report (`--strict` errors). A wire is excused from its
+   **own** endpoints' keep-outs only near its ports (the stub plus two
+   margins — the leave itself), so even a self-loop's mid-flight respects
+   its own body: a self-loop is not a special case but a wire whose
+   direct fit hugs its own corner and whose sweep rounds it. A wire earns
+   **one gentle detour or none**: it may bend around the first body its
+   direct fit offends, and only if that clears it entirely; otherwise it
+   draws the smooth direct curve straight through and reports every body
+   it crosses — never a weave. Between wires there is no law: crossings
+   are free at any angle (point contact, counted in the report like any
+   crossing); only duplicates — parallel rails at pitch riding one shape —
+   and a fan's shared trunk bind wires to each other.
+5. **Determinism** — Law 4 verbatim: byte-identical reruns; ties break on
+   the fixed side rank, then declaration order. No tension or curvature
+   knobs.
+
+The model is three decide-once steps on the shared spine (worlds and
+transparency exactly as orthogonal step 1, requests as step 3; steps 2, 4
+and 5 — channels, search, placement — do not exist here):
+
+- **Sides.** A forced side wins (trees and mindmaps stamp theirs at
+  desugar; a containment link takes the parent's inner side). Otherwise
+  each end takes the permitted side that most faces the other end — the
+  outward normal with the greatest dot product against the chord — ties
+  on side rank.
+- **Ports.** Per node side, before any curve exists: the side's landings
+  spread around its **centre** at ≥ pitch by the same bounded ladder
+  placement uses (compressing evenly when the window cannot hold them),
+  ordered along the side by where their far ends lie. A fan's shared end
+  is one landing. Ports never read curve geometry, so every wire then
+  fits independently — natural needs no committed-route order.
+- **Fit & dodge.** The wire fits as the direct spline: stub tangents
+  normal to their sides (the stub is the marker's run-up, a hair when
+  unmarked), handles pulled toward the far end (`NATURAL_PULL`), clamped
+  to the forward travel so a short offset never overshoots. Sampled
+  against the world's solid bodies inflated by margin, the **first**
+  offending body — and only it — gets the detour, and the detour is one
+  **stadium sweep**: the body's two corners nearest the detour side (the
+  chord side that deviates less, ties toward one fixed side) push out a
+  full clearance as vias, each carrying a forced tangent **along the
+  face** — the curve enters as one S, glides the face, and exits as one
+  S, never a face-hugging polygon — deepening one clearance per round,
+  at most `DODGE_ROUNDS` rounds. The first fit that offends nothing
+  **and lands clean** is the wire — a detour that bends the approach
+  nearly parallel to a landing side would hook around at the port, and a
+  dodge may not manufacture an arrival the direct fit didn't have. A
+  second body under the detour, a hooked landing, or the budget spent,
+  and the wire draws its direct fit instead and is reported: **natural
+  never strays** — a natural wire always draws, worst case smoothly
+  through the bodies it names.
+
+Markers, labels (arc-length `along:`, sliding), fans, self-loops, and the
+report ride the shared spine unchanged — the crossing count is
+spine-owned, over every drawn wire of every avoiding strategy. Duplicates
+need no bundle machinery here: the port ladder alone spreads them into
+parallel rails. The natural checker judges contact (perpendicular arrival,
+window, marker stub), knot smoothness, chord-facing directness (undodged
+fits), respect — ≥ margin or named in the engine's own report — and
+duplicate separation; the run/track, capacity, and square-crossing laws
+are orthogonal-only, and a natural scope produces no strays to check.
+`NATURAL_PULL`, `DODGE_ROUNDS`, and the margin rule are part of this
+contract, defined in one place in code.
+
+The rest of this document is the `orthogonal` contract.
+
+---
+
+## Vocabulary
+
+- **Node** — anything a link avoids: a box, an oval, a text label. A node is
+  its axis-aligned bbox with four **sides**. A **group** not containing a
+  link's endpoint is solid; one containing an endpoint is transparent to that
+  link, its *other* children solid.
+- **clearance** — one number, default **16** (`clearance:` cascades; the
+  diagram routes at the maximum any link carries): the minimum gap between a
+  link and every node body. Node clearance **never shrinks**.
+- **pitch** — the gap between a link and its neighbouring links. Starts at
+  `clearance`; where a channel or side cannot hold its wires at that spacing
+  it compresses, uniformly per group, **never below `clearance / 2`**. Pitch
+  is the one relief valve — layout is never the relief.
+- **Keep-out** — a node's bbox inflated by `clearance`. Only a link's own
+  perpendicular end segment enters its own endpoint's keep-out.
+- **Channel** — a maximal free rectangle between keep-outs, from the sweep
+  decomposition: V-channels carry vertical travel, H-channels horizontal;
+  each axis's channels partition the free space. A **cell** is an H∩V
+  overlap; cells are the graph's vertices. A channel wall is a keep-out
+  edge, a **shared boundary** with a same-axis channel, or the **canvas
+  edge**; no wall charges a margin — a run may hug whatever bounds its
+  corridor, and separation across a shared boundary is placement's job like
+  any other (near runs on the two sides settle in one cluster). The sweep
+  may slice one free corridor into several same-axis channels; capacity,
+  anchors, and usable width always read the reassembled **corridor** — the
+  walls that actually bound a run's span — so a shared boundary interior to
+  a void costs nothing.
+- **Run** — one straight piece of a route, lying in one channel of its axis.
+  A run's **track** is its ordinate across the channel. A route is an
+  alternating chain of runs.
+- **Track quantum** — a world's own grid, where its scope states one (a
+  schematic's fine pitch, [SPEC 16.1](SPEC.md#161-placement--the-lattice)): a
+  step, and the scene point its lines count from — the scope's **own origin**,
+  wherever its parent seated it — so the parts' grid and the wires' are one
+  grid by construction and no scope moves to make them agree. It rounds an
+  interior run's *preference*, never its lawful range: no law reads it, and a
+  world without one is unchanged.
+- **Landing body** — the body a link end lands on: its **endpoint**, or, where
+  the endpoint has no side to call its own — a neighbour's keep-out already
+  covers it, or no side of it reaches the world's free space — the innermost
+  enclosing container that has. A climbed contact **carries** the endpoint's
+  own span onto that body's side, clamped into the side's port window, so a
+  wire off a table cell leaves the card at that cell's row and never crosses
+  the card's own cells. A body's **contents ride inside it**: they lie in the
+  keep-out its end segment already surrenders, so they neither block its leave
+  nor charge it clearance. A fixed port never climbs (§Fixed ports).
+- **Port** — the point where a link meets a side: the ordinate of its end
+  run. Ports are not chosen ahead of routing; they fall out of placement.
+- **Bundle** — the links sharing one unordered endpoint pair and the same
+  forced sides: one route, adjacent tracks, parallel rails the whole way.
+- **Crossing** — an intersection of two links: exactly perpendicular, both
+  locally straight, point contact.
+- **Stray** — the drawn report for an unroutable link (§Impossible layouts).
+
+---
+
+## The Four Laws
+
+Checkable on the output with no knowledge of the router:
+
+1. **Clearance.** A link keeps ≥ `clearance` from every node body, and
+   ≥ pitch from every other link. Sub-`clearance` pitch is excused only by a
+   channel or side that cannot hold its wires at full clearance, is uniform
+   within that group, and never falls below `clearance / 2`. Exactly three
+   surrenders: a link's own end segments (each entering only its own **landing
+   body**'s keep-out, perpendicular, and answering to nothing that body
+   contains), crossings (square-on, point contact), and a fan's shared trunk
+   (drawn as one line until the split).
+
+2. **Contact.** Every link end lands **on a side** of its **landing body**,
+   **perpendicular**, ≥ `clearance` from that side's corners — never on a
+   corner, never inside a body — and a climbed contact lands inside the window
+   its endpoint carried there. Ports sharing a side sit ≥ pitch apart, in the
+   same order as their wires (no braiding at the mouth), each as close to
+   where its wire runs straightest as its neighbours allow — a lone aligned
+   pair connects dead straight; a crowded side ladders around the contested
+   spot. (A **fixed port** amends this law — §Fixed ports.)
+
+3. **Economy.** Each link takes the cheapest legal route, where
+   **cost = length + 2·clearance per turn + 4·clearance per crossing**, given
+   every earlier link's committed route — earlier links never move. Routing
+   order is declaration order; the constants are part of this contract. What a
+   fan shares is priced as a fan, not as its lead sibling's link
+   (§Special nodes) — the trunk is one line, so one wire may not buy its own
+   economy with its siblings'. A
+   crossing is worth a `4·clearance` detour, no more: long orbits never beat
+   short crossings, and turns cost real length, so straight beats dogleg
+   beats staircase.
+
+4. **Determinism.** The same input renders byte-identically, every time.
+   Every tie breaks on the fixed side rank (right → bottom → left → top),
+   then declaration order.
+
+When the layout leaves a link no legal route, the link is **reported and
+drawn as a stray** — never as a lawful-looking wire; `--strict` turns the
+report into an error. There is no other escape: nodes never move, gaps never
+grow, pitch never drops below half clearance, bundles never split.
+
+---
+
+## The Model
+
+Six steps. Each decides once; none revisits an earlier step's answer.
+
+1. **Keep-outs & worlds.** Layout finishes first and is immutable. Every node
+   inflates by `clearance`. A link routes in the innermost container holding
+   both endpoints — its **world** — with that world's other children solid
+   and the endpoints' ancestor groups transparent; if the inner world has no
+   route, the link retries one world up, to the root (a tight interior never
+   walls in a link its ancestors would let out). A world is the container
+   **itself**, never its name: an anonymous group's interior is a world (and
+   its `clearance` / `routing` config cascades) exactly as a named one's —
+   an id is for addressing, not for routing.
+
+2. **Channels.** Per world, the free space — bounds plus canvas margin, minus
+   keep-outs — decomposes by sweep into H- and V-channels, cells, and
+   adjacencies. The graph depends only on node placement; links never reshape
+   it. A channel span's **capacity** is the runs it can hold at minimum
+   pitch: `floor(usable width / (clearance/2)) + 1`.
+
+3. **Requests.** Resolve expands every link statement into edges, grouped
+   into bundles (multiplicity *k*), ordered by declaration then expansion
+   order — the order routing consumes them in.
+
+4. **Search.** Per bundle, in order: enter the graph by a perpendicular
+   **punch** from each permitted side of the end's **landing body** (a forced
+   side prunes to one; the punch crosses transparent ancestor walls, never a
+   solid keep-out, and never its own landing body's contents); run weighted
+   Dijkstra over cells with the Law-3 cost. A fan's shared side is settled
+   once, at the first of its siblings to route, by pricing each permitted side
+   over the whole group (§Special nodes) — one search per sibling per
+   candidate side, against the ledger as it stands then; from that point the
+   settled side prunes every sibling's entries exactly as a forced side does. Length is the L1 estimate through
+   the entered cells; turns count axis changes, plus the end jog when the two
+   ports' windows cannot meet on one track; crossings count the committed
+   perpendicular runs whose spans the candidate sweeps. A channel span whose
+   committed load leaves fewer than *k* tracks at minimum pitch is **closed**
+   — so is a side without *k* free port slots at minimum pitch — and the
+   search detours around it; capacity is never exceeded, only priced. The
+   winning route commits its runs (channel, span, *k*) and its two sides — a
+   run booked at the ordinate it will draw on as far as that is known: a
+   fixed port's end run at that port, every other run at its corridor's
+   anchor, so a wire pinned to one row is never charged to a corridor two
+   rows off that it never enters. No
+   route in any world: every member of the bundle is a stray.
+
+5. **Placement.** Per channel, independently: runs whose spans come within
+   pitch of one another form a **cluster**; a cluster's pitch is
+   `min(clearance, usable / (n−1))`, floored at `clearance / 2` (step 4
+   guaranteed it fits). Runs order within the cluster so wires leave in the
+   order they arrive — nested, never braided; bundle members keep declaration
+   order; remaining ties break by declaration. Each run states a **preferred
+   track**, and the cluster takes the order-preserving ordinates that
+   minimize total squared deviation from those preferences at ≥ pitch inside
+   the channel's usable width (unique; pool-adjacent-violators):
+   - an **interior run** prefers its channel's **anchor** — the midline when
+     both walls are keep-out edges (a bend between two nodes lands halfway
+     between them), the keep-out wall when the other wall is the canvas edge
+     (wires hug the diagram, not the margin). Where the run's world states a
+     **track quantum**, that preference rounds to the nearest line of it
+     **the corridor holds** — a wall is no grid line, so a corridor carrying
+     none keeps its anchor — and a bare run between two gridded parts bends
+     on their grid rather than a hair off it;
+   - an **end run** prefers the straightest lawful line: its ports' shared
+     window when one run serves both ends (the two side centres' midpoint,
+     clamped into the window), its own side's centre otherwise. A **port
+     window** is the side minus a `clearance` corner margin at each end;
+     an end run never leaves its window;
+   - the one **canonical U** amends the first: on a three-run route whose two
+     ends leave the *same* way — both ports on one side name, so both end
+     runs travel outward along that side's normal — the interior run prefers
+     the **outermost of the two side lines**, clamped into its corridor, not
+     the anchor. One body or two reads the same: with one rect the two side
+     lines coincide, which is the same-side pin pair's U (§Fixed ports).
+   Ports *are* the end-run ordinates — one mechanism places tracks and ports,
+   so a port can never disagree with the wire it serves.
+
+6. **Geometry.** Routes lower to polylines: corners are run intersections,
+   collinear points merge, each end segment stays straight for at least its
+   marker. Corners round at render time: each corner wants the link's
+   **`corner-radius`** (SPEC 17 — default `auto`, the clearance; `0` squares
+   every corner) and is capped by the legs it owns — a terminal leg serves its
+   one corner whole, a leg shared by two corners splits in proportion to their
+   desires. Two refinements intact:
+   corners nested on one diagonal round **concentrically** — the innermost
+   takes the base radius and each outward radius grows by exactly its track
+   offset, so wires turning together hold their gap through the arc — and
+   every radius caps at the nearest crossing on its legs, so a crossing never
+   lands mid-arc. Rounding never brings a link nearer than the law allows to
+   anything. Labels ride the drawn route at their `along:` fractions
+   (auto-distributed when unset), may slide along it to dodge nodes and other
+   labels, and never move the link.
+
+The report counts every drawn crossing with its link pair, and names every
+stray with its source span and reason — a blocked endpoint (no side reaches
+free space), a closed graph (no path at minimum pitch), a full side, or a
+fixed port the layout cannot honour (§Fixed ports).
+
+---
+
+## Consequences
+
+The laws above make these shapes canonical — worth knowing because tests pin
+them:
+
+| Scene | Drawn |
+|---|---|
+| Facing sides, centres aligned | one straight wire, zero turns |
+| Facing sides, offset, windows overlap | still straight — the wire rides the shared window |
+| Facing sides, offset past overlap | one dogleg, the perpendicular run on the gap **midline** |
+| The same, ×k (a bundle) | k parallel rails at pitch, the ladder centred on the midline route |
+| Wire along the canvas edge | hugs the nodes' keep-outs, not the margin |
+| Two buses landing on one side | two nested ladders, no braid, straighter bus nearer its target |
+| Crossing vs. orbit | crosses — a crossing costs `4·clearance` of detour, never the diagram's circumference |
+| Wire off a tiled cell (a table's field) | leaves the **card** at that cell's row, never through the card's own cells |
+
+---
+
+## Special nodes
+
+- **Fan** (`a -> b & c`): siblings share one port and one end segment on the
+  shared end. The trunk is one drawn line, so the side it leaves on is the
+  **fan's** decision, never the lead sibling's private one: the shared side is
+  the permitted side of least **fan total** — the sum of every sibling's
+  cheapest legal route under it, each priced against the ledger as it stands
+  before the fan commits — and a side no sibling can route from is not a
+  candidate. Ties break on the fixed side rank. The **port** on that side is
+  the first sibling's, and siblings still route in declaration order. (Price
+  the side per sibling instead and the lead saves one turn by charging its
+  siblings three — the one fan decision left unpriced as a fan.) Along the
+  common prefix — the **trunk** — siblings are one drawn line; past the split
+  each is a full link under every law. Being one line has three consequences,
+  all of them the same sentence:
+  - **One track.** The trunk is one run in the ledger's count, whatever its
+    multiplicity — so a corridor that holds the lead holds the whole fan, and
+    a sibling never asks for room beside the line it is already on.
+  - **One split point.** Siblings' branch runs leave the trunk where they
+    part, and the branches meet *on* the trunk rather than run alongside it:
+    they owe each other pitch only where their travel overlaps, exactly as
+    two pieces of one wire do. Two branches heading opposite ways therefore
+    share one ordinate — placement's preference alone decides which, so both
+    take their corridor's anchor and the fan forks at one point (a T, the
+    schematic's junction dot); where a sibling's own port pins its branch,
+    the free branches take that split instead — the nearest of them that
+    their own corridor holds — rather than opening one beside it (a split
+    behind a keep-out wall is no place a branch can bend, and a branch that
+    preferred it would only be pinned to that wall). Nothing in Law 3 prefers an earlier or later
+    fork: a monotone route costs the same length and turns wherever it bends,
+    so Law 4's fixed preference settles it.
+  - **Peeling, when they travel together.** Branches heading the *same* way
+    overlap, owe full pitch, and so leave one at a time — the trunk runs on
+    under the ones still on it.
+- **Chain** (`a -> b -> c`): separate links, nothing shared.
+- **Duplicates** (`a -> b` twice): one bundle — one route, adjacent rails the
+  whole way. A bundle routes whole or not at all.
+- **Self-loop** (`a -> a`): out one side, around the keep-out corner, back in
+  an adjacent side. Defaults right → top; forced sides win; both ends forced
+  onto one side is an error.
+- **Bidirectional** (`a <-> b`): one link, a marker at each end.
+- **Containment** (one endpoint **geometrically** inside the other): the link
+  runs *inside* the parent — from the inner node's side to the parent's
+  **inner** side, the parent's other children solid. The trigger is geometry,
+  not path ancestry: everywhere but a tree, nesting implies enclosure, but a
+  tree's branch child is a path-descendant placed *beside* its parent, so it is
+  an ordinary side-by-side wire, not a containment link.
+
+---
+
+## Fixed ports
+
+A caller may **fix** a link end's port: a scope that owns its connection
+geometry — a schematic pin's stub tip, a label's connection point
+([SPEC 16](SPEC.md#16-schematic)) — supplies the exact landing ordinate on a
+**forced side**, and the wire lands there, not near there. A fixed port
+always rides a forced side, never **climbs** (the caller named a body as well
+as an ordinate, §Vocabulary), and the endpoint's **body rect stays the
+obstacle** (a pin folds into its component's rect; the port sits on that
+rect's side). Everything else in this contract — worlds, channels, search,
+placement, geometry — is unchanged: a fixed port only collapses the end's
+lawful port window to a point. It is an `orthogonal` capability; the drawn
+wire **carries its fixed ports**, so the checker still judges output alone.
+
+- **Law 2, amended.** A fixed-port end lands **at its port**, exactly,
+  perpendicular — and the corner-margin rule is waived for it: the caller
+  owns the landing, corners included. Free ends sharing the side ladder
+  around a fixed port as around any neighbour — no braiding, unchanged.
+- **Law 1, one new scarcity.** An end segment pinned to its port cannot
+  spread, so sub-clearance spacing against it is excused exactly as a full
+  side excuses its compressed ports — and the half-clearance floor still
+  binds. The caller keeps its ports ≥ minimum pitch apart, or loses the
+  later wire (below).
+- **Two fixed ports on one body are a pair, not a loop.** A wire between two
+  *distinct* fixed ports of one body — two pins of one part, on one side or
+  two — is an ordinary two-ended link: the endpoints' paths differ, so the
+  self-loop machinery (and its one-side error) never applies, and the shared
+  body is each end's **own** endpoint — never a partner obstacle walling the
+  punch in. Same-side pairs draw the canonical U — out perpendicular, along,
+  back in — and Law 1's end-segment surrender reads on the shared **rect**:
+  both end segments are excused against it, whichever pin's path names it.
+- **Fans.** Landings on one shared fixed port — same endpoint, same side,
+  same ordinate — merge into one implicit fan, **across statements**: one
+  port slot, one drawn lead until the split; duplicates ride one line the
+  whole way. A fan whose shared end carries two **different** fixed ports
+  is impossible by construction — every member strays, named.
+- **Through ports.** A net run's landing ([SPEC 16.4](SPEC.md#164-labels))
+  is a point on a wire, not a stop: its port rides the run's axis, and each
+  wire lands on the axis side facing its own far end — so a run wired on
+  both sides draws one straight trace, the two wires meeting tip to tip at
+  the port. That end-to-end contact is sanctioned exactly as a fan's trunk
+  is; landings choosing the same side still merge as a fan.
+- **Infeasibility is loud, never a clamp.** A wire is never drawn *near*
+  its fixed port. A port whose landing a keep-out covers strays with
+  "fixed port blocked"; the later of two fixed ports closer than the
+  minimum pitch strays, named; a conflicted fan strays whole. Strays, the
+  report, and `--strict` behave exactly as in §Impossible layouts.
+- **Determinism unchanged.** Fixed ports remove freedom and add none:
+  every tie breaks as before, and the same input renders byte-identically.
+
+---
+
+## Impossible layouts
+
+The laws are absolute. When geometry allows no legal route, the engine draws
+every link it can and **names the ones it couldn't**, each with its source
+span and reason; `--strict` makes that an error. The engine never draws a
+link through a node, oblique into a side, squeezed below half-clearance
+pitch to paper over a crowded diagram, or **across itself** — a route whose
+two punches cross (an end run driven through a transparent ancestor over the
+other end's) is no route, and the search closes that entry — and it never
+moves the layout to help. The user's levers are the honest ones: widen `gap`, shrink
+`clearance`, reorder or re-side the links.
+
+An impossible link renders as a **stray**: a single straight segment between
+its two bodies, centre to centre, trimmed to their boundaries, at whatever
+angle the geometry gives. Lawful wires are orthogonal, so a slanted dashed
+line (themed `--lini-stray`, a warning glyph at its midpoint) cannot be
+mistaken for one. A stray obeys no law, takes no port, and blocks nothing.
+
+---
+
+## Implementation shape
+
+```
+src/routing/
+  mod.rs        strategy dispatch, shared Routing result (links, report, strays)
+  report.rs     violations, crossings, stray construction
+  straight.rs   the straight strategy (sequence messages)
+  ortho/        the six-step model — scene index (scene, rect), worlds (world),
+                channel graph (graph), requests/bundles (request), admission
+                (admit, cost, entry — landing bodies, punches — ledger),
+                search, placement (place, cluster, ladder, order, pairwise),
+                geometry, labels
+  natural/      the natural strategy — sides & ports (port), the direct
+                spline fit and via dodges (curve, dodge)
+  validate.rs   the independent law checker (+ validate/excuse.rs) — a test
+                oracle over orthogonal and natural wires, never a repair
+```
+
+One weighted search per bundle over a graph of tens of cells — Dijkstra
+under an L1 lower bound toward the goal tips, stopping the moment no
+unsettled state can beat a total already in hand, so every settled cost
+(and every drawn route) is exactly the plain drain's — and one linear
+placement sweep per channel: routing a busy diagram is microseconds, not
+seconds. The admission probe simulates placement in the candidate's own
+**world** alone — worlds are separate graphs, so chains elsewhere share no
+channel with it and cannot move for it. A
+natural scope skips even that — no graph, no search; each wire is one fit
+plus a few sampled dodge rounds, so a mindmap routes in the time it takes
+to fit its splines. The validator re-judges every sample's orthogonal wires
+against the four laws in CI; complex fixtures pin turn counts, crossing
+counts, and byte-identical reruns — no image reading in tests.

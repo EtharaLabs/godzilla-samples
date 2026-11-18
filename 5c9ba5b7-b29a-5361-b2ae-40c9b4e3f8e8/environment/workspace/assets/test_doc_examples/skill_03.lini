@@ -1,0 +1,11 @@
+|table#basket| { columns: 80, 140, 80; align: start, center, end; } [
+  "Fruit" "Quantity" "Notes"       // first row → header band
+  "Apple" "12"       "fresh"
+  "Mango" "3" { color: --red-ink }  "ripe"   // a styled cell
+]
+
+|entity#users| "Users" { columns: auto, auto, auto; } [
+  "PK" "id"    "int"
+  ""   "email" "varchar"
+]
+users -o< orders        // crow's-foot relationship, lands on the card edge

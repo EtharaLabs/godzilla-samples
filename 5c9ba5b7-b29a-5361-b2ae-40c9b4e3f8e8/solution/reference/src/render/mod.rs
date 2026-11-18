@@ -1,0 +1,624 @@
+mod filters;
+mod fonts;
+mod icon_fit;
+mod intern;
+mod knockout;
+mod links;
+pub(crate) mod markers; // `marker_size` is read by the router to reserve stub room
+mod paints;
+mod primitives;
+mod rounding;
+mod rules;
+mod style_block;
+mod stylesheet;
+mod text;
+mod used_vars;
+pub(crate) mod values;
+mod wavy;
+
+use crate::Options;
+use crate::layout::{LaidOut, PlacedNode};
+use crate::resolve::{AttrMap, NodeKind, VarTable};
+use filters::FilterTable;
+pub(crate) use paints::lower as lower_paints;
+use rules::RuleSet;
+use values::{escape_xml, num};
+
+/// The SVG document, and the warnings its emission raised — the runs a
+/// `--static` export had to leave as `<text>` [SPEC 18].
+pub fn render(laid_out: &LaidOut, opts: &Options) -> (String, Vec<crate::error::Diagnostic>) {
+    let vb = &laid_out.viewbox;
+
+    use std::fmt::Write;
+
+    // The stylesheet's structural rules state every paint default once; the
+    // root `.lini` rule seeds the inherited text properties (font, size,
+    // color) for the whole tree. Per-node differences ride `style=`.
+    let ruleset = stylesheet::build(laid_out, opts);
+    let filters = FilterTable::collect(&laid_out.nodes, &laid_out.vars, opts);
+
+    // The scene + link body renders first, into its own buffer: the one text
+    // emitter registers every face (and, under `--static`, glyph) it uses in
+    // the sink, and the `<style>` / `<defs>` blocks below then carry exactly
+    // that set [SPEC 18].
+    let sink = fonts::FontSink::new(laid_out);
+    let mut body = String::with_capacity(2048);
+    body.push_str("  <g class=\"lini-scene\">\n");
+    for node in in_layer_order(&laid_out.nodes) {
+        render_node(
+            &mut body,
+            node,
+            2,
+            &[],
+            &laid_out.vars,
+            &ruleset,
+            &filters,
+            opts,
+            &sink,
+        );
+    }
+    body.push_str("  </g>\n");
+
+    if laid_out.links.is_empty() && laid_out.strays.is_empty() && laid_out.junctions.is_empty() {
+        body.push_str("  <g class=\"lini-links\"/>\n");
+    } else {
+        body.push_str("  <g class=\"lini-links\">\n");
+        // The fillet pass is orthogonal-contract machinery (concentric
+        // nesting, square crossing caps): a natural wire's cubics never round
+        // through it, so its sampled path stays out entirely.
+        let polys: Vec<&[(f64, f64)]> = laid_out
+            .links
+            .iter()
+            .map(|w| if w.curve.is_empty() { &w.path[..] } else { &[] })
+            .collect();
+        let caps: Vec<f64> = laid_out.links.iter().map(links::radius_cap).collect();
+        let targets = links::fillet_targets(&polys, &caps);
+        let cuts = links::cut_boxes(laid_out);
+        for (link, targets) in laid_out.links.iter().zip(&targets) {
+            links::render_link(
+                &mut body,
+                link,
+                targets,
+                &cuts,
+                &laid_out.vars,
+                &ruleset,
+                opts,
+                &sink,
+            );
+        }
+        for air in &laid_out.strays {
+            links::render_stray(&mut body, air, &laid_out.vars, opts);
+        }
+        // The connection dots close the wiring group [SPEC 16.5]: they are the
+        // wires' own chrome, and a junction dot is drawn **over** the lines it
+        // marks. Ordinary nodes through the ordinary walk — their look is the
+        // one `.lini-junction` rule, reached through the same `.lini-links`
+        // ancestor a wire's descendant rules are.
+        for dot in &laid_out.junctions {
+            render_node(
+                &mut body,
+                dot,
+                2,
+                &["lini-links".to_string()],
+                &laid_out.vars,
+                &ruleset,
+                &filters,
+                opts,
+                &sink,
+            );
+        }
+        body.push_str("  </g>\n");
+    }
+
+    let mut out = String::with_capacity(2048 + body.len());
+    // A pages-only scene prints true-scale [SPEC 15.8]: real millimetres for
+    // `width` / `height` (the `viewBox` stays px, so on-screen sizing is
+    // unchanged). Every other scene sizes in pixels.
+    let size = match laid_out.physical {
+        Some((w, h)) => format!(r#"width="{}mm" height="{}mm""#, num(w), num(h)),
+        None => format!(r#"width="{}" height="{}""#, num(vb.w), num(vb.h)),
+    };
+    let used = used_vars::referenced(laid_out, &ruleset);
+    // One `:hover ~` reveal rule per tooltip card — live charts only.
+    let tooltip_rules = if opts.static_mode {
+        0
+    } else {
+        tooltip_count(&laid_out.nodes)
+    };
+    // The root wears `lini` for host CSS to target and its own scope class for
+    // its own rules to key on, so two figures inlined in one page cannot
+    // restyle each other [SPEC 18].
+    let scope = style_block::scope_class(&laid_out.vars, &ruleset, &used, opts, tooltip_rules);
+    writeln!(
+        out,
+        r#"<svg xmlns="http://www.w3.org/2000/svg" viewBox="{} {} {} {}" {size} class="lini {scope}">"#,
+        num(vb.x),
+        num(vb.y),
+        num(vb.w),
+        num(vb.h),
+    )
+    .unwrap();
+
+    style_block::emit(
+        &mut out,
+        &scope,
+        &laid_out.vars,
+        &ruleset,
+        &used,
+        opts,
+        tooltip_rules,
+        if opts.embed_font { Some(&sink) } else { None },
+    );
+
+    let glyphs = opts.static_mode && fonts::has_glyphs(&sink);
+    if filters.is_empty()
+        && laid_out.gradients.is_empty()
+        && laid_out.hatches.is_empty()
+        && laid_out.clips.is_empty()
+        && !glyphs
+    {
+        out.push_str("  <defs/>\n");
+    } else {
+        out.push_str("  <defs>\n");
+        filters.emit_defs(&mut out, &laid_out.vars, opts);
+        paints::emit_defs(laid_out, &mut out, opts);
+        if glyphs {
+            fonts::emit_glyph_defs(&mut out, &sink);
+        }
+        out.push_str("  </defs>\n");
+    }
+
+    // The backing rect paints the scene background over the whole viewBox
+    // [SPEC 18]. Its whole fill is stated by the `.lini-canvas` rule, so the
+    // rect carries no `style=` — and it exists exactly when that rule does, so
+    // a scene with no background (the live default) emits no element at all.
+    if ruleset
+        .provided(&["lini-canvas".to_string()], &[], "fill")
+        .is_some()
+    {
+        writeln!(
+            out,
+            r#"  <rect class="lini-canvas" x="{}" y="{}" width="{}" height="{}"/>"#,
+            num(vb.x),
+            num(vb.y),
+            num(vb.w),
+            num(vb.h),
+        )
+        .unwrap();
+    }
+
+    out.push_str(&body);
+    out.push_str("</svg>\n");
+    (out, sink.into_gaps())
+}
+
+/// The number of rich tooltip cards (max `tip-N` index + 1) — the renderer emits one
+/// `.lini-hit-N:hover ~ .lini-tip-N` reveal rule per card [SPEC 14.8].
+fn tooltip_count(nodes: &[PlacedNode]) -> usize {
+    fn scan(nodes: &[PlacedNode], max: &mut Option<usize>) {
+        for n in nodes {
+            for t in &n.type_chain {
+                if let Some(i) = t.strip_prefix("tip-").and_then(|s| s.parse::<usize>().ok()) {
+                    *max = Some(max.map_or(i, |m| m.max(i)));
+                }
+            }
+            scan(&n.children, max);
+        }
+    }
+    let mut max = None;
+    scan(nodes, &mut max);
+    max.map_or(0, |m| m + 1)
+}
+
+#[allow(clippy::too_many_arguments)] // the recursive walk threads every emission context
+fn render_node(
+    out: &mut String,
+    n: &PlacedNode,
+    depth: usize,
+    ancestors: &[String],
+    vars: &VarTable,
+    ruleset: &RuleSet,
+    filters: &FilterTable,
+    opts: &Options,
+    sink: &fonts::FontSink,
+) {
+    use std::fmt::Write;
+    // The rich chart tooltip card is live-only [SPEC 14.8]: a baked SVG keeps the
+    // `<title>` floor and drops the `:hover` card, so skip it (and its subtree) here.
+    if opts.static_mode && n.type_chain.iter().any(|t| t == "chart-tip") {
+        return;
+    }
+    // Text renders as a bare `<text class="lini-text">` at its placed position —
+    // no wrapping `<g>` [SPEC 18]. Font and colour inherit from the enclosing box.
+    if n.kind == NodeKind::Text {
+        render_text(out, n, depth, ancestors, ruleset, vars, opts, sink);
+        return;
+    }
+    // `href:` wraps the whole node in an `<a href>` so the shape (and its
+    // children) is clickable [SPEC 13]. The group sits one level deeper inside.
+    let href = match n.attrs.get("href") {
+        Some(crate::resolve::ResolvedValue::String(s)) => Some(s.clone()),
+        _ => None,
+    };
+    let depth = if let Some(url) = &href {
+        writeln!(
+            out,
+            r#"{}<a href="{}">"#,
+            "  ".repeat(depth),
+            escape_xml(url)
+        )
+        .unwrap();
+        depth + 1
+    } else {
+        depth
+    };
+    let indent = "  ".repeat(depth);
+    // The tooltip `hit-N` class is a live-only hover hook [SPEC 14.8]: strip it when
+    // baking so a data mark renders exactly as it would with tooltips off.
+    let stripped;
+    let chain: &[String] = if opts.static_mode && n.type_chain.iter().any(|t| t.starts_with("hit-"))
+    {
+        stripped = n
+            .type_chain
+            .iter()
+            .filter(|t| !t.starts_with("hit-"))
+            .cloned()
+            .collect::<Vec<_>>();
+        &stripped
+    } else {
+        &n.type_chain
+    };
+    let class_list = values::class_list(n.kind.as_str(), chain, &n.applied_styles);
+    let classes = class_list.join(" ");
+    let transform = if n.rotation != 0.0 {
+        format!(
+            r#" transform="translate({},{}) rotate({})""#,
+            num(n.cx),
+            num(n.cy),
+            num(n.rotation)
+        )
+    } else {
+        format!(r#" transform="translate({},{})""#, num(n.cx), num(n.cy))
+    };
+    let id_attr = match &n.id {
+        Some(id) => format!(r#" data-id="{}""#, escape_xml(id)),
+        None => String::new(),
+    };
+    // A `|detail|` clips its geometry to the region circle [SPEC 15.8] — the
+    // `url(#…)` reference `paints::lower` interned.
+    let clip_attr = match n.attrs.get("clip") {
+        Some(crate::resolve::ResolvedValue::RawCss(u)) => format!(r#" clip-path="{u}""#),
+        _ => String::new(),
+    };
+    let style_attr = node_style_attr(n, &class_list, ancestors, ruleset, vars, opts);
+    writeln!(
+        out,
+        r#"{}<g class="{}"{}{}{}{}>"#,
+        indent, classes, id_attr, clip_attr, style_attr, transform
+    )
+    .unwrap();
+
+    // `hint:` emits a `<title>` as the group's first child — an SVG tooltip
+    // and the accessible name [SPEC 18].
+    if let Some(crate::resolve::ResolvedValue::String(hint)) = n.attrs.get("hint") {
+        writeln!(out, "{}  <title>{}</title>", indent, escape_xml(hint)).unwrap();
+    }
+
+    primitives::render_geometry(out, n, depth + 1, vars, ruleset, filters, opts);
+    // Children's DOM ancestor chain grows by this node's classes — what the
+    // emitted descendant CSS actually matches against.
+    let mut child_ancestors = ancestors.to_vec();
+    child_ancestors.extend(class_list.iter().cloned());
+    for child in in_layer_order(&n.children) {
+        render_node(
+            out,
+            child,
+            depth + 1,
+            &child_ancestors,
+            vars,
+            ruleset,
+            filters,
+            opts,
+            sink,
+        );
+    }
+
+    writeln!(out, "{}</g>", indent).unwrap();
+    if href.is_some() {
+        writeln!(out, "{}</a>", "  ".repeat(depth - 1)).unwrap();
+    }
+}
+
+/// A text node: a bare `<text class="lini-text">` at its placed centre
+/// [SPEC 13], via the shared text emitter ([`text::emit`]) that also draws link
+/// labels. `text-anchor: middle` (on `.lini-text`) + the baked cap-height `dy`
+/// centre it on (cx, cy); font and colour inherit from the enclosing box's `<g>`.
+/// Its own `{ }` paint/font rides `style=`; `translate` is folded into (cx, cy).
+#[allow(clippy::too_many_arguments)] // the recursive walk threads every emission context
+fn render_text(
+    out: &mut String,
+    n: &PlacedNode,
+    depth: usize,
+    ancestors: &[String],
+    ruleset: &RuleSet,
+    vars: &VarTable,
+    opts: &Options,
+    sink: &fonts::FontSink,
+) {
+    let indent = "  ".repeat(depth);
+    let label = n.label.as_deref().unwrap_or("");
+    // A text node's `type_chain` carries any extra class (e.g. a chart's `.lini-chart-label`
+    // inline labels, [SPEC 14.8]); plain text has none, so this stays `lini-text`.
+    // A worn user class joins as `lini-style-*` [SPEC 18], its live declarations
+    // riding the stylesheet rule exactly as a node's do.
+    let mut classes = vec!["lini-text".to_string()];
+    classes.extend(n.type_chain.iter().map(|t| format!("lini-{t}")));
+    classes.extend(n.applied_styles.iter().map(|s| format!("lini-style-{s}")));
+    let style = text_paint_attr(
+        &n.own_style,
+        &n.attrs,
+        &classes,
+        ancestors,
+        ruleset,
+        vars,
+        opts,
+    );
+    text::emit(
+        out,
+        &indent,
+        &classes,
+        label,
+        (n.cx, n.cy),
+        n.span,
+        &n.attrs,
+        &style,
+        ruleset,
+        opts,
+        sink,
+    );
+}
+
+/// The inline `style=` for a text leaf — a node's `<text>` or a link label — as
+/// the class-diff of its paint [SPEC 18], the same chokepoint a node `<g>` uses
+/// ([`node_style_attr`]). This is the **one** place text paint inlines, so no
+/// font/paint prop is ever hand-dropped (link labels used to silently lose
+/// `text-shadow` on their own hand-rolled path). `color` aliases `fill`
+/// (CSS-style); `css_value` adds the `px` / length units. Geometry
+/// (`letter-spacing`, `translate`, `rotate`, `layer`) is handled elsewhere and
+/// never rides here — it is not in `PAINT_PROPS`.
+pub(super) fn text_paint_attr(
+    own: &AttrMap,
+    effective: &AttrMap,
+    classes: &[String],
+    ancestors: &[String],
+    ruleset: &RuleSet,
+    vars: &VarTable,
+    opts: &Options,
+) -> String {
+    let decls = ruleset.inline_paint_diff(
+        classes,
+        ancestors,
+        own,
+        |lini| match lini {
+            "fill" => own.get("fill").or_else(|| own.get("color")),
+            "color" => None,
+            // The measurement font, from the leaf's *effective* attrs rather than
+            // its own: an enclosing `|box| { font-family: … }` reaches the glyphs
+            // by inheritance, which the `TEXT_FONT_CLASS` rule would otherwise
+            // outrank. Stating it here keeps the authored face on the element that
+            // was measured with it — and a leaf at the default has no such attr,
+            // so the rule stays the only place the default is written.
+            "font-family" => own.get(lini).or_else(|| effective.get(lini)),
+            _ => own.get(lini),
+        },
+        |lini, v| values::css_value(lini, v, vars, opts),
+    );
+    style_attr_from(&decls)
+}
+
+/// The node's paint, as the difference against what the stylesheet already
+/// provides for its classes — inline style beats class rules, mirroring the
+/// specificity ladder [SPEC 4/16]. Geometry never appears here.
+fn node_style_attr(
+    n: &PlacedNode,
+    classes: &[String],
+    ancestors: &[String],
+    ruleset: &RuleSet,
+    vars: &VarTable,
+    opts: &Options,
+) -> String {
+    let decls = ruleset.inline_paint_diff(
+        classes,
+        ancestors,
+        &n.attrs,
+        // On |text|, `color` is an alias for `fill` (CSS-style); the shape rule's
+        // `currentColor` keeps SVG inheritance working when neither is set.
+        |lini| match (lini, n.kind) {
+            ("fill", NodeKind::Text) => n.attrs.get("fill").or_else(|| n.attrs.get("color")),
+            ("color", NodeKind::Text) => None,
+            _ => n.attrs.get(lini),
+        },
+        |lini, v| values::css_value(lini, v, vars, opts),
+    );
+    style_attr_from(&decls)
+}
+
+/// Siblings in paint order: ascending effective layer, ties by source order
+/// [SPEC 5]. The effective layer is the explicit `layer:`, else 1 for a pinned
+/// child (overlays paint above the flow) and 0 for a flow child. A stable sort
+/// keeps source order within each layer.
+fn in_layer_order(nodes: &[PlacedNode]) -> Vec<&PlacedNode> {
+    let mut order: Vec<&PlacedNode> = nodes.iter().collect();
+    order.sort_by(|a, b| eff_layer(a).total_cmp(&eff_layer(b)));
+    order
+}
+
+fn eff_layer(n: &PlacedNode) -> f64 {
+    n.attrs
+        .number("layer")
+        .unwrap_or(if crate::layout::is_pinned(&n.attrs) {
+            1.0
+        } else {
+            0.0
+        })
+}
+
+/// ` style="…"` from prop declarations, or empty. The body is **XML-escaped**:
+/// a CSS value may legally carry a quote — a `font-family` name with a space
+/// is quoted (`"Google Sans"`) — and an unescaped one would close the
+/// attribute, dropping the declaration [SPEC 18].
+pub(super) fn style_attr_from(decls: &[(&str, String)]) -> String {
+    if decls.is_empty() {
+        return String::new();
+    }
+    let body: Vec<String> = decls.iter().map(|(p, v)| format!("{}: {}", p, v)).collect();
+    format!(r#" style="{}""#, escape_xml(&body.join("; ")))
+}
+
+#[cfg(test)]
+mod tests {
+    /// The shipped compile path, not a hand-rolled twin of it: these tests
+    /// judge the SVG a user gets, lint pass, theme and assets included.
+    fn svg_for(src: &str) -> String {
+        crate::compile_str(src).expect("compile")
+    }
+
+    #[test]
+    fn a_quoted_font_family_survives_its_style_attribute() {
+        // A family name with a space is a quoted CSS string [SPEC 2/6]; emitted
+        // raw it would close the `style="…"` attribute at its own first quote
+        // and the declaration would be dropped — the box measures proportional
+        // while the glyphs stay mono.
+        let svg = svg_for("|box#a| \"Hamburgefonstiv\" { font-family: \"Google Sans\" }\n");
+        assert!(
+            svg.contains(r#"style="font-family: &quot;Google Sans&quot;""#),
+            "the quotes escape: {svg}"
+        );
+        assert!(
+            !svg.contains(r#"style="font-family: "Google Sans"""#),
+            "never raw: {svg}"
+        );
+    }
+
+    #[test]
+    fn a_scopes_font_family_reaches_a_link_labels_measurement() {
+        // The measured text props inherit onto a link the way they inherit onto
+        // a node [SPEC 4/6]: otherwise a scope's family restyles every label
+        // through native CSS while layout still measures the default face. The
+        // label's knockout mask is that measurement, made visible.
+        let scene = "|box#a| { width: 60; height: 40 }\n\
+                     |box#b| { width: 60; height: 40 }\n\
+                     a -> b \"Hamburgefonstiv\"\n";
+        let width = |svg: &str| {
+            let at = svg.find(r#"<rect class="lini-cut""#).expect("a label mask");
+            svg[at..]
+                .split(r#"width=""#)
+                .nth(1)
+                .and_then(|s| s.split('"').next())
+                .and_then(|s| s.parse::<f64>().ok())
+                .expect("the mask width")
+        };
+        // Named both ways round, so the assertion holds whichever family is
+        // the default of the day.
+        let at = |family: &str| width(&svg_for(&format!("{{ font-family: {family} }}\n{scene}")));
+        let (prop, mono) = (at("\"Google Sans\""), at("\"Google Sans Code\""));
+        assert!(
+            prop < mono,
+            "the proportional face measures narrower: {prop} vs {mono}"
+        );
+    }
+
+    #[test]
+    fn root_fill_states_the_canvas_rule_and_inlines_nothing() {
+        // The class-diff law [SPEC 18]: the plate's whole paint is its rule, so
+        // a root `fill:` (a schematic root's sheet wash included) replaces the
+        // rule's `--lini-bg` rather than overriding it on the element.
+        let svg = svg_for("{ fill: #eef; }\n|box#x|\n");
+        assert!(
+            svg.contains(" .lini-canvas { fill: #eef; }"),
+            "the rule states it: {svg}"
+        );
+        assert!(
+            svg.contains(r#"<rect class="lini-canvas" x="#)
+                && !svg.contains(r##"style="fill: #eef""##),
+            "and the rect inlines nothing: {svg}"
+        );
+    }
+
+    #[test]
+    fn a_scene_with_no_background_emits_no_plate_at_all() {
+        // [SPEC 18] Live output is for inlining: a figure the source gave no
+        // background paints none — no rect, no rule, and so no `--lini-bg` in
+        // the layer block. A host page has nothing to override.
+        let svg = svg_for("|box#x|\n");
+        assert!(!svg.contains("lini-canvas"), "{svg}");
+        assert!(!svg.contains("--lini-bg"), "{svg}");
+        // An explicit `none` is that same scene, said out loud.
+        assert!(!svg_for("{ fill: none; }\n|box#x|\n").contains("lini-canvas"));
+    }
+
+    #[test]
+    fn baked_output_carries_its_own_opaque_backdrop() {
+        // [SPEC 10.6/18] `--static` is a standalone document for renderers with
+        // no CSS variables, so it takes `--lini-bg` as a literal — but a scene
+        // that asked for transparency still gets it.
+        let svg = crate::compile_str_with(
+            "|box#x|\n",
+            &crate::Options {
+                static_mode: true,
+                ..Default::default()
+            },
+        )
+        .expect("compile");
+        assert!(svg.contains(" .lini-canvas { fill: white; }"), "{svg}");
+        assert!(svg.contains(r#"<rect class="lini-canvas""#), "{svg}");
+    }
+
+    #[test]
+    fn layer_lifts_a_node_above_later_source_order() {
+        // `a` is written first; its higher `layer` paints it last (on top),
+        // so its <g> is emitted after `b`'s [SPEC 5].
+        let svg = svg_for("|box#a| { layer: 5; }\n|box#b|\n");
+        let ai = svg.find(r#"data-id="a""#).expect("a");
+        let bi = svg.find(r#"data-id="b""#).expect("b");
+        assert!(ai > bi, "a (layer 5) should paint after b: {svg}");
+    }
+
+    #[test]
+    fn equal_layer_keeps_source_order() {
+        let svg = svg_for("|box#a|\n|box#b|\n");
+        assert!(
+            svg.find(r#"data-id="a""#).unwrap() < svg.find(r#"data-id="b""#).unwrap(),
+            "{svg}"
+        );
+    }
+
+    #[test]
+    fn hint_emits_a_title_child_on_the_node_g() {
+        let svg = svg_for("|box#x| { hint: \"a tooltip\"; }\n");
+        assert!(svg.contains("<title>a tooltip</title>"), "{svg}");
+    }
+
+    #[test]
+    fn no_title_element_without_a_title_prop() {
+        let svg = svg_for("|box#x|\n");
+        assert!(!svg.contains("<title>"), "{svg}");
+    }
+
+    #[test]
+    fn shadow_flood_color_is_a_literal_in_live_mode() {
+        // `flood-color` is a filter presentation attribute: var()/light-dark()
+        // there fall back to opaque black, so the tint must be a resolved literal
+        // even with live vars (the canvas-fill bug, on the shadow).
+        let svg = svg_for("|box#x| { shadow: 4 }\n");
+        let flood = svg
+            .split("flood-color=\"")
+            .nth(1)
+            .and_then(|s| s.split('"').next())
+            .expect("a shadow flood-color");
+        assert!(
+            !flood.starts_with("var(") && !flood.contains("light-dark"),
+            "shadow tint must be a literal, got {flood:?}"
+        );
+    }
+}

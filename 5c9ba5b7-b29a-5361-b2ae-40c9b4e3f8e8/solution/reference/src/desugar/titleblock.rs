@@ -1,0 +1,253 @@
+//! `|title-block|` field sugar [SPEC 15.8]. ISO 7200 fields — string-valued
+//! properties on the block — desugar into a fixed grid: the title spans the
+//! top, the rest flow three per row, each a small muted caption over its value.
+//! **Absent fields collapse** (no cell), so the default block is minimal
+//! (Title / Dwg No. / Rev / Sheet). A `|title-block|` with **no** field
+//! property keeps the plain-table form — its cells fully authored.
+
+use crate::span::Span;
+use crate::syntax::ast::{Child, Decl, Node, TextNode, Value};
+
+/// The ISO 7200 fields, in block order, with their captions. `title` leads and
+/// spans the width; the rest flow into the grid.
+const FIELDS: &[(&str, &str)] = &[
+    ("title", "Title"),
+    ("drawing-number", "Dwg No."),
+    ("revision", "Rev"),
+    ("sheet-number", "Sheet"),
+    ("date", "Date"),
+    ("author", "Drawn"),
+    ("approved", "Approved"),
+    ("department", "Dept"),
+    ("reference", "Reference"),
+    ("document-type", "Type"),
+    ("status", "Status"),
+];
+
+/// The generated grid's column count when the block declares none — the title
+/// spans whatever the grid actually has.
+const COLUMNS: usize = 3;
+
+/// Whether a `|title-block|`'s style carries any ISO 7200 field.
+pub(super) fn has_fields(style: &[Decl]) -> bool {
+    FIELDS.iter().any(|(k, _)| field_value(style, k).is_some())
+}
+
+/// Expand a field-carrying `|title-block|` [SPEC 15.8]: return one `|cell|` per
+/// **present** field (a caption over its value; the title spanning), and set
+/// the grid's `columns:`. The field decls are consumed from `style`. The title
+/// spans **the grid the block actually has** — an authored `columns:` sets the
+/// count, and the span must follow it or exceed the track list [SPEC 21].
+pub(super) fn expand_fields(style: &mut Vec<Decl>, span: Span) -> Vec<Node> {
+    let cols = super::tables::declared_column_count(style, &[]).unwrap_or(COLUMNS);
+    let cells: Vec<Node> = FIELDS
+        .iter()
+        .filter_map(|(key, cap)| {
+            field_value(style, key).map(|v| {
+                let span_cols = (*key == "title").then_some(cols);
+                field_cell(cap, &v, span_cols, span)
+            })
+        })
+        .collect();
+    style.retain(|d| !FIELDS.iter().any(|(k, _)| *k == d.name));
+    if !style.iter().any(|d| d.name == "columns") {
+        style.push(Decl {
+            name: "columns".into(),
+            // Comma-shaped groups: `columns` is a track **list** [SPEC 2].
+            groups: vec![vec![Value::Ident("auto".into())]; COLUMNS],
+            span,
+        });
+    }
+    cells
+}
+
+/// A field's string value, when present.
+fn field_value(style: &[Decl], key: &str) -> Option<String> {
+    match style
+        .iter()
+        .find(|d| d.name == key)
+        .and_then(|d| d.groups.first())
+        .and_then(|g| g.first())
+    {
+        Some(Value::String(s)) => Some(s.clone()),
+        _ => None,
+    }
+}
+
+/// One field cell: the muted caption stacked over the value. ISO 7200 reads the
+/// caption *over* its field, so the cell states `direction: column` itself
+/// rather than leaning on the flow default (`row` since [SPEC 11]). Tight
+/// vertical padding keeps the block compact. The title cell spans the columns.
+fn field_cell(caption: &str, value: &str, span_cols: Option<usize>, span: Span) -> Node {
+    let mut style = vec![
+        Decl {
+            name: "direction".into(),
+            groups: vec![vec![Value::Ident("column".into())]],
+            span,
+        },
+        Decl {
+            name: "padding".into(),
+            groups: vec![vec![Value::Number(2.0), Value::Number(6.0)]],
+            span,
+        },
+        // A field is at least a word wide [SPEC 15.8]: the block then reads as
+        // a block, its short fields as wide as its long ones' captions.
+        Decl {
+            name: "width".into(),
+            groups: vec![vec![Value::Number(
+                crate::ledger::consts::TITLE_FIELD_WIDTH,
+            )]],
+            span,
+        },
+        // The caption labels the value, so the two read as one stacked pair —
+        // the block's own `|block|` gap of 20 would set them adrift, the
+        // caption riding the cell's top edge and the value its bottom.
+        Decl {
+            name: "gap".into(),
+            groups: vec![vec![Value::Number(4.0)]],
+            span,
+        },
+        // The internal `field` marker [SPEC 15.8]: the grid names this cell when
+        // an authored `cell:` lands on its slot ([SPEC 21]'s overlap row).
+        Decl {
+            name: "field".into(),
+            groups: vec![vec![Value::String(caption.into())]],
+            span,
+        },
+    ];
+    if let Some(cols) = span_cols {
+        style.push(Decl {
+            name: "span".into(),
+            groups: vec![vec![Value::Number(cols as f64), Value::Number(1.0)]],
+            span,
+        });
+    }
+    let mut n = super::synth::node("cell", span);
+    n.style = style;
+    n.children = vec![
+        Child::Box(caption_field(caption, span)),
+        Child::Text(text(value, span)),
+    ];
+    n
+}
+
+/// The field caption — a `|field|` node, so its small muted font states once as
+/// the `.lini-field` class rule (not an inline style per caption).
+fn caption_field(s: &str, span: Span) -> Node {
+    super::synth::labelled("field", text(s, span))
+}
+
+/// A bare text leaf — inherits its box's font.
+fn text(s: &str, span: Span) -> TextNode {
+    TextNode {
+        text: s.to_string(),
+        classes: Vec::new(),
+        style: Vec::new(),
+        style_span: None,
+        span,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::syntax::ast::{Child, Node};
+
+    fn title_block(src: &str) -> Node {
+        let toks = crate::lexer::lex(src).expect("lex");
+        let file = crate::syntax::parser::parse(src, &toks).expect("parse");
+        let lowered = crate::desugar::desugar(&file).expect("desugar");
+        fn find(children: &[Child]) -> Option<Node> {
+            for c in children {
+                if let Child::Box(n) = c {
+                    if n.classes.iter().any(|k| k == "lini-title-block") {
+                        return Some(n.clone());
+                    }
+                    if let Some(hit) = find(&n.children) {
+                        return Some(hit);
+                    }
+                }
+            }
+            None
+        }
+        find(&lowered.instances).expect("a title block")
+    }
+
+    fn cells(n: &Node) -> Vec<&Node> {
+        n.children
+            .iter()
+            .filter_map(|c| match c {
+                Child::Box(b) if b.classes.iter().any(|k| k == "lini-cell") => Some(b),
+                _ => None,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn present_fields_become_cells_and_absent_collapse() {
+        let tb = title_block(
+            "|page#p| [\n  |drawing#v| [ |rect#r| { width: 10; height: 10 } ]\n  |title-block| { title: \"T\"; drawing-number: \"D\"; revision: \"A\" }\n]\n",
+        );
+        // Three present fields → three cells (author, date, … absent: no cell).
+        let cs = cells(&tb);
+        assert_eq!(cs.len(), 3, "one cell per present field");
+        // The title cell spans the columns.
+        assert!(
+            cs[0].style.iter().any(|d| d.name == "span"),
+            "the title spans"
+        );
+        assert!(
+            tb.style.iter().any(|d| d.name == "columns"),
+            "the grid gets columns"
+        );
+    }
+
+    #[test]
+    fn authored_children_follow_the_generated_cells() {
+        let tb = title_block(
+            "|page#p| [\n  |drawing#v| [ |rect#r| { width: 10; height: 10 } ]\n  |title-block| { title: \"T\"; revision: \"A\" } [ \"Scale 1:1\" ]\n]\n",
+        );
+        // Generated cells lead — each marked with its `field` caption — and the
+        // authored cell follows as an ordinary cell in the same grid.
+        let cs = cells(&tb);
+        assert_eq!(cs.len(), 3, "two field cells + one authored");
+        let field_of = |n: &super::Node| {
+            n.style
+                .iter()
+                .find(|d| d.name == "field")
+                .map(|d| d.groups[0][0].clone())
+        };
+        assert!(field_of(cs[0]).is_some(), "the title cell leads");
+        assert!(field_of(cs[1]).is_some(), "the Rev cell second");
+        assert!(field_of(cs[2]).is_none(), "the authored cell follows");
+    }
+
+    #[test]
+    fn the_title_spans_the_authored_column_count() {
+        // An authored `columns:` sets the grid; the title's span follows it —
+        // a hard-coded 3 over a 2-track list exceeded the grid [SPEC 21].
+        let tb = title_block(
+            "|page#p| [\n  |drawing#v| [ |rect#r| { width: 10; height: 10 } ]\n  |title-block| { title: \"T\"; columns: 60, auto } [ \"Scale\" \"1:1\" ]\n]\n",
+        );
+        let title = cells(&tb)[0];
+        let span = title
+            .style
+            .iter()
+            .find(|d| d.name == "span")
+            .expect("the title spans");
+        assert!(
+            matches!(span.groups[0][0], crate::syntax::ast::Value::Number(n) if n == 2.0),
+            "the span follows the authored track list: {:?}",
+            span.groups[0]
+        );
+    }
+
+    #[test]
+    fn no_field_keeps_the_plain_table_form() {
+        let tb = title_block(
+            "|page#p| [\n  |drawing#v| [ |rect#r| { width: 10; height: 10 } ]\n  |title-block| { columns: 40, auto } [ \"Scale\" \"1:1\" ]\n]\n",
+        );
+        // The authored cells stand; no field grid is synthesized.
+        assert_eq!(cells(&tb).len(), 2, "the two authored cells");
+        assert!(tb.style.iter().any(|d| d.name == "columns"));
+    }
+}
