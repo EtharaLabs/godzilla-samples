@@ -1,0 +1,27 @@
+# json — an untyped, throwing boundary becomes typed, total data.
+#
+#   pyfun run examples/interop/json_decode.pyfun
+#
+# "Parse, don't validate": give `json.loads` a Pyfun type at the call site, and `try`
+# turns its exceptions into a `Result` you must handle — a parse failure is a value,
+# never a crash. (For decoding into your own records, see json_to_adt.pyfun.)
+
+# A JSON array of one type decodes to a `List`; a flat object to a `Map`. `= json.loads`
+# auto-imports `json`; the boundary is effectful, so both are `io`.
+extern parseFloats: string -> List float = json.loads
+extern parseScores: string -> Map string float = json.loads
+
+# `try` catches a malformed string into `Error`; the `match` forces you to handle it.
+let sumJson s =
+  match try (parseFloats s):
+    case Ok xs: List.fold (+) 0.0 xs
+    case Error e: 0.0
+
+# Object lookup stays total, too: `Map.tryFind` returns `Option`, so a missing key
+# is `None`, not a `KeyError`.
+let scores = parseScores """{"ada": 9.5, "alan": 8.0}"""
+
+print (sumJson "[1.0, 2.0, 3.5]")                             # 6.5
+print (sumJson "[1.0, oops]")                                 # 0.0  (JSONDecodeError caught)
+print (Option.withDefault 0.0 (Map.tryFind "ada" scores))    # 9.5
+print (Option.withDefault 0.0 (Map.tryFind "grace" scores))  # 0.0

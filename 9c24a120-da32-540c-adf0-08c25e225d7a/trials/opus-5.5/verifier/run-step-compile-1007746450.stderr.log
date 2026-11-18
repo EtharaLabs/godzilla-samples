@@ -1,0 +1,332 @@
+   Compiling pyfun v0.10.0 (/workspace)
+warning: unused variable: `t`
+    --> src/parser.rs:2618:17
+     |
+2618 |             let t = self.raw().clone();
+     |                 ^ help: if this is intentional, prefix it with an underscore: `_t`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: variant `Assign` is never constructed
+   --> src/ast.rs:190:5
+    |
+181 | pub enum CeStmt {
+    |          ------ variant in this enum
+...
+190 |     Assign(String, Span, Expr),
+    |     ^^^^^^
+    |
+    = note: `CeStmt` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variant `Unit` is never constructed
+   --> src/ast.rs:206:5
+    |
+200 | pub enum PatKind {
+    |          ------- variant in this enum
+...
+206 |     Unit,
+    |     ^^^^
+    |
+    = note: `PatKind` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: function `t_int` is never used
+  --> src/check_expr.rs:24:8
+   |
+24 | pub fn t_int() -> Ty {
+   |        ^^^^^
+
+warning: function `contains_fun` is never used
+    --> src/check_expr.rs:1248:8
+     |
+1248 | pub fn contains_fun(t: &Ty) -> bool {
+     |        ^^^^^^^^^^^^
+
+warning: function `camel_words` is never used
+  --> src/holes.rs:71:4
+   |
+71 | fn camel_words(name: &str) -> Vec<String> {
+   |    ^^^^^^^^^^^
+
+warning: variant `Builtin` is never constructed
+  --> src/infer.rs:40:5
+   |
+35 | pub enum TypeDef {
+   |          ------- variant in this enum
+...
+40 |     Builtin,
+   |     ^^^^^^^
+   |
+   = note: `TypeDef` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `index` is never read
+  --> src/infer.rs:56:9
+   |
+53 | pub struct CtorInfo {
+   |            -------- field in this struct
+...
+56 |     pub index: usize,
+   |         ^^^^^
+   |
+   = note: `CtorInfo` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `in_module` is never read
+   --> src/infer.rs:119:9
+    |
+ 85 | pub struct Checker {
+    |            ------- field in this struct
+...
+119 |     pub in_module: Option<String>,
+    |         ^^^^^^^^^
+
+warning: function `builtin_type` is never used
+   --> src/infer.rs:151:4
+    |
+151 | fn builtin_type(name: &str) -> Option<usize> {
+    |    ^^^^^^^^^^^^
+
+warning: method `bind_local` is never used
+   --> src/infer.rs:571:12
+    |
+161 | impl Checker {
+    | ------------ method in this implementation
+...
+571 |     pub fn bind_local(&mut self, name: &str, scheme: Scheme, mutable: bool) {
+    |            ^^^^^^^^^^
+
+warning: fields `mutable` and `depth` are never read
+  --> src/lower.rs:40:9
+   |
+37 | pub struct Bind {
+   |            ---- fields in this struct
+...
+40 |     pub mutable: bool,
+   |         ^^^^^^^
+41 |     /// scope depth where defined (0 = module)
+42 |     pub depth: usize,
+   |         ^^^^^
+   |
+   = note: `Bind` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: fields `thunks` and `async_result` are never read
+  --> src/lower.rs:90:9
+   |
+86 | pub struct ExternInfo {
+   |            ---------- fields in this struct
+...
+90 |     pub thunks: Vec<usize>,
+   |         ^^^^^^
+91 |     /// returns Async (awaitable call, re-run per await)
+92 |     pub async_result: bool,
+   |         ^^^^^^^^^^^^
+
+warning: fields `module_names` and `in_module` are never read
+   --> src/lower.rs:118:9
+    |
+ 95 | pub struct Lowerer<'a> {
+    |            ------- fields in this struct
+...
+118 |     pub module_names: HashMap<String, String>,
+    |         ^^^^^^^^^^^^
+119 |     pub in_module: Option<String>,
+    |         ^^^^^^^^^
+
+warning: field `depth` is never read
+   --> src/lower.rs:158:9
+    |
+157 | pub struct FnFrame {
+    |            ------- field in this struct
+158 |     pub depth: usize,
+    |         ^^^^^
+    |
+    = note: `FnFrame` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+
+warning: methods `callee_arity` and `module_member_arity` are never used
+   --> src/lower.rs:608:8
+    |
+182 | impl<'a> Lowerer<'a> {
+    | -------------------- methods in this implementation
+...
+608 |     fn callee_arity(&self, f: &Expr) -> Option<usize> {
+    |        ^^^^^^^^^^^^
+...
+633 |     fn module_member_arity(&self, _m: &str, _n: &str) -> Option<usize> {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: variant `Discard` is never constructed
+   --> src/lower.rs:792:5
+    |
+786 | pub enum Dest {
+    |          ---- variant in this enum
+...
+792 |     Discard,
+    |     ^^^^^^^
+    |
+    = note: `Dest` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `module_files` is never read
+  --> src/lsp.rs:87:9
+   |
+79 | pub struct Analysis {
+   |            -------- field in this struct
+...
+87 |     pub module_files: Vec<(String, PathBuf, Option<Checker>, Program)>,
+   |         ^^^^^^^^^^^^
+
+warning: field `1` is never read
+   --> src/lsp.rs:255:18
+    |
+255 |     Ctor(String, Span, bool),
+    |     ----         ^^^^
+    |     |
+    |     field in this variant
+    |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+255 -     Ctor(String, Span, bool),
+255 +     Ctor(String, (), bool),
+    |
+
+warning: field `2` is never read
+   --> src/lsp.rs:256:24
+    |
+256 |     Type(String, Span, bool),
+    |     ----               ^^^^
+    |     |
+    |     field in this variant
+    |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+256 -     Type(String, Span, bool),
+256 +     Type(String, Span, ()),
+    |
+
+warning: field `1` is never read
+   --> src/lsp.rs:258:21
+    |
+258 |     Builtin(String, Span),
+    |     -------         ^^^^
+    |     |
+    |     field in this variant
+    |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+258 -     Builtin(String, Span),
+258 +     Builtin(String, ()),
+    |
+
+warning: field `1` is never read
+   --> src/lsp.rs:260:21
+    |
+260 |     Unbound(String, Span),
+    |     -------         ^^^^
+    |     |
+    |     field in this variant
+    |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+260 -     Unbound(String, Span),
+260 +     Unbound(String, ()),
+    |
+
+warning: function `smallest` is never used
+   --> src/lsp.rs:265:4
+    |
+265 | fn smallest<'a, T>(items: impl Iterator<Item = (Span, T)>, off: usize) -> Option<(Span, T)> {
+    |    ^^^^^^^^
+
+warning: field `errors` is never read
+  --> src/parser.rs:23:9
+   |
+18 | pub struct Parser {
+   |            ------ field in this struct
+...
+23 |     pub errors: Vec<Diag>,
+   |         ^^^^^^
+
+warning: methods `next_span`, `at_boundary_tok`, and `ctor_path` are never used
+    --> src/parser.rs:303:8
+     |
+ 137 | impl Parser {
+     | ----------- methods in this implementation
+...
+ 303 |     fn next_span(&self) -> Span {
+     |        ^^^^^^^^^
+...
+1683 |     fn at_boundary_tok(&self, _k: usize) -> bool {
+     |        ^^^^^^^^^^^^^^^
+...
+2146 |     fn ctor_path(&mut self) -> PResult<(Vec<String>, String, Span)> {
+     |        ^^^^^^^^^
+
+warning: field `module` is never read
+  --> src/project.rs:46:13
+   |
+46 |     Parse { module: Option<(String, String)>, src: String, diag: Diag },
+   |     -----   ^^^^^^
+   |     |
+   |     field in this variant
+
+warning: variants `NotIn` and `IsNot` are never constructed
+  --> src/py.rs:29:5
+   |
+21 | pub enum Cop {
+   |          --- variants in this enum
+...
+29 |     NotIn,
+   |     ^^^^^
+30 |     Is,
+31 |     IsNot,
+   |     ^^^^^
+   |
+   = note: `Cop` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: variant `Dict` is never constructed
+  --> src/py.rs:56:5
+   |
+35 | pub enum PE {
+   |          -- variant in this enum
+...
+56 |     Dict(Vec<(PE, PE)>),
+   |     ^^^^
+   |
+   = note: `PE` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: variant `Break` is never constructed
+  --> src/py.rs:97:5
+   |
+83 | pub enum PS {
+   |          -- variant in this enum
+...
+97 |     Break,
+   |     ^^^^^
+   |
+   = note: `PS` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `name` is never read
+  --> src/resolve.rs:12:9
+   |
+11 | pub struct RDef {
+   |            ---- field in this struct
+12 |     pub name: String,
+   |         ^^^^
+   |
+   = note: `RDef` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `stored` is never read
+  --> src/session.rs:44:9
+   |
+40 | pub struct EvalOk {
+   |            ------ field in this struct
+...
+44 |     pub stored: bool,
+   |         ^^^^^^
+
+warning: function `unit_vars` is never used
+   --> src/types.rs:666:8
+    |
+666 | pub fn unit_vars(u: &Unit) -> BTreeSet<UvId> {
+    |        ^^^^^^^^^
+
+warning: `pyfun` (bin "pyfun") generated 32 warnings (run `cargo fix --bin "pyfun" -p pyfun` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 8.88s
