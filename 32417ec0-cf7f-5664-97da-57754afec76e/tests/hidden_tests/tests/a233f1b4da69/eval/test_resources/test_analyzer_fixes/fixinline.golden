@@ -1,0 +1,21 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:5:19: field User.name is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:3:42: 	used here, in namespace "order"
+
+=== -fix
+exit: 0
+--- stdout
+
+--- stderr
+--- changed user.go
+package fixinline
+
+// A field of a single-line struct has no line of its own, so the directive
+// has to break it onto one.
+type User struct {
+	//declscope:shared
+	name string
+} // want `field User.name is private to namespace "user", but is used from namespace "order"`

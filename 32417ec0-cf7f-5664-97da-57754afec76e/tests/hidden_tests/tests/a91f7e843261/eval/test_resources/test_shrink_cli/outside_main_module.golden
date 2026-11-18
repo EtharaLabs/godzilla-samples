@@ -1,0 +1,6 @@
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:3:6: func Lonely is exported, but nothing outside example.com/app/internal/a uses it
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:7:6: func Taken is exported, but nothing outside example.com/app/internal/a uses it (no fix: the unexported name is taken or would be captured)
+--- stderr
+declscope shrink: not judged: 2 package(s) outside the main module

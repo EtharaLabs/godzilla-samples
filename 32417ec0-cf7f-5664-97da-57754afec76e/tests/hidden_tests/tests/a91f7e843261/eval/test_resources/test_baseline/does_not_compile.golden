@@ -1,0 +1,17 @@
+exit 1
+--- stdout
+--- stderr
+-: # example.com/app/p
+p/p.go:3:28: cannot use "x" (untyped string constant) as int value in return statement
+/tmp/dse-xxxxxxxxxxxx/work/p/p.go:3:28: cannot use "x" (untyped string constant) as int value in return statement
+declscope baseline: packages contain errors
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== p/p.go
+package p
+
+func broken() int { return "x" }

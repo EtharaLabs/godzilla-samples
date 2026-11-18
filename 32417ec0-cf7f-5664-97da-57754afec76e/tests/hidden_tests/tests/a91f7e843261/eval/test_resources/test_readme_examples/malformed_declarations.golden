@@ -1,0 +1,19 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:28:1: //declscope:shared on i: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: unknown directive declscope:foo
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:1: malformed declscope directive: write it as //declscope:name
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:1: malformed declscope directive: write it as //declscope:name
+/tmp/dse-xxxxxxxxxxxx/work/user.go:12:1: //declscope:shared takes no argument
+/tmp/dse-xxxxxxxxxxxx/work/user.go:15:1: unused //declscope:private on e: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:16:1: conflicting scope directives: //declscope:private and //declscope:shared
+/tmp/dse-xxxxxxxxxxxx/work/user.go:19:1: unknown rule "foo" in declscope:ignore (want one of boundary, qualify, surplus, unused, directive, filter, overexported)
+/tmp/dse-xxxxxxxxxxxx/work/user.go:22:1: empty rule name in declscope:ignore
+/tmp/dse-xxxxxxxxxxxx/work/user.go:25:1: empty rule name in declscope:ignore
+/tmp/dse-xxxxxxxxxxxx/work/user.go:29:1: duplicate declscope:shared directive
+/tmp/dse-xxxxxxxxxxxx/work/user.go:33:1: duplicate declscope:ignore directive
+/tmp/dse-xxxxxxxxxxxx/work/user.go:37:2: misplaced declscope:shared: no declaration here for it to bind to; write it in a declaration's doc comment or trailing its first or last line
+/tmp/dse-xxxxxxxxxxxx/work/user.go:41:1: declscope:namespace must appear before the package clause
+/tmp/dse-xxxxxxxxxxxx/work/user.go:44:1: declscope:core must appear before the package clause
+/tmp/dse-xxxxxxxxxxxx/work/user.go:32:1: unused //declscope:ignore boundary,unused on j

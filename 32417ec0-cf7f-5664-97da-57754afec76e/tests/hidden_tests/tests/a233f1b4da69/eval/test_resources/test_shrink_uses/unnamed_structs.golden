@@ -1,0 +1,8 @@
+exit: 3
+--- stdout
+$WORK/internal/a/a.go:3:6: type Opts is exported, but nothing outside example.com/uses/internal/a uses it
+$WORK/internal/a/a.go:8:6: type Pair is exported, but nothing outside example.com/uses/internal/a uses it
+$WORK/internal/a/a.go:12:6: type Alone is exported, but nothing outside example.com/uses/internal/a uses it
+$WORK/internal/a/a.go:13:2: field Q is exported, but nothing outside example.com/uses/internal/a uses it
+
+--- stderr

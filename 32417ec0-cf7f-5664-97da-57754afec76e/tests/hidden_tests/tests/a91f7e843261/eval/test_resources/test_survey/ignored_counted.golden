@@ -1,0 +1,97 @@
+exit 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 1,
+      "failed": []
+    },
+    "configs": [
+      {
+        "chain": [
+          "/tmp/dse-xxxxxxxxxxxx/work/.declscope.yaml"
+        ],
+        "packages": 1,
+        "rules": {
+          "boundary": true,
+          "qualify": "always",
+          "exported": false,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      }
+    ],
+    "baselines": []
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 1,
+      "ignored": 1,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": true,
+      "keyable": true,
+      "found": 1,
+      "ignored": 1,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 1,
+      "ignored": 1,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "packages": [
+    {
+      "package": "example.com/app/p",
+      "namespaces": 1,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 1
+      }
+    }
+  ]
+}
+--- stderr

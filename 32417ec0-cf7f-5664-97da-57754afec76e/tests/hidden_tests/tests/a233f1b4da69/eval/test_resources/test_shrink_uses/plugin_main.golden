@@ -1,0 +1,6 @@
+exit: 3
+--- stdout
+$WORK/internal/plug/plug.go:9:6: func Lone is exported, but nothing outside example.com/uses/internal/plug uses it
+
+--- stderr
+declscope shrink: not judged: example.com/uses/internal/tool: package main

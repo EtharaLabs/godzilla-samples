@@ -1,0 +1,7 @@
+exit: 3
+--- stdout
+$WORK/m/internal/a/a.go:3:6: func F is exported, but nothing outside example.com/m/internal/a uses it (no fix: the build list of the nested module example.com/other cannot be read, and a module it names may use it: reading the build list failed: example.com/m/ext: module lookup disabled by GOPROXY=off)
+$WORK/m/internal/a/a.go:5:6: type T is exported, but nothing outside example.com/m/internal/a uses it (no fix: the build list of the nested module example.com/other cannot be read, and a module it names may use it: reading the build list failed: example.com/m/ext: module lookup disabled by GOPROXY=off)
+$WORK/m/internal/a/a.go:5:16: field X is exported, but nothing outside example.com/m/internal/a uses it (no fix: the build list of the nested module example.com/other cannot be read, and a module it names may use it: reading the build list failed: example.com/m/ext: module lookup disabled by GOPROXY=off)
+
+--- stderr

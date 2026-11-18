@@ -1,0 +1,26 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/email.go:3:1: //declscope:shared on normalizeEmail: no use from another namespace is visible to declscope
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/account.go:6:2: field account.balance takes shared scope from //declscope:shared on account, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/email.go:3:1: //declscope:shared on normalizeEmail: no use from another namespace is visible to declscope
+
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/account.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/account.go (new)
+@@ -2,7 +2,8 @@
+ 
+ //declscope:shared
+ type account struct {
+-	id      int
++	id int
++	//declscope:private
+ 	balance int
+ }
+ 
+--- stderr

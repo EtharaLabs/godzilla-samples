@@ -1,0 +1,19 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:12:2: field UserV.z is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:17: 	used here, in namespace "order"
+$WORK/user.go:20:2: field UserW.v is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:29: 	used here, in namespace "order"
+$WORK/user.go:44:6: func userLoose is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:78: 	used here, in namespace "order"
+$WORK/user.go:58:2: field UserM.m is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:35: 	used here, in namespace "order"
+$WORK/user.go:11:21: unknown directive declscope:bogus
+$WORK/user.go:42:1: misplaced declscope:ignore: no declaration here for it to bind to; write it in a declaration's doc comment or trailing its first or last line
+$WORK/user.go:48:2: misplaced declscope:shared: no declaration here for it to bind to; write it in a declaration's doc comment or trailing its first or last line
+$WORK/user.go:56:2: misplaced declscope:ignore: no declaration here for it to bind to; write it in a declaration's doc comment or trailing its first or last line
+$WORK/user.go:65:2: declscope:namespace must appear before the package clause
+$WORK/user.go:75:2: declscope:core must appear before the package clause
+$WORK/user.go:76:2: unknown directive declscope:bogus

@@ -1,0 +1,42 @@
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:3:6: func Lonely is exported, but nothing outside example.com/app/internal/a uses it
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:7:6: func Taken is exported, but nothing outside example.com/app/internal/a uses it (no fix: the unexported name is taken or would be captured)
+--- stderr
+
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:7:6: func Taken is exported, but nothing outside example.com/app/internal/a uses it (no fix: the unexported name is taken or would be captured)
+--- stderr
+
+=== b/b.go
+package b
+
+import "example.com/app/internal/a"
+
+var _ = a.Used()
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== internal/a/a.go
+package a
+
+func lonely() int { return 1 }
+
+func Used() int { return lonely() + Taken() }
+
+func Taken() int { return taken() }
+
+func taken() int { return 0 }
+
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:7:6: func Taken is exported, but nothing outside example.com/app/internal/a uses it (no fix: the unexported name is taken or would be captured)
+--- stderr
+
+exit 0
+--- stdout
+--- stderr

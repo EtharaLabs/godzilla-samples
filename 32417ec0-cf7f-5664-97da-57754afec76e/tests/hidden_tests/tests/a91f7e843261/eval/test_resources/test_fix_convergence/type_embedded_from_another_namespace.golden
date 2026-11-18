@@ -1,0 +1,79 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: type userCount is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:20: 	used here, in namespace "order"
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"message": "type userCount is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to userCount, and //declscope:private to userCount.n",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 11,
+								"end": 11,
+								"new": "//declscope:shared\n"
+							},
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 34,
+								"end": 34,
+								"new": "\n//declscope:private\n"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:20",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:29",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+type Order struct{ userCount }
+
+=== user.go
+package x
+
+//declscope:shared
+type userCount struct {
+	//declscope:private
+	n int
+}
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

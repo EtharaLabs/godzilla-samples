@@ -1,0 +1,24 @@
+exit 0
+--- stdout
+--- stderr
+declscope baseline: not judged: 1 package(s) outside the main module
+declscope: recorded 2 violation(s) in one.yaml
+
+# declscope baseline
+#
+# Violations recorded here are suppressed; new ones are still reported.
+# Regenerate with:
+#
+#     declscope baseline ./...
+#
+# Do not edit by hand. An entry disappears when its violation is fixed, so the
+# diff of a regeneration is the record of what was cleaned up.
+packages:
+  errors_test:
+    boundary:
+      wrap:
+        - multiErr
+  example.com/app/internal/a:
+    overexported:
+      a:
+        - Lonely

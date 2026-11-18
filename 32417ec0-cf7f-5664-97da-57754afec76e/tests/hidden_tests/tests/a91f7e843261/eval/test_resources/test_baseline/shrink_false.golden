@@ -1,0 +1,80 @@
+exit 0
+--- stdout
+--- stderr
+declscope: recorded 2 violation(s) in /tmp/dse-xxxxxxxxxxxx/work/.declscope-baseline.yaml
+
+=== .declscope-baseline.yaml
+# declscope baseline
+#
+# Violations recorded here are suppressed; new ones are still reported.
+# Regenerate with:
+#
+#     declscope baseline ./...
+#
+# Do not edit by hand. An entry disappears when its violation is fixed, so the
+# diff of a regeneration is the record of what was cleaned up.
+packages:
+  example.com/app/internal/app:
+    boundary:
+      user:
+        - helper
+    qualify:
+      user:
+        - helper
+
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: ondemand
+
+=== cmd/use/main.go
+package main
+
+import x "example.com/app/internal/app"
+
+func main() { _ = x.NewBox() }
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== internal/app/box.go
+package x
+
+type Box struct{ Field int }
+
+func NewBox() Box { return Box{} }
+
+=== internal/app/charge.go
+//declscope:namespace billing
+
+package x
+
+func ChargeBilling() {}
+
+=== internal/app/core.go
+//declscope:core
+
+package x
+
+func CoreThing() {}
+
+=== internal/app/order.go
+package x
+
+func orderRun() int { return helper() }
+
+var _ = orderRun
+
+=== internal/app/user.go
+package x
+
+func helper() int { return 1 }
+
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/app/box.go:3:18: field Field is exported, but nothing outside example.com/app/internal/app uses it
+/tmp/dse-xxxxxxxxxxxx/work/internal/app/charge.go:5:6: func ChargeBilling is exported, but nothing outside example.com/app/internal/app uses it
+/tmp/dse-xxxxxxxxxxxx/work/internal/app/core.go:5:6: func CoreThing is exported, but nothing outside example.com/app/internal/app uses it
+--- stderr

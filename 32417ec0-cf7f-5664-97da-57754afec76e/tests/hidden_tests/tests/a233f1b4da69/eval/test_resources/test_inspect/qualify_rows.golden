@@ -1,0 +1,59 @@
+exit: 0
+--- stdout
+# example.com/m
+
+Config: `$WORK/.declscope.yaml`
+
+## Namespaces
+
+| namespace | files      | declarations | qualify targets |
+| --------- | ---------- | -----------: | --------------: |
+| (core)    | `core.go`  |            1 |               - |
+| empty     | `empty.go` |            1 |               1 |
+| order     | `order.go` |            0 |               0 |
+| user      | `user.go`  |            3 |               3 |
+
+## Crossings
+
+```mermaid
+graph LR
+  n0["order"]
+  n1["user"]
+  n2["(core)"]
+  n0 ==>|3| n1
+  n0 ==>|1| n2
+```
+
+<details>
+<summary>Table: 2 crossings</summary>
+
+| crossing       | mutual | declared | baselined | reported | clears | reached | uses |
+| -------------- | ------ | -------: | --------: | -------: | -----: | ------: | ---: |
+| order → user   |        |        0 |         0 |        3 |      3 |  3 of 3 |    3 |
+| order → (core) |        |        0 |         0 |        1 |      1 |  1 of 1 |    1 |
+
+</details>
+
+Declarations crossed: 4 reported, 0 baselined, 0 declared. The columns above count within a pair, so they sum to more: a declaration reached from two namespaces is two rows and one finding.
+
+## Most-reached declarations except `(core)`
+
+| declaration | namespace | reached from | state    |
+| ----------- | --------- | ------------ | -------- |
+| `excused`   | user      | 1 namespace  | reported |
+| `helper`    | user      | 1 namespace  | reported |
+| `userOK`    | user      | 1 namespace  | reported |
+
+1 declaration is further: the core's, which is the shared model and reached from everywhere by design.
+
+## Qualify
+
+| namespace | exempt | baselined | reported | saturation |
+| --------- | -----: | --------: | -------: | ---------: |
+| (core)    |      - |         - |        - |          - |
+| empty     |      0 |         0 |        0 |     0 of 1 |
+| order     |      - |         - |        - |          - |
+| user      |      1 |         0 |        1 |     1 of 3 |
+
+
+--- stderr

@@ -1,0 +1,112 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:5: var count is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:5:39: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:5: var count does not carry namespace "user" anywhere in its name; rename it to userCount, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func limit is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:5:47: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func limit does not carry namespace "user" anywhere in its name; rename it to userLimit, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:8:16: method User.id is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:5:59: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:1:1: the file's //declscope:shared: no use from another namespace is visible to declscope
+
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/order.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/order.go (new)
+@@ -2,6 +2,6 @@
+ 
+ package x
+ 
+-func orderTotal(u *User) int { return count + limit() + u.id() }
++func orderTotal(u *User) int { return userCount + userLimit() + u.id() }
+ 
+ var _ = orderTotal
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -1,10 +1,14 @@
+ package x
+ 
+ // count is how many users there are.
+-var count = 10
++//
++//declscope:shared
++var userCount = 10
+ 
+-func limit() int { return count * 2 }
++//declscope:shared
++func userLimit() int { return userCount * 2 }
+ 
++//declscope:shared
+ func (u *User) id() int { return u.ID }
+ 
+ type User struct{ ID int }
+--- /tmp/dse-xxxxxxxxxxxx/work/user_test.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user_test.go (new)
+@@ -3,7 +3,7 @@
+ import "testing"
+ 
+ func TestLimit(t *testing.T) {
+-	if limit() != 2*count {
+-		t.Fatal(limit())
++	if userLimit() != 2*userCount {
++		t.Fatal(userLimit())
+ 	}
+ }
+--- stderr
+
+exit 0
+--- stdout
+--- stderr
+
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+//declscope:shared
+
+package x
+
+func orderTotal(u *User) int { return userCount + userLimit() + u.id() }
+
+var _ = orderTotal
+
+=== user.go
+package x
+
+// count is how many users there are.
+//
+//declscope:shared
+var userCount = 10
+
+//declscope:shared
+func userLimit() int { return userCount * 2 }
+
+//declscope:shared
+func (u *User) id() int { return u.ID }
+
+type User struct{ ID int }
+
+=== user_test.go
+package x
+
+import "testing"
+
+func TestLimit(t *testing.T) {
+	if userLimit() != 2*userCount {
+		t.Fatal(userLimit())
+	}
+}
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/order.go:1:1: the file's //declscope:shared: no use from another namespace is visible to declscope

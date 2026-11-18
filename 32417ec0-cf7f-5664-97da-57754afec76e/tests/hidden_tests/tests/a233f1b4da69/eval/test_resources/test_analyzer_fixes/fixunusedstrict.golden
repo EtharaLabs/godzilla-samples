@@ -1,0 +1,49 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/b.go:8:6: func bShared is declared private by //declscope:private, but is used from namespace "c"
+$WORK/c.go:3:9: 	used here, in namespace "c"
+$WORK/a.go:1:1: unused file-level //declscope:private: every declaration it reaches already has private scope
+$WORK/a.go:8:1: unused //declscope:private on aDoc: it already has private scope
+$WORK/a.go:11:1: unused //declscope:private on aBare: it already has private scope
+$WORK/a.go:17:1: unused //declscope:private on aIgnored: it already has private scope
+$WORK/a.go:22:11: unused //declscope:private on aShape.side: it already has private scope
+$WORK/a.go:26:2: unused //declscope:private on aShape.edge: it already has private scope
+$WORK/a.go:30:1: unused //declscope:private on aSeed, aLimit: each already has private scope
+$WORK/b.go:7:1: unused //declscope:private on bShared: it already has private scope
+$WORK/a.go:18:1: unused //declscope:ignore qualify on aIgnored
+
+=== -fix
+exit: 0
+--- stdout
+
+--- stderr
+--- changed a.go
+package fixunusedstrict
+
+// aDoc has a doc comment, separated from the directive by a bare line that
+// the fix takes along.
+func aDoc() int { return 1 }
+
+func aBare() int { return 2 }
+
+// aIgnored keeps its ignore: only the scope directive goes, and the bare line
+// still separates the doc comment from what is left.
+//
+//declscope:ignore qualify // want `unused //declscope:ignore qualify on aIgnored`
+func aIgnored() int { return 3 }
+
+type aShape struct {
+	side int
+
+	// edge is documented.
+	edge int
+}
+
+var (
+	aSeed  = 1
+	aLimit = 2
+)
+
+var _ = aDoc() + aBare() + aIgnored() + aShape{}.side + aShape{}.edge + aSeed + aLimit

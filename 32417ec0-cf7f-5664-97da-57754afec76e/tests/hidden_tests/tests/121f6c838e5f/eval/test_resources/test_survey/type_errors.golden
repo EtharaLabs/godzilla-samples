@@ -1,0 +1,7 @@
+[exit] 1
+[stdout]
+[stderr]
+declscope survey: these packages do not type-check, so their counts would be zero for a reason that is not the code:
+  example.com/app/broken: $WORK/broken/b.go:3:23: cannot use "x" (untyped string constant) as int value in return statement
+  example.com/app/dep: imports example.com/app/broken: $WORK/broken/b.go:3:23: cannot use "x" (untyped string constant) as int value in return statement
+pass -allow-errors to measure the rest anyway

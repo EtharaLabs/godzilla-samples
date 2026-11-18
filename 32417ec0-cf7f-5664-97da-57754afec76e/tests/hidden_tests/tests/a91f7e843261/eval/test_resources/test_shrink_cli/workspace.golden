@@ -1,0 +1,10 @@
+exit 0
+--- stdout
+--- stderr
+declscope shrink: not judged: example.com/root/internal/a: the nested module example.com/root/tool may import it, and loading it failed: example.com/root/tool: missing go.sum entry needed to verify package example.com/root/tool is provided by exactly one module; to add: 	go mod download example.com/root
+
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/a/a.go:5:6: func Unused is exported, but nothing outside example.com/root/internal/a uses it
+/tmp/dse-xxxxxxxxxxxx/work/other/internal/o/o.go:3:6: func Lone is exported, but nothing outside example.com/other/internal/o uses it
+--- stderr

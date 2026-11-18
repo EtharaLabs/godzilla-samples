@@ -1,0 +1,36 @@
+## shrink
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-module/internal/x/x.go:5:6: func Unused is exported, but nothing outside example.com/nested/internal/x uses it
+--- stderr
+
+## shrink -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after shrink -fix
+=== nested-module/go.mod
+module example.com/nested
+
+go 1.25
+
+=== nested-module/internal/x/x.go
+// Package x has a nested module under its parent. That module is loaded, and
+// imports nothing of this one, so x is judged like any other package.
+package x
+
+func unused() {} // want: func Unused is exported, but nothing outside example.com/nested/internal/x uses it$
+
+=== nested-module/tools/go.mod
+module example.com/nested/tools
+
+go 1.25
+
+=== nested-module/tools/tools.go
+package tools
+
+## shrink after -fix
+exit 0
+--- stdout
+--- stderr

@@ -1,0 +1,143 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: type userA is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:26: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:20: field userA.n is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:10:44: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6: type userB is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:34: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:12:19: 	used here, in namespace "order"
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: type userA is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:26: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:20: field userA.n is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:10:44: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6: type userB is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:34: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:12:19: 	used here, in namespace "order"
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 3,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 3
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "order",
+      "files": [
+        "order.go"
+      ],
+      "core": false,
+      "declarations": 3,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "user",
+      "files": [
+        "user.go"
+      ],
+      "core": false,
+      "declarations": 10,
+      "qualifyTargets": 0
+    }
+  ],
+  "crossings": [
+    {
+      "from": "order",
+      "to": "user",
+      "mutual": false,
+      "declared": 0,
+      "baselined": 0,
+      "reported": 3,
+      "ignored": 0,
+      "unchecked": 0,
+      "reached": 3,
+      "declarations": 10,
+      "uses": 4,
+      "clears": 3
+    }
+  ],
+  "edges": [
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userA",
+      "kind": "type",
+      "uses": 1,
+      "state": "reported"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userA.n",
+      "kind": "field",
+      "uses": 1,
+      "state": "reported"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userB",
+      "kind": "type",
+      "uses": 2,
+      "state": "reported"
+    }
+  ],
+  "names": []
+}
+--- stderr

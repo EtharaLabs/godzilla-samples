@@ -1,0 +1,66 @@
+## shrink
+exit 0
+--- stdout
+--- stderr
+
+## shrink -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after shrink -fix
+=== nested-module-generic/go.mod
+module example.com/ng
+
+go 1.25
+
+=== nested-module-generic/internal/a/a.go
+// Package a holds a value that the nested module in tools passes to
+// q.Encode, a generic of this module. The nested module's load has q only
+// as an import, which SSA builds no body for. The escape still counts, and
+// Secret is not reported.
+package a
+
+type T struct{ Secret int }
+
+func Make() T { return T{Secret: 1} }
+
+=== nested-module-generic/internal/q/q.go
+package q
+
+import "encoding/json"
+
+func Encode[V any](v V) string {
+	b, _ := json.Marshal(v)
+	return string(b)
+}
+
+=== nested-module-generic/tools/go.mod
+module example.com/ng/tools
+
+go 1.25
+
+require example.com/ng v0.0.0
+
+replace example.com/ng => ../
+
+=== nested-module-generic/tools/tools.go
+package tools
+
+import (
+	"example.com/ng/internal/a"
+	"example.com/ng/internal/q"
+)
+
+func Use() string { return q.Encode(a.Make()) }
+
+## shrink after -fix
+exit 0
+--- stdout
+--- stderr
+
+## shrink once the use is gone
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-module-generic/internal/a/a.go:7:16: field Secret is exported, but nothing outside example.com/ng/internal/a uses it
+--- stderr

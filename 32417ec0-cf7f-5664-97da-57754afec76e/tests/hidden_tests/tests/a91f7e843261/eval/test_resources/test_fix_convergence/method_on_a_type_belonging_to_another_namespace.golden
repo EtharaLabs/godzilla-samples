@@ -1,0 +1,38 @@
+## diagnostics
+exit 0
+--- stdout
+--- stderr
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+func (u *User) bump() { u.ID++ }
+
+func OrderRun(u *User) { u.bump() }
+
+=== user.go
+package x
+
+type User struct{ ID int }
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

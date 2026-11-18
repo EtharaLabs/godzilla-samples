@@ -1,0 +1,24 @@
+[exit] 0
+[stdout]
+Show the agent skills embedded in declscope, and where each one stands.
+
+Usage:
+  declscope skill list [flags] [skill...]
+
+Flags:
+  -agent value
+    	Target agent: {github-copilot|claude-code|cursor|codex|gemini|antigravity}, or all, or detected (repeatable) (default "detected")
+  -dir string
+    	Install to a custom directory (overrides -agent and -scope)
+  -dry-run
+    	Report what would happen without writing
+  -f	Overwrite existing skills (shorthand)
+  -force
+    	Overwrite existing skills
+  -scope value
+    	Installation scope: {project|user} (default project)
+
+Embedded skills:
+  declscope-adoption   Adopt declscope on an existing Go codebase and drive its diagnostics to zero. Read this when intr...
+  declscope-authoring  Write or change Go code in a repository that runs declscope, which shows as a .declscope.y*ml or ...
+[stderr]

@@ -1,0 +1,70 @@
+exit: 3
+--- stdout
+$WORK/internal/r/r.go:3:6: type Emb is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+$WORK/internal/r/r.go:38:6: type Nest is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+
+--- stderr
+
+--- file internal/r/r.go
+package r
+
+type Emb struct{}
+
+type holder struct {
+	Emb
+	emb int
+}
+
+type inner struct{}
+
+type outer struct{ inner }
+
+type shared struct {
+	val int
+}
+
+type left struct{ shared }
+
+type right struct{ shared }
+
+type diamond struct {
+	left
+	right
+}
+
+type pointed struct{}
+
+type aliased struct{}
+
+type aliasOfAliased = aliased
+
+type embedder struct {
+	*pointed
+	aliasOfAliased
+}
+
+type Nest struct{}
+
+type hopper struct{}
+
+func (hopper) nest() int { return 0 }
+
+type nested struct{ Nest }
+
+type stack struct {
+	nested
+	hopper
+}
+
+type basic struct{ int }
+
+var (
+	_ = holder{}.Emb
+	_ = holder{}.emb
+	_ = outer{}.inner
+	_ = embedder{}.pointed
+	_ = embedder{}.aliasOfAliased
+	_ = stack{}.nest()
+	_ = diamond{}
+	_ = basic{}.int
+)

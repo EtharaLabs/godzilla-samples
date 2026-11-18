@@ -1,0 +1,7 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/box.go:10:6: type boxed takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/box.go:15:6: func boxRead takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:8:2: field userCard.old takes shared scope from //declscope:shared on userCard, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2: field userCard.fresh takes shared scope from //declscope:shared on userCard, but no use from another namespace is visible to declscope

@@ -1,0 +1,116 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: func taken is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:30: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6: func userTaken is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:40: 	used here, in namespace "order"
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"message": "func taken is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to taken",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 11,
+								"end": 11,
+								"new": "//declscope:shared\n"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:30",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:35",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			},
+			{
+				"category": "qualify",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"message": "func taken does not carry namespace \"user\" anywhere in its name; rename it to userTaken, or to another name that carries \"user\""
+			},
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6",
+				"message": "func userTaken is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to userTaken",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 42,
+								"end": 42,
+								"new": "//declscope:shared\n"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:40",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:49",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: ondemand
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+func orderRun() int { return taken() + userTaken() }
+
+var _ = orderRun
+
+=== user.go
+package x
+
+//declscope:shared
+func taken() int { return 1 }
+
+//declscope:shared
+func userTaken() int { return 2 }
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6: func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"

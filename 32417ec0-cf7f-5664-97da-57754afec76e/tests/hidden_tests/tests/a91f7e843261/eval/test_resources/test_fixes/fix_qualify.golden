@@ -1,0 +1,94 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -1,6 +1,6 @@
+ package fixqualify
+ 
+-func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
++func userHelper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+ 
+ // The rename target is taken, so no fix is offered for this one.
+ func taken() int { return 2 } // want `func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"`
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+# The naming rule is off by default, and this package asserts what it does
+# once a second namespace puts it in force. The surplus rule is turned off so
+# that it does not land on the same directives and obscure the fix.
+rules:
+  naming:
+    qualify: ondemand
+  surplus: off
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixqualify
+
+//declscope:shared
+func orderRun() int { return 4 }
+
+=== user.go
+package fixqualify
+
+func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+
+// The rename target is taken, so no fix is offered for this one.
+func taken() int { return 2 } // want `func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"`
+
+func userTaken() int { return 3 }
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+# The naming rule is off by default, and this package asserts what it does
+# once a second namespace puts it in force. The surplus rule is turned off so
+# that it does not land on the same directives and obscure the fix.
+rules:
+  naming:
+    qualify: ondemand
+  surplus: off
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixqualify
+
+//declscope:shared
+func orderRun() int { return 4 }
+
+=== user.go
+package fixqualify
+
+func userHelper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+
+// The rename target is taken, so no fix is offered for this one.
+func taken() int { return 2 } // want `func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"`
+
+func userTaken() int { return 3 }
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func taken does not carry namespace "user" anywhere in its name; rename it to userTaken, or to another name that carries "user"

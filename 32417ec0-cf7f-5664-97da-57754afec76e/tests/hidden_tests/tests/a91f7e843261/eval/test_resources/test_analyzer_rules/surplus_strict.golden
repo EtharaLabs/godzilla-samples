@@ -1,0 +1,18 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/file.go:10:2: field fileCursor.seen takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/helper.go:12:6: func helperLocal takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/helper.go:15:5: var helperA takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/helper.go:15:14: var helperB takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/helper.go:23:6: type helperBox takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/helper.go:28:20: method helperBox.helperSize takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/helper.go:35:2: field helperPair.y takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2: field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:30:2: field userPair.left takes shared scope from //declscope:shared on userPair, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:30:8: field userPair.right takes shared scope from //declscope:shared on userPair, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:46:1: //declscope:shared on userIdle, userIdle.count: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:57:2: field userQuiet.kept takes shared scope from //declscope:shared on userQuiet, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:81:2: method userSaver.save takes shared scope from //declscope:shared on userSaver, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:101:2: var blockLocal takes shared scope from the //declscope:shared on its block, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:71:2: unused //declscope:ignore surplus on userNeedless.read

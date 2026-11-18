@@ -1,0 +1,84 @@
+// Soundness of the rename fix.
+//
+// A rename is correct when every reference still resolves to the same object
+// afterwards. Go resolves a name from the inside out: local scope, then file
+// scope (imports), then package scope, then the universe of predeclared names.
+// The guard modeled here checks package scope only; the counterexamples
+// enumerate the further scopes a sound guard must check.
+//
+// ASSUME-1: names reduce to Old / New / Other, since only the presence of a
+//   collision matters, not the spelling (modelling assumption)
+// ASSUME-2: two reference sites are modeled — one that referred to the
+//   declaration, and one elsewhere in the package that already used the new
+//   name. Soundness over more sites is the conjunction over each (modelling
+//   assumption)
+spec RenameSound {
+  enum NameId { OldName, NewName, OtherName }
+  enum Bind   { Unbound, BindsOld, BindsNew, BindsOther }
+  enum Target { ToDecl, ToLocal, ToFile, ToOtherPkg, ToUniverse, Unresolved }
+
+  state {
+    configured:  Bool = false,
+    declName:    NameId = OldName,  // The declaration's current name
+    localAt:     Bind = Unbound,    // What the innermost scope at the reference binds
+    fileAt:      Bind = Unbound,    // What that file's imports bind
+    otherPkg:    Bind = Unbound,    // Another package-scope declaration
+    universeNew: Bool = false,      // NewName is predeclared (len, error, string, ...)
+    renamed:     Bool = false,
+    // What a second site elsewhere in the package resolved NewName to before
+    // the rename. Captured so the rename can be checked not to capture it.
+    elsewhereBefore: Target = Unresolved
+  }
+
+  action configure(l: Bind, f: Bind, o: Bind, u: Bool) {
+    requires not configured
+    configured = true  localAt = l  fileAt = f  otherPkg = o  universeNew = u
+  }
+
+  def bindOf(n: NameId) =
+    if n == OldName then BindsOld else if n == NewName then BindsNew else BindsOther
+
+  // Resolution from the reference site, innermost scope first.
+  def resolve(n: NameId) =
+    if localAt == bindOf(n) then ToLocal
+    else if fileAt == bindOf(n) then ToFile
+    else if otherPkg == bindOf(n) then ToOtherPkg
+    else if n == declName then ToDecl
+    else if n == NewName and universeNew then ToUniverse
+    else Unresolved
+
+  // A second site elsewhere in the package, with no local or import binding of
+  // its own, resolving NewName.
+  def resolveElsewhere() =
+    if otherPkg == BindsNew then ToOtherPkg
+    else if declName == NewName then ToDecl
+    else if universeNew then ToUniverse
+    else Unresolved
+
+  // The guard modeled here: package scope only.
+  def guardPackageScopeOnly() = otherPkg != BindsNew
+
+  fair action rename() {
+    requires configured
+    requires not renamed
+    requires declName == OldName
+    requires resolve(OldName) == ToDecl   // The reference resolves correctly before
+    requires guardPackageScopeOnly()
+    declName = NewName
+    renamed = true
+    elsewhereBefore = resolveElsewhere()   // Reads the pre-rename state
+  }
+
+  // Soundness, part one: the reference to the declaration must still reach it.
+  invariant RenameKeepsReferenceOnTarget { renamed => resolve(NewName) == ToDecl }
+
+  // Soundness, part two: a reference that already used the new name elsewhere
+  // must not be captured by the renamed declaration. A package-level name
+  // legitimately shadows the universe, so the first invariant stays silent
+  // here — the harm falls on everything else that wanted the predeclared name.
+  invariant RenameCapturesNothingElsewhere {
+    renamed and elsewhereBefore != Unresolved => resolveElsewhere() == elsewhereBefore
+  }
+
+  reachable RenameHappens { renamed }
+}

@@ -1,0 +1,163 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:6: func userSpare takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:21:2: field userEntry.spare takes shared scope from //declscope:shared on userEntry, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:33:2: field _.spare takes shared scope from //declscope:shared on _, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:18:1: unused //declscope:shared on userEntry: it already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:30:1: unused //declscope:shared: every declaration it reaches already has shared scope
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -7,6 +7,8 @@
+ 
+ // userSpare takes it too, and nothing else calls it. Its narrowing gives
+ // this file an edit whatever the rest gets, so the golden is compared.
++//
++//declscope:private
+ func userSpare() int { return 4 } // want `func userSpare takes shared scope`
+ 
+ var _ = userSpare
+@@ -17,7 +19,8 @@
+ //
+ //declscope:shared // want `unused //declscope:shared on userEntry: it already has shared scope`
+ type userEntry struct {
+-	key   int
++	key int
++	//declscope:private
+ 	spare int // want `field userEntry.spare takes shared scope`
+ }
+ 
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+# Both rules strict: an unused report under strict reads what the declarations
+# already have, so narrowing one of them can reword it where loose's cannot.
+rules:
+  surplus: strict
+  unused: strict
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixsurplusstrictunusedstrict
+
+func orderRun() int { return userHelper() + userEntry{}.key }
+
+var _ = orderRun
+
+=== user.go
+//declscope:shared
+
+package fixsurplusstrictunusedstrict
+
+// userHelper takes the file's package, and order.go calls it.
+func userHelper() int { return 3 }
+
+// userSpare takes it too, and nothing else calls it. Its narrowing gives
+// this file an edit whatever the rest gets, so the golden is compared.
+func userSpare() int { return 4 } // want `func userSpare takes shared scope`
+
+var _ = userSpare
+
+// The type restates the file's package, and its report names the type alone.
+// Narrowing spare leaves it reading the same, so the fix is offered. The
+// directive's own deletion is withheld, since surplus reads it.
+//
+//declscope:shared // want `unused //declscope:shared on userEntry: it already has shared scope`
+type userEntry struct {
+	key   int
+	spare int // want `field userEntry.spare takes shared scope`
+}
+
+var _ = userEntry{}.spare
+
+// A type that declares no name has a report that says what everything it
+// reaches has. Narrowing spare would make it say that one field states its
+// own scope, so the fix is withheld.
+//
+//declscope:shared // want `unused //declscope:shared: every declaration it reaches already has shared scope`
+type _ struct {
+	Wide  int
+	spare int // want `field _.spare takes shared scope`
+}
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+# Both rules strict: an unused report under strict reads what the declarations
+# already have, so narrowing one of them can reword it where loose's cannot.
+rules:
+  surplus: strict
+  unused: strict
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixsurplusstrictunusedstrict
+
+func orderRun() int { return userHelper() + userEntry{}.key }
+
+var _ = orderRun
+
+=== user.go
+//declscope:shared
+
+package fixsurplusstrictunusedstrict
+
+// userHelper takes the file's package, and order.go calls it.
+func userHelper() int { return 3 }
+
+// userSpare takes it too, and nothing else calls it. Its narrowing gives
+// this file an edit whatever the rest gets, so the golden is compared.
+//
+//declscope:private
+func userSpare() int { return 4 } // want `func userSpare takes shared scope`
+
+var _ = userSpare
+
+// The type restates the file's package, and its report names the type alone.
+// Narrowing spare leaves it reading the same, so the fix is offered. The
+// directive's own deletion is withheld, since surplus reads it.
+//
+//declscope:shared // want `unused //declscope:shared on userEntry: it already has shared scope`
+type userEntry struct {
+	key int
+	//declscope:private
+	spare int // want `field userEntry.spare takes shared scope`
+}
+
+var _ = userEntry{}.spare
+
+// A type that declares no name has a report that says what everything it
+// reaches has. Narrowing spare would make it say that one field states its
+// own scope, so the fix is withheld.
+//
+//declscope:shared // want `unused //declscope:shared: every declaration it reaches already has shared scope`
+type _ struct {
+	Wide  int
+	spare int // want `field _.spare takes shared scope`
+}
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:36:2: field _.spare takes shared scope from //declscope:shared on _, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:20:1: unused //declscope:shared on userEntry: it already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:33:1: unused //declscope:shared: every declaration it reaches already has shared scope

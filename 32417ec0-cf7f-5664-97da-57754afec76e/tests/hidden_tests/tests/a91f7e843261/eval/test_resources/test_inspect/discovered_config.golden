@@ -1,0 +1,109 @@
+exit 0
+--- stdout
+# example.com/app/p
+
+Config: `/tmp/dse-xxxxxxxxxxxx/work/.declscope.yaml` + `/tmp/dse-xxxxxxxxxxxx/work/p/.declscope.yaml`
+
+## Namespaces
+
+| namespace | files     | declarations | qualify targets |
+| --------- | --------- | -----------: | --------------: |
+| user      | `user.go` |            1 |               1 |
+
+## Crossings
+
+Nothing crosses a namespace in this package.
+
+## Qualify
+
+| namespace | exempt | baselined | reported | saturation |
+| --------- | -----: | --------: | -------: | ---------: |
+| user      |      0 |         0 |        1 |     1 of 1 |
+
+--- stderr
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app/p",
+  "config": [
+    "/tmp/dse-xxxxxxxxxxxx/work/.declscope.yaml",
+    "/tmp/dse-xxxxxxxxxxxx/work/p/.declscope.yaml"
+  ],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": true,
+      "keyable": true,
+      "found": 1,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 1
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "user",
+      "files": [
+        "user.go"
+      ],
+      "core": false,
+      "declarations": 1,
+      "qualifyTargets": 1
+    }
+  ],
+  "crossings": [],
+  "edges": [],
+  "names": [
+    {
+      "namespace": "user",
+      "file": "user.go",
+      "declaration": "helper",
+      "kind": "func",
+      "exported": false,
+      "state": "reported",
+      "fixable": true
+    }
+  ]
+}
+--- stderr

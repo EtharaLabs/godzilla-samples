@@ -1,0 +1,188 @@
+exit: 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 4,
+      "failed": []
+    },
+    "configs": [
+      {
+        "chain": [
+          "$WORK/.declscope.yaml"
+        ],
+        "packages": 3,
+        "rules": {
+          "boundary": true,
+          "qualify": "ondemand",
+          "exported": true,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      },
+      {
+        "chain": [
+          "$WORK/.declscope.yaml",
+          "$WORK/off/.declscope.yaml"
+        ],
+        "packages": 1,
+        "rules": {
+          "boundary": false,
+          "qualify": "never",
+          "exported": true,
+          "surplus": "off",
+          "unused": "off"
+        }
+      }
+    ],
+    "baselines": [
+      {
+        "path": "$WORK/app/.declscope-baseline.yaml",
+        "entries": 2
+      }
+    ]
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 3,
+      "ignored": 0,
+      "baselined": 1,
+      "reported": 2
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": true,
+      "keyable": true,
+      "found": 3,
+      "ignored": 1,
+      "baselined": 1,
+      "reported": 1
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "packages": [
+    {
+      "package": "example.com/m/app",
+      "namespaces": 3,
+      "coreFiles": 1,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 2,
+        "baselined": 1,
+        "declared": 1
+      },
+      "qualify": {
+        "asked": true,
+        "reported": 1,
+        "baselined": 1,
+        "exempt": 1,
+        "worst": {
+          "namespace": "user",
+          "failing": 2,
+          "targets": 5
+        }
+      },
+      "largest": {
+        "from": "order",
+        "to": "user",
+        "reached": 3,
+        "uses": 3
+      }
+    },
+    {
+      "package": "example.com/m/allcore",
+      "namespaces": 1,
+      "coreFiles": 2,
+      "allCore": true,
+      "boundary": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 0
+      }
+    },
+    {
+      "package": "example.com/m/gen",
+      "namespaces": 0,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 0
+      }
+    },
+    {
+      "package": "example.com/m/off",
+      "namespaces": 2,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 0
+      },
+      "largest": {
+        "from": "b",
+        "to": "a",
+        "reached": 1,
+        "uses": 1
+      }
+    }
+  ]
+}
+
+--- stderr

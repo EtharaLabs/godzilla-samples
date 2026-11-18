@@ -1,0 +1,13 @@
+exit: 3
+--- stdout
+$WORK/internal/a/a.go:5:6: func Unused is exported, but nothing outside example.com/m/internal/a uses it
+
+--- stderr
+
+=== GOFLAGS=-tags=never
+exit: 3
+--- stdout
+$WORK/internal/a/a.go:5:6: func Unused is exported, but nothing outside example.com/m/internal/a uses it
+$WORK/internal/t/t_never.go:5:6: func OnlyTagged is exported, but nothing outside example.com/m/internal/t uses it
+
+--- stderr

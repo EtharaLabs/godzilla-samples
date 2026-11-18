@@ -1,0 +1,7 @@
+exit: 3
+--- stdout
+$WORK/internal/plain/plain.go:3:6: func Unused is exported, but nothing outside example.com/m/internal/plain uses it
+
+--- stderr
+declscope shrink: not judged: example.com/m/internal/asm: the package holds non-Go files
+declscope shrink: not judged: example.com/m/internal/crc: the package holds non-Go files

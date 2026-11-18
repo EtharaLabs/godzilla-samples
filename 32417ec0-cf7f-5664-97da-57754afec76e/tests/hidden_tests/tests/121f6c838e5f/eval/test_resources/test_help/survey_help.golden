@@ -1,0 +1,19 @@
+[exit] 0
+[stdout]
+[stderr]
+Usage: declscope survey [flags] [packages]
+
+Reports what was checked and what it found, one row per package, so that the
+package to open first is the one at the top.
+
+It decides nothing and gates nothing: the exit status is zero whatever the
+counts say. Use declscope itself for that, and a baseline to adopt it.
+
+  -allow-errors
+    	measure anyway when some packages do not type-check
+  -config string
+    	path to a declscope YAML config file
+  -format string
+    	output format: markdown or json (default "markdown")
+  -test
+    	measure *_test.go files as well (default true)

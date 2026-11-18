@@ -1,0 +1,35 @@
+=== declscope baseline ./a
+exit: 0
+--- stdout
+
+--- stderr
+declscope: recorded 2 violation(s) in $WORK/.declscope-baseline.yaml
+
+=== declscope ./...
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/internal/b/user.go:3:6: func helper is private to namespace "user", but is used from namespace "order"
+$WORK/internal/b/order.go:3:30: 	used here, in namespace "order"
+$WORK/internal/b/user.go:3:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+
+=== files
+--- changed .declscope-baseline.yaml
+# declscope baseline
+#
+# Violations recorded here are suppressed; new ones are still reported.
+# Regenerate with:
+#
+#     declscope baseline ./...
+#
+# Do not edit by hand. An entry disappears when its violation is fixed, so the
+# diff of a regeneration is the record of what was cleaned up.
+packages:
+  example.com/m/a:
+    boundary:
+      user:
+        - helper
+    qualify:
+      user:
+        - helper

@@ -1,0 +1,12 @@
+//declscope:ignore qualify
+
+package fileignore
+
+// The file stands outside the naming rule, so neither of these is asked to
+// carry the "util" prefix.
+func helper() int { return 1 }
+
+// The boundary still holds: only qualify was silenced.
+func helper2() int { return 2 } // want `func helper2 is private to namespace "util", but is used from namespace "order"`
+
+var _ = helper

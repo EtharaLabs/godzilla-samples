@@ -1,0 +1,83 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: //declscope:shared on userHelper: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: unused //declscope:shared on userHelper: it already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:1: unused //declscope:shared on userQuiet: it already has shared scope
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "surplus",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"message": "//declscope:shared on userHelper: no use from another namespace is visible to declscope"
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"message": "unused //declscope:shared on userHelper: it already has shared scope",
+				"suggested_fixes": [
+					{
+						"message": "remove //declscope:shared",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 11,
+								"end": 30,
+								"new": ""
+							}
+						]
+					}
+				]
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:6:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:6:1",
+				"message": "unused //declscope:shared on userQuiet: it already has shared scope"
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+defaults:
+  unexported: shared
+rules:
+  unused: strict
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package x
+
+func userHelper() int { return 1 }
+
+//declscope:shared
+//declscope:ignore surplus
+func userQuiet() int { return 2 }
+
+var _ = userHelper() + userQuiet()
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:1: unused //declscope:shared on userQuiet: it already has shared scope

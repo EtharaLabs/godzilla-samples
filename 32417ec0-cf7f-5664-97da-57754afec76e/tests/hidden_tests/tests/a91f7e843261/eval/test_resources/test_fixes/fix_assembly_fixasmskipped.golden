@@ -1,0 +1,85 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6: func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -2,6 +2,6 @@
+ 
+ // The go command skips _old.s, as it skips every name that starts with _ or
+ // ., so plain is still renamed.
+-func plain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
++func userPlain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+ 
+-func Exported() int64 { return plain() }
++func Exported() int64 { return userPlain() }
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== _old.s
+#include "textflag.h"
+
+TEXT ·quadruple(SB), NOSPLIT, $0-16
+	CALL ·plain(SB)
+	RET
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package fixasmskipped
+
+// The go command skips _old.s, as it skips every name that starts with _ or
+// ., so plain is still renamed.
+func plain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+
+func Exported() int64 { return plain() }
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== _old.s
+#include "textflag.h"
+
+TEXT ·quadruple(SB), NOSPLIT, $0-16
+	CALL ·plain(SB)
+	RET
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package fixasmskipped
+
+// The go command skips _old.s, as it skips every name that starts with _ or
+// ., so plain is still renamed.
+func userPlain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+
+func Exported() int64 { return userPlain() }
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

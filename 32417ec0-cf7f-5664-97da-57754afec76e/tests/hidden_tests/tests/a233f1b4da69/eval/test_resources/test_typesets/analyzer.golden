@@ -1,0 +1,20 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:3:6: type userA is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:7:37: 	used here, in namespace "order"
+$WORK/order.go:10:2: 	used here, in namespace "order"
+$WORK/order.go:18:24: 	used here, in namespace "order"
+$WORK/user.go:3:20: field userA.x is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:7:61: 	used here, in namespace "order"
+$WORK/user.go:5:6: type userB is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:10:10: 	used here, in namespace "order"
+$WORK/order.go:11:2: 	used here, in namespace "order"
+$WORK/order.go:18:42: 	used here, in namespace "order"
+$WORK/user.go:7:6: type userC is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:16:28: 	used here, in namespace "order"
+$WORK/order.go:18:59: 	used here, in namespace "order"
+$WORK/order.go:18:67: 	used here, in namespace "order"
+$WORK/user.go:7:20: field userC.y is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:16:76: 	used here, in namespace "order"

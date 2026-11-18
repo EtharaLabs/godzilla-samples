@@ -1,0 +1,25 @@
+exit: 0
+--- stdout
+
+--- stderr
+
+=== -config loud.yaml
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:3:6: func helper is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:9: 	used here, in namespace "order"
+$WORK/user.go:3:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+$WORK/user.go:5:6: type box is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:20: 	used here, in namespace "order"
+$WORK/user.go:5:6: type box does not carry namespace "user" anywhere in its name; rename it to userBox, or to another name that carries "user"
+$WORK/user.go:6:2: field box.n is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:26: 	used here, in namespace "order"
+
+=== -config nope.yaml
+exit: 1
+--- stdout
+
+--- stderr
+declscope: open nope.yaml: no such file or directory

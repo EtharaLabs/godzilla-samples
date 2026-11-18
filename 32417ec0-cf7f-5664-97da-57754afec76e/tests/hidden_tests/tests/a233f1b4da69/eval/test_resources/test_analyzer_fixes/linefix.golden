@@ -1,0 +1,25 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.tmpl:1: field kept.flag is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:3:43: 	used here, in namespace "order"
+
+=== -fix
+exit: 0
+--- stdout
+
+--- stderr
+--- changed user.go
+package linefix
+
+// A //line directive without a column leaves the adjusted column at 0. The
+// field does not start its line, so the fix still breaks the line first.
+//
+//line user.tmpl:1
+type kept struct {
+	//declscope:shared
+	flag bool
+} // want `field kept.flag is private to namespace "user", but is used from namespace "order"`
+
+func UserMake() kept { return kept{flag: true} }

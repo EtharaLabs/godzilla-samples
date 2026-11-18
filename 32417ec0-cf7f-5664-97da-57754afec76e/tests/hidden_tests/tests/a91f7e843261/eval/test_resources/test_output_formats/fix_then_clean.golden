@@ -1,0 +1,47 @@
+exit 0
+--- stdout
+--- stderr
+
+=== a/order.go
+package a
+
+func orderRun() int { return userHelper() }
+
+var _ = orderRun
+
+=== a/user.go
+package a
+
+//declscope:shared
+func userHelper() int { return 1 }
+
+=== b/order.go
+package b
+
+var _ = userBox{}.n
+
+func orderMake() userBox {
+	return userBox{n: 1, m: 2}
+}
+
+var _ = orderMake
+
+=== b/user.go
+package b
+
+// userBox holds a count.
+//
+//declscope:shared
+type userBox struct {
+	n int
+	m int
+}
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+exit 0
+--- stdout
+--- stderr

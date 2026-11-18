@@ -1,0 +1,103 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: func helper is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:30: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"message": "func helper is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to helper",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 11,
+								"end": 11,
+								"new": "//declscope:shared\n"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:30",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:36",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			},
+			{
+				"category": "qualify",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6",
+				"message": "func helper does not carry namespace \"user\" anywhere in its name; rename it to userHelper, or to another name that carries \"user\"",
+				"suggested_fixes": [
+					{
+						"message": "rename helper to userHelper (prefix it with its namespace)",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/order.go",
+								"start": 40,
+								"end": 46,
+								"new": "userHelper"
+							},
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 16,
+								"end": 22,
+								"new": "userHelper"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: ondemand
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+func orderRun() int { return userHelper() }
+
+var _ = orderRun
+
+=== user.go
+package x
+
+//declscope:shared
+func userHelper() int { return 1 }
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

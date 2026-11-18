@@ -1,0 +1,37 @@
+## shrink
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-module-in-testdata/internal/q/q.go:6:6: func F is exported, but nothing outside example.com/dp/internal/q uses it
+--- stderr
+
+## shrink -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after shrink -fix
+=== nested-module-in-testdata/go.mod
+module example.com/dp
+
+go 1.25
+
+=== nested-module-in-testdata/internal/q/q.go
+// Package q may be imported by the module in testdata/tools, one level
+// below a directory ./... skips. That module is loaded, and imports nothing
+// of this one, so q is judged.
+package q
+
+func f() {} // want: func F is exported, but nothing outside example.com/dp/internal/q uses it$
+
+=== nested-module-in-testdata/testdata/tools/go.mod
+module example.com/dp/tools
+
+go 1.25
+
+=== nested-module-in-testdata/testdata/tools/tools.go
+package tools
+
+## shrink after -fix
+exit 0
+--- stdout
+--- stderr

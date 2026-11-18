@@ -1,0 +1,8 @@
+[exit] 3
+[stdout]
+[stderr]
+$WORK/user.go:10:6: func userSpare takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+$WORK/user.go:21:2: field userEntry.spare takes shared scope from //declscope:shared on userEntry, but no use from another namespace is visible to declscope
+$WORK/user.go:33:2: field _.spare takes shared scope from //declscope:shared on _, but no use from another namespace is visible to declscope
+$WORK/user.go:18:1: unused //declscope:shared on userEntry: it already has shared scope
+$WORK/user.go:30:1: unused //declscope:shared: every declaration it reaches already has shared scope

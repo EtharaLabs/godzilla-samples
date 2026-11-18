@@ -1,0 +1,14 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/list.go:9:2: field List.items is private to namespace "list", but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:9:11: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:10:4: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:18:15: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/list.go:14:19: method List.push is private to namespace "list", but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:15:4: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/list.go:23:6: type listNode is private to namespace "list", but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:16:7: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/list.go:24:2: field listNode.val is private to namespace "list", but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:16:21: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:18:26: 	used here, in namespace "use"

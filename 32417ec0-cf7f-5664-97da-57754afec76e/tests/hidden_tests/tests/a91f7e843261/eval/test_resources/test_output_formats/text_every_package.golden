@@ -1,0 +1,14 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/a/user.go:3:6: func userHelper is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/a/order.go:3:30: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:4:6: type userBox is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:3:9: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:5:18: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:9: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:5:2: field userBox.n is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:3:19: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:17: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:6:2: field userBox.m is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:23: 	used here, in namespace "order"

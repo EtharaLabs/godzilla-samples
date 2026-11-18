@@ -1,0 +1,188 @@
+## shrink
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/a/internal/y/y.go:4:6: func Unused is exported, but nothing outside example.com/nbl/a/internal/y uses it
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/b/internal/z/z.go:6:6: func Baz is exported, but nothing outside example.com/nbl/b/internal/z uses it (no fix: the build of the nested module example.com/nbl/b/g uses example.com/nbl/b/u from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/u-copy, which imports example.com/nbl/b/internal/z)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/c/internal/w/w.go:7:6: func Qux is exported, but nothing outside example.com/nbl/c/internal/w uses it (no fix: the build of the nested module example.com/nbl/k uses example.com/nbl/c/v from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/v-copy, which imports example.com/nbl/c/internal/w)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/s/internal/x/x.go:6:6: func Foo is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/t-copy, which imports example.com/nbl/s/internal/x)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/s/internal/x/x.go:10:6: func Bar is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/t-copy, which imports example.com/nbl/s/internal/x)
+--- stderr
+
+## shrink -fix
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/b/internal/z/z.go:6:6: func Baz is exported, but nothing outside example.com/nbl/b/internal/z uses it (no fix: the build of the nested module example.com/nbl/b/g uses example.com/nbl/b/u from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/u-copy, which imports example.com/nbl/b/internal/z)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/c/internal/w/w.go:7:6: func Qux is exported, but nothing outside example.com/nbl/c/internal/w uses it (no fix: the build of the nested module example.com/nbl/k uses example.com/nbl/c/v from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/v-copy, which imports example.com/nbl/c/internal/w)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/s/internal/x/x.go:6:6: func Foo is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/t-copy, which imports example.com/nbl/s/internal/x)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/s/internal/x/x.go:10:6: func Bar is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/t-copy, which imports example.com/nbl/s/internal/x)
+--- stderr
+
+## tree after shrink -fix
+=== nested-build-list/m/a/internal/y/y.go
+package y
+
+// unused lies in a range that no copy of t has a path in, so it is judged.
+func unused() {} // want: func Unused is exported, but nothing outside example.com/nbl/a/internal/y uses it
+
+=== nested-build-list/m/b/g/g.go
+package g
+
+=== nested-build-list/m/b/g/go.mod
+module example.com/nbl/b/g
+
+go 1.24
+
+require (
+	example.com/nbl v0.0.0
+	example.com/nbl/b/u v0.0.0
+)
+
+replace (
+	example.com/nbl => ../../
+	example.com/nbl/b/u => ../../../u-copy
+)
+
+=== nested-build-list/m/b/g/tagged.go
+//go:build never
+
+package g
+
+import "example.com/nbl/b/u"
+
+// Run is compiled only under the never tag, so this run's load never
+// compiles u. The build under that tag does.
+func Run() { u.Run() }
+
+=== nested-build-list/m/b/internal/z/z.go
+package z
+
+// Baz is what the copy of u that the nested module b/g builds with under the
+// never tag uses. Nothing in this tree does, and unexporting it breaks
+// go build -tags=never ./... of b/g, so its fix is withheld.
+func Baz() {} // want: func Baz is exported, but nothing outside example.com/nbl/b/internal/z uses it \(no fix: the build of the nested module example.com/nbl/b/g uses example.com/nbl/b/u from .*u-copy, which imports example.com/nbl/b/internal/z\)
+
+=== nested-build-list/m/c/internal/w/w.go
+package w
+
+// Qux is what the copy of v that the nested module k builds with uses. k
+// lies under no internal parent, so this run never loads it, but its build
+// list still names that copy. Unexporting Qux breaks go build ./... of k, so
+// its fix is withheld.
+func Qux() {} // want: func Qux is exported, but nothing outside example.com/nbl/c/internal/w uses it \(no fix: the build of the nested module example.com/nbl/k uses example.com/nbl/c/v from .*v-copy, which imports example.com/nbl/c/internal/w\)
+
+=== nested-build-list/m/go.mod
+module example.com/nbl
+
+go 1.24
+
+=== nested-build-list/m/k/go.mod
+module example.com/nbl/k
+
+go 1.24
+
+require (
+	example.com/nbl v0.0.0
+	example.com/nbl/c/v v0.0.0
+)
+
+replace (
+	example.com/nbl => ../
+	example.com/nbl/c/v => ../../v-copy
+)
+
+=== nested-build-list/m/k/k.go
+package k
+
+import "example.com/nbl/c/v"
+
+func Run() { v.Run() }
+
+=== nested-build-list/m/s/internal/x/x.go
+package x
+
+// Foo is what the copy of t that the nested module s/n builds with uses.
+// Nothing in this tree does, and unexporting it breaks go build ./... of s/n,
+// so its fix is withheld.
+func Foo() {} // want: func Foo is exported, but nothing outside example.com/nbl/s/internal/x uses it \(no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from .*, which imports example.com/nbl/s/internal/x\)
+
+// Bar is used by nothing, but the copy may use it too, so its fix is
+// withheld all the same.
+func Bar() {} // want: func Bar is exported, but nothing outside example.com/nbl/s/internal/x uses it \(no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from
+
+=== nested-build-list/m/s/n/go.mod
+module example.com/nbl/s/n
+
+go 1.24
+
+require (
+	example.com/nbl v0.0.0
+	example.com/nbl/s/t v0.0.0
+)
+
+replace (
+	example.com/nbl => ../../
+	example.com/nbl/s/t => ../../../t-copy
+)
+
+=== nested-build-list/m/s/n/n.go
+package n
+
+import "example.com/nbl/s/t"
+
+func Run() { t.Run() }
+
+=== nested-build-list/m/s/t/go.mod
+module example.com/nbl/s/t
+
+go 1.24
+
+=== nested-build-list/m/s/t/t.go
+package t
+
+// Run uses neither x.Foo nor x.Bar. The copy of t that n builds with does.
+func Run() {}
+
+=== nested-build-list/t-copy/go.mod
+module example.com/nbl/s/t
+
+go 1.24
+
+=== nested-build-list/t-copy/t.go
+package t
+
+import "example.com/nbl/s/internal/x"
+
+func Run() { x.Foo() }
+
+=== nested-build-list/u-copy/go.mod
+module example.com/nbl/b/u
+
+go 1.24
+
+=== nested-build-list/u-copy/u.go
+package u
+
+import "example.com/nbl/b/internal/z"
+
+func Run() { z.Baz() }
+
+=== nested-build-list/v-copy/go.mod
+module example.com/nbl/c/v
+
+go 1.24
+
+=== nested-build-list/v-copy/v.go
+package v
+
+import "example.com/nbl/c/internal/w"
+
+func Run() { w.Qux() }
+
+## shrink after -fix
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/b/internal/z/z.go:6:6: func Baz is exported, but nothing outside example.com/nbl/b/internal/z uses it (no fix: the build of the nested module example.com/nbl/b/g uses example.com/nbl/b/u from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/u-copy, which imports example.com/nbl/b/internal/z)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/c/internal/w/w.go:7:6: func Qux is exported, but nothing outside example.com/nbl/c/internal/w uses it (no fix: the build of the nested module example.com/nbl/k uses example.com/nbl/c/v from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/v-copy, which imports example.com/nbl/c/internal/w)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/s/internal/x/x.go:6:6: func Foo is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/t-copy, which imports example.com/nbl/s/internal/x)
+/tmp/dse-xxxxxxxxxxxx/work/nested-build-list/m/s/internal/x/x.go:10:6: func Bar is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from /tmp/dse-xxxxxxxxxxxx/work/nested-build-list/t-copy, which imports example.com/nbl/s/internal/x)
+--- stderr

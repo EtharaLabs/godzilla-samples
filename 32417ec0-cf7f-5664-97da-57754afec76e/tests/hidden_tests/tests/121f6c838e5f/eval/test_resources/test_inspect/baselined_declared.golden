@@ -1,0 +1,48 @@
+[exit] 0
+[stdout]
+# example.com/app/a
+
+## Namespaces
+
+| namespace | files  | declarations | qualify targets |
+| --------- | ------ | -----------: | --------------- |
+| a         | `a.go` |            3 | -               |
+| b         | `b.go` |            1 | -               |
+| c         | `c.go` |            1 | -               |
+
+## Crossings
+
+```mermaid
+graph LR
+  n0["b"]
+  n1["a"]
+  n2["c"]
+  n0 -->|2| n1
+  n2 ==>|1| n1
+```
+
+<details>
+<summary>Table: 2 crossings</summary>
+
+| crossing | mutual | declared | baselined | reported | clears | reached | uses |
+| -------- | ------ | -------: | --------: | -------: | -----: | ------: | ---: |
+| b → a    |        |        1 |         1 |        0 |      1 |  2 of 3 |    2 |
+| c → a    |        |        0 |         0 |        1 |      1 |  1 of 3 |    1 |
+
+</details>
+
+Declarations crossed: 1 reported, 1 baselined, 1 declared. The columns above count within a pair, so they sum to more: a declaration reached from two namespaces is two rows and one finding.
+
+## Most-reached declarations except `(core)`
+
+| declaration | namespace | reached from | state     |
+| ----------- | --------- | ------------ | --------- |
+| `aHelper`   | a         | 1 namespace  | baselined |
+| `aLate`     | a         | 1 namespace  | reported  |
+| `aShared`   | a         | 1 namespace  | declared  |
+
+## Qualify
+
+Not asked: `rules.naming.qualify` does not apply to this package.
+
+[stderr]

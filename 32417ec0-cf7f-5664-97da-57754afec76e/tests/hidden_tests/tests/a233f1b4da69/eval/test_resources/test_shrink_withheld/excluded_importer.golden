@@ -1,0 +1,54 @@
+exit: 3
+--- stdout
+$WORK/internal/y/y.go:5:6: type Runner is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: an exported declaration that keeps its name hands it out)
+$WORK/internal/y/y.go:7:15: method Run is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:12:2: field Flag is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:15:6: type Holder is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: an exported declaration that keeps its name hands it out)
+$WORK/internal/y/y.go:17:6: type Embedded is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:22:2: field Flag is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:23:2: field Other is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:27:2: field A is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:28:2: field B is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:32:2: field C is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+$WORK/internal/y/y.go:36:2: field D is exported, but nothing outside example.com/withheld/internal/y uses it (no fix: a build-excluded file of another package may use it)
+
+--- stderr
+
+--- file internal/y/y.go
+package y
+
+func unnamed() {}
+
+type Runner struct{}
+
+func (Runner) Run() {}
+
+func NewRunner() Runner { return Runner{} }
+
+type Converted struct {
+	Flag int
+}
+
+type Holder struct{ Embedded }
+
+type Embedded struct{}
+
+func NewHolder() Holder { return Holder{} }
+
+type Keyed struct {
+	Flag  int
+	Other int
+}
+
+type Filled struct {
+	A int
+	B string
+}
+
+type InSlice struct {
+	C int
+}
+
+type InMap struct {
+	D int
+}

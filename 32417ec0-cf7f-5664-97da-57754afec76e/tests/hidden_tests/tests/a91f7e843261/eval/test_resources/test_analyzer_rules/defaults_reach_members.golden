@@ -1,0 +1,7 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: field User.secret is declared private by //declscope:private, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:7:11: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:16:16: method User.seal is declared private by //declscope:private, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:5:4: 	used here, in namespace "order"

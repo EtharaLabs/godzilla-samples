@@ -1,0 +1,19 @@
+exit: 0
+--- stdout
+
+--- stderr
+
+=== second run
+exit: 0
+--- stdout
+
+--- stderr
+
+--- file internal/a/a.go
+package a
+
+func helper() int { return 1 }
+
+type box struct{ n int }
+
+var _ = box{n: helper()}

@@ -1,0 +1,49 @@
+## shrink
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/nested-own-workspace/internal/x/x.go:6:6: func Bar is exported, but nothing outside example.com/now/internal/x uses it
+--- stderr
+
+## shrink -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after shrink -fix
+=== nested-own-workspace/go.mod
+module example.com/now
+
+go 1.24
+
+=== nested-own-workspace/internal/x/x.go
+package x
+
+// Foo is what the nested module n uses, through its own go.work.
+func Foo() {}
+
+func bar() {} // want: func Bar is exported, but nothing outside example.com/now/internal/x uses it
+
+=== nested-own-workspace/n/go.mod
+module example.com/now/n
+
+go 1.24
+
+=== nested-own-workspace/n/go.work
+go 1.24
+
+use (
+	.
+	..
+)
+
+=== nested-own-workspace/n/n.go
+package n
+
+import "example.com/now/internal/x"
+
+func Run() { x.Foo() }
+
+## shrink after -fix
+exit 0
+--- stdout
+--- stderr

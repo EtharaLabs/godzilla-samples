@@ -1,0 +1,24 @@
+exit: 3
+--- stdout
+$WORK/internal/x/x.go:3:5: var WinRef is exported, but nothing outside example.com/withheld/internal/x uses it (no fix: a build-excluded file of its package names it)
+$WORK/internal/x/x.go:8:2: field F is exported, but nothing outside example.com/withheld/internal/x uses it (no fix: a build-excluded file of its package may use it)
+$WORK/internal/x/x.go:11:12: method Close is exported, but nothing outside example.com/withheld/internal/x uses it (no fix: a build-excluded file of its package may use it)
+
+--- stderr
+
+--- file internal/x/x.go
+package x
+
+var WinRef = 1
+
+func unnamed() {}
+
+type own struct {
+	F int
+}
+
+func (own) Close() error { return nil }
+
+func newOwn() own { return own{} }
+
+var _ = own{}.F

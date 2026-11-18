@@ -1,0 +1,73 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: unused //declscope:private: every declaration it reaches states its own scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:2: unused //declscope:private on userA: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:1: unused //declscope:ignore directive on userA, UserB
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"message": "unused //declscope:private: every declaration it reaches states its own scope"
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:6:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:6:2",
+				"message": "unused //declscope:private on userA: it already has private scope"
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:1",
+				"message": "unused //declscope:ignore directive on userA, UserB"
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  unused: strict
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package x
+
+//declscope:private
+//declscope:ignore directive
+var (
+	//declscope:private
+	userA = 1
+	//declscope:shared
+	UserB = 2
+)
+
+var _ = userA
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: unused //declscope:private: every declaration it reaches states its own scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:2: unused //declscope:private on userA: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:1: unused //declscope:ignore directive on userA, UserB

@@ -1,0 +1,201 @@
+exit 0
+--- stdout
+# example.com/app/n
+
+Config: `/tmp/dse-xxxxxxxxxxxx/work/.declscope.yaml`
+
+## Namespaces
+
+| namespace | files        | declarations | qualify targets |
+| --------- | ------------ | -----------: | --------------: |
+| (core)    | `client.go`  |            1 |               - |
+| store     | `store.go`   |            3 |               3 |
+| tracing   | `tracing.go` |            3 |               3 |
+
+## Crossings
+
+```mermaid
+graph LR
+  n0["tracing"]
+  n1["(core)"]
+  n0 ==>|1| n1
+```
+
+<details>
+<summary>Table: 1 crossing</summary>
+
+| crossing         | mutual | declared | baselined | reported | clears | reached | uses |
+| ---------------- | ------ | -------: | --------: | -------: | -----: | ------: | ---: |
+| tracing → (core) |        |        0 |         0 |        1 |      1 |  1 of 1 |    1 |
+
+</details>
+
+Declarations crossed: 1 reported, 0 baselined, 0 declared. The columns above count within a pair, so they sum to more: a declaration reached from two namespaces is two rows and one finding.
+
+## Most-reached declarations except `(core)`
+
+1 declaration is further: the core's, which is the shared model and reached from everywhere by design.
+
+## Qualify
+
+| namespace | exempt | baselined | reported | saturation |
+| --------- | -----: | --------: | -------: | ---------: |
+| (core)    |      - |         - |        - |          - |
+| store     |      1 |         0 |        1 |     1 of 3 |
+| tracing   |      0 |         0 |        2 |     2 of 3 |
+
+--- stderr
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app/n",
+  "config": [
+    "/tmp/dse-xxxxxxxxxxxx/work/.declscope.yaml"
+  ],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 1,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 1
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": true,
+      "keyable": true,
+      "found": 4,
+      "ignored": 1,
+      "baselined": 0,
+      "reported": 3
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "(core)",
+      "files": [
+        "client.go"
+      ],
+      "core": true,
+      "declarations": 1,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "store",
+      "files": [
+        "store.go"
+      ],
+      "core": false,
+      "declarations": 3,
+      "qualifyTargets": 3
+    },
+    {
+      "namespace": "tracing",
+      "files": [
+        "tracing.go"
+      ],
+      "core": false,
+      "declarations": 3,
+      "qualifyTargets": 3
+    }
+  ],
+  "crossings": [
+    {
+      "from": "tracing",
+      "to": "(core)",
+      "mutual": false,
+      "declared": 0,
+      "baselined": 0,
+      "reported": 1,
+      "ignored": 0,
+      "unchecked": 0,
+      "reached": 1,
+      "declarations": 1,
+      "uses": 1,
+      "clears": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "tracing",
+      "to": "(core)",
+      "declaration": "dial",
+      "kind": "func",
+      "uses": 1,
+      "state": "reported"
+    }
+  ],
+  "names": [
+    {
+      "namespace": "store",
+      "file": "store.go",
+      "declaration": "keep",
+      "kind": "func",
+      "exported": false,
+      "state": "exempt",
+      "fixable": true
+    },
+    {
+      "namespace": "store",
+      "file": "store.go",
+      "declaration": "load",
+      "kind": "func",
+      "exported": false,
+      "state": "reported",
+      "fixable": true
+    },
+    {
+      "namespace": "tracing",
+      "file": "tracing.go",
+      "declaration": "Export",
+      "kind": "func",
+      "exported": true,
+      "state": "reported",
+      "fixable": false
+    },
+    {
+      "namespace": "tracing",
+      "file": "tracing.go",
+      "declaration": "traceValue",
+      "kind": "func",
+      "exported": false,
+      "state": "reported",
+      "fixable": true
+    }
+  ]
+}
+--- stderr

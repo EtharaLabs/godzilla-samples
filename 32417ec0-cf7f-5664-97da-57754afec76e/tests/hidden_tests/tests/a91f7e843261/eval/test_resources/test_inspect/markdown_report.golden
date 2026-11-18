@@ -1,0 +1,71 @@
+exit 0
+--- stdout
+# example.com/app/shop
+
+Config: `ci.yaml`
+
+## Namespaces
+
+| namespace | files                     | declarations | qualify targets |
+| --------- | ------------------------- | -----------: | --------------: |
+| (core)    | `client.go`               |            2 |               - |
+| cart      | `cart.go`, `cart_test.go` |            3 |               2 |
+| order     | `order.go`                |            3 |               2 |
+| user      | `user.go`                 |            6 |               4 |
+
+## Crossings
+
+```mermaid
+graph LR
+  n0["order"]
+  n1["user"]
+  n2["cart"]
+  n3["(core)"]
+  n0 ==>|4| n1
+  n2 ==>|2| n0
+  n0 ==>|1| n3
+  n0 -->|1| n2
+  n1 -->|1| n2
+```
+
+<details>
+<summary>Table: 5 crossings</summary>
+
+| crossing       | mutual | declared | baselined | reported | clears | reached | uses |
+| -------------- | ------ | -------: | --------: | -------: | -----: | ------: | ---: |
+| order → user   |        |        1 |         0 |        3 |      3 |  4 of 6 |    4 |
+| cart → order   | yes    |        0 |         0 |        2 |      2 |  2 of 3 |    2 |
+| order → (core) |        |        0 |         0 |        1 |      1 |  1 of 2 |    1 |
+| order → cart   | yes    |        0 |         1 |        0 |      2 |  1 of 3 |    1 |
+| user → cart    |        |        0 |         1 |        0 |      0 |  1 of 3 |    1 |
+
+</details>
+
+1 declaration is further: open, shared by default rather than by decision, so left out of the table and of the diagram.
+
+Declarations crossed: 6 reported, 1 baselined, 1 declared. The columns above count within a pair, so they sum to more: a declaration reached from two namespaces is two rows and one finding.
+
+## Most-reached declarations except `(core)`
+
+| declaration        | namespace | reached from | state     |
+| ------------------ | --------- | ------------ | --------- |
+| `cartTotal`        | cart      | 2 namespaces | baselined |
+| `orderCount`       | order     | 1 namespace  | reported  |
+| `orderPlace`       | order     | 1 namespace  | reported  |
+| `userAudit`        | user      | 1 namespace  | reported  |
+| `userFind`         | user      | 1 namespace  | declared  |
+| `userRecord.email` | user      | 1 namespace  | reported  |
+| `userRecord.name`  | user      | 1 namespace  | reported  |
+
+1 declaration is further: the core's, which is the shared model and reached from everywhere by design.
+
+## Qualify
+
+| namespace | exempt | baselined | reported | saturation |
+| --------- | -----: | --------: | -------: | ---------: |
+| (core)    |      - |         - |        - |          - |
+| cart      |      0 |         0 |        1 |     1 of 2 |
+| order     |      0 |         0 |        0 |     0 of 2 |
+| user      |      0 |         0 |        0 |     0 of 4 |
+
+--- stderr

@@ -1,0 +1,119 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func load does not carry namespace "user" anywhere in its name; rename it to userLoad, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:6: func spare does not carry namespace "user" anywhere in its name; rename it to userSpare, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:14:6: func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -11,6 +11,6 @@
+ 
+ // Named nowhere outside this file, so nothing the excluded file writes is
+ // disturbed and the rename is offered.
+-func free() int { return 3 } // want `func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"`
++func userFree() int { return 3 } // want `func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"`
+ 
+-func Exported() int { return load() + spare() + free() }
++func Exported() int { return load() + spare() + userFree() }
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== excluded.go
+//go:build declscope_never
+
+package fixexcluded
+
+// This file belongs to the package but no build configuration the analysis
+// runs under includes it, so it is absent from pass.Files and the fix never
+// rewrites it. It names load, and it declares userSpare.
+
+func userSpare() int { return 0 }
+
+func excludedUse() int { return load() + userSpare() }
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package fixexcluded
+
+// load is named from excluded.go, which this build configuration leaves out.
+// Renaming it here would leave that file calling a name that no longer
+// exists, so the rename is withheld and only the violation is reported.
+func load() int { return 1 } // want `func load does not carry namespace "user" anywhere in its name; rename it to userLoad, or to another name that carries "user"`
+
+// userSpare is already declared in excluded.go, so claiming that name would
+// declare it twice in the configuration that includes the file.
+func spare() int { return 2 } // want `func spare does not carry namespace "user" anywhere in its name; rename it to userSpare, or to another name that carries "user"`
+
+// Named nowhere outside this file, so nothing the excluded file writes is
+// disturbed and the rename is offered.
+func free() int { return 3 } // want `func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"`
+
+func Exported() int { return load() + spare() + free() }
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== excluded.go
+//go:build declscope_never
+
+package fixexcluded
+
+// This file belongs to the package but no build configuration the analysis
+// runs under includes it, so it is absent from pass.Files and the fix never
+// rewrites it. It names load, and it declares userSpare.
+
+func userSpare() int { return 0 }
+
+func excludedUse() int { return load() + userSpare() }
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package fixexcluded
+
+// load is named from excluded.go, which this build configuration leaves out.
+// Renaming it here would leave that file calling a name that no longer
+// exists, so the rename is withheld and only the violation is reported.
+func load() int { return 1 } // want `func load does not carry namespace "user" anywhere in its name; rename it to userLoad, or to another name that carries "user"`
+
+// userSpare is already declared in excluded.go, so claiming that name would
+// declare it twice in the configuration that includes the file.
+func spare() int { return 2 } // want `func spare does not carry namespace "user" anywhere in its name; rename it to userSpare, or to another name that carries "user"`
+
+// Named nowhere outside this file, so nothing the excluded file writes is
+// disturbed and the rename is offered.
+func userFree() int { return 3 } // want `func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"`
+
+func Exported() int { return load() + spare() + userFree() }
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func load does not carry namespace "user" anywhere in its name; rename it to userLoad, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:6: func spare does not carry namespace "user" anywhere in its name; rename it to userSpare, or to another name that carries "user"

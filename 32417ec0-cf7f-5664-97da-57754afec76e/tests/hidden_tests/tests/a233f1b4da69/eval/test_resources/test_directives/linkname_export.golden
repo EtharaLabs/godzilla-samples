@@ -1,0 +1,41 @@
+exit: 0
+--- stdout
+{
+	"example.com/d": {
+		"declscope": [
+			{
+				"category": "qualify",
+				"posn": "$WORK/user.go:6:6",
+				"end": "$WORK/user.go:6:6",
+				"message": "func pushed does not carry namespace \"user\" anywhere in its name; rename it to userPushed, or to another name that carries \"user\""
+			},
+			{
+				"category": "qualify",
+				"posn": "$WORK/user.go:9:6",
+				"end": "$WORK/user.go:9:6",
+				"message": "func linked does not carry namespace \"user\" anywhere in its name; rename it to userLinked, or to another name that carries \"user\""
+			},
+			{
+				"category": "qualify",
+				"posn": "$WORK/user.go:12:6",
+				"end": "$WORK/user.go:12:6",
+				"message": "func free does not carry namespace \"user\" anywhere in its name; rename it to userFree, or to another name that carries \"user\"",
+				"suggested_fixes": [
+					{
+						"message": "rename free to userFree (prefix it with its namespace)",
+						"edits": [
+							{
+								"filename": "$WORK/user.go",
+								"start": 117,
+								"end": 121,
+								"new": "userFree"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}
+
+--- stderr

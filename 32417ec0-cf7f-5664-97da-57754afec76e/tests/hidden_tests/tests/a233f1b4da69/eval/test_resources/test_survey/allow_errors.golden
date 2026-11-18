@@ -1,0 +1,141 @@
+exit: 0
+--- stdout
+## Checks in force
+
+| check      | value                                                     | packages |
+| ---------- | --------------------------------------------------------- | -------: |
+| config     | built-in defaults                                         |        1 |
+| rules      | boundary on, qualify never, surplus strict, unused strict |        1 |
+| type check | 1 package ok, 2 failed                                    |          |
+
+Did not type-check, so given no row:
+
+- `example.com/m/bad: $WORK/bad/bad.go:3:23: cannot use "x" (untyped string constant) as int value in return statement`
+- `example.com/m/user: imports example.com/m/bad: $WORK/bad/bad.go:3:23: cannot use "x" (untyped string constant) as int value in return statement`
+
+## Findings
+
+| rule        | found | ignored | baselined | reported |
+| ----------- | ----: | ------: | --------: | -------: |
+| `boundary`  |     0 |       0 |         0 |        0 |
+| `qualify`   |     - |       - |         - |        - |
+| `surplus`   |     0 |       0 |         0 |        0 |
+| `unused`    |     0 |       0 |         - |        0 |
+| `directive` |     0 |       0 |         - |        0 |
+| `filter`    |     0 |       0 |         - |        0 |
+
+## Packages — boundary
+
+| package            | reported | baselined | declared | largest crossing |
+| ------------------ | -------: | --------: | -------: | ---------------- |
+| `example.com/m/ok` |        0 |         0 |        0 | -                |
+
+## Packages — qualify
+
+| package            | reported | baselined | exempt | worst namespace |
+| ------------------ | -------- | --------- | ------ | --------------- |
+| `example.com/m/ok` | -        | -         | -      | -               |
+
+
+--- stderr
+
+=== json
+exit: 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 3,
+      "failed": [
+        "example.com/m/bad: $WORK/bad/bad.go:3:23: cannot use \"x\" (untyped string constant) as int value in return statement",
+        "example.com/m/user: imports example.com/m/bad: $WORK/bad/bad.go:3:23: cannot use \"x\" (untyped string constant) as int value in return statement"
+      ]
+    },
+    "configs": [
+      {
+        "chain": [],
+        "packages": 1,
+        "rules": {
+          "boundary": true,
+          "qualify": "never",
+          "exported": false,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      }
+    ],
+    "baselines": []
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "packages": [
+    {
+      "package": "example.com/m/ok",
+      "namespaces": 1,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 0
+      }
+    }
+  ]
+}
+
+--- stderr

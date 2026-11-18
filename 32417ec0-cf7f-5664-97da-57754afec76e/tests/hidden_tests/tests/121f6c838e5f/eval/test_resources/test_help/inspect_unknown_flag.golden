@@ -1,0 +1,19 @@
+[exit] 2
+[stdout]
+[stderr]
+flag provided but not defined: -allow-errors
+Usage: declscope inspect [flags] <package>
+
+Reports the shape of one package: its namespaces, every crossing between them,
+what became of each crossing, and where the naming rule stands.
+
+Takes one package. A namespace is implicitly qualified by its package, so
+counts from two packages cannot be added up, and averaging them away silently
+would answer a question nobody asked.
+
+  -config string
+    	path to a declscope YAML config file
+  -format string
+    	output format: markdown or json (default "markdown")
+  -test
+    	measure *_test.go files as well (default true)

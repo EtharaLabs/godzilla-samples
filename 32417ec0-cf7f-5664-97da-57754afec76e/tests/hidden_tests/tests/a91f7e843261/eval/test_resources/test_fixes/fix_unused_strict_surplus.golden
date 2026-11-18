@@ -1,0 +1,148 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/a.go:6:1: //declscope:shared on aHelper: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:9:1: //declscope:shared on cTaker: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:12:2: //declscope:shared on cLocal: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/a.go:6:1: unused //declscope:shared on aHelper: it already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/b.go:6:1: unused //declscope:shared on bQuiet: it already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:12:2: unused //declscope:shared on cLocal: it already has shared scope
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/a.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/a.go (new)
+@@ -2,8 +2,6 @@
+ 
+ // aHelper's directive restates the default. surplus reports it too, and the
+ // deletion settles both.
+-//
+-//declscope:shared // want `unused //declscope:shared on aHelper: it already has shared scope` `//declscope:shared on aHelper: no use from another namespace is visible to declscope`
+ func aHelper() int { return 1 }
+ 
+ var _ = aHelper()
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+defaults:
+  unexported: shared
+rules:
+  unused: strict
+
+=== a.go
+package fixunusedstrictsurplus
+
+// aHelper's directive restates the default. surplus reports it too, and the
+// deletion settles both.
+//
+//declscope:shared // want `unused //declscope:shared on aHelper: it already has shared scope` `//declscope:shared on aHelper: no use from another namespace is visible to declscope`
+func aHelper() int { return 1 }
+
+var _ = aHelper()
+
+=== b.go
+package fixunusedstrictsurplus
+
+// An ignore answers surplus for bQuiet, and would answer nothing once the
+// directive is gone.
+//
+//declscope:shared // want `unused //declscope:shared on bQuiet: it already has shared scope`
+//declscope:ignore surplus
+func bQuiet() int { return 1 }
+
+var _ = bQuiet()
+
+=== c.go
+//declscope:private
+
+package fixunusedstrictsurplus
+
+// cLocal's directive restates its block's, which cTaker keeps in use.
+// Deleting it would make cLocal one of the block's dependents, which surplus
+// judges.
+//
+//declscope:shared // want `//declscope:shared on cTaker: no use from another namespace is visible to declscope`
+var (
+	cTaker = 1
+	//declscope:shared // want `unused //declscope:shared on cLocal: it already has shared scope` `//declscope:shared on cLocal: no use from another namespace is visible to declscope`
+	cLocal = 2
+)
+
+func cOther() int { return 3 }
+
+var _ = cTaker + cLocal + cOther()
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+defaults:
+  unexported: shared
+rules:
+  unused: strict
+
+=== a.go
+package fixunusedstrictsurplus
+
+// aHelper's directive restates the default. surplus reports it too, and the
+// deletion settles both.
+func aHelper() int { return 1 }
+
+var _ = aHelper()
+
+=== b.go
+package fixunusedstrictsurplus
+
+// An ignore answers surplus for bQuiet, and would answer nothing once the
+// directive is gone.
+//
+//declscope:shared // want `unused //declscope:shared on bQuiet: it already has shared scope`
+//declscope:ignore surplus
+func bQuiet() int { return 1 }
+
+var _ = bQuiet()
+
+=== c.go
+//declscope:private
+
+package fixunusedstrictsurplus
+
+// cLocal's directive restates its block's, which cTaker keeps in use.
+// Deleting it would make cLocal one of the block's dependents, which surplus
+// judges.
+//
+//declscope:shared // want `//declscope:shared on cTaker: no use from another namespace is visible to declscope`
+var (
+	cTaker = 1
+	//declscope:shared // want `unused //declscope:shared on cLocal: it already has shared scope` `//declscope:shared on cLocal: no use from another namespace is visible to declscope`
+	cLocal = 2
+)
+
+func cOther() int { return 3 }
+
+var _ = cTaker + cLocal + cOther()
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/c.go:9:1: //declscope:shared on cTaker: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:12:2: //declscope:shared on cLocal: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/b.go:6:1: unused //declscope:shared on bQuiet: it already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:12:2: unused //declscope:shared on cLocal: it already has shared scope

@@ -1,0 +1,39 @@
+exit: 3
+--- stdout
+$WORK/internal/r/r.go:19:19: method Len is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is predeclared)
+
+--- stderr
+
+--- file internal/r/r.go
+package r
+
+type alias = pair
+
+type pair struct {
+	k int
+}
+
+type level int
+
+type local struct {
+	a int
+}
+
+type list[E any] struct {
+	items []E
+}
+
+func (l *list[E]) Len() int { return len(l.items) }
+
+func uses() int {
+	var l list[int]
+	return l.Len() + len(l.items) + local{1}.a + local{a: 2}.a + pair{}.k
+}
+
+var (
+	_ alias
+	_ level
+	_ = uses
+	_ = float64(level(1))
+	_ = []int{1}
+)

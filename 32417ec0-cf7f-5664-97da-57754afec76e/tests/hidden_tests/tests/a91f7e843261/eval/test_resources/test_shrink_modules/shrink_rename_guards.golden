@@ -1,0 +1,472 @@
+## shrink
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/line.go:7:6: func Lined is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:8:6: func Plain is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:11:6: type Thing is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:17:6: func Keep is exported, but nothing outside example.com/rename/internal/r uses it (no fix: an example function names it)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:19:6: type Kept is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:21:6: func KEPT is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:23:6: type Toy is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:29:6: type Wrap is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:31:6: func WRAP is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:36:6: type Nest is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:52:6: type Pv is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:54:11: method SPAN is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:56:6: type Span is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:67:6: func NewThing is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:70:6: type Svc is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:73:12: method Serve is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:76:6: func Block is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:79:6: func Load is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:81:6: func Taken is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:86:5: var Count is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:91:6: func Dup is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:93:6: func DUP is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:95:6: func Type is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is not an identifier)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:97:6: func Init is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name means something to the toolchain)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:100:6: func Pushed is exported, but nothing outside example.com/rename/internal/r uses it (no fix: a //go:linkname or //export names it)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:103:6: func Strings is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:106:6: func HTTPServer is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:108:7: const MAX_RETRIES is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the name has no unexported spelling Go would use)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:110:7: const Limit is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:112:6: type Alias is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:115:6: type Level is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:119:6: type Named is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:121:2: field Size is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:124:14: method Name is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:129:6: type Asked is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:131:14: method Run is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:134:6: type Quiet is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:136:14: method Hush is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:141:6: type Base is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:143:13: method Hop is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:151:6: type Boxed is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:152:2: field Size is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:157:6: type T is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:158:2: field F is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:161:6: type U is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:162:2: field F is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:173:6: type First is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:174:2: field ID is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:177:6: type Second is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:178:2: field Id is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:188:6: type Pair is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:189:2: field ID is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:190:2: field Id is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:195:6: type Emb is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:197:6: type Holder is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:203:6: type Inner is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:209:6: type Shared is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:210:2: field Val is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:223:6: type Pointed is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:225:6: type Aliased is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:227:6: type AliasOfAliased is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:238:6: type Local is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:239:2: field A is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:243:6: type List is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:244:2: field Items is exported, but nothing outside example.com/rename/internal/r uses it
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:247:19: method Len is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is predeclared)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/rx/rx.go:6:6: func Clash is exported, but nothing outside example.com/rename/internal/rx uses it (no fix: a build-excluded file of its package writes the unexported name)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/rx/rx.go:9:6: func Linked is exported, but nothing outside example.com/rename/internal/rx uses it (no fix: a //go:linkname or //export names it)
+--- stderr
+
+## shrink -fix
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:17:6: func Keep is exported, but nothing outside example.com/rename/internal/r uses it (no fix: an example function names it)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:19:6: type Kept is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:29:6: type Wrap is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:36:6: type Nest is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:56:6: type Span is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:81:6: func Taken is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:86:5: var Count is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:93:6: func DUP is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:95:6: func Type is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is not an identifier)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:97:6: func Init is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name means something to the toolchain)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:100:6: func Pushed is exported, but nothing outside example.com/rename/internal/r uses it (no fix: a //go:linkname or //export names it)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:103:6: func Strings is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:108:7: const MAX_RETRIES is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the name has no unexported spelling Go would use)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:121:2: field Size is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:124:14: method Name is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:131:14: method Run is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:136:14: method Hush is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:143:13: method Hop is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:152:2: field Size is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:158:2: field F is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:162:2: field F is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:178:2: field Id is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:190:2: field Id is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:195:6: type Emb is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:247:19: method Len is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is predeclared)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/rx/rx.go:6:6: func Clash is exported, but nothing outside example.com/rename/internal/rx uses it (no fix: a build-excluded file of its package writes the unexported name)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/rx/rx.go:9:6: func Linked is exported, but nothing outside example.com/rename/internal/rx uses it (no fix: a //go:linkname or //export names it)
+--- stderr
+
+## tree after shrink -fix
+=== rename-guards/go.mod
+module example.com/rename
+
+go 1.25
+
+=== rename-guards/internal/r/imp.go
+package r
+
+import "strings"
+
+var _ = strings.ToUpper
+
+=== rename-guards/internal/r/line.go
+package r
+
+// A //line directive moves reported positions elsewhere. The fix must still
+// edit this file.
+//
+//line fake.tmpl:1
+func lined() int { return 1 } // want: func Lined is exported, but nothing.*uses it$
+
+=== rename-guards/internal/r/r.go
+// Package r exercises the rename: what it rewrites, and every guard that
+// withholds it. Nothing outside the package uses anything here.
+package r
+
+import _ "unsafe"
+
+// plain is fixed, and the name its doc comment opens with is rewritten too.
+func plain() int { return 1 } // want: func Plain is exported, but nothing.*uses it$
+
+// A thing is fixed, and so is the name after the article.
+type thing struct{} // want: type Thing is exported, but nothing.*uses it$
+
+// Keep keeps its name, since an example names it, so Kept keeps its own.
+// Kept then claims no name, and KEPT, which lowers to the same, is fixed
+// with the Toy it returns, all in one run. Kept's report reads as taken,
+// the way the next run reads it once KEPT is kept.
+func Keep() Kept { return Kept{} } // want: func Keep is exported.*no fix: an example function names it
+
+type Kept struct{} // want: type Kept is exported.*no fix: the unexported name is taken or would be captured
+
+func kept() *toy { return nil } // want: func KEPT is exported, but nothing.*uses it$
+
+type toy struct{} // want: type Toy is exported, but nothing.*uses it$
+
+// Wrap and WRAP both lower to wrap, and WRAP hands out Wrap. Wrap claims
+// the name first, so WRAP's fix is withheld, and WRAP, keeping its name,
+// keeps Wrap's: neither would be fixed, for a name neither takes. The claim
+// is made again with WRAP first, and Wrap's fix is the one withheld.
+type Wrap struct{} // want: type Wrap is exported.*no fix: the unexported name is taken or would be captured
+
+func wrap() Wrap { return Wrap{} } // want: func WRAP is exported, but nothing.*uses it$
+
+// Nest is embedded two levels down in stack, beside hopper, whose method
+// nest sits at the depth Nest's field would take: renaming Nest would make
+// stack{}.nest() ambiguous.
+type Nest struct{} // want: type Nest is exported.*no fix: the unexported name is taken or would be captured
+
+type hopper struct{}
+
+func (hopper) nest() int { return 0 }
+
+type nested struct{ Nest }
+
+type stack struct {
+	nested
+	hopper
+}
+
+// Span and SPAN both lower to span, and meet only in spanOut, one level down
+// from Span's field. SPAN claims the name first, and Span's report reads as
+// taken, the way the next run, with SPAN fixed, reads it.
+type pv struct{} // want: type Pv is exported, but nothing.*uses it$
+
+func (pv) span() {} // want: method SPAN is exported, but nothing.*uses it$
+
+type Span struct{} // want: type Span is exported.*no fix: the unexported name is taken or would be captured
+
+type spanIn struct{ Span }
+
+type spanOut struct {
+	spanIn
+	pv
+}
+
+// newThing returns a Thing, and is fixed in the same run, so it keeps
+// nothing exported: one run of -fix settles both.
+func newThing() *thing { return nil } // want: func NewThing is exported, but nothing.*uses it$
+
+// svc's method is fixed, and so is the name its doc comment opens with.
+type svc struct{} // want: type Svc is exported, but nothing.*uses it$
+
+// serve is fixed with its doc comment.
+func (svc) serve() {} // want: method Serve is exported, but nothing.*uses it$
+
+/* Block is a block comment, which the fix leaves alone. */
+func block() {} // want: func Block is exported, but nothing.*uses it$
+
+// Loader opens this comment, which is another word, and is left alone.
+func load() {} // want: func Load is exported, but nothing.*uses it$
+
+func Taken() int { return taken() } // want: func Taken is exported.*no fix: the unexported name is taken or would be captured
+
+func taken() int { return 0 }
+
+// Count is captured by the parameter of the same name at its one use.
+var Count = func(count int) int { return count } // want: var Count is exported.*no fix: the unexported name is taken or would be captured
+
+func useCount(count int) int { return count + Count(count) }
+
+// DUP lowers to the name Dup's fix claims.
+func dup() int { return 1 } // want: func Dup is exported, but nothing.*uses it$
+
+func DUP() int { return 2 } // want: func DUP is exported.*no fix: the unexported name is taken or would be captured
+
+func Type() {} // want: func Type is exported.*no fix: the unexported name is not an identifier
+
+func Init() {} // want: func Init is exported.*no fix: the unexported name means something to the toolchain
+
+//go:linkname Pushed
+func Pushed() {} // want: func Pushed is exported.*no fix: a //go:linkname or //export names it
+
+// The unexported name is an import of another file of the package.
+func Strings() {} // want: func Strings is exported.*no fix: the unexported name is taken or would be captured
+
+// httpServer becomes httpServer. MAX_RETRIES has no spelling Go would use.
+func httpServer() {} // want: func HTTPServer is exported, but nothing.*uses it$
+
+const MAX_RETRIES = 3 // want: const MAX_RETRIES is exported.*no fix: the name has no unexported spelling Go would use
+
+const limit = 3 // want: const Limit is exported, but nothing.*uses it$
+
+type alias = pair // want: type Alias is exported, but nothing.*uses it$
+
+// level is not a struct, so nothing embeds it to collide with.
+type level int // want: type Level is exported, but nothing.*uses it$
+
+// named has a method whose unexported name is a field, and a field whose
+// unexported name is a method.
+type named struct { // want: type Named is exported, but nothing.*uses it$
+	name string
+	Size int // want: field Size is exported.*no fix: the unexported name is taken on its type
+}
+
+func (named) Name() string { return "" } // want: method Name is exported.*no fix: the unexported name is taken on its type
+
+func (named) size() int { return 0 }
+
+// asked would start satisfying the interface of a type assertion.
+type asked struct{} // want: type Asked is exported, but nothing.*uses it$
+
+func (asked) Run() {} // want: method Run is exported.*no fix: the unexported name is taken on its type
+
+// quiet would start satisfying husher, a named interface of the package.
+type quiet struct{} // want: type Quiet is exported, but nothing.*uses it$
+
+func (quiet) Hush() {} // want: method Hush is exported.*no fix: the unexported name is taken on its type
+
+type husher interface{ hush() }
+
+// derived promotes Hop, and already has a field of the unexported name.
+type base struct{} // want: type Base is exported, but nothing.*uses it$
+
+func (base) Hop() {} // want: method Hop is exported.*no fix: the unexported name is taken on its type
+
+type derived struct {
+	base
+	hop int
+}
+
+// An unnamed struct promotes Size, and has a field of the unexported name.
+type boxed struct { // want: type Boxed is exported, but nothing.*uses it$
+	Size int // want: field Size is exported.*no fix: the unexported name is taken on its type
+}
+
+// amb embeds T and U, so its F is ambiguous, and renaming T's F to f would
+// make its f ambiguous too.
+type t struct { // want: type T is exported, but nothing.*uses it$
+	F int // want: field F is exported.*no fix: the unexported name is taken on its type
+}
+
+type u struct { // want: type U is exported, but nothing.*uses it$
+	F int // want: field F is exported.*no fix: the unexported name is taken on its type
+	f int
+}
+
+type amb struct {
+	t
+	u
+}
+
+// first.ID and Second.Id both lower to id, and both embeds the two, so only
+// the first is fixed.
+type first struct { // want: type First is exported, but nothing.*uses it$
+	id int // want: field ID is exported, but nothing.*uses it$
+}
+
+type second struct { // want: type Second is exported, but nothing.*uses it$
+	Id int // want: field Id is exported.*no fix: the unexported name is taken on its type
+}
+
+type both struct {
+	first
+	second
+}
+
+// ID and Id of one type lower to one name, so only the first is fixed.
+// First.ID's claim on id above does not reach Pair.
+type pair struct { // want: type Pair is exported, but nothing.*uses it$
+	id int // want: field ID is exported, but nothing.*uses it$
+	Id int // want: field Id is exported.*no fix: the unexported name is taken on its type
+}
+
+// Emb's unexported name is taken by a field of a struct embedding it, since
+// the embedded field takes the type's name.
+type Emb struct{} // want: type Emb is exported.*no fix: the unexported name is taken or would be captured
+
+type holder struct { // want: type Holder is exported, but nothing.*uses it$
+	Emb
+	emb int
+}
+
+// inner is embedded and selected by its name, which the rename rewrites.
+type inner struct{} // want: type Inner is exported, but nothing.*uses it$
+
+type outer struct{ inner }
+
+// shared is embedded twice in diamond, through left and right, and its
+// field Val with it. Both are found through either path, and both are fixed.
+type shared struct { // want: type Shared is exported, but nothing.*uses it$
+	val int // want: field Val is exported, but nothing.*uses it$
+}
+
+type left struct{ shared }
+
+type right struct{ shared }
+
+type diamond struct {
+	left
+	right
+}
+
+// pointed and AliasOfAliased are embedded through a pointer and an alias.
+type pointed struct{} // want: type Pointed is exported, but nothing.*uses it$
+
+type aliased struct{} // want: type Aliased is exported, but nothing.*uses it$
+
+type aliasOfAliased = aliased // want: type AliasOfAliased is exported, but nothing.*uses it$
+
+type embedder struct {
+	*pointed
+	aliasOfAliased
+}
+
+// A predeclared type embedded by name is no declaration of the package.
+type basic struct{ int }
+
+// An unkeyed literal in the package itself is renamed with the fields.
+type local struct { // want: type Local is exported, but nothing.*uses it$
+	a int // want: field A is exported, but nothing.*uses it$
+}
+
+// A selection on an instantiation names the origin's member.
+type list[E any] struct { // want: type List is exported, but nothing.*uses it$
+	items []E // want: field Items is exported, but nothing.*uses it$
+}
+
+func (l *list[E]) Len() int { return len(l.items) } // want: method Len is exported.*no fix: the unexported name is predeclared
+
+func uses() int {
+	var l list[int]
+	_ = func(v any) bool { _, ok := v.(interface{ run() }); return ok }
+	var _ husher
+	var v struct {
+		boxed
+		size int
+	}
+	return l.Len() + len(l.items) + useCount(1) + plain() + dup() + DUP() + MAX_RETRIES + limit +
+		named{}.Size + named{}.size() + len(named{}.name+named{}.Name()) + derived{}.hop + v.Size + v.size +
+		amb{}.f + t{}.F + u{}.F + both{}.id + both{}.Id + pair{}.id + pair{}.Id + holder{}.emb + local{1}.a + local{a: 2}.a +
+		basic{}.int
+}
+
+var (
+	_ thing
+	_ = newThing
+	_ = Keep
+	_ = kept
+	_ = stack{}.nest()
+	_ = spanOut{}
+	_ = wrap
+	_ alias
+	_ level
+	_ = asked{}.Run
+	_ = quiet{}.Hush
+	_ = derived{}.Hop
+	_ = holder{}.Emb
+	_ = outer{}.inner
+	_ = embedder{}.pointed
+	_ = embedder{}.aliasOfAliased
+	_ = uses
+	_ = svc{}.serve
+	// A conversion and a literal of types that are no struct pair nothing.
+	_ = float64(limit)
+	_ = []int{1}
+)
+
+=== rename-guards/internal/r/r_test.go
+package r
+
+func ExampleKeep() {}
+
+=== rename-guards/internal/rx/rx.go
+// Package rx has a build-excluded file of its own, so it is apart from r:
+// that file holds back every field and method of its package.
+package rx
+
+// The unexported name is written by the build-excluded file.
+func Clash() {} // want: func Clash is exported.*no fix: a build-excluded file of its package writes the unexported name
+
+// The build-excluded file binds the name with //go:linkname.
+func Linked() {} // want: func Linked is exported.*no fix: a //go:linkname or //export names it
+
+=== rename-guards/internal/rx/rx_never.go
+//go:build never
+
+package rx
+
+import _ "unsafe"
+
+var clash = 1
+
+//go:linkname Linked example.com/rename/internal/rx.pushed
+
+## shrink after -fix
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:17:6: func Keep is exported, but nothing outside example.com/rename/internal/r uses it (no fix: an example function names it)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:19:6: type Kept is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:29:6: type Wrap is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:36:6: type Nest is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:56:6: type Span is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:81:6: func Taken is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:86:5: var Count is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:93:6: func DUP is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:95:6: func Type is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is not an identifier)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:97:6: func Init is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name means something to the toolchain)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:100:6: func Pushed is exported, but nothing outside example.com/rename/internal/r uses it (no fix: a //go:linkname or //export names it)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:103:6: func Strings is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:108:7: const MAX_RETRIES is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the name has no unexported spelling Go would use)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:121:2: field Size is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:124:14: method Name is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:131:14: method Run is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:136:14: method Hush is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:143:13: method Hop is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:152:2: field Size is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:158:2: field F is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:162:2: field F is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:178:2: field Id is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:190:2: field Id is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken on its type)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:195:6: type Emb is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/r/r.go:247:19: method Len is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is predeclared)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/rx/rx.go:6:6: func Clash is exported, but nothing outside example.com/rename/internal/rx uses it (no fix: a build-excluded file of its package writes the unexported name)
+/tmp/dse-xxxxxxxxxxxx/work/rename-guards/internal/rx/rx.go:9:6: func Linked is exported, but nothing outside example.com/rename/internal/rx uses it (no fix: a //go:linkname or //export names it)
+--- stderr

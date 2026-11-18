@@ -1,0 +1,472 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/box.go:7:6: type boxItem is private to namespace "box", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:44: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/box.go:8:2: field boxItem.shared is private to namespace "box", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:4:37: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/crate.go:7:6: type crateItem is private to namespace "crate", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:55: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/dto.go:11:2: field UserDTO.seq takes shared scope from //declscope:shared on UserDTO, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/dto.go:12:2: field UserDTO.rev takes shared scope from //declscope:shared on UserDTO, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:10:6: func restatedSpare takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:22:2: var restatedLocal takes shared scope from the //declscope:shared on its block, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:34:2: field restatedEntry.spare takes shared scope from //declscope:shared on restatedEntry, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:46:2: field _.spare takes shared scope from //declscope:shared on _, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2: field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:13:2: field userAccount.limit takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:15:2: field userAccount.plain takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:18:2: field userAccount.left takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:18:8: field userAccount.right takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:24:23: field userTiny.n takes shared scope from //declscope:shared on userTiny, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:19:1: unused //declscope:shared on restatedShared, restatedLocal: nothing it reaches takes a scope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:31:1: unused //declscope:shared on restatedEntry: nothing it reaches takes a scope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:43:1: unused //declscope:shared: nothing it reaches takes a scope
+/tmp/dse-xxxxxxxxxxxx/work/box.go:13:2: unused //declscope:ignore surplus on boxItem.memo
+/tmp/dse-xxxxxxxxxxxx/work/crate.go:6:1: unused //declscope:ignore surplus on crateItem
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/box.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/box.go (new)
+@@ -4,10 +4,14 @@
+ // widens it. The same fix narrows count, which nothing outside reads, and
+ // leaves shared, which order.go reads, and memo, whose author asked this rule
+ // to stay out.
++//
++//declscope:shared
+ type boxItem struct { // want `type boxItem is private to namespace "box", but is used from namespace "order"`
+ 	shared int // want `field boxItem.shared is private to namespace "box", but is used from namespace "order"`
+ 
+ 	// count is read here only.
++	//
++	//declscope:private
+ 	count int
+ 
+ 	//declscope:ignore surplus // want `unused //declscope:ignore surplus on boxItem.memo`
+--- /tmp/dse-xxxxxxxxxxxx/work/crate.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/crate.go (new)
+@@ -4,6 +4,7 @@
+ // weight through the type, so the fix leaves weight alone.
+ //
+ //declscope:ignore surplus // want `unused //declscope:ignore surplus on crateItem`
++//declscope:shared
+ type crateItem struct { // want `type crateItem is private to namespace "crate", but is used from namespace "order"`
+ 	weight int
+ }
+--- /tmp/dse-xxxxxxxxxxxx/work/restated.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/restated.go (new)
+@@ -7,6 +7,8 @@
+ 
+ // restatedSpare takes it too, and nothing else calls it. Its narrowing gives
+ // this file an edit whatever the rest gets, so the golden is compared.
++//
++//declscope:private
+ func restatedSpare() int { return 4 } // want `func restatedSpare takes shared scope`
+ 
+ var _ = restatedSpare
+@@ -30,7 +32,8 @@
+ //
+ //declscope:shared // want `unused //declscope:shared on restatedEntry: nothing it reaches takes a scope`
+ type restatedEntry struct {
+-	key   int
++	key int
++	//declscope:private
+ 	spare int // want `field restatedEntry.spare takes shared scope`
+ }
+ 
+@@ -42,6 +45,7 @@
+ //
+ //declscope:shared // want `unused //declscope:shared: nothing it reaches takes a scope`
+ type _ struct {
+-	Wide  int
++	Wide int
++	//declscope:private
+ 	spare int // want `field _.spare takes shared scope`
+ }
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -6,22 +6,31 @@
+ 
+ 	// balance is read only here, so it is narrowed, and the directive lands
+ 	// under its doc comment after a bare comment line.
++	//
++	//declscope:private
+ 	balance int // want `field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope`
+ 
+ 	// A doc comment that already ends in a bare line takes no second one.
+ 	//
++	//declscope:private
+ 	limit int // want `field userAccount.limit takes shared scope`
+ 
++	//declscope:private
+ 	plain int // want `field userAccount.plain takes shared scope`
+ 
+ 	// Two names in one entry take one directive, written once.
++	//
++	//declscope:private
+ 	left, right int // want `field userAccount.left takes shared scope` `field userAccount.right takes shared scope`
+ }
+ 
+ // A field that shares its line with the type is broken onto its own.
+ //
+ //declscope:shared
+-type userTiny struct{ n int } // want `field userTiny.n takes shared scope`
++type userTiny struct {
++	//declscope:private
++	n int
++} // want `field userTiny.n takes shared scope`
+ 
+ func userLocal(a userAccount, t userTiny) int {
+ 	return a.balance + a.limit + a.plain + a.left + a.right + t.n
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+# strict judges each declaration under a directive that is otherwise in use.
+rules:
+  surplus: strict
+  unused: loose
+
+=== box.go
+package fixsurplusstrict
+
+// boxItem takes private from the default and crosses, so the boundary fix
+// widens it. The same fix narrows count, which nothing outside reads, and
+// leaves shared, which order.go reads, and memo, whose author asked this rule
+// to stay out.
+type boxItem struct { // want `type boxItem is private to namespace "box", but is used from namespace "order"`
+	shared int // want `field boxItem.shared is private to namespace "box", but is used from namespace "order"`
+
+	// count is read here only.
+	count int
+
+	//declscope:ignore surplus // want `unused //declscope:ignore surplus on boxItem.memo`
+	memo int
+}
+
+func boxLocal(b boxItem) int { return b.count + b.memo }
+
+var _ = boxLocal
+
+=== crate.go
+package fixsurplusstrict
+
+// crateItem crosses, so the boundary fix widens it. Its own ignore reaches
+// weight through the type, so the fix leaves weight alone.
+//
+//declscope:ignore surplus // want `unused //declscope:ignore surplus on crateItem`
+type crateItem struct { // want `type crateItem is private to namespace "crate", but is used from namespace "order"`
+	weight int
+}
+
+func crateLocal(c crateItem) int { return c.weight }
+
+var _ = crateLocal
+
+=== dto.go
+package fixsurplusstrict
+
+// The directive decides only for the unexported fields: UserDTO and Name are
+// shared by exportedness. Narrowing both fields would leave it binding
+// nothing, so the fields are reported without a fix, and this file takes no
+// edit. The directive is the thing to delete, which no fix does.
+//
+//declscope:shared
+type UserDTO struct {
+	Name string
+	seq  int // want `field UserDTO.seq takes shared scope`
+	rev  int // want `field UserDTO.rev takes shared scope`
+}
+
+func dtoLocal(d UserDTO) int { return d.seq + d.rev }
+
+var _ = dtoLocal
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixsurplusstrict
+
+func orderRun(a userAccount, t userTiny, b boxItem, c crateItem) int {
+	return a.id + len([]any{t, c}) + b.shared + restatedShared + restatedHelper() + restatedEntry{}.key
+}
+
+var _ = orderRun
+
+=== restated.go
+//declscope:shared
+
+package fixsurplusstrict
+
+// restatedHelper takes the file's package, and order.go calls it.
+func restatedHelper() int { return 3 }
+
+// restatedSpare takes it too, and nothing else calls it. Its narrowing gives
+// this file an edit whatever the rest gets, so the golden is compared.
+func restatedSpare() int { return 4 } // want `func restatedSpare takes shared scope`
+
+var _ = restatedSpare
+
+// The block restates the file's package, so it decides nothing, and the
+// unused rule reports it naming both specs. Narrowing restatedLocal would
+// reword that report, so the fix is withheld. The block is the thing to
+// delete, which no fix does.
+//
+//declscope:shared // want `unused //declscope:shared on restatedShared, restatedLocal: nothing it reaches takes a scope`
+var (
+	restatedShared = 1
+	restatedLocal  = 2 // want `var restatedLocal takes shared scope`
+)
+
+var _ = restatedLocal
+
+// The type restates the file's package too, but its report names the type
+// alone, and a field it reaches is never named. Narrowing spare leaves that
+// report reading the same, so the fix is offered.
+//
+//declscope:shared // want `unused //declscope:shared on restatedEntry: nothing it reaches takes a scope`
+type restatedEntry struct {
+	key   int
+	spare int // want `field restatedEntry.spare takes shared scope`
+}
+
+var _ = restatedEntry{}.spare
+
+// A type that declares no name is named on no report, which reads whether
+// anything took its scope. Wide takes it and stays, so narrowing spare leaves
+// the report reading the same, and the fix is offered.
+//
+//declscope:shared // want `unused //declscope:shared: nothing it reaches takes a scope`
+type _ struct {
+	Wide  int
+	spare int // want `field _.spare takes shared scope`
+}
+
+=== user.go
+package fixsurplusstrict
+
+//declscope:shared
+type userAccount struct {
+	id int
+
+	// balance is read only here, so it is narrowed, and the directive lands
+	// under its doc comment after a bare comment line.
+	balance int // want `field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope`
+
+	// A doc comment that already ends in a bare line takes no second one.
+	//
+	limit int // want `field userAccount.limit takes shared scope`
+
+	plain int // want `field userAccount.plain takes shared scope`
+
+	// Two names in one entry take one directive, written once.
+	left, right int // want `field userAccount.left takes shared scope` `field userAccount.right takes shared scope`
+}
+
+// A field that shares its line with the type is broken onto its own.
+//
+//declscope:shared
+type userTiny struct{ n int } // want `field userTiny.n takes shared scope`
+
+func userLocal(a userAccount, t userTiny) int {
+	return a.balance + a.limit + a.plain + a.left + a.right + t.n
+}
+
+var _ = userLocal
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+# strict judges each declaration under a directive that is otherwise in use.
+rules:
+  surplus: strict
+  unused: loose
+
+=== box.go
+package fixsurplusstrict
+
+// boxItem takes private from the default and crosses, so the boundary fix
+// widens it. The same fix narrows count, which nothing outside reads, and
+// leaves shared, which order.go reads, and memo, whose author asked this rule
+// to stay out.
+//
+//declscope:shared
+type boxItem struct { // want `type boxItem is private to namespace "box", but is used from namespace "order"`
+	shared int // want `field boxItem.shared is private to namespace "box", but is used from namespace "order"`
+
+	// count is read here only.
+	//
+	//declscope:private
+	count int
+
+	//declscope:ignore surplus // want `unused //declscope:ignore surplus on boxItem.memo`
+	memo int
+}
+
+func boxLocal(b boxItem) int { return b.count + b.memo }
+
+var _ = boxLocal
+
+=== crate.go
+package fixsurplusstrict
+
+// crateItem crosses, so the boundary fix widens it. Its own ignore reaches
+// weight through the type, so the fix leaves weight alone.
+//
+//declscope:ignore surplus // want `unused //declscope:ignore surplus on crateItem`
+//declscope:shared
+type crateItem struct { // want `type crateItem is private to namespace "crate", but is used from namespace "order"`
+	weight int
+}
+
+func crateLocal(c crateItem) int { return c.weight }
+
+var _ = crateLocal
+
+=== dto.go
+package fixsurplusstrict
+
+// The directive decides only for the unexported fields: UserDTO and Name are
+// shared by exportedness. Narrowing both fields would leave it binding
+// nothing, so the fields are reported without a fix, and this file takes no
+// edit. The directive is the thing to delete, which no fix does.
+//
+//declscope:shared
+type UserDTO struct {
+	Name string
+	seq  int // want `field UserDTO.seq takes shared scope`
+	rev  int // want `field UserDTO.rev takes shared scope`
+}
+
+func dtoLocal(d UserDTO) int { return d.seq + d.rev }
+
+var _ = dtoLocal
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixsurplusstrict
+
+func orderRun(a userAccount, t userTiny, b boxItem, c crateItem) int {
+	return a.id + len([]any{t, c}) + b.shared + restatedShared + restatedHelper() + restatedEntry{}.key
+}
+
+var _ = orderRun
+
+=== restated.go
+//declscope:shared
+
+package fixsurplusstrict
+
+// restatedHelper takes the file's package, and order.go calls it.
+func restatedHelper() int { return 3 }
+
+// restatedSpare takes it too, and nothing else calls it. Its narrowing gives
+// this file an edit whatever the rest gets, so the golden is compared.
+//
+//declscope:private
+func restatedSpare() int { return 4 } // want `func restatedSpare takes shared scope`
+
+var _ = restatedSpare
+
+// The block restates the file's package, so it decides nothing, and the
+// unused rule reports it naming both specs. Narrowing restatedLocal would
+// reword that report, so the fix is withheld. The block is the thing to
+// delete, which no fix does.
+//
+//declscope:shared // want `unused //declscope:shared on restatedShared, restatedLocal: nothing it reaches takes a scope`
+var (
+	restatedShared = 1
+	restatedLocal  = 2 // want `var restatedLocal takes shared scope`
+)
+
+var _ = restatedLocal
+
+// The type restates the file's package too, but its report names the type
+// alone, and a field it reaches is never named. Narrowing spare leaves that
+// report reading the same, so the fix is offered.
+//
+//declscope:shared // want `unused //declscope:shared on restatedEntry: nothing it reaches takes a scope`
+type restatedEntry struct {
+	key int
+	//declscope:private
+	spare int // want `field restatedEntry.spare takes shared scope`
+}
+
+var _ = restatedEntry{}.spare
+
+// A type that declares no name is named on no report, which reads whether
+// anything took its scope. Wide takes it and stays, so narrowing spare leaves
+// the report reading the same, and the fix is offered.
+//
+//declscope:shared // want `unused //declscope:shared: nothing it reaches takes a scope`
+type _ struct {
+	Wide int
+	//declscope:private
+	spare int // want `field _.spare takes shared scope`
+}
+
+=== user.go
+package fixsurplusstrict
+
+//declscope:shared
+type userAccount struct {
+	id int
+
+	// balance is read only here, so it is narrowed, and the directive lands
+	// under its doc comment after a bare comment line.
+	//
+	//declscope:private
+	balance int // want `field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope`
+
+	// A doc comment that already ends in a bare line takes no second one.
+	//
+	//declscope:private
+	limit int // want `field userAccount.limit takes shared scope`
+
+	//declscope:private
+	plain int // want `field userAccount.plain takes shared scope`
+
+	// Two names in one entry take one directive, written once.
+	//
+	//declscope:private
+	left, right int // want `field userAccount.left takes shared scope` `field userAccount.right takes shared scope`
+}
+
+// A field that shares its line with the type is broken onto its own.
+//
+//declscope:shared
+type userTiny struct {
+	//declscope:private
+	n int
+} // want `field userTiny.n takes shared scope`
+
+func userLocal(a userAccount, t userTiny) int {
+	return a.balance + a.limit + a.plain + a.left + a.right + t.n
+}
+
+var _ = userLocal
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/dto.go:11:2: field UserDTO.seq takes shared scope from //declscope:shared on UserDTO, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/dto.go:12:2: field UserDTO.rev takes shared scope from //declscope:shared on UserDTO, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:24:2: var restatedLocal takes shared scope from the //declscope:shared on its block, but no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:21:1: unused //declscope:shared on restatedShared, restatedLocal: nothing it reaches takes a scope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:33:1: unused //declscope:shared on restatedEntry: nothing it reaches takes a scope
+/tmp/dse-xxxxxxxxxxxx/work/restated.go:46:1: unused //declscope:shared: nothing it reaches takes a scope

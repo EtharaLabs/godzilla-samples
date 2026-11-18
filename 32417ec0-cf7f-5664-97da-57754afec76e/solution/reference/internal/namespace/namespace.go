@@ -1,0 +1,547 @@
+// Package namespace resolves the pseudo-namespace that a Go source file
+// belongs to.
+//
+// A namespace is the unit of privacy that declscope enforces. By
+// default it is derived from the file name, so each file is its own namespace,
+// but files may opt into a shared namespace with a directive:
+//
+//	//declscope:namespace user
+//	package repo
+//
+// Deriving the default from the file name rather than using the file name
+// itself keeps renaming a file from cascading into renaming every identifier
+// it declares.
+//
+// A namespace does two jobs, and they are deliberately kept apart. As an
+// identity it answers "is this reference inside the same namespace?", and
+// every file that has a stem has one. As a mark it is what the naming rule
+// asks a declaration's name to carry somewhere (Contains), offering a prefix
+// when it is absent (Qualify), and only a namespace that can start an
+// identifier qualifies for the fix; CanPrefix tells the two apart. 2fa.go is a
+// namespace that a test file can share, but no identifier begins with a digit,
+// so it can never be a prefix.
+package namespace
+
+import (
+	"go/ast"
+	"go/token"
+	"path/filepath"
+	"slices"
+	"strings"
+	"unicode"
+	"unicode/utf8"
+
+	"github.com/mpyw/declscope/internal/buildtag"
+)
+
+// CanPrefix reports whether ns can be written as a prefix: prepended to an
+// unexported identifier, it has to yield another unexported identifier, and
+// raised for an exported one, an exported identifier.
+//
+// A namespace that cannot (2faAuth, since no identifier may start with a
+// digit) is still a perfectly good identity for the privacy rules, but the
+// naming rules have nothing they could ask for and stay silent. Any string
+// that starts an identifier and does not export it qualifies, so a keyword
+// stem such as struct.go still prefixes its declarations (structHelper).
+//
+// Its first letter must also have a capital form, or Qualify could not keep an
+// exported name exported: 用户.go and //declscope:namespace _foo would offer
+// 用户Load and _fooSave for Load and Save. Such a namespace is no better off
+// than 2faAuth. An exported name can never carry it either, since wordStart
+// opens a word inside a name only at a capital or a digit.
+func CanPrefix(ns string) bool {
+	if !token.IsIdentifier(ns) && !token.IsKeyword(ns) {
+		return false
+	}
+	first, _ := utf8.DecodeRuneInString(ns)
+	upper := unicode.ToUpper(first)
+	return upper != first && unicode.IsUpper(upper)
+}
+
+// Qualify returns name rewritten to carry ns as a prefix, which is the rename
+// offered when a name does not carry its namespace anywhere (see Contains). A
+// name that already carries it is left alone, so the fix can never double a
+// word the name already has.
+//
+// The first word of name is capitalized the way Go spells it, so id becomes
+// userID and urlPath becomes userURLPath rather than userId and userUrlPath.
+// A namespace that cannot be a prefix (see CanPrefix) leaves the name alone.
+//
+// The result keeps name's exportedness. A namespace is always an unexported
+// identifier, so prepending one blindly would lower-case an exported name:
+// Load in user.go would be renamed to userLoad, deleting the package's API to
+// satisfy a linter. An exported name takes an exported prefix instead.
+func Qualify(name, ns string) string {
+	if !CanPrefix(ns) || Contains(name, ns) {
+		return name
+	}
+	out := ns + capitalize(name)
+	if ast.IsExported(name) {
+		return capitalize(out)
+	}
+	return out
+}
+
+// Unexported returns the unexported spelling of an exported name the way Go
+// spells an identifier, and whether there is one. declscope shrink renames
+// with it.
+//
+//	Load        -> load
+//	HTTPClient  -> httpClient   (an initialism opens the name)
+//	ID, IDs     -> id, ids      (an initialism, singular or plural)
+//	UIDs        -> uids         (the whole run, not UI and Ds)
+//	HTTP2Client -> http2Client  (an initialism before a digit)
+//	IPv4        -> ipv4
+//	MAX         -> max
+//	MAX_RETRIES -> none         (an underscore has no camel-case spelling)
+//
+// A name that is already unexported is returned unchanged.
+func Unexported(name string) (string, bool) {
+	if strings.Contains(name, "_") {
+		return "", false
+	}
+	return lowerLeading(name), true
+}
+
+// of returns the default namespace for a file path.
+//
+// The path is reduced to its base name and then normalized:
+//
+//	user_repository.go      -> userRepository
+//	user_repository_test.go -> userRepository  (tests share their subject's namespace)
+//	parser_linux.go         -> parser          (GOOS/GOARCH suffixes are build
+//	parser_linux_amd64.go   -> parser           constraints, not namespaces)
+//	parser_test_linux.go    -> parserTest      (but only a name ending in _test.go is a test)
+//	parser_linux.pb.go      -> parserPb        (go/build reads a suffix only
+//	parser.x_linux.go       -> parserXLinux     before the first dot)
+//	user_id.go              -> userID          (initialisms are spelled the way Go does)
+//	user_ids.go             -> userIDs         (and so are their plurals)
+//	foo-bar.go, foo.bar.go  -> fooBar          (any separator, not only _)
+//	Foo.go, HTTPServer.go   -> foo, httpServer (a PascalCase stem is lowered
+//	IDs.go, IPv4.go         -> ids, ipv4        the way Unexported lowers a name)
+//	v2_client.go            -> v2Client
+//	2fa_auth.go             -> 2faAuth
+//
+// of always returns the normalized stem when there is one, so that a file's
+// identity never depends on whether the stem also makes a usable prefix:
+// 2fa_test.go must share the namespace of 2fa.go even though no identifier can
+// start with a digit. Whether the result can serve as a prefix is a separate
+// question, answered by CanPrefix. Only a file with no stem at all yields "".
+func of(path string) string {
+	base := strings.TrimSuffix(filepath.Base(path), ".go")
+
+	// A test file, as go/build tells one, shares its subject's namespace. It
+	// is told by the name as written, which must end in _test.go, so this
+	// comes before the build suffix is trimmed: foo_test_linux.go is an
+	// ordinary linux file, not a test of foo.go. The _test is only dropped
+	// when something would remain.
+	if s, ok := strings.CutSuffix(base, "_test"); ok && s != "" {
+		base = s
+	}
+
+	// go/build reads a build suffix only before the first dot, and looks past
+	// a _test there: name_GOOS_GOARCH_test.go.
+	stem, rest, dotted := strings.Cut(base, ".")
+	stem, _ = buildtag.TrimOSArch(stem)
+	base = stem
+	if dotted {
+		base += "." + rest
+	}
+
+	return camel(base)
+}
+
+// camel converts a file stem to lowerCamelCase.
+//
+// Every run of characters that could not appear in an identifier is a
+// separator, so foo_bar, foo-bar and foo.bar all yield fooBar. The first
+// segment is lowered the way Go lowers a leading initialism (HTTPServer ->
+// httpServer) and every later one is capitalized the way Go capitalizes one
+// (id -> ID), so that the namespace of user_id.go is the userID a Go
+// programmer would write.
+func camel(base string) string {
+	parts := strings.FieldsFunc(base, func(r rune) bool {
+		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+	})
+	var b strings.Builder
+	for i, part := range parts {
+		if i == 0 {
+			b.WriteString(lowerLeading(part))
+			continue
+		}
+		b.WriteString(capitalize(part))
+	}
+	return b.String()
+}
+
+// capitalize upper-cases the first word of a lowerCamelCase segment the way
+// Go would: a word that is a common initialism is upper-cased whole (id ->
+// ID, idCache -> IDCache, Id -> ID), and so is one that is its plural, but
+// for the s (ids -> IDs, idsCache -> IDsCache). Any other word has its first
+// letter raised.
+func capitalize(word string) string {
+	if word == "" {
+		return ""
+	}
+	if w, ok := upperInitialism(word); ok {
+		return w
+	}
+	i := 0
+	for i < len(word) {
+		r, size := utf8.DecodeRuneInString(word[i:])
+		if !unicode.IsLower(r) {
+			break
+		}
+		i += size
+	}
+	if w, ok := upperInitialism(word[:i]); i > 0 && ok {
+		return w + word[i:]
+	}
+	r, size := utf8.DecodeRuneInString(word)
+	return string(unicode.ToUpper(r)) + word[size:]
+}
+
+// upperInitialism spells word in capitals if it is a common initialism, or
+// its plural with the s kept lower-case (ids -> IDs), and reports whether it
+// is either.
+func upperInitialism(word string) (string, bool) {
+	if isInitialism(word) {
+		return strings.ToUpper(word), true
+	}
+	if s, ok := strings.CutSuffix(word, "s"); ok && isInitialism(s) {
+		return strings.ToUpper(s) + "s", true
+	}
+	return "", false
+}
+
+// lowerLeading lowers the run of capitals s starts with, the way Go spells
+// an identifier that begins with it. Unexported spells whole names with it and
+// camel spells the first segment of a file stem, so a file named after a
+// declaration gets the namespace that declaration's unexported name would
+// have: IDs.go is ids, as Unexported(IDs) is. A string that does not start
+// with a capital is returned unchanged.
+func lowerLeading(s string) string {
+	runes := []rune(s)
+	upper := 0
+	for upper < len(runes) && unicode.IsUpper(runes[upper]) {
+		upper++
+	}
+	lower := func(n int) string { return strings.ToLower(string(runes[:n])) + string(runes[n:]) }
+	switch {
+	case upper == 0:
+		return s
+	case upper == len(runes) || !unicode.IsLower(runes[upper]):
+		// ID, MAX, HTTP2Client: nothing lower-case follows the run, so it is
+		// one word.
+		return lower(upper)
+	case upper == 1:
+		return lower(1)
+	case runes[upper] == 's' && (upper+1 == len(runes) || !unicode.IsLower(runes[upper+1])) &&
+		isInitialism(string(runes[:upper])):
+		// IDs, UIDs, URLsCache: the whole run is an initialism and its plural
+		// s ends the word. This is asked before the shorter prefix, or UIDs
+		// would be read as UI and a word Ds.
+		return lower(upper)
+	case isInitialism(string(runes[:upper-1])):
+		// HTTPServer, URLPath: an initialism, then a word opened by the last
+		// capital. HTTPS is an initialism too, which is why this is asked
+		// first.
+		return lower(upper - 1)
+	case isInitialism(string(runes[:upper])):
+		// IDs, URLs, IPv4: the whole run is the initialism.
+		return lower(upper)
+	default:
+		// OAuth: the last capital opens the next word.
+		return lower(upper - 1)
+	}
+}
+
+// cutFold is strings.CutPrefix comparing under simple case folding, so that
+// userIDCache matches the prefix userId.
+func cutFold(name, prefix string) (rest string, ok bool) {
+	for _, want := range prefix {
+		// An exhausted name would decode as utf8.RuneError, U+FFFD, and a
+		// vocabulary word is YAML's, not an identifier, so it may spell one.
+		if name == "" {
+			return "", false
+		}
+		got, size := utf8.DecodeRuneInString(name)
+		if got != want && unicode.ToLower(got) != unicode.ToLower(want) {
+			return "", false
+		}
+		name = name[size:]
+	}
+	return name, true
+}
+
+func isInitialism(s string) bool { return commonInitialisms[strings.ToUpper(s)] }
+
+// commonInitialisms is golint's list of the words that are spelled in
+// capitals. It is vendored rather than pulled in as a dependency: the list is
+// small and stable, and the module otherwise depends only on x/tools and
+// yaml.v3.
+var commonInitialisms = map[string]bool{
+	"ACL": true, "API": true, "ASCII": true, "CPU": true, "CSS": true,
+	"DNS": true, "EOF": true, "GUID": true, "HTML": true, "HTTP": true,
+	"HTTPS": true, "ID": true, "IP": true, "JSON": true, "LHS": true,
+	"QPS": true, "RAM": true, "RHS": true, "RPC": true, "SLA": true,
+	"SMTP": true, "SQL": true, "SSH": true, "TCP": true, "TLS": true,
+	"TTL": true, "UDP": true, "UI": true, "UID": true, "UUID": true,
+	"URI": true, "URL": true, "UTF8": true, "VM": true, "XML": true,
+	"XMPP": true, "XSRF": true, "XSS": true,
+}
+
+// Contains reports whether ns is written in name, beginning at a word boundary.
+// The match may end inside a word, so parse is carried by SpecifierParser and
+// conflict by CheckConflicts: a name that spells its namespace as a plural or
+// an agent noun carries it as plainly as one that spells it whole.
+//
+// The left edge is anchored because the right one is not. Without the anchor,
+// key would be found in monkey and every short namespace would stop meaning
+// anything. With it, the cost is names that open with the namespace by accident
+// — mode is found in models — which is the narrower failure of the two.
+//
+// The free right edge covers every derivation that keeps the namespace's own
+// spelling (renders, rendering, Parser), but not the two English inflections
+// that change it: a final e dropped before -ing (store → storing) and a final
+// y turned to i (apply → applies, applied). Those are accepted through forms
+// generated from the namespace — see inflections — never by stemming the name:
+// a stem of store loose in the name would also accept story and storm, so only
+// the whole generated forms count.
+//
+// Matching is case-folded: a namespace is an identity, and the leading letter
+// of a name is decided by whether it is exported, not by the namespace.
+func Contains(name, ns string) bool {
+	if ns == "" {
+		return false
+	}
+	carries := func(form string) bool { return containsForm(name, form) }
+	return carries(ns) || slices.ContainsFunc(inflections(ns), carries)
+}
+
+// containsForm is one spelling's share of Contains: the form must begin at a
+// word boundary of name, and may end anywhere.
+func containsForm(name, form string) bool {
+	for i := range name {
+		if !wordStart(name, i) {
+			continue
+		}
+		if _, ok := cutFold(name[i:], form); ok {
+			return true
+		}
+	}
+	return false
+}
+
+// LooksInflected reports whether ns looks like a form that inflections
+// generates from another namespace: tracing from trace, applies from apply.
+// The naming rule uses it only to point at rules.naming.vocabulary in its
+// message. It decides nothing about what carries a namespace.
+//
+// Generation runs one way, from the namespace to longer forms, and is never
+// reversed. Reversing it needs a guess at the stem: tracing could be trace or
+// trac, heading is head and not heade, mapping is map. A wrong guess carries
+// names the author never meant (trac would carry track). So an inflected
+// namespace is not carried by its stem, and the message tells the author
+// where to list the stem instead.
+//
+// The shape is asked of inflections itself, so the two cannot drift apart.
+// The one rule added here is that the stem of the final word holds a vowel,
+// which keeps string, ring and ping out.
+func LooksInflected(ns string) bool {
+	word := ns
+	for i := len(ns) - 1; i > 0; i-- {
+		if wordStart(ns, i) {
+			word = ns[i:]
+			break
+		}
+	}
+	word = strings.ToLower(word)
+	if len(word) < len("ing") {
+		return false
+	}
+	stem := word[:len(word)-len("ing")]
+	generates := func(base string) bool { return slices.Contains(inflections(base), word) }
+	return (generates(stem+"e") || generates(stem+"y")) && strings.ContainsFunc(stem, isVowel)
+}
+
+// inflections returns the spellings of ns that English writes with a changed
+// stem, which the free right edge of Contains cannot reach:
+//
+//	store → storing    (the final e drops before -ing)
+//	apply → applies, applied    (the final y turns to i)
+//
+// Each is a complete form, never a bare stem: matching stor with a free right
+// edge would accept story and storm, and matching appli would accept appliance.
+// In a compound namespace only the final word inflects (azureAppconfigParam),
+// and the final word is where the tail letters sit, so inspecting the last two
+// runes is enough. A final e or y after a vowel does not change spelling
+// (freeing, deploys) and generates nothing.
+func inflections(ns string) []string {
+	last, lastSize := utf8.DecodeLastRuneInString(ns)
+	prev, _ := utf8.DecodeLastRuneInString(ns[:len(ns)-lastSize])
+	if prev == utf8.RuneError || !unicode.IsLetter(prev) || isVowel(prev) {
+		return nil
+	}
+	stem := ns[:len(ns)-lastSize]
+	switch unicode.ToLower(last) {
+	case 'e':
+		return []string{stem + "ing"}
+	case 'y':
+		return []string{stem + "ies", stem + "ied"}
+	}
+	return nil
+}
+
+// isVowel reports an English vowel letter, case-folded. y is deliberately not
+// one here: apply's y is what inflects, so for the letter before the tail the
+// question never arises in a real namespace.
+func isVowel(r rune) bool {
+	switch unicode.ToLower(r) {
+	case 'a', 'e', 'i', 'o', 'u':
+		return true
+	}
+	return false
+}
+
+// wordStart reports whether the rune at byte offset i opens a word of a
+// camelCase identifier. An initialism counts as one word, so the P of APIParser
+// opens a word while the I of API does not: inside a run of capitals, only the
+// last one does, and only because a lowercase rune follows it.
+//
+// A plural initialism is one word too, as lowerLeading reads it: when the run
+// up to that capital is an initialism and an s that ends the word follows it,
+// the capital stays inside the run. Opening a word at the L of fetchURLs found
+// ls.go's namespace there but not in fetchUrls, and shrink's rename of URLs to
+// urls then lost a namespace the name had carried.
+func wordStart(name string, i int) bool {
+	if i == 0 {
+		return true
+	}
+	r, size := utf8.DecodeRuneInString(name[i:])
+	prev, _ := utf8.DecodeLastRuneInString(name[:i])
+	if unicode.IsDigit(r) != unicode.IsDigit(prev) {
+		return true
+	}
+	if !unicode.IsUpper(r) {
+		return false
+	}
+	if !unicode.IsUpper(prev) {
+		return true
+	}
+	next, nextSize := utf8.DecodeRuneInString(name[i+size:])
+	if !unicode.IsLower(next) {
+		return false
+	}
+	if next == 's' {
+		after, _ := utf8.DecodeRuneInString(name[i+size+nextSize:])
+		start := i
+		for start > 0 {
+			c, cSize := utf8.DecodeLastRuneInString(name[:start])
+			if !unicode.IsUpper(c) {
+				break
+			}
+			start -= cSize
+		}
+		if !unicode.IsLower(after) && isInitialism(name[start:i+size]) {
+			// URLs, UIDsCache: the s closes the initialism's plural.
+			return false
+		}
+	}
+	return true
+}
+
+// Declared is what one file of a package states about its namespace: its
+// path on disk, and its file-level directives.
+type Declared struct {
+	Path string
+	// Core is //declscope:core, and Name a //declscope:namespace, with Named
+	// saying whether there is one.
+	Core  bool
+	Named bool
+	Name  string
+}
+
+// Resolved is a file's namespace: the core, which has no name, or the one
+// Name holds. Name is empty for a file whose stem yields none.
+type Resolved struct {
+	Core bool
+	Name string
+}
+
+// Resolve returns the namespace of each file of one package, in order. The
+// analyzer and declscope shrink both read namespaces through it, so that a
+// baseline key names the same namespace from either.
+//
+// A file takes //declscope:core, else its //declscope:namespace, else the one
+// of derives from its path. A test file joins its subject's namespace, which
+// is why a namespace is derived from the stem rather than being the file
+// name. //declscope:core comes from a directive rather than from the stem, so
+// the joining has to be done here: without it client_test.go could not reach
+// what client.go declares, and the mechanical repair would be to widen the
+// whole core. Only a file with no namespace directive joins: one that names
+// its own namespace has decided where it belongs, and the core must not
+// override that decision unseen.
+//
+// Only a test file joins, and only the core file it tests (see subjectOf).
+// Joining by the shared stem pulled client.go into the core of a core
+// client_test.go, so the test variant spelled each of client.go's
+// declarations under another namespace than the package did. It pulled
+// foo.go into the core of a core foo_linux.go too, but only in a linux build,
+// so a baseline recorded there suppressed nothing elsewhere.
+func Resolve(files []Declared) []Resolved {
+	out := make([]Resolved, len(files))
+	cores := map[string]bool{}
+	for i, f := range files {
+		switch {
+		case f.Core:
+			// The core namespace has no name. Every core file shares it, which
+			// is what makes having no prefix name exactly one unit.
+			out[i].Core = true
+			cores[filepath.Base(f.Path)] = true
+		case f.Named:
+			out[i].Name = f.Name
+		default:
+			out[i].Name = of(f.Path)
+		}
+	}
+	for i, f := range files {
+		if subject, ok := subjectOf(f.Path); ok && !out[i].Core && !f.Named && cores[subject] {
+			out[i] = Resolved{Core: true}
+		}
+	}
+	return out
+}
+
+// subjectOf returns the base name of the file a test file tests, read from
+// its name: client_test.go tests client.go, and client_linux_test.go tests
+// client_linux.go, not client.go. Matching the whole name keeps the pairing
+// the same in every build: by the stem alone, client_test.go would join a
+// core client_linux.go in a linux build only. A file that is not a test file
+// has no subject.
+func subjectOf(path string) (string, bool) {
+	stem, ok := strings.CutSuffix(filepath.Base(path), "_test.go")
+	if !ok || stem == "" {
+		return "", false
+	}
+	return stem + ".go", true
+}
+
+// Spell spells a file's namespace for a baseline, which is the one place it
+// has to be written down rather than compared.
+//
+// A namespace derived from a file name is normalized to alphanumerics, and
+// one written with //declscope:namespace must be an unexported identifier,
+// so a parenthesis can appear in neither. That leaves "(core)" free for the
+// core, whose prefix is empty and whose files all share it, and free for the
+// file with no stem at all, which has no namespace either, and must not share
+// a key with every other such file.
+func Spell(r Resolved, path string) string {
+	if r.Core {
+		return "(core)"
+	}
+	if r.Name != "" {
+		return r.Name
+	}
+	return "(file " + filepath.Base(path) + ")"
+}

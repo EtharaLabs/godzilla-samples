@@ -1,0 +1,220 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:2: var seed is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:30: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:2: var seed does not carry namespace "user" anywhere in its name; rename it to userSeed, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:2: var other is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:37: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:2: var other does not carry namespace "user" anywhere in its name; rename it to userOther, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2: const limit is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:45: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2: const limit does not carry namespace "user" anywhere in its name; rename it to userLimit, or to another name that carries "user"
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:2",
+				"message": "var seed is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to seed",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 18,
+								"end": 18,
+								"new": "//declscope:shared\n\t"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:30",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:34",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			},
+			{
+				"category": "qualify",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:2",
+				"message": "var seed does not carry namespace \"user\" anywhere in its name; rename it to userSeed, or to another name that carries \"user\"",
+				"suggested_fixes": [
+					{
+						"message": "rename seed to userSeed (prefix it with its namespace)",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/order.go",
+								"start": 40,
+								"end": 44,
+								"new": "userSeed"
+							},
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 18,
+								"end": 22,
+								"new": "userSeed"
+							}
+						]
+					}
+				]
+			},
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:5:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:5:2",
+				"message": "var other is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to other",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 29,
+								"end": 29,
+								"new": "//declscope:shared\n\t"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:37",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:42",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			},
+			{
+				"category": "qualify",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:5:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:5:2",
+				"message": "var other does not carry namespace \"user\" anywhere in its name; rename it to userOther, or to another name that carries \"user\"",
+				"suggested_fixes": [
+					{
+						"message": "rename other to userOther (prefix it with its namespace)",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/order.go",
+								"start": 47,
+								"end": 52,
+								"new": "userOther"
+							},
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 29,
+								"end": 34,
+								"new": "userOther"
+							}
+						]
+					}
+				]
+			},
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2",
+				"message": "const limit is private to namespace \"user\", but is used from namespace \"order\"",
+				"suggested_fixes": [
+					{
+						"message": "add //declscope:shared to limit",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 51,
+								"end": 51,
+								"new": "//declscope:shared\n\t"
+							}
+						]
+					}
+				],
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:45",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order.go:3:50",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			},
+			{
+				"category": "qualify",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:9:2",
+				"message": "const limit does not carry namespace \"user\" anywhere in its name; rename it to userLimit, or to another name that carries \"user\"",
+				"suggested_fixes": [
+					{
+						"message": "rename limit to userLimit (prefix it with its namespace)",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/order.go",
+								"start": 55,
+								"end": 60,
+								"new": "userLimit"
+							},
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 51,
+								"end": 56,
+								"new": "userLimit"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: ondemand
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+func orderRun() int { return userSeed + userOther + userLimit }
+
+var _ = orderRun
+
+=== user.go
+package x
+
+var (
+	//declscope:shared
+	userSeed = 1
+	//declscope:shared
+	userOther = 2
+)
+
+const (
+	//declscope:shared
+	userLimit = 3
+)
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

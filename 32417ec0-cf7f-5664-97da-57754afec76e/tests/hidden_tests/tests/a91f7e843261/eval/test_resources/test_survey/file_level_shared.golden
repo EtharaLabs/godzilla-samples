@@ -1,0 +1,215 @@
+exit 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 1,
+      "failed": []
+    },
+    "configs": [
+      {
+        "chain": [],
+        "packages": 1,
+        "rules": {
+          "boundary": true,
+          "qualify": "never",
+          "exported": false,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      }
+    ],
+    "baselines": []
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "packages": [
+    {
+      "package": "example.com/app/p",
+      "namespaces": 2,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "declared": 1
+      },
+      "qualify": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 0
+      },
+      "largest": {
+        "from": "order",
+        "to": "util",
+        "reached": 1,
+        "uses": 1
+      }
+    }
+  ]
+}
+--- stderr
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app/p",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "order",
+      "files": [
+        "order.go"
+      ],
+      "core": false,
+      "declarations": 1,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "util",
+      "files": [
+        "util.go"
+      ],
+      "core": false,
+      "declarations": 2,
+      "qualifyTargets": 0
+    }
+  ],
+  "crossings": [
+    {
+      "from": "order",
+      "to": "util",
+      "mutual": false,
+      "declared": 1,
+      "baselined": 0,
+      "reported": 0,
+      "ignored": 0,
+      "unchecked": 0,
+      "reached": 1,
+      "declarations": 2,
+      "uses": 1,
+      "clears": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "order",
+      "to": "util",
+      "declaration": "UtilExported",
+      "kind": "func",
+      "uses": 1,
+      "state": "open"
+    },
+    {
+      "from": "order",
+      "to": "util",
+      "declaration": "utilHelper",
+      "kind": "func",
+      "uses": 1,
+      "state": "declared"
+    }
+  ],
+  "names": []
+}
+--- stderr

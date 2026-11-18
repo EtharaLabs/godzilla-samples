@@ -1,0 +1,9 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/base.go:7:2: field Base.n is private to namespace "base", but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:5:42: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/inline.go:7:6: type entry is declared private by //declscope:private, but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:5:20: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/inline.go:8:2: field entry.key is declared private by //declscope:private on entry, but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:5:52: 	used here, in namespace "use"

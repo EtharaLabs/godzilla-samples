@@ -1,0 +1,23 @@
+exit: 3
+--- stdout
+$WORK/internal/w/w.go:3:5: var Version is exported, but nothing outside example.com/withheld/internal/w uses it (no fix: a string variable may be set by -ldflags -X, which names it)
+$WORK/internal/w/w.go:5:5: var Build is exported, but nothing outside example.com/withheld/internal/w uses it (no fix: a string variable may be set by -ldflags -X, which names it)
+
+--- stderr
+
+--- file internal/w/w.go
+package w
+
+var Version = "dev"
+
+var Build alias = "dev"
+
+type alias = string
+
+var sentinel = errorText("sentinel")
+
+type errorText string
+
+var count = 3
+
+var _, _, _, _ = Version, Build, sentinel, count

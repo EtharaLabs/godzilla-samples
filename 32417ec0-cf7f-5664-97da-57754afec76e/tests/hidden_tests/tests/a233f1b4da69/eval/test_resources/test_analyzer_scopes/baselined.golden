@@ -1,0 +1,117 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:7:6: func userFresh is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:21: 	used here, in namespace "order"
+$WORK/user.go:13:2: field User.note is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:5:20: 	used here, in namespace "order"
+
+=== survey -format=json
+exit: 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 1,
+      "failed": []
+    },
+    "configs": [
+      {
+        "chain": [],
+        "packages": 1,
+        "rules": {
+          "boundary": true,
+          "qualify": "never",
+          "exported": false,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      }
+    ],
+    "baselines": [
+      {
+        "path": "$WORK/.declscope-baseline.yaml",
+        "entries": 2
+      }
+    ]
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 4,
+      "ignored": 0,
+      "baselined": 2,
+      "reported": 2
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "packages": [
+    {
+      "package": "baselined",
+      "namespaces": 2,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 2,
+        "baselined": 2,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": false,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 0
+      },
+      "largest": {
+        "from": "order",
+        "to": "user",
+        "reached": 4,
+        "uses": 4
+      }
+    }
+  ]
+}
+
+--- stderr

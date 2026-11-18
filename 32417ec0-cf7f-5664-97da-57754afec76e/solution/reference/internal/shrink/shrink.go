@@ -1,0 +1,979 @@
+// Package shrink finds the exported declarations of internal packages that
+// nothing outside their package uses, and unexports them. It backs declscope
+// shrink, and spec/shrink.fsl is its model.
+//
+// The analyzer cannot answer this question. It sees one package, and an
+// importer might use any exported name. Inside internal/ the import rule
+// limits the importers to one directory tree, so a run that loads the whole
+// module sees every one of them, and the absence of a use becomes evidence.
+//
+// The report and the fix are held to different standards. The report may be
+// wrong where a use is possible but not provable, such as a name a
+// build-excluded file writes: the fix is withheld there and the report kept.
+// The fix is made only where no use can exist outside the package.
+//
+// The package is laid out by what each part needs to know. What asks only of
+// types or files is a subpackage with its own small vocabulary: module loads
+// the module and knows its internal ranges, excluded reads the files the
+// build left out, and reach follows what a value lets code reach. What works
+// on the model below stays here, one file per stage: candidate.go finds the
+// declarations to judge, evidence.go gathers who uses what, rename.go decides
+// the fix, and ignore.go accounts for //declscope:ignore overexported.
+//
+// This file is the core: the model every stage reads, and the judgment that
+// drives them. In a named namespace each type here would have to carry that
+// namespace's name.
+//
+//declscope:core
+package shrink
+
+import (
+	"cmp"
+	"fmt"
+	"go/ast"
+	"go/token"
+	"go/types"
+	"maps"
+	"os"
+	"path/filepath"
+	"slices"
+	"strings"
+
+	"golang.org/x/tools/go/packages"
+
+	"github.com/mpyw/declscope/internal/baseline"
+	"github.com/mpyw/declscope/internal/directive"
+	"github.com/mpyw/declscope/internal/namespace"
+	"github.com/mpyw/declscope/internal/rule"
+	"github.com/mpyw/declscope/internal/shrink/excluded"
+	"github.com/mpyw/declscope/internal/shrink/module"
+	"github.com/mpyw/declscope/internal/shrink/reach"
+)
+
+// Finding is one report of declscope shrink.
+type Finding struct {
+	Pos token.Position
+	// Rule is overexported for a declaration, and unused for an ignore
+	// naming overexported that silenced nothing.
+	Rule rule.Rule
+	// Name and Kind describe the declaration. Both are empty for an unused
+	// ignore.
+	Name, Kind string
+	// Package is the import path of the package that declares it.
+	Package string
+	// Owner is the type a method or field belongs to, and Namespace the one
+	// of the file declaring it, spelled as a baseline spells it. Both go into
+	// Key.
+	Owner, Namespace string
+	// TestOnly marks a declaration only external tests use. It keeps its
+	// name, since the external test package would stop compiling.
+	TestOnly bool
+	// Withheld says why no fix is offered, empty when Fix holds one.
+	Withheld string
+	// Fix renames every identifier naming the declaration, all of them in its
+	// own package. It is nil when the fix is withheld.
+	Fix []Edit
+}
+
+// Key identifies the finding in a baseline the way the analyzer's keys do: a
+// member by its owner's name and its own, under the namespace of the file
+// that declares it.
+func (f Finding) Key() baseline.Key {
+	decl := f.Name
+	if f.Owner != "" {
+		decl = f.Owner + "." + f.Name
+	}
+	return baseline.Key{Package: f.Package, Rule: f.Rule, Namespace: f.Namespace, Decl: decl}
+}
+
+// Baselined reports whether the baseline that applies to the package in dir
+// records k.
+type Baselined func(dir string, k baseline.Key) bool
+
+// Edit replaces the bytes [Start, End) of a file.
+type Edit struct {
+	Filename   string
+	Start, End int
+	NewText    string
+}
+
+// Message renders the finding the way the analyzer renders a diagnostic.
+func (f Finding) Message() string {
+	if f.Rule == rule.Unused {
+		return "unused //declscope:ignore overexported: nothing it covers is reported"
+	}
+	var msg string
+	if f.TestOnly {
+		msg = fmt.Sprintf("%s %s is exported, but only the external tests of %s use it", f.Kind, f.Name, f.Package)
+	} else {
+		msg = fmt.Sprintf("%s %s is exported, but nothing outside %s uses it", f.Kind, f.Name, f.Package)
+	}
+	if f.Withheld != "" {
+		msg += " (no fix: " + f.Withheld + ")"
+	}
+	return msg
+}
+
+// Result is what one run found.
+type Result struct {
+	Findings []Finding
+	// Skipped lists the internal packages the patterns named that were not
+	// judged, and why. Saying nothing about them would read as nothing
+	// overexported.
+	Skipped []Skipped
+	// Outside counts the packages the patterns named outside every main
+	// module, which are never judged. They are counted rather than listed:
+	// std or all would name hundreds.
+	Outside int
+	// Unmatched lists the patterns that named no package. The go command
+	// warns about each, and so does declscope shrink.
+	Unmatched []string
+}
+
+// Skipped is an internal package that was not judged.
+type Skipped struct {
+	Package, Reason string
+}
+
+// Run loads the main modules seen from dir, the one holding it or every one
+// of its workspace, and reports on the packages the patterns name, resolved
+// from dir as the go command resolves them. Every package of the main
+// modules is loaded whatever the patterns say, since an importer outside
+// them still counts.
+//
+// A report baselined records is left out, and so is its fix, as a report an
+// ignore silences is. Both keep their names while the rest are judged. An
+// ignore is consulted first, as the analyzer does, so an ignore over a
+// baselined declaration still silences it. baselined may be nil.
+func Run(dir string, patterns []string, baselined Baselined) (Result, error) {
+	// The patterns first: a pattern the go command rejects is the cheaper
+	// thing to find, and the one a reader should see.
+	named, err := module.Resolve(dir, patterns)
+	if err != nil {
+		return Result{}, err
+	}
+	mod, err := module.Load(dir)
+	if err != nil {
+		return Result{}, err
+	}
+	ev, err := evidenceCollect(mod)
+	if err != nil {
+		return Result{}, err
+	}
+	r := &run{mod: mod, ev: ev, facts: map[string]*renameFacts{}, usedIgnores: map[token.Pos]bool{}, baselined: baselined}
+	res := Result{Outside: named.Outside, Unmatched: named.Unmatched}
+	// A package of a main module that ./... leaves out, such as one under
+	// testdata named on its own, is not loaded, so none of its uses were
+	// read either.
+	for _, path := range slices.Sorted(maps.Keys(named.Paths)) {
+		if _, internal := module.InternalParent(path); internal && mod.Variants(path) == nil {
+			res.Skipped = append(res.Skipped, Skipped{Package: path, Reason: "./... leaves it out, so this run does not load it"})
+		}
+	}
+	for _, path := range mod.Paths {
+		if !named.Paths[path] {
+			continue
+		}
+		pkgs := mod.Variants(path)
+		if why := r.skip(pkgs[0]); why != "" {
+			// A package outside internal/ is never judged, and listing every
+			// one would bury the packages a reader expected judged.
+			if _, internal := module.InternalParent(path); internal {
+				res.Skipped = append(res.Skipped, Skipped{Package: path, Reason: why})
+			}
+			continue
+		}
+		candidates, siblings, repeated := candidatesOf(pkgs[0])
+		res.Findings = append(res.Findings, r.judge(pkgs[0], candidates)...)
+		res.Findings = append(res.Findings, r.unusedIgnores(pkgs[0], siblings, repeated)...)
+	}
+	slices.SortFunc(res.Findings, func(a, b Finding) int {
+		return cmp.Or(strings.Compare(a.Pos.Filename, b.Pos.Filename), cmp.Compare(a.Pos.Offset, b.Pos.Offset))
+	})
+	return res, nil
+}
+
+// Apply writes every fix the findings carry.
+func Apply(findings []Finding) error {
+	byFile := map[string][]Edit{}
+	for _, f := range findings {
+		for _, e := range f.Fix {
+			byFile[e.Filename] = append(byFile[e.Filename], e)
+		}
+	}
+	for _, name := range slices.Sorted(maps.Keys(byFile)) {
+		edits := byFile[name]
+		// Later edits first, so earlier offsets stay valid. Two findings never
+		// edit one identifier, since each renames its own declaration.
+		slices.SortFunc(edits, func(a, b Edit) int { return cmp.Compare(b.Start, a.Start) })
+		info, err := os.Stat(name)
+		if err != nil {
+			return err
+		}
+		src, err := os.ReadFile(name)
+		if err != nil {
+			return err
+		}
+		for _, e := range slices.Compact(edits) {
+			src = slices.Concat(src[:e.Start], []byte(e.NewText), src[e.End:])
+		}
+		if err := os.WriteFile(name, src, info.Mode()); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// kind is what a candidate declares, for the message and for which evidence
+// applies to it.
+//
+//declscope:shared // candidate.go and rename.go classify candidates by it
+type kind string
+
+//declscope:shared // candidate.go classifies each candidate
+const (
+	kindFunc   kind = "func"
+	kindVar    kind = "var"
+	kindConst  kind = "const"
+	kindType   kind = "type"
+	kindMethod kind = "method"
+	kindField  kind = "field"
+)
+
+// member reports whether the kind is reached through a value of its owner,
+// which is how another module uses one without naming the owner.
+//
+//declscope:shared // rename.go asks it
+func (k kind) member() bool { return k == kindMethod || k == kindField }
+
+// candidate is an exported declaration of a judged package.
+//
+//declscope:shared // candidate.go builds it, and every stage reads it
+type candidate struct {
+	obj  types.Object
+	key  string
+	kind kind
+	// owner is the type a method or field belongs to, nil otherwise.
+	owner *types.TypeName
+	// pkg is the widest variant of the declaring package: with its in-package
+	// tests, when it has any.
+	pkg     *packages.Package
+	ignores []directive.Ignore
+	// testFile marks a declaration of an in-package _test.go file.
+	testFile bool
+	// doc is the declaration's own doc comment, whose leading name the
+	// rename rewrites too.
+	doc *ast.CommentGroup
+	// set is the const block a constant is a value of, nil otherwise.
+	set *constSet
+}
+
+// constSet is a const block of two or more constants, every one of them of
+// one exported type of the package: the values of an enum. go doc lists a
+// lone default and a mixed block under the type too, so the block is what
+// tells a value of the set from another constant of the type. The block is
+// judged as a whole: it is left alone while its type is not reported, or
+// while another package uses any of its values, and otherwise each value is
+// reported, fixed only where every one of them is.
+//
+//declscope:shared // candidate.go builds it
+type constSet struct {
+	typ *types.TypeName
+}
+
+// excludedNear is what the build-excluded files say about one package,
+// gathered once rather than once per candidate: every candidate of a package
+// asks the same files the same questions.
+type excludedNear struct {
+	// own is every file of the package itself, and linknamed every name they
+	// bind with //go:linkname or //export.
+	own       []*excluded.File
+	linknamed map[string]bool
+	// importing is every file of another package that imports the package,
+	// and dotImporting every one that imports it into its own scope.
+	importing, dotImporting []*excluded.File
+	// reached says whether a file of another package imports a path that
+	// reaches the package (module.Reaches), or belongs to a loaded package
+	// that does.
+	reached bool
+}
+
+// excludedPlace is where a build-excluded file belongs: its directory and its
+// package name. A file of a loaded package shares both with it.
+type excludedPlace struct {
+	dir, pkg string
+}
+
+// excludedNearOf returns what the build-excluded files say about the package
+// p, built on first use.
+func (r *run) excludedNearOf(p *packages.Package) *excludedNear {
+	if near, ok := r.excludedNear[p.PkgPath]; ok {
+		return near
+	}
+	if r.excludedPlaces == nil {
+		r.excludedPlaces = map[excludedPlace][]*excluded.File{}
+		for _, x := range r.mod.Excluded {
+			at := excludedPlace{x.Dir, x.Package}
+			r.excludedPlaces[at] = append(r.excludedPlaces[at], x)
+		}
+		r.excludedNear = map[string]*excludedNear{}
+		r.loadedAt = map[excludedPlace]string{}
+		// A nested module's excluded files are among them, so its packages
+		// are siblings too.
+		loaded := r.mod.Pkgs
+		for _, imp := range r.mod.Importers {
+			loaded = slices.Concat(loaded, imp.Pkgs)
+		}
+		for _, q := range loaded {
+			r.loadedAt[placeOf(q)] = q.PkgPath
+		}
+	}
+	own := placeOf(p)
+	near := &excludedNear{own: r.excludedPlaces[own]}
+	syntax := make([]*ast.File, 0, len(near.own))
+	for _, x := range near.own {
+		syntax = append(syntax, x.Syntax)
+	}
+	near.linknamed = directive.Linknamed(syntax)
+	for _, x := range r.mod.Excluded {
+		if (excludedPlace{x.Dir, x.Package}) == own {
+			continue
+		}
+		paths := x.ImportPaths()
+		if slices.Contains(paths, p.PkgPath) {
+			near.importing = append(near.importing, x)
+		}
+		if x.DotImports(p.PkgPath) {
+			near.dotImporting = append(near.dotImporting, x)
+		}
+		if !near.reached {
+			// The file's compiled siblings count as much as its imports: a
+			// package-level variable of theirs may hold a value of the
+			// package's types.
+			sibling, loaded := r.loadedAt[excludedPlace{x.Dir, x.Package}]
+			near.reached = loaded && r.mod.Reaches(sibling, p.PkgPath) ||
+				slices.ContainsFunc(paths, func(path string) bool { return r.mod.Reaches(path, p.PkgPath) })
+		}
+	}
+	r.excludedNear[p.PkgPath] = near
+	return near
+}
+
+// placeOf returns where the files of the loaded package p are.
+func placeOf(p *packages.Package) excludedPlace {
+	var dir string
+	if files := slices.Concat(p.GoFiles, p.CompiledGoFiles); len(files) > 0 {
+		dir = filepath.Dir(files[0])
+	}
+	return excludedPlace{dir, p.Types.Name()}
+}
+
+// qualifiedIn reports whether a build-excluded file of another package
+// imports the candidate's package and writes pkg.Name: a use, in a
+// configuration this run does not build.
+func (r *run) qualifiedIn(c *candidate) bool {
+	return slices.ContainsFunc(r.excludedNearOf(c.pkg).importing, func(x *excluded.File) bool {
+		return x.Qualifies(c.pkg.PkgPath, c.pkg.Types.Name(), c.obj.Name())
+	})
+}
+
+// maybeUsedIn reports whether a build-excluded file of another package may
+// use the candidate, and maybeUsedInOwn whether one of its own package may,
+// in ways the file's names do not show.
+//
+// The file is not type-checked, so for a field or a method, and for a type
+// some struct embeds, what it spells is not enough. Go uses those without
+// writing their names: a method satisfies an interface, a field is matched
+// by name in a conversion or an assignment between identical struct types,
+// a literal fills fields by position through an alias, and a selector names
+// an embedded type as a field. So any file that may hold a value of a type
+// of the candidate's package counts: its own package's, one importing a
+// package that reaches it (module.Reaches), and one whose own package does,
+// through a package-level variable of a compiled file beside it. A
+// package-level name has no such use, and counts only where it is written:
+// under a dot import, or pkg.Name, which usedOutside reads.
+func (r *run) maybeUsedIn(c *candidate) bool {
+	near := r.excludedNearOf(c.pkg)
+	if near.reached && r.usedImplicitly(c) {
+		return true
+	}
+	return slices.ContainsFunc(near.dotImporting, func(x *excluded.File) bool { return x.Writes(c.obj.Name()) })
+}
+
+func (r *run) maybeUsedInOwn(c *candidate) bool {
+	return len(r.excludedNearOf(c.pkg).own) > 0 && r.usedImplicitly(c)
+}
+
+// usedImplicitly reports whether Go can use the candidate without spelling
+// its name: a field or a method, or a type some struct of the module embeds,
+// whose name a selector reads as a field's.
+func (r *run) usedImplicitly(c *candidate) bool {
+	if r.embedded == nil {
+		r.embedded = map[string]bool{}
+		for _, p := range r.mod.Widest() {
+			for _, obj := range p.TypesInfo.Defs {
+				if tn := embeddedTypeName(obj); tn != nil {
+					r.embedded[keyOf(r.mod.Fset, tn)] = true
+				}
+			}
+		}
+	}
+	return c.kind.member() || c.kind == kindType && r.embedded[c.key]
+}
+
+// writtenInOwn reports whether a build-excluded file of the candidate's own
+// package writes name. The rename cannot rewrite that file, which would keep
+// the old name or declare the new one twice.
+//
+//declscope:shared // rename.go asks it about the new name
+func (r *run) writtenInOwn(c *candidate, name string) bool {
+	return slices.ContainsFunc(r.excludedNearOf(c.pkg).own, func(x *excluded.File) bool { return x.Writes(name) })
+}
+
+// linknamedInOwn reports whether a build-excluded file of the candidate's
+// own package binds its name with //go:linkname or //export. The rename
+// cannot rewrite that file, and the build that keeps it would fail: the
+// directive would name a declaration that is gone.
+//
+//declscope:shared // rename.go asks it beside the package's own linknames
+func (r *run) linknamedInOwn(c *candidate) bool {
+	return r.excludedNearOf(c.pkg).linknamed[c.obj.Name()]
+}
+
+// linkerSet reports whether the candidate is a package-level string
+// variable, which `go build -ldflags "-X path.Name=value"` sets by name. A
+// build file passes the flag, where go/types never looks, and the linker
+// ignores a -X whose name no longer exists, so the rename would break the
+// release silently. The linker sets only a variable of type string itself,
+// which an alias of string is too: one of a named string type fails the build
+// with "not a var of type string", so no -X can name it.
+func (c *candidate) linkerSet() bool {
+	v, ok := c.obj.(*types.Var)
+	if !ok || c.kind != kindVar {
+		return false
+	}
+	return types.Identical(v.Type(), types.Typ[types.String])
+}
+
+// run is the state one invocation shares across the packages it judges.
+//
+//declscope:shared // rename.go and ignore.go add methods of their own
+type run struct {
+	mod *module.Module
+	ev  *evidence
+	// facts caches what the rename guards ask of each package.
+	facts map[string]*renameFacts
+	// usedIgnores is every ignore naming overexported that silenced a report.
+	usedIgnores map[token.Pos]bool
+	// constrainedNear caches, per package path, whether a file behind a
+	// build constraint is in a package that reaches it, or imports one.
+	//
+	//declscope:private
+	constrainedNear map[string]bool
+	// embedded is every type some struct of the module embeds, keyed by
+	// keyOf. It is built on first use.
+	//
+	//declscope:private
+	embedded map[string]bool
+	// excludedNear caches, per package path, what the build-excluded files
+	// say about the package, excludedPlaces holds those files by where they
+	// belong, and loadedAt holds the path of the loaded package at each
+	// place. All are built on first use.
+	//
+	//declscope:private
+	excludedNear map[string]*excludedNear
+	//declscope:private
+	excludedPlaces map[excludedPlace][]*excluded.File
+	//declscope:private
+	loadedAt map[excludedPlace]string
+	// baselined is how Run was asked what the baseline records, and
+	// namespaces caches each package's spelled namespace per file.
+	//
+	//declscope:private
+	baselined Baselined
+	//declscope:private
+	namespaces map[string]map[string]string
+}
+
+// namespaceOf spells the namespace of the file declaring the candidate, as
+// the analyzer spells it in a baseline key: namespace.Resolve reads every file
+// of the package that the analyzer reads, which leaves generated ones out.
+func (r *run) namespaceOf(c *candidate) string {
+	byFile, ok := r.namespaces[c.pkg.PkgPath]
+	if !ok {
+		var files []string
+		var declared []namespace.Declared
+		for _, f := range c.pkg.Syntax {
+			if ast.IsGenerated(f) {
+				continue
+			}
+			path := r.mod.Fset.PositionFor(f.Pos(), false).Filename
+			d := directive.ParseFile(f)
+			files = append(files, path)
+			declared = append(declared, namespace.Declared{Path: path, Core: d.Core, Named: d.HasNamespace, Name: d.Namespace})
+		}
+		byFile = map[string]string{}
+		for i, res := range namespace.Resolve(declared) {
+			byFile[files[i]] = namespace.Spell(res, files[i])
+		}
+		if r.namespaces == nil {
+			r.namespaces = map[string]map[string]string{}
+		}
+		r.namespaces[c.pkg.PkgPath] = byFile
+	}
+	// No candidate is declared in a generated file (candidatesOf), so every
+	// one is in the map.
+	return byFile[r.mod.Fset.PositionFor(c.obj.Pos(), false).Filename]
+}
+
+// skip says why a package is not judged at all, or returns "".
+//
+// Each reason is one way an importer could be unseen or a name could be
+// read where the analysis never looks, so nothing is said rather than a
+// guess.
+func (r *run) skip(p *packages.Package) string {
+	switch {
+	case p.Name == "main":
+		// -buildmode=plugin looks exported symbols of main up by name.
+		return "package main"
+	case len(p.OtherFiles) > 0 || slices.ContainsFunc(p.IgnoredFiles, func(f string) bool { return !strings.HasSuffix(f, ".go") }):
+		// Assembly and cgo name Go symbols from files go/types never reads.
+		// Assembly for another GOARCH is in IgnoredFiles, and names them in
+		// the build this run does not see.
+		return "the package holds non-Go files"
+	case !slices.Equal(p.GoFiles, p.CompiledGoFiles):
+		return "the package uses cgo"
+	}
+	_, why := r.mod.Range(p.PkgPath)
+	return why
+}
+
+// judge reports every candidate of one package.
+//
+// A type an exported declaration returns, takes or holds keeps its name while
+// that declaration keeps its own, or the declaration would hand out a type
+// its callers cannot name. Which declarations keep their names is known only
+// once each is judged, so judging goes in steps:
+//
+//  1. Each candidate is judged on its own, and each rename is planned without
+//     claiming its new name.
+//  2. Types are settled, until nothing changes. A type an API used from
+//     another package carries is used, and is not reported. A type another
+//     exported declaration that keeps its name carries keeps its own, and its
+//     fix is withheld with the report kept. Neither walk follows a member
+//     fixed in the same run, so a declaration and the type it returns still
+//     go together, and one run of -fix settles the package.
+//  3. The fixes left claim their names, in order. A fix that finds its name
+//     claimed loses it, and judging starts again from step 2, since a
+//     declaration that keeps its name may carry more.
+//  4. A loser whose name no fix that stands has claimed lost to a fix step 2
+//     withheld since. The first such loser is released, claims first from
+//     then on, and judging starts again. Each loser is released once, and one
+//     released can lose again, to another released before it.
+//
+// Every repeat either adds a loser or releases one, a candidate is released
+// at most once, and between releases the losers only grow, so it ends. Names are claimed only once the types are
+// settled, so a claim is never made by a fix that step 2 later withholds.
+//
+// An ignore silences a report only once the types settle: a type found
+// carried is used, and the ignore over it silenced nothing.
+func (r *run) judge(p *packages.Package, candidates []*candidate) []Finding {
+	var vs []*verdict
+	for _, c := range candidates {
+		if r.usedOutside(c) {
+			// A configuration that leaves out the files using it reports it,
+			// and the ignore answers the report there.
+			if r.neededWithoutConstrained(c) {
+				r.ignoreSilenced(c)
+			}
+			continue
+		}
+		v := &verdict{c: c, f: Finding{
+			Pos:  r.mod.Fset.PositionFor(c.obj.Pos(), false),
+			Rule: rule.Overexported,
+			// A method or field is named alone, never with its type: the type
+			// may be fixed in the same run, and a report the run keeps must
+			// read the same afterwards.
+			Name:      c.obj.Name(),
+			Kind:      string(c.kind),
+			Package:   c.pkg.PkgPath,
+			Namespace: r.namespaceOf(c),
+		}}
+		if c.kind.member() && c.owner != nil {
+			v.f.Owner = c.owner.Name()
+		}
+		if r.ev.extTest[c.key] {
+			// Exporting from an in-package _test.go file for the external
+			// tests is the export_test.go idiom, doing its job.
+			if c.testFile {
+				continue
+			}
+			v.f.TestOnly, v.base = true, "external tests use it"
+		} else {
+			v.base = r.withheld(c)
+		}
+		v.silenced = ignoreCovers(c)
+		v.baselined = !v.silenced && r.baselined != nil && r.baselined(filepath.Dir(v.f.Pos.Filename), v.f.Key())
+		if v.base == "" && !v.silenced && !v.baselined {
+			v.plan, v.base = r.renamePlan(c)
+		}
+		vs = append(vs, v)
+	}
+	vs = r.judgeSets(candidates, vs)
+	roots := r.carrierRoots(p)
+	first := map[*verdict]bool{}
+	for {
+		for _, v := range vs {
+			v.used, v.kept, v.f.Withheld = false, false, v.base
+			if v.lost {
+				v.f.Withheld = v.plan.taken
+			}
+		}
+		r.settle(p.Types, vs, roots)
+		claims := &renameClaims{pkg: map[string]bool{}}
+		clashed := false
+		for _, v := range slices.Concat(verdictsFirst(vs, first, true), verdictsFirst(vs, first, false)) {
+			if v.fixable() && !claims.take(v.plan) {
+				v.lost, v.f.Withheld, clashed = true, v.plan.taken, true
+			}
+		}
+		if clashed {
+			continue
+		}
+		// One at a time: two losers that clash with each other would both be
+		// free, and the later one would lose again.
+		i := slices.IndexFunc(vs, func(v *verdict) bool {
+			return v.lost && !first[v] && claims.free(v.plan)
+		})
+		if i >= 0 {
+			vs[i].lost, first[vs[i]] = false, true
+			continue
+		}
+		// A kept declaration whose name a fix takes reads as taken, the way
+		// the next run, with the fix applied, reads it.
+		for _, v := range vs {
+			if v.kept && !claims.free(v.plan) {
+				v.f.Withheld = v.plan.taken
+			}
+		}
+		break
+	}
+	var findings []Finding
+	for _, v := range vs {
+		switch {
+		case v.used:
+		case v.silenced:
+			r.ignoreSilenced(v.c)
+		case v.baselined:
+		default:
+			if v.fixable() {
+				v.f.Fix = v.plan.edits
+			}
+			findings = append(findings, v.f)
+		}
+	}
+	return findings
+}
+
+// judgeSets drops the verdicts of every const set left alone before the
+// types settle: one with a value another package uses, or whose type is not
+// reported, being used, silenced, baselined or no candidate at all. settle
+// drops the rest whose type turns out used. A value dropped keeps its name,
+// so it carries its type, and an ignore over it silenced nothing.
+func (r *run) judgeSets(candidates []*candidate, vs []*verdict) []*verdict {
+	byKey := map[string]*verdict{}
+	for _, v := range vs {
+		byKey[v.c.key] = v
+	}
+	alone := map[*constSet]bool{}
+	for _, c := range candidates {
+		if c.set == nil {
+			continue
+		}
+		tv := byKey[keyOf(r.mod.Fset, c.set.typ)]
+		if byKey[c.key] == nil || tv == nil || tv.silenced || tv.baselined {
+			alone[c.set] = true
+		}
+	}
+	return slices.DeleteFunc(vs, func(v *verdict) bool { return alone[v.c.set] })
+}
+
+// verdict is judge's working state for one candidate.
+type verdict struct {
+	c    *candidate
+	f    Finding
+	plan *renamePlanned
+	// base is why the fix is withheld before types settle, or "".
+	base string
+	// silenced marks a candidate an ignore covers. It keeps its name, and
+	// its report is dropped. The ignore counts as used unless the candidate
+	// turns out used, when it silenced nothing.
+	silenced bool
+	// baselined marks a candidate the baseline records, and no ignore covers.
+	// It keeps its name, and its report is dropped.
+	baselined bool
+	// used marks a type an API used from another package carries, and kept
+	// one another exported declaration that keeps its name carries.
+	used, kept bool
+	// lost marks a fix whose name another claimed first.
+	lost bool
+}
+
+func (v *verdict) fixable() bool { return !v.used && !v.silenced && !v.baselined && v.f.Withheld == "" }
+
+// verdictsFirst returns the verdicts that are, or are not, in first, in
+// order.
+func verdictsFirst(vs []*verdict, first map[*verdict]bool, in bool) []*verdict {
+	var out []*verdict
+	for _, v := range vs {
+		if first[v] == in {
+			out = append(out, v)
+		}
+	}
+	return out
+}
+
+// settle settles which types are used and which keep their names, until
+// nothing changes. Each pass only takes fixes away.
+//
+// A const set goes with its type: a value of a used type is used too. And it
+// keeps its names or loses them together: one value that keeps its name
+// withholds the fix of every other.
+// spec/shrink_settle.fsl proves that this still ends, and leaves no set split.
+func (r *run) settle(within *types.Package, vs []*verdict, roots []types.Object) {
+	byKey := map[string]*verdict{}
+	for _, v := range vs {
+		byKey[v.c.key] = v
+	}
+	for changed := true; changed; {
+		changed = false
+		fixed := map[string]bool{}
+		for _, v := range vs {
+			if v.fixable() {
+				fixed[v.c.key] = true
+			}
+		}
+		carried, kept := r.typesCarried(within, roots, fixed)
+		for _, v := range vs {
+			switch {
+			case v.c.kind != kindType || v.used:
+			case carried[v.c.key]:
+				v.used, changed = true, true
+			case kept[v.c.key] && v.fixable():
+				v.kept, v.f.Withheld, changed = true, "an exported declaration that keeps its name hands it out", true
+			}
+		}
+		held := map[*constSet]bool{}
+		for _, v := range vs {
+			if v.c.set != nil && !v.fixable() {
+				held[v.c.set] = true
+			}
+		}
+		for _, v := range vs {
+			switch {
+			case v.c.set == nil || v.used:
+			// judgeSets left the verdict of the type in.
+			case byKey[keyOf(r.mod.Fset, v.c.set.typ)].used:
+				v.used, changed = true, true
+			case held[v.c.set] && v.fixable():
+				v.f.Withheld, changed = "another value of its const block keeps its name", true
+			}
+		}
+	}
+}
+
+// carrierRoots returns every exported declaration of the package that can
+// carry a type: those at package scope, and the methods and fields another
+// package uses.
+func (r *run) carrierRoots(p *packages.Package) []types.Object {
+	var roots []types.Object
+	for _, obj := range p.TypesInfo.Defs {
+		if obj == nil || !obj.Exported() || obj.Pkg() != p.Types {
+			continue
+		}
+		switch obj.(type) {
+		case *types.Func, *types.Var, *types.Const, *types.TypeName:
+		default:
+			continue
+		}
+		if obj.Parent() != p.Types.Scope() && !r.ev.outside[keyOf(r.mod.Fset, obj)] {
+			continue
+		}
+		roots = append(roots, obj)
+	}
+	return roots
+}
+
+// typesCarried returns the types of within that the roots not in fixed
+// carry, in two sets.
+//
+// carried is what a declaration used from another package carries: a result,
+// a parameter, a variable's type, an exported field or method of a type used
+// there. The other package holds values of it, so it is used.
+//
+// kept is what any other exported declaration that keeps its name carries.
+// A root is never in fixed, so a type it reaches of itself changes nothing,
+// and one whose own fix is withheld keeps its report.
+//
+// A method or field in fixed is not followed, since the same run unexports
+// it. spec/shrink_settle.fsl proves that settling this way ends, and leaves
+// nothing fixed that a declaration keeping its name carries.
+func (r *run) typesCarried(within *types.Package, roots []types.Object, fixed map[string]bool) (carried, kept map[string]bool) {
+	fset := r.mod.Fset
+	carried, kept = map[string]bool{}, map[string]bool{}
+	follow := func(o types.Object) bool { return !fixed[keyOf(fset, o)] }
+	var outside, staying []types.Type
+	for _, root := range roots {
+		key := keyOf(fset, root)
+		switch {
+		case fixed[key]:
+		case r.ev.outside[key]:
+			outside = append(outside, root.Type())
+		default:
+			staying = append(staying, root.Type())
+		}
+	}
+	reach.ByName(outside, within, follow, func(tn *types.TypeName) { carried[keyOf(fset, tn)] = true })
+	reach.ByName(staying, within, follow, func(tn *types.TypeName) { kept[keyOf(fset, tn)] = true })
+	return carried, kept
+}
+
+// usedOutside reports whether anything outside the candidate's package uses
+// it. Each entry is one way to be used, and any of them silences the report.
+func (r *run) usedOutside(c *candidate) bool {
+	ev, key := r.ev, c.key
+	uses := []func() bool{
+		// Another package names it, writes it unkeyed, or links it by name.
+		func() bool { return ev.outside[key] },
+		// A static interface satisfaction needs it, and names no method.
+		func() bool { return ev.satisfied[key] },
+		// Another module reaches it through a value an importable package
+		// hands out, or names it as an embedded field of one.
+		func() bool { return ev.exposed[key] },
+		// A struct conversion or an identical unnamed struct pairs the field
+		// by name.
+		func() bool { return c.kind == kindField && ev.paired[key] },
+		// A value of it escapes into an interface, where fmt, encoding/json
+		// and reflect find methods and fields at run time, and %T prints a
+		// type's name. A method escapes with its owner.
+		func() bool { return ev.escaped[key] },
+		func() bool { return c.kind == kindMethod && ev.escaped[keyOf(r.mod.Fset, c.owner)] },
+		// A build-excluded file of another package writes pkg.Name.
+		func() bool { return !c.kind.member() && r.qualifiedIn(c) },
+	}
+	return slices.ContainsFunc(uses, func(used func() bool) bool { return used() })
+}
+
+// neededWithoutConstrained reports whether a configuration that leaves the
+// files behind a build constraint out would report the candidate, so that
+// an ignore answering the report is needed there. Such a configuration
+// reads them for names only, and for a field, a method, or a type some
+// struct embeds, a name is not enough: it reports the candidate with its fix
+// withheld wherever one of those files is in a package or imports a path
+// that reaches it (maybeUsedIn, maybeUsedInOwn). Here, that is asked of the
+// files this run reads.
+//
+// How this run uses the candidate does not enter. A use behind the same
+// constraint, a spelled one or an escape alike, is gone in that
+// configuration. A use seen in every one keeps it from reporting, and its
+// unused report on the ignore catches a stale one there. Only a name spelled
+// from a file under no constraint is known to be seen in every one, and it
+// settles the matter here.
+func (r *run) neededWithoutConstrained(c *candidate) bool {
+	if !r.usedImplicitly(c) || r.ev.everywhere[c.key] {
+		return false
+	}
+	path := c.pkg.PkgPath
+	near, ok := r.constrainedNear[path]
+	if !ok {
+		near = slices.ContainsFunc(r.ev.constrained, func(f evidenceConstrained) bool {
+			return r.mod.Reaches(f.pkg, path) || slices.ContainsFunc(f.imports, func(imp string) bool { return r.mod.Reaches(imp, path) })
+		})
+		if r.constrainedNear == nil {
+			r.constrainedNear = map[string]bool{}
+		}
+		r.constrainedNear[path] = near
+	}
+	return near
+}
+
+// withheld returns why the fix is withheld for a reason other than the
+// rename itself, or "". Each entry is a use that may exist but cannot be
+// proved, or a reference the rename cannot rewrite.
+func (r *run) withheld(c *candidate) string {
+	// A copy of other source that a nested module builds may use it.
+	if why := r.mod.Doubt(c.pkg.PkgPath); why != "" {
+		return why
+	}
+	reasons := []struct {
+		why     string
+		applies func() bool
+	}{
+		{"a literal or conversion through a type parameter whose type set cannot be computed may write it", func() bool { return r.ev.guessed[c.key] }},
+		{"a build-excluded file of another package may use it", func() bool { return r.maybeUsedIn(c) }},
+		{"a build-excluded file of its package names it", func() bool { return r.writtenInOwn(c, c.obj.Name()) }},
+		{"a build-excluded file of its package may use it", func() bool { return r.maybeUsedInOwn(c) }},
+		{"a generated file names it", func() bool { return r.ev.generated[c.key] }},
+		{"an example function names it", func() bool { return r.ev.example[c.key] }},
+		{"a string variable may be set by -ldflags -X, which names it", c.linkerSet},
+	}
+	for _, reason := range reasons {
+		if reason.applies() {
+			return reason.why
+		}
+	}
+	return ""
+}
+
+// keyOf identifies a declaration across the variants of its package.
+//
+// A package with tests is type-checked more than once, and each variant has
+// its own objects. They share the parsed files, so the declaring identifier's
+// place is the one identity they agree on.
+//
+//declscope:shared // every stage keys its evidence by it
+func keyOf(fset *token.FileSet, obj types.Object) string {
+	if obj == nil || !obj.Pos().IsValid() {
+		return ""
+	}
+	p := fset.PositionFor(obj.Pos(), false)
+	return fmt.Sprintf("%s:%d", p.Filename, p.Offset)
+}
+
+// origin maps an instantiated field or method back to the declared object:
+// go/types records the instantiated one in Uses for a selection on a generic
+// type. The analyzer's own origin does the same for the same reason.
+//
+//declscope:shared // evidence.go and rename.go normalize every object with it
+func origin(obj types.Object) types.Object {
+	switch o := obj.(type) {
+	case *types.Var:
+		return o.Origin()
+	case *types.Func:
+		return o.Origin()
+	}
+	return obj
+}
+
+// embeddedTypeName returns the type name an embedded field is spelled with,
+// and nil for any other object. A selection of the field (s.T) is spelled
+// with the type's name, so renaming the type rewrites it too.
+//
+//declscope:shared // evidence.go and rename.go follow embedded fields
+func embeddedTypeName(obj types.Object) *types.TypeName {
+	v, ok := obj.(*types.Var)
+	if !ok || !v.Embedded() {
+		return nil
+	}
+	t := v.Type()
+	if ptr, ok := t.(*types.Pointer); ok {
+		t = ptr.Elem()
+	}
+	switch t := t.(type) {
+	case *types.Named:
+		return t.Origin().Obj()
+	case *types.Alias:
+		return t.Obj()
+	}
+	return nil
+}

@@ -1,0 +1,58 @@
+## shrink
+exit 0
+--- stdout
+--- stderr
+declscope shrink: not judged: example.com/ne/internal/a: the nested module example.com/ne/tools may import it, and it reads example.com/ne/internal/a from /tmp/dse-xxxxxxxxxxxx/work/nested-module-elsewhere-copy
+
+## shrink -fix
+exit 0
+--- stdout
+--- stderr
+declscope shrink: not judged: example.com/ne/internal/a: the nested module example.com/ne/tools may import it, and it reads example.com/ne/internal/a from /tmp/dse-xxxxxxxxxxxx/work/nested-module-elsewhere-copy
+
+## tree after shrink -fix
+=== nested-module-elsewhere/go.mod
+module example.com/ne
+
+go 1.25
+
+=== nested-module-elsewhere/internal/a/a.go
+// Package a is not judged: the nested module in tools reads example.com/ne
+// from nested-module-elsewhere-copy, so its uses are of other source.
+package a
+
+func F() {}
+
+=== nested-module-elsewhere/tools/go.mod
+module example.com/ne/tools
+
+go 1.25
+
+require example.com/ne v0.0.0
+
+replace example.com/ne => ../../nested-module-elsewhere-copy
+
+=== nested-module-elsewhere/tools/tools.go
+package tools
+
+import "example.com/ne/internal/a"
+
+var _ = a.F
+
+=== nested-module-elsewhere-copy/go.mod
+module example.com/ne
+
+go 1.25
+
+=== nested-module-elsewhere-copy/internal/a/a.go
+// Package a is the copy nested-module-elsewhere/tools builds against. It is
+// not a fixture of its own.
+package a
+
+func F() {}
+
+## shrink after -fix
+exit 0
+--- stdout
+--- stderr
+declscope shrink: not judged: example.com/ne/internal/a: the nested module example.com/ne/tools may import it, and it reads example.com/ne/internal/a from /tmp/dse-xxxxxxxxxxxx/work/nested-module-elsewhere-copy

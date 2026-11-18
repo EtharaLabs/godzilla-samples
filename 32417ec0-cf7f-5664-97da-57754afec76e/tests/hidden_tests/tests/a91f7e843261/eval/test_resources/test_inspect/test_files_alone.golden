@@ -1,0 +1,24 @@
+exit 1
+--- stdout
+--- stderr
+declscope inspect: example.com/app/q has only test files, so -test=false leaves nothing to measure; drop -test=false
+
+exit 0
+--- stdout
+# example.com/app/q
+
+## Namespaces
+
+| namespace | files       | declarations | qualify targets |
+| --------- | ----------- | -----------: | --------------- |
+| q         | `q_test.go` |            1 | -               |
+
+## Crossings
+
+Nothing crosses a namespace in this package.
+
+## Qualify
+
+Not asked: `rules.naming.qualify` does not apply to this package.
+
+--- stderr

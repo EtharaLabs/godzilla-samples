@@ -1,0 +1,131 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: type userA is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:20:28: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:6: type userC is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:20:36: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:26:19: 	used here, in namespace "order"
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: type userA is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:20:28: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:6: type userC is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:20:36: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:26:19: 	used here, in namespace "order"
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 2,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 2
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "order",
+      "files": [
+        "order.go"
+      ],
+      "core": false,
+      "declarations": 10,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "user",
+      "files": [
+        "user.go"
+      ],
+      "core": false,
+      "declarations": 10,
+      "qualifyTargets": 0
+    }
+  ],
+  "crossings": [
+    {
+      "from": "order",
+      "to": "user",
+      "mutual": false,
+      "declared": 0,
+      "baselined": 0,
+      "reported": 2,
+      "ignored": 0,
+      "unchecked": 0,
+      "reached": 2,
+      "declarations": 10,
+      "uses": 3,
+      "clears": 2
+    }
+  ],
+  "edges": [
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userA",
+      "kind": "type",
+      "uses": 1,
+      "state": "reported"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userC",
+      "kind": "type",
+      "uses": 2,
+      "state": "reported"
+    }
+  ],
+  "names": []
+}
+--- stderr

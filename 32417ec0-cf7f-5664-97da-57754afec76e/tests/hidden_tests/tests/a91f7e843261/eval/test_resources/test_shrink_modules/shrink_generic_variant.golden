@@ -1,0 +1,89 @@
+## shrink
+exit 0
+--- stdout
+--- stderr
+
+## shrink -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after shrink -fix
+=== generic-variant/cmd/gv/main.go
+package main
+
+import (
+	"fmt"
+
+	"example.com/gv/internal/p"
+	"example.com/gv/internal/q"
+	"example.com/gv/internal/s"
+)
+
+func main() {
+	fmt.Println(q.Encode(p.Make()))
+	fmt.Println(s.Wrap(p.MakeU()))
+}
+
+=== generic-variant/go.mod
+module example.com/gv
+
+go 1.25
+
+=== generic-variant/internal/p/p.go
+// Package p holds values that escape into json.Marshal inside q.Encode, a
+// generic of the module. cmd/gv calls it through the variant of q without
+// its tests, which is not the variant read, so SSA has no body for the
+// instance. The escape still counts, and neither field is reported.
+package p
+
+type T struct{ Secret int }
+
+func Make() T { return T{Secret: 1} }
+
+// U reaches q.Encode only through s.Wrap, whose own instance has a body.
+type U struct{ Hidden int }
+
+func MakeU() U { return U{Hidden: 1} }
+
+=== generic-variant/internal/q/q.go
+// Package q has a test, so the variant read is q with its test, not the one
+// cmd/gv imports.
+package q
+
+import "encoding/json"
+
+func Encode[V any](v V) string {
+	b, _ := json.Marshal(v)
+	return string(b)
+}
+
+=== generic-variant/internal/q/q_test.go
+package q
+
+import "testing"
+
+func TestEncode(t *testing.T) { _ = Encode(1) }
+
+=== generic-variant/internal/s/s.go
+// Package s has no test, so its variant read is the one cmd/gv imports, and
+// SSA builds Wrap's instance. The call to q.Encode inside it still goes to
+// the variant of q without its tests, and is given a type parameter, which
+// names no type of p.
+package s
+
+import "example.com/gv/internal/q"
+
+func Wrap[V any](v V) string { return q.Encode(v) }
+
+## shrink after -fix
+exit 0
+--- stdout
+--- stderr
+
+## shrink once the use is gone
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/generic-variant/internal/p/p.go:7:16: field Secret is exported, but nothing outside example.com/gv/internal/p uses it
+/tmp/dse-xxxxxxxxxxxx/work/generic-variant/internal/p/p.go:12:16: field Hidden is exported, but nothing outside example.com/gv/internal/p uses it
+--- stderr

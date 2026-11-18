@@ -1,0 +1,34 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:8:6: type entry is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:3:33: 	used here, in namespace "order"
+$WORK/user.go:9:2: field entry.key is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:3:41: 	used here, in namespace "order"
+
+=== -fix
+exit: 0
+--- stdout
+
+--- stderr
+--- changed user.go
+package fixsurplusnarrow
+
+// entry crosses, and the boundary fix widens it. note is read here alone, so
+// the same edit narrows it back, or surplus would report what -fix wrote.
+// memo shares its line, so one directive narrows both, and extra takes its
+// own.
+
+//declscope:shared
+type entry struct { // want `type entry is private to namespace "user", but is used from namespace "order"`
+	key string // want `field entry.key is private to namespace "user", but is used from namespace "order"`
+	//declscope:private
+	note, memo string
+	//declscope:private
+	extra int
+}
+
+func userNote(e entry) string { return e.note + e.memo + string(rune(e.extra)) }
+
+var _ = userNote

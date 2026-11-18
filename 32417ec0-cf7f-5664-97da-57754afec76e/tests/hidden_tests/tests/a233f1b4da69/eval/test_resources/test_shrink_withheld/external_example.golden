@@ -1,0 +1,16 @@
+exit: 3
+--- stdout
+$WORK/internal/w/w.go:3:6: func Shown is exported, but only the external tests of example.com/withheld/internal/w use it (no fix: external tests use it)
+$WORK/internal/w/w.go:5:6: type Pt is exported, but only the external tests of example.com/withheld/internal/w use it (no fix: external tests use it)
+$WORK/internal/w/w.go:7:11: method Draw is exported, but only the external tests of example.com/withheld/internal/w use it (no fix: external tests use it)
+
+--- stderr
+
+--- file internal/w/w.go
+package w
+
+func Shown() {}
+
+type Pt struct{}
+
+func (Pt) Draw() {}

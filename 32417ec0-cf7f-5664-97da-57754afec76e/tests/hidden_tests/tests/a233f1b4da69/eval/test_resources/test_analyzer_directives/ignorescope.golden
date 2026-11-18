@@ -1,0 +1,117 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/user.go:7:6: func helper is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:9: 	used here, in namespace "order"
+$WORK/user.go:25:6: func userTypo is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:45: 	used here, in namespace "order"
+$WORK/user.go:24:1: unknown rule "bogus" in declscope:ignore (want one of boundary, qualify, surplus, unused, directive, filter, overexported)
+$WORK/user.go:19:1: unused //declscope:ignore qualify on userKept
+$WORK/user.go:38:2: unused //declscope:ignore qualify on userBlockB
+
+=== survey -format=json
+exit: 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 1,
+      "failed": []
+    },
+    "configs": [
+      {
+        "chain": [
+          "$WORK/.declscope.yaml"
+        ],
+        "packages": 1,
+        "rules": {
+          "boundary": true,
+          "qualify": "ondemand",
+          "exported": false,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      }
+    ],
+    "baselines": []
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 7,
+      "ignored": 5,
+      "baselined": 0,
+      "reported": 2
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 1,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 1
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": true,
+      "keyable": true,
+      "found": 3,
+      "ignored": 3,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 2,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 2
+    }
+  },
+  "packages": [
+    {
+      "package": "ignorescope",
+      "namespaces": 2,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 2,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": true,
+        "reported": 0,
+        "baselined": 0,
+        "exempt": 3
+      },
+      "largest": {
+        "from": "order",
+        "to": "user",
+        "reached": 7,
+        "uses": 7
+      }
+    }
+  ]
+}
+
+--- stderr

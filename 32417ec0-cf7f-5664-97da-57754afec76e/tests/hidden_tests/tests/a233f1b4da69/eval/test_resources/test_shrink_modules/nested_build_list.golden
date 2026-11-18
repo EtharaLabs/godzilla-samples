@@ -1,0 +1,20 @@
+exit: 3
+--- stdout
+$WORK/m/b/internal/z/z.go:3:6: func Baz is exported, but nothing outside example.com/nbl/b/internal/z uses it (no fix: the build of the nested module example.com/nbl/b/g uses example.com/nbl/b/u from $WORK/u-copy, which imports example.com/nbl/b/internal/z)
+$WORK/m/c/internal/w/w.go:3:6: func Qux is exported, but nothing outside example.com/nbl/c/internal/w uses it (no fix: the build of the nested module example.com/nbl/k uses example.com/nbl/c/v from $WORK/v-copy, which imports example.com/nbl/c/internal/w)
+$WORK/m/s/internal/x/x.go:3:6: func Foo is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from $WORK/t-copy, which imports example.com/nbl/s/internal/x)
+$WORK/m/s/internal/x/x.go:5:6: func Bar is exported, but nothing outside example.com/nbl/s/internal/x uses it (no fix: the build of the nested module example.com/nbl/s/n uses example.com/nbl/s/t from $WORK/t-copy, which imports example.com/nbl/s/internal/x)
+
+--- stderr
+
+--- file m/a/internal/y/y.go
+package y
+
+func unused() {}
+
+--- file m/s/internal/x/x.go
+package x
+
+func Foo() {}
+
+func Bar() {}

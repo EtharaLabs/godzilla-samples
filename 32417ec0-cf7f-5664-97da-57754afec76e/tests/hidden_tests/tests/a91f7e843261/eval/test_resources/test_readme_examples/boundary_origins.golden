@@ -1,0 +1,29 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/statement.go:4:6: type Statement is declared private by //declscope:private, but is used from namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/order_repository.go:3:18: 	used here, in namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/statement.go:5:2: field Statement.Table is declared private by //declscope:private on Statement, but is used from namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/order_repository.go:4:26: 	used here, in namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/statement.go:6:2: field Statement.wheres is declared private by //declscope:private on Statement, but is used from namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/order_repository.go:4:78: 	used here, in namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/user_repository.go:3:6: func normalizeEmail is private to namespace "userRepository", but is used from namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/order_repository.go:4:9: 	used here, in namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/user_repository.go:6:6: func normalizePhone is declared private by //declscope:private, but is used from namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/order_repository.go:4:35: 	used here, in namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/util.go:5:6: func NormalizeName is declared private by the file's //declscope:private, but is used from namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/order_repository.go:4:56: 	used here, in namespace "orderRepository"
+/tmp/dse-xxxxxxxxxxxx/work/user_repository.go:5:1: unused //declscope:private on normalizePhone: it already has private scope
+
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/user_repository.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user_repository.go (new)
+@@ -1,5 +1,6 @@
+ package database
+ 
++//declscope:shared
+ func normalizeEmail(s string) string { return s }
+ 
+ //declscope:private
+--- stderr

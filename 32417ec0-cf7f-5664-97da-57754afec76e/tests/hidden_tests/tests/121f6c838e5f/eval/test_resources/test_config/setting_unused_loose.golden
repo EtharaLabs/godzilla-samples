@@ -1,0 +1,8 @@
+[exit] 3
+[stdout]
+[stderr]
+$WORK/app/user.go:14:6: func load is private to namespace "user", but is used from namespace "order"
+$WORK/app/order.go:3:32: 	used here, in namespace "order"
+$WORK/app/user.go:16:1: //declscope:shared on userShared: no use from another namespace is visible to declscope
+$WORK/app/user.go:8:1: unused //declscope:shared on Helper: nothing it reaches takes a scope
+$WORK/app/user.go:11:1: unused //declscope:ignore boundary on greet

@@ -1,0 +1,29 @@
+package pkglevel
+
+// The prefix is an ownership prefix and grants nothing, so this is still
+// private to its namespace.
+func userHelper() int { return 1 } // want `func userHelper is private to namespace "user", but is used from namespace "order"`
+
+// Surplus is always an explicit act.
+//
+//declscope:shared
+func userShared() int { return 2 }
+
+// Exported identifiers carry no boundary, and no prefix unless
+// rules.naming.exported asks for one.
+func Exported() int { return userHelper() }
+
+var userCount int // want `var userCount is private to namespace "user", but is used from namespace "order"`
+
+//declscope:shared
+var userTotal int
+
+const userLimit = 10 // want `const userLimit is private to namespace "user", but is used from namespace "order"`
+
+type userPayload struct{} // want `type userPayload is private to namespace "user", but is used from namespace "order"`
+
+// Used only inside its own namespace, and none the worse for carrying the
+// prefix: the prefix says which unit owns it, not how far it reaches.
+func userLocal() int { return userCount }
+
+var _ = userLocal

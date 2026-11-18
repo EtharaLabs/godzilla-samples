@@ -1,0 +1,19 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/d.go:7:6: func dShared is declared private by //declscope:private, but is used from namespace "e"
+/tmp/dse-xxxxxxxxxxxx/work/e.go:3:9: 	used here, in namespace "e"
+/tmp/dse-xxxxxxxxxxxx/work/a.go:6:2: unused //declscope:private on implicit.x: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/a.go:13:1: unused //declscope:private on explicit: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/a.go:15:2: unused //declscope:private on explicit.x: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/b.go:6:1: unused //declscope:private on seed, limit: each already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/b.go:15:1: unused //declscope:private: every declaration it reaches already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/b.go:17:2: unused //declscope:private on other: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:1:1: unused file-level //declscope:private: every declaration it reaches already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/c.go:8:1: unused //declscope:private on cFile: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/d.go:6:1: unused //declscope:private on dShared: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/f.go:1:1: unused file-level //declscope:private: every declaration it reaches already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/f.go:9:1: unused //declscope:shared: every declaration it reaches states its own scope
+/tmp/dse-xxxxxxxxxxxx/work/h.go:9:1: unused //declscope:shared: every declaration it reaches states its own scope
+/tmp/dse-xxxxxxxxxxxx/work/i.go:7:1: unused //declscope:private: every declaration it reaches states its own scope
+/tmp/dse-xxxxxxxxxxxx/work/j.go:7:1: unused //declscope:private: every declaration it reaches states its own scope or already has private scope

@@ -1,0 +1,86 @@
+exit 1
+--- stdout
+--- stderr
+declscope baseline: .declscope-baseline.yaml in /tmp/dse-xxxxxxxxxxxx/work would not be found from these packages, because the lookup from them never reaches the working directory:
+  example.com/nested (/tmp/dse-xxxxxxxxxxxx/work/nested)
+run from a directory their lookup passes through, name a baseline in a config file near them, or pass -o
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== go.work
+go 1.22
+
+use (
+	.
+	./nested
+)
+
+=== nested/go.mod
+module example.com/nested
+
+go 1.22
+
+=== nested/order.go
+package x
+
+func orderRun() int { return helper() }
+
+var _ = orderRun
+
+=== nested/order_test.go
+package x
+
+import "testing"
+
+func TestOrder(t *testing.T) { _ = helper() }
+
+=== nested/user.go
+package x
+
+func helper() int { return 1 }
+
+=== order.go
+package x
+
+func orderRun() int { return helper() }
+
+var _ = orderRun
+
+=== order_test.go
+package x
+
+import "testing"
+
+func TestOrder(t *testing.T) { _ = helper() }
+
+=== user.go
+package x
+
+func helper() int { return 1 }
+
+exit 0
+--- stdout
+--- stderr
+declscope: recorded 2 violation(s) in all.yaml
+
+# declscope baseline
+#
+# Violations recorded here are suppressed; new ones are still reported.
+# Regenerate with:
+#
+#     declscope baseline ./...
+#
+# Do not edit by hand. An entry disappears when its violation is fixed, so the
+# diff of a regeneration is the record of what was cleaned up.
+packages:
+  example.com/app:
+    boundary:
+      user:
+        - helper
+  example.com/nested:
+    boundary:
+      user:
+        - helper

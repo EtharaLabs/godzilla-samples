@@ -1,0 +1,21 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/a.go:6:6: func bX does not carry namespace "a" anywhere in its name; rename it to aBX, or to another name that carries "a"
+$WORK/a_b.go:3:6: func x does not carry namespace "aB" anywhere in its name; rename it to aBX, or to another name that carries "aB"
+
+=== -fix
+exit: 0
+--- stdout
+
+--- stderr
+--- changed a.go
+package fixsiblings
+
+// Prefixing is not injective across namespaces: bX in namespace "a" and x in
+// namespace "aB" both prefix to aBX. The first declaration in the pass claims
+// the name; the second is reported without a fix.
+func aBX() int { return 1 } // want `func bX does not carry namespace "a" anywhere in its name; rename it to aBX, or to another name that carries "a"`
+
+var _ = aBX

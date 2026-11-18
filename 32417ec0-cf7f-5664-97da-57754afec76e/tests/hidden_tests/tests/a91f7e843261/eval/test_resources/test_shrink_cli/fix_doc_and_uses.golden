@@ -1,0 +1,50 @@
+exit 3
+--- stdout
+/tmp/dse-xxxxxxxxxxxx/work/internal/user/user.go:8:6: func Format is exported, but nothing outside example.com/app/internal/user uses it
+/tmp/dse-xxxxxxxxxxxx/work/internal/user/user.go:20:19: method Bump is exported, but nothing outside example.com/app/internal/user uses it
+--- stderr
+
+exit 0
+--- stdout
+--- stderr
+
+=== user/user.go
+package user
+
+import "fmt"
+
+func Load(id int) string { return format(id) }
+
+// format renders an ID for display.
+func format(id int) string { return fmt.Sprint(id) }
+
+// Record is one row.
+type Record struct {
+	ID   int
+	Name string
+}
+
+// Counter counts.
+type Counter struct{ n int }
+
+// bump adds one.
+func (c *Counter) bump() { c.n++ }
+
+func NewCounter() *Counter { c := &Counter{}; f := c.bump; f(); return c }
+
+func Dump(r Record) { fmt.Println(r) }
+
+=== user/user_test.go
+package user
+
+import "testing"
+
+func TestFormat(t *testing.T) {
+	if format(1) != "1" {
+		t.Fatal(format(1))
+	}
+}
+
+exit 0
+--- stdout
+--- stderr

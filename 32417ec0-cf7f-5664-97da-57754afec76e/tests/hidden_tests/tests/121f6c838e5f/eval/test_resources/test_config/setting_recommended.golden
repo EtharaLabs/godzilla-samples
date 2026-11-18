@@ -1,0 +1,12 @@
+[exit] 3
+[stdout]
+[stderr]
+$WORK/app/user.go:9:6: func Helper does not carry namespace "user" anywhere in its name; rename it to UserHelper, or to another name that carries "user"
+$WORK/app/user.go:12:6: func greet does not carry namespace "user" anywhere in its name; rename it to userGreet, or to another name that carries "user"
+$WORK/app/user.go:14:6: func load is private to namespace "user", but is used from namespace "order"
+$WORK/app/order.go:3:32: 	used here, in namespace "order"
+$WORK/app/user.go:14:6: func load does not carry namespace "user" anywhere in its name; rename it to userLoad, or to another name that carries "user"
+$WORK/app/user.go:16:1: //declscope:shared on userShared: no use from another namespace is visible to declscope
+$WORK/app/user.go:4:2: unused //declscope:private on user.name: it already has private scope
+$WORK/app/user.go:8:1: unused //declscope:shared on Helper: it already has shared scope
+$WORK/app/user.go:11:1: unused //declscope:ignore boundary on greet

@@ -1,0 +1,34 @@
+[exit] 0
+[stdout]
+## Checks in force
+
+| check      | value                                                     | packages |
+| ---------- | --------------------------------------------------------- | -------: |
+| config     | built-in defaults                                         |        1 |
+| rules      | boundary on, qualify never, surplus strict, unused strict |        1 |
+| type check | 1 package ok, 0 failed                                    |          |
+
+## Findings
+
+| rule        | found | ignored | baselined | reported |
+| ----------- | ----: | ------: | --------: | -------: |
+| `boundary`  |     1 |       0 |         0 |        1 |
+| `qualify`   |     - |       - |         - |        - |
+| `surplus`   |     0 |       0 |         0 |        0 |
+| `unused`    |     0 |       0 |         - |        0 |
+| `directive` |     0 |       0 |         - |        0 |
+| `filter`    |     0 |       0 |         - |        0 |
+
+## Packages — boundary
+
+| package             | reported | baselined | declared | largest crossing      |
+| ------------------- | -------: | --------: | -------: | --------------------- |
+| `example.com/app/a` |        1 |         0 |        0 | b → a (1 declaration) |
+
+## Packages — qualify
+
+| package             | reported | baselined | exempt | worst namespace |
+| ------------------- | -------- | --------- | ------ | --------------- |
+| `example.com/app/a` | -        | -         | -      | -               |
+
+[stderr]

@@ -1,0 +1,83 @@
+exit 0
+--- stdout
+# example.com/app/p
+
+> No file of this package was read — every one is generated, or the filter removed them — so nothing here was checked.
+
+## Namespaces
+
+| namespace | files | declarations | qualify targets |
+| --------- | ----- | ------------ | --------------- |
+
+## Crossings
+
+Nothing crosses a namespace in this package.
+
+## Qualify
+
+Not asked: `rules.naming.qualify` does not apply to this package.
+
+--- stderr
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app/p",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [],
+  "crossings": [],
+  "edges": [],
+  "names": []
+}
+--- stderr

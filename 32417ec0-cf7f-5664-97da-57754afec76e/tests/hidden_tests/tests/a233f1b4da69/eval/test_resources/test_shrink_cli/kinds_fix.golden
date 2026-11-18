@@ -1,0 +1,46 @@
+exit: 3
+--- stdout
+$WORK/internal/a/a.go:19:5: var Version is exported, but nothing outside example.com/m/internal/a uses it (no fix: a string variable may be set by -ldflags -X, which names it)
+$WORK/internal/a/a.go:23:7: const Max is exported, but nothing outside example.com/m/internal/a uses it (no fix: the unexported name is predeclared)
+
+--- stderr
+
+--- file internal/a/a.go
+package a
+
+// format renders an ID for display.
+func format(id int) int { return id }
+
+func Used() int { return format(1) }
+
+// A thing is a value.
+type thing struct {
+	name  string
+	count int
+}
+
+// Loader opens this comment, which is another word.
+func load() thing { return thing{} }
+
+func (t thing) size() int { return t.count }
+
+var Version = "dev"
+
+var limit = 3
+
+const Max = 10
+
+// The mode is a mode.
+type mode int
+
+const (
+	fast mode = iota
+	slow
+)
+
+--- file b/b.go
+package b
+
+import "example.com/m/internal/a"
+
+var X = a.Used()

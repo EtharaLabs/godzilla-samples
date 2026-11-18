@@ -1,0 +1,9 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:2: method Sealed.sealed is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:4:7: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:24:2: method Mixed.nope is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:5:34: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:36:2: method Store.fetch is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:5:59: 	used here, in namespace "order"

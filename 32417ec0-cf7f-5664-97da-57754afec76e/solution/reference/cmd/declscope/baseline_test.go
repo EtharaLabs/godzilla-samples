@@ -1,0 +1,1000 @@
+package main_test
+
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
+	"testing"
+
+	"github.com/mpyw/declscope/internal/baseline"
+)
+
+// These run the built binary against a temporary module, because the
+// properties under test are about where the subcommand writes and what the
+// analyzer then finds — a unit test of either half proves nothing about the
+// handshake between them. Each case ends by running the analyzer, since a
+// baseline is only correct if its presence suppresses what it records.
+
+// twoFiles is a package with a boundary violation on helper, referenced from
+// the ordinary and the test variant alike so that the two hand over the same
+// key twice. Under qualifyOn — the naming rule is off by default — helper
+// draws a qualify violation as well.
+var twoFiles = map[string]string{
+	"user.go":       "package x\n\nfunc helper() int { return 1 }\n",
+	"order.go":      "package x\n\nfunc orderRun() int { return helper() }\n\nvar _ = orderRun\n",
+	"order_test.go": "package x\n\nimport \"testing\"\n\nfunc TestOrder(t *testing.T) { _ = helper() }\n",
+}
+
+// qualifyOn puts the naming rule in force, which the built-in default no
+// longer does. The baseline must record and suppress qualify entries too, so
+// every module here states it.
+const qualifyOn = "rules:\n  naming:\n    qualify: ondemand\n"
+
+func TestBaselinePerPackageTargets(t *testing.T) {
+	// A config in sub/ names its own baseline, and deep/ carries its own
+	// default-named one; each shadows the root for the packages under it.
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	// Only the nearest config applies, so sub/ restates the naming rule the
+	// root turns on: layering is not a thing the lookup does.
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	writeTree(t, root, "sub/.declscope.yaml", "baseline: sub-baseline.yaml\n"+qualifyOn)
+	writeTree(t, root, "deep/.declscope-baseline.yaml", "")
+	for _, pkg := range []string{"", "sub/inner", "deep/inner", "plain"} {
+		for name, body := range twoFiles {
+			writeTree(t, root, filepath.Join(pkg, name), body)
+		}
+	}
+
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+
+	want := map[string][]string{
+		".declscope-baseline.yaml":      {"example.com/m", "example.com/m/plain"},
+		"sub/sub-baseline.yaml":         {"example.com/m/sub/inner"},
+		"deep/.declscope-baseline.yaml": {"example.com/m/deep/inner"},
+	}
+	for file, pkgs := range want {
+		set := load(t, filepath.Join(root, file))
+		for _, pkg := range pkgs {
+			if !set.Has(baseline.Key{Package: pkg, Rule: "boundary", Namespace: "user", Decl: "helper"}) {
+				t.Errorf("%s lacks the entry for %s:\n%s", file, pkg, out)
+			}
+		}
+		if set.Len() != 2*len(pkgs) {
+			t.Errorf("%s holds %d entries, want %d: entries of other packages leaked in", file, set.Len(), 2*len(pkgs))
+		}
+		if !strings.Contains(out, "in "+filepath.Join(root, file)) {
+			t.Errorf("the report does not name %s:\n%s", file, out)
+		}
+	}
+
+	assertSuppressed(t, bin, root)
+}
+
+// TestBaselineFromSubdirectory is the data-loss case: a run from store/ must
+// write under store/ and leave the root baseline — which holds entries for
+// packages the run never saw — exactly as it was.
+func TestBaselineFromSubdirectory(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	for _, pkg := range []string{"", "store/inner"} {
+		for name, body := range twoFiles {
+			writeTree(t, root, filepath.Join(pkg, name), body)
+		}
+	}
+	if _, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatal("generating the root baseline")
+	}
+	before, err := os.ReadFile(filepath.Join(root, ".declscope-baseline.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	store := filepath.Join(root, "store")
+	out, code := runIn(t, bin, store, "baseline", "./...")
+	if code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+
+	after, err := os.ReadFile(filepath.Join(root, ".declscope-baseline.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(before) != string(after) {
+		t.Errorf("a run from store/ rewrote the root baseline:\n--- before ---\n%s\n--- after ---\n%s", before, after)
+	}
+	set := load(t, filepath.Join(store, ".declscope-baseline.yaml"))
+	if !set.Has(baseline.Key{Package: "example.com/m/store/inner", Rule: "boundary", Namespace: "user", Decl: "helper"}) {
+		t.Errorf("store/.declscope-baseline.yaml should hold store's entries:\n%s", out)
+	}
+	if !strings.Contains(out, "in "+filepath.Join(store, ".declscope-baseline.yaml")) {
+		t.Errorf("the report should name the file under store/:\n%s", out)
+	}
+
+	assertSuppressed(t, bin, root)
+}
+
+// TestBaselineRefusesUnreachableDefault covers the one case where writing in
+// the working directory would be a lie: a package whose lookup stops at its
+// own go.mod before reaching it. A workspace is what makes such a package
+// addressable from the root at all. The root's own package is placeable, and
+// still nothing is written for it: a refusal is all or nothing, so a partial
+// run cannot leave a baseline that looks complete.
+func TestBaselineRefusesUnreachableDefault(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, "go.work", "go 1.25\n\nuse (\n\t.\n\t./nested\n)\n")
+	writeTree(t, root, "nested/go.mod", "module example.com/nested\n\ngo 1.25\n")
+	for _, pkg := range []string{"", "nested"} {
+		for name, body := range twoFiles {
+			writeTree(t, root, filepath.Join(pkg, name), body)
+		}
+	}
+
+	out, code := runIn(t, bin, root, "baseline", "./...", "./nested/...")
+	if code == 0 {
+		t.Fatalf("a baseline nobody would find must not be written silently:\n%s", out)
+	}
+	if !strings.Contains(out, "example.com/nested") {
+		t.Errorf("the refusal should name the package:\n%s", out)
+	}
+	if _, err := os.Stat(filepath.Join(root, ".declscope-baseline.yaml")); err == nil {
+		t.Error("nothing should have been written, not even for the placeable package")
+	}
+
+	// With -o the caller has taken over placement, so the run goes through
+	// and both packages land in the one file.
+	out, code = runIn(t, bin, root, "baseline", "-o", "all.yaml", "./...", "./nested/...")
+	if code != 0 {
+		t.Fatalf("-o should place everything in one file: exit %d\n%s", code, out)
+	}
+	set := load(t, filepath.Join(root, "all.yaml"))
+	for _, pkg := range []string{"example.com/m", "example.com/nested"} {
+		if !set.Has(baseline.Key{Package: pkg, Rule: "boundary", Namespace: "user", Decl: "helper"}) {
+			t.Errorf("all.yaml lacks the entry for %s:\n%s", pkg, out)
+		}
+	}
+}
+
+// TestBaselineRefusesUnreachableDefaultBeforeShrink pins that the refusal is
+// known from the analyzer's pass alone, so shrink never runs: a package
+// outside the patterns that does not compile would fail shrink's
+// module-wide load, and that error must not hide the refusal.
+func TestBaselineRefusesUnreachableDefaultBeforeShrink(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, "go.work", "go 1.25\n\nuse (\n\t.\n\t./nested\n)\n")
+	writeTree(t, root, "nested/go.mod", "module example.com/nested\n\ngo 1.25\n")
+	for name, body := range twoFiles {
+		writeTree(t, root, filepath.Join("nested", name), body)
+	}
+	writeTree(t, root, "broken/broken.go", "package broken\n\nvar _ int = \"\"\n")
+
+	out, code := runIn(t, bin, root, "baseline", "./nested/...")
+	if code == 0 {
+		t.Fatalf("a baseline nobody would find must not be written silently:\n%s", out)
+	}
+	if !strings.Contains(out, "would not be found") || !strings.Contains(out, "example.com/nested") {
+		t.Errorf("the refusal should name the package:\n%s", out)
+	}
+	if strings.Contains(out, "declscope shrink") {
+		t.Errorf("shrink should not have run:\n%s", out)
+	}
+}
+
+func TestBaselineRegeneratesCorruptFile(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	for name, body := range twoFiles {
+		writeTree(t, root, name, body)
+	}
+	corrupt := "packages:\n  x:\n    boundary:\n      user: [helper]\nbogus: 1\n"
+	writeTree(t, root, ".declscope-baseline.yaml", corrupt)
+
+	// The analyzer must refuse the file, otherwise a typo would silently
+	// suppress nothing...
+	if out, code := runIn(t, bin, root, "./..."); code == 0 || !strings.Contains(out, "bogus") {
+		t.Fatalf("the analyzer should reject a corrupt baseline: exit %d\n%s", code, out)
+	}
+	// ...but regenerating, which is what the file itself says to do, must
+	// not be blocked by it.
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 0 {
+		t.Fatalf("a corrupt baseline blocked its own regeneration: exit %d\n%s", code, out)
+	}
+	set := load(t, filepath.Join(root, ".declscope-baseline.yaml"))
+	if !set.Has(baseline.Key{Package: "example.com/m", Rule: "boundary", Namespace: "user", Decl: "helper"}) {
+		t.Error("the regenerated file should hold the current violations")
+	}
+	assertSuppressed(t, bin, root)
+
+	// The same with -o: a corrupt file that is not even the target must not
+	// get in the way.
+	writeTree(t, root, ".declscope-baseline.yaml", corrupt)
+	if out, code := runIn(t, bin, root, "baseline", "-o", "alt.yaml", "./..."); code != 0 {
+		t.Errorf("exit %d:\n%s", code, out)
+	}
+}
+
+// TestBaselineReportsWrittenCount checks the number in "recorded N
+// violation(s)" against the file: the ordinary and the test variant of a
+// package hand over the same keys, and only one copy is written.
+func TestBaselineReportsWrittenCount(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	for name, body := range twoFiles {
+		writeTree(t, root, name, body)
+	}
+
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	m := regexp.MustCompile(`recorded (\d+) violation`).FindStringSubmatch(out)
+	if m == nil {
+		t.Fatalf("no count reported:\n%s", out)
+	}
+	reported, _ := strconv.Atoi(m[1])
+	data, err := os.ReadFile(filepath.Join(root, ".declscope-baseline.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	inFile := len(entryLine.FindAllString(string(data), -1))
+	if reported != inFile || inFile != 2 {
+		t.Errorf("reported %d, file holds %d, want 2 (boundary and qualify on helper):\n%s", reported, inFile, data)
+	}
+}
+
+// assertSuppressed runs the analyzer over the module from root and expects
+// silence: every violation the baseline recorded must be found by the lookup
+// from its own package.
+func assertSuppressed(t *testing.T, bin, root string) {
+	t.Helper()
+	if out, code := runIn(t, bin, root, "./..."); code != 0 || strings.TrimSpace(out) != "" {
+		t.Errorf("the generated baseline does not suppress what it recorded: exit %d\n%s", code, out)
+	}
+}
+
+func load(t *testing.T, path string) *baseline.Set {
+	t.Helper()
+	set, err := baseline.Load(path)
+	if err != nil {
+		t.Fatalf("%s: %v", path, err)
+	}
+	return set
+}
+
+// runIn executes the binary in dir and returns its combined output and exit
+// code. Diagnostics and refusals both exit non-zero, so only a failure to
+// start is fatal.
+//
+//declscope:shared // every subcommand's tests drive the same binary through it
+func runIn(t *testing.T, bin, dir string, args ...string) (string, int) {
+	t.Helper()
+	cmd := exec.Command(bin, args...)
+	cmd.Dir = dir
+	coverEnv(cmd)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		exit, ok := err.(*exec.ExitError)
+		if !ok {
+			t.Fatalf("running declscope %v: %v\n%s", args, err, out)
+		}
+		return string(out), exit.ExitCode()
+	}
+	return string(out), 0
+}
+
+// bin is the linter under test, built once per process: every test here
+// drives the same binary, and a build per test multiplies the memory that a
+// full `go test ./...` peaks at.
+//
+//declscope:shared // TestMain builds it for every test in the package, version_test.go included
+var bin string
+
+func TestMain(m *testing.M) {
+	if err := coverSetUp(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	dir, err := os.MkdirTemp("", "declscope-baseline-test")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	bin = filepath.Join(dir, "declscope")
+	if out, err := coverBuild("-o", bin).CombinedOutput(); err != nil {
+		fmt.Fprintf(os.Stderr, "building the linter: %v\n%s", err, out)
+		_ = os.RemoveAll(dir)
+		os.Exit(1)
+	}
+	code := m.Run()
+	_ = os.RemoveAll(dir)
+	os.Exit(code)
+}
+
+// testModule is the go.mod every temporary module here is built around.
+//
+//declscope:shared // every subcommand's tests lay out a module with it
+const testModule = "module example.com/declscopetest\n\ngo 1.25\n"
+
+//declscope:shared // every subcommand's tests lay out a module with it
+func writeTree(t *testing.T, root, name, body string) {
+	t.Helper()
+	path := filepath.Join(root, name)
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// entryLine matches one recorded declaration, at whatever depth the file
+// nests: counting a fixed indent would quietly read zero if the shape changed.
+var entryLine = regexp.MustCompile(`(?m)^ +- \S`)
+
+// TestBaselineDoesNotSurviveAMove checks that an entry stops matching once the
+// declaration moves to a file in another namespace.
+//
+// boundary is a statement about which namespaces a use crosses. The same
+// declaration reached from the same file is a different violation once it is
+// declared somewhere else, and a key blind to that would go on suppressing a
+// crossing nobody recorded.
+func TestBaselineDoesNotSurviveAMove(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	// The naming rules would otherwise report helper in both placements and
+	// drown the one thing under test.
+	writeTree(t, root, ".declscope.yaml", "rules:\n  naming:\n    qualify: never\n")
+	writeTree(t, root, "user.go", "package x\n\nfunc helper() int { return 1 }\n")
+	writeTree(t, root, "csv.go", "package x\n\nfunc csvRun() int { return helper() }\n\nvar _ = csvRun\n")
+
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	assertSuppressed(t, bin, root)
+
+	// The same declaration and the same use site, in a different namespace.
+	if err := os.Remove(filepath.Join(root, "user.go")); err != nil {
+		t.Fatal(err)
+	}
+	writeTree(t, root, "order.go", "package x\n\nfunc helper() int { return 1 }\n")
+
+	out, code := runIn(t, bin, root, "./...")
+	if code == 0 {
+		t.Fatalf("the crossing is now order -> csv, which the baseline never recorded:\n%s", out)
+	}
+	if !strings.Contains(out, `is private to namespace "order"`) {
+		t.Errorf("want the report to name the namespace it crosses now, got:\n%s", out)
+	}
+}
+
+// TestBaselineDefaultsToEveryPackage checks the pattern the subcommand assumes
+// when given none. Recording what a run finds is the whole of what a baseline
+// is for, so the default is the one the analyzer itself is usually pointed at.
+func TestBaselineDefaultsToEveryPackage(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	for _, pkg := range []string{"", "sub"} {
+		for name, body := range twoFiles {
+			writeTree(t, root, filepath.Join(pkg, name), body)
+		}
+	}
+
+	out, code := runIn(t, bin, root, "baseline")
+	if code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	set := load(t, filepath.Join(root, ".declscope-baseline.yaml"))
+	for _, pkg := range []string{"example.com/m", "example.com/m/sub"} {
+		if !set.Has(baseline.Key{Package: pkg, Rule: "boundary", Namespace: "user", Decl: "helper"}) {
+			t.Errorf("no entry for %s, so the default did not reach it:\n%s", pkg, out)
+		}
+	}
+
+	assertSuppressed(t, bin, root)
+}
+
+// TestBaselineRecordsSettledMembers checks the round trip for a type strict
+// reports together with its fields. The analysis reports the type alone,
+// since its fix narrows the fields too, but a baselined type offers no fix, so
+// regeneration has to record the fields with it or the next run reports them.
+// A field added afterwards is new, and is reported.
+func TestBaselineRecordsSettledMembers(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", "rules:\n  surplus: strict\n")
+	writeTree(t, root, "order.go", "package x\n\nfunc orderRun(k boxKind) int { return int(k) }\n\nvar _ = orderRun\n")
+	box := "//declscope:shared\n\npackage x\n\ntype boxKind int\n\ntype boxed struct {\n\tn int\n%s}\n\nvar _ = boxed{}\n"
+	writeTree(t, root, "box.go", fmt.Sprintf(box, ""))
+
+	out, code := runIn(t, bin, root, "./...")
+	if !strings.Contains(out, "type boxed") || strings.Contains(out, "boxed.n") {
+		t.Fatalf("want the type reported in place of its field: exit %d\n%s", code, out)
+	}
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	set := load(t, filepath.Join(root, ".declscope-baseline.yaml"))
+	if !set.Has(baseline.Key{Package: "example.com/m", Rule: "surplus", Namespace: "box", Decl: "boxed.n"}) {
+		t.Errorf("the baseline does not record the field its type stood in for")
+	}
+	assertSuppressed(t, bin, root)
+
+	writeTree(t, root, "box.go", fmt.Sprintf(box, "\textra int\n"))
+	if out, _ := runIn(t, bin, root, "./..."); !strings.Contains(out, "field boxed.extra") || strings.Contains(out, "boxed.n") {
+		t.Errorf("want only the new field reported:\n%s", out)
+	}
+}
+
+// TestBaselineRefusesABrokenConfig checks that a config one package cannot
+// load stops the regeneration with that config's error, and writes nothing.
+// The packages are collected in parallel, so this is also the check that an
+// error from one of them is not lost among the results of the others.
+func TestBaselineRefusesABrokenConfig(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, "a/a.go", "package a\n")
+	writeTree(t, root, "b/b.go", "package b\n")
+	writeTree(t, root, "b/.declscope.yaml", "rules:\n  surplus: bogus\n")
+
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code == 0 || !strings.Contains(out, `rules.surplus: unknown mode "bogus"`) {
+		t.Errorf("want the config error and a non-zero exit, got %d:\n%s", code, out)
+	}
+	if _, err := os.Stat(filepath.Join(root, ".declscope-baseline.yaml")); err == nil {
+		t.Error("a refused run wrote a baseline")
+	}
+}
+
+// TestSubcommandsRefuseAnUnknownFlag checks that each subcommand answers a
+// flag it does not take with its own usage and exit status 2, the way the
+// flag package's other users do.
+func TestSubcommandsRefuseAnUnknownFlag(t *testing.T) {
+	dir := t.TempDir()
+	writeTree(t, dir, "go.mod", testModule)
+	for _, sub := range []string{"baseline", "survey", "inspect"} {
+		out, code := runIn(t, bin, dir, sub, "-bogus")
+		if code != 2 || !strings.Contains(out, "Usage: declscope "+sub) {
+			t.Errorf("%s -bogus exited %d, want 2 with its usage:\n%s", sub, code, out)
+		}
+	}
+}
+
+// TestSubcommandsReportALoadFailure checks that a go command which cannot list
+// the packages at all stops each subcommand with its error, rather than
+// reading as a module with nothing in it.
+func TestSubcommandsReportALoadFailure(t *testing.T) {
+	dir := t.TempDir()
+	writeTree(t, dir, "go.mod", testModule)
+	writeTree(t, dir, "p/p.go", "package p\n")
+	t.Setenv("GOFLAGS", "-mod=bogus")
+	for _, sub := range []string{"baseline", "survey", "inspect"} {
+		out, code := runIn(t, bin, dir, sub, "./p")
+		if code != 1 || !strings.Contains(out, "declscope "+sub+":") || !strings.Contains(out, "-mod=bogus") {
+			t.Errorf("%s exited %d, want 1 with the go command's error:\n%s", sub, code, out)
+		}
+	}
+	// A wildcard sends inspect through its names-only load first, which has
+	// to stop on the same error.
+	out, code := runIn(t, bin, dir, "inspect", "./...")
+	if code != 1 || !strings.Contains(out, "declscope inspect:") || !strings.Contains(out, "-mod=bogus") {
+		t.Errorf("inspect ./... exited %d, want 1 with the go command's error:\n%s", code, out)
+	}
+}
+
+// TestBaselineWithNothingToRecord checks a module with no package: the run
+// stops as go vet does, and writes no file, since an empty baseline would
+// read as a clean codebase.
+func TestBaselineWithNothingToRecord(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 1 || !strings.Contains(out, "declscope baseline: ./... matched no packages") {
+		t.Errorf("exited %d, want 1 and the refusal:\n%s", code, out)
+	}
+	if _, err := os.Stat(filepath.Join(root, ".declscope-baseline.yaml")); err == nil {
+		t.Error("a run with nothing to record wrote a baseline")
+	}
+}
+
+// TestBaselineKeepsTheFileOnAPatternMatchingNothing checks that -o with
+// patterns naming no package leaves the file alone. Writing it would replace
+// every recorded violation with none, and the next analyzer run would report
+// them all as new.
+func TestBaselineKeepsTheFileOnAPatternMatchingNothing(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	writeTree(t, root, "empty/README", "no Go here\n")
+	const recorded = "packages:\n  example.com/declscopetest/p:\n    boundary:\n      p:\n        - helper\n"
+	writeTree(t, root, "keep.yaml", recorded)
+	out, code := runIn(t, bin, root, "baseline", "-o", "keep.yaml", "./empty/...")
+	if code != 1 || !strings.Contains(out, "declscope baseline: ./empty/... matched no packages") {
+		t.Errorf("exited %d, want 1 and the refusal:\n%s", code, out)
+	}
+	if got, err := os.ReadFile(filepath.Join(root, "keep.yaml")); err != nil || string(got) != recorded {
+		t.Errorf("the baseline was rewritten (err %v):\n%s", err, got)
+	}
+}
+
+// TestUnmatchedPatternWarns checks that every subcommand warns about a
+// pattern that names no package while another does, as the go command does.
+func TestUnmatchedPatternWarns(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	writeTree(t, root, "p/p.go", "package p\n")
+	writeTree(t, root, "empty/README", "no Go here\n")
+	for _, args := range [][]string{
+		{"baseline", "-o", filepath.Join(t.TempDir(), "b.yaml")},
+		{"survey"},
+		{"inspect"},
+	} {
+		out, code := runIn(t, bin, root, append(args, "./empty/...", "./p")...)
+		want := `declscope ` + args[0] + `: warning: "./empty/..." matched no packages`
+		if code != 0 || !strings.Contains(out, want) {
+			t.Errorf("%v: exited %d, want 0 and %q:\n%s", args, code, out, want)
+		}
+		out, code = runIn(t, bin, root, append(args, "./empty/...")...)
+		want = "declscope " + args[0] + ": ./empty/... matched no packages"
+		if code != 1 || !strings.Contains(out, want) {
+			t.Errorf("%v: exited %d, want 1 and %q:\n%s", args, code, out, want)
+		}
+	}
+}
+
+// TestBaselineReportsAFileItCannotWrite checks that a baseline that cannot be
+// written fails the run.
+func TestBaselineReportsAFileItCannotWrite(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	writeTree(t, root, "p/user.go", "package p\n\nfunc helper() int { return 1 }\n")
+	writeTree(t, root, "p/order.go", "package p\n\nfunc orderRun() int { return helper() }\n\nvar _ = orderRun\n")
+	writeTree(t, root, "blocker", "")
+	out, code := runIn(t, bin, root, "baseline", "-o", filepath.Join(root, "blocker", "b.yaml"), "./...")
+	if code != 1 || !strings.Contains(out, "declscope baseline:") {
+		t.Errorf("exited %d, want 1 with the write error:\n%s", code, out)
+	}
+}
+
+// TestBaselineRefusesAPackageThatDoesNotCompile checks that a package with a
+// type error stops the run. Its findings would be missing for a reason that is
+// not the code, and the baseline written without them would be wrong.
+func TestBaselineRefusesAPackageThatDoesNotCompile(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	writeTree(t, root, "p/p.go", "package p\n\nfunc broken() int { return \"x\" }\n")
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 1 || !strings.Contains(out, "packages contain errors") {
+		t.Errorf("exited %d, want 1 with the refusal:\n%s", code, out)
+	}
+}
+
+// TestBaselineLeavesOutWhatAnIgnoreAnswers checks that a finding an ignore
+// directive silences is not recorded. The ignore already answers it, and an
+// entry would outlive the directive.
+func TestBaselineLeavesOutWhatAnIgnoreAnswers(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	writeTree(t, root, "p/user.go", "package p\n\n//declscope:ignore boundary\nfunc helper() int { return 1 }\n")
+	writeTree(t, root, "p/order.go", "package p\n\nfunc orderRun() int { return helper() }\n\nvar _ = orderRun\n")
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 0 || !strings.Contains(out, "recorded 0 violation(s)") {
+		t.Errorf("exited %d, want 0 with nothing recorded:\n%s", code, out)
+	}
+}
+
+// shrinkPackage is an internal package with a boundary and a qualify violation
+// on helper, and three declarations nothing outside it uses: one in a core
+// file, one in a file named with //declscope:namespace, and a field. cmd/use
+// uses NewBox, which keeps Box exported, and leaves Field unused.
+var shrinkPackage = map[string]string{
+	"user.go":   "package x\n\nfunc helper() int { return 1 }\n",
+	"order.go":  "package x\n\nfunc orderRun() int { return helper() }\n\nvar _ = orderRun\n",
+	"core.go":   "//declscope:core\n\npackage x\n\nfunc CoreThing() {}\n",
+	"charge.go": "//declscope:namespace billing\n\npackage x\n\nfunc ChargeBilling() {}\n",
+	"box.go":    "package x\n\ntype Box struct{ Field int }\n\nfunc NewBox() Box { return Box{} }\n",
+}
+
+// TestBaselineRecordsShrinkWithTheAnalyzer pins the whole file a baseline
+// writes when the analyzer and shrink both report in one package: the
+// analyzer's rules and overexported side by side under the package, each
+// namespace spelled as the analyzer spells it, (core) for a core file and a
+// declared name for //declscope:namespace, and a member under its owner. The
+// count includes shrink's entries. Both tools are then silent.
+func TestBaselineRecordsShrinkWithTheAnalyzer(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	for name, body := range shrinkPackage {
+		writeTree(t, root, filepath.Join("internal/app", name), body)
+	}
+	writeTree(t, root, "cmd/use/main.go", "package main\n\nimport x \"example.com/m/internal/app\"\n\nfunc main() { _ = x.NewBox() }\n")
+
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 0 || !strings.Contains(out, "recorded 5 violation(s)") {
+		t.Fatalf("exit %d, want 5 recorded, 2 from the analyzer and 3 from shrink:\n%s", code, out)
+	}
+	data, err := os.ReadFile(filepath.Join(root, ".declscope-baseline.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	const want = `packages:
+  example.com/m/internal/app:
+    boundary:
+      user:
+        - helper
+    overexported:
+      (core):
+        - CoreThing
+      billing:
+        - ChargeBilling
+      box:
+        - Box.Field
+    qualify:
+      user:
+        - helper
+`
+	got := string(data)
+	if !strings.HasPrefix(got, "# declscope baseline\n") || !strings.HasSuffix(got, "\n"+want) {
+		t.Errorf("the baseline is not the expected file, want its entries to read:\n%s\ngot:\n%s", want, got)
+	}
+
+	assertSuppressed(t, bin, root)
+	if out, code := runIn(t, bin, root, "shrink"); code != 0 || out != "" {
+		t.Errorf("shrink with the baseline: exit %d, want silence:\n%s", code, out)
+	}
+}
+
+// TestBaselinePlacesShrinkPerPackage pins that shrink's entries go where the
+// analyzer's go, package by package: a config in sub/ names its own baseline,
+// and deep/ carries its own default-named one. Each file holds its own
+// packages' entries only, and both tools are then silent. -o gathers every
+// entry into one file instead.
+func TestBaselinePlacesShrinkPerPackage(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, "sub/.declscope.yaml", "baseline: sub-baseline.yaml\n")
+	writeTree(t, root, "deep/.declscope-baseline.yaml", "")
+	pkgs := map[string]string{
+		".declscope-baseline.yaml":      "internal/top",
+		"sub/sub-baseline.yaml":         "sub/internal/inner",
+		"deep/.declscope-baseline.yaml": "deep/internal/inner",
+	}
+	for _, dir := range pkgs {
+		writeTree(t, root, filepath.Join(dir, "lonely.go"), "package inner\n\nfunc Lonely() {}\n")
+	}
+
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	for file, dir := range pkgs {
+		set := load(t, filepath.Join(root, file))
+		key := baseline.Key{Package: "example.com/m/" + dir, Rule: "overexported", Namespace: "lonely", Decl: "Lonely"}
+		if !set.Has(key) || set.Len() != 1 {
+			t.Errorf("%s holds %d entries, want exactly %+v", file, set.Len(), key)
+		}
+	}
+	assertSuppressed(t, bin, root)
+	if out, code := runIn(t, bin, root, "shrink"); code != 0 || out != "" {
+		t.Errorf("shrink with the baselines: exit %d, want silence:\n%s", code, out)
+	}
+
+	one := filepath.Join(t.TempDir(), "one.yaml")
+	if out, code := runIn(t, bin, root, "baseline", "-o", one, "./..."); code != 0 {
+		t.Fatalf("baseline -o: exit %d:\n%s", code, out)
+	}
+	set := load(t, one)
+	for _, dir := range pkgs {
+		if !set.Has(baseline.Key{Package: "example.com/m/" + dir, Rule: "overexported", Namespace: "lonely", Decl: "Lonely"}) {
+			t.Errorf("-o lacks the entry of %s", dir)
+		}
+	}
+	if set.Len() != len(pkgs) {
+		t.Errorf("-o holds %d entries, want %d", set.Len(), len(pkgs))
+	}
+}
+
+// extTest is an external test package beside twoFiles, with a boundary
+// violation of its own. Its import path ends in _test, so -merge has to count
+// it as loaded with the package it tests.
+var extTest = map[string]string{
+	"ext_user_test.go":  "package x_test\n\nfunc extHelper() int { return 1 }\n",
+	"ext_order_test.go": "package x_test\n\nimport \"testing\"\n\nfunc TestExt(t *testing.T) { _ = extHelper() }\n",
+}
+
+// mergeModule lays out a/, with twoFiles and extTest, and internal/b/, with
+// twoFiles and an exported declaration nothing uses, which shrink reports.
+func mergeModule(t *testing.T) string {
+	t.Helper()
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	for name, body := range twoFiles {
+		writeTree(t, root, filepath.Join("a", name), body)
+		writeTree(t, root, filepath.Join("internal/b", name), body)
+	}
+	for name, body := range extTest {
+		writeTree(t, root, filepath.Join("a", name), body)
+	}
+	writeTree(t, root, "internal/b/lonely.go", "package x\n\nfunc Lonely() {}\n")
+	return root
+}
+
+// readFile returns the file's content, failing the test if it cannot be read.
+func readFile(t *testing.T, path string) string {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(data)
+}
+
+// TestBaselineNarrowPatternWithoutMerge pins the default: the file is
+// regenerated from the loaded packages alone, so a narrower pattern drops the
+// entries of every other package, and the analyzer reports them again.
+func TestBaselineNarrowPatternWithoutMerge(t *testing.T) {
+	root := mergeModule(t)
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	if out, code := runIn(t, bin, root, "baseline", "./a"); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	for _, k := range load(t, filepath.Join(root, ".declscope-baseline.yaml")).Keys() {
+		if k.Package != "example.com/m/a" && k.Package != "example.com/m/a_test" {
+			t.Errorf("without -merge, ./a kept the entry %+v", k)
+		}
+	}
+	if out, code := runIn(t, bin, root, "./..."); code == 0 || !strings.Contains(out, filepath.Join("internal", "b")) {
+		t.Errorf("want internal/b reported again: exit %d\n%s", code, out)
+	}
+}
+
+// TestBaselineMergeKeepsUnloadedPackages checks that -merge regenerates the
+// entries of the packages the patterns load, test variants and the external
+// test package included, and keeps the rest byte for byte: the analyzer's and
+// shrink's alike, and shrink's under -shrink=false too, since that run
+// regenerates none of them.
+func TestBaselineMergeKeepsUnloadedPackages(t *testing.T) {
+	root := mergeModule(t)
+	path := filepath.Join(root, ".declscope-baseline.yaml")
+	out, code := runIn(t, bin, root, "baseline", "./...")
+	if code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	full := readFile(t, path)
+	for _, k := range []baseline.Key{
+		{Package: "example.com/m/a_test", Rule: "boundary", Namespace: "extUser", Decl: "extHelper"},
+		{Package: "example.com/m/internal/b", Rule: "overexported", Namespace: "lonely", Decl: "Lonely"},
+	} {
+		if !load(t, path).Has(k) {
+			t.Fatalf("the full run does not record %+v:\n%s", k, full)
+		}
+	}
+
+	for _, args := range [][]string{
+		{"baseline", "-merge", "./a"},
+		{"baseline", "-merge", "./internal/b"},
+		{"baseline", "-merge", "-shrink=false", "./internal/b"},
+		{"baseline", "-merge", "./..."},
+	} {
+		got, code := runIn(t, bin, root, args...)
+		if code != 0 {
+			t.Fatalf("%v: exit %d:\n%s", args, code, got)
+		}
+		if got != out {
+			t.Errorf("%v reported\n%s\nwant the full run's\n%s", args, got, out)
+		}
+		if after := readFile(t, path); after != full {
+			t.Errorf("%v changed an unchanged baseline:\n--- before ---\n%s\n--- after ---\n%s", args, full, after)
+		}
+	}
+
+	// The external test package's violation is fixed. A run over ./a drops
+	// its entry, and keeps internal/b's.
+	if err := os.Remove(filepath.Join(root, "a", "ext_order_test.go")); err != nil {
+		t.Fatal(err)
+	}
+	if out, code := runIn(t, bin, root, "baseline", "-merge", "./a"); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	set := load(t, path)
+	for _, k := range set.Keys() {
+		if k.Package == "example.com/m/a_test" {
+			t.Errorf("the fixed entry %+v survived", k)
+		}
+	}
+	for _, k := range []baseline.Key{
+		{Package: "example.com/m/a", Rule: "boundary", Namespace: "user", Decl: "helper"},
+		{Package: "example.com/m/internal/b", Rule: "boundary", Namespace: "user", Decl: "helper"},
+		{Package: "example.com/m/internal/b", Rule: "overexported", Namespace: "lonely", Decl: "Lonely"},
+	} {
+		if !set.Has(k) {
+			t.Errorf("-merge ./a lost %+v", k)
+		}
+	}
+	assertSuppressed(t, bin, root)
+	if out, code := runIn(t, bin, root, "shrink"); code != 0 || out != "" {
+		t.Errorf("shrink with the baseline: exit %d, want silence:\n%s", code, out)
+	}
+}
+
+// TestBaselineMergeRefusesAnUnparsableFile checks that -merge stops on a file
+// it cannot parse rather than replacing it, since keeping what is there is
+// what it was asked for. Every target is read before any is written, so the
+// nested target the run also resolves to is not created either. Without
+// -merge the same file is replaced, as before.
+func TestBaselineMergeRefusesAnUnparsableFile(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	writeTree(t, root, "sub/.declscope.yaml", "baseline: sub-baseline.yaml\n"+qualifyOn)
+	for _, pkg := range []string{"a", "sub/inner"} {
+		for name, body := range twoFiles {
+			writeTree(t, root, filepath.Join(pkg, name), body)
+		}
+	}
+	const corrupt = "packages:\n  x:\n    boundary:\n      user: [helper]\nbogus: 1\n"
+	writeTree(t, root, ".declscope-baseline.yaml", corrupt)
+
+	out, code := runIn(t, bin, root, "baseline", "-merge", "./...")
+	if code != 1 || !strings.Contains(out, ".declscope-baseline.yaml cannot be parsed: ") || !strings.Contains(out, "bogus") ||
+		!strings.Contains(out, "; run without -merge to replace it\n") || strings.Contains(out, "regenerate") {
+		t.Errorf("exited %d, want 1 naming the parse error with one piece of advice:\n%s", code, out)
+	}
+	if got := readFile(t, filepath.Join(root, ".declscope-baseline.yaml")); got != corrupt {
+		t.Errorf("-merge rewrote a file it could not parse:\n%s", got)
+	}
+	if _, err := os.Stat(filepath.Join(root, "sub", "sub-baseline.yaml")); err == nil {
+		t.Error("a refused -merge wrote the nested baseline")
+	}
+
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatalf("without -merge the corrupt file should be replaced: exit %d\n%s", code, out)
+	}
+	assertSuppressed(t, bin, root)
+}
+
+// TestBaselineMergeReportsAFileItCannotRead checks that a target -merge
+// cannot read is named as such, without the advice to run without -merge:
+// that run cannot write the file either.
+func TestBaselineMergeReportsAFileItCannotRead(t *testing.T) {
+	root := mergeModule(t)
+	dir := filepath.Join(root, "dir.yaml")
+	if err := os.Mkdir(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	out, code := runIn(t, bin, root, "baseline", "-merge", "-o", dir, "./...")
+	if code != 1 || !strings.Contains(out, "declscope baseline: "+dir+" cannot be read: ") || strings.Contains(out, "without -merge") {
+		t.Errorf("exited %d, want 1 naming the file that cannot be read, with no advice:\n%s", code, out)
+	}
+}
+
+// TestBaselineMergeWithO checks that -merge reads the file -o names, which
+// every loaded package resolves to.
+func TestBaselineMergeWithO(t *testing.T) {
+	root := mergeModule(t)
+	one := filepath.Join(t.TempDir(), "one.yaml")
+	if out, code := runIn(t, bin, root, "baseline", "-o", one, "./..."); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	full := readFile(t, one)
+	if out, code := runIn(t, bin, root, "baseline", "-o", one, "-merge", "./a"); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	if got := readFile(t, one); got != full {
+		t.Errorf("-o with -merge changed an unchanged baseline:\n--- before ---\n%s\n--- after ---\n%s", full, got)
+	}
+	if out, code := runIn(t, bin, root, "baseline", "-o", one, "./a"); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	if load(t, one).Has(baseline.Key{Package: "example.com/m/internal/b", Rule: "boundary", Namespace: "user", Decl: "helper"}) {
+		t.Error("-o without -merge kept the entries of a package ./a does not load")
+	}
+}
+
+// TestBaselineMergeWithNestedTargets checks -merge against a subtree with its
+// own baseline: each file keeps its own unloaded packages, and a file no
+// loaded package resolves to is not written at all.
+func TestBaselineMergeWithNestedTargets(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, ".declscope.yaml", qualifyOn)
+	writeTree(t, root, "sub/.declscope.yaml", "baseline: sub-baseline.yaml\n"+qualifyOn)
+	for _, pkg := range []string{"a", "c", "sub/inner", "sub/other"} {
+		for name, body := range twoFiles {
+			writeTree(t, root, filepath.Join(pkg, name), body)
+		}
+	}
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 {
+		t.Fatalf("exit %d:\n%s", code, out)
+	}
+	top := filepath.Join(root, ".declscope-baseline.yaml")
+	sub := filepath.Join(root, "sub", "sub-baseline.yaml")
+	wantTop, wantSub := readFile(t, top), readFile(t, sub)
+
+	for _, patterns := range [][]string{{"./sub/inner"}, {"./a"}, {"./a", "./sub/other"}} {
+		args := append([]string{"baseline", "-merge"}, patterns...)
+		out, code := runIn(t, bin, root, args...)
+		if code != 0 {
+			t.Fatalf("%v: exit %d:\n%s", args, code, out)
+		}
+		if got := readFile(t, top); got != wantTop {
+			t.Errorf("%v changed the root baseline:\n%s", args, got)
+		}
+		if got := readFile(t, sub); got != wantSub {
+			t.Errorf("%v changed the nested baseline:\n%s", args, got)
+		}
+		if patterns[0] == "./sub/inner" && strings.Contains(out, "in "+top) {
+			t.Errorf("%v wrote the root baseline, which no loaded package resolves to:\n%s", args, out)
+		}
+	}
+	assertSuppressed(t, bin, root)
+}
+
+// TestBaselineMergeKeepsWhatShrinkLeftUnjudged pins that a package shrink
+// does not judge keeps its overexported entries under -merge, since the run
+// recorded none for it, and that both runs name it on stderr as shrink does.
+// The condition is #316's: the build reads the module ext from a copy outside
+// the tree while a nested ext/ also exists.
+func TestBaselineMergeKeepsWhatShrinkLeftUnjudged(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "m")
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n")
+	writeTree(t, root, "internal/a/a.go", "package a\n\nfunc Used() {}\n\nfunc Unused() {}\n")
+	writeTree(t, root, "cmd/c/main.go", "package main\n\nimport \"example.com/m/internal/a\"\n\nfunc main() { a.Used() }\n")
+	writeTree(t, root, "ext/go.mod", "module example.com/m/ext\n\ngo 1.25\n\nrequire example.com/m v0.0.0\n\nreplace example.com/m => ../\n")
+	writeTree(t, root, "ext/e.go", "package ext\n\nimport \"example.com/m/internal/a\"\n\nfunc Run() { a.Used() }\n")
+	path := filepath.Join(root, ".declscope-baseline.yaml")
+	unused := baseline.Key{Package: "example.com/m/internal/a", Rule: "overexported", Namespace: "a", Decl: "Unused"}
+
+	if out, code := runIn(t, bin, root, "baseline", "./..."); code != 0 || !load(t, path).Has(unused) {
+		t.Fatalf("exit %d, want %+v recorded:\n%s", code, unused, out)
+	}
+	full := readFile(t, path)
+
+	writeTree(t, root, "go.mod", "module example.com/m\n\ngo 1.25\n\nrequire example.com/m/ext v0.0.0\n\nreplace example.com/m/ext => ../extcopy\n")
+	writeTree(t, filepath.Dir(root), "extcopy/go.mod", "module example.com/m/ext\n\ngo 1.25\n")
+	const note = "declscope baseline: not judged: example.com/m/internal/a: the build uses example.com/m/ext from "
+
+	out, code := runIn(t, bin, root, "baseline", "-merge", "./...")
+	if code != 0 || !strings.Contains(out, note) {
+		t.Errorf("-merge: exit %d, want 0 naming internal/a as not judged:\n%s", code, out)
+	}
+	if got := readFile(t, path); got != full {
+		t.Errorf("-merge dropped the entries of a package shrink did not judge:\n--- before ---\n%s\n--- after ---\n%s", full, got)
+	}
+
+	out, code = runIn(t, bin, root, "baseline", "./...")
+	if code != 0 || !strings.Contains(out, note) {
+		t.Errorf("without -merge: exit %d, want 0 naming internal/a as not judged:\n%s", code, out)
+	}
+	if load(t, path).Has(unused) {
+		t.Error("without -merge the file kept an entry this run did not record")
+	}
+}
+
+// TestBaselineCountsPackagesOutside pins that baseline counts the packages
+// shrink does not judge for lying outside the main module, as shrink does.
+func TestBaselineCountsPackagesOutside(t *testing.T) {
+	root := t.TempDir()
+	writeTree(t, root, "go.mod", testModule)
+	writeTree(t, root, "internal/a/a.go", "package a\n\nfunc Lonely() {}\n")
+	one := filepath.Join(t.TempDir(), "one.yaml")
+	out, code := runIn(t, bin, root, "baseline", "-o", one, "errors", "./...")
+	if code != 0 || !strings.Contains(out, "declscope baseline: not judged: 1 package(s) outside the main module\n") {
+		t.Fatalf("exit %d, want one line counting errors:\n%s", code, out)
+	}
+}

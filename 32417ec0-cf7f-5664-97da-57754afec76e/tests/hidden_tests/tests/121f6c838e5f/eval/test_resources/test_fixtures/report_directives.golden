@@ -1,0 +1,15 @@
+[exit] 3
+[stdout]
+[stderr]
+$WORK/user.go:7:6: func userNotReallyShared is declared private by //declscope:private, but is used from namespace "order"
+$WORK/order.go:4:34: 	used here, in namespace "order"
+$WORK/user.go:38:2: var userPrivateB is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:5:34: 	used here, in namespace "order"
+$WORK/user.go:48:2: var userPrivateD is declared private by //declscope:private, but is used from namespace "order"
+$WORK/order.go:5:63: 	used here, in namespace "order"
+$WORK/user.go:15:1: unknown directive declscope:bogus
+$WORK/user.go:21:1: malformed declscope directive: write it as //declscope:name
+$WORK/user.go:24:1: malformed declscope directive: write it as //declscope:name
+$WORK/user.go:27:1: malformed declscope directive: write it as //declscope:name
+$WORK/user.go:30:1: malformed declscope directive: write it as //declscope:name
+$WORK/user.go:12:1: unused //declscope:ignore on userNeverLeaks

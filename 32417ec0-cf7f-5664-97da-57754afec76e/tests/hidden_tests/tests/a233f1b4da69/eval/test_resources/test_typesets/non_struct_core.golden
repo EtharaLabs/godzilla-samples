@@ -1,0 +1,18 @@
+exit: 3
+--- stdout
+$WORK/internal/a/a.go:3:6: type A is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:3:16: field X is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:5:6: type B is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:5:16: field X is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:7:6: type C is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:7:16: field X is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:9:6: type D is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:9:16: field X is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:11:6: type E is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:11:16: field X is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:13:6: type F is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:13:16: field X is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:17:6: type Unused is exported, but nothing outside example.com/ts/internal/a uses it
+$WORK/internal/a/a.go:17:21: field X is exported, but nothing outside example.com/ts/internal/a uses it
+
+--- stderr

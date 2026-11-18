@@ -1,0 +1,10 @@
+[exit] 3
+[stdout]
+[stderr]
+$WORK/user.go:7:6: func helper is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:9: 	used here, in namespace "order"
+$WORK/user.go:25:6: func userTypo is private to namespace "user", but is used from namespace "order"
+$WORK/order.go:4:45: 	used here, in namespace "order"
+$WORK/user.go:24:1: unknown rule "bogus" in declscope:ignore (want one of boundary, qualify, surplus, unused, directive, filter, overexported)
+$WORK/user.go:19:1: unused //declscope:ignore qualify on userKept
+$WORK/user.go:38:2: unused //declscope:ignore qualify on userBlockB

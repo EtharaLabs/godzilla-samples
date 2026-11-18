@@ -1,0 +1,15 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/entry.go:4:6: type entry is private to namespace "entry", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:18: 	used here, in namespace "order"
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/entry.go:5:6: type entry is declared private by //declscope:private, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:18: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/entry.go:6:2: field entry.Key is declared private by //declscope:private on entry, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:43: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/entry.go:7:2: field entry.Value is declared private by //declscope:private on entry, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:58: 	used here, in namespace "order"

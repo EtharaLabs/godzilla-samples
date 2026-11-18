@@ -1,0 +1,63 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "qualify",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6",
+				"message": "func helper does not carry namespace \"user\" anywhere in its name; rename it to userHelper, or to another name that carries \"user\""
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: ondemand
+filter:
+  omit:
+    - "**/ext.go"
+
+=== ext.go
+package x
+
+func ExtUse() int { return helper() }
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+func OrderRun() int { return helper() }
+
+=== user.go
+package x
+
+//declscope:shared
+func helper() int { return 1 }
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"

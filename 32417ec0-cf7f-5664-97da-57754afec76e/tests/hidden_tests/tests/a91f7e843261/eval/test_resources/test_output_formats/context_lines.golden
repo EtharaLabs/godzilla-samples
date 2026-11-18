@@ -1,0 +1,83 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/a/user.go:3:6: func userHelper is private to namespace "user", but is used from namespace "order"
+3	func userHelper() int { return 1 }
+/tmp/dse-xxxxxxxxxxxx/work/a/order.go:3:30: 	used here, in namespace "order"
+3	func orderRun() int { return userHelper() }
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:4:6: type userBox is private to namespace "user", but is used from namespace "order"
+4	type userBox struct {
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:3:9: 	used here, in namespace "order"
+3	var _ = userBox{}.n
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:5:18: 	used here, in namespace "order"
+5	func orderMake() userBox {
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:9: 	used here, in namespace "order"
+6		return userBox{n: 1, m: 2}
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:5:2: field userBox.n is private to namespace "user", but is used from namespace "order"
+5		n int
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:3:19: 	used here, in namespace "order"
+3	var _ = userBox{}.n
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:17: 	used here, in namespace "order"
+6		return userBox{n: 1, m: 2}
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:6:2: field userBox.m is private to namespace "user", but is used from namespace "order"
+6		m int
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:23: 	used here, in namespace "order"
+6		return userBox{n: 1, m: 2}
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:4:6: type userBox is private to namespace "user", but is used from namespace "order"
+2	
+3	// userBox holds a count.
+4	type userBox struct {
+5		n int
+6		m int
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:3:9: 	used here, in namespace "order"
+1	package b
+2	
+3	var _ = userBox{}.n
+4	
+5	func orderMake() userBox {
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:5:18: 	used here, in namespace "order"
+3	var _ = userBox{}.n
+4	
+5	func orderMake() userBox {
+6		return userBox{n: 1, m: 2}
+7	}
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:9: 	used here, in namespace "order"
+4	
+5	func orderMake() userBox {
+6		return userBox{n: 1, m: 2}
+7	}
+8	
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:5:2: field userBox.n is private to namespace "user", but is used from namespace "order"
+3	// userBox holds a count.
+4	type userBox struct {
+5		n int
+6		m int
+7	}
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:3:19: 	used here, in namespace "order"
+1	package b
+2	
+3	var _ = userBox{}.n
+4	
+5	func orderMake() userBox {
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:17: 	used here, in namespace "order"
+4	
+5	func orderMake() userBox {
+6		return userBox{n: 1, m: 2}
+7	}
+8	
+/tmp/dse-xxxxxxxxxxxx/work/b/user.go:6:2: field userBox.m is private to namespace "user", but is used from namespace "order"
+4	type userBox struct {
+5		n int
+6		m int
+7	}
+8	
+/tmp/dse-xxxxxxxxxxxx/work/b/order.go:6:23: 	used here, in namespace "order"
+4	
+5	func orderMake() userBox {
+6		return userBox{n: 1, m: 2}
+7	}
+8	

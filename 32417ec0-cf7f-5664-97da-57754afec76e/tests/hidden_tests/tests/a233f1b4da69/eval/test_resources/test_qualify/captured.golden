@@ -1,0 +1,26 @@
+exit: 3
+--- stdout
+
+--- stderr
+$WORK/count.go:3:5: var limit does not carry namespace "count" anywhere in its name; rename it to countLimit, or to another name that carries "count"
+$WORK/count.go:5:6: func add does not carry namespace "count" anywhere in its name; rename it to countAdd, or to another name that carries "count"
+$WORK/count.go:7:6: func compare does not carry namespace "count" anywhere in its name; rename it to countCompare, or to another name that carries "count"
+$WORK/count.go:9:6: func free does not carry namespace "count" anywhere in its name; rename it to countFree, or to another name that carries "count"
+
+=== -fix
+exit: 0
+--- stdout
+
+--- stderr
+--- changed count.go
+package q
+
+var limit = 10
+
+func countAdd(countLimit int) int { return countLimit + limit }
+
+func compare() int { return 0 }
+
+func countFree() int { return countAdd(1) + compare() }
+
+var _ = countFree

@@ -1,0 +1,35 @@
+exit 0
+--- stdout
+## Checks in force
+
+| check      | value                                                               | packages |
+| ---------- | ------------------------------------------------------------------- | -------: |
+| config     | `/tmp/dse-xxxxxxxxxxxx/work/.declscope.yaml`                        |        1 |
+| rules      | boundary on, qualify ondemand, exported, surplus off, unused strict |        1 |
+| baseline   | `/tmp/dse-xxxxxxxxxxxx/work/.declscope-baseline.yaml`, 2 entries    |          |
+| type check | 1 package ok, 0 failed                                              |          |
+
+## Findings
+
+| rule        | found | ignored | baselined | reported |
+| ----------- | ----: | ------: | --------: | -------: |
+| `boundary`  |     1 |       0 |         1 |        0 |
+| `qualify`   |     2 |       0 |         1 |        1 |
+| `surplus`   |     - |       - |         - |        - |
+| `unused`    |     0 |       0 |         - |        0 |
+| `directive` |     0 |       0 |         - |        0 |
+| `filter`    |     0 |       0 |         - |        0 |
+
+## Packages — boundary
+
+| package             | reported | baselined | declared | largest crossing             |
+| ------------------- | -------: | --------: | -------: | ---------------------------- |
+| `example.com/app/p` |        0 |         1 |        0 | order → user (1 declaration) |
+
+## Packages — qualify
+
+| package             | reported | baselined | exempt | worst namespace |
+| ------------------- | -------: | --------: | -----: | --------------- |
+| `example.com/app/p` |        1 |         1 |      0 | order 2 of 2    |
+
+--- stderr

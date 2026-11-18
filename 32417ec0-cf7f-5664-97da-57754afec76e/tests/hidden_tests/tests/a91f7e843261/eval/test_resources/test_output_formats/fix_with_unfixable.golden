@@ -1,0 +1,24 @@
+exit 0
+--- stdout
+--- stderr
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package x
+
+func orderRun() int { return forced() + helper() }
+
+var _ = orderRun
+
+=== user.go
+package x
+
+//declscope:private
+func forced() int { return 1 }
+
+//declscope:shared
+func helper() int { return 2 }

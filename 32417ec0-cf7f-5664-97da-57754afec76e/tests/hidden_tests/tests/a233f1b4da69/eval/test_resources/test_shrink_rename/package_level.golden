@@ -1,0 +1,67 @@
+exit: 3
+--- stdout
+$WORK/internal/r/r.go:18:6: func Taken is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+$WORK/internal/r/r.go:23:5: var Count is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+$WORK/internal/r/r.go:29:6: func DUP is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+$WORK/internal/r/r.go:31:6: func Type is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is not an identifier)
+$WORK/internal/r/r.go:33:6: func Func is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is not an identifier)
+$WORK/internal/r/r.go:35:6: func Init is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name means something to the toolchain)
+$WORK/internal/r/r.go:37:6: func Main is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name means something to the toolchain)
+$WORK/internal/r/r.go:39:6: func Cmp is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the unexported name is taken or would be captured)
+$WORK/internal/r/r.go:43:7: const MAX_RETRIES is exported, but nothing outside example.com/rename/internal/r uses it (no fix: the name has no unexported spelling Go would use)
+
+--- stderr
+
+--- file internal/r/r.go
+package r
+
+// plain is fixed, and the name its doc comment opens with is rewritten too.
+func plain() int { return 1 }
+
+// A thing is fixed, and so is the name after the article.
+type thing struct{}
+
+// The gadget is fixed, and so is the name after the article.
+type gadget struct{}
+
+/* Block is a block comment, which the fix leaves alone. */
+func block() {}
+
+// Loader opens this comment, which is another word, and is left alone.
+func load() {}
+
+func Taken() int { return taken() }
+
+func taken() int { return 0 }
+
+// Count is captured by the parameter of the same name at its one use.
+var Count = func(count int) int { return count }
+
+func useCount(count int) int { return count + Count(count) }
+
+func dup() int { return 1 }
+
+func DUP() int { return 2 }
+
+func Type() {}
+
+func Func() {}
+
+func Init() {}
+
+func Main() {}
+
+func Cmp() {}
+
+func httpServer() {}
+
+const MAX_RETRIES = 3
+
+const limit = 3
+
+var (
+	_ thing
+	_ gadget
+	_ = useCount
+	_ = plain() + dup() + DUP() + MAX_RETRIES + limit
+)

@@ -1,0 +1,114 @@
+exit: 0
+--- stdout
+{
+  "checks": {
+    "typeCheck": {
+      "packages": 1,
+      "failed": []
+    },
+    "configs": [
+      {
+        "chain": [
+          "$WORK/.declscope.yaml"
+        ],
+        "packages": 1,
+        "rules": {
+          "boundary": true,
+          "qualify": "ondemand",
+          "exported": true,
+          "surplus": "strict",
+          "unused": "strict"
+        }
+      }
+    ],
+    "baselines": [
+      {
+        "path": "$WORK/.declscope-baseline.yaml",
+        "entries": 1
+      }
+    ]
+  },
+  "totals": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 2,
+      "ignored": 1,
+      "baselined": 0,
+      "reported": 1
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": true,
+      "keyable": true,
+      "found": 2,
+      "ignored": 0,
+      "baselined": 1,
+      "reported": 1
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "packages": [
+    {
+      "package": "example.com/m/p",
+      "namespaces": 2,
+      "coreFiles": 0,
+      "allCore": false,
+      "boundary": {
+        "asked": true,
+        "reported": 1,
+        "baselined": 0,
+        "declared": 0
+      },
+      "qualify": {
+        "asked": true,
+        "reported": 1,
+        "baselined": 1,
+        "exempt": 0,
+        "worst": {
+          "namespace": "user",
+          "failing": 2,
+          "targets": 2
+        }
+      },
+      "largest": {
+        "from": "order",
+        "to": "user",
+        "reached": 2,
+        "uses": 2
+      }
+    }
+  ]
+}
+
+--- stderr

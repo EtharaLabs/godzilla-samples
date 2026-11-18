@@ -1,0 +1,8 @@
+exit: 3
+--- stdout
+$WORK/internal/a/a.go:3:5: var OnlyExtTest is exported, but only the external tests of example.com/uses/internal/a use it (no fix: external tests use it)
+$WORK/internal/a/a.go:5:6: type Ext is exported, but only the external tests of example.com/uses/internal/a use it (no fix: external tests use it)
+$WORK/internal/a/a.go:6:2: field A is exported, but only the external tests of example.com/uses/internal/a use it (no fix: external tests use it)
+$WORK/internal/a/a.go:9:6: func Shown is exported, but only the external tests of example.com/uses/internal/a use it (no fix: external tests use it)
+
+--- stderr

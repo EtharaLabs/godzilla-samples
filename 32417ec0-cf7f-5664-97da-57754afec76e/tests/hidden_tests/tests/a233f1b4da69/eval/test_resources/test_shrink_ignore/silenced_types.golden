@@ -1,0 +1,7 @@
+exit: 3
+--- stdout
+$WORK/internal/i/i.go:6:6: func FOO is exported, but nothing outside example.com/ignores/internal/i uses it
+$WORK/internal/i/i.go:8:1: unused //declscope:ignore overexported: nothing it covers is reported
+$WORK/internal/i/i.go:16:6: type Built is exported, but nothing outside example.com/ignores/internal/i uses it (no fix: an exported declaration that keeps its name hands it out)
+
+--- stderr

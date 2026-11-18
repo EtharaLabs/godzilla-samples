@@ -1,0 +1,75 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:19: field User.name is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:42: 	used here, in namespace "order"
+
+## -fix -diff
+exit 0
+--- stdout
+--- /tmp/dse-xxxxxxxxxxxx/work/user.go (old)
++++ /tmp/dse-xxxxxxxxxxxx/work/user.go (new)
+@@ -2,4 +2,7 @@
+ 
+ // A field of a single-line struct has no line of its own, so the directive
+ // has to break it onto one.
+-type User struct{ name string } // want `field User.name is private to namespace "user", but is used from namespace "order"`
++type User struct {
++	//declscope:shared
++	name string
++} // want `field User.name is private to namespace "user", but is used from namespace "order"`
+--- stderr
+
+## tree after -fix -diff
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixinline
+
+func orderRun(u *User) string { return u.name }
+
+var _ = orderRun
+
+=== user.go
+package fixinline
+
+// A field of a single-line struct has no line of its own, so the directive
+// has to break it onto one.
+type User struct{ name string } // want `field User.name is private to namespace "user", but is used from namespace "order"`
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order.go
+package fixinline
+
+func orderRun(u *User) string { return u.name }
+
+var _ = orderRun
+
+=== user.go
+package fixinline
+
+// A field of a single-line struct has no line of its own, so the directive
+// has to break it onto one.
+type User struct {
+	//declscope:shared
+	name string
+} // want `field User.name is private to namespace "user", but is used from namespace "order"`
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

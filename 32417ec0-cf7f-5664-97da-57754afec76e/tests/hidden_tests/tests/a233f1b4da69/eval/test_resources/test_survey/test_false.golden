@@ -1,0 +1,75 @@
+exit: 0
+--- stdout
+## Checks in force
+
+| check      | value                                                     | packages |
+| ---------- | --------------------------------------------------------- | -------: |
+| config     | built-in defaults                                         |        2 |
+| rules      | boundary on, qualify never, surplus strict, unused strict |        2 |
+| type check | 2 packages ok, 0 failed                                   |          |
+
+## Findings
+
+| rule        | found | ignored | baselined | reported |
+| ----------- | ----: | ------: | --------: | -------: |
+| `boundary`  |     1 |       0 |         0 |        1 |
+| `qualify`   |     - |       - |         - |        - |
+| `surplus`   |     0 |       0 |         0 |        0 |
+| `unused`    |     0 |       0 |         - |        0 |
+| `directive` |     0 |       0 |         - |        0 |
+| `filter`    |     0 |       0 |         - |        0 |
+
+## Packages — boundary
+
+| package                   | reported | baselined | declared | largest crossing             |
+| ------------------------- | -------: | --------: | -------: | ---------------------------- |
+| `example.com/m/p`         |        1 |         0 |        0 | order → user (1 declaration) |
+| `example.com/m/onlytests` |        0 |         0 |        0 | -                            |
+
+## Packages — qualify
+
+| package                   | reported | baselined | exempt | worst namespace |
+| ------------------------- | -------- | --------- | ------ | --------------- |
+| `example.com/m/p`         | -        | -         | -      | -               |
+| `example.com/m/onlytests` | -        | -         | -      | -               |
+
+
+--- stderr
+
+=== -test=false
+exit: 0
+--- stdout
+## Checks in force
+
+| check      | value                                                     | packages |
+| ---------- | --------------------------------------------------------- | -------: |
+| config     | built-in defaults                                         |        1 |
+| rules      | boundary on, qualify never, surplus strict, unused strict |        1 |
+| type check | 1 package ok, 0 failed                                    |          |
+
+## Findings
+
+| rule        | found | ignored | baselined | reported |
+| ----------- | ----: | ------: | --------: | -------: |
+| `boundary`  |     0 |       0 |         0 |        0 |
+| `qualify`   |     - |       - |         - |        - |
+| `surplus`   |     - |       - |         - |        - |
+| `unused`    |     0 |       0 |         - |        0 |
+| `directive` |     0 |       0 |         - |        0 |
+| `filter`    |     0 |       0 |         - |        0 |
+
+## Packages — boundary
+
+| package           | reported | baselined | declared | largest crossing |
+| ----------------- | -------: | --------: | -------: | ---------------- |
+| `example.com/m/p` |        0 |         0 |        0 | -                |
+
+## Packages — qualify
+
+| package           | reported | baselined | exempt | worst namespace |
+| ----------------- | -------- | --------- | ------ | --------------- |
+| `example.com/m/p` | -        | -         | -      | -               |
+
+
+--- stderr
+declscope survey: warning: example.com/m/onlytests has only test files, so -test=false leaves nothing to measure

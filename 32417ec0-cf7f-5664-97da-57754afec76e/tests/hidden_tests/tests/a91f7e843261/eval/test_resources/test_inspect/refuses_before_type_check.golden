@@ -1,0 +1,19 @@
+exit 1
+--- stdout
+--- stderr
+declscope inspect: this pattern matches 2 packages, and a namespace of one means nothing in another:
+  example.com/app/a
+  example.com/app/broken
+name one of them
+
+exit 1
+--- stdout
+--- stderr
+declscope inspect: these packages do not type-check, so nothing can be measured:
+  ./nope: stat /tmp/dse-xxxxxxxxxxxx/work/nope: directory not found
+
+exit 1
+--- stdout
+--- stderr
+declscope inspect: these packages do not type-check, so nothing can be measured:
+  example.com/app/broken: /tmp/dse-xxxxxxxxxxxx/work/broken/broken.go:3:25: undefined: nope

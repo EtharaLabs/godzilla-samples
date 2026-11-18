@@ -1,0 +1,105 @@
+exit 0
+--- stdout
+{
+  "package": "example.com/app",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "other",
+      "files": [
+        "other_test.go"
+      ],
+      "core": false,
+      "declarations": 1,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "user",
+      "files": [
+        "user.go"
+      ],
+      "core": false,
+      "declarations": 1,
+      "qualifyTargets": 0
+    }
+  ],
+  "crossings": [
+    {
+      "from": "other",
+      "to": "user",
+      "mutual": false,
+      "declared": 1,
+      "baselined": 0,
+      "reported": 0,
+      "ignored": 0,
+      "unchecked": 0,
+      "reached": 1,
+      "declarations": 1,
+      "uses": 1,
+      "clears": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "other",
+      "to": "user",
+      "declaration": "userHelp",
+      "kind": "func",
+      "uses": 1,
+      "state": "declared"
+    }
+  ],
+  "names": []
+}
+--- stderr

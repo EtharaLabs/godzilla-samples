@@ -1,0 +1,157 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:6: type userList is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:26: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:6:8: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: field userList.items is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:8:15: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:11:2: field userList.size is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:70: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:14:23: method userList.push is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:52: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:7:4: 	used here, in namespace "order"
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:9:6: type userList is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:26: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:6:8: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: field userList.items is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:8:15: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:11:2: field userList.size is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:70: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:14:23: method userList.push is private to namespace "user", but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:3:52: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order.go:7:4: 	used here, in namespace "order"
+
+exit 0
+--- stdout
+{
+  "package": "example.com/app",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 4,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 4
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "order",
+      "files": [
+        "order.go"
+      ],
+      "core": false,
+      "declarations": 2,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "user",
+      "files": [
+        "user.go"
+      ],
+      "core": false,
+      "declarations": 10,
+      "qualifyTargets": 0
+    }
+  ],
+  "crossings": [
+    {
+      "from": "order",
+      "to": "user",
+      "mutual": false,
+      "declared": 0,
+      "baselined": 0,
+      "reported": 4,
+      "ignored": 0,
+      "unchecked": 0,
+      "reached": 4,
+      "declarations": 10,
+      "uses": 6,
+      "clears": 4
+    }
+  ],
+  "edges": [
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userList",
+      "kind": "type",
+      "uses": 2,
+      "state": "reported"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userList.items",
+      "kind": "field",
+      "uses": 1,
+      "state": "reported"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userList.push",
+      "kind": "method",
+      "uses": 2,
+      "state": "reported"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userList.size",
+      "kind": "field",
+      "uses": 1,
+      "state": "reported"
+    }
+  ],
+  "names": []
+}
+--- stderr

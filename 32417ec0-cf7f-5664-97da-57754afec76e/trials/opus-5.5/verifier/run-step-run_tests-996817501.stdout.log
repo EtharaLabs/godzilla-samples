@@ -1,0 +1,2156 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: /tmp/grader-seal-sj2vo0rj/pytest-cache
+rootdir: /workspace/eval
+configfile: .grader_pytest.ini
+plugins: libtmux-0.62.0, rerunfailures-16.4, timeout-2.4.0, xdist-3.8.0
+timeout: 30.0s
+timeout method: signal
+timeout func_only: False
+created: 16/16 workers
+16 workers [404 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_analyzer_cli.py::test_fix_inserts_shared_directive 
+tests/test_baseline.py::test_baseline_missing_directory_pattern 
+tests/test_baseline.py::test_baseline_merge_unreadable_target 
+tests/test_analyzer_cli.py::test_missing_directory_pattern 
+tests/test_config.py::test_setting_changes_reports[empty_file] 
+tests/test_analyzer_cli.py::test_two_packages_in_one_run 
+tests/test_analyzer_cli.py::test_reports_crossing_and_exits_3 
+tests/test_config.py::test_invalid_config_is_an_error[unknown_rules_key] 
+tests/test_config.py::test_setting_changes_reports[recommended] 
+tests/test_baseline.py::test_baseline_suppresses_shrink 
+tests/test_config.py::test_invalid_config_is_an_error[bad_boundary] 
+tests/test_config.py::test_invalid_config_is_an_error[case_sensitive_mode] 
+tests/test_baseline.py::test_baseline_per_package_targets 
+tests/test_baseline.py::test_baseline_shrink_not_judged_is_named 
+tests/test_baseline.py::test_baseline_unreachable_is_allowed_with_o 
+tests/test_config.py::test_lookup_stops_at_module_root 
+[gw5] [  0%] PASSED tests/test_baseline.py::test_baseline_missing_directory_pattern 
+tests/test_baseline.py::test_baseline_narrow_pattern_drops_other_packages 
+[gw2] [  0%] PASSED tests/test_analyzer_cli.py::test_missing_directory_pattern 
+[gw13] [  0%] PASSED tests/test_config.py::test_invalid_config_is_an_error[case_sensitive_mode] 
+tests/test_config.py::test_invalid_config_is_an_error[old_package_scope] 
+tests/test_analyzer_cli.py::test_type_error_skips_analysis 
+[gw10] [  0%] PASSED tests/test_config.py::test_setting_changes_reports[empty_file] 
+tests/test_config.py::test_setting_changes_reports[qualify_always] 
+[gw11] [  1%] PASSED tests/test_config.py::test_setting_changes_reports[recommended] 
+tests/test_config.py::test_setting_changes_reports[surplus_loose] 
+[gw12] [  1%] PASSED tests/test_config.py::test_invalid_config_is_an_error[bad_boundary] 
+tests/test_config.py::test_invalid_config_is_an_error[bad_exported] 
+[gw15] [  1%] PASSED tests/test_config.py::test_lookup_stops_at_module_root 
+tests/test_config.py::test_nearer_file_overrides_per_key 
+[gw14] [  1%] PASSED tests/test_config.py::test_invalid_config_is_an_error[unknown_rules_key] 
+tests/test_config.py::test_invalid_config_is_an_error[unknown_top_key] 
+[gw8] [  2%] PASSED tests/test_baseline.py::test_baseline_unreachable_is_allowed_with_o 
+tests/test_baseline.py::test_baseline_refuses_type_errors 
+[gw13] [  2%] PASSED tests/test_config.py::test_invalid_config_is_an_error[old_package_scope] 
+tests/test_config.py::test_invalid_config_is_an_error[two_unknown_keys] 
+[gw7] [  2%] PASSED tests/test_baseline.py::test_baseline_per_package_targets 
+[gw10] [  2%] PASSED tests/test_config.py::test_setting_changes_reports[qualify_always] 
+tests/test_config.py::test_setting_changes_reports[qualify_always_exported_false] 
+tests/test_baseline.py::test_configured_baseline_is_consulted 
+[gw15] [  3%] PASSED tests/test_config.py::test_nearer_file_overrides_per_key 
+tests/test_config.py::test_nearer_file_restates_a_key 
+[gw12] [  3%] PASSED tests/test_config.py::test_invalid_config_is_an_error[bad_exported] 
+tests/test_config.py::test_invalid_config_is_an_error[bad_qualify] 
+[gw14] [  3%] PASSED tests/test_config.py::test_invalid_config_is_an_error[unknown_top_key] 
+tests/test_config.py::test_invalid_config_is_an_error[vocabulary_not_list] 
+[gw2] [  3%] PASSED tests/test_analyzer_cli.py::test_type_error_skips_analysis 
+[gw11] [  4%] PASSED tests/test_config.py::test_setting_changes_reports[surplus_loose] 
+[gw3] [  4%] PASSED tests/test_analyzer_cli.py::test_two_packages_in_one_run 
+tests/test_analyzer_cli.py::test_explicit_config_missing_file 
+tests/test_analyzer_cli.py::test_build_tags_from_goflags 
+tests/test_config.py::test_setting_changes_reports[surplus_off] 
+[gw8] [  4%] PASSED tests/test_baseline.py::test_baseline_refuses_type_errors 
+[gw13] [  4%] PASSED tests/test_config.py::test_invalid_config_is_an_error[two_unknown_keys] 
+tests/test_baseline.py::test_baseline_refuses_broken_config 
+tests/test_config.py::test_invalid_config_is_an_error[unknown_defaults_key] 
+[gw10] [  5%] PASSED tests/test_config.py::test_setting_changes_reports[qualify_always_exported_false] 
+tests/test_config.py::test_setting_changes_reports[qualify_never] 
+[gw14] [  5%] PASSED tests/test_config.py::test_invalid_config_is_an_error[vocabulary_not_list] 
+tests/test_config.py::test_invalid_config_is_an_error[yaml_syntax] 
+[gw15] [  5%] PASSED tests/test_config.py::test_nearer_file_restates_a_key 
+tests/test_config.py::test_invalid_outer_file_in_chain_fails 
+[gw12] [  5%] PASSED tests/test_config.py::test_invalid_config_is_an_error[bad_qualify] 
+tests/test_config.py::test_invalid_config_is_an_error[bad_surplus] 
+[gw2] [  6%] PASSED tests/test_analyzer_cli.py::test_explicit_config_missing_file 
+tests/test_analyzer_cli.py::test_explicit_config_is_directory 
+[gw11] [  6%] PASSED tests/test_config.py::test_setting_changes_reports[surplus_off] 
+tests/test_config.py::test_setting_changes_reports[unused_loose] 
+[gw10] [  6%] PASSED tests/test_config.py::test_setting_changes_reports[qualify_never] 
+tests/test_config.py::test_setting_changes_reports[qualify_ondemand_exported] 
+[gw0] [  6%] PASSED tests/test_analyzer_cli.py::test_fix_inserts_shared_directive 
+tests/test_analyzer_cli.py::test_fix_converges_in_one_pass 
+[gw1] [  7%] PASSED tests/test_analyzer_cli.py::test_reports_crossing_and_exits_3 
+tests/test_analyzer_cli.py::test_clean_package_exits_0_silently 
+[gw13] [  7%] PASSED tests/test_config.py::test_invalid_config_is_an_error[unknown_defaults_key] 
+tests/test_config.py::test_invalid_config_is_an_error[unknown_filter_key] 
+[gw14] [  7%] PASSED tests/test_config.py::test_invalid_config_is_an_error[yaml_syntax] 
+tests/test_config.py::test_yaml_wins_over_yml 
+[gw7] [  7%] PASSED tests/test_baseline.py::test_configured_baseline_is_consulted 
+tests/test_baseline.py::test_yml_baseline_is_discovered 
+[gw12] [  8%] PASSED tests/test_config.py::test_invalid_config_is_an_error[bad_surplus] 
+tests/test_config.py::test_invalid_config_is_an_error[bad_unused] 
+[gw15] [  8%] PASSED tests/test_config.py::test_invalid_outer_file_in_chain_fails 
+[gw3] [  8%] PASSED tests/test_analyzer_cli.py::test_build_tags_from_goflags 
+tests/test_analyzer_cli.py::test_fix_json_reports_and_applies 
+tests/test_config.py::test_vocabulary_word_carries_namespace 
+[gw2] [  8%] PASSED tests/test_analyzer_cli.py::test_explicit_config_is_directory 
+[gw11] [  9%] PASSED tests/test_config.py::test_setting_changes_reports[unused_loose] 
+tests/test_analyzer_cli.py::test_explicit_config_skips_discovery 
+tests/test_config.py::test_setting_changes_reports[unused_off] 
+[gw10] [  9%] PASSED tests/test_config.py::test_setting_changes_reports[qualify_ondemand_exported] 
+tests/test_config.py::test_setting_changes_reports[reach_without_boundary] 
+[gw13] [  9%] PASSED tests/test_config.py::test_invalid_config_is_an_error[unknown_filter_key] 
+tests/test_config.py::test_invalid_config_is_an_error[unknown_naming_key] 
+[gw12] [  9%] PASSED tests/test_config.py::test_invalid_config_is_an_error[bad_unused] 
+tests/test_config.py::test_invalid_config_is_an_error[baseline_not_string] 
+[gw14] [ 10%] PASSED tests/test_config.py::test_yaml_wins_over_yml 
+tests/test_config.py::test_yml_alone_is_read 
+[gw11] [ 10%] PASSED tests/test_config.py::test_setting_changes_reports[unused_off] 
+tests/test_config.py::test_setting_changes_reports[unused_strict] 
+[gw13] [ 10%] PASSED tests/test_config.py::test_invalid_config_is_an_error[unknown_naming_key] 
+tests/test_config.py::test_filter_patterns[omit_doublestar_dir] 
+[gw1] [ 10%] PASSED tests/test_analyzer_cli.py::test_clean_package_exits_0_silently 
+tests/test_analyzer_cli.py::test_test_false_skips_test_files 
+[gw10] [ 11%] PASSED tests/test_config.py::test_setting_changes_reports[reach_without_boundary] 
+tests/test_config.py::test_vocabulary_word_needs_word_boundary 
+[gw15] [ 11%] PASSED tests/test_config.py::test_vocabulary_word_carries_namespace 
+tests/test_config.py::test_vocabulary_merges_down_the_chain 
+[gw14] [ 11%] PASSED tests/test_config.py::test_yml_alone_is_read 
+tests/test_fixtures.py::test_fixture_report[blockignore] 
+[gw12] [ 11%] PASSED tests/test_config.py::test_invalid_config_is_an_error[baseline_not_string] 
+tests/test_config.py::test_filter_only_cancelled_by_outer_only 
+[gw11] [ 12%] PASSED tests/test_config.py::test_setting_changes_reports[unused_strict] 
+tests/test_fixtures.py::test_fixture_report[defaultsmembers] 
+[gw5] [ 12%] PASSED tests/test_baseline.py::test_baseline_narrow_pattern_drops_other_packages 
+tests/test_baseline.py::test_baseline_merge_keeps_other_packages 
+[gw4] [ 12%] PASSED tests/test_baseline.py::test_baseline_suppresses_shrink 
+tests/test_baseline.py::test_baseline_shrink_false 
+[gw10] [ 12%] PASSED tests/test_config.py::test_vocabulary_word_needs_word_boundary 
+[gw8] [ 13%] PASSED tests/test_baseline.py::test_baseline_refuses_broken_config 
+[gw14] [ 13%] PASSED tests/test_fixtures.py::test_fixture_report[blockignore] 
+tests/test_fixtures.py::test_fixture_report[boundaryoff] 
+tests/test_baseline.py::test_baseline_explicit_config_rules 
+tests/test_config.py::test_explicit_relative_config 
+[gw13] [ 13%] PASSED tests/test_config.py::test_filter_patterns[omit_doublestar_dir] 
+tests/test_config.py::test_filter_patterns[omit_file_any_depth] 
+[gw11] [ 13%] PASSED tests/test_fixtures.py::test_fixture_report[defaultsmembers] 
+tests/test_fixtures.py::test_fixture_report[directives] 
+[gw14] [ 14%] PASSED tests/test_fixtures.py::test_fixture_report[boundaryoff] 
+[gw15] [ 14%] PASSED tests/test_config.py::test_vocabulary_merges_down_the_chain 
+tests/test_fixtures.py::test_fixture_report[fileignore] 
+tests/test_fixtures.py::test_fixture_report[braceignore] 
+[gw10] [ 14%] PASSED tests/test_config.py::test_explicit_relative_config 
+[gw12] [ 14%] PASSED tests/test_config.py::test_filter_only_cancelled_by_outer_only 
+tests/test_config.py::test_explicit_config_from_subdirectory 
+tests/test_config.py::test_filter_only_intersects 
+[gw9] [ 15%] PASSED tests/test_baseline.py::test_baseline_shrink_not_judged_is_named 
+tests/test_config.py::test_setting_changes_reports[boundary_off] 
+[gw8] [ 15%] PASSED tests/test_baseline.py::test_baseline_explicit_config_rules 
+[gw1] [ 15%] PASSED tests/test_analyzer_cli.py::test_test_false_skips_test_files 
+tests/test_baseline.py::test_baseline_leaves_out_what_an_ignore_answers 
+tests/test_analyzer_cli.py::test_json_output_exits_0 
+[gw11] [ 15%] PASSED tests/test_fixtures.py::test_fixture_report[directives] 
+[gw2] [ 16%] PASSED tests/test_analyzer_cli.py::test_explicit_config_skips_discovery 
+tests/test_fixtures.py::test_fixture_report[duplicatedirective] 
+[gw13] [ 16%] PASSED tests/test_config.py::test_filter_patterns[omit_file_any_depth] 
+tests/test_config.py::test_filter_patterns[omit_no_slash_dir_name] 
+tests/test_analyzer_cli.py::test_empty_config_flag_value_means_discovery 
+[gw3] [ 16%] PASSED tests/test_analyzer_cli.py::test_fix_json_reports_and_applies 
+tests/test_analyzer_cli.py::test_version_flag_ignores_patterns 
+[gw15] [ 16%] PASSED tests/test_fixtures.py::test_fixture_report[fileignore] 
+tests/test_fixtures.py::test_fixture_report[fileignorescope] 
+[gw9] [ 17%] PASSED tests/test_config.py::test_setting_changes_reports[boundary_off] 
+tests/test_config.py::test_setting_changes_reports[boundary_on] 
+[gw3] [ 17%] PASSED tests/test_analyzer_cli.py::test_version_flag_ignores_patterns 
+tests/test_baseline.py::test_baseline_default_target_and_content 
+[gw14] [ 17%] PASSED tests/test_fixtures.py::test_fixture_report[braceignore] 
+tests/test_fixtures.py::test_fixture_report[coregoossibling] 
+[gw11] [ 17%] PASSED tests/test_fixtures.py::test_fixture_report[duplicatedirective] 
+tests/test_fixtures.py::test_fixture_report[embedded] 
+[gw8] [ 18%] PASSED tests/test_baseline.py::test_baseline_leaves_out_what_an_ignore_answers 
+[gw15] [ 18%] PASSED tests/test_fixtures.py::test_fixture_report[fileignorescope] 
+[gw6] [ 18%] RERUN tests/test_baseline.py::test_baseline_merge_unreadable_target 
+tests/test_baseline.py::test_baseline_merge_unreadable_target 
+tests/test_baseline.py::test_baseline_merge_with_o 
+[gw10] [ 18%] PASSED tests/test_config.py::test_explicit_config_from_subdirectory 
+[gw12] [ 19%] PASSED tests/test_config.py::test_filter_only_intersects 
+tests/test_config.py::test_filter_omit_unions 
+tests/test_fixtures.py::test_fixture_report[filescope] 
+tests/test_config.py::test_filter_patterns[omit_anchored_hit] 
+[gw13] [ 19%] PASSED tests/test_config.py::test_filter_patterns[omit_no_slash_dir_name] 
+[gw9] [ 19%] PASSED tests/test_config.py::test_setting_changes_reports[boundary_on] 
+tests/test_config.py::test_filter_patterns[omit_question] 
+[gw14] [ 19%] PASSED tests/test_fixtures.py::test_fixture_report[coregoossibling] 
+tests/test_fixtures.py::test_fixture_report[corenamedtest] 
+tests/test_config.py::test_setting_changes_reports[comment_only] 
+[gw11] [ 20%] PASSED tests/test_fixtures.py::test_fixture_report[embedded] 
+tests/test_fixtures.py::test_fixture_report[explicit] 
+[gw2] [ 20%] PASSED tests/test_analyzer_cli.py::test_empty_config_flag_value_means_discovery 
+[gw15] [ 20%] PASSED tests/test_fixtures.py::test_fixture_report[filescope] 
+tests/test_fixtures.py::test_fixture_report[filtercancelled] 
+tests/test_fixtures.py::test_fixture_report[fixcapture] 
+[gw5] [ 20%] PASSED tests/test_baseline.py::test_baseline_merge_keeps_other_packages 
+tests/test_baseline.py::test_baseline_merge_regenerates_loaded_package 
+[gw4] [ 21%] PASSED tests/test_baseline.py::test_baseline_shrink_false 
+tests/test_baseline.py::test_baseline_o_writes_one_file 
+[gw10] [ 21%] PASSED tests/test_config.py::test_filter_patterns[omit_anchored_hit] 
+tests/test_config.py::test_filter_patterns[omit_anchored_miss] 
+[gw12] [ 21%] PASSED tests/test_config.py::test_filter_omit_unions 
+tests/test_config.py::test_filter_pattern_relative_to_its_config 
+[gw11] [ 21%] PASSED tests/test_fixtures.py::test_fixture_report[explicit] 
+tests/test_fixtures.py::test_fixture_report[exportedprefixes] 
+[gw9] [ 22%] PASSED tests/test_config.py::test_setting_changes_reports[comment_only] 
+tests/test_config.py::test_setting_changes_reports[defaults_private] 
+[gw15] [ 22%] PASSED tests/test_fixtures.py::test_fixture_report[filtercancelled] 
+tests/test_fixtures.py::test_fixture_report[fixasm] 
+[gw13] [ 22%] PASSED tests/test_config.py::test_filter_patterns[omit_question] 
+tests/test_config.py::test_filter_patterns[omit_star] 
+[gw8] [ 22%] PASSED tests/test_baseline.py::test_baseline_merge_with_o 
+tests/test_fixtures.py::test_fixture_report[fixsurplusnarrow] 
+[gw12] [ 23%] PASSED tests/test_config.py::test_filter_pattern_relative_to_its_config 
+tests/test_config.py::test_ignore_filter_is_unused 
+[gw9] [ 23%] PASSED tests/test_config.py::test_setting_changes_reports[defaults_private] 
+tests/test_config.py::test_setting_changes_reports[defaults_shared] 
+[gw4] [ 23%] PASSED tests/test_baseline.py::test_baseline_o_writes_one_file 
+tests/test_baseline.py::test_baseline_with_nothing_to_record 
+[gw11] [ 23%] PASSED tests/test_fixtures.py::test_fixture_report[exportedprefixes] 
+tests/test_fixtures.py::test_fixture_report[exportedscope] 
+[gw2] [ 24%] PASSED tests/test_fixtures.py::test_fixture_report[fixcapture] 
+tests/test_fixtures.py::test_fixture_report[fixembedded] 
+[gw10] [ 24%] PASSED tests/test_config.py::test_filter_patterns[omit_anchored_miss] 
+tests/test_config.py::test_filter_patterns[omit_dir_glob] 
+[gw12] [ 24%] PASSED tests/test_config.py::test_ignore_filter_is_unused 
+[gw8] [ 24%] PASSED tests/test_fixtures.py::test_fixture_report[fixsurplusnarrow] 
+tests/test_fixtures.py::test_fixture_report[aliases] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] 
+[gw9] [ 25%] PASSED tests/test_config.py::test_setting_changes_reports[defaults_shared] 
+tests/test_fixtures.py::test_fixture_report[fixunusedstrictsurplus] 
+[gw1] [ 25%] PASSED tests/test_analyzer_cli.py::test_json_output_exits_0 
+tests/test_analyzer_cli.py::test_context_lines 
+[gw13] [ 25%] PASSED tests/test_config.py::test_filter_patterns[omit_star] 
+tests/test_config.py::test_filter_patterns[only_and_omit] 
+[gw11] [ 25%] PASSED tests/test_fixtures.py::test_fixture_report[exportedscope] 
+tests/test_fixtures.py::test_fixture_report[fixtesttaggedonly] 
+[gw2] [ 25%] PASSED tests/test_fixtures.py::test_fixture_report[fixembedded] 
+tests/test_fixtures.py::test_fixture_report[fixembeddedgeneric] 
+[gw0] [ 26%] PASSED tests/test_analyzer_cli.py::test_fix_converges_in_one_pass 
+tests/test_analyzer_cli.py::test_fix_diff_prints_diff_without_writing 
+[gw9] [ 26%] PASSED tests/test_fixtures.py::test_fixture_report[fixunusedstrictsurplus] 
+tests/test_fixtures.py::test_fixture_report[fixunusedstrictwithheld] 
+[gw12] [ 26%] PASSED tests/test_fixtures.py::test_fixture_report[aliases] 
+[gw4] [ 26%] PASSED tests/test_baseline.py::test_baseline_with_nothing_to_record 
+tests/test_baseline.py::test_baseline_pattern_matching_nothing_refuses 
+tests/test_fixtures.py::test_fixture_report[baselined] 
+[gw10] [ 27%] PASSED tests/test_config.py::test_filter_patterns[omit_dir_glob] 
+tests/test_config.py::test_filter_patterns[omit_dir_slash] 
+[gw11] [ 27%] PASSED tests/test_fixtures.py::test_fixture_report[fixtesttaggedonly] 
+tests/test_fixtures.py::test_fixture_report[fixtestvariant] 
+[gw4] [ 27%] PASSED tests/test_baseline.py::test_baseline_pattern_matching_nothing_refuses 
+[gw7] [ 27%] RERUN tests/test_baseline.py::test_yml_baseline_is_discovered 
+tests/test_baseline.py::test_yml_baseline_is_discovered 
+tests/test_baseline.py::test_baseline_unmatched_pattern_beside_others_warns 
+[gw12] [ 28%] PASSED tests/test_fixtures.py::test_fixture_report[baselined] 
+[gw14] [ 28%] PASSED tests/test_fixtures.py::test_fixture_report[corenamedtest] 
+tests/test_fixtures.py::test_fixture_report[corens] 
+tests/test_fixtures.py::test_fixture_report[blankimport] 
+[gw9] [ 28%] PASSED tests/test_fixtures.py::test_fixture_report[fixunusedstrictwithheld] 
+[gw5] [ 28%] PASSED tests/test_baseline.py::test_baseline_merge_regenerates_loaded_package 
+tests/test_fixtures.py::test_fixture_report[foreignmethod] 
+tests/test_baseline.py::test_baseline_merge_refuses_unparsable_file 
+[gw13] [ 29%] PASSED tests/test_config.py::test_filter_patterns[only_and_omit] 
+tests/test_config.py::test_filter_patterns[only_empty_list] 
+[gw1] [ 29%] PASSED tests/test_analyzer_cli.py::test_context_lines 
+[gw4] [ 29%] PASSED tests/test_baseline.py::test_baseline_unmatched_pattern_beside_others_warns 
+tests/test_fixtures.py::test_fixture_report[ignorefilter] 
+[gw10] [ 29%] PASSED tests/test_config.py::test_filter_patterns[omit_dir_slash] 
+tests/test_analyzer_cli.py::test_context_zero_lines 
+tests/test_config.py::test_filter_patterns[omit_dot_anchored_hit] 
+[gw3] [ 30%] PASSED tests/test_baseline.py::test_baseline_default_target_and_content 
+tests/test_baseline.py::test_baseline_suppresses_recorded_violations 
+[gw2] [ 30%] PASSED tests/test_fixtures.py::test_fixture_report[fixembeddedgeneric] 
+tests/test_fixtures.py::test_fixture_report[fixembedder] 
+[gw9] [ 30%] PASSED tests/test_fixtures.py::test_fixture_report[foreignmethod] 
+tests/test_fixtures.py::test_fixture_report[generics] 
+[gw13] [ 30%] PASSED tests/test_config.py::test_filter_patterns[only_empty_list] 
+tests/test_config.py::test_filter_patterns[only_user] 
+[gw4] [ 31%] PASSED tests/test_fixtures.py::test_fixture_report[ignorefilter] 
+tests/test_fixtures.py::test_fixture_report[ignoremodulewide] 
+[gw9] [ 31%] PASSED tests/test_fixtures.py::test_fixture_report[generics] 
+[gw12] [ 31%] PASSED tests/test_fixtures.py::test_fixture_report[blankimport] 
+tests/test_fixtures.py::test_fixture_report[linefix] 
+tests/test_fixtures.py::test_fixture_report[ifacemembers] 
+[gw1] [ 31%] PASSED tests/test_analyzer_cli.py::test_context_zero_lines 
+[gw10] [ 32%] PASSED tests/test_config.py::test_filter_patterns[omit_dot_anchored_hit] 
+tests/test_fixtures.py::test_fixture_report[qualifyalways] 
+tests/test_fixtures.py::test_fixture_report[nsidentity] 
+[gw0] [ 32%] PASSED tests/test_analyzer_cli.py::test_fix_diff_prints_diff_without_writing 
+tests/test_analyzer_cli.py::test_diff_without_fix_reports_normally 
+[gw12] [ 32%] PASSED tests/test_fixtures.py::test_fixture_report[linefix] 
+[gw6] [ 32%] RERUN tests/test_baseline.py::test_baseline_merge_unreadable_target 
+tests/test_fixtures.py::test_fixture_report[lineforeign] 
+tests/test_baseline.py::test_baseline_merge_unreadable_target 
+[gw13] [ 32%] PASSED tests/test_config.py::test_filter_patterns[only_user] 
+[gw10] [ 33%] PASSED tests/test_fixtures.py::test_fixture_report[qualifyalways] 
+tests/test_fixtures.py::test_fixture_report[qualifyrule] 
+tests/test_fixtures.py::test_fixture_report[qualifybaselined] 
+[gw9] [ 33%] PASSED tests/test_fixtures.py::test_fixture_report[ifacemembers] 
+tests/test_fixtures.py::test_fixture_report[ignoredirective] 
+[gw11] [ 33%] PASSED tests/test_fixtures.py::test_fixture_report[fixtestvariant] 
+tests/test_fixtures.py::test_fixture_report[fixunseenbody] 
+[gw2] [ 33%] PASSED tests/test_fixtures.py::test_fixture_report[fixembedder] 
+tests/test_fixtures.py::test_fixture_report[fixes] 
+[gw5] [ 34%] PASSED tests/test_baseline.py::test_baseline_merge_refuses_unparsable_file 
+tests/test_baseline.py::test_baseline_replaces_unparsable_file_without_merge 
+[gw10] [ 34%] PASSED tests/test_fixtures.py::test_fixture_report[qualifybaselined] 
+[gw12] [ 34%] PASSED tests/test_fixtures.py::test_fixture_report[lineforeign] 
+[gw11] [ 34%] PASSED tests/test_fixtures.py::test_fixture_report[fixunseenbody] 
+[gw9] [ 35%] PASSED tests/test_fixtures.py::test_fixture_report[ignoredirective] 
+[gw14] [ 35%] PASSED tests/test_fixtures.py::test_fixture_report[corens] 
+tests/test_fixtures.py::test_fixture_report[qualifydefault] 
+[gw2] [ 35%] PASSED tests/test_fixtures.py::test_fixture_report[fixes] 
+tests/test_fixtures.py::test_fixture_report[fixunseenclause] 
+tests/test_fixtures.py::test_fixture_report[surplusdefault] 
+tests/test_fixtures.py::test_fixture_report[fixexcluded] 
+tests/test_fixtures.py::test_fixture_report[lineunseen] 
+tests/test_fixtures.py::test_fixture_report[coretestsubject] 
+[gw6] [ 35%] FAILED tests/test_baseline.py::test_baseline_merge_unreadable_target 
+tests/test_baseline.py::test_baseline_unwritable_target 
+[gw0] [ 35%] PASSED tests/test_analyzer_cli.py::test_diff_without_fix_reports_normally 
+tests/test_analyzer_cli.py::test_named_package_directory 
+[gw5] [ 36%] PASSED tests/test_baseline.py::test_baseline_replaces_unparsable_file_without_merge 
+tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] 
+[gw11] [ 36%] PASSED tests/test_fixtures.py::test_fixture_report[fixunseenclause] 
+tests/test_fixtures.py::test_fixture_report[fixunusedstrict] 
+[gw2] [ 36%] PASSED tests/test_fixtures.py::test_fixture_report[fixexcluded] 
+tests/test_fixtures.py::test_fixture_report[fixforeignmethod] 
+[gw12] [ 36%] PASSED tests/test_fixtures.py::test_fixture_report[lineunseen] 
+[gw10] [ 37%] PASSED tests/test_fixtures.py::test_fixture_report[qualifydefault] 
+tests/test_fixtures.py::test_fixture_report[mainpkg] 
+tests/test_fixtures.py::test_fixture_report[qualifyinflect] 
+[gw9] [ 37%] PASSED tests/test_fixtures.py::test_fixture_report[surplusdefault] 
+tests/test_fixtures.py::test_fixture_report[surplusdefaultstrict] 
+[gw6] [ 37%] PASSED tests/test_baseline.py::test_baseline_unwritable_target 
+tests/test_baseline.py::test_analyzer_refuses_unparsable_baseline 
+[gw11] [ 37%] PASSED tests/test_fixtures.py::test_fixture_report[fixunusedstrict] 
+tests/test_fixtures.py::test_fixture_report[surplusstricttests] 
+[gw2] [ 38%] PASSED tests/test_fixtures.py::test_fixture_report[fixforeignmethod] 
+tests/test_fixtures.py::test_fixture_report[unusedloose] 
+[gw10] [ 38%] PASSED tests/test_fixtures.py::test_fixture_report[qualifyinflect] 
+tests/test_fixtures.py::test_fixture_report[qualifyinflected] 
+[gw3] [ 38%] PASSED tests/test_baseline.py::test_baseline_suppresses_recorded_violations 
+tests/test_fixtures.py::test_fixture_report[fixinline] 
+[gw9] [ 38%] PASSED tests/test_fixtures.py::test_fixture_report[surplusdefaultstrict] 
+tests/test_fixtures.py::test_fixture_report[surplusgenerator] 
+[gw6] [ 39%] PASSED tests/test_baseline.py::test_analyzer_refuses_unparsable_baseline 
+tests/test_baseline.py::test_survey_refuses_unparsable_baseline 
+[gw1] [ 39%] PASSED tests/test_fixtures.py::test_fixture_report[nsidentity] 
+tests/test_fixtures.py::test_fixture_report[nsinitialism] 
+[gw13] [ 39%] PASSED tests/test_fixtures.py::test_fixture_report[qualifyrule] 
+tests/test_fixtures.py::test_fixture_report[surplus] 
+[gw3] [ 39%] PASSED tests/test_fixtures.py::test_fixture_report[fixinline] 
+[gw10] [ 40%] PASSED tests/test_fixtures.py::test_fixture_report[qualifyinflected] 
+tests/test_fixtures.py::test_fixture_report[fixlinkname] 
+[gw9] [ 40%] PASSED tests/test_fixtures.py::test_fixture_report[surplusgenerator] 
+tests/test_fixtures.py::test_fixture_report[unusedstrictpkg] 
+tests/test_fixtures.py::test_fixture_report[surpluslinkname] 
+[gw8] [ 40%] RERUN tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] 
+[gw6] [ 40%] PASSED tests/test_baseline.py::test_survey_refuses_unparsable_baseline 
+tests/test_baseline.py::test_shrink_refuses_unparsable_baseline 
+[gw1] [ 41%] PASSED tests/test_fixtures.py::test_fixture_report[nsinitialism] 
+[gw12] [ 41%] PASSED tests/test_fixtures.py::test_fixture_report[mainpkg] 
+tests/test_fixtures.py::test_fixture_report[nsnormalize] 
+tests/test_fixtures.py::test_fixture_report[memberowner] 
+[gw13] [ 41%] PASSED tests/test_fixtures.py::test_fixture_report[surplus] 
+[gw0] [ 41%] PASSED tests/test_analyzer_cli.py::test_named_package_directory 
+tests/test_fixtures.py::test_fixture_report[surplusbaselined] 
+tests/test_analyzer_cli.py::test_import_path_pattern 
+[gw10] [ 42%] PASSED tests/test_fixtures.py::test_fixture_report[unusedstrictpkg] 
+tests/test_fixtures.py::test_fixture_report[unusedstricttests] 
+[gw3] [ 42%] PASSED tests/test_fixtures.py::test_fixture_report[fixlinkname] 
+tests/test_fixtures.py::test_fixture_report[fixmembers] 
+[gw14] [ 42%] PASSED tests/test_fixtures.py::test_fixture_report[coretestsubject] 
+tests/test_fixtures.py::test_fixture_report[typeignore] 
+[gw12] [ 42%] PASSED tests/test_fixtures.py::test_fixture_report[memberowner] 
+tests/test_fixtures.py::test_fixture_report[members] 
+[gw1] [ 43%] PASSED tests/test_fixtures.py::test_fixture_report[nsnormalize] 
+tests/test_fixtures.py::test_fixture_report[nstestsuffix] 
+[gw13] [ 43%] PASSED tests/test_fixtures.py::test_fixture_report[surplusbaselined] 
+tests/test_fixtures.py::test_fixture_report[surpluscarrier] 
+[gw14] [ 43%] PASSED tests/test_fixtures.py::test_fixture_report[typeignore] 
+tests/test_fixtures.py::test_fixture_report[typeparamsets] 
+[gw12] [ 43%] PASSED tests/test_fixtures.py::test_fixture_report[members] 
+[gw3] [ 44%] PASSED tests/test_fixtures.py::test_fixture_report[fixmembers] 
+tests/test_fixtures.py::test_fixture_report[fixoutside] 
+tests/test_fixtures.py::test_fixture_clean_json[nsdetached] 
+[gw1] [ 44%] PASSED tests/test_fixtures.py::test_fixture_report[nstestsuffix] 
+tests/test_fixtures.py::test_fixture_report[pkglevel] 
+[gw11] [ 44%] PASSED tests/test_fixtures.py::test_fixture_report[surplusstricttests] 
+tests/test_fixtures.py::test_fixture_report[surplusused] 
+[gw0] [ 44%] PASSED tests/test_analyzer_cli.py::test_import_path_pattern 
+tests/test_fixtures.py::test_fixture_clean_json[generated] 
+[gw13] [ 45%] PASSED tests/test_fixtures.py::test_fixture_report[surpluscarrier] 
+tests/test_fixtures.py::test_fixture_report[surplusconvert] 
+[gw7] [ 45%] RERUN tests/test_baseline.py::test_yml_baseline_is_discovered 
+tests/test_baseline.py::test_yml_baseline_is_discovered 
+[gw3] [ 45%] PASSED tests/test_fixtures.py::test_fixture_report[fixoutside] 
+[gw12] [ 45%] PASSED tests/test_fixtures.py::test_fixture_clean_json[nsdetached] 
+tests/test_fixtures.py::test_fixture_report[fixqualify] 
+tests/test_fixtures.py::test_fixture_clean_json[nsindoc] 
+[gw1] [ 45%] PASSED tests/test_fixtures.py::test_fixture_report[pkglevel] 
+[gw11] [ 46%] PASSED tests/test_fixtures.py::test_fixture_report[surplusused] 
+tests/test_fixtures.py::test_fixture_report[testonlyignore] 
+tests/test_fixtures.py::test_fixture_clean_json[surplusexcluded] 
+[gw0] [ 46%] PASSED tests/test_fixtures.py::test_fixture_clean_json[generated] 
+tests/test_fixtures.py::test_fixture_clean_json[generatedowner] 
+[gw1] [ 46%] PASSED tests/test_fixtures.py::test_fixture_clean_json[surplusexcluded] 
+tests/test_fixtures.py::test_fixture_clean_json[surplusloose] 
+[gw12] [ 46%] PASSED tests/test_fixtures.py::test_fixture_clean_json[nsindoc] 
+tests/test_fixtures.py::test_fixture_clean_json[singlens] 
+[gw3] [ 47%] PASSED tests/test_fixtures.py::test_fixture_report[fixqualify] 
+tests/test_fixtures.py::test_fixture_report[fixsiblings] 
+[gw15] [ 47%] RERUN tests/test_fixtures.py::test_fixture_report[fixasm] 
+tests/test_fixtures.py::test_fixture_report[fixasm] 
+[gw0] [ 47%] PASSED tests/test_fixtures.py::test_fixture_clean_json[generatedowner] 
+tests/test_fixtures.py::test_fixture_clean_json[lineaftercomment] 
+[gw10] [ 47%] PASSED tests/test_fixtures.py::test_fixture_report[unusedstricttests] 
+[gw7] [ 47%] FAILED tests/test_baseline.py::test_yml_baseline_is_discovered 
+tests/test_fixtures.py::test_fixture_report[vocabulary] 
+tests/test_baseline.py::test_hand_written_baseline_matches_by_namespace 
+[gw3] [ 48%] PASSED tests/test_fixtures.py::test_fixture_report[fixsiblings] 
+[gw0] [ 48%] PASSED tests/test_fixtures.py::test_fixture_clean_json[lineaftercomment] 
+tests/test_fixtures.py::test_fixture_fix[fixasmskipped] 
+tests/test_fixtures.py::test_fixture_clean_json[lineignore] 
+[gw1] [ 48%] PASSED tests/test_fixtures.py::test_fixture_clean_json[surplusloose] 
+tests/test_fixtures.py::test_fixture_clean_json[surplusopaque] 
+[gw12] [ 48%] PASSED tests/test_fixtures.py::test_fixture_clean_json[singlens] 
+tests/test_fixtures.py::test_fixture_clean_json[surplusallowed] 
+[gw4] [ 49%] RERUN tests/test_fixtures.py::test_fixture_report[ignoremodulewide] 
+tests/test_fixtures.py::test_fixture_report[ignoremodulewide] 
+[gw7] [ 49%] PASSED tests/test_baseline.py::test_hand_written_baseline_matches_by_namespace 
+[gw0] [ 49%] PASSED tests/test_fixtures.py::test_fixture_clean_json[lineignore] 
+[gw10] [ 49%] PASSED tests/test_fixtures.py::test_fixture_report[vocabulary] 
+tests/test_fixtures.py::test_fixture_clean_json[emptyfile] 
+tests/test_baseline.py::test_baseline_does_not_survive_a_move 
+[gw1] [ 50%] PASSED tests/test_fixtures.py::test_fixture_clean_json[surplusopaque] 
+tests/test_fixtures.py::test_fixture_fix[fixembedder] 
+tests/test_fixtures.py::test_fixture_clean_json[surplusstrictdefaults] 
+[gw12] [ 50%] PASSED tests/test_fixtures.py::test_fixture_clean_json[surplusallowed] 
+tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] 
+[gw10] [ 50%] PASSED tests/test_fixtures.py::test_fixture_clean_json[emptyfile] 
+tests/test_fixtures.py::test_fixture_fix[fixmembers] 
+[gw1] [ 50%] PASSED tests/test_fixtures.py::test_fixture_clean_json[surplusstrictdefaults] 
+tests/test_fixtures.py::test_fixture_fix[fixsiblings] 
+[gw7] [ 50%] PASSED tests/test_baseline.py::test_baseline_does_not_survive_a_move 
+tests/test_baseline.py::test_baseline_refuses_unreachable_default 
+[gw11] [ 51%] PASSED tests/test_fixtures.py::test_fixture_report[testonlyignore] 
+tests/test_fixtures.py::test_fixture_report[toolchainnames] 
+[gw10] [ 51%] PASSED tests/test_fixtures.py::test_fixture_fix[fixmembers] 
+tests/test_fixtures.py::test_fixture_fix[fixoutside] 
+[gw7] [ 51%] PASSED tests/test_baseline.py::test_baseline_refuses_unreachable_default 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedoff] 
+[gw1] [ 51%] PASSED tests/test_fixtures.py::test_fixture_fix[fixsiblings] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusnarrow] 
+[gw10] [ 52%] PASSED tests/test_fixtures.py::test_fixture_fix[fixoutside] 
+tests/test_fixtures.py::test_fixture_fix[fixqualify] 
+[gw7] [ 52%] PASSED tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedoff] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict] 
+[gw1] [ 52%] PASSED tests/test_fixtures.py::test_fixture_fix[fixsurplusnarrow] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] 
+[gw10] [ 52%] PASSED tests/test_fixtures.py::test_fixture_fix[fixqualify] 
+tests/test_fixtures.py::test_fixture_fix[fixunseenbody] 
+[gw11] [ 53%] PASSED tests/test_fixtures.py::test_fixture_report[toolchainnames] 
+tests/test_fixtures.py::test_fixture_fix[fixtesttagged] 
+[gw5] [ 53%] RERUN tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] 
+tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] 
+[gw11] [ 53%] PASSED tests/test_fixtures.py::test_fixture_fix[fixtesttagged] 
+tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] 
+[gw2] [ 53%] RERUN tests/test_fixtures.py::test_fixture_report[unusedloose] 
+tests/test_fixtures.py::test_fixture_report[unusedloose] 
+[gw9] [ 54%] RERUN tests/test_fixtures.py::test_fixture_report[surpluslinkname] 
+tests/test_fixtures.py::test_fixture_report[surpluslinkname] 
+[gw8] [ 54%] RERUN tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] 
+[gw8] [ 54%] FAILED tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedoff] 
+[gw8] [ 54%] PASSED tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedoff] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict] 
+[gw14] [ 54%] RERUN tests/test_fixtures.py::test_fixture_report[typeparamsets] 
+tests/test_fixtures.py::test_fixture_report[typeparamsets] 
+[gw13] [ 54%] RERUN tests/test_fixtures.py::test_fixture_report[surplusconvert] 
+tests/test_fixtures.py::test_fixture_report[surplusconvert] 
+[gw6] [ 55%] RERUN tests/test_baseline.py::test_shrink_refuses_unparsable_baseline 
+tests/test_baseline.py::test_shrink_refuses_unparsable_baseline 
+[gw4] [ 55%] RERUN tests/test_fixtures.py::test_fixture_report[ignoremodulewide] 
+tests/test_fixtures.py::test_fixture_report[ignoremodulewide] 
+[gw3] [ 55%] RERUN tests/test_fixtures.py::test_fixture_fix[fixasmskipped] 
+tests/test_fixtures.py::test_fixture_fix[fixasmskipped] 
+[gw4] [ 55%] FAILED tests/test_fixtures.py::test_fixture_report[ignoremodulewide] 
+tests/test_fixtures.py::test_fixture_report[ignorescope] 
+[gw4] [ 55%] PASSED tests/test_fixtures.py::test_fixture_report[ignorescope] 
+[gw15] [ 55%] RERUN tests/test_fixtures.py::test_fixture_report[fixasm] 
+tests/test_fixtures.py::test_fixture_report[fixasm] 
+tests/test_fixtures.py::test_fixture_report[ignoreunseen] 
+[gw12] [ 55%] RERUN tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] 
+tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] 
+[gw0] [ 56%] RERUN tests/test_fixtures.py::test_fixture_fix[fixembedder] 
+tests/test_fixtures.py::test_fixture_fix[fixembedder] 
+[gw15] [ 56%] FAILED tests/test_fixtures.py::test_fixture_report[fixasm] 
+tests/test_fixtures.py::test_fixture_report[fixasmignored] 
+[gw15] [ 56%] PASSED tests/test_fixtures.py::test_fixture_report[fixasmignored] 
+[gw7] [ 56%] RERUN tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict] 
+[gw1] [ 56%] RERUN tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_report[fixasmskipped] 
+[gw15] [ 57%] PASSED tests/test_fixtures.py::test_fixture_report[fixasmskipped] 
+[gw5] [ 57%] RERUN tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] 
+tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] 
+[gw10] [ 57%] RERUN tests/test_fixtures.py::test_fixture_fix[fixunseenbody] 
+tests/test_fixtures.py::test_fixture_fix[fixunseenbody] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixes] 
+[gw5] [ 57%] FAILED tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] 
+tests/test_fixtures.py::test_fixture_report[surplusstrict] 
+[gw15] [ 57%] PASSED tests/test_fixtures.py::test_fixture_fix_diff[fixes] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixqualify] 
+[gw15] [ 57%] PASSED tests/test_fixtures.py::test_fixture_fix_diff[fixqualify] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixmembers] 
+[gw2] [ 57%] RERUN tests/test_fixtures.py::test_fixture_report[unusedloose] 
+tests/test_fixtures.py::test_fixture_report[unusedloose] 
+[gw15] [ 58%] PASSED tests/test_fixtures.py::test_fixture_fix_diff[fixmembers] 
+[gw11] [ 58%] RERUN tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] 
+tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] 
+[gw2] [ 58%] FAILED tests/test_fixtures.py::test_fixture_report[unusedloose] 
+tests/test_fixtures.py::test_fixture_report[unusedoff] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] 
+[gw2] [ 58%] PASSED tests/test_fixtures.py::test_fixture_report[unusedoff] 
+tests/test_fixtures.py::test_fixture_report[unusedscope] 
+[gw9] [ 58%] RERUN tests/test_fixtures.py::test_fixture_report[surpluslinkname] 
+tests/test_fixtures.py::test_fixture_report[surpluslinkname] 
+[gw2] [ 58%] PASSED tests/test_fixtures.py::test_fixture_report[unusedscope] 
+[gw9] [ 58%] FAILED tests/test_fixtures.py::test_fixture_report[surpluslinkname] 
+tests/test_fixtures.py::test_fixture_report[surplussatisfies] 
+tests/test_fixtures.py::test_fixture_report[unusedstrict] 
+[gw8] [ 59%] RERUN tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict] 
+[gw14] [ 59%] RERUN tests/test_fixtures.py::test_fixture_report[typeparamsets] 
+tests/test_fixtures.py::test_fixture_report[typeparamsets] 
+[gw14] [ 59%] FAILED tests/test_fixtures.py::test_fixture_report[typeparamsets] 
+tests/test_fixtures.py::test_fixture_report[uncapitalizable] 
+[gw13] [ 59%] RERUN tests/test_fixtures.py::test_fixture_report[surplusconvert] 
+tests/test_fixtures.py::test_fixture_report[surplusconvert] 
+[gw14] [ 59%] PASSED tests/test_fixtures.py::test_fixture_report[uncapitalizable] 
+[gw13] [ 59%] FAILED tests/test_fixtures.py::test_fixture_report[surplusconvert] 
+tests/test_fixtures.py::test_fixture_clean_json[surplustests] 
+tests/test_fixtures.py::test_fixture_report[unkeyed] 
+[gw6] [ 59%] RERUN tests/test_baseline.py::test_shrink_refuses_unparsable_baseline 
+tests/test_baseline.py::test_shrink_refuses_unparsable_baseline 
+[gw13] [ 59%] PASSED tests/test_fixtures.py::test_fixture_clean_json[surplustests] 
+tests/test_fixtures.py::test_fixture_clean_json[testns] 
+[gw6] [ 59%] FAILED tests/test_baseline.py::test_shrink_refuses_unparsable_baseline 
+tests/test_baseline.py::test_baseline_spells_members_methods_and_core 
+[gw3] [ 59%] RERUN tests/test_fixtures.py::test_fixture_fix[fixasmskipped] 
+tests/test_fixtures.py::test_fixture_fix[fixasmskipped] 
+[gw6] [ 59%] PASSED tests/test_baseline.py::test_baseline_spells_members_methods_and_core 
+tests/test_help.py::test_version_rejects_other_value 
+[gw6] [ 60%] PASSED tests/test_help.py::test_version_rejects_other_value 
+[gw3] [ 60%] FAILED tests/test_fixtures.py::test_fixture_fix[fixasmskipped] 
+tests/test_fixtures.py::test_fixture_fix[fixcapture] 
+[gw4] [ 60%] RERUN tests/test_fixtures.py::test_fixture_report[ignoreunseen] 
+tests/test_fixtures.py::test_fixture_report[ignoreunseen] 
+[gw13] [ 60%] PASSED tests/test_fixtures.py::test_fixture_clean_json[testns] 
+tests/test_fixtures.py::test_fixture_fix[fixasm] 
+tests/test_help.py::test_version_bare_flag_is_refused 
+[gw6] [ 60%] PASSED tests/test_help.py::test_version_bare_flag_is_refused 
+[gw12] [ 60%] RERUN tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] 
+tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] 
+tests/test_help.py::test_flags_prints_analyzer_flags_json 
+[gw6] [ 61%] PASSED tests/test_help.py::test_flags_prints_analyzer_flags_json 
+[gw12] [ 61%] FAILED tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] 
+tests/test_fixtures.py::test_fixture_fix[fixinline] 
+[gw3] [ 61%] PASSED tests/test_fixtures.py::test_fixture_fix[fixcapture] 
+tests/test_fixtures.py::test_fixture_fix[fixembedded] 
+tests/test_help.py::test_baseline_help 
+[gw6] [ 61%] PASSED tests/test_help.py::test_baseline_help 
+[gw12] [ 61%] PASSED tests/test_fixtures.py::test_fixture_fix[fixinline] 
+tests/test_fixtures.py::test_fixture_fix[fixlinkname] 
+tests/test_help.py::test_baseline_unknown_flag 
+[gw0] [ 61%] RERUN tests/test_fixtures.py::test_fixture_fix[fixembedder] 
+tests/test_fixtures.py::test_fixture_fix[fixembedder] 
+[gw6] [ 62%] PASSED tests/test_help.py::test_baseline_unknown_flag 
+[gw1] [ 62%] RERUN tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] 
+[gw7] [ 62%] RERUN tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict] 
+tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict] 
+[gw5] [ 62%] RERUN tests/test_fixtures.py::test_fixture_report[surplusstrict] 
+tests/test_fixtures.py::test_fixture_report[surplusstrict] 
+[gw10] [ 62%] RERUN tests/test_fixtures.py::test_fixture_fix[fixunseenbody] 
+tests/test_fixtures.py::test_fixture_fix[fixunseenbody] 
+tests/test_help.py::test_survey_help 
+[gw6] [ 62%] PASSED tests/test_help.py::test_survey_help 
+[gw1] [ 62%] FAILED tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_fix[fixunusedstrictsurplus] 
+[gw7] [ 62%] FAILED tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict] 
+tests/test_fixtures.py::test_fixture_fix[fixtestexcluded] 
+tests/test_help.py::test_inspect_without_package_prints_usage_exit_2 
+[gw6] [ 62%] PASSED tests/test_help.py::test_inspect_without_package_prints_usage_exit_2 
+[gw10] [ 62%] FAILED tests/test_fixtures.py::test_fixture_fix[fixunseenbody] 
+tests/test_fixtures.py::test_fixture_fix[fixunseenclause] 
+[gw0] [ 62%] FAILED tests/test_fixtures.py::test_fixture_fix[fixembedder] 
+[gw1] [ 63%] PASSED tests/test_fixtures.py::test_fixture_fix[fixunusedstrictsurplus] 
+tests/test_fixtures.py::test_fixture_fix[fixes] 
+tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] 
+tests/test_help.py::test_inspect_flags_only_prints_usage_exit_2 
+[gw6] [ 63%] PASSED tests/test_help.py::test_inspect_flags_only_prints_usage_exit_2 
+[gw11] [ 63%] RERUN tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] 
+tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] 
+[gw15] [ 63%] RERUN tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] 
+[gw0] [ 63%] PASSED tests/test_fixtures.py::test_fixture_fix[fixes] 
+tests/test_help.py::test_shrink_unknown_flag 
+tests/test_fixtures.py::test_fixture_fix[fixexcluded] 
+[gw6] [ 64%] PASSED tests/test_help.py::test_shrink_unknown_flag 
+[gw11] [ 64%] FAILED tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] 
+tests/test_fixtures.py::test_fixture_fix[fixtestvariant] 
+[gw7] [ 64%] PASSED tests/test_fixtures.py::test_fixture_fix[fixtestexcluded] 
+tests/test_help.py::test_inspect_unknown_flag 
+[gw7] [ 64%] PASSED tests/test_help.py::test_inspect_unknown_flag 
+tests/test_help.py::test_skill_bare_prints_overview 
+[gw6] [ 64%] PASSED tests/test_help.py::test_skill_bare_prints_overview 
+[gw9] [ 65%] RERUN tests/test_fixtures.py::test_fixture_report[surplussatisfies] 
+tests/test_fixtures.py::test_fixture_report[surplussatisfies] 
+[gw0] [ 65%] PASSED tests/test_fixtures.py::test_fixture_fix[fixexcluded] 
+tests/test_help.py::test_skill_help_word 
+[gw2] [ 65%] RERUN tests/test_fixtures.py::test_fixture_report[unusedstrict] 
+tests/test_fixtures.py::test_fixture_report[unusedstrict] 
+[gw0] [ 65%] PASSED tests/test_help.py::test_skill_help_word 
+tests/test_help.py::test_shrink_help 
+[gw7] [ 66%] PASSED tests/test_help.py::test_shrink_help 
+tests/test_help.py::test_skill_install_help 
+tests/test_help.py::test_skill_dash_h 
+[gw0] [ 66%] PASSED tests/test_help.py::test_skill_dash_h 
+[gw6] [ 66%] PASSED tests/test_help.py::test_skill_install_help 
+tests/test_help.py::test_skill_install_unknown_flag 
+[gw8] [ 66%] RERUN tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict] 
+tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict] 
+[gw7] [ 66%] PASSED tests/test_help.py::test_skill_install_unknown_flag 
+tests/test_help.py::test_skill_uninstall_help 
+tests/test_help.py::test_skill_remove_alias_help 
+[gw6] [ 67%] PASSED tests/test_help.py::test_skill_uninstall_help 
+[gw8] [ 67%] FAILED tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict] 
+tests/test_fixtures.py::test_fixture_report[fixtestexcluded] 
+[gw11] [ 67%] PASSED tests/test_fixtures.py::test_fixture_fix[fixtestvariant] 
+tests/test_help.py::test_skill_list_help 
+[gw11] [ 67%] PASSED tests/test_help.py::test_skill_list_help 
+tests/test_help.py::test_skill_ls_alias_help 
+tests/test_inspect.py::test_inspect_markdown 
+tests/test_help.py::test_skill_unknown_subcommand 
+[gw11] [ 67%] PASSED tests/test_help.py::test_skill_unknown_subcommand 
+[gw6] [ 68%] PASSED tests/test_inspect.py::test_inspect_markdown 
+tests/test_inspect.py::test_inspect_json 
+tests/test_inspect.py::test_inspect_refuses_many_packages 
+[gw6] [ 68%] PASSED tests/test_inspect.py::test_inspect_json 
+[gw8] [ 68%] PASSED tests/test_fixtures.py::test_fixture_report[fixtestexcluded] 
+tests/test_fixtures.py::test_fixture_report[fixtesttagged] 
+tests/test_inspect.py::test_inspect_wildcard_matching_one 
+[gw14] [ 68%] RERUN tests/test_fixtures.py::test_fixture_report[unkeyed] 
+tests/test_fixtures.py::test_fixture_report[unkeyed] 
+[gw6] [ 69%] PASSED tests/test_inspect.py::test_inspect_wildcard_matching_one 
+tests/test_inspect.py::test_inspect_refuses_dependency_error 
+[gw6] [ 69%] PASSED tests/test_inspect.py::test_inspect_refuses_dependency_error 
+[gw11] [ 69%] PASSED tests/test_inspect.py::test_inspect_refuses_many_packages 
+tests/test_inspect.py::test_inspect_refuses_two_patterns 
+tests/test_inspect.py::test_inspect_test_only_without_tests 
+[gw11] [ 69%] PASSED tests/test_inspect.py::test_inspect_refuses_two_patterns 
+tests/test_inspect.py::test_inspect_unknown_format 
+[gw8] [ 70%] PASSED tests/test_fixtures.py::test_fixture_report[fixtesttagged] 
+tests/test_inspect.py::test_inspect_refuses_type_error 
+[gw11] [ 70%] PASSED tests/test_inspect.py::test_inspect_unknown_format 
+[gw8] [ 70%] PASSED tests/test_inspect.py::test_inspect_refuses_type_error 
+tests/test_inspect.py::test_inspect_explicit_config 
+tests/test_inspect.py::test_inspect_missing_config 
+[gw11] [ 70%] PASSED tests/test_inspect.py::test_inspect_missing_config 
+[gw8] [ 71%] PASSED tests/test_inspect.py::test_inspect_explicit_config 
+tests/test_inspect.py::test_inspect_ignores_errors_in_external_test 
+tests/test_inspect.py::test_inspect_skips_external_test_package 
+[gw4] [ 71%] RERUN tests/test_fixtures.py::test_fixture_report[ignoreunseen] 
+tests/test_fixtures.py::test_fixture_report[ignoreunseen] 
+[gw4] [ 71%] FAILED tests/test_fixtures.py::test_fixture_report[ignoreunseen] 
+tests/test_fixtures.py::test_fixture_report[ignoreunseentest] 
+[gw8] [ 71%] PASSED tests/test_inspect.py::test_inspect_ignores_errors_in_external_test 
+tests/test_inspect.py::test_inspect_baselined_and_declared 
+[gw11] [ 71%] PASSED tests/test_inspect.py::test_inspect_skips_external_test_package 
+tests/test_inspect.py::test_inspect_test_false_drops_test_crossing 
+[gw13] [ 71%] RERUN tests/test_fixtures.py::test_fixture_fix[fixasm] 
+tests/test_fixtures.py::test_fixture_fix[fixasm] 
+[gw3] [ 72%] RERUN tests/test_fixtures.py::test_fixture_fix[fixembedded] 
+tests/test_fixtures.py::test_fixture_fix[fixembedded] 
+[gw8] [ 72%] PASSED tests/test_inspect.py::test_inspect_baselined_and_declared 
+tests/test_inspect.py::test_inspect_mutual_crossing 
+[gw8] [ 72%] PASSED tests/test_inspect.py::test_inspect_mutual_crossing 
+tests/test_shrink.py::test_shrink_reports_and_exits_3 
+[gw12] [ 72%] RERUN tests/test_fixtures.py::test_fixture_fix[fixlinkname] 
+tests/test_fixtures.py::test_fixture_fix[fixlinkname] 
+[gw5] [ 72%] RERUN tests/test_fixtures.py::test_fixture_report[surplusstrict] 
+tests/test_fixtures.py::test_fixture_report[surplusstrict] 
+[gw5] [ 72%] FAILED tests/test_fixtures.py::test_fixture_report[surplusstrict] 
+tests/test_fixtures.py::test_fixture_report[surplusstrictbaselined] 
+[gw11] [ 73%] PASSED tests/test_inspect.py::test_inspect_test_false_drops_test_crossing 
+tests/test_inspect.py::test_inspect_exit_zero_with_findings 
+[gw5] [ 73%] PASSED tests/test_fixtures.py::test_fixture_report[surplusstrictbaselined] 
+tests/test_fixtures.py::test_fixture_report[surplusstrictopaque] 
+[gw11] [ 73%] PASSED tests/test_inspect.py::test_inspect_exit_zero_with_findings 
+tests/test_shrink.py::test_shrink_fix_unexports 
+[gw10] [ 73%] RERUN tests/test_fixtures.py::test_fixture_fix[fixunseenclause] 
+tests/test_fixtures.py::test_fixture_fix[fixunseenclause] 
+[gw1] [ 74%] RERUN tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] 
+tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] 
+[gw8] [ 74%] PASSED tests/test_shrink.py::test_shrink_reports_and_exits_3 
+tests/test_shrink.py::test_shrink_dot_dot_dot_same_as_default 
+[gw5] [ 74%] PASSED tests/test_fixtures.py::test_fixture_report[surplusstrictopaque] 
+[gw15] [ 74%] RERUN tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_report[surplusstrictreach] 
+[gw15] [ 74%] FAILED tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] 
+tests/test_fixtures.py::test_fixture_fix_diff[fixunusedstrict] 
+[gw2] [ 74%] RERUN tests/test_fixtures.py::test_fixture_report[unusedstrict] 
+tests/test_fixtures.py::test_fixture_report[unusedstrict] 
+[gw9] [ 74%] RERUN tests/test_fixtures.py::test_fixture_report[surplussatisfies] 
+tests/test_fixtures.py::test_fixture_report[surplussatisfies] 
+[gw15] [ 74%] PASSED tests/test_fixtures.py::test_fixture_fix_diff[fixunusedstrict] 
+tests/test_help.py::test_dash_h_prints_help_with_subcommands 
+[gw2] [ 74%] FAILED tests/test_fixtures.py::test_fixture_report[unusedstrict] 
+tests/test_help.py::test_single_dash_help_word 
+[gw15] [ 75%] PASSED tests/test_help.py::test_dash_h_prints_help_with_subcommands 
+[gw2] [ 75%] PASSED tests/test_help.py::test_single_dash_help_word 
+[gw9] [ 75%] FAILED tests/test_fixtures.py::test_fixture_report[surplussatisfies] 
+tests/test_help.py::test_flags_without_package_print_driver_usage 
+[gw0] [ 75%] RERUN tests/test_help.py::test_skill_remove_alias_help 
+tests/test_help.py::test_skill_remove_alias_help 
+tests/test_shrink.py::test_shrink_testdata_not_loaded 
+[gw11] [ 75%] PASSED tests/test_shrink.py::test_shrink_fix_unexports 
+tests/test_shrink.py::test_shrink_fix_then_analyzer_is_consistent 
+tests/test_help.py::test_bare_invocation_prints_help_and_exits_1 
+[gw7] [ 75%] RERUN tests/test_help.py::test_skill_ls_alias_help 
+tests/test_help.py::test_skill_ls_alias_help 
+[gw2] [ 76%] PASSED tests/test_help.py::test_bare_invocation_prints_help_and_exits_1 
+[gw8] [ 76%] PASSED tests/test_shrink.py::test_shrink_dot_dot_dot_same_as_default 
+tests/test_shrink.py::test_shrink_pattern_narrows_reports_not_uses 
+tests/test_help.py::test_unknown_flag_exits_2_with_message_and_help 
+[gw2] [ 76%] PASSED tests/test_help.py::test_unknown_flag_exits_2_with_message_and_help 
+tests/test_shrink.py::test_shrink_file_level_ignore 
+[gw15] [ 76%] PASSED tests/test_shrink.py::test_shrink_testdata_not_loaded 
+tests/test_shrink.py::test_shrink_ignore_overexported 
+[gw14] [ 76%] RERUN tests/test_fixtures.py::test_fixture_report[unkeyed] 
+tests/test_fixtures.py::test_fixture_report[unkeyed] 
+[gw2] [ 77%] PASSED tests/test_shrink.py::test_shrink_file_level_ignore 
+tests/test_shrink.py::test_shrink_partial_match_warns 
+[gw14] [ 77%] FAILED tests/test_fixtures.py::test_fixture_report[unkeyed] 
+[gw15] [ 77%] PASSED tests/test_shrink.py::test_shrink_ignore_overexported 
+tests/test_shrink.py::test_shrink_missing_directory 
+tests/test_fixtures.py::test_fixture_report[unuseddefaultstrict] 
+[gw15] [ 77%] PASSED tests/test_shrink.py::test_shrink_missing_directory 
+[gw6] [ 77%] RERUN tests/test_inspect.py::test_inspect_test_only_without_tests 
+tests/test_inspect.py::test_inspect_test_only_without_tests 
+[gw14] [ 78%] PASSED tests/test_fixtures.py::test_fixture_report[unuseddefaultstrict] 
+tests/test_shrink.py::test_shrink_refuses_type_errors 
+tests/test_shrink.py::test_shrink_outside_a_module 
+[gw14] [ 78%] PASSED tests/test_shrink.py::test_shrink_outside_a_module 
+[gw8] [ 78%] PASSED tests/test_shrink.py::test_shrink_pattern_narrows_reports_not_uses 
+tests/test_shrink.py::test_shrink_no_match 
+tests/test_shrink.py::test_shrink_config_missing 
+[gw8] [ 78%] PASSED tests/test_shrink.py::test_shrink_no_match 
+[gw11] [ 79%] PASSED tests/test_shrink.py::test_shrink_fix_then_analyzer_is_consistent 
+tests/test_shrink.py::test_shrink_build_excluded_use_counts 
+tests/test_shrink.py::test_shrink_ignore_unused_silences_unused_ignore 
+[gw2] [ 79%] PASSED tests/test_shrink.py::test_shrink_partial_match_warns 
+tests/test_shrink.py::test_shrink_foreign_import_path 
+[gw2] [ 79%] PASSED tests/test_shrink.py::test_shrink_foreign_import_path 
+tests/test_shrink.py::test_shrink_non_internal_package_not_reported 
+[gw11] [ 79%] PASSED tests/test_shrink.py::test_shrink_ignore_unused_silences_unused_ignore 
+tests/test_shrink.py::test_shrink_workspace_loads_every_module 
+[gw2] [ 80%] PASSED tests/test_shrink.py::test_shrink_non_internal_package_not_reported 
+[gw8] [ 80%] PASSED tests/test_shrink.py::test_shrink_build_excluded_use_counts 
+tests/test_skill.py::test_install_into_dir 
+tests/test_shrink.py::test_shrink_unexported_name_taken 
+[gw2] [ 80%] PASSED tests/test_skill.py::test_install_into_dir 
+[gw4] [ 80%] RERUN tests/test_fixtures.py::test_fixture_report[ignoreunseentest] 
+tests/test_fixtures.py::test_fixture_report[ignoreunseentest] 
+[gw15] [ 81%] PASSED tests/test_shrink.py::test_shrink_refuses_type_errors 
+tests/test_shrink.py::test_shrink_config_names_baseline 
+tests/test_skill.py::test_list_before_install 
+[gw2] [ 81%] PASSED tests/test_skill.py::test_list_before_install 
+[gw8] [ 81%] PASSED tests/test_shrink.py::test_shrink_unexported_name_taken 
+tests/test_skill.py::test_install_twice_skips 
+[gw11] [ 81%] PASSED tests/test_shrink.py::test_shrink_workspace_loads_every_module 
+[gw14] [ 82%] PASSED tests/test_shrink.py::test_shrink_config_missing 
+tests/test_skill.py::test_list_after_install 
+tests/test_shrink.py::test_shrink_interface_method_and_stringer 
+[gw8] [ 82%] PASSED tests/test_skill.py::test_install_twice_skips 
+[gw11] [ 82%] PASSED tests/test_skill.py::test_list_after_install 
+tests/test_skill.py::test_modified_skill_is_refused 
+[gw2] [ 82%] PASSED tests/test_skill.py::test_modified_skill_is_refused 
+tests/test_skill.py::test_uninstall_leaves_foreign_skill 
+[gw11] [ 83%] PASSED tests/test_skill.py::test_uninstall_leaves_foreign_skill 
+tests/test_skill.py::test_foreign_skill_is_refused 
+[gw3] [ 83%] RERUN tests/test_fixtures.py::test_fixture_fix[fixembedded] 
+tests/test_fixtures.py::test_fixture_fix[fixembedded] 
+[gw8] [ 83%] PASSED tests/test_skill.py::test_foreign_skill_is_refused 
+tests/test_skill.py::test_short_f_overwrites_modified 
+tests/test_skill.py::test_uninstall_nothing_installed 
+[gw11] [ 83%] PASSED tests/test_skill.py::test_uninstall_nothing_installed 
+[gw2] [ 83%] PASSED tests/test_skill.py::test_short_f_overwrites_modified 
+tests/test_skill.py::test_uninstall_removes 
+[gw14] [ 84%] PASSED tests/test_shrink.py::test_shrink_interface_method_and_stringer 
+tests/test_skill.py::test_uninstall_dry_run_keeps_files 
+[gw8] [ 84%] PASSED tests/test_skill.py::test_uninstall_removes 
+[gw14] [ 84%] PASSED tests/test_skill.py::test_uninstall_dry_run_keeps_files 
+[gw3] [ 84%] FAILED tests/test_fixtures.py::test_fixture_fix[fixembedded] 
+tests/test_fixtures.py::test_fixture_fix[fixembeddedgeneric] 
+[gw12] [ 84%] RERUN tests/test_fixtures.py::test_fixture_fix[fixlinkname] 
+tests/test_fixtures.py::test_fixture_fix[fixlinkname] 
+tests/test_skill.py::test_list_named_skill_only 
+tests/test_skill.py::test_install_named_skill_only 
+tests/test_skill.py::test_install_unknown_skill 
+[gw15] [ 84%] PASSED tests/test_shrink.py::test_shrink_config_names_baseline 
+tests/test_skill.py::test_detected_agent_directory 
+tests/test_skill.py::test_force_overwrites_modified 
+[gw8] [ 85%] PASSED tests/test_skill.py::test_install_unknown_skill 
+[gw2] [ 85%] PASSED tests/test_skill.py::test_install_named_skill_only 
+[gw14] [ 85%] PASSED tests/test_skill.py::test_detected_agent_directory 
+[gw11] [ 85%] PASSED tests/test_skill.py::test_list_named_skill_only 
+[gw15] [ 86%] PASSED tests/test_skill.py::test_force_overwrites_modified 
+[gw13] [ 86%] RERUN tests/test_fixtures.py::test_fixture_fix[fixasm] 
+tests/test_fixtures.py::test_fixture_fix[fixasm] 
+tests/test_skill.py::test_dry_run_project_default_agents 
+tests/test_skill.py::test_install_project_writes_both_directories 
+[gw12] [ 86%] FAILED tests/test_fixtures.py::test_fixture_fix[fixlinkname] 
+[gw11] [ 86%] PASSED tests/test_skill.py::test_dry_run_project_default_agents 
+tests/test_help.py::test_survey_unknown_flag 
+[gw2] [ 86%] PASSED tests/test_skill.py::test_install_project_writes_both_directories 
+[gw12] [ 86%] PASSED tests/test_help.py::test_survey_unknown_flag 
+tests/test_skill.py::test_project_root_found_from_subdirectory 
+[gw8] [ 87%] PASSED tests/test_skill.py::test_project_root_found_from_subdirectory 
+tests/test_skill.py::test_agent_comma_list_and_dedup 
+tests/test_skill.py::test_project_root_without_repository 
+[gw15] [ 87%] PASSED tests/test_skill.py::test_agent_comma_list_and_dedup 
+[gw14] [ 87%] PASSED tests/test_skill.py::test_project_root_without_repository 
+tests/test_skill.py::test_unknown_scope 
+tests/test_help.py::test_inspect_help 
+tests/test_skill.py::test_agent_all 
+[gw11] [ 87%] PASSED tests/test_skill.py::test_unknown_scope 
+tests/test_skill.py::test_agent_repeated_flag 
+tests/test_skill.py::test_unknown_agent 
+tests/test_skill.py::test_empty_scope 
+[gw2] [ 88%] PASSED tests/test_skill.py::test_agent_all 
+[gw12] [ 88%] PASSED tests/test_help.py::test_inspect_help 
+[gw8] [ 88%] PASSED tests/test_skill.py::test_agent_repeated_flag 
+[gw14] [ 88%] PASSED tests/test_skill.py::test_unknown_agent 
+[gw15] [ 89%] PASSED tests/test_skill.py::test_empty_scope 
+[gw3] [ 89%] PASSED tests/test_fixtures.py::test_fixture_fix[fixembeddedgeneric] 
+tests/test_skill.py::test_agent_selection_by_name 
+[gw3] [ 89%] PASSED tests/test_skill.py::test_agent_selection_by_name 
+tests/test_skill.py::test_user_scope_claude 
+[gw11] [ 89%] PASSED tests/test_skill.py::test_user_scope_claude 
+[gw5] [ 90%] RERUN tests/test_fixtures.py::test_fixture_report[surplusstrictreach] 
+tests/test_skill.py::test_user_scope_claude_config_dir 
+tests/test_skill.py::test_user_scope_other_agents 
+tests/test_skill.py::test_project_scope_in_home_is_refused 
+tests/test_fixtures.py::test_fixture_report[surplusstrictreach] 
+[gw10] [ 90%] RERUN tests/test_fixtures.py::test_fixture_fix[fixunseenclause] 
+tests/test_fixtures.py::test_fixture_fix[fixunseenclause] 
+[gw12] [ 90%] PASSED tests/test_skill.py::test_user_scope_other_agents 
+[gw8] [ 90%] PASSED tests/test_skill.py::test_project_scope_in_home_is_refused 
+[gw1] [ 90%] RERUN tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] 
+tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] 
+tests/test_skill.py::test_dir_overrides_agent_and_scope 
+tests/test_skill.py::test_list_alias_ls 
+[gw15] [ 90%] PASSED tests/test_skill.py::test_dir_overrides_agent_and_scope 
+tests/test_survey.py::test_survey_explicit_markdown 
+[gw13] [ 90%] FAILED tests/test_fixtures.py::test_fixture_fix[fixasm] 
+tests/test_skill.py::test_uninstall_alias_remove 
+tests/test_survey.py::test_survey_markdown_with_config 
+tests/test_fixtures.py::test_fixture_fix[fixasmignored] 
+tests/test_survey.py::test_survey_json_space_separated_flag 
+tests/test_survey.py::test_survey_markdown_defaults 
+[gw10] [ 90%] FAILED tests/test_fixtures.py::test_fixture_fix[fixunseenclause] 
+tests/test_fixtures.py::test_fixture_fix[fixunusedstrict] 
+[gw9] [ 91%] RERUN tests/test_help.py::test_flags_without_package_print_driver_usage 
+tests/test_help.py::test_flags_without_package_print_driver_usage 
+[gw1] [ 91%] FAILED tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] 
+tests/test_fixtures.py::test_fixture_fix[linefix] 
+[gw0] [ 91%] RERUN tests/test_help.py::test_skill_remove_alias_help 
+tests/test_help.py::test_skill_remove_alias_help 
+[gw0] [ 91%] FAILED tests/test_help.py::test_skill_remove_alias_help 
+tests/test_help.py::test_help_does_not_need_a_module 
+[gw0] [ 91%] PASSED tests/test_help.py::test_help_does_not_need_a_module 
+[gw13] [ 91%] PASSED tests/test_fixtures.py::test_fixture_fix[fixasmignored] 
+tests/test_survey.py::test_survey_test_only_package_warns 
+[gw7] [ 91%] RERUN tests/test_help.py::test_skill_ls_alias_help 
+tests/test_help.py::test_skill_ls_alias_help 
+[gw7] [ 91%] FAILED tests/test_help.py::test_skill_ls_alias_help 
+tests/test_inspect.py::test_inspect_default_config 
+tests/test_survey.py::test_survey_explicit_config 
+[gw10] [ 91%] PASSED tests/test_fixtures.py::test_fixture_fix[fixunusedstrict] 
+tests/test_survey.py::test_survey_no_package_matched 
+[gw1] [ 92%] PASSED tests/test_fixtures.py::test_fixture_fix[linefix] 
+tests/test_survey.py::test_survey_partial_match_warns 
+[gw12] [ 92%] PASSED tests/test_survey.py::test_survey_markdown_defaults 
+tests/test_survey.py::test_survey_refuses_type_errors 
+[gw10] [ 92%] PASSED tests/test_survey.py::test_survey_no_package_matched 
+[gw7] [ 92%] PASSED tests/test_inspect.py::test_inspect_default_config 
+[gw15] [ 93%] PASSED tests/test_survey.py::test_survey_json_space_separated_flag 
+tests/test_inspect.py::test_inspect_import_path 
+tests/test_survey.py::test_survey_allow_errors_json 
+[gw8] [ 93%] PASSED tests/test_survey.py::test_survey_markdown_with_config 
+[gw3] [ 93%] PASSED tests/test_survey.py::test_survey_explicit_markdown 
+tests/test_survey.py::test_survey_allow_errors 
+tests/test_survey.py::test_survey_counts_ignored 
+tests/test_survey.py::test_survey_unknown_format 
+[gw3] [ 93%] PASSED tests/test_survey.py::test_survey_unknown_format 
+[gw0] [ 94%] PASSED tests/test_survey.py::test_survey_explicit_config 
+tests/test_survey.py::test_survey_config_chain_rows 
+[gw7] [ 94%] PASSED tests/test_inspect.py::test_inspect_import_path 
+tests/test_survey.py::test_survey_directive_problems_counted 
+[gw10] [ 94%] PASSED tests/test_survey.py::test_survey_counts_ignored 
+tests/test_survey.py::test_survey_missing_directory 
+[gw15] [ 94%] PASSED tests/test_survey.py::test_survey_allow_errors_json 
+tests/test_survey.py::test_survey_exit_zero_with_findings 
+[gw10] [ 95%] PASSED tests/test_survey.py::test_survey_missing_directory 
+[gw7] [ 95%] PASSED tests/test_survey.py::test_survey_directive_problems_counted 
+[gw15] [ 95%] PASSED tests/test_survey.py::test_survey_exit_zero_with_findings 
+[gw6] [ 95%] RERUN tests/test_inspect.py::test_inspect_test_only_without_tests 
+tests/test_inspect.py::test_inspect_test_only_without_tests 
+[gw0] [ 95%] PASSED tests/test_survey.py::test_survey_config_chain_rows 
+[gw12] [ 96%] PASSED tests/test_survey.py::test_survey_refuses_type_errors 
+tests/test_survey.py::test_survey_unused_and_boundary_off 
+[gw8] [ 96%] PASSED tests/test_survey.py::test_survey_allow_errors 
+[gw6] [ 96%] FAILED tests/test_inspect.py::test_inspect_test_only_without_tests 
+tests/test_inspect.py::test_inspect_no_match 
+[gw12] [ 96%] PASSED tests/test_survey.py::test_survey_unused_and_boundary_off 
+[gw6] [ 96%] PASSED tests/test_inspect.py::test_inspect_no_match 
+[gw4] [ 96%] RERUN tests/test_fixtures.py::test_fixture_report[ignoreunseentest] 
+tests/test_fixtures.py::test_fixture_report[ignoreunseentest] 
+[gw4] [ 96%] FAILED tests/test_fixtures.py::test_fixture_report[ignoreunseentest] 
+tests/test_fixtures.py::test_fixture_report[ignoreunused] 
+[gw4] [ 97%] PASSED tests/test_fixtures.py::test_fixture_report[ignoreunused] 
+[gw2] [ 97%] RERUN tests/test_skill.py::test_user_scope_claude_config_dir 
+tests/test_skill.py::test_user_scope_claude_config_dir 
+[gw14] [ 97%] RERUN tests/test_skill.py::test_list_alias_ls 
+tests/test_skill.py::test_list_alias_ls 
+[gw5] [ 97%] RERUN tests/test_fixtures.py::test_fixture_report[surplusstrictreach] 
+tests/test_fixtures.py::test_fixture_report[surplusstrictreach] 
+[gw11] [ 97%] RERUN tests/test_skill.py::test_uninstall_alias_remove 
+tests/test_skill.py::test_uninstall_alias_remove 
+[gw5] [ 97%] FAILED tests/test_fixtures.py::test_fixture_report[surplusstrictreach] 
+tests/test_shrink.py::test_shrink_not_judged_packages 
+[gw9] [ 97%] RERUN tests/test_help.py::test_flags_without_package_print_driver_usage 
+tests/test_help.py::test_flags_without_package_print_driver_usage 
+[gw9] [ 97%] FAILED tests/test_help.py::test_flags_without_package_print_driver_usage 
+tests/test_help.py::test_version_full_line_shape 
+[gw9] [ 98%] PASSED tests/test_help.py::test_version_full_line_shape 
+[gw13] [ 98%] RERUN tests/test_survey.py::test_survey_test_only_package_warns 
+tests/test_survey.py::test_survey_test_only_package_warns 
+[gw1] [ 98%] RERUN tests/test_survey.py::test_survey_partial_match_warns 
+tests/test_survey.py::test_survey_partial_match_warns 
+[gw5] [ 98%] PASSED tests/test_shrink.py::test_shrink_not_judged_packages 
+[gw2] [ 98%] RERUN tests/test_skill.py::test_user_scope_claude_config_dir 
+tests/test_skill.py::test_user_scope_claude_config_dir 
+[gw2] [ 98%] FAILED tests/test_skill.py::test_user_scope_claude_config_dir 
+tests/test_skill.py::test_dry_run_install_after_partial 
+[gw14] [ 98%] RERUN tests/test_skill.py::test_list_alias_ls 
+tests/test_skill.py::test_list_alias_ls 
+[gw2] [ 99%] PASSED tests/test_skill.py::test_dry_run_install_after_partial 
+[gw14] [ 99%] FAILED tests/test_skill.py::test_list_alias_ls 
+tests/test_survey.py::test_survey_json 
+[gw11] [ 99%] RERUN tests/test_skill.py::test_uninstall_alias_remove 
+tests/test_skill.py::test_uninstall_alias_remove 
+[gw11] [ 99%] FAILED tests/test_skill.py::test_uninstall_alias_remove 
+tests/test_survey.py::test_survey_test_false 
+[gw14] [ 99%] PASSED tests/test_survey.py::test_survey_json 
+[gw11] [ 99%] PASSED tests/test_survey.py::test_survey_test_false 
+[gw13] [ 99%] RERUN tests/test_survey.py::test_survey_test_only_package_warns 
+tests/test_survey.py::test_survey_test_only_package_warns 
+[gw1] [ 99%] RERUN tests/test_survey.py::test_survey_partial_match_warns 
+tests/test_survey.py::test_survey_partial_match_warns 
+[gw13] [ 99%] FAILED tests/test_survey.py::test_survey_test_only_package_warns 
+tests/test_survey.py::test_survey_counts_baselined 
+[gw1] [ 99%] FAILED tests/test_survey.py::test_survey_partial_match_warns 
+tests/test_survey.py::test_survey_refuses_broken_config 
+[gw1] [ 99%] PASSED tests/test_survey.py::test_survey_refuses_broken_config 
+[gw13] [100%] PASSED tests/test_survey.py::test_survey_counts_baselined 
+
+=================================== FAILURES ===================================
+____________________ test_baseline_merge_unreadable_target _____________________
+[gw6] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_baseline.py:225: in test_baseline_merge_unreadable_target
+    assert_run_golden(__file__, "merge_unreadable", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from merge_unreadable.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,4 @@
+E    [exit] 1
+E    [stdout]
+E    [stderr]
+E   -declscope baseline: dirout cannot be read: is a directory
+E   +declscope baseline: dirout cannot be parsed: read dirout: is a directory; run without -merge to replace it
+_______________________ test_yml_baseline_is_discovered ________________________
+[gw7] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_baseline.py:305: in test_yml_baseline_is_discovered
+    assert_run_golden(__file__, "yml_discovered", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from yml_discovered.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,3 +1,5 @@
+E   -[exit] 0
+E   +[exit] 3
+E    [stdout]
+E    [stderr]
+E   +$WORK/a/a.go:3:6: func aHelper is private to namespace "a", but is used from namespace "b"
+E   +$WORK/a/b.go:3:15: 	used here, in namespace "b"
+____________________ test_fixture_report[fixsurplusstrict] _____________________
+[gw8] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_fixsurplusstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,26 +1,21 @@
+E   -[exit] 3
+E   +[exit] 2
+E    [stdout]
+E    [stderr]
+E   -$WORK/box.go:7:6: type boxItem is private to namespace "box", but is used from namespace "order"
+E   -$WORK/order.go:3:44: 	used here, in namespace "order"
+E   -$WORK/box.go:8:2: field boxItem.shared is private to namespace "box", but is used from namespace "order"
+E   -$WORK/order.go:4:37: 	used here, in namespace "order"
+E   -$WORK/crate.go:7:6: type crateItem is private to namespace "crate", but is used from namespace "order"
+E   -$WORK/order.go:3:55: 	used here, in namespace "order"
+E   -$WORK/dto.go:11:2: field UserDTO.seq takes shared scope from //declscope:shared on UserDTO, but no use from another namespace is visible to declscope
+E   -$WORK/dto.go:12:2: field UserDTO.rev takes shared scope from //declscope:shared on UserDTO, but no use from another namespace is visible to declscope
+E   -$WORK/restated.go:10:6: func restatedSpare takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E   -$WORK/restated.go:22:2: var restatedLocal takes shared scope from the //declscope:shared on its block, but no use from another namespace is visible to declscope
+E   -$WORK/restated.go:34:2: field restatedEntry.spare takes shared scope from //declscope:shared on restatedEntry, but no use from another namespace is visible to declscope
+E   -$WORK/restated.go:46:2: field _.spare takes shared scope from //declscope:shared on _, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:9:2: field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:13:2: field userAccount.limit takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:15:2: field userAccount.plain takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:18:2: field userAccount.left takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:18:8: field userAccount.right takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:24:23: field userTiny.n takes shared scope from //declscope:shared on userTiny, but no use from another namespace is visible to declscope
+E   -$WORK/restated.go:19:1: unused //declscope:shared on restatedShared, restatedLocal: nothing it reaches takes a scope
+E   -$WORK/restated.go:31:1: unused //declscope:shared on restatedEntry: nothing it reaches takes a scope
+E   -$WORK/restated.go:43:1: unused //declscope:shared: nothing it reaches takes a scope
+E   -$WORK/box.go:13:2: unused //declscope:ignore surplus on boxItem.memo
+E   -$WORK/crate.go:6:1: unused //declscope:ignore surplus on crateItem
+E   +panic: runtime error: invalid memory address or nil pointer dereference
+E   +[signal SIGSEGV: segmentation violation code=0x1 addr=0x10 pc=0x2e58bc]
+E   +
+E   +goroutine 1 [running]:
+E   +declscope/internal/analyzer.(*model).surplusFinding(0x5e1b756e4180, 0x5e1b756c3d40, 0x5e1b754936d0, 0x5e1b75493618)
+E   +	declscope/internal/analyzer/rules.go:391 +0x3ac
+E   +declscope/internal/analyzer.(*model).declFindings(0x5e1b756e4180, 0x1)
+E   +	declscope/internal/analyzer/rules.go:630 +0x380
+E   +declscope/internal/analyzer.Analyze(0x5e1b756f0ec0, 0x5e1b756b82a0?, 0x0)
+E   +	declscope/internal/analyzer/analyzer.go:98 +0xa0
+E   +declscope/internal/analyzer.run(0x5e1b756f0ec0)
+E   +	declscope/internal/analyzer/analyzer.go:54 +0xa4
+E   +declscope/internal/checker.Run({0x5e1b753fe0f0, 0x1, 0x1}, 0x5e1b7545f020, 0x5e1b7550d450)
+E   +	declscope/internal/checker/checker.go:301 +0x82c
+E   +declscope/internal/checker.Main(0x5e1b7545f020)
+E   +	declscope/internal/checker/checker.go:158 +0x5cc
+E   +main.main()
+E   +	declscope/cmd/declscope/main.go:28 +0x1f4
+____________________ test_fixture_report[ignoremodulewide] _____________________
+[gw4] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_ignoremodulewide.golden:
+E   --- expected
+E   +++ actual
+E   @@ -2,4 +2,6 @@
+E    [stdout]
+E    [stderr]
+E    $WORK/a.go:19:1: unused //declscope:ignore on Bare
+E   +$WORK/a.go:27:1: unused //declscope:ignore unused on Answering
+E   +$WORK/b.go:5:1: unused file-level //declscope:ignore unused
+E    $WORK/c.go:4:1: unused file-level //declscope:ignore unused
+_________________________ test_fixture_report[fixasm] __________________________
+[gw15] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_fixasm.golden:
+E   --- expected
+E   +++ actual
+E   @@ -3,5 +3,4 @@
+E    [stderr]
+E    $WORK/user.go:4:6: func add does not carry namespace "user" anywhere in its name; rename it to userAdd, or to another name that carries "user"
+E    $WORK/user.go:8:6: func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"
+E   -$WORK/user_test.go:6:1: //declscope:shared on userThing: no use from another namespace is visible to declscope
+E    $WORK/user_test.go:9:6: func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"
+__________________ test_fixture_report[surplussatisfiespairs] __________________
+[gw5] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_surplussatisfiespairs.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,5 +1,8 @@
+E    [exit] 3
+E    [stdout]
+E    [stderr]
+E   +$WORK/cell.go:6:1: //declscope:shared on cell.peek: no use from another namespace is visible to declscope
+E   +$WORK/cell.go:9:1: //declscope:shared on cell.poke: no use from another namespace is visible to declscope
+E    $WORK/engine.go:15:1: //declscope:shared on engine.idle: no use from another namespace is visible to declscope
+E   +$WORK/ticket.go:6:1: //declscope:shared on ticket.fetch: no use from another namespace is visible to declscope
+E    $WORK/valve.go:7:1: //declscope:shared on shut: no use from another namespace is visible to declscope
+_______________________ test_fixture_report[unusedloose] _______________________
+[gw2] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_unusedloose.golden:
+E   --- expected
+E   +++ actual
+E   @@ -4,5 +4,5 @@
+E    $WORK/a.go:16:2: unused //declscope:private on explicit.x: nothing it reaches takes a scope
+E    $WORK/b.go:1:1: unused file-level //declscope:private
+E    $WORK/b.go:9:1: unused //declscope:shared: every declaration it reaches states its own scope
+E   -$WORK/d.go:8:1: unused //declscope:shared: nothing it reaches takes a scope
+E   -$WORK/d.go:18:1: unused //declscope:shared: nothing it reaches takes a scope
+E   +$WORK/d.go:8:1: unused //declscope:shared on : nothing it reaches takes a scope
+E   +$WORK/d.go:18:1: unused //declscope:shared on : nothing it reaches takes a scope
+_____________________ test_fixture_report[surpluslinkname] _____________________
+[gw9] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_surpluslinkname.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,6 @@
+E    [exit] 3
+E    [stdout]
+E    [stderr]
+E   +$WORK/user.go:9:1: //declscope:shared on userClock: no use from another namespace is visible to declscope
+E   +$WORK/user.go:15:1: //declscope:shared on userTick: no use from another namespace is visible to declscope
+E    $WORK/user.go:20:1: //declscope:shared on userQuiet: no use from another namespace is visible to declscope
+______________________ test_fixture_report[typeparamsets] ______________________
+[gw14] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_typeparamsets.golden:
+E   --- expected
+E   +++ actual
+E   @@ -4,11 +4,4 @@
+E    $WORK/entry.go:9:2: field Named.count is private to namespace "entry", but is used from namespace "build"
+E    $WORK/build.go:3:60: 	used here, in namespace "build"
+E    $WORK/build.go:3:65: 	used here, in namespace "build"
+E   -$WORK/entry.go:15:2: field Narrow.count is private to namespace "entry", but is used from namespace "build"
+E   -$WORK/build.go:9:14: 	used here, in namespace "build"
+E   -$WORK/entry.go:24:2: field Via.count is private to namespace "entry", but is used from namespace "build"
+E   -$WORK/build.go:12:69: 	used here, in namespace "build"
+E   -$WORK/entry.go:32:2: field Left.count is private to namespace "entry", but is used from namespace "build"
+E   -$WORK/build.go:14:61: 	used here, in namespace "build"
+E   -$WORK/entry.go:36:2: field Right.count is private to namespace "entry", but is used from namespace "build"
+E   -$WORK/build.go:14:61: 	used here, in namespace "build"
+E   +$WORK/entry.go:42:2: //declscope:shared on Converted.count: no use from another namespace is visible to declscope
+_____________________ test_fixture_report[surplusconvert] ______________________
+[gw13] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_surplusconvert.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,7 @@
+E    [exit] 3
+E    [stdout]
+E    [stderr]
+E   +$WORK/model.go:5:2: //declscope:shared on model.rev: no use from another namespace is visible to declscope
+E   +$WORK/model.go:16:2: //declscope:shared on genModel.rev: no use from another namespace is visible to declscope
+E    $WORK/model.go:26:2: //declscope:shared on Ledger.seq: no use from another namespace is visible to declscope
+E   +$WORK/model.go:36:2: //declscope:shared on ParamModel.rev: no use from another namespace is visible to declscope
+___________________ test_shrink_refuses_unparsable_baseline ____________________
+[gw6] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_baseline.py:254: in test_shrink_refuses_unparsable_baseline
+    assert_run_golden(__file__, "shrink_corrupt", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from shrink_corrupt.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,4 @@
+E   -[exit] 1
+E   +[exit] 3
+E    [stdout]
+E   +$WORK/internal/user/user.go:8:6: func Format is exported, but nothing outside example.com/app/internal/user uses it
+E    [stderr]
+E   -declscope shrink: $WORK/.declscope-baseline.yaml: yaml: line 1: did not find expected node content (regenerate it with `declscope baseline ./...`)
+_______________________ test_fixture_fix[fixasmskipped] ________________________
+[gw3] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixasmskipped.golden:
+E   --- expected
+E   +++ actual
+E   @@ -3,6 +3,6 @@
+E    
+E    // The go command skips _old.s, as it skips every name that starts with _ or
+E    // ., so plain is still renamed.
+E   -func userPlain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+E   +func plain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+E    
+E   -func Exported() int64 { return userPlain() }
+E   +func Exported() int64 { return plain() }
+______________________ test_fixture_fix[fixforeignmethod] ______________________
+[gw12] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixforeignmethod.golden:
+E   --- expected
+E   +++ actual
+E   @@ -50,7 +50,7 @@
+E    
+E    // assert is asked for only by a type assertion. Renamed, the program would
+E    // still compile, but the assertion would fail where it now succeeds.
+E   -func (o orderT) assert() int { return 2 } // want `method assert does not carry namespace "user" anywhere in its name; rename it to userAssert, or to another name that carries "user"`
+E   +func (o orderT) userAssert() int { return 2 } // want `method assert does not carry namespace "user" anywhere in its name; rename it to userAssert, or to another name that carries "user"`
+E    
+E    // check would become userCheck, which orderChecker asks for. Renamed, orderT
+E    // would start satisfying it, and the assertion would succeed where it now fails.
+E   @@ -63,7 +63,7 @@
+E    func (o orderT) depth() int { return 4 } // want `method depth does not carry namespace "user" anywhere in its name; rename it to userDepth, or to another name that carries "user"`
+E    
+E    // width would become userWidth, a field of the unnamed struct orderAnon has.
+E   -func (o *orderT) width() int { return 5 } // want `method width does not carry namespace "user" anywhere in its name; rename it to userWidth, or to another name that carries "user"`
+E   +func (o *orderT) userWidth() int { return 5 } // want `method width does not carry namespace "user" anywhere in its name; rename it to userWidth, or to another name that carries "user"`
+E    
+E    // spare is free on orderT, on every type promoting it, and in every interface,
+E    // so it is renamed.
+______________________ test_fixture_fix[fixsurplusstrict] ______________________
+[gw1] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:63: in test_fixture_fix
+    assert_run_golden(__file__, f"fix_run_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fix_run_fixsurplusstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,3 +1,21 @@
+E   -[exit] 0
+E   +[exit] 2
+E    [stdout]
+E    [stderr]
+E   +panic: runtime error: invalid memory address or nil pointer dereference
+E   +[signal SIGSEGV: segmentation violation code=0x1 addr=0x10 pc=0x2e58bc]
+E   +
+E   +goroutine 1 [running]:
+E   +declscope/internal/analyzer.(*model).surplusFinding(0x1bed72686180, 0x1bed72475d40, 0x1bed724136d0, 0x1bed72413618)
+E   +	declscope/internal/analyzer/rules.go:391 +0x3ac
+E   +declscope/internal/analyzer.(*model).declFindings(0x1bed72686180, 0x1)
+E   +	declscope/internal/analyzer/rules.go:630 +0x380
+E   +declscope/internal/analyzer.Analyze(0x1bed7268f140, 0x1bed7246e2a0?, 0x0)
+E   +	declscope/internal/analyzer/analyzer.go:98 +0xa0
+E   +declscope/internal/analyzer.run(0x1bed7268f140)
+E   +	declscope/internal/analyzer/analyzer.go:54 +0xa4
+E   +declscope/internal/checker.Run({0x1bed7236c230, 0x1, 0x1}, 0x1bed7236d080, 0x1bed723fb450)
+E   +	declscope/internal/checker/checker.go:301 +0x82c
+E   +declscope/internal/checker.Main(0x1bed7236d080)
+E   +	declscope/internal/checker/checker.go:158 +0x5cc
+E   +main.main()
+E   +	declscope/cmd/declscope/main.go:28 +0x1f4
+________________ test_fixture_fix[fixsurplusstrictunusedstrict] ________________
+[gw7] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:63: in test_fixture_fix
+    assert_run_golden(__file__, f"fix_run_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fix_run_fixsurplusstrictunusedstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,3 +1,21 @@
+E   -[exit] 0
+E   +[exit] 2
+E    [stdout]
+E    [stderr]
+E   +panic: runtime error: invalid memory address or nil pointer dereference
+E   +[signal SIGSEGV: segmentation violation code=0x1 addr=0x10 pc=0x2e58bc]
+E   +
+E   +goroutine 1 [running]:
+E   +declscope/internal/analyzer.(*model).surplusFinding(0x5d8c2a92c780, 0x5d8c2a92b500, 0x5d8c2a89b6d0, 0x5d8c2a89b618)
+E   +	declscope/internal/analyzer/rules.go:391 +0x3ac
+E   +declscope/internal/analyzer.(*model).declFindings(0x5d8c2a92c780, 0x1)
+E   +	declscope/internal/analyzer/rules.go:630 +0x380
+E   +declscope/internal/analyzer.Analyze(0x5d8c2a87fc00, 0x5d8c2a838180?, 0x0)
+E   +	declscope/internal/analyzer/analyzer.go:98 +0xa0
+E   +declscope/internal/analyzer.run(0x5d8c2a87fc00)
+E   +	declscope/internal/analyzer/analyzer.go:54 +0xa4
+E   +declscope/internal/checker.Run({0x5d8c2a82e230, 0x1, 0x1}, 0x5d8c2a82f080, 0x5d8c2a935450)
+E   +	declscope/internal/checker/checker.go:301 +0x82c
+E   +declscope/internal/checker.Main(0x5d8c2a82f080)
+E   +	declscope/internal/checker/checker.go:158 +0x5cc
+E   +main.main()
+E   +	declscope/cmd/declscope/main.go:28 +0x1f4
+_______________________ test_fixture_fix[fixunseenbody] ________________________
+[gw10] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixunseenbody.golden:
+E   --- expected
+E   +++ actual
+E   @@ -9,6 +9,6 @@
+E    
+E    // broken.go is excluded by the build and cannot be parsed, so the pass cannot
+E    // tell whether it names helper or userHelper. The rename is withheld.
+E   -func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+E   +func userHelper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+E    
+E   -var _ = helper
+E   +var _ = userHelper
+________________________ test_fixture_fix[fixembedder] _________________________
+[gw0] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixembedder.golden:
+E   --- expected
+E   +++ actual
+E   @@ -28,9 +28,9 @@
+E    
+E    // deep is embedded two levels down, beside a field the rename would collide
+E    // with at the same depth, which would make h.userDeep ambiguous.
+E   -type deep struct{ n int } // want `type deep does not carry namespace "user" anywhere in its name; rename it to userDeep, or to another name that carries "user"`
+E   +type userDeep struct{ n int } // want `type deep does not carry namespace "user" anywhere in its name; rename it to userDeep, or to another name that carries "user"`
+E    
+E   -type userMiddle struct{ deep }
+E   +type userMiddle struct{ userDeep }
+E    
+E    type userSide struct{ userDeep int }
+E    
+E   @@ -39,7 +39,7 @@
+E    	userSide
+E    }
+E    
+E   -func userReadTop(h userTop) int { return h.userDeep + h.deep.n }
+E   +func userReadTop(h userTop) int { return h.userDeep + h.userDeep.n }
+E    
+E    // spare is embedded where nothing else is called userSpare, so it is renamed.
+E    type userSpare struct{ n int } // want `type spare does not carry namespace "user" anywhere in its name; rename it to userSpare, or to another name that carries "user"`
+_____________________ test_fixture_fix[fixtesttaggedonly] ______________________
+[gw11] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixtesttaggedonly.golden:
+E   --- expected
+E   +++ actual
+E   @@ -9,9 +9,9 @@
+E    func load() int { return 1 } // want `func load does not carry namespace "user" anywhere in its name; rename it to userLoad, or to another name that carries "user"`
+E    
+E    // Named only in this file, so it is renamed.
+E   -func userFree() int { return 3 } // want `func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"`
+E   +func free() int { return 3 } // want `func free does not carry namespace "user" anywhere in its name; rename it to userFree, or to another name that carries "user"`
+E    
+E   -func Exported() int { return load() + userFree() }
+E   +func Exported() int { return load() + free() }
+E    === user_tagged_test.go
+E    //go:build declscope_never
+______________ test_fixture_report[fixsurplusstrictunusedstrict] _______________
+[gw8] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_fixsurplusstrictunusedstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,8 +1,21 @@
+E   -[exit] 3
+E   +[exit] 2
+E    [stdout]
+E    [stderr]
+E   -$WORK/user.go:10:6: func userSpare takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:21:2: field userEntry.spare takes shared scope from //declscope:shared on userEntry, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:33:2: field _.spare takes shared scope from //declscope:shared on _, but no use from another namespace is visible to declscope
+E   -$WORK/user.go:18:1: unused //declscope:shared on userEntry: it already has shared scope
+E   -$WORK/user.go:30:1: unused //declscope:shared: every declaration it reaches already has shared scope
+E   +panic: runtime error: invalid memory address or nil pointer dereference
+E   +[signal SIGSEGV: segmentation violation code=0x1 addr=0x10 pc=0x2e58bc]
+E   +
+E   +goroutine 1 [running]:
+E   +declscope/internal/analyzer.(*model).surplusFinding(0x271d2754e780, 0x271d2754d500, 0x271d275136d0, 0x271d27513618)
+E   +	declscope/internal/analyzer/rules.go:391 +0x3ac
+E   +declscope/internal/analyzer.(*model).declFindings(0x271d2754e780, 0x1)
+E   +	declscope/internal/analyzer/rules.go:630 +0x380
+E   +declscope/internal/analyzer.Analyze(0x271d27519c00, 0x271d2762e120?, 0x0)
+E   +	declscope/internal/analyzer/analyzer.go:98 +0xa0
+E   +declscope/internal/analyzer.run(0x271d27519c00)
+E   +	declscope/internal/analyzer/analyzer.go:54 +0xa4
+E   +declscope/internal/checker.Run({0x271d2751e090, 0x1, 0x1}, 0x271d2751d020, 0x271d27559450)
+E   +	declscope/internal/checker/checker.go:301 +0x82c
+E   +declscope/internal/checker.Main(0x271d2751d020)
+E   +	declscope/internal/checker/checker.go:158 +0x5cc
+E   +main.main()
+E   +	declscope/cmd/declscope/main.go:28 +0x1f4
+______________________ test_fixture_report[ignoreunseen] _______________________
+[gw4] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_ignoreunseen.golden:
+E   --- expected
+E   +++ actual
+E   @@ -3,4 +3,5 @@
+E    [stderr]
+E    $WORK/a.go:17:1: unused //declscope:ignore boundary on aStale
+E    $WORK/a.go:23:1: unused //declscope:ignore qualify on aQualify
+E   +$WORK/a.go:37:2: unused //declscope:ignore boundary on aCoord.y
+E    $WORK/a.go:45:2: unused //declscope:ignore boundary on aPair.z
+______________________ test_fixture_report[surplusstrict] ______________________
+[gw5] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_surplusstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -5,12 +5,14 @@
+E    $WORK/helper.go:12:6: func helperLocal takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E    $WORK/helper.go:15:5: var helperA takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E    $WORK/helper.go:15:14: var helperB takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E   +$WORK/helper.go:19:14: var helperD takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E    $WORK/helper.go:23:6: type helperBox takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E    $WORK/helper.go:28:20: method helperBox.helperSize takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E    $WORK/helper.go:35:2: field helperPair.y takes shared scope from the file's //declscope:shared, but no use from another namespace is visible to declscope
+E    $WORK/user.go:9:2: field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope
+E    $WORK/user.go:30:2: field userPair.left takes shared scope from //declscope:shared on userPair, but no use from another namespace is visible to declscope
+E    $WORK/user.go:30:8: field userPair.right takes shared scope from //declscope:shared on userPair, but no use from another namespace is visible to declscope
+E   +$WORK/user.go:40:7: field userMixed.bottom takes shared scope from //declscope:shared on userMixed, but no use from another namespace is visible to declscope
+E    $WORK/user.go:46:1: //declscope:shared on userIdle, userIdle.count: no use from another namespace is visible to declscope
+E    $WORK/user.go:57:2: field userQuiet.kept takes shared scope from //declscope:shared on userQuiet, but no use from another namespace is visible to declscope
+E    $WORK/user.go:81:2: method userSaver.save takes shared scope from //declscope:shared on userSaver, but no use from another namespace is visible to declscope
+___________________ test_fixture_fix_diff[fixsurplusstrict] ____________________
+[gw15] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:74: in test_fixture_fix_diff
+    assert_golden(__file__, f"diff_{name}", normalize(r.stdout, workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from diff_fixsurplusstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,92 +0,0 @@
+E   ---- $WORK/box.go (old)
+E   -+++ $WORK/box.go (new)
+E   -@@ -4,10 +4,14 @@
+E   - // widens it. The same fix narrows count, which nothing outside reads, and
+E   - // leaves shared, which order.go reads, and memo, whose author asked this rule
+E   - // to stay out.
+E   -+//
+E   -+//declscope:shared
+E   - type boxItem struct { // want `type boxItem is private to namespace "box", but is used from namespace "order"`
+E   - 	shared int // want `field boxItem.shared is private to namespace "box", but is used from namespace "order"`
+E   - 
+E   - 	// count is read here only.
+E   -+	//
+E   -+	//declscope:private
+E   - 	count int
+E   - 
+E   - 	//declscope:ignore surplus // want `unused //declscope:ignore surplus on boxItem.memo`
+E   ---- $WORK/crate.go (old)
+E   -+++ $WORK/crate.go (new)
+E   -@@ -4,6 +4,7 @@
+E   - // weight through the type, so the fix leaves weight alone.
+E   - //
+E   - //declscope:ignore surplus // want `unused //declscope:ignore surplus on crateItem`
+E   -+//declscope:shared
+E   - type crateItem struct { // want `type crateItem is private to namespace "crate", but is used from namespace "order"`
+E   - 	weight int
+E   - }
+E   ---- $WORK/restated.go (old)
+E   -+++ $WORK/restated.go (new)
+E   -@@ -7,6 +7,8 @@
+E   - 
+E   - // restatedSpare takes it too, and nothing else calls it. Its narrowing gives
+E   - // this file an edit whatever the rest gets, so the golden is compared.
+E   -+//
+E   -+//declscope:private
+E   - func restatedSpare() int { return 4 } // want `func restatedSpare takes shared scope`
+E   - 
+E   - var _ = restatedSpare
+E   -@@ -30,7 +32,8 @@
+E   - //
+E   - //declscope:shared // want `unused //declscope:shared on restatedEntry: nothing it reaches takes a scope`
+E   - type restatedEntry struct {
+E   --	key   int
+E   -+	key int
+E   -+	//declscope:private
+E   - 	spare int // want `field restatedEntry.spare takes shared scope`
+E   - }
+E   - 
+E   -@@ -42,6 +45,7 @@
+E   - //
+E   - //declscope:shared // want `unused //declscope:shared: nothing it reaches takes a scope`
+E   - type _ struct {
+E   --	Wide  int
+E   -+	Wide int
+E   -+	//declscope:private
+E   - 	spare int // want `field _.spare takes shared scope`
+E   - }
+E   ---- $WORK/user.go (old)
+E   -+++ $WORK/user.go (new)
+E   -@@ -6,22 +6,31 @@
+E   - 
+E   - 	// balance is read only here, so it is narrowed, and the directive lands
+E   - 	// under its doc comment after a bare comment line.
+E   -+	//
+E   -+	//declscope:private
+E   - 	balance int // want `field userAccount.balance takes shared scope from //declscope:shared on userAccount, but no use from another namespace is visible to declscope`
+E   - 
+E   - 	// A doc comment that already ends in a bare line takes no second one.
+E   - 	//
+E   -+	//declscope:private
+E   - 	limit int // want `field userAccount.limit takes shared scope`
+E   - 
+E   -+	//declscope:private
+E   - 	plain int // want `field userAccount.plain takes shared scope`
+E   - 
+E   - 	// Two names in one entry take one directive, written once.
+E   -+	//
+E   -+	//declscope:private
+E   - 	left, right int // want `field userAccount.left takes shared scope` `field userAccount.right takes shared scope`
+E   - }
+E   - 
+E   - // A field that shares its line with the type is broken onto its own.
+E   - //
+E   - //declscope:shared
+E   --type userTiny struct{ n int } // want `field userTiny.n takes shared scope`
+E   -+type userTiny struct {
+E   -+	//declscope:private
+E   -+	n int
+E   -+} // want `field userTiny.n takes shared scope`
+E   - 
+E   - func userLocal(a userAccount, t userTiny) int {
+E   - 	return a.balance + a.limit + a.plain + a.left + a.right + t.n
+______________________ test_fixture_report[unusedstrict] _______________________
+[gw2] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_unusedstrict.golden:
+E   --- expected
+E   +++ actual
+E   @@ -16,4 +16,4 @@
+E    $WORK/f.go:9:1: unused //declscope:shared: every declaration it reaches states its own scope
+E    $WORK/h.go:9:1: unused //declscope:shared: every declaration it reaches states its own scope
+E    $WORK/i.go:7:1: unused //declscope:private: every declaration it reaches states its own scope
+E   -$WORK/j.go:7:1: unused //declscope:private: every declaration it reaches states its own scope or already has private scope
+E   +$WORK/j.go:7:1: unused //declscope:private on : it already has private scope
+____________________ test_fixture_report[surplussatisfies] _____________________
+[gw9] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_surplussatisfies.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,8 @@
+E    [exit] 3
+E    [stdout]
+E    [stderr]
+E   +$WORK/box.go:9:1: //declscope:shared on box.get: no use from another namespace is visible to declscope
+E   +$WORK/closer.go:6:1: //declscope:shared on closer.close: no use from another namespace is visible to declscope
+E   +$WORK/myint.go:6:1: //declscope:shared on myInt.str: no use from another namespace is visible to declscope
+E   +$WORK/reader.go:9:1: //declscope:shared on reader.read: no use from another namespace is visible to declscope
+E    $WORK/reader.go:14:1: //declscope:shared on reader.stray: no use from another namespace is visible to declscope
+_________________________ test_fixture_report[unkeyed] _________________________
+[gw14] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_unkeyed.golden:
+E   --- expected
+E   +++ actual
+E   @@ -23,5 +23,3 @@
+E    $WORK/build.go:27:22: 	used here, in namespace "build"
+E    $WORK/entry.go:62:2: field Snap.count is private to namespace "entry", but is used from namespace "build"
+E    $WORK/build.go:32:16: 	used here, in namespace "build"
+E   -$WORK/entry.go:68:2: field Tilde.count is private to namespace "entry", but is used from namespace "build"
+E   -$WORK/build.go:38:16: 	used here, in namespace "build"
+________________________ test_fixture_fix[fixembedded] _________________________
+[gw3] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixembedded.golden:
+E   --- expected
+E   +++ actual
+E   @@ -24,4 +24,4 @@
+E    	userView
+E    }
+E    
+E   -func (u *User) Sum() int { return u.userCount.n + u.userTotal.sum + u.userView.v }
+E   +func (u *User) Sum() int { return u.userCount.n + u.userTotal.sum + u.view.v }
+________________________ test_fixture_fix[fixlinkname] _________________________
+[gw12] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixlinkname.golden:
+E   --- expected
+E   +++ actual
+E   @@ -6,13 +6,13 @@
+E    // The directive names helper as text, which a rename cannot follow.
+E    //
+E    //go:linkname helper
+E   -func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+E   +func userHelper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+E    
+E    // A cgo //export names tick as text the same way.
+E    //
+E    //export tick
+E   -func tick() int { return 3 } // want `func tick does not carry namespace "user" anywhere in its name; rename it to userTick, or to another name that carries "user"`
+E   +func userTick() int { return 3 } // want `func tick does not carry namespace "user" anywhere in its name; rename it to userTick, or to another name that carries "user"`
+E    
+E    func userPlain() int { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+E    
+E   -func Exported() int { return helper() + tick() + userPlain() }
+E   +func Exported() int { return userHelper() + userTick() + userPlain() }
+___________________________ test_fixture_fix[fixasm] ___________________________
+[gw13] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixasm.golden:
+E   --- expected
+E   +++ actual
+E   @@ -18,4 +18,4 @@
+E    //declscope:shared // want `//declscope:shared on userThing: no use from another namespace is visible to declscope`
+E    var userThing = 1
+E    
+E   -func userPlain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+E   +func plain() int64 { return 2 } // want `func plain does not carry namespace "user" anywhere in its name; rename it to userPlain, or to another name that carries "user"`
+______________________ test_fixture_fix[fixunseenclause] _______________________
+[gw10] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixunseenclause.golden:
+E   --- expected
+E   +++ actual
+E   @@ -7,6 +7,6 @@
+E    
+E    // broken.go is excluded by the build and cannot be parsed, so the pass cannot
+E    // tell whether it names helper or userHelper. The rename is withheld.
+E   -func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+E   +func userHelper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+E    
+E   -var _ = helper
+E   +var _ = userHelper
+__________________ test_fixture_fix[fixunusedstrictwithheld] ___________________
+[gw1] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:64: in test_fixture_fix
+    assert_golden(__file__, f"fixed_{name}", go_files(workdir))
+tests/conftest.py:230: in assert_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", actual)
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from fixed_fixunusedstrictwithheld.golden:
+E   --- expected
+E   +++ actual
+E   @@ -10,6 +10,7 @@
+E    //declscope:private
+E    //declscope:ignore unused
+E    var (
+E   +	//declscope:private // want `unused //declscope:private on aSpec: it already has private scope`
+E    	aSpec = 2
+E    )
+E    
+E   @@ -70,8 +71,6 @@
+E    
+E    // gShared is named by g_other.go, which the build excludes and the pass reads
+E    // for its names alone: the crossing may be there.
+E   -//
+E   -//declscope:private // want `unused //declscope:private on gShared: it already has private scope`
+E    func gShared() int { return 1 }
+E    === g_other.go
+E    //go:build ignore
+_________________________ test_skill_remove_alias_help _________________________
+[gw0] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_help.py:209: in test_skill_remove_alias_help
+    assert_run_golden(__file__, "skill_uninstall_help", r)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from skill_uninstall_help.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,9 +1,12 @@
+E   -[exit] 0
+E   +[exit] 1
+E    [stdout]
+E   -Remove the agent skills embedded in declscope.
+E   +[stderr]
+E   +Manage the agent skills embedded in declscope.
+E    
+E    Usage:
+E   +  declscope skill install   [flags] [skill...]
+E      declscope skill uninstall [flags] [skill...]
+E   +  declscope skill list      [flags] [skill...]
+E    
+E    Flags:
+E      -agent value
+E   @@ -21,4 +24,4 @@
+E    Embedded skills:
+E      declscope-adoption   Adopt declscope on an existing Go codebase and drive its diagnostics to zero. Read this when intr...
+E      declscope-authoring  Write or change Go code in a repository that runs declscope, which shows as a .declscope.y*ml or ...
+E   -[stderr]
+E   +declscope: unknown skill subcommand "remove"
+___________________________ test_skill_ls_alias_help ___________________________
+[gw7] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_help.py:203: in test_skill_ls_alias_help
+    assert_run_golden(__file__, "skill_list_help", r)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from skill_list_help.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,9 +1,12 @@
+E   -[exit] 0
+E   +[exit] 1
+E    [stdout]
+E   -Show the agent skills embedded in declscope, and where each one stands.
+E   +[stderr]
+E   +Manage the agent skills embedded in declscope.
+E    
+E    Usage:
+E   -  declscope skill list [flags] [skill...]
+E   +  declscope skill install   [flags] [skill...]
+E   +  declscope skill uninstall [flags] [skill...]
+E   +  declscope skill list      [flags] [skill...]
+E    
+E    Flags:
+E      -agent value
+E   @@ -21,4 +24,4 @@
+E    Embedded skills:
+E      declscope-adoption   Adopt declscope on an existing Go codebase and drive its diagnostics to zero. Read this when intr...
+E      declscope-authoring  Write or change Go code in a repository that runs declscope, which shows as a .declscope.y*ml or ...
+E   -[stderr]
+E   +declscope: unknown skill subcommand "ls"
+_____________________ test_inspect_test_only_without_tests _____________________
+[gw6] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_inspect.py:85: in test_inspect_test_only_without_tests
+    assert_run_golden(__file__, "test_only", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from test_only.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,20 @@
+E   -[exit] 1
+E   +[exit] 0
+E    [stdout]
+E   +# example.com/app/testonly
+E   +
+E   +> No file of this package was read — every one is generated, or the filter removed them — so nothing here was checked.
+E   +
+E   +## Namespaces
+E   +
+E   +| namespace | files | declarations | qualify targets |
+E   +| --------- | ----- | ------------ | --------------- |
+E   +
+E   +## Crossings
+E   +
+E   +Nothing crosses a namespace in this package.
+E   +
+E   +## Qualify
+E   +
+E   +Not asked: `rules.naming.qualify` does not apply to this package.
+E   +
+E    [stderr]
+E   -declscope inspect: example.com/app/testonly has only test files, so -test=false leaves nothing to measure; drop -test=false
+____________________ test_fixture_report[ignoreunseentest] _____________________
+[gw4] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_ignoreunseentest.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,3 @@
+E   -[exit] 3
+E   +[exit] 0
+E    [stdout]
+E    [stderr]
+E   -$WORK/a.go:16:1: unused //declscope:ignore boundary on aStale
+___________________ test_fixture_report[surplusstrictreach] ____________________
+[gw5] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_fixtures.py:41: in test_fixture_report
+    assert_run_golden(__file__, f"report_{name}", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from report_surplusstrictreach.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,4 +1,7 @@
+E    [exit] 3
+E    [stdout]
+E    [stderr]
+E   +$WORK/user.go:42:2: field userModel.rev takes shared scope from //declscope:shared on userModel, but no use from another namespace is visible to declscope
+E   +$WORK/user.go:49:2: field userGenModel.gen takes shared scope from //declscope:shared on userGenModel, but no use from another namespace is visible to declscope
+E   +$WORK/user.go:64:2: field userPtrModel.rev takes shared scope from //declscope:shared on userPtrModel, but no use from another namespace is visible to declscope
+E    $WORK/user.go:74:2: field userBox.stray takes shared scope from //declscope:shared on userBox, but no use from another namespace is visible to declscope
+________________ test_flags_without_package_print_driver_usage _________________
+[gw9] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_help.py:42: in test_flags_without_package_print_driver_usage
+    assert_run_golden(__file__, "flags_no_package", r)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from flags_no_package.golden:
+E   --- expected
+E   +++ actual
+E   @@ -5,6 +5,18 @@
+E    
+E    Usage: declscope [-flag] [package]
+E    
+E   +Subcommands:
+E   +
+E   +   declscope baseline [flags] [packages]
+E   +   declscope inspect  [flags] <package>
+E   +   declscope survey   [flags] [packages]
+E   +   declscope shrink   [flags] [packages]
+E   +
+E   +   declscope skill install   [flags] [skill...]
+E   +   declscope skill uninstall [flags] [skill...]
+E   +   declscope skill list      [flags] [skill...]
+E   +
+E   +Run a subcommand with -h for its flags.
+E    
+E    Flags:
+E      -V	print version and exit
+______________________ test_user_scope_claude_config_dir _______________________
+[gw2] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_skill.py:259: in test_user_scope_claude_config_dir
+    assert_run_golden(__file__, "user_claude_config_dir", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from user_claude_config_dir.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,5 +1,5 @@
+E    [exit] 0
+E    [stdout]
+E   -would be installed  declscope-adoption   $WORK/cc/skills/declscope-adoption
+E   -would be installed  declscope-authoring  $WORK/cc/skills/declscope-authoring
+E   +would be installed  declscope-adoption   $WORK/cc:$WORK/other/skills/declscope-adoption
+E   +would be installed  declscope-authoring  $WORK/cc:$WORK/other/skills/declscope-authoring
+E    [stderr]
+______________________________ test_list_alias_ls ______________________________
+[gw14] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_skill.py:290: in test_list_alias_ls
+    assert_run_golden(__file__, "list_up_to_date", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from list_up_to_date.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,11 +1,27 @@
+E   -[exit] 0
+E   +[exit] 1
+E    [stdout]
+E   -declscope-adoption
+E   -  Adopt declscope on an existing Go codebase and drive its diagnostics to zero. Read this when intr...
+E   -declscope-authoring
+E   -  Write or change Go code in a repository that runs declscope, which shows as a .declscope.y*ml or ...
+E   +[stderr]
+E   +Manage the agent skills embedded in declscope.
+E    
+E   -SKILL                STATE       PATH
+E   -declscope-adoption   up-to-date  $WORK/dest/declscope-adoption
+E   -declscope-authoring  up-to-date  $WORK/dest/declscope-authoring
+E   -[stderr]
+E   +Usage:
+E   +  declscope skill install   [flags] [skill...]
+E   +  declscope skill uninstall [flags] [skill...]
+E   +  declscope skill list      [flags] [skill...]
+E   +
+E   +Flags:
+E   +  -agent value
+E   +    	Target agent: {github-copilot|claude-code|cursor|codex|gemini|antigravity}, or all, or detected (repeatable) (default "detected")
+E   +  -dir string
+E   +    	Install to a custom directory (overrides -agent and -scope)
+E   +  -dry-run
+E   +    	Report what would happen without writing
+E   +  -f	Overwrite existing skills (shorthand)
+E   +  -force
+E   +    	Overwrite existing skills
+E   +  -scope value
+E   +    	Installation scope: {project|user} (default project)
+E   +
+E   +Embedded skills:
+E   +  declscope-adoption   Adopt declscope on an existing Go codebase and drive its diagnostics to zero. Read this when intr...
+E   +  declscope-authoring  Write or change Go code in a repository that runs declscope, which shows as a .declscope.y*ml or ...
+E   +declscope: unknown skill subcommand "ls"
+_________________________ test_uninstall_alias_remove __________________________
+[gw11] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_skill.py:297: in test_uninstall_alias_remove
+    assert_run_golden(__file__, "uninstall", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from uninstall.golden:
+E   --- expected
+E   +++ actual
+E   @@ -1,5 +1,27 @@
+E   -[exit] 0
+E   +[exit] 1
+E    [stdout]
+E   -removed  declscope-adoption   $WORK/dest/declscope-adoption
+E   -removed  declscope-authoring  $WORK/dest/declscope-authoring
+E    [stderr]
+E   +Manage the agent skills embedded in declscope.
+E   +
+E   +Usage:
+E   +  declscope skill install   [flags] [skill...]
+E   +  declscope skill uninstall [flags] [skill...]
+E   +  declscope skill list      [flags] [skill...]
+E   +
+E   +Flags:
+E   +  -agent value
+E   +    	Target agent: {github-copilot|claude-code|cursor|codex|gemini|antigravity}, or all, or detected (repeatable) (default "detected")
+E   +  -dir string
+E   +    	Install to a custom directory (overrides -agent and -scope)
+E   +  -dry-run
+E   +    	Report what would happen without writing
+E   +  -f	Overwrite existing skills (shorthand)
+E   +  -force
+E   +    	Overwrite existing skills
+E   +  -scope value
+E   +    	Installation scope: {project|user} (default project)
+E   +
+E   +Embedded skills:
+E   +  declscope-adoption   Adopt declscope on an existing Go codebase and drive its diagnostics to zero. Read this when intr...
+E   +  declscope-authoring  Write or change Go code in a repository that runs declscope, which shows as a .declscope.y*ml or ...
+E   +declscope: unknown skill subcommand "remove"
+_____________________ test_survey_test_only_package_warns ______________________
+[gw13] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_survey.py:100: in test_survey_test_only_package_warns
+    assert_run_golden(__file__, "test_only", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from test_only.golden:
+E   --- expected
+E   +++ actual
+E   @@ -4,9 +4,9 @@
+E    
+E    | check      | value                                                     | packages |
+E    | ---------- | --------------------------------------------------------- | -------: |
+E   -| config     | built-in defaults                                         |        1 |
+E   -| rules      | boundary on, qualify never, surplus strict, unused strict |        1 |
+E   -| type check | 1 package ok, 0 failed                                    |          |
+E   +| config     | built-in defaults                                         |        2 |
+E   +| rules      | boundary on, qualify never, surplus strict, unused strict |        2 |
+E   +| type check | 2 packages ok, 0 failed                                   |          |
+E    
+E    ## Findings
+E    
+E   @@ -21,15 +21,16 @@
+E    
+E    ## Packages — boundary
+E    
+E   -| package               | reported | baselined | declared | largest crossing             |
+E   -| --------------------- | -------: | --------: | -------: | ---------------------------- |
+E   -| `example.com/app/app` |        1 |         0 |        0 | order → user (1 declaration) |
+E   +| package                                   | reported | baselined | declared | largest crossing             |
+E   +| ----------------------------------------- | -------: | --------: | -------: | ---------------------------- |
+E   +| `example.com/app/app`                     |        1 |         0 |        0 | order → user (1 declaration) |
+E   +| `example.com/app/testonly` [nothing read] |        0 |         0 |        0 | -                            |
+E    
+E    ## Packages — qualify
+E    
+E   -| package               | reported | baselined | exempt | worst namespace |
+E   -| --------------------- | -------- | --------- | ------ | --------------- |
+E   -| `example.com/app/app` | -        | -         | -      | -               |
+E   +| package                    | reported | baselined | exempt | worst namespace |
+E   +| -------------------------- | -------- | --------- | ------ | --------------- |
+E   +| `example.com/app/app`      | -        | -         | -      | -               |
+E   +| `example.com/app/testonly` | -        | -         | -      | -               |
+E    
+E    [stderr]
+E   -declscope survey: warning: example.com/app/testonly has only test files, so -test=false leaves nothing to measure
+_______________________ test_survey_partial_match_warns ________________________
+[gw1] linux -- Python 3.12.3 /usr/bin/python3
+tests/test_survey.py:114: in test_survey_partial_match_warns
+    assert_run_golden(__file__, "partial_match", r, workdir)
+tests/conftest.py:236: in assert_run_golden
+    _golden_compare(resources_for(test_file) / f"{name}.golden", render_result(result, workdir))
+tests/conftest.py:225: in _golden_compare
+    raise AssertionError(f"output differs from {path.name}:\n{diff}")
+E   AssertionError: output differs from partial_match.golden:
+E   --- expected
+E   +++ actual
+E   @@ -32,4 +32,3 @@
+E    | `example.com/app/b` | -        | -         | -      | -               |
+E    
+E    [stderr]
+E   -declscope survey: warning: "./empty/..." matched no packages
+--------------- generated xml file: /workspace/eval/results.xml ----------------
+=========================== short test summary info ============================
+FAILED tests/test_baseline.py::test_baseline_merge_unreadable_target - Assert...
+FAILED tests/test_baseline.py::test_yml_baseline_is_discovered - AssertionErr...
+FAILED tests/test_fixtures.py::test_fixture_report[fixsurplusstrict] - Assert...
+FAILED tests/test_fixtures.py::test_fixture_report[ignoremodulewide] - Assert...
+FAILED tests/test_fixtures.py::test_fixture_report[fixasm] - AssertionError: ...
+FAILED tests/test_fixtures.py::test_fixture_report[surplussatisfiespairs] - A...
+FAILED tests/test_fixtures.py::test_fixture_report[unusedloose] - AssertionEr...
+FAILED tests/test_fixtures.py::test_fixture_report[surpluslinkname] - Asserti...
+FAILED tests/test_fixtures.py::test_fixture_report[typeparamsets] - Assertion...
+FAILED tests/test_fixtures.py::test_fixture_report[surplusconvert] - Assertio...
+FAILED tests/test_baseline.py::test_shrink_refuses_unparsable_baseline - Asse...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixasmskipped] - AssertionErr...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixforeignmethod] - Assertion...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixsurplusstrict] - Assertion...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixsurplusstrictunusedstrict]
+FAILED tests/test_fixtures.py::test_fixture_fix[fixunseenbody] - AssertionErr...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixembedder] - AssertionError...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixtesttaggedonly] - Assertio...
+FAILED tests/test_fixtures.py::test_fixture_report[fixsurplusstrictunusedstrict]
+FAILED tests/test_fixtures.py::test_fixture_report[ignoreunseen] - AssertionE...
+FAILED tests/test_fixtures.py::test_fixture_report[surplusstrict] - Assertion...
+FAILED tests/test_fixtures.py::test_fixture_fix_diff[fixsurplusstrict] - Asse...
+FAILED tests/test_fixtures.py::test_fixture_report[unusedstrict] - AssertionE...
+FAILED tests/test_fixtures.py::test_fixture_report[surplussatisfies] - Assert...
+FAILED tests/test_fixtures.py::test_fixture_report[unkeyed] - AssertionError:...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixembedded] - AssertionError...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixlinkname] - AssertionError...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixasm] - AssertionError: out...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixunseenclause] - AssertionE...
+FAILED tests/test_fixtures.py::test_fixture_fix[fixunusedstrictwithheld] - As...
+FAILED tests/test_help.py::test_skill_remove_alias_help - AssertionError: out...
+FAILED tests/test_help.py::test_skill_ls_alias_help - AssertionError: output ...
+FAILED tests/test_inspect.py::test_inspect_test_only_without_tests - Assertio...
+FAILED tests/test_fixtures.py::test_fixture_report[ignoreunseentest] - Assert...
+FAILED tests/test_fixtures.py::test_fixture_report[surplusstrictreach] - Asse...
+FAILED tests/test_help.py::test_flags_without_package_print_driver_usage - As...
+FAILED tests/test_skill.py::test_user_scope_claude_config_dir - AssertionErro...
+FAILED tests/test_skill.py::test_list_alias_ls - AssertionError: output diffe...
+FAILED tests/test_skill.py::test_uninstall_alias_remove - AssertionError: out...
+FAILED tests/test_survey.py::test_survey_test_only_package_warns - AssertionE...
+FAILED tests/test_survey.py::test_survey_partial_match_warns - AssertionError...
+================== 41 failed, 363 passed, 82 rerun in 12.55s ===================

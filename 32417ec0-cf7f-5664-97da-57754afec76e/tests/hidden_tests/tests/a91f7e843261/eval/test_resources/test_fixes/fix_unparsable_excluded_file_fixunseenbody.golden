@@ -1,0 +1,75 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+
+## -fix -diff
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix -diff
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== broken.go
+//go:build ignore
+
+package fixunseenbody
+
+func (
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package fixunseenbody
+
+// broken.go is excluded by the build and cannot be parsed, so the pass cannot
+// tell whether it names helper or userHelper. The rename is withheld.
+func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+
+var _ = helper
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  naming:
+    qualify: always
+
+=== broken.go
+//go:build ignore
+
+package fixunseenbody
+
+func (
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package fixunseenbody
+
+// broken.go is excluded by the build and cannot be parsed, so the pass cannot
+// tell whether it names helper or userHelper. The rename is withheld.
+func helper() int { return 1 } // want `func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"`
+
+var _ = helper
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"

@@ -1,0 +1,16 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:1: //declscope:shared on wide: no use from another namespace is visible to declscope
+
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:6: func helper does not carry namespace "user" anywhere in its name; rename it to userHelper, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:6:6: func wide does not carry namespace "user" anywhere in its name; rename it to userWide, or to another name that carries "user"
+/tmp/dse-xxxxxxxxxxxx/work/user.go:5:1: //declscope:shared on wide: no use from another namespace is visible to declscope
+
+exit 1
+--- stdout
+--- stderr
+declscope: open absent.yaml: no such file or directory

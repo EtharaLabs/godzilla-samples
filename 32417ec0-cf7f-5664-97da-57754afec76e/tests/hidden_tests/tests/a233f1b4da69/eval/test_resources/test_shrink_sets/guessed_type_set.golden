@@ -1,0 +1,13 @@
+exit: 1
+--- stdout
+
+--- stderr
+declscope shrink: these packages do not type-check, so no absence of a use means anything:
+  example.com/sets/b: $WORK/b/b.go:6:1094: cannot handle more than 100 union terms (implementation limitation)
+
+--- file internal/a/a.go
+package a
+
+type S struct{ X int }
+
+func Free() {}

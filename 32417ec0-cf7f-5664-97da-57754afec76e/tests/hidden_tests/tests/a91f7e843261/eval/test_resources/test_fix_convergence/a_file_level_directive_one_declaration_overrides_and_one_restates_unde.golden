@@ -1,0 +1,88 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1: unused file-level //declscope:shared: every declaration it reaches takes a nearer directive's scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:8:1: unused //declscope:shared on userOwn: it already has shared scope
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1",
+				"message": "unused file-level //declscope:shared: every declaration it reaches takes a nearer directive's scope",
+				"suggested_fixes": [
+					{
+						"message": "remove //declscope:shared",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 0,
+								"end": 20,
+								"new": ""
+							}
+						]
+					}
+				]
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:8:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:8:1",
+				"message": "unused //declscope:shared on userOwn: it already has shared scope",
+				"suggested_fixes": [
+					{
+						"message": "remove //declscope:shared",
+						"edits": [
+							{
+								"filename": "/tmp/dse-xxxxxxxxxxxx/work/user.go",
+								"start": 87,
+								"end": 106,
+								"new": ""
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+defaults:
+  unexported: shared
+rules:
+  unused: strict
+  surplus: off
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+package x
+
+//declscope:private
+func userNarrow() int { return 1 }
+
+func userOwn() int { return 2 }
+
+var _ = userNarrow() + userOwn()
+
+## diagnostics after -fix
+exit 0
+--- stdout
+--- stderr

@@ -1,0 +1,137 @@
+exit 0
+--- stdout
+{
+  "package": "example.com/app",
+  "config": [],
+  "allCore": false,
+  "findings": {
+    "boundary": {
+      "asked": true,
+      "keyable": true,
+      "found": 3,
+      "ignored": 3,
+      "baselined": 0,
+      "reported": 0
+    },
+    "directive": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "filter": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "qualify": {
+      "asked": false,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "surplus": {
+      "asked": true,
+      "keyable": true,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    },
+    "unused": {
+      "asked": true,
+      "keyable": false,
+      "found": 0,
+      "ignored": 0,
+      "baselined": 0,
+      "reported": 0
+    }
+  },
+  "namespaces": [
+    {
+      "namespace": "order",
+      "files": [
+        "order.go"
+      ],
+      "core": false,
+      "declarations": 1,
+      "qualifyTargets": 0
+    },
+    {
+      "namespace": "user",
+      "files": [
+        "user.go"
+      ],
+      "core": false,
+      "declarations": 5,
+      "qualifyTargets": 0
+    }
+  ],
+  "crossings": [
+    {
+      "from": "order",
+      "to": "user",
+      "mutual": false,
+      "declared": 1,
+      "baselined": 0,
+      "reported": 0,
+      "ignored": 3,
+      "unchecked": 0,
+      "reached": 4,
+      "declarations": 5,
+      "uses": 4,
+      "clears": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "UserT",
+      "kind": "type",
+      "uses": 1,
+      "state": "open"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "UserT.x",
+      "kind": "field",
+      "uses": 1,
+      "state": "ignored"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userA",
+      "kind": "var",
+      "uses": 1,
+      "state": "ignored"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userHelper",
+      "kind": "func",
+      "uses": 1,
+      "state": "declared"
+    },
+    {
+      "from": "order",
+      "to": "user",
+      "declaration": "userOne",
+      "kind": "func",
+      "uses": 1,
+      "state": "ignored"
+    }
+  ],
+  "names": []
+}
+--- stderr

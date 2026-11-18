@@ -1,0 +1,93 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1: the file's //declscope:shared: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1: //declscope:shared on _.userTaken: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: //declscope:shared on _.userSame: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1: unused //declscope:shared: every declaration it reaches states its own scope or already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: unused //declscope:shared on _.userSame: it already has shared scope
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "surplus",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1",
+				"message": "the file's //declscope:shared: no use from another namespace is visible to declscope"
+			},
+			{
+				"category": "surplus",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1",
+				"message": "//declscope:shared on _.userTaken: no use from another namespace is visible to declscope"
+			},
+			{
+				"category": "surplus",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2",
+				"message": "//declscope:shared on _.userSame: no use from another namespace is visible to declscope"
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1",
+				"message": "unused //declscope:shared: every declaration it reaches states its own scope or already has shared scope"
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2",
+				"message": "unused //declscope:shared on _.userSame: it already has shared scope"
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  unused: strict
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== user.go
+//declscope:shared
+
+package x
+
+func userF() int { return 1 }
+
+//declscope:shared
+type _ struct {
+	userTaken int
+	//declscope:shared
+	userSame int
+	//declscope:private
+	userNarrow int
+}
+
+var _ = userF()
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:1:1: the file's //declscope:shared: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1: //declscope:shared on _.userTaken: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: //declscope:shared on _.userSame: no use from another namespace is visible to declscope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:7:1: unused //declscope:shared: every declaration it reaches states its own scope or already has shared scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:10:2: unused //declscope:shared on _.userSame: it already has shared scope

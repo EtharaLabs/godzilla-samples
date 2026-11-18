@@ -1,0 +1,83 @@
+## diagnostics
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: unused //declscope:private on userShared: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6: func userShared is declared private by //declscope:private, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order_test.go:5:36: 	used here, in namespace "order"
+
+## -json
+exit 0
+--- stdout (edits sorted)
+{
+	"example.com/app": {
+		"declscope": [
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"message": "unused //declscope:private on userShared: it already has private scope"
+			}
+		]
+	},
+	"example.com/app [example.com/app.test]": {
+		"declscope": [
+			{
+				"category": "boundary",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6",
+				"message": "func userShared is declared private by //declscope:private, but is used from namespace \"order\"",
+				"related": [
+					{
+						"posn": "/tmp/dse-xxxxxxxxxxxx/work/order_test.go:5:36",
+						"end": "/tmp/dse-xxxxxxxxxxxx/work/order_test.go:5:46",
+						"message": "used here, in namespace \"order\""
+					}
+				]
+			},
+			{
+				"category": "unused",
+				"posn": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"end": "/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1",
+				"message": "unused //declscope:private on userShared: it already has private scope"
+			}
+		]
+	}
+}
+--- stderr
+
+## -fix
+exit 0
+--- stdout
+--- stderr
+
+## tree after -fix
+=== .declscope.yaml
+rules:
+  unused: strict
+
+=== go.mod
+module example.com/app
+
+go 1.22
+
+=== order_test.go
+package x
+
+import "testing"
+
+func TestOrder(t *testing.T) { _ = userShared() }
+
+=== user.go
+package x
+
+//declscope:private
+func userShared() int { return 1 }
+
+## diagnostics after -fix
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/user.go:3:1: unused //declscope:private on userShared: it already has private scope
+/tmp/dse-xxxxxxxxxxxx/work/user.go:4:6: func userShared is declared private by //declscope:private, but is used from namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/order_test.go:5:36: 	used here, in namespace "order"

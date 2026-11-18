@@ -1,0 +1,10 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/api.go:16:6: func Seal is declared private by //declscope:private, but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:6:9: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/api.go:22:6: type entry is declared private by //declscope:private, but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:3:27: 	used here, in namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/api.go:22:6: type entry does not carry namespace "api" anywhere in its name; rename it to apiEntry, or to another name that carries "api"
+/tmp/dse-xxxxxxxxxxxx/work/api.go:23:2: field entry.Key is declared private by //declscope:private on entry, but is used from namespace "use"
+/tmp/dse-xxxxxxxxxxxx/work/use.go:5:8: 	used here, in namespace "use"

@@ -1,0 +1,7 @@
+exit 3
+--- stdout
+--- stderr
+/tmp/dse-xxxxxxxxxxxx/work/gen/user.go:3:6: func helper is private to namespace "user", but is used from namespace "gen"
+/tmp/dse-xxxxxxxxxxxx/work/gen/gen.go:3:28: 	used here, in namespace "gen"
+/tmp/dse-xxxxxxxxxxxx/work/gen/order.go:3:30: 	used here, in namespace "order"
+/tmp/dse-xxxxxxxxxxxx/work/q/gen/gen.go:1:1: filter.only stated in /tmp/dse-xxxxxxxxxxxx/work matches 3 file(s) here, but an only above it removes them all, so this package is read as empty

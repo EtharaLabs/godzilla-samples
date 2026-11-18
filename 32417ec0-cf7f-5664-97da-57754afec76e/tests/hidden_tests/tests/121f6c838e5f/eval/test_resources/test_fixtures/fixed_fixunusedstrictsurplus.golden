@@ -1,0 +1,38 @@
+=== a.go
+package fixunusedstrictsurplus
+
+// aHelper's directive restates the default. surplus reports it too, and the
+// deletion settles both.
+func aHelper() int { return 1 }
+
+var _ = aHelper()
+=== b.go
+package fixunusedstrictsurplus
+
+// An ignore answers surplus for bQuiet, and would answer nothing once the
+// directive is gone.
+//
+//declscope:shared // want `unused //declscope:shared on bQuiet: it already has shared scope`
+//declscope:ignore surplus
+func bQuiet() int { return 1 }
+
+var _ = bQuiet()
+=== c.go
+//declscope:private
+
+package fixunusedstrictsurplus
+
+// cLocal's directive restates its block's, which cTaker keeps in use.
+// Deleting it would make cLocal one of the block's dependents, which surplus
+// judges.
+//
+//declscope:shared // want `//declscope:shared on cTaker: no use from another namespace is visible to declscope`
+var (
+	cTaker = 1
+	//declscope:shared // want `unused //declscope:shared on cLocal: it already has shared scope` `//declscope:shared on cLocal: no use from another namespace is visible to declscope`
+	cLocal = 2
+)
+
+func cOther() int { return 3 }
+
+var _ = cTaker + cLocal + cOther()

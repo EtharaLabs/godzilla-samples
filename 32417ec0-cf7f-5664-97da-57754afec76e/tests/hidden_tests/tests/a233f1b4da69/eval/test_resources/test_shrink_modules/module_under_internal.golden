@@ -1,0 +1,6 @@
+exit: 3
+--- stdout
+$WORK/internal/z/z.go:9:6: func Unused is exported, but nothing outside example.com/x/internal/y/internal/z uses it
+
+--- stderr
+declscope shrink: not judged: example.com/x/internal/y: its internal/ parent example.com/x lies above the module example.com/x/internal/y
