@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_split_at(n, xs):
+    m = max(n, 0)
+    return (xs[0:m], xs[m:len(xs)])
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_tail(xs):
+    return Some(xs[1:len(xs)]) if xs else _None_
+xs: list[int] = [3, 1, 4, 1, 5]
+first: Some | None_ = _pf_head(xs)
+none: Some | None_ = _pf_head(_pf_drop(9, [1]))
+rest: Some | None_ = _pf_tail(xs)
+taken: list[int] = _pf_take(2, xs)
+dropped: list[int] = _pf_drop(3, xs)
+overTake: list[int] = _pf_take(99, xs)
+negTake: list[int] = _pf_take(-1, xs)
+split: tuple[list[int], list[int]] = _pf_split_at(2, xs)
+--- stderr ---

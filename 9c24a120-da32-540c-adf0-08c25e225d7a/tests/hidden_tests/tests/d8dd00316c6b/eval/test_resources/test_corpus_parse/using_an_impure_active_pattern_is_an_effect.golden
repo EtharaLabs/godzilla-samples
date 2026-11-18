@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let (|Loud|Quiet|) n =
+    (print n)
+    (if (n > 5) then Loud else Quiet)
+let pure classify n =
+    match n:
+        case Loud: 1
+        case Quiet: 2
+--- stderr ---

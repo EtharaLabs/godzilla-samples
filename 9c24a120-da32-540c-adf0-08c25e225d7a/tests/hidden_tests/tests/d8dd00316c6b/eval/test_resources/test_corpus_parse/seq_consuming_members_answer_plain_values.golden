@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let s = (Seq.ofList [1, 2, 3])
+let n = (Seq.len s)
+let e = (Seq.isEmpty s)
+let x = ((Seq.exists (fun v -> (v > 1))) s)
+let a = ((Seq.forall (fun v -> (v > 0))) s)
+let c = ((Seq.contains 2) s)
+let t = (Seq.sum s)
+--- stderr ---

@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+let some1 = (Some 1)
+let some2 = (Some 2)
+let none = (List.head ((List.drop 9) [1]))
+let both = (((Option.map2 (fun a b -> (a + b))) some1) some2)
+let missing = (((Option.map2 (fun a b -> (a + b))) some1) none)
+let kept = ((Option.orElse some2) some1)
+let fellBack = ((Option.orElse some2) none)
+let flat = (Option.flatten (Some (Some 5)))
+let flatNone = (Option.flatten (Some none))
+let listed = (Option.toList some1)
+let empty = (Option.toList none)
+let holds = ((Option.exists (fun x -> (x > 0))) some1)
+let holdsNot = ((Option.exists (fun x -> (x > 0))) none)
+--- stderr ---

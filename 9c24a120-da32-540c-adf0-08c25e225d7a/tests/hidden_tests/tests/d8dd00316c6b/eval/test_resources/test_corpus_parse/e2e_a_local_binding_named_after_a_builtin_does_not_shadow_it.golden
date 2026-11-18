@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let f xs =
+    let dict = 1
+    let m = (Map.ofList [("a", dict)])
+    (Map.len m)
+(print (f []))
+--- stderr ---

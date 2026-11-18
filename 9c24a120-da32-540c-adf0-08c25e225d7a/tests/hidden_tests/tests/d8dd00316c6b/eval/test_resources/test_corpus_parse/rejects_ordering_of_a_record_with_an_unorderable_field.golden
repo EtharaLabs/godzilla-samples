@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+type H = { run: int -> int }
+let mk = H { run = (fun x -> x) }
+let bad = (mk < mk)
+--- stderr ---

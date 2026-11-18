@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+attempts: int = 0
+def step(x: int) -> Ok | Error:
+    def _pf_fn0():
+        global attempts
+        attempts = attempts + 1
+        _ = None
+        return Ok(x + 1)
+    return _pf_fn0()
+--- stderr ---

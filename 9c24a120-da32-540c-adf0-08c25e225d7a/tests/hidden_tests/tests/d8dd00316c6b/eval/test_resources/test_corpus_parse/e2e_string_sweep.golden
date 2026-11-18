@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+let empty = (String.isEmpty "")
+let full = (String.isEmpty "a")
+let at = ((String.get 1) "abc")
+let past = ((String.get 9) "abc")
+let thrice = ((String.repeat 3) "ab")
+let none = ((String.repeat 0) "ab")
+let left = (String.trimStart "  hi  ")
+let right = (String.trimEnd "  hi  ")
+let lines = (String.splitLines "a\nb\nc\n")
+let backwards = (String.rev "abc")
+let joined = (String.ofList ["a", "b", "c"])
+let roundTrip = (String.ofList (String.toList "xyz"))
+--- stderr ---

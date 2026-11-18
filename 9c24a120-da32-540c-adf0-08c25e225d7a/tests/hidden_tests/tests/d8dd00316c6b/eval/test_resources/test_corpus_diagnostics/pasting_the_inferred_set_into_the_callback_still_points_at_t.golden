@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `idle` performs {async}, but `serve` takes this callback as `Writer ->{io, async} Async unit`, which performs exactly {io, async}; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `Writer ->{e} Async unit`
+ --> 5:20
+  |
+5 | let listen = serve idle 7777
+  |                    ^^^^
+
+1 error

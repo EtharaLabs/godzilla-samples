@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Tag:\n    _0: object\n    def __repr__(self):\n        return f\"_Tag({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Untag:\n    def __repr__(self):\n        return \"_Untag\"\ndef _ap_Tag_Untag(n):\n    print(\"eval\")\n    if n > 0:\n        return _Tag(n)\n    else:\n        return _Untag()\n_pf_t1 = 5\n_pf_t2 = _ap_Tag_Untag(_pf_t1)\nif isinstance(_pf_t2, _Tag):\n    v = _pf_t2._0\n    _pf_t0 = v\nelif isinstance(_pf_t2, _Untag):\n    _pf_t0 = 0\nelse:\n    raise RuntimeError(\"non-exhaustive match\")\nr = _pf_t0\nprint(r)\n",
+ "stderr": ""
+}

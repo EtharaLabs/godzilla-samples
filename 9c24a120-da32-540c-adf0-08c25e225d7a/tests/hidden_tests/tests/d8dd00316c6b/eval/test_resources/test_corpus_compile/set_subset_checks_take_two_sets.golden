@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_is_superset(a, b):
+    return a.issuperset(b)
+a = _pf_set_is_subset(set([1]), set([1, 2]))
+b = _pf_set_is_superset(set([1, 2]), set([1]))
+--- stderr ---

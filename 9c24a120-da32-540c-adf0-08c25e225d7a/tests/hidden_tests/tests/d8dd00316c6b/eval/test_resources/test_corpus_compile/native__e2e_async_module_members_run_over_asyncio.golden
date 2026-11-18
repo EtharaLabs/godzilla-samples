@@ -1,0 +1,108 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+def _pf_async_catch(c):
+    async def run():
+        try:
+            return Ok(await c)
+        except Exception as e:
+            return Error(_Exception(type(e).__name__, str(e)))
+    return _pf_Async(run)
+def _pf_async_parallel(xs):
+    async def run():
+        return list(await asyncio.gather(*map(_pf_run, xs)))
+    return _pf_Async(run)
+def _pf_async_race(xs):
+    async def run():
+        if not xs:
+            raise ValueError("Async.race needs at least one value")
+        tasks = list(map(asyncio.ensure_future, map(_pf_run, xs)))
+        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+        for t in pending:
+            t.cancel()
+        return next(iter(done)).result()
+    return _pf_Async(run)
+def _pf_async_timeout(secs, c):
+    async def run():
+        try:
+            return Some(await asyncio.wait_for(_pf_run(c), secs))
+        except TimeoutError:
+            return _None_
+    return _pf_Async(run)
+def _pf_async_to_thread(f):
+    return _pf_Async(asyncio.to_thread, f, None)
+async def _pf_run(a):
+    return await a
+def slow(n):
+    async def _pf_fn0():
+        await asyncio.sleep(0.01)
+        return n
+    return _pf_Async(_pf_fn0)
+async def _pf_fn3():
+    xs = await _pf_async_parallel([slow(1), slow(2), slow(3)])
+    _ = print(xs)
+    async def _pf_fn1():
+        await asyncio.sleep(0.5)
+        return 8
+    first = await _pf_async_race([slow(7), _pf_Async(_pf_fn1)])
+    _ = print(first)
+    t = await _pf_async_timeout(0.001, _pf_Async(asyncio.sleep, 0.5))
+    _ = print(t)
+    u = await _pf_async_timeout(1.0, slow(9))
+    _ = print(u)
+    def _pf_fn2(_):
+        return 41
+    v = await _pf_async_to_thread(_pf_fn2)
+    _ = print(v)
+    r = await _pf_async_catch(_pf_Async(asyncio.sleep, "oops"))
+    if isinstance(r, Ok):
+        _pf_t0 = print("ok")
+    else:
+        e = r._0
+        _pf_t0 = print(f"caught {e.errorKind}")
+    _ = _pf_t0
+    ok = await _pf_async_catch(slow(5))
+    _ = print(ok)
+    return None
+main = _pf_Async(_pf_fn3)
+asyncio.run(_pf_run(main))
+--- stderr ---

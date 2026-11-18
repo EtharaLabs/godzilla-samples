@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def describe(c):
+    match c:
+        case 0:
+            return "free"
+        case n:
+            return "costs"
+a = describe(0)
+b = describe(42)
+--- stderr ---

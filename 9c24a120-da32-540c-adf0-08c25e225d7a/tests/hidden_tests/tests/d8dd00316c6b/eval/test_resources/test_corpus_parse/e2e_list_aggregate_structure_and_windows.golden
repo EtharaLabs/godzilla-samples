@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+let xs = [3, 1, 4, 1, 5]
+let biggest = (List.max xs)
+let smallest = (List.min xs)
+let noMax = (List.max ((List.drop 9) [1]))
+let doubled = ((List.sumBy (fun x -> (x * 2))) [1, 2, 3])
+let mean = (List.average [1.0, 2.0, 4.0])
+let joined = ((List.reduce (fun a b -> (a + b))) [1, 2, 3])
+let split = ((List.partition (fun x -> (x > 2))) xs)
+let apart = (List.unzip ((List.zip [1, 2]) ["a", "b"]))
+let flat = (List.flatten [[1, 2], [3]])
+let squares = ((List.init 4) (fun i -> (i * i)))
+let copies = ((List.replicate 3) "x")
+let updated = (((List.updateAt 1) 99) [1, 2, 3])
+let untouched = (((List.updateAt 9) 99) [1, 2, 3])
+let inserted = (((List.insertAt 1) 99) [1, 2, 3])
+let removed = ((List.removeAt 1) [1, 2, 3])
+let pairs = (List.pairwise [1, 2, 3])
+let windows = ((List.windowed 2) [1, 2, 3])
+let chunks = ((List.chunkBySize 2) [1, 2, 3])
+--- stderr ---

@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let f xs = option { let! a = ((List.get 0) xs) let! b = ((List.get 1) xs) return (a + b) }
+let hit =
+    match (f [1, 2]):
+        case (Some n): n
+        case None: 0
+let miss =
+    match (f [1]):
+        case (Some n): n
+        case None: 0
+--- stderr ---

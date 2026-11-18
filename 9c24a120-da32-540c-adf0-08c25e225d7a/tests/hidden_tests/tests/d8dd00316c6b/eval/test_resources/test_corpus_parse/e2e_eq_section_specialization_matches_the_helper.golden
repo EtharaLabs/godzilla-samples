@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let a = ((List.findIndex ((==) 3)) [1, 2, 3, 3])
+let b = ((List.findIndex ((==) 9)) [1, 2, 3])
+let c = ((List.find ((==) "b")) ["a", "b"])
+let d = ((List.find ((==) "z")) ["a", "b"])
+let e = ((List.exists ((==) 2)) [1, 2])
+let f = ((List.exists ((==) 5)) [1, 2])
+let g = ((List.findIndex (fun y -> (y == (1, 2)))) [(0, 0), (1, 2)])
+let h = ((List.findIndex ((==) 0)) [])
+let i = ((List.find ((==) 0.0)) [(- 0.0)])
+--- stderr ---

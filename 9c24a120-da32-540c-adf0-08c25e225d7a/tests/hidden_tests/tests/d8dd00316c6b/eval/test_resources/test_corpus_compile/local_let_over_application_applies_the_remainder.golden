@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+def f(x):
+    def k(a, b):
+        return lambda c: a + b + c
+    return k(1, 2)(x)
+r = f(3)
+--- stderr ---

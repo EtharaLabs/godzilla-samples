@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let some = (Some 5)
+let none = None
+let a = ((Option.withDefault 0) some)
+let b = ((Option.withDefault 0) none)
+let c = (Option.isSome some)
+let d = (Option.isNone none)
+let e = ((Option.map (fun x -> (x + 1))) some)
+--- stderr ---

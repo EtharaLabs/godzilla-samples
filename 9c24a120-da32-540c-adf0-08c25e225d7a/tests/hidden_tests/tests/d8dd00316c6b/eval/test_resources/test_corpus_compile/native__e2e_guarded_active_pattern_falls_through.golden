@@ -1,0 +1,30 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def describe(n: int) -> str:
+    _pf_t0 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, _Even):
+        if n > 100:
+            return "big even"
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    if isinstance(_pf_t0, _Odd):
+        return "odd"
+    raise RuntimeError("non-exhaustive match")
+a: str = describe(200)
+b: str = describe(4)
+c: str = describe(7)
+--- stderr ---

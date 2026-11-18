@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def step(acc, x):
+    m = acc[0]
+    log = acc[1]
+    return (_pf_map_add(x, x, m), _pf_concat(log, [len(m)]))
+m = dict()
+log = []
+for x in [1, 2, 3]:
+    _pf_t0 = len(m)
+    m[x] = x
+    log.append(_pf_t0)
+r: tuple[dict[int, int], list[int]] = (m, log)
+--- stderr ---

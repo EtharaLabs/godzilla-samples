@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let f a =
+    let g o =
+        let before = a
+        let (a, b) = (10, 20)
+        (((before + a) + b) + o)
+    (g 1)
+let r = (f 100)
+--- stderr ---

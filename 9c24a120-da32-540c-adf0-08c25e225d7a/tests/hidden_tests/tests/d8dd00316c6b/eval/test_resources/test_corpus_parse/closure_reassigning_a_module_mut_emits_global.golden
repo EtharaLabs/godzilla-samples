@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let counter =
+    let mut n = 0
+    let bump x =
+        (n <- (n + x))
+        n
+    (bump 5)
+--- stderr ---

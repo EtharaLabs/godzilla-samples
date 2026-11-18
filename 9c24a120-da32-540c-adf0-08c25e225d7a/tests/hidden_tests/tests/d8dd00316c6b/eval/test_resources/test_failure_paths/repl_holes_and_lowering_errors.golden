@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> x : 'a
+pyfun> y : int
+pyfun> y : int
+pyfun> pyfun> ...... ...... ...... ...... ...... ...... ...... f : int -> string
+pyfun> pyfun> --- stderr ---
+error: cannot compile: unfilled hole `?` has type `'a` (fill it in)
+ --> 2:9
+  |
+2 | let x = ?
+  |         ^
+error: cannot compile: unfilled hole `?` has type `int` — try: y — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 13 more (fill it in)
+ --> 4:12
+  |
+4 | print (y + ?)
+  |            ^
+error: a `case` guard must be a simple expression
+ --> 1:1
+  |
+1 | 
+  | ^
+error: unbound name `f`
+ --> 4:1
+  |
+4 | f 0
+  | ^

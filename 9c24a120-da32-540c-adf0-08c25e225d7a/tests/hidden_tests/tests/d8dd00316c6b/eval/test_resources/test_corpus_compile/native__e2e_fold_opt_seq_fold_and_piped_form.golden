@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def _pf_map_to_list(m):
+    return list(m.items())
+m = dict()
+for x in range(0, 3):
+    m[x] = x
+s: dict[int, int] = m
+a = []
+for x in [1, 2, 3]:
+    a.append(x)
+p: list[int] = a
+so: list[tuple[int, int]] = _pf_map_to_list(s)
+--- stderr ---

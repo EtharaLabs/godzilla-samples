@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import statistics
+@dataclass(frozen=True, slots=True)
+class Summary:
+    n: int
+    mean: float
+    stdev: float
+def summarize(xs):
+    return Summary(len(xs), statistics.mean(xs), statistics.stdev(xs))
+def report(xs):
+    s = summarize(xs)
+    return f"n={s.n} mean={s.mean} sd={s.stdev}"
+print(report([1.0, 2.0, 3.0, 4.0]))
+--- stderr ---

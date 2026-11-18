@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def f(n):
+    def go(acc, k):
+        if k == 0:
+            return [acc]
+        else:
+            return _pf_collect(functools.partial(go, acc + 1), [k - 1])
+    return go(0, n)
+r = f(3)
+--- stderr ---

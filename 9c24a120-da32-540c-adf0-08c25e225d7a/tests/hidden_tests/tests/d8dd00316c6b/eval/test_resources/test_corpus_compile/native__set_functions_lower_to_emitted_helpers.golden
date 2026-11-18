@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+def _pf_set_add(x, s):
+    return s.union([x])
+r: bool = 1 in _pf_set_add(1, set([2]))
+--- stderr ---

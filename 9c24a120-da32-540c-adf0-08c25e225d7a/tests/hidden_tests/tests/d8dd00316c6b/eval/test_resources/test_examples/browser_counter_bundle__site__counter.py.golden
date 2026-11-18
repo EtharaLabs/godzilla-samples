@@ -1,0 +1,11 @@
+import dom
+count = 0
+def render(_):
+    return dom.setText(dom.byId("count"), f"{count}")
+def bump(_):
+    global count
+    count = count + 1
+    return render(None)
+dom.on(dom.byId("plus"), "click", dom.proxy(bump))
+render(None)
+print("counter ready")

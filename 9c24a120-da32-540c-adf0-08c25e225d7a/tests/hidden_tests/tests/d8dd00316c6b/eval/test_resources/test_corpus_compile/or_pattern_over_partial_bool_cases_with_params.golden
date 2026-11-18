@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def _ap_DivisibleBy(d, n):
+    return n % d == 0
+def f(n):
+    _pf_t0 = _ap_DivisibleBy(3, n)
+    _pf_t1 = _ap_DivisibleBy(5, n)
+    if _pf_t0 or _pf_t1:
+        return 1
+    else:
+        return 0
+--- stderr ---

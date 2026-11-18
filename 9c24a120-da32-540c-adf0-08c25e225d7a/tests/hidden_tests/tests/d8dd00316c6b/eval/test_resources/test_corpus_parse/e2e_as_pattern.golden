@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+let describe =
+    fun n ->
+        match n:
+            case 0: 0
+            case (x as v): v
+let both =
+    fun p ->
+        match p:
+            case ((a, b) as w): w
+let a = (describe 7)
+let b = (both (3, 4))
+--- stderr ---

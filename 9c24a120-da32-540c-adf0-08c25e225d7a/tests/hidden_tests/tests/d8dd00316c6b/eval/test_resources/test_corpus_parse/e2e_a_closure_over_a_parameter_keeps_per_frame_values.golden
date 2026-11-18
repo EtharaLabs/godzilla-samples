@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+let collect n acc = (if (n == 0) then acc else ((collect (n - 1)) ((List.concat acc) [(fun k -> n)])))
+let fns = ((collect 3) [])
+let values = ((List.map (fun f -> (f 0))) fns)
+--- stderr ---

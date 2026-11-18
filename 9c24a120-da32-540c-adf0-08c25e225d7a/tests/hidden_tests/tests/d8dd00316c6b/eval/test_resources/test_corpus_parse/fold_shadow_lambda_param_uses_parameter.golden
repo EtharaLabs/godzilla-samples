@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let build combiner xs =
+    let step acc x = ((List.concat acc) [(x + 100)])
+    ((fun step -> (((List.fold step) []) xs)) combiner)
+let out = ((build (fun acc x -> ((List.concat acc) [(x * 2)]))) [1, 2, 3])
+--- stderr ---

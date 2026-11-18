@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+def countdown(n: int) -> str:
+    while True:
+        if n == 0:
+            return "done"
+        else:
+            n = n - 1
+            continue
+def sumTo(n: int, acc: int) -> int:
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n)
+            continue
+deep: str = countdown(50000)
+total: int = sumTo(100000, 0)
+--- stderr ---

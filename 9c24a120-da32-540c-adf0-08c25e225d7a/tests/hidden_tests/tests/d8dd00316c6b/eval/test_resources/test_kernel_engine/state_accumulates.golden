@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+00000002ok0000000000000333from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+00000002ok00000022area : Shape -> float
+00000198def area(s):
+    match s:
+        case Circle(r):
+            return 2.0 * r
+        case Rect(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")
+00000002ok0000000000000028print(area(Rect(3.0, 4.0)))
+--- stderr ---

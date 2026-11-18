@@ -1,0 +1,90 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+@dataclass(frozen=True, slots=True, repr=False)
+class Across:
+    def __repr__(self):
+        return "Across"
+_Across = Across()
+@dataclass(frozen=True, slots=True, repr=False)
+class Down:
+    def __repr__(self):
+        return "Down"
+_Down = Down()
+def g(o):
+    if isinstance(o, Some):
+        x = o._0
+        if x > 10:
+            return "big"
+    if isinstance(o, Some):
+        x = o._0
+        return "small"
+    else:
+        return "none"
+def h(o):
+    if isinstance(o, Some):
+        a, b = o._0
+        return a + b
+    else:
+        return 0
+def k(r):
+    if isinstance(r, Ok):
+        v = r._0
+        return v
+    else:
+        e = r._0
+        return -1
+def v(o):
+    if isinstance(o, Some):
+        x = o._0
+        _pf_t0 = x
+    else:
+        _pf_t0 = 0
+    return 1 + _pf_t0
+def only(o):
+    if isinstance(o, Some):
+        x = o._0
+        if x > 0:
+            return x
+    if False:
+        return 1
+    if isinstance(o, None_):
+        return 2
+    else:
+        return 3
+a = g(Some(11))
+b = g(Some(1))
+c = g(_None_)
+d = h(Some((1, 2)))
+e = k(Ok(4))
+f = k(Error("x"))
+i = v(Some(3))
+j = only(Some(5))
+l = only(Some(0 - 5))
+m = only(_None_)
+n = _Across == _Across
+p = len(set([_Across, _Down, _Across]))
+q = _pf_map_find_or(_Down, 0, dict([(_Down, 7)]))
+--- stderr ---

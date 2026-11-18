@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> x : int
+pyfun> pyfun> pyfun> 5
+pyfun> --- stderr ---
+error: expected int, found bool
+ --> 3:13
+  |
+3 | let y = x + true
+  |             ^^^^
+error: unbound name `y`
+ --> 3:1
+  |
+3 | y
+  | ^

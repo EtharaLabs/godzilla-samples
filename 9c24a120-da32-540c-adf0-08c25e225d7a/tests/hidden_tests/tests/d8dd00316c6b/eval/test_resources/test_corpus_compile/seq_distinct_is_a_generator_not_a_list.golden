@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def _pf_seq_distinct(xs):
+    seen = set()
+    for x in xs:
+        if not x in seen:
+            seen.add(x)
+            yield x
+s = list(_pf_seq_distinct(iter([1, 1])))
+--- stderr ---

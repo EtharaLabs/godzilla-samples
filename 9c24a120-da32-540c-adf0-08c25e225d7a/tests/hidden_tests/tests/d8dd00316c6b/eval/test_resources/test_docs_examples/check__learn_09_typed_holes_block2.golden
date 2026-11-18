@@ -1,0 +1,15 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+note: hole `?render` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 59 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more
+ --> 6:6
+  |
+6 |   |> ?render
+  |      ^^^^^^^
+
+note: hole `?missing` has type `int` — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 13 more
+ --> 5:25
+  |
+5 |   |> Option.withDefault ?missing
+  |                         ^^^^^^^^
+2 unfilled holes

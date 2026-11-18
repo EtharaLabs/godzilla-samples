@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+import builtins
+import pathlib
+renamed = pathlib.Path("report.csv").with_name("summary.csv")
+print(pathlib.Path("report.csv").suffix)
+print(builtins.str(renamed))
+--- stderr ---

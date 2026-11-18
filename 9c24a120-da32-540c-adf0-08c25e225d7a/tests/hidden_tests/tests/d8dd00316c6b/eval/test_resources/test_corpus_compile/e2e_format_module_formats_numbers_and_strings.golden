@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_grouped(x):
+    return format(x, ",")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_fmt_thousands(n, x):
+    return format(x, f",.{n}f")
+a = _pf_fmt_fixed(2, 3.14159)
+b = _pf_fmt_thousands(2, 1234567.5)
+c = _pf_fmt_percent(1, 0.256)
+d = _pf_fmt_currency("$", 2, 1234.5)
+e = _pf_fmt_grouped(1234567)
+f = _pf_fmt_pad_left(6, "0", "42")
+g = _pf_fmt_pad_right(6, ".", "42")
+--- stderr ---

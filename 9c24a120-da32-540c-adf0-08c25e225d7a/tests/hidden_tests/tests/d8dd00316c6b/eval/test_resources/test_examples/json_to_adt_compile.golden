@@ -1,0 +1,168 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_list(dec):
+    def go(v):
+        if not isinstance(v, list):
+            raise ValueError("expected a JSON array")
+        return list(map(dec, v))
+    return go
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class User:
+    name: str
+    age: int
+    roles: list
+userDecoder = _pf_dec_map3(lambda name, age, roles: User(name, age, roles), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("age", _pf_dec_int), _pf_dec_field("roles", _pf_dec_list(_pf_dec_string)))
+def describe(r):
+    if isinstance(r, Ok):
+        u = r._0
+        return f"{u.name} ({u.age}): {_pf_str_join(", ", u.roles)}"
+    else:
+        e = r._0
+        return f"decode failed ({e.errorKind}): {e.errorMessage}"
+_pf_t0 = lambda name, age, roles: User(name, age, roles)
+try:
+    _pf_t1 = json.loads("{\"name\": \"ada\", \"age\": 36, \"roles\": [\"admin\", \"dev\"]}")
+    if not isinstance(_pf_t1, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t2 = _pf_t1["name"]
+    if not isinstance(_pf_t2, str):
+        raise ValueError("expected a string, got " + type(_pf_t2).__name__)
+    if not isinstance(_pf_t1, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t3 = _pf_t1["age"]
+    if not (isinstance(_pf_t3, int) and not isinstance(_pf_t3, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t3).__name__)
+    if not isinstance(_pf_t1, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t4 = _pf_t1["roles"]
+    if not isinstance(_pf_t4, list):
+        raise ValueError("expected a JSON array")
+    _pf_t5 = []
+    for _pf_t6 in _pf_t4:
+        if not isinstance(_pf_t6, str):
+            raise ValueError("expected a string, got " + type(_pf_t6).__name__)
+        _pf_t5.append(_pf_t6)
+    _pf_t7 = Ok(_pf_t0(_pf_t2, _pf_t3, _pf_t5))
+except Exception as e:
+    _pf_t7 = Error(_Exception(type(e).__name__, str(e)))
+print(describe(_pf_t7))
+_pf_t8 = lambda name, age, roles: User(name, age, roles)
+try:
+    _pf_t9 = json.loads("{\"name\": \"bob\", \"age\": 40}")
+    if not isinstance(_pf_t9, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t10 = _pf_t9["name"]
+    if not isinstance(_pf_t10, str):
+        raise ValueError("expected a string, got " + type(_pf_t10).__name__)
+    if not isinstance(_pf_t9, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t11 = _pf_t9["age"]
+    if not (isinstance(_pf_t11, int) and not isinstance(_pf_t11, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t11).__name__)
+    if not isinstance(_pf_t9, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t12 = _pf_t9["roles"]
+    if not isinstance(_pf_t12, list):
+        raise ValueError("expected a JSON array")
+    _pf_t13 = []
+    for _pf_t14 in _pf_t12:
+        if not isinstance(_pf_t14, str):
+            raise ValueError("expected a string, got " + type(_pf_t14).__name__)
+        _pf_t13.append(_pf_t14)
+    _pf_t15 = Ok(_pf_t8(_pf_t10, _pf_t11, _pf_t13))
+except Exception as e:
+    _pf_t15 = Error(_Exception(type(e).__name__, str(e)))
+print(describe(_pf_t15))
+_pf_t16 = lambda name, age, roles: User(name, age, roles)
+try:
+    _pf_t17 = json.loads("{\"name\": \"cy\", \"age\": \"old\", \"roles\": []}")
+    if not isinstance(_pf_t17, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t18 = _pf_t17["name"]
+    if not isinstance(_pf_t18, str):
+        raise ValueError("expected a string, got " + type(_pf_t18).__name__)
+    if not isinstance(_pf_t17, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t19 = _pf_t17["age"]
+    if not (isinstance(_pf_t19, int) and not isinstance(_pf_t19, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t19).__name__)
+    if not isinstance(_pf_t17, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t20 = _pf_t17["roles"]
+    if not isinstance(_pf_t20, list):
+        raise ValueError("expected a JSON array")
+    _pf_t21 = []
+    for _pf_t22 in _pf_t20:
+        if not isinstance(_pf_t22, str):
+            raise ValueError("expected a string, got " + type(_pf_t22).__name__)
+        _pf_t21.append(_pf_t22)
+    _pf_t23 = Ok(_pf_t16(_pf_t18, _pf_t19, _pf_t21))
+except Exception as e:
+    _pf_t23 = Error(_Exception(type(e).__name__, str(e)))
+print(describe(_pf_t23))
+_pf_t24 = lambda name, age, roles: User(name, age, roles)
+try:
+    _pf_t25 = json.loads("not json at all")
+    if not isinstance(_pf_t25, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t26 = _pf_t25["name"]
+    if not isinstance(_pf_t26, str):
+        raise ValueError("expected a string, got " + type(_pf_t26).__name__)
+    if not isinstance(_pf_t25, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t27 = _pf_t25["age"]
+    if not (isinstance(_pf_t27, int) and not isinstance(_pf_t27, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t27).__name__)
+    if not isinstance(_pf_t25, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t28 = _pf_t25["roles"]
+    if not isinstance(_pf_t28, list):
+        raise ValueError("expected a JSON array")
+    _pf_t29 = []
+    for _pf_t30 in _pf_t28:
+        if not isinstance(_pf_t30, str):
+            raise ValueError("expected a string, got " + type(_pf_t30).__name__)
+        _pf_t29.append(_pf_t30)
+    _pf_t31 = Ok(_pf_t24(_pf_t26, _pf_t27, _pf_t29))
+except Exception as e:
+    _pf_t31 = Error(_Exception(type(e).__name__, str(e)))
+print(describe(_pf_t31))
+--- stderr ---

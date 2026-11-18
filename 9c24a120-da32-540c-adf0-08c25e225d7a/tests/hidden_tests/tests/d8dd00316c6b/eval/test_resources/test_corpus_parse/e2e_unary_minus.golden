@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+let a = (- 5)
+let b = (abs (- 5))
+let c = (2 * (- 3))
+let d = (- (4 + 1))
+let sign =
+    match (- 1):
+        case -1: "neg"
+        case _: "other"
+--- stderr ---

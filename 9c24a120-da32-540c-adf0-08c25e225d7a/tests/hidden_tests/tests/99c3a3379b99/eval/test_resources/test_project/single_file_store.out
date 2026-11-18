@@ -1,0 +1,19 @@
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def lookup(key):
+    match key:
+        case 1:
+            return Some(100)
+        case 2:
+            return Some(200)
+        case _:
+            return _None_

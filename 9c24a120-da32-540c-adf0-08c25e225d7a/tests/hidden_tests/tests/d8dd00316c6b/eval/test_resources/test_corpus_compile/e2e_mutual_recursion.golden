@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+isEven = lambda n: (True if n == 0 else isOdd(n - 1))
+isOdd = lambda n: (False if n == 0 else isEven(n - 1))
+a = isEven(10)
+b = isOdd(10)
+--- stderr ---

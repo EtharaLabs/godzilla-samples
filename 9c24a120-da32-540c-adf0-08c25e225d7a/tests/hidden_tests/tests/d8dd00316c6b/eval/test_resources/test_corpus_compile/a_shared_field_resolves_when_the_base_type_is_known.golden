@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Placed:
+    letter: str
+    row: int
+@dataclass(frozen=True, slots=True)
+class Cell:
+    letter: str
+    blank: bool
+@dataclass(frozen=True, slots=True)
+class Board:
+    top: object
+p = Placed("a", 1)
+c = Cell("b", False)
+b = Board(c)
+pl = p.letter
+cl = c.letter
+nested = b.top.letter
+_pf_t0 = p
+moved = Cell("z", _pf_t0.blank)
+match c:
+    case Cell(letter=letter):
+        _pf_t1 = letter
+viaMatch = _pf_t1
+--- stderr ---

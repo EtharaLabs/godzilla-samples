@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let bad a b = (a < b)
+let t = ((bad (Some (fun n -> n))) (Some (fun n -> n)))
+--- stderr ---

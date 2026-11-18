@@ -1,0 +1,90 @@
+# ==== geometry.py ====
+def area(w, h):
+    return w * h
+def square(x):
+    return area(x, x)
+
+# ==== store.py ====
+from _pyfun_rt import Some, None_, _None_
+def lookup(key):
+    match key:
+        case 1:
+            return Some(100)
+        case 2:
+            return Some(200)
+        case _:
+            return _None_
+
+# ==== main.py ====
+import functools
+import geometry
+import store
+from _pyfun_rt import Some, None_, _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+floor = geometry.area(4, 5)
+nine = geometry.square(3)
+widen = functools.partial(geometry.area, 10)
+strip = widen(2)
+hit = _pf_option_with_default(0, store.lookup(1))
+miss = _pf_option_with_default(0, store.lookup(9))
+print(floor)
+print(nine)
+print(strip)
+print(hit)
+print(miss)
+
+# ==== _pyfun_rt.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import contextvars
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+_pf_scope = contextvars.ContextVar("_pf_scope")
+

@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let show r =
+    match r:
+        case (Ok v): f"ok: {v}"
+        case (Error e): f"{e.errorKind}: {e.errorMessage}"
+let good = (show ((Decode.decodeString ((Decode.field "name") Decode.string)) "{\"name\": \"ada\"}"))
+let missing = (show ((Decode.decodeString ((Decode.field "name") Decode.string)) "{\"other\": 1}"))
+--- stderr ---

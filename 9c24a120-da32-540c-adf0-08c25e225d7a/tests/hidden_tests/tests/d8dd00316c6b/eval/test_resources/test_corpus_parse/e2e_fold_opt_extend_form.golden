@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let acc = (((List.fold (fun acc x -> ((List.concat acc) [x, x]))) []) [1, 2])
+let out = acc
+--- stderr ---

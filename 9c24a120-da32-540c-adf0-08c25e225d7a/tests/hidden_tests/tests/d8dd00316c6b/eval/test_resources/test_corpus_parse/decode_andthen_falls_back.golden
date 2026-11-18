@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let dec = ((Decode.andThen (fun n -> (Decode.succeed (n + 1)))) Decode.int)
+let show r =
+    match r:
+        case (Ok v): f"ok: {v}"
+        case (Error e): e.errorKind
+let out = (show ((Decode.decodeString dec) "41"))
+--- stderr ---

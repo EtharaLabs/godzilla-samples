@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+# ==== mathx.py ====
+import math
+fabs = math.fabs
+
+# ==== main.py ====
+import mathx
+def _pf_map(f, xs):
+    return list(map(f, xs))
+xs = _pf_map(mathx.fabs, [8.0, 27.0, 64.0])
+print(xs)
+
+--- stderr ---

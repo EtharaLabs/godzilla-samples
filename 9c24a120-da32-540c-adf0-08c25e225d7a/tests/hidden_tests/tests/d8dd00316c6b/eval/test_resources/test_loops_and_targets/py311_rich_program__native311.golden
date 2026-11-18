@@ -1,0 +1,252 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import asyncio
+import contextvars
+import dataclasses
+import json
+import keyword
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_lower(s):
+    return s.lower()
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_dec_decode_string(dec, s):
+    try:
+        return Ok(dec(json.loads(s)))
+    except Exception as e:
+        return Error(_Exception(type(e).__name__, str(e)))
+_pf_scope = contextvars.ContextVar("_pf_scope")
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def _pf_task_scope(body):
+    async def run():
+        async def scoped():
+            async with asyncio.TaskGroup() as tg:
+                _pf_scope.set(tg)
+                return await body
+        return await asyncio.create_task(scoped())
+    return _pf_Async(run)
+def _pf_task_start(c):
+    _pf_scope.get().create_task(_pf_run(c))
+    return None
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+Shape = Circle | Rect
+@dataclass(frozen=True, slots=True)
+class Pt:
+    x: int
+    y: int
+def _pf_dec_auto(d):
+    return lambda v: _pf_dec_auto_value(d, v)
+def _pf_dec_auto_value(d, v):
+    k = d[0]
+    if k == "ref":
+        return _pf_dec_auto_value(_pf_codecs[d[1]], v)
+    if k == "int":
+        if isinstance(v, bool) or not isinstance(v, int):
+            raise ValueError("expected an int, got " + type(v).__name__)
+        return v
+    if k == "float":
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            raise ValueError("expected a float, got " + type(v).__name__)
+        return float(v)
+    if k == "bool":
+        if not isinstance(v, bool):
+            raise ValueError("expected a bool, got " + type(v).__name__)
+        return v
+    if k == "str":
+        if not isinstance(v, str):
+            raise ValueError("expected a string, got " + type(v).__name__)
+        return v
+    if k == "unit":
+        if not v is None:
+            raise ValueError("expected null, got " + type(v).__name__)
+        return None
+    if k == "option":
+        if v is None:
+            return _None_
+        return Some(_pf_dec_auto_value(d[1], v))
+    if k == "list" or k == "set":
+        if not isinstance(v, list):
+            raise ValueError("expected a list, got " + type(v).__name__)
+        out = []
+        for x in v:
+            out.append(_pf_dec_auto_value(d[1], x))
+        return out if k == "list" else set(out)
+    if k == "tuple":
+        if not isinstance(v, list) or len(v) != len(d[1]):
+            raise ValueError("expected a list of " + str(len(d[1])) + " items")
+        return tuple(map(_pf_dec_auto_value, d[1], v))
+    if k == "map":
+        out = {}
+        if d[1][0] == "str":
+            if not isinstance(v, dict):
+                raise ValueError("expected an object, got " + type(v).__name__)
+            for key in v:
+                out[key] = _pf_dec_auto_value(d[2], v[key])
+            return out
+        if not isinstance(v, list):
+            raise ValueError("expected a list of pairs, got " + type(v).__name__)
+        for pair in v:
+            out[_pf_dec_auto_value(d[1], pair[0])] = _pf_dec_auto_value(d[2], pair[1])
+        return out
+    if k == "record":
+        if not isinstance(v, dict):
+            raise ValueError("expected an object, got " + type(v).__name__)
+        args = []
+        for field in d[2]:
+            args.append(_pf_dec_auto_value(field[1], v[field[0]]))
+        return d[1](*args)
+    if k == "adt":
+        if not isinstance(v, dict):
+            raise ValueError("expected an object, got " + type(v).__name__)
+        tag = v["type"]
+        if not tag in d[1]:
+            raise ValueError("unknown case " + str(tag))
+        ctor, descs = d[1][tag]
+        fields = v.get("fields", [])
+        if len(fields) != len(descs):
+            raise ValueError("case " + tag + (" takes " + (str(len(descs)) + " fields")))
+        if not descs:
+            return ctor
+        return ctor(*map(_pf_dec_auto_value, descs, fields))
+    raise ValueError("unknown codec " + str(k))
+def _pf_enc_auto(v):
+    return json.dumps(_pf_enc_value(v))
+def _pf_enc_value(v):
+    if v is None or isinstance(v, (bool, int, float, str)):
+        return v
+    if isinstance(v, (list, tuple, set, frozenset)):
+        return list(map(_pf_enc_value, v))
+    if isinstance(v, dict):
+        pairs = []
+        strings = True
+        for key in v:
+            if not isinstance(key, str):
+                strings = False
+            pairs.append([_pf_enc_value(key), _pf_enc_value(v[key])])
+        return dict(pairs) if strings else pairs
+    if isinstance(v, Some):
+        return _pf_enc_value(v._0)
+    if isinstance(v, None_):
+        return None
+    names = []
+    for f in dataclasses.fields(v):
+        names.append(f.name)
+    positional = True
+    for n in names:
+        if not n.startswith("_"):
+            positional = False
+    if positional:
+        out = {"type": type(v).__name__}
+        if names:
+            out["fields"] = []
+            for n in names:
+                out["fields"].append(_pf_enc_value(getattr(v, n)))
+        return out
+    out = {}
+    for n in names:
+        key = n[0:-1] if n.endswith("_") and keyword.iskeyword(n[0:-1]) else n
+        out[key] = _pf_enc_value(getattr(v, n))
+    return out
+_pf_codecs = {"Pt": ("record", Pt, [("x", ("int",)), ("y", ("int",))])}
+def worker(name):
+    async def _pf_fn0():
+        await asyncio.sleep(0.0)
+        _ = print("worker {} {}".format(_pf_str_upper("x"), name))
+    return _pf_Async(_pf_fn0)
+async def _pf_fn2():
+    async def _pf_fn1():
+        _ = _pf_task_start(worker("a"))
+    await _pf_task_scope(_pf_Async(_pf_fn1))
+main = _pf_Async(_pf_fn2)
+def count(n: int, acc: int) -> str:
+    while True:
+        if n == 0:
+            return "done {}: {}".format(_pf_str_lower("ACC"), acc)
+        else:
+            n, acc = (n - 1, acc + n)
+            continue
+def area(s: Shape) -> str:
+    if isinstance(s, Circle):
+        r = s._0
+        if r > 1.0:
+            return "big {} {}".format(_pf_str_upper("c"), r)
+    if isinstance(s, Circle):
+        r = s._0
+        return "small"
+    else:
+        w = s._0
+        h = s._1
+        return "{{rect}} {} {}".format(_pf_str_concat("w", "h"), w * h)
+def index(xs):
+    t = dict()
+    for k in xs:
+        _pf_t0 = int("ff", base=16)
+        t[k] = _pf_t0
+    return t
+pts: str = _pf_enc_auto(Pt(1, 2))
+_pf_t2 = _pf_dec_decode_string(_pf_dec_auto(("ref", "Pt")), pts)
+if isinstance(_pf_t2, Ok):
+    p = _pf_t2._0
+    _pf_t1 = "x={} {}".format(p.x, _pf_str_upper("ok"))
+else:
+    e = _pf_t2._0
+    _pf_t1 = f"failed {e.errorKind}"
+back: str = _pf_t1
+print(count(3, 0))
+print(area(Rect(1.0, 2.0)))
+print(index([1, 2]))
+print(pts)
+print(back)
+print(asyncio.run(_pf_run(main)))
+--- stderr ---

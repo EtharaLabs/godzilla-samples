@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+let (|Positive|_|) n = (if (n > 0) then (Some n) else None)
+let classify n =
+    let label =
+        match n:
+            case (Positive p) if (p > 100): "big"
+            case (Positive p): "small"
+            case _: "nonpos"
+    ((String.concat label) "!")
+let a = (classify 250)
+let b = (classify 5)
+let c = (classify 0)
+--- stderr ---

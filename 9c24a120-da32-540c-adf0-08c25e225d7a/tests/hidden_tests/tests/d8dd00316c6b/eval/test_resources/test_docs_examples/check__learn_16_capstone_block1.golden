@@ -1,0 +1,21 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+note: hole `?` has type `Decoder float` — try: Decode.float, Decode.auto — or: Decode.succeed ?, Decode.fail ?, Decode.oneOf ?, Decode.field ? ?, and 2 more
+ --> 9:30
+  |
+9 |     (Decode.field "distance" ?)
+  |                              ^
+
+note: hole `?` has type `float<m>` — try: a — or: sqrt ?, cbrt ?, abs ?, min ? ?, and 1 more
+  --> 21:65
+   |
+21 |       let dist = runs |> List.fold (fun a r -> a + r.distance * ?) 0.0<m>
+   |                                                                 ^
+
+note: hole `?` has type `float<'a>` — try: dist, time — or: sqrt ?, cbrt ?, abs ?, min ? ?, and 1 more
+  --> 23:24
+   |
+23 |       let avg = dist / ?
+   |                        ^
+3 unfilled holes

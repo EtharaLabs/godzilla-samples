@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+let describe a b c =
+    let s1 =
+        match a:
+            case (Ok n): n
+            case (Error why): (String.len why)
+    let s2 =
+        match b:
+            case (Ok n): n
+            case (Error why): (String.len why)
+    let s3 =
+        match c:
+            case (Ok n): n
+            case (Error why): (String.len why)
+    ((s1 + s2) + s3)
+let r = (((describe (Error "a")) (Ok 2)) (Error "ccc"))
+--- stderr ---

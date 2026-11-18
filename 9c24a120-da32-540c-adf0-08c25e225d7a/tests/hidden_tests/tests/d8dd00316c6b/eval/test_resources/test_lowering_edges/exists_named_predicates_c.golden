@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_exists(f, xs):
+    return any(map(f, xs))
+def _pf_find_eq(x, xs):
+    try:
+        return Some(xs[xs.index(x)])
+    except ValueError:
+        return _None_
+def _pf_index_of(x, xs):
+    try:
+        return Some(xs.index(x))
+    except ValueError:
+        return _None_
+def isBig(x):
+    return x > 3
+xs = [1, 5]
+print(_pf_exists(isBig, xs))
+print(_pf_exists(lambda b: 3 < b, xs))
+print(_pf_find_eq(5, xs))
+print(_pf_index_of(1, xs))
+--- stderr ---

@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+import gzip
+def f(path):
+    return gzip.open(path, compresslevel=9, buffering=-1, text=True, ratio=2.5)
+--- stderr ---

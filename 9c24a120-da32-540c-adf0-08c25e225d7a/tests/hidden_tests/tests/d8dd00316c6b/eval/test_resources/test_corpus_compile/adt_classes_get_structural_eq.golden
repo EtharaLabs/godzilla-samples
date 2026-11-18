@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Empty:
+    def __repr__(self):
+        return "Empty"
+_Empty = Empty()
+@dataclass(frozen=True, slots=True, repr=False)
+class Has:
+    _0: object
+    def __repr__(self):
+        return f"Has({self._0!r})"
+a = Has(1) == Has(1)
+b = Has(1) == Has(2)
+--- stderr ---

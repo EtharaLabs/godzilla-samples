@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Cell:
+    row: int
+    col: int
+    letter: str
+def f(_pf_arg0):
+    a, _pf_arg0_1 = _pf_arg0
+    _, b = _pf_arg0_1
+    return a + b
+def g(_pf_arg0):
+    l = _pf_arg0.letter
+    return l
+def h(_pf_arg0):
+    x = _pf_arg0.letter
+    col = _pf_arg0.col
+    return x
+print(f((1, (2, 3))))
+print(g(Cell(1, 2, "z")))
+--- stderr ---

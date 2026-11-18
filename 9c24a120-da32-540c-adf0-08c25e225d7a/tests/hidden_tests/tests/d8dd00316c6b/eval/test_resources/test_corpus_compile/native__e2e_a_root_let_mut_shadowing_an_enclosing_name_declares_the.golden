@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def f(x: int) -> int:
+    def g(o: int) -> int:
+        before = x
+        _x = 0
+        def bump(u: int):
+            nonlocal _x
+            _x = _x + u
+            return None
+        bump(5)
+        bump(6)
+        return before + _x + o
+    return g(1)
+r: int = f(100)
+--- stderr ---

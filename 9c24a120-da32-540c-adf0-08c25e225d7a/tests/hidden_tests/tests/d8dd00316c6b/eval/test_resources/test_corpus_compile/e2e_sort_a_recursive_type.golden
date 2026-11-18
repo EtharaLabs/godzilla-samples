@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+def _pf_sort(xs):
+    return sorted(xs)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    _0: int
+    def __repr__(self):
+        return f"Leaf({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+ordered = _pf_sort([Node(Leaf(2), Leaf(3)), Leaf(5), Leaf(1)])
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let ok = ((Result.withDefault 0) ((Decode.decodeString Decode.int) "42"))
+let wrongType = ((Result.withDefault (0 - 1)) ((Decode.decodeString Decode.int) "\"x\""))
+let boolNotInt = ((Result.withDefault (0 - 1)) ((Decode.decodeString Decode.int) "true"))
+let intAsFloat = ((Result.withDefault 0.0) ((Decode.decodeString Decode.float) "3"))
+let malformed = (Result.isError ((Decode.decodeString Decode.bool) "not json"))
+--- stderr ---

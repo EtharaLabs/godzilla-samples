@@ -1,0 +1,116 @@
+exit: 0
+--- stdout ---
+# ==== color.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Red:
+    def __repr__(self):
+        return "Red"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_Red = Red()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Green:
+    def __repr__(self):
+        return "Green"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_Green = Green()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Blue:
+    def __repr__(self):
+        return "Blue"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2,)
+_Blue = Blue()
+
+# ==== main.py ====
+import color
+from _pyfun_rt import Some, None_, _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def name(k):
+    match k:
+        case color.Red():
+            return "r"
+        case color.Green():
+            return "g"
+        case color.Blue():
+            return "b"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def last(xs):
+    _pf_t0 = _pf_last(xs)
+    if isinstance(_pf_t0, Some):
+        c = _pf_t0._0
+        return name(c)
+    else:
+        return "-"
+print(last([color._Green, color._Red]))
+print(last([]))
+print(color._Red == color._Red)
+print(len(set([color._Red, color._Red, color._Blue])))
+
+# ==== _pyfun_rt.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import contextvars
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+_pf_scope = contextvars.ContextVar("_pf_scope")
+
+--- stderr ---

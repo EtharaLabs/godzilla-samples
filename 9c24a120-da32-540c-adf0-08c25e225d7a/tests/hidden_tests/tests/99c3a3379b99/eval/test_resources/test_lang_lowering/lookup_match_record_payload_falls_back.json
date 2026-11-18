@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _pf_map_try_find(k, m):\n    if k in m:\n        return Some(m.get(k))\n    return _None_\n@dataclass(frozen=True, slots=True)\nclass P:\n    x: int\n    y: int\nm = dict([(1, P(1, 2))])\ndef f(k):\n    match _pf_map_try_find(k, m):\n        case Some(P(x=x, y=y)):\n            return x + y\n        case None_():\n            return 0\n        case _:\n            raise RuntimeError(\"non-exhaustive match\")\n",
+ "stderr": ""
+}

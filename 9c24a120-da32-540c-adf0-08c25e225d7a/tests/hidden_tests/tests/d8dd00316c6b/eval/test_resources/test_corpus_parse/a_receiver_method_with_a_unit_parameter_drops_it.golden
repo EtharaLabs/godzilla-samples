@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+extern type C
+extern ping: C -> unit -> string = .m()
+let f c = ((ping c) ())
+--- stderr ---

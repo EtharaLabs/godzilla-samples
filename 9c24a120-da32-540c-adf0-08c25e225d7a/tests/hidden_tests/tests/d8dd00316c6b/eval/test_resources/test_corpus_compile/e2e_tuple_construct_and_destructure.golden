@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def swap(p):
+    match p:
+        case (a, b):
+            return (b, a)
+def fst(t):
+    match t:
+        case (a, _):
+            return a
+pair = (10, 20)
+s = swap(pair)
+first = fst(pair)
+--- stderr ---

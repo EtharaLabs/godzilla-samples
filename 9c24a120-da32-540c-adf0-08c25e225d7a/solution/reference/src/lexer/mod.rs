@@ -1,0 +1,1689 @@
+//! Hand-written lexer for the Pyfun subset.
+//!
+//! Mostly whitespace-insensitive, with an **offside rule** that turns indentation
+//! into block structure (outside any `()`/`{}` brackets, where line breaks are
+//! always continuations). A layout stack of block columns drives three synthetic
+//! tokens:
+//! - [`Tok::Indent`] — a `let … =` whose body begins on a *deeper* line opens a
+//!   block (the only block opener; `=` at bracket depth 0 primes it).
+//! - [`Tok::Dedent`] — a line dedents below the current block's column, closing it.
+//! - [`Tok::Sep`] — a line lands on the current block's column and the next token
+//!   can begin a statement, separating two statements.
+//!
+//! A deeper line, or one led by a continuation token (an infix operator, `|`,
+//! `then`/`else`/`with`/…), continues the current statement — so multi-line
+//! `match`/`if`/CE blocks keep working while statement sequences (and nested let
+//! bodies) split correctly. The top level is the outermost block. Line comments
+//! start with `#` (Python-style — `//` is the floor-division operator); spans are
+//! byte offsets.
+
+mod token;
+
+pub use token::{FStrPart, LineStart, Span, Tok, Token};
+
+/// An error produced during lexing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LexError {
+    pub message: String,
+    pub span: Span,
+}
+
+impl std::fmt::Display for LexError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} (at {}..{})",
+            self.message, self.span.start, self.span.end
+        )
+    }
+}
+
+/// Tokenize `source` into a flat token stream terminated by [`Tok::Eof`].
+///
+/// The strict entry point used by the compiler: any lexing error fails the whole
+/// tokenization (the first error is returned). The editor uses [`lex_recover`].
+pub fn lex(source: &str) -> Result<Vec<Token>, LexError> {
+    let (tokens, errors) = Lexer::new(source).run();
+    match errors.into_iter().next() {
+        Some(error) => Err(error),
+        None => Ok(tokens),
+    }
+}
+
+/// Tokenize `source`, **recovering** from lexing errors: a bad character or an
+/// unterminated string is recorded and skipped, and tokenization continues. Always
+/// returns a token stream (of what *did* lex) plus every error. This is the editor
+/// entry point ([`crate::analyze`]); the compiler keeps the strict [`lex`].
+pub fn lex_recover(source: &str) -> (Vec<Token>, Vec<LexError>) {
+    Lexer::new(source).run()
+}
+
+struct Lexer<'a> {
+    src: &'a [u8],
+    pos: usize,
+    out: Vec<Token>,
+    /// Lexing errors collected during recovery (strict [`lex`] keeps only the first).
+    errors: Vec<LexError>,
+    /// Nesting depth of `()`/`{}`; line breaks inside brackets never separate.
+    depth: usize,
+    /// Stack of active layout (block) columns, innermost last. The first entry is
+    /// the top-level column; deeper blocks (let bodies) push their own column.
+    layout: Vec<usize>,
+    /// Set right after an `=` at bracket depth 0: the next token, if it begins a
+    /// deeper line, opens an indentation block (the let binding's body).
+    pending_block: bool,
+    /// Newline-counting cursor for [`Self::current_line`]: the position counted
+    /// up to, and the 1-based line number there.
+    line_scan: (usize, u32),
+}
+
+impl<'a> Lexer<'a> {
+    fn new(source: &'a str) -> Self {
+        Lexer {
+            src: source.as_bytes(),
+            pos: 0,
+            out: Vec::new(),
+            errors: Vec::new(),
+            depth: 0,
+            layout: Vec::new(),
+            pending_block: false,
+            line_scan: (0, 1),
+        }
+    }
+
+    /// The 1-based line number at the cursor, counted incrementally from the
+    /// last position asked about. Counting bytes (rather than tracking every
+    /// consumer of `pos`) stays exact across trivia and multi-line string
+    /// literals alike; the cursor only moves forward between calls.
+    fn current_line(&mut self) -> u32 {
+        let (from, line) = self.line_scan;
+        let newlines = self.src[from..self.pos]
+            .iter()
+            .filter(|&&b| b == b'\n')
+            .count();
+        self.line_scan = (self.pos, line + newlines as u32);
+        self.line_scan.1
+    }
+
+    fn run(mut self) -> (Vec<Token>, Vec<LexError>) {
+        loop {
+            let crossed_newline = self.skip_trivia();
+            if self.pos >= self.src.len() {
+                // Close any still-open blocks before EOF.
+                while self.layout.len() > 1 {
+                    self.layout.pop();
+                    self.push_layout(Tok::Dedent);
+                }
+                let end = self.pos;
+                self.out.push(Token {
+                    tok: Tok::Eof,
+                    span: Span::new(end, end),
+                    line_start: None,
+                    depth: self.depth as u32,
+                });
+                return (self.out, self.errors);
+            }
+            // The offside rule (see module docs): at bracket depth 0 a line break
+            // opens a block (after `=`), closes blocks (dedent), or separates
+            // statements (same column), via Indent/Dedent/Sep tokens.
+            let col = self.column();
+            if self.layout.is_empty() {
+                self.layout.push(col);
+            }
+            let pending = std::mem::take(&mut self.pending_block);
+            if !self.out.is_empty() && self.depth == 0 && crossed_newline {
+                let top = *self.layout.last().unwrap();
+                if pending && col > top {
+                    self.layout.push(col);
+                    self.push_layout(Tok::Indent);
+                } else {
+                    self.offside(col);
+                }
+            }
+            // Record where the token sits: whether it opens its line (the file's
+            // first token counts) and the bracket depth in force at its start.
+            // Both are snapshotted here because `lex_one` mutates `depth`, and
+            // patched onto the token below once it exists.
+            let line_start = if crossed_newline || self.out.is_empty() {
+                Some(LineStart {
+                    line: self.current_line(),
+                    col: col as u32,
+                })
+            } else {
+                None
+            };
+            let tok_depth = self.depth as u32;
+            let tok_index = self.out.len();
+            let before = self.pos;
+            if let Err(error) = self.lex_one() {
+                self.errors.push(error);
+                // Recover: skip the offending character (a whole UTF-8 scalar, so a
+                // multi-byte char yields one error, not one per byte) and carry on.
+                // An unterminated string already consumed to EOF, so `before == pos`
+                // is the bad-character case that needs a manual nudge.
+                if self.pos == before {
+                    self.skip_char();
+                }
+                continue;
+            }
+            if let Some(t) = self.out.get_mut(tok_index) {
+                t.line_start = line_start;
+                t.depth = tok_depth;
+            }
+            // A block-opening token at bracket depth 0 primes a block to open if the
+            // body begins on a deeper line: a `let` binding's `=`, a `match` arm or
+            // lambda `->`, an `if`'s `then`/`else`, or a `match`/`case`'s `:`
+            // (`DESIGN.md` §7.2). (Inline bodies cross no newline, so the priming
+            // lapses and no block opens — this is why a single-line `extern name:
+            // type = target` opens nothing.)
+            if self.depth == 0
+                && matches!(
+                    self.out.last().map(|t| &t.tok),
+                    Some(Tok::Eq | Tok::Arrow | Tok::Then | Tok::Else | Tok::Colon)
+                )
+            {
+                self.pending_block = true;
+            }
+        }
+    }
+
+    /// Advance past one UTF-8 scalar value (the lead byte plus any continuation
+    /// bytes), used to skip an un-lexable character during recovery.
+    fn skip_char(&mut self) {
+        self.pos += 1;
+        while matches!(self.peek(), Some(b) if b & 0b1100_0000 == 0b1000_0000) {
+            self.pos += 1;
+        }
+    }
+
+    /// Close any blocks deeper than `col`, then — if `col` lands exactly on the
+    /// enclosing block's column and the next token can begin a statement — emit a
+    /// statement separator. A line that is deeper than the current block, or one
+    /// that leads with a continuation token (an infix operator, `|`, `then`,
+    /// `else`, …), continues the current statement instead.
+    fn offside(&mut self, col: usize) {
+        while self.layout.len() > 1 && col < *self.layout.last().unwrap() {
+            self.layout.pop();
+            self.push_layout(Tok::Dedent);
+        }
+        let top = *self.layout.last().unwrap();
+        if col == top && self.upcoming_starts_stmt() {
+            self.push_layout(Tok::Sep);
+        }
+    }
+
+    /// Push a zero-width layout token (`Sep`/`Indent`/`Dedent`) at the cursor.
+    fn push_layout(&mut self, tok: Tok) {
+        self.out.push(Token {
+            tok,
+            span: Span::new(self.pos, self.pos),
+            line_start: None,
+            depth: self.depth as u32,
+        });
+    }
+
+    /// Whether the upcoming token can begin a new statement (so a same-column line
+    /// is a separate statement) rather than continue the current one. Continuation
+    /// leads are infix operators, `|`, `.`, and the keywords `then`/`else`/`elif`/
+    /// `with`/`and`/`or`/`in` — none of which can start an expression.
+    fn upcoming_starts_stmt(&self) -> bool {
+        let Some(c) = self.peek() else { return false };
+        if c.is_ascii_digit() || c == b'"' || c == b'(' || c == b'{' || c == b'[' {
+            return true;
+        }
+        // A `#` here can only be a doc comment (`skip_trivia` stopped at it), which
+        // begins a new statement (it attaches to the *following* declaration).
+        if c == b'#' {
+            return true;
+        }
+        if c == b'_' {
+            return false;
+        }
+        if is_ident_start(c) {
+            let ident = self.peek_ident();
+            return !matches!(
+                ident.as_str(),
+                "then" | "else" | "elif" | "with" | "and" | "or" | "in"
+            );
+        }
+        // Operators, `|`, `.`, `,`, closing brackets, etc. all continue a statement.
+        false
+    }
+
+    /// Read (without consuming) the identifier starting at the cursor.
+    fn peek_ident(&self) -> String {
+        let mut i = self.pos;
+        while i < self.src.len() && is_ident_continue(self.src[i]) {
+            i += 1;
+        }
+        String::from_utf8_lossy(&self.src[self.pos..i]).into_owned()
+    }
+
+    /// Read and consume the identifier starting at the cursor (the caller has
+    /// checked the first byte is an identifier start). Used for `?name` holes.
+    fn peek_ident_and_advance(&mut self) -> String {
+        let start = self.pos;
+        while matches!(self.peek(), Some(b) if is_ident_continue(b)) {
+            self.pos += 1;
+        }
+        String::from_utf8_lossy(&self.src[start..self.pos]).into_owned()
+    }
+
+    /// The column (0-based) of the current position, i.e. bytes since the last
+    /// newline. Assumes space indentation (a tab counts as one column).
+    fn column(&self) -> usize {
+        let mut i = self.pos;
+        while i > 0 && self.src[i - 1] != b'\n' {
+            i -= 1;
+        }
+        self.pos - i
+    }
+
+    fn peek(&self) -> Option<u8> {
+        self.src.get(self.pos).copied()
+    }
+
+    fn peek2(&self) -> Option<u8> {
+        self.src.get(self.pos + 1).copied()
+    }
+
+    /// Skip whitespace and `#` line comments, reporting whether at least one
+    /// newline was crossed (so the caller can apply the offside rule).
+    fn skip_trivia(&mut self) -> bool {
+        let mut newline = false;
+        loop {
+            match self.peek() {
+                Some(b'\n') => {
+                    newline = true;
+                    self.pos += 1;
+                }
+                Some(b) if b.is_ascii_whitespace() => self.pos += 1,
+                // A `#` line comment runs to end of line; its terminating newline
+                // is handled by the `\n` arm on the next iteration, so it counts.
+                // Exception: `##` at column 0 (bracket depth 0) is a *doc comment*
+                // — stop so the main loop lexes it as a [`Tok::Doc`] token. `##`
+                // indented, trailing, or inside brackets stays an ordinary comment.
+                Some(b'#') => {
+                    if self.peek2() == Some(b'#') && self.depth == 0 && self.column() == 0 {
+                        return newline;
+                    }
+                    while let Some(b) = self.peek() {
+                        if b == b'\n' {
+                            break;
+                        }
+                        self.pos += 1;
+                    }
+                }
+                _ => return newline,
+            }
+        }
+    }
+
+    /// Lex one doc-comment line (`## text`, cursor on the first `#`) into a
+    /// [`Tok::Doc`]. One space after `##` is the conventional separator and is
+    /// stripped; the rest of the line (which may itself start with `#`) is the
+    /// payload. The terminating newline is left for `skip_trivia`.
+    fn lex_doc(&mut self, start: usize) {
+        self.pos += 2; // skip `##`
+        if self.peek() == Some(b' ') {
+            self.pos += 1;
+        }
+        let text_start = self.pos;
+        while let Some(b) = self.peek() {
+            if b == b'\n' {
+                break;
+            }
+            self.pos += 1;
+        }
+        let text = String::from_utf8_lossy(&self.src[text_start..self.pos])
+            .trim_end()
+            .to_string();
+        self.push(Tok::Doc(text), start);
+    }
+
+    fn push(&mut self, tok: Tok, start: usize) {
+        // `line_col` and `depth` are patched by `run` once the token is lexed
+        // (it snapshots both before `lex_one`, so an opening bracket records
+        // the depth outside itself).
+        self.out.push(Token {
+            tok,
+            span: Span::new(start, self.pos),
+            line_start: None,
+            depth: self.depth as u32,
+        });
+    }
+
+    fn lex_one(&mut self) -> Result<(), LexError> {
+        let start = self.pos;
+        let c = self.peek().unwrap();
+        match c {
+            b'0'..=b'9' => self.lex_number(start),
+            // Exactly three quotes open a triple-quoted (multi-line) string; two
+            // quotes are the empty string `""` (the `"` after it, if any, opens a
+            // new literal — the Python disambiguation rule).
+            b'"' => {
+                let triple = self.quotes_at(start, 3);
+                self.lex_string(start, triple)
+            }
+            // Only a doc comment (`##` at column 0, depth 0) reaches here —
+            // `skip_trivia` consumes every other `#` comment.
+            b'#' => {
+                self.lex_doc(start);
+                Ok(())
+            }
+            // An adjacent `f"` (no space) opens an interpolated string. `f "x"` with a
+            // space stays ordinary application, matching Python; only the pathological
+            // adjacent `f"x"` changes meaning (it was `f` applied to `"x"`). An
+            // adjacent `f"""` opens the multi-line form.
+            b'f' if self.peek2() == Some(b'"') => {
+                let triple = self.quotes_at(start + 1, 3);
+                self.lex_fstring(start, triple)
+            }
+            // An adjacent `r"` (no space) opens a raw string — no escape processing,
+            // backslashes stay literal. `r "x"` with a space is `r` applied to a
+            // string (like `f`). `r"""..."""` is the raw multi-line form; `rf"..."`
+            // is out of scope.
+            b'r' if self.peek2() == Some(b'"') => {
+                let triple = self.quotes_at(start + 1, 3);
+                self.lex_raw_string(start, triple)
+            }
+            // A typed hole `?` (anonymous) or `?name` (an identifier lexed
+            // adjacently, no space — like `f"`/`r"`; `? name` with a space is a bare
+            // hole followed by an identifier).
+            b'?' => {
+                self.pos += 1;
+                let name = if matches!(self.peek(), Some(b) if is_ident_start(b)) {
+                    Some(self.peek_ident_and_advance())
+                } else {
+                    None
+                };
+                self.push(Tok::Hole(name), start);
+                Ok(())
+            }
+            c if is_ident_start(c) => {
+                self.lex_ident(start);
+                Ok(())
+            }
+            _ => self.lex_symbol(start),
+        }
+    }
+
+    /// How many consecutive `"` bytes sit at `at`, capped at `want` — so
+    /// `quotes_at(p, 3)` detects a triple-quote opener/closer without reading past
+    /// what is needed (exactly-three at the open; `""` stays the empty string).
+    fn quotes_at(&self, at: usize, want: usize) -> bool {
+        (0..want).all(|i| self.src.get(at + i) == Some(&b'"'))
+    }
+
+    /// Whether the cursor sits on a closing `"""`.
+    fn at_triple_quote(&self) -> bool {
+        self.quotes_at(self.pos, 3)
+    }
+
+    /// Lex an interpolated string `f"...{expr}..."` (or, with `triple`, the
+    /// multi-line `f"""..."""`) into a single [`Tok::FStr`], splitting it into
+    /// literal chunks and holes. `{{`/`}}` escape to literal braces; a lone `{`
+    /// opens a hole scanned by [`Self::lex_hole`]. In the triple form newlines
+    /// (and lone `"`) are literal content, and only `"""` terminates.
+    fn lex_fstring(&mut self, start: usize, triple: bool) -> Result<(), LexError> {
+        self.pos += if triple { 4 } else { 2 }; // skip `f"` / `f"""`
+        let mut parts: Vec<FStrPart> = Vec::new();
+        let mut lit = String::new();
+        let flush = |lit: &mut String, parts: &mut Vec<FStrPart>| {
+            if !lit.is_empty() {
+                parts.push(FStrPart::Lit(std::mem::take(lit)));
+            }
+        };
+        loop {
+            match self.peek() {
+                None => return Err(self.err(start, "unterminated f-string")),
+                Some(b'"') if !triple || self.at_triple_quote() => {
+                    self.pos += if triple { 3 } else { 1 };
+                    flush(&mut lit, &mut parts);
+                    self.push(Tok::FStr(parts), start);
+                    return Ok(());
+                }
+                Some(b'\\') => {
+                    self.pos += 1;
+                    let c = self.lex_escape()?;
+                    lit.push(c);
+                }
+                Some(b'{') if self.peek2() == Some(b'{') => {
+                    lit.push('{');
+                    self.pos += 2;
+                }
+                Some(b'}') if self.peek2() == Some(b'}') => {
+                    lit.push('}');
+                    self.pos += 2;
+                }
+                Some(b'{') => {
+                    self.pos += 1; // consume `{`
+                    let (hole, echo) = self.lex_hole(start)?;
+                    // A self-documenting hole `{x=}` echoes its raw source text
+                    // (including the `=`) before the value; the echo joins the
+                    // pending literal chunk so adjacent literals stay merged.
+                    if let Some(echo) = echo {
+                        lit.push_str(&echo);
+                    }
+                    flush(&mut lit, &mut parts);
+                    parts.push(FStrPart::Hole(hole));
+                }
+                Some(b'}') => {
+                    return Err(self.err(
+                        self.pos,
+                        "single `}` in f-string; write `}}` for a literal brace",
+                    ));
+                }
+                Some(_) => self.push_char(&mut lit),
+            }
+        }
+    }
+
+    /// Scan a hole body (the cursor is just past the opening `{`) up to its matching
+    /// `}`, balancing nested `{}` and skipping string literals so a brace or quote
+    /// inside them doesn't close the hole early, then lex the captured slice into the
+    /// hole's tokens (with absolute spans). Also returns the raw text to echo when
+    /// the hole carries a debug marker (see [`Self::debug_marker`]).
+    fn lex_hole(&mut self, fstr_start: usize) -> Result<(Vec<Token>, Option<String>), LexError> {
+        let hole_start = self.pos;
+        let mut brace_depth = 0usize;
+        loop {
+            match self.peek() {
+                None => return Err(self.err(fstr_start, "unterminated f-string (missing `}`)")),
+                Some(b'"') => self.skip_string_in_hole()?,
+                Some(b'{') => {
+                    brace_depth += 1;
+                    self.pos += 1;
+                }
+                Some(b'}') if brace_depth > 0 => {
+                    brace_depth -= 1;
+                    self.pos += 1;
+                }
+                Some(b'}') => {
+                    let hole_end = self.pos;
+                    self.pos += 1; // consume `}`
+                    if hole_start == hole_end {
+                        return Err(self.err(hole_start, "empty f-string hole `{}`"));
+                    }
+                    let (expr_end, echo) = self.debug_marker(hole_start, hole_end);
+                    return Ok((self.lex_subrange(hole_start, expr_end), echo));
+                }
+                Some(_) => self.pos += 1,
+            }
+        }
+    }
+
+    /// Detect a self-documenting debug hole `f"{x=}"` (Python's `{expr=}` form): a
+    /// single `=` as the hole's last non-whitespace character. The `=` must be a
+    /// genuine marker, not the tail of an operator, so the character before it may
+    /// not be one of `=`/`!`/`<`/`>` (`{x==y}`, `{x != y}`, `{x <= 1}`, `{x >= 1}`
+    /// stay ordinary holes). Returns where the hole's *expression* ends (the marker
+    /// excluded) plus, for a debug hole, the raw source text to echo — everything
+    /// the user typed including the `=` and its surrounding whitespace, so
+    /// `f"{x = }"` prints `x = <value>`.
+    fn debug_marker(&self, hole_start: usize, hole_end: usize) -> (usize, Option<String>) {
+        let text = &self.src[hole_start..hole_end];
+        let mut last = text.len();
+        while last > 0 && text[last - 1].is_ascii_whitespace() {
+            last -= 1;
+        }
+        // A marker needs an `=` at the end and an expression (whose final
+        // character isn't an operator tail) before it.
+        if last < 2 || text[last - 1] != b'=' || matches!(text[last - 2], b'=' | b'!' | b'<' | b'>')
+        {
+            return (hole_end, None);
+        }
+        let echo = std::str::from_utf8(text)
+            .expect("hole slice is valid utf-8")
+            .to_string();
+        (hole_start + last - 1, Some(echo))
+    }
+
+    /// Skip a string literal inside a hole (cursor at the opening `"`), honoring
+    /// backslash escapes, so its contents can't prematurely close the hole. A
+    /// nested triple-quoted string (`"""..."""`, PEP 701 quote reuse) is skipped
+    /// to its own `"""` close so braces inside it don't unbalance the hole.
+    fn skip_string_in_hole(&mut self) -> Result<(), LexError> {
+        let start = self.pos;
+        let triple = self.at_triple_quote();
+        self.pos += if triple { 3 } else { 1 }; // opening quote(s)
+        loop {
+            match self.peek() {
+                None => return Err(self.err(start, "unterminated string literal in f-string")),
+                Some(b'"') if !triple || self.at_triple_quote() => {
+                    self.pos += if triple { 3 } else { 1 };
+                    return Ok(());
+                }
+                Some(b'\\') => self.pos += 2, // skip the escaped character
+                Some(_) => self.pos += 1,
+            }
+        }
+    }
+
+    /// Lex the source range `[start, end)` (a hole's expression) into its own token
+    /// stream, offsetting every span back to absolute source positions and forwarding
+    /// any errors. Bracket depth is pre-set so the offside rule emits no layout tokens
+    /// inside the hole.
+    fn lex_subrange(&mut self, start: usize, end: usize) -> Vec<Token> {
+        let sub = std::str::from_utf8(&self.src[start..end]).expect("hole slice is valid utf-8");
+        let mut lexer = Lexer::new(sub);
+        lexer.depth = 1; // suppress Indent/Dedent/Sep inside the hole
+        let (mut tokens, errors) = lexer.run();
+        for t in &mut tokens {
+            t.span = Span::new(t.span.start + start, t.span.end + start);
+        }
+        for mut e in errors {
+            e.span = Span::new(e.span.start + start, e.span.end + start);
+            self.errors.push(e);
+        }
+        tokens
+    }
+
+    fn lex_number(&mut self, start: usize) -> Result<(), LexError> {
+        // Alternate integer bases: `0x`/`0o`/`0b` (case-insensitive), with optional
+        // `_` separators. These commit to an integer, so no float/exponent handling.
+        if self.peek() == Some(b'0') {
+            let radix = match self.peek2() {
+                Some(b'x' | b'X') => Some(16),
+                Some(b'o' | b'O') => Some(8),
+                Some(b'b' | b'B') => Some(2),
+                _ => None,
+            };
+            if let Some(radix) = radix {
+                self.pos += 2; // consume the `0x`/`0o`/`0b` prefix
+                let digits_start = self.pos;
+                self.consume_digit_run(radix);
+                let raw = self.slice(digits_start, self.pos).replace('_', "");
+                let value = i64::from_str_radix(&raw, radix)
+                    .map_err(|_| self.err(start, "invalid integer literal"))?;
+                self.push(Tok::Int(value), start);
+                return Ok(());
+            }
+        }
+        self.consume_digit_run(10);
+        // A '.' followed by a digit makes this a float; a trailing '.' is not
+        // consumed (it isn't valid in the Phase 1 subset).
+        let mut is_float = self.peek() == Some(b'.') && matches!(self.peek2(), Some(b'0'..=b'9'));
+        if is_float {
+            self.pos += 1; // consume '.'
+            self.consume_digit_run(10);
+        }
+        // Optional exponent: `e`/`E`, an optional sign, then digits (`1e6`,
+        // `2.5e-3`, `6.674e-11`). A number with an exponent is a float even without
+        // a fractional part. The sign is consumed here (not left to unary minus).
+        // Only consume `e` when a valid exponent follows, else it's an identifier
+        // (so `x1` after a number, or `1en` with no digits, still lexes sensibly).
+        if matches!(self.peek(), Some(b'e' | b'E')) {
+            let has_exponent = match self.peek2() {
+                Some(b'0'..=b'9') => true,
+                Some(b'+' | b'-') => matches!(self.src.get(self.pos + 2), Some(b'0'..=b'9')),
+                _ => false,
+            };
+            if has_exponent {
+                is_float = true;
+                self.pos += 1; // 'e' / 'E'
+                if matches!(self.peek(), Some(b'+' | b'-')) {
+                    self.pos += 1; // exponent sign
+                }
+                self.consume_digit_run(10);
+            }
+        }
+        // Strip `_` digit separators before parsing (Rust's parse rejects them).
+        let text = self.slice(start, self.pos).replace('_', "");
+        if is_float {
+            let value: f64 = text
+                .parse()
+                .map_err(|_| self.err(start, "invalid float literal"))?;
+            self.push(Tok::Float(value), start);
+        } else {
+            let value: i64 = text
+                .parse()
+                .map_err(|_| self.err(start, "invalid integer literal"))?;
+            self.push(Tok::Int(value), start);
+        }
+        Ok(())
+    }
+
+    /// Consume a run of base-`radix` digits with optional `_` separators. An
+    /// underscore is consumed only *between* digits (`1_000`), never leading,
+    /// trailing, or doubled — so `1_` leaves the `_` for the next token.
+    fn consume_digit_run(&mut self, radix: u32) {
+        while matches!(self.peek(), Some(c) if is_radix_digit(c, radix)) {
+            self.pos += 1;
+            if self.peek() == Some(b'_')
+                && matches!(self.peek2(), Some(d) if is_radix_digit(d, radix))
+            {
+                self.pos += 1; // the separator
+            }
+        }
+    }
+
+    /// Lex a plain string literal — `"..."`, or with `triple` the multi-line
+    /// `"""..."""` (both produce an ordinary [`Tok::Str`]; the triple form is
+    /// lexer-only, like raw strings). Escapes process in both (Python's non-raw
+    /// triple-quote rule); in the triple form newlines and lone `"` are literal
+    /// content, and only `"""` terminates. The whole literal is consumed in this
+    /// one call, so its internal newlines never reach the offside rule.
+    fn lex_string(&mut self, start: usize, triple: bool) -> Result<(), LexError> {
+        self.pos += if triple { 3 } else { 1 }; // opening quote(s)
+        let mut value = String::new();
+        loop {
+            match self.peek() {
+                None => {
+                    let what = if triple {
+                        "unterminated triple-quoted string literal"
+                    } else {
+                        "unterminated string literal"
+                    };
+                    return Err(self.err(start, what));
+                }
+                Some(b'"') if !triple || self.at_triple_quote() => {
+                    self.pos += if triple { 3 } else { 1 };
+                    self.push(Tok::Str(value), start);
+                    return Ok(());
+                }
+                Some(b'\\') => {
+                    self.pos += 1;
+                    let c = self.lex_escape()?;
+                    value.push(c);
+                }
+                Some(_) => self.push_char(&mut value),
+            }
+        }
+    }
+
+    /// Lex a raw string `r"..."` (cursor at the `r`; with `triple`, the multi-line
+    /// `r"""..."""`): no escape processing, so backslashes are literal. Follows
+    /// Python's raw-string rule — a `\` keeps both itself and the next character
+    /// literally *and* that next character does not terminate the string, so
+    /// `r"a\"b"` is the four chars `a \ " b` and a raw string cannot end in a lone
+    /// backslash-before-quote (that just continues). Produces an ordinary
+    /// [`Tok::Str`] with the raw content; the emitter re-escapes on output, so the
+    /// round-trip is faithful.
+    fn lex_raw_string(&mut self, start: usize, triple: bool) -> Result<(), LexError> {
+        self.pos += if triple { 4 } else { 2 }; // skip `r"` / `r"""`
+        let mut value = String::new();
+        loop {
+            match self.peek() {
+                None => return Err(self.err(start, "unterminated raw string literal")),
+                Some(b'"') if !triple || self.at_triple_quote() => {
+                    self.pos += if triple { 3 } else { 1 };
+                    self.push(Tok::Str(value), start);
+                    return Ok(());
+                }
+                // A backslash is literal, and the following character is taken
+                // literally too (so `\"` does not close the string).
+                Some(b'\\') => {
+                    value.push('\\');
+                    self.pos += 1;
+                    if self.peek().is_some() {
+                        self.push_char(&mut value);
+                    }
+                }
+                Some(_) => self.push_char(&mut value),
+            }
+        }
+    }
+
+    /// Decode a string escape, cursor just past the `\`, consuming the whole escape
+    /// and returning the character. Shared by `lex_string` and `lex_fstring`.
+    /// Supports `\"` `\\` `\n` `\t` `\r` and `\u{HEX}` (Rust-style, 1–6 hex digits).
+    fn lex_escape(&mut self) -> Result<char, LexError> {
+        let c = match self.peek() {
+            Some(b'"') => '"',
+            Some(b'\\') => '\\',
+            Some(b'n') => '\n',
+            Some(b't') => '\t',
+            Some(b'r') => '\r',
+            Some(b'u') => return self.lex_unicode_escape(),
+            _ => return Err(self.err(self.pos.saturating_sub(1), "invalid escape sequence")),
+        };
+        self.pos += 1;
+        Ok(c)
+    }
+
+    /// Decode a `\u{HEX}` escape, cursor at the `u`. Braces are required (Rust-style,
+    /// so any 1–6 digit code point works without Python's `\uXXXX`/`\U…` split).
+    fn lex_unicode_escape(&mut self) -> Result<char, LexError> {
+        let esc_start = self.pos.saturating_sub(1); // the `\`, for error spans
+        self.pos += 1; // consume `u`
+        if self.peek() != Some(b'{') {
+            return Err(self.err(esc_start, "expected `{` after `\\u` (write `\\u{1F600}`)"));
+        }
+        self.pos += 1; // consume `{`
+        let hex_start = self.pos;
+        while matches!(self.peek(), Some(c) if is_radix_digit(c, 16)) {
+            self.pos += 1;
+        }
+        let hex = self.slice(hex_start, self.pos).to_string();
+        if self.peek() != Some(b'}') {
+            return Err(self.err(esc_start, "expected `}` to close `\\u{...}`"));
+        }
+        self.pos += 1; // consume `}`
+        let code = u32::from_str_radix(&hex, 16)
+            .map_err(|_| self.err(esc_start, "invalid `\\u{...}` escape"))?;
+        char::from_u32(code)
+            .ok_or_else(|| self.err(esc_start, "invalid Unicode code point in `\\u{...}`"))
+    }
+
+    /// Append the (possibly multi-byte) UTF-8 character at the cursor to `out`,
+    /// advancing past its whole byte sequence. `self.src` came from a `&str`, so it
+    /// is valid UTF-8; pushing `b as char` per byte instead would turn every
+    /// non-ASCII byte into its own Latin-1 codepoint, and re-encoding on emit would
+    /// double-UTF-8-encode the text (`"café"` → mojibake).
+    /// Push one source character of a string literal's content. A line break is
+    /// `\n` whatever the file's line endings, as Python reads source with
+    /// universal newlines: a multi-line string in a file saved on Windows would
+    /// otherwise carry a `\r` before every `\n` (`\r\n` and a lone `\r` both
+    /// become `\n`).
+    fn push_char(&mut self, out: &mut String) {
+        if self.src[self.pos] == b'\r' {
+            self.pos += if self.src.get(self.pos + 1) == Some(&b'\n') {
+                2
+            } else {
+                1
+            };
+            out.push('\n');
+            return;
+        }
+        let start = self.pos;
+        let end = (start + utf8_len(self.src[start])).min(self.src.len());
+        match std::str::from_utf8(&self.src[start..end]) {
+            Ok(s) => out.push_str(s),
+            Err(_) => out.push('\u{FFFD}'),
+        }
+        self.pos = end;
+    }
+
+    fn lex_ident(&mut self, start: usize) {
+        self.pos += 1;
+        while matches!(self.peek(), Some(b) if is_ident_continue(b)) {
+            self.pos += 1;
+        }
+        let text = self.slice(start, self.pos);
+        // A lone underscore is the wildcard, not an identifier.
+        let tok = if text == "_" {
+            Tok::Underscore
+        } else if let Some(kw) = Tok::keyword(text) {
+            kw
+        } else {
+            Tok::Ident(text.to_string())
+        };
+        self.push(tok, start);
+    }
+
+    fn lex_symbol(&mut self, start: usize) -> Result<(), LexError> {
+        let c = self.peek().unwrap();
+        if c == b'&' && self.peek2() == Some(b'&') {
+            self.pos += 2;
+            return Err(self.err(start, "use `and` instead of `&&`"));
+        }
+        // Two-character operators first.
+        if c == b'|' && self.peek2() == Some(b'>') {
+            self.pos += 2;
+            self.push(Tok::PipeOp, start);
+            return Ok(());
+        }
+        if c == b'-' && self.peek2() == Some(b'>') {
+            self.pos += 2;
+            self.push(Tok::Arrow, start);
+            return Ok(());
+        }
+        if c == b'/' && self.peek2() == Some(b'/') {
+            self.pos += 2;
+            self.push(Tok::SlashSlash, start);
+            return Ok(());
+        }
+        if c == b'*' && self.peek2() == Some(b'*') {
+            self.pos += 2;
+            self.push(Tok::StarStar, start);
+            return Ok(());
+        }
+        // Function composition `>>` / `<<` — two tokens, lexed before single `<`/`>`
+        // and the `<=`/`>=`/`<-` pair. `<<` is one token, so it never opens a unit
+        // annotation (which keys off a single `<` adjacent to a literal).
+        if c == b'>' && self.peek2() == Some(b'>') {
+            self.pos += 2;
+            self.push(Tok::GtGt, start);
+            return Ok(());
+        }
+        if c == b'<' && self.peek2() == Some(b'<') {
+            self.pos += 2;
+            self.push(Tok::LtLt, start);
+            return Ok(());
+        }
+        if c == b'<' && self.peek2() == Some(b'|') {
+            self.pos += 2;
+            self.push(Tok::PipeLeft, start);
+            return Ok(());
+        }
+        // `...` — the `extern` kwarg slot marker, lexed before the single `.` so the
+        // three dots are one token (and `. .  .` stays three).
+        if c == b'.' && self.peek2() == Some(b'.') && self.src.get(self.pos + 2) == Some(&b'.') {
+            self.pos += 3;
+            self.push(Tok::Ellipsis, start);
+            return Ok(());
+        }
+        // Two-char comparison / equality operators (checked before `=` `!` `<` `>`).
+        if let Some(tok) = match (c, self.peek2()) {
+            (b'=', Some(b'=')) => Some(Tok::EqEq),
+            (b'!', Some(b'=')) => Some(Tok::BangEq),
+            (b'<', Some(b'=')) => Some(Tok::Le),
+            (b'>', Some(b'=')) => Some(Tok::Ge),
+            (b'<', Some(b'-')) => Some(Tok::LArrow),
+            _ => None,
+        } {
+            self.pos += 2;
+            self.push(tok, start);
+            return Ok(());
+        }
+        let tok = match c {
+            b'=' => Tok::Eq,
+            b'+' => Tok::Plus,
+            b'-' => Tok::Minus,
+            b'*' => Tok::Star,
+            b'/' => Tok::Slash,
+            b'%' => Tok::Percent,
+            b'|' => Tok::Bar,
+            b'!' => Tok::Bang,
+            b'^' => Tok::Caret,
+            b'<' => Tok::Lt,
+            b'>' => Tok::Gt,
+            b'(' => Tok::LParen,
+            b')' => Tok::RParen,
+            b'{' => Tok::LBrace,
+            b'}' => Tok::RBrace,
+            b'[' => Tok::LBracket,
+            b']' => Tok::RBracket,
+            b',' => Tok::Comma,
+            b':' => Tok::Colon,
+            b'.' => Tok::Dot,
+            _ => return Err(self.err(start, &format!("unexpected character {:?}", c as char))),
+        };
+        // Track bracket nesting so the offside rule ignores line breaks inside
+        // `(...)` / `{...}` (implicit line continuation).
+        match tok {
+            Tok::LParen | Tok::LBrace | Tok::LBracket => self.depth += 1,
+            Tok::RParen | Tok::RBrace | Tok::RBracket => self.depth = self.depth.saturating_sub(1),
+            _ => {}
+        }
+        self.pos += 1;
+        self.push(tok, start);
+        Ok(())
+    }
+
+    fn slice(&self, start: usize, end: usize) -> &str {
+        // The lexer only advances over ASCII bytes for tokens, and string
+        // contents are pushed char-by-char, so this slice is always valid UTF-8.
+        std::str::from_utf8(&self.src[start..end]).expect("token slice is valid utf-8")
+    }
+
+    fn err(&self, start: usize, message: &str) -> LexError {
+        LexError {
+            message: message.to_string(),
+            span: Span::new(start, self.pos),
+        }
+    }
+}
+
+fn is_ident_start(c: u8) -> bool {
+    c == b'_' || c.is_ascii_alphabetic()
+}
+
+fn is_ident_continue(c: u8) -> bool {
+    c == b'_' || c.is_ascii_alphanumeric()
+}
+
+/// The byte length of the UTF-8 sequence beginning with lead byte `b`. On a
+/// continuation or invalid byte, returns 1 to guarantee forward progress (the
+/// caller replaces the malformed slice with U+FFFD).
+/// Is byte `b` a digit in `radix` (2/8/10/16)? Handles hex `a`–`f`/`A`–`F`.
+fn is_radix_digit(b: u8, radix: u32) -> bool {
+    (b as char).is_digit(radix)
+}
+
+fn utf8_len(b: u8) -> usize {
+    match b {
+        _ if b < 0x80 => 1,
+        _ if b >> 5 == 0b110 => 2,
+        _ if b >> 4 == 0b1110 => 3,
+        _ if b >> 3 == 0b11110 => 4,
+        _ => 1,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn kinds(src: &str) -> Vec<Tok> {
+        lex(src).unwrap().into_iter().map(|t| t.tok).collect()
+    }
+
+    #[test]
+    fn distinguishes_pipe_from_bar() {
+        assert_eq!(kinds("|> |"), vec![Tok::PipeOp, Tok::Bar, Tok::Eof]);
+    }
+
+    #[test]
+    fn tokens_carry_line_column_and_bracket_depth() {
+        // The parser's CE item rule reads both fields (brackets suppress layout
+        // tokens, so this is the line information that survives into a block).
+        let tokens = lex("let x = (1,\n  2)").unwrap();
+        let tok = |target: &Tok| tokens.iter().find(|t| &t.tok == target).unwrap();
+        assert_eq!(
+            tok(&Tok::Let).line_start,
+            Some(LineStart { line: 1, col: 0 })
+        );
+        assert_eq!(tok(&Tok::Let).depth, 0);
+        // An opening bracket carries the depth outside itself.
+        assert_eq!(tok(&Tok::LParen).depth, 0);
+        assert_eq!(tok(&Tok::Int(1)).line_start, None);
+        assert_eq!(tok(&Tok::Int(1)).depth, 1);
+        assert_eq!(
+            tok(&Tok::Int(2)).line_start,
+            Some(LineStart { line: 2, col: 2 })
+        );
+        assert_eq!(tok(&Tok::Int(2)).depth, 1);
+    }
+
+    #[test]
+    fn doc_comment_at_column_zero_is_a_token() {
+        // `## text` at column 0 lexes as a Doc token (one space after `##`
+        // stripped); the following declaration starts its own statement.
+        assert_eq!(
+            kinds("## adds one\nlet inc = 1"),
+            vec![
+                Tok::Doc("adds one".to_string()),
+                Tok::Sep,
+                Tok::Let,
+                Tok::Ident("inc".to_string()),
+                Tok::Eq,
+                Tok::Int(1),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn non_doc_hash_comments_stay_trivia() {
+        // Single `#`, trailing `##`, and indented `##` are all ordinary comments.
+        assert_eq!(
+            kinds("# note\nlet x = 1 ## trailing"),
+            vec![
+                Tok::Let,
+                Tok::Ident("x".to_string()),
+                Tok::Eq,
+                Tok::Int(1),
+                Tok::Eof
+            ]
+        );
+        let toks = kinds("let f a =\n    ## note\n    a + 1");
+        assert!(
+            !toks.iter().any(|t| matches!(t, Tok::Doc(_))),
+            "indented ## must stay a comment, got {toks:?}"
+        );
+    }
+
+    #[test]
+    fn backward_pipe_is_one_token() {
+        // `<|` is distinct from `<` `|`, `<<`, `<=`, `<-`.
+        assert_eq!(
+            kinds("a <| b"),
+            vec![
+                Tok::Ident("a".to_string()),
+                Tok::PipeLeft,
+                Tok::Ident("b".to_string()),
+                Tok::Eof
+            ]
+        );
+        assert_eq!(
+            kinds("<< <| <="),
+            vec![Tok::LtLt, Tok::PipeLeft, Tok::Le, Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn ints_floats_and_wildcard() {
+        assert_eq!(
+            kinds("1 2.5 _"),
+            vec![Tok::Int(1), Tok::Float(2.5), Tok::Underscore, Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn keywords_vs_idents() {
+        assert_eq!(
+            kinds("let x"),
+            vec![Tok::Let, Tok::Ident("x".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn skips_line_comments() {
+        // `#` starts a line comment; the newline after it returns to the baseline
+        // column, so the offside rule separates the two statements with a `Sep`.
+        assert_eq!(
+            kinds("1 # ignored\n2"),
+            vec![Tok::Int(1), Tok::Sep, Tok::Int(2), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn fstring_splits_into_literals_and_holes() {
+        let toks = kinds("f\"a {x} b\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr, got {:?}", toks[0]);
+        };
+        assert_eq!(parts.len(), 3);
+        assert_eq!(parts[0], FStrPart::Lit("a ".to_string()));
+        let FStrPart::Hole(hole) = &parts[1] else {
+            panic!("expected a hole");
+        };
+        // The hole is lexed to its own tokens, terminated by `Eof`.
+        assert_eq!(
+            hole.iter().map(|t| t.tok.clone()).collect::<Vec<_>>(),
+            vec![Tok::Ident("x".to_string()), Tok::Eof]
+        );
+        assert_eq!(parts[2], FStrPart::Lit(" b".to_string()));
+    }
+
+    #[test]
+    fn fstring_hole_spans_are_absolute() {
+        // `f"v={x}"` — the hole's `x` sits at byte offset 5 in the source.
+        let toks = lex("f\"v={x}\"").unwrap();
+        let Tok::FStr(parts) = &toks[0].tok else {
+            panic!("expected FStr");
+        };
+        let FStrPart::Hole(hole) = &parts[1] else {
+            panic!("expected a hole");
+        };
+        assert_eq!(hole[0].span, Span::new(5, 6));
+    }
+
+    #[test]
+    fn fstring_escapes_and_nested_braces() {
+        // `{{`/`}}` are literal braces; a nested string keeps its own `}`.
+        let toks = kinds("f\"{{x}} {g \"}\"}\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr");
+        };
+        assert_eq!(parts[0], FStrPart::Lit("{x} ".to_string()));
+        assert!(matches!(parts[1], FStrPart::Hole(_)));
+    }
+
+    #[test]
+    fn fstring_debug_hole_echoes_its_source() {
+        // `{x=}` echoes the raw hole text (incl. the `=`) as a literal chunk,
+        // merged with any preceding literal, then the ordinary hole follows.
+        let toks = kinds("f\"val {x=}\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr, got {:?}", toks[0]);
+        };
+        assert_eq!(parts.len(), 2);
+        assert_eq!(parts[0], FStrPart::Lit("val x=".to_string()));
+        let FStrPart::Hole(hole) = &parts[1] else {
+            panic!("expected a hole");
+        };
+        // The hole's expression excludes the marker; spans stay absolute.
+        assert_eq!(
+            hole.iter().map(|t| t.tok.clone()).collect::<Vec<_>>(),
+            vec![Tok::Ident("x".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn fstring_debug_hole_preserves_whitespace() {
+        // `{x = }` echoes the whitespace around the `=` verbatim (Python's rule).
+        let toks = kinds("f\"{x = }\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr");
+        };
+        assert_eq!(parts[0], FStrPart::Lit("x = ".to_string()));
+        assert!(matches!(parts[1], FStrPart::Hole(_)));
+    }
+
+    #[test]
+    fn fstring_operator_equals_is_not_a_debug_marker() {
+        // `==`/`!=`/`<=`/`>=` at the end of a hole are operators, not markers:
+        // the hole keeps all its tokens and no literal chunk is echoed.
+        for src in [
+            "f\"{x==y}\"",
+            "f\"{x != y}\"",
+            "f\"{x >= 1}\"",
+            "f\"{x <= 1}\"",
+        ] {
+            let toks = kinds(src);
+            let Tok::FStr(parts) = &toks[0] else {
+                panic!("expected FStr in {src}");
+            };
+            assert_eq!(parts.len(), 1, "{src}");
+            let FStrPart::Hole(hole) = &parts[0] else {
+                panic!("expected a hole in {src}");
+            };
+            assert_eq!(hole.len(), 4, "{src}"); // lhs, op, rhs, Eof
+        }
+    }
+
+    #[test]
+    fn f_with_space_is_not_an_fstring() {
+        // `f "x"` (with a space) stays ordinary application; only adjacent `f"` opens
+        // an interpolated string.
+        assert_eq!(
+            kinds("f \"x\""),
+            vec![
+                Tok::Ident("f".to_string()),
+                Tok::Str("x".to_string()),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn distinguishes_division_operators() {
+        assert_eq!(
+            kinds("7 / 2"),
+            vec![Tok::Int(7), Tok::Slash, Tok::Int(2), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("7 // 2"),
+            vec![Tok::Int(7), Tok::SlashSlash, Tok::Int(2), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn offside_separates_top_level_items_but_not_continuations() {
+        // Same-column lines separate; an indented continuation does not.
+        assert_eq!(
+            kinds("a\nb"),
+            vec![
+                Tok::Ident("a".to_string()),
+                Tok::Sep,
+                Tok::Ident("b".to_string()),
+                Tok::Eof
+            ]
+        );
+        assert_eq!(
+            kinds("a\n  b"),
+            vec![
+                Tok::Ident("a".to_string()),
+                Tok::Ident("b".to_string()),
+                Tok::Eof
+            ]
+        );
+        // Line breaks inside brackets never separate.
+        assert_eq!(
+            kinds("(a\nb)"),
+            vec![
+                Tok::LParen,
+                Tok::Ident("a".to_string()),
+                Tok::Ident("b".to_string()),
+                Tok::RParen,
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn lexes_field_access_dot() {
+        assert_eq!(
+            kinds("p.x"),
+            vec![
+                Tok::Ident("p".to_string()),
+                Tok::Dot,
+                Tok::Ident("x".to_string()),
+                Tok::Eof
+            ]
+        );
+        // A float still wins over a leading-digit `.`; `.` only stands alone
+        // between identifiers.
+        assert_eq!(kinds("2.5"), vec![Tok::Float(2.5), Tok::Eof]);
+    }
+
+    #[test]
+    fn lexes_ellipsis_as_one_token() {
+        // The `extern` kwarg slot marker is a single lexeme, so a dotted target's
+        // separate dots stay separate and spaced-out dots are not an ellipsis.
+        assert_eq!(kinds("..."), vec![Tok::Ellipsis, Tok::Eof]);
+        assert_eq!(
+            kinds("f(k=...)"),
+            vec![
+                Tok::Ident("f".to_string()),
+                Tok::LParen,
+                Tok::Ident("k".to_string()),
+                Tok::Eq,
+                Tok::Ellipsis,
+                Tok::RParen,
+                Tok::Eof
+            ]
+        );
+        assert_eq!(kinds(". . ."), vec![Tok::Dot, Tok::Dot, Tok::Dot, Tok::Eof]);
+        assert_eq!(
+            kinds("a.b.c"),
+            vec![
+                Tok::Ident("a".to_string()),
+                Tok::Dot,
+                Tok::Ident("b".to_string()),
+                Tok::Dot,
+                Tok::Ident("c".to_string()),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn lexes_reassignment_arrow() {
+        assert_eq!(
+            kinds("x <- 5"),
+            vec![
+                Tok::Ident("x".to_string()),
+                Tok::LArrow,
+                Tok::Int(5),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn lexes_composition_operators() {
+        assert_eq!(
+            kinds("f >> g << h"),
+            vec![
+                Tok::Ident("f".to_string()),
+                Tok::GtGt,
+                Tok::Ident("g".to_string()),
+                Tok::LtLt,
+                Tok::Ident("h".to_string()),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn composition_does_not_disturb_comparison_or_units_or_reassignment() {
+        // `<<`/`>>` are single tokens lexed before `<`/`>`, so ordinary comparison,
+        // a `5<m>` unit annotation, and `<-` reassignment all still lex as before.
+        assert_eq!(
+            kinds("a < b"),
+            vec![
+                Tok::Ident("a".to_string()),
+                Tok::Lt,
+                Tok::Ident("b".to_string()),
+                Tok::Eof
+            ]
+        );
+        assert_eq!(
+            kinds("5<m>"),
+            vec![
+                Tok::Int(5),
+                Tok::Lt,
+                Tok::Ident("m".to_string()),
+                Tok::Gt,
+                Tok::Eof
+            ]
+        );
+        assert_eq!(
+            kinds("x <- v"),
+            vec![
+                Tok::Ident("x".to_string()),
+                Tok::LArrow,
+                Tok::Ident("v".to_string()),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn lexes_a_raw_string_with_literal_backslashes() {
+        // `r"C:\path\n"` — backslashes and the following char are literal (no escape
+        // processing), producing an ordinary `Tok::Str` with the raw content.
+        assert_eq!(
+            kinds(r#"r"C:\path\n""#),
+            vec![Tok::Str(r"C:\path\n".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn raw_string_backslash_quote_is_two_literal_chars() {
+        // Python's rule: `\"` inside a raw string is a literal backslash + quote and
+        // does NOT terminate the string.
+        assert_eq!(
+            kinds(r#"r"a\"b""#),
+            vec![Tok::Str(r#"a\"b"#.to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn r_with_a_space_is_an_identifier_then_a_string() {
+        // Only an *adjacent* `r"` opens a raw string; `r "x"` stays `r` applied to a
+        // string (matching the `f"..."` rule).
+        assert_eq!(
+            kinds(r#"r "x""#),
+            vec![
+                Tok::Ident("r".to_string()),
+                Tok::Str("x".to_string()),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn opens_a_block_after_indented_let_body() {
+        // `let f =` with a deeper body opens a block; statements at the body
+        // column are separated; the block closes (Dedent) at EOF.
+        assert_eq!(
+            kinds("let f =\n    a\n    b"),
+            vec![
+                Tok::Let,
+                Tok::Ident("f".to_string()),
+                Tok::Eq,
+                Tok::Indent,
+                Tok::Ident("a".to_string()),
+                Tok::Sep,
+                Tok::Ident("b".to_string()),
+                Tok::Dedent,
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn inline_let_body_opens_no_block() {
+        assert_eq!(
+            kinds("let x = 1\nlet y = 2"),
+            vec![
+                Tok::Let,
+                Tok::Ident("x".to_string()),
+                Tok::Eq,
+                Tok::Int(1),
+                Tok::Sep,
+                Tok::Let,
+                Tok::Ident("y".to_string()),
+                Tok::Eq,
+                Tok::Int(2),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn match_arms_stay_one_statement_in_a_block() {
+        // The body block opens after `=`; the `|` arms lead with a continuation
+        // token, so no `Sep` splits them — the match is a single statement.
+        let toks = kinds("let f n =\n  match n with\n  | 0 -> 1\n  | _ -> 2");
+        assert_eq!(toks.iter().filter(|t| **t == Tok::Sep).count(), 0);
+        assert_eq!(toks.iter().filter(|t| **t == Tok::Indent).count(), 1);
+        assert_eq!(toks.iter().filter(|t| **t == Tok::Dedent).count(), 1);
+    }
+
+    #[test]
+    fn string_escapes() {
+        assert_eq!(
+            kinds(r#""a\nb""#),
+            vec![Tok::Str("a\nb".to_string()), Tok::Eof]
+        );
+        // `\r` and Rust-style `\u{HEX}` (1–6 hex digits).
+        assert_eq!(
+            kinds(r#""a\r\nb""#),
+            vec![Tok::Str("a\r\nb".to_string()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds(r#""\u{e9}""#),
+            vec![Tok::Str("é".to_string()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds(r#""hi \u{1F600}""#),
+            vec![Tok::Str("hi 😀".to_string()), Tok::Eof]
+        );
+        // Errors: unknown escape, `\u` without braces, bad code point.
+        assert!(lex(r#""\z""#).is_err());
+        assert!(lex(r#""\u41""#).is_err());
+        assert!(lex(r#""\u{110000}""#).is_err()); // > U+10FFFF
+    }
+
+    #[test]
+    fn digit_separators_and_alternate_bases() {
+        // `_` separators are stripped; 0x/0o/0b parse in their base.
+        assert_eq!(kinds("1_000_000"), vec![Tok::Int(1_000_000), Tok::Eof]);
+        assert_eq!(kinds("0xFF"), vec![Tok::Int(255), Tok::Eof]);
+        assert_eq!(kinds("0o17"), vec![Tok::Int(15), Tok::Eof]);
+        assert_eq!(kinds("0b1010"), vec![Tok::Int(10), Tok::Eof]);
+        assert_eq!(kinds("0xDEAD_BEEF"), vec![Tok::Int(0xDEAD_BEEF), Tok::Eof]);
+        assert_eq!(
+            kinds("1_234.567_5"),
+            vec![Tok::Float(1_234.567_5), Tok::Eof]
+        );
+        // A trailing `_` (not between digits) is left for the next token.
+        assert_eq!(kinds("1_ "), vec![Tok::Int(1), Tok::Underscore, Tok::Eof]);
+    }
+
+    #[test]
+    fn double_star_is_exponentiation() {
+        // `**` is one token, distinct from two `*`.
+        assert_eq!(
+            kinds("2 ** 3"),
+            vec![Tok::Int(2), Tok::StarStar, Tok::Int(3), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("a * b"),
+            vec![
+                Tok::Ident("a".to_string()),
+                Tok::Star,
+                Tok::Ident("b".to_string()),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn scientific_notation_floats() {
+        // Exponent (with optional sign, upper/lowercase e); a number with an
+        // exponent is a float even without a fractional part.
+        assert_eq!(kinds("1e6"), vec![Tok::Float(1e6), Tok::Eof]);
+        assert_eq!(kinds("2.5e-3"), vec![Tok::Float(2.5e-3), Tok::Eof]);
+        assert_eq!(kinds("1E3"), vec![Tok::Float(1e3), Tok::Eof]);
+        assert_eq!(kinds("1e+4"), vec![Tok::Float(1e4), Tok::Eof]);
+        // Back-compat: an `e` with no valid exponent is a separate identifier, not
+        // part of the number (so `2exp` is `2` then `exp`, `1e` is `1` then `e`).
+        assert_eq!(
+            kinds("2exp"),
+            vec![Tok::Int(2), Tok::Ident("exp".to_string()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("1e"),
+            vec![Tok::Int(1), Tok::Ident("e".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn non_ascii_string_keeps_its_characters() {
+        // Multi-byte UTF-8 (2-byte é, 3-byte →, 4-byte 🎉) must lex to the real
+        // characters, not one Latin-1 codepoint per byte (which would double-encode
+        // on emit). `String::len` counts chars, so this pins the char count too.
+        let Tok::Str(s) = &kinds("\"café → 🎉\"")[0] else {
+            panic!("expected a string literal")
+        };
+        assert_eq!(s, "café → 🎉");
+        // café(4) + space + → + space + 🎉 = 8 characters (13 bytes).
+        assert_eq!(s.chars().count(), 8);
+
+        // Same for f-string literal chunks.
+        let Tok::FStr(parts) = &kinds("f\"café {x}\"")[0] else {
+            panic!("expected an f-string")
+        };
+        assert_eq!(parts[0], FStrPart::Lit("café ".to_string()));
+    }
+
+    #[test]
+    fn triple_quoted_string_spans_newlines() {
+        // Embedded newlines (and indentation on continuation lines) are literal
+        // content; the whole literal is one `Tok::Str`.
+        assert_eq!(
+            kinds("\"\"\"line1\nline2\"\"\""),
+            vec![Tok::Str("line1\nline2".to_string()), Tok::Eof]
+        );
+        // A lone `"` (or `""`) inside is content; escapes still process.
+        assert_eq!(
+            kinds("\"\"\"a \"quoted\" b\"\"\""),
+            vec![Tok::Str("a \"quoted\" b".to_string()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("\"\"\"a\\tb\\u{e9}\"\"\""),
+            vec![Tok::Str("a\tbé".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn three_quotes_vs_empty_string_disambiguation() {
+        // `""` is the empty string; `""""""` (six quotes) is the empty triple
+        // string; `"" "x"` is two ordinary strings. Only exactly three quotes at
+        // the open start a triple literal.
+        assert_eq!(kinds("\"\""), vec![Tok::Str(String::new()), Tok::Eof]);
+        assert_eq!(
+            kinds("\"\"\"\"\"\""),
+            vec![Tok::Str(String::new()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("\"\" \"x\""),
+            vec![Tok::Str(String::new()), Tok::Str("x".to_string()), Tok::Eof]
+        );
+        // `"""` and `""""` open a triple with no close: unterminated.
+        assert!(lex("\"\"\"").is_err());
+        assert!(lex("\"\"\"\"").is_err());
+    }
+
+    #[test]
+    fn triple_quoted_fstring_spans_newlines_with_holes() {
+        // `f"""` opens a multi-line interpolated string; holes work exactly as in
+        // the single-line form and newlines are literal chunk content.
+        let toks = kinds("f\"\"\"a {x}\nb\"\"\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr, got {:?}", toks[0]);
+        };
+        assert_eq!(parts.len(), 3);
+        assert_eq!(parts[0], FStrPart::Lit("a ".to_string()));
+        assert!(matches!(parts[1], FStrPart::Hole(_)));
+        assert_eq!(parts[2], FStrPart::Lit("\nb".to_string()));
+        // A debug hole works in the triple form too.
+        let toks = kinds("f\"\"\"{x=}\"\"\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr");
+        };
+        assert_eq!(parts[0], FStrPart::Lit("x=".to_string()));
+        assert!(matches!(parts[1], FStrPart::Hole(_)));
+        // `f""` stays the ordinary empty f-string (two quotes, not a triple).
+        assert_eq!(kinds("f\"\""), vec![Tok::FStr(vec![]), Tok::Eof]);
+        // A nested triple-quoted string inside a hole doesn't close the hole.
+        let toks = kinds("f\"\"\"{String.len \"\"\"x}y\"\"\"}\"\"\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr");
+        };
+        assert_eq!(parts.len(), 1);
+        assert!(matches!(parts[0], FStrPart::Hole(_)));
+    }
+
+    #[test]
+    fn a_windows_line_break_in_a_string_is_a_newline() {
+        // A file saved with `\r\n` line endings gives the same strings as one
+        // with `\n`, as Python's universal newlines do, in every string form; an
+        // escaped `\r` is still a carriage return.
+        assert_eq!(
+            kinds("\"\"\"a\r\nb\"\"\""),
+            vec![Tok::Str("a\nb".to_string()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("r\"\"\"a\r\nb\"\"\""),
+            vec![Tok::Str("a\nb".to_string()), Tok::Eof]
+        );
+        let toks = kinds("f\"\"\"{x}\r\nb\"\"\"");
+        let Tok::FStr(parts) = &toks[0] else {
+            panic!("expected FStr, got {:?}", toks[0]);
+        };
+        assert_eq!(parts[1], FStrPart::Lit("\nb".to_string()));
+        assert_eq!(
+            kinds("\"\"\"a\rb\"\"\""),
+            vec![Tok::Str("a\nb".to_string()), Tok::Eof]
+        );
+        assert_eq!(
+            kinds("\"a\\rb\""),
+            vec![Tok::Str("a\rb".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn triple_quoted_raw_string() {
+        // `r"""` combines: multi-line + literal backslashes.
+        assert_eq!(
+            kinds("r\"\"\"a\\n\nb\"\"\""),
+            vec![Tok::Str("a\\n\nb".to_string()), Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn triple_quoted_string_leaks_no_layout_tokens() {
+        // The literal is consumed in one pass, so its internal newlines never
+        // reach the offside rule: a multi-line string inside a `let` block emits
+        // no stray Sep/Indent/Dedent, and the next top-level item still separates.
+        assert_eq!(
+            kinds("let s =\n    \"\"\"a\nb\"\"\"\nlet t = 1"),
+            vec![
+                Tok::Let,
+                Tok::Ident("s".to_string()),
+                Tok::Eq,
+                Tok::Indent,
+                Tok::Str("a\nb".to_string()),
+                Tok::Dedent,
+                Tok::Sep,
+                Tok::Let,
+                Tok::Ident("t".to_string()),
+                Tok::Eq,
+                Tok::Int(1),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn recovers_from_a_bad_character() {
+        // `@` is not a valid token; recovery skips it and lexes the rest.
+        let (tokens, errors) = lex_recover("let x = 1 @ 2");
+        assert_eq!(errors.len(), 1, "errors: {errors:?}");
+        let toks: Vec<Tok> = tokens.into_iter().map(|t| t.tok).collect();
+        assert_eq!(
+            toks,
+            vec![
+                Tok::Let,
+                Tok::Ident("x".to_string()),
+                Tok::Eq,
+                Tok::Int(1),
+                Tok::Int(2),
+                Tok::Eof
+            ]
+        );
+    }
+
+    #[test]
+    fn recovers_from_an_unterminated_string() {
+        // The string runs to EOF; recovery records the error and still yields the
+        // leading tokens (so the editor sees `let s =`).
+        let (tokens, errors) = lex_recover("let s = \"oops");
+        assert_eq!(errors.len(), 1);
+        let toks: Vec<Tok> = tokens.into_iter().map(|t| t.tok).collect();
+        assert_eq!(
+            toks,
+            vec![Tok::Let, Tok::Ident("s".to_string()), Tok::Eq, Tok::Eof]
+        );
+    }
+
+    #[test]
+    fn multibyte_bad_char_is_one_error() {
+        // A non-ASCII bad character is skipped as a single scalar, not per-byte.
+        let (_, errors) = lex_recover("let x = §");
+        assert_eq!(errors.len(), 1, "errors: {errors:?}");
+    }
+
+    #[test]
+    fn strict_lex_still_fails_on_the_first_error() {
+        assert!(lex("let x = 1 @ 2").is_err());
+    }
+}

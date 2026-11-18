@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let base = 10
+let addb acc x = ((List.concat acc) [(x + base)])
+let usefn n =
+    let base = 99
+    (((List.fold addb) []) [1])
+let out = (usefn 0)
+--- stderr ---

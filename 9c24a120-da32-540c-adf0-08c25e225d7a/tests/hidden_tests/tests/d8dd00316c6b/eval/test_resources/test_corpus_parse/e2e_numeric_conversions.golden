@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let a = (round 3.7)
+let b = (floor 3.7)
+let c = (ceil 3.2)
+let d = (truncate 3.9)
+let e = (floor (- 2.5))
+let f = ((Option.withDefault 0.0) (String.toFloat "3.5"))
+let g = ((Option.withDefault 0.0) (String.toFloat "nope"))
+--- stderr ---

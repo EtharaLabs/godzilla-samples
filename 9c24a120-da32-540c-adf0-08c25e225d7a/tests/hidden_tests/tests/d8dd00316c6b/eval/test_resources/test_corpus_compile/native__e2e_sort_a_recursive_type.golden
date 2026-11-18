@@ -1,0 +1,44 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+def _pf_sort(xs):
+    return sorted(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    _0: int
+    def __repr__(self):
+        return f"Leaf({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Leaf and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Tree"
+    _1: "Tree"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r})"
+    def __eq__(self, other):
+        return type(other) is Node and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+Tree = Leaf | Node
+ordered: list[Tree] = _pf_sort([Node(Leaf(2), Leaf(3)), Leaf(5), Leaf(1)])
+--- stderr ---

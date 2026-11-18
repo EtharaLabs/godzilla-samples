@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+module Sum =
+    let yield_ x = x
+    let combine a b = (a + b)
+    let delay f = (f 0)
+let total = Sum { yield 1 yield 2 yield 3 yield 4 }
+--- stderr ---

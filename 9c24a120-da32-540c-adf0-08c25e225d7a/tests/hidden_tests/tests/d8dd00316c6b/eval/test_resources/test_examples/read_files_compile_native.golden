@@ -1,0 +1,41 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import pathlib
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def roundTrip(name: str) -> str:
+    p = pathlib.Path(name)
+    _ = pathlib.Path.write_text(p, "hello from pyfun")
+    back = pathlib.Path.read_text(p)
+    _ = pathlib.Path.unlink(p)
+    return back
+def readOrNote(name: str) -> str:
+    try:
+        _pf_t0 = Ok(pathlib.Path.read_text(pathlib.Path(name)))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        s = _pf_t0._0
+        return s
+    else:
+        e = _pf_t0._0
+        return f"(could not read {name}: {e.errorKind})"
+print(roundTrip("pyfun_interop_demo.txt"))
+print(readOrNote("no_such_file.txt"))
+--- stderr ---

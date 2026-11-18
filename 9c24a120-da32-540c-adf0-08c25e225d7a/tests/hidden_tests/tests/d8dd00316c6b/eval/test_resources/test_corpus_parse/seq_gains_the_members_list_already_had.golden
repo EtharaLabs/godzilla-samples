@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+let s = (Seq.ofList [1, 2, 3])
+let e = (Seq.toList Seq.empty)
+let d = (Seq.toList ((Seq.distinctBy (fun x -> (x % 2))) s))
+let r = (Seq.toList ((Seq.replicate 2) "a"))
+let g = ((Seq.get 1) s)
+let l = (Seq.last s)
+let t = ((Seq.sumBy (fun x -> (x * 2))) s)
+let m = (Seq.max s)
+let n = (Seq.min s)
+let f = ((Seq.reduce (fun a b -> (a + b))) s)
+--- stderr ---

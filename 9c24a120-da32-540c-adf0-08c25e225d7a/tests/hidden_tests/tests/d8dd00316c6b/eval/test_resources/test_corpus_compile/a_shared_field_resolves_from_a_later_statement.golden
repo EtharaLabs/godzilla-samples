@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Placed:
+    row: int
+    letter: str
+@dataclass(frozen=True, slots=True)
+class Cell:
+    row: int
+    letter: str
+    blank: bool
+def describe(c):
+    l = c.letter
+    flag = c.blank
+    return l
+--- stderr ---

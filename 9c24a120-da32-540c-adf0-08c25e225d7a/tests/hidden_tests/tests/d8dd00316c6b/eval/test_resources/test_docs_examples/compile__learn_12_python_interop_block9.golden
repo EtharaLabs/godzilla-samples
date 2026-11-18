@@ -1,0 +1,87 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map2(f, da, db):
+    def go(v):
+        return f(da(v), db(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Book:
+    title: str
+    pages: int
+bookDecoder = _pf_dec_map2(lambda title, pages: Book(title, pages), _pf_dec_field("title", _pf_dec_string), _pf_dec_field("pages", _pf_dec_int))
+def describe(r):
+    if isinstance(r, Ok):
+        b = r._0
+        return f"{b.title}, {b.pages} pages"
+    else:
+        e = r._0
+        return f"failed ({e.errorKind}): {e.errorMessage}"
+wellFormed = "{\"title\": \"Dune\", \"pages\": 412}"
+missingField = "{\"title\": \"Dune\"}"
+_pf_t0 = lambda title, pages: Book(title, pages)
+try:
+    _pf_t1 = json.loads(wellFormed)
+    if not isinstance(_pf_t1, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t2 = _pf_t1["title"]
+    if not isinstance(_pf_t2, str):
+        raise ValueError("expected a string, got " + type(_pf_t2).__name__)
+    if not isinstance(_pf_t1, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t3 = _pf_t1["pages"]
+    if not (isinstance(_pf_t3, int) and not isinstance(_pf_t3, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t3).__name__)
+    _pf_t4 = Ok(_pf_t0(_pf_t2, _pf_t3))
+except Exception as e:
+    _pf_t4 = Error(_Exception(type(e).__name__, str(e)))
+print(describe(_pf_t4))
+_pf_t5 = lambda title, pages: Book(title, pages)
+try:
+    _pf_t6 = json.loads(missingField)
+    if not isinstance(_pf_t6, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t7 = _pf_t6["title"]
+    if not isinstance(_pf_t7, str):
+        raise ValueError("expected a string, got " + type(_pf_t7).__name__)
+    if not isinstance(_pf_t6, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t8 = _pf_t6["pages"]
+    if not (isinstance(_pf_t8, int) and not isinstance(_pf_t8, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t8).__name__)
+    _pf_t9 = Ok(_pf_t5(_pf_t7, _pf_t8))
+except Exception as e:
+    _pf_t9 = Error(_Exception(type(e).__name__, str(e)))
+print(describe(_pf_t9))
+--- stderr ---

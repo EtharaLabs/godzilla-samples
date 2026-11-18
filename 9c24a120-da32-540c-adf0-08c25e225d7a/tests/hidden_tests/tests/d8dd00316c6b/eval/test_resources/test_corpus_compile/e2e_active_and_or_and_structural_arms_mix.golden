@@ -1,0 +1,51 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _ap_Answer(o):
+    return o == Some(42)
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def describe(o):
+    match o:
+        case Some(x) if x > 100:
+            return "big"
+    _pf_t0 = _ap_Answer(o)
+    if _pf_t0:
+        return "the answer"
+    match o:
+        case Some(x):
+            _pf_t1 = _ap_Even_Odd(x)
+            if isinstance(_pf_t1, _Even) or isinstance(_pf_t1, _Odd):
+                return str(x)
+            else:
+                raise RuntimeError("non-exhaustive match")
+    match o:
+        case None_():
+            return "none"
+    raise RuntimeError("non-exhaustive match")
+a = describe(Some(42))
+b = describe(Some(7))
+c = describe(Some(500))
+d = describe(_None_)
+--- stderr ---

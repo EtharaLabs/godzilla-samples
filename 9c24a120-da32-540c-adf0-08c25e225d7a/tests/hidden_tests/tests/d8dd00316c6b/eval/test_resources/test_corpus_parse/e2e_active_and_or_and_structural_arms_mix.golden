@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+let (|Answer|_|) o = (o == (Some 42))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let describe o =
+    match o:
+        case (Some x) if (x > 100): "big"
+        case Answer: "the answer"
+        case (Some x):
+            match x:
+                case (Even | Odd): (String.fromInt x)
+        case None: "none"
+let a = (describe (Some 42))
+let b = (describe (Some 7))
+let c = (describe (Some 500))
+let d = (describe None)
+--- stderr ---

@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+let classify n =
+    match n:
+        case 0: "zero"
+        case 1: "one"
+        case _: "many"
+let r1 = (classify 0)
+let r2 = (classify 7)
+let r3 = (if true then 10 else 20)
+--- stderr ---

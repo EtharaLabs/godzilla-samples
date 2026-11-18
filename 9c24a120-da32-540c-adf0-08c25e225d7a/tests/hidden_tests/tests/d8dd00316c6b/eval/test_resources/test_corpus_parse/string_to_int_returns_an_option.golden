@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let bump o =
+    match o:
+        case (Some n): (n + 1)
+        case None: 0
+let r = (bump (String.toInt "41"))
+--- stderr ---

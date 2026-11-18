@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+let classify n =
+    match n:
+        case 0:
+            let base = 100
+            base
+        case _:
+            let mut acc = n
+            (acc <- (acc * 2))
+            acc
+let absdiff a b =
+    if (a > b) then
+        let d = (a - b)
+        d
+    else
+        let d = (b - a)
+        d
+let r1 = (classify 0)
+let r2 = (classify 5)
+let r3 = ((absdiff 3) 10)
+--- stderr ---

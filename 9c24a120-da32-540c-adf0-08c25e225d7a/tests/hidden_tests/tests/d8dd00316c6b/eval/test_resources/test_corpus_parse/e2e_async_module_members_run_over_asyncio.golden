@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+extern import asyncio
+extern runAsync: (Async a) -> a = asyncio.run
+extern failing: string -> Async unit = asyncio.sleep
+let slow n = async { do! (Async.sleep 0.01) return n }
+let main = async { let! xs = (Async.parallel [(slow 1), (slow 2), (slow 3)]) let _ = (print xs) let! first = (Async.race [(slow 7), async { do! (Async.sleep 0.5) return 8 }]) let _ = (print first) let! t = ((Async.timeout 0.001) (Async.sleep 0.5)) let _ = (print t) let! u = ((Async.timeout 1.0) (slow 9)) let _ = (print u) let! v = (Async.toThread (fun _ -> 41)) let _ = (print v) let! r = (Async.catch (failing "oops")) let _ = (match r: case (Ok _): (print "ok") case (Error e): (print f"caught {e.errorKind}")) let! ok = (Async.catch (slow 5)) let _ = (print ok) return () }
+(runAsync main)
+--- stderr ---

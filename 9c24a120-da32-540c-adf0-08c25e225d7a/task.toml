@@ -1,0 +1,67 @@
+schema_version = "1.4"
+reward_type = "bounded_continuous"
+artifacts = [{ source = "/workspace", exclude = ["./executable", "./target", "./.git"] }]
+
+[task]
+name = "ethara/9c24a120-da32-540c-adf0-08c25e225d7a"
+version = "1.0.0"
+description = "Rebuild Pyfun, a compiler for an F#-inspired functional-first language that emits readable Python, with algebraic data types, exhaustive matching, inferred effects and units of measure, in Rust with only the standard library, from its documentation and a compiled reference binary; graded by 4,591 hidden tests that compare the rebuilt program's behavior with the original's."
+authors = [{ name = "Aman Yadav", email = "aman.yadav@ethara.ai" }]
+keywords = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "compiler", "functional-programming", "python"]
+
+[metadata]
+instance_id = "simontreanor__pyfun.d6d64e8"
+repository = "simontreanor/Pyfun"
+commit = "d6d64e85c0135216508ed2e798613d149ee2cc98"
+language = "rust"
+difficulty = "medium"
+base_commit = "f40924470d685af5d68448479b2c5613d9034c88"
+reference_commit = "2c9a5b42b6267d7a358cf32b15480bc4a74660f7"
+platforms = ["linux/arm64", "linux/amd64"]
+test_branches = 2
+active_tests = 4591
+ignored_tests = 53
+language_policy = "original"
+tests_provenance = "automated"
+generator_fingerprint = "1456e8187ce6dd51"
+test_suite_sha256 = "79cf86f7050e895309d2a3214a14093ce0a4635ddfe9c292de07ff0736abb007"
+category = "software-engineering"
+reward_type = "bounded_continuous"
+domain = "software-engineering"
+field = "computer-science"
+subfield = "compilers"
+tags = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "compiler", "functional-programming", "python"]
+expert_time_estimate_hours = 100.0
+null_floor = 0.0
+discrimination_weight = 1.0
+
+[agent]
+timeout_sec = 86400
+user = "agent"
+network_mode = "allowlist"
+allowed_hosts = ["api.openai.com", "api.anthropic.com"]
+
+[verifier]
+timeout_sec = 43200
+user = "root"
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+env = { PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/cargo/bin" }

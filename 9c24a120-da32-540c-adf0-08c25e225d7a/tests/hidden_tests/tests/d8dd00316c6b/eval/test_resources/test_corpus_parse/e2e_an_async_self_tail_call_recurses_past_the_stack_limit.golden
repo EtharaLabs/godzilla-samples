@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+extern import asyncio
+extern runAsync: (Async a) -> a = asyncio.run
+let finished acc = async { return acc }
+let loop n acc = async { return! (if (n == 0) then (finished acc) else ((loop (n - 1)) (acc + n))) }
+(print (runAsync ((loop 100000) 0)))
+--- stderr ---

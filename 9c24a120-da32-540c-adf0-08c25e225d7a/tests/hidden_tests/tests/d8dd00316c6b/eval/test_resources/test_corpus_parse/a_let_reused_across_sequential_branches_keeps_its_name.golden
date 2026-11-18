@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+let f a b =
+    let x =
+        if a then
+            let t = 1
+            (t + 1)
+        else 0
+    let y =
+        if b then
+            let t = 10
+            (t + 1)
+        else 0
+    (x + y)
+let r = ((f true) true)
+--- stderr ---

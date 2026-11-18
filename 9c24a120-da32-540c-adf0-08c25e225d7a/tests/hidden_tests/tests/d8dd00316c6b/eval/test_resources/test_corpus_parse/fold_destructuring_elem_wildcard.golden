@@ -1,0 +1,4 @@
+exit: 0
+--- stdout ---
+let out = (Set.toList (((List.fold (fun s (p, _) -> ((Set.add p) s))) Set.empty) [(1, "a"), (2, "b"), (1, "c")]))
+--- stderr ---

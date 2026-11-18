@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def classify(n):
+    while True:
+        match n:
+            case 0:
+                return "zero"
+            case _:
+                n = n - 1
+                continue
+--- stderr ---

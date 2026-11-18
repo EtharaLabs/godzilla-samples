@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def f(xs: list[int]) -> Some | None_:
+    def _pf_fn0():
+        _pf_t1 = _pf_list_get(0, xs)
+        if isinstance(_pf_t1, Some):
+            a = _pf_t1._0
+            _pf_t0 = _pf_list_get(1, xs)
+            if isinstance(_pf_t0, Some):
+                b = _pf_t0._0
+                return Some(a + b)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+_pf_t3 = f([1, 2])
+if isinstance(_pf_t3, Some):
+    n = _pf_t3._0
+    _pf_t2 = n
+else:
+    _pf_t2 = 0
+hit: int = _pf_t2
+_pf_t5 = f([1])
+if isinstance(_pf_t5, Some):
+    n = _pf_t5._0
+    _pf_t4 = n
+else:
+    _pf_t4 = 0
+miss: int = _pf_t4
+--- stderr ---

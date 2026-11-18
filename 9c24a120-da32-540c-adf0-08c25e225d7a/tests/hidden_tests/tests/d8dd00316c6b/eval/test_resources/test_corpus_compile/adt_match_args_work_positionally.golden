@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Empty:
+    def __repr__(self):
+        return "Empty"
+_Empty = Empty()
+@dataclass(frozen=True, slots=True, repr=False)
+class Has:
+    _0: object
+    def __repr__(self):
+        return f"Has({self._0!r})"
+def unwrap(o):
+    match o:
+        case Has(v):
+            return v
+        case Empty():
+            return 0
+        case _:
+            raise RuntimeError("non-exhaustive match")
+r = unwrap(Has(7))
+--- stderr ---

@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+firsts = _pf_map(_pf_fst, _pf_zip([1], ["a"]))
+--- stderr ---

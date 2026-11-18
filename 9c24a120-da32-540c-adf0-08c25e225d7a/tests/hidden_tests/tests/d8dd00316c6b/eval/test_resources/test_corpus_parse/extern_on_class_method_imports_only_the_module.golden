@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+type C = CH
+extern ex: C -> string -> C = sqlite3.Connection.execute
+let f c = ((ex c) "x")
+--- stderr ---

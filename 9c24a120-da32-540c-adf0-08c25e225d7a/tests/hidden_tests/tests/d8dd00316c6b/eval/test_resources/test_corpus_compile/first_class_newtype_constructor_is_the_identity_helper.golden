@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_id(x):
+    return x
+ids = _pf_map(_pf_id, ["a"])
+--- stderr ---

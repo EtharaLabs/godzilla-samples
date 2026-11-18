@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let p = ((List.partition (fun x -> (x > 1))) [1, 2])
+let u = (List.unzip ((List.zip [1]) ["a"]))
+let f = (List.flatten [[1], [2]])
+let i = ((List.init 3) (fun n -> (n * n)))
+let r = ((List.replicate 2) "x")
+let g = ((List.groupBy (fun x -> (x % 2))) [1, 2])
+--- stderr ---

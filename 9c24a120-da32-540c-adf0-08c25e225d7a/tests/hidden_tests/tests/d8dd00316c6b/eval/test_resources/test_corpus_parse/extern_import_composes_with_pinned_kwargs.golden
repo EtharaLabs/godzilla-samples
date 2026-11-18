@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+extern import sqlite3
+extern conn: string -> a = sqlite3.dbapi2.connect(timeout=5)
+let c = (conn ":memory:")
+--- stderr ---

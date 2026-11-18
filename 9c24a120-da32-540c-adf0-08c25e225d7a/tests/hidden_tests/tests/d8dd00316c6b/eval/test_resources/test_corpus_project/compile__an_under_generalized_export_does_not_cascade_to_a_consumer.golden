@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+# ==== helper.py ====
+def id(x):
+    return x
+def id2(y):
+    return y
+
+# ==== middle.py ====
+def f0(a, b):
+    return (a, b)
+def f1(a, b):
+    return (a, b)
+
+# ==== main.py ====
+import middle
+print(middle.f1(1, 2))
+print(middle.f1("x", "y"))
+
+--- stderr ---

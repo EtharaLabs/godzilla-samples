@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+extern gather: (a ->{e} b) -> (List a) ->{async, e} Async (List b) = mymod.gather
+let r = ((gather (fun x -> x)) [1, 2])
+--- stderr ---

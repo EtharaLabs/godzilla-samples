@@ -1,0 +1,57 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Red:
+    def __repr__(self):
+        return "Red"
+    def __eq__(self, other):
+        return type(other) is Red and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_Red: Red = Red()
+@dataclass(frozen=True, slots=True, repr=False)
+class Green:
+    def __repr__(self):
+        return "Green"
+    def __eq__(self, other):
+        return type(other) is Green and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_Green: Green = Green()
+@dataclass(frozen=True, slots=True, repr=False)
+class Blue:
+    def __repr__(self):
+        return "Blue"
+    def __eq__(self, other):
+        return type(other) is Blue and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (2,)
+_Blue: Blue = Blue()
+Color = Red | Green | Blue
+x: bool = _Red < _Green
+--- stderr ---

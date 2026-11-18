@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _ap_Positive(n):
+    if n > 0:
+        return Some(n)
+    else:
+        return _None_
+def clamped(n):
+    _pf_t0 = _ap_Positive(n)
+    if isinstance(_pf_t0, Some):
+        p = _pf_t0._0
+        return p
+    else:
+        return 0
+print(clamped(9))
+print(clamped(0 - 5))
+--- stderr ---

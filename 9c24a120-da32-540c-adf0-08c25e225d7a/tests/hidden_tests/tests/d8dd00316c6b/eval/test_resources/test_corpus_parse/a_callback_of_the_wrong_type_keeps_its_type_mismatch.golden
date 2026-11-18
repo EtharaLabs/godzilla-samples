@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+extern type Writer
+extern type Server
+extern serve: (Writer -> Async unit) -> int -> Async Server = asyncio.start_server
+let listen = ((serve 5) 7777)
+--- stderr ---

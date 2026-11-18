@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+def classify(n: int) -> int:
+    if n == 0:
+        base = 100
+        return base
+    else:
+        acc = n
+        acc = acc * 2
+        return acc
+def absdiff(a: int, b: int) -> int:
+    if a > b:
+        d = a - b
+        return d
+    else:
+        d = b - a
+        return d
+r1: int = classify(0)
+r2: int = classify(5)
+r3: int = absdiff(3, 10)
+--- stderr ---

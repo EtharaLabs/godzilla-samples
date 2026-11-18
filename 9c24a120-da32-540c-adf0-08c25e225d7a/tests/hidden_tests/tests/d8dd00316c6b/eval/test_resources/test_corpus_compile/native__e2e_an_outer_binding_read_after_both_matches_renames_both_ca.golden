@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def step(a: Ok | Error, b: Ok | Error) -> int:
+    why = "x"
+    if isinstance(a, Ok):
+        v = a._0
+        _pf_t0 = v
+    else:
+        _why = a._0
+        _pf_t0 = len(_why)
+    x = _pf_t0
+    if isinstance(b, Ok):
+        v = b._0
+        _pf_t1 = v
+    else:
+        _why2 = b._0
+        _pf_t1 = len(_why2)
+    y = _pf_t1
+    return len(why) + x + y
+r: int = step(Ok(1), Error("no"))
+--- stderr ---

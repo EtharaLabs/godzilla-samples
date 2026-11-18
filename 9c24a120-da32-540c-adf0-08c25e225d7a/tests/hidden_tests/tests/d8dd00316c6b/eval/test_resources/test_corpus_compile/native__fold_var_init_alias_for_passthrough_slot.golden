@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+from typing import Any
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def step(acc, x):
+    m = acc[0]
+    keep = acc[1]
+    return (_pf_map_add(x, x, m), keep)
+seed: dict[Any, Any] = dict()
+seed2: dict[Any, Any] = dict()
+m = dict(seed)
+keep = seed2
+for x in [1, 2]:
+    m[x] = x
+r: tuple[dict[int, int], dict[Any, Any]] = (m, keep)
+m = r[0]
+keep = r[1]
+_pf_t0 = (len(m), len(keep), len(seed2))
+out: tuple[int, int, int] = _pf_t0
+--- stderr ---

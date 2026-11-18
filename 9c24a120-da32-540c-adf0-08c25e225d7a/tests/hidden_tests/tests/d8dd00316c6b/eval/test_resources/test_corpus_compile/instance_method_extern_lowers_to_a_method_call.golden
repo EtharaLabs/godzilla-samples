@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class RH:
+    def __repr__(self):
+        return "RH"
+_RH = RH()
+def f(r):
+    return r.read()
+--- stderr ---

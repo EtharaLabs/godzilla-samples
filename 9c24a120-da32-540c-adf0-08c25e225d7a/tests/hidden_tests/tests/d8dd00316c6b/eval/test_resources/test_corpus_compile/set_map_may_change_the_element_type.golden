@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+def _pf_set_map(f, s):
+    return set(map(f, s))
+s = _pf_set_map(lambda x: str(x), set([1, 2]))
+--- stderr ---

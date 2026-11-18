@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let f o =
+    match o:
+        case ((Some v) as w): w
+        case None: None
+--- stderr ---

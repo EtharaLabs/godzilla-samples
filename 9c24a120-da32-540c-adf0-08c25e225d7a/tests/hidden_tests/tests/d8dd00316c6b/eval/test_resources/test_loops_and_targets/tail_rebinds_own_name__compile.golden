@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def go(n):
+    go2 = n
+    def go(k):
+        return k + 1
+    if n == 0:
+        return 0
+    else:
+        return go(n - 1)
+print(go(5))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: the body rebinds `go`

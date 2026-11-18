@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+let m = (((Map.add "a") 1) (((Map.add "b") 2) Map.empty))
+let v = (((Map.findOr "a") 0) m)
+let o = ((Map.tryFind "a") m)
+let m2 = ((Map.remove "b") m)
+let has = ((Map.contains "a") m2)
+let n = (Map.len m2)
+let ks = (Map.keys m)
+let vs = (Map.values m)
+--- stderr ---

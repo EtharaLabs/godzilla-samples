@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+let xs = [1, 2, 3, 1, 2]
+let taken = ((List.takeWhile (fun x -> (x < 3))) xs)
+let dropped = ((List.dropWhile (fun x -> (x < 3))) xs)
+let desc = ((List.sortByDescending (fun x -> x)) xs)
+let counted = ((List.countBy (fun x -> (x % 2))) xs)
+let uniqBy = (Seq.toList ((Seq.distinctBy (fun x -> (x % 2))) (Seq.ofList xs)))
+let copies = (Seq.toList ((Seq.replicate 3) "a"))
+let none = (Seq.toList Seq.empty)
+let at = ((Seq.get 2) (Seq.ofList xs))
+let final = (Seq.last (Seq.ofList xs))
+let doubled = ((Seq.sumBy (fun x -> (x * 2))) (Seq.ofList xs))
+let biggest = (Seq.max (Seq.ofList xs))
+let smallest = (Seq.min (Seq.ofList xs))
+let joined = ((Seq.reduce (fun a b -> (a + b))) (Seq.ofList xs))
+let holds = ((Option.forall (fun x -> (x > 0))) (Some 1))
+let has = ((Option.contains 1) (Some 1))
+let okHas = ((Result.contains 1) (Ok 1))
+let negative = (sign (- 5))
+let zero = (sign 0)
+let positive = (sign 42)
+--- stderr ---

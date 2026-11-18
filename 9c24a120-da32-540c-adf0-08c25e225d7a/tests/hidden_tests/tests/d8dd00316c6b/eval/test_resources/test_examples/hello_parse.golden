@@ -1,0 +1,349 @@
+exit: 0
+--- stdout ---
+type Color = Red | Green | Blue
+type Point = { x: int, y: int }
+let pure add a b = (a + b)
+let inc = (add 1)
+let five = (4 |> inc)
+let fact n = (if (n == 0) then 1 else (n * (fact (n - 1))))
+let same = (id 42)
+let always7 = ((const 7) "discarded")
+let subtract a b = (a - b)
+let backwards = (((flip subtract) 3) 10)
+let zeroed = ((List.map (const 0)) [1, 2, 3])
+let dropped = (ignore 42)
+## Returns 1 when the flag is set, else 0.
+let pick b = (if b then 1 else 0)
+## A traffic signal.
+## `Walk` when clear, `Wait` while it counts down, `Stop` otherwise. Ordered by
+## declaration, so `Walk < Wait < Stop` under the derived comparison.
+type Signal = Walk | Wait | Stop
+let scaled a b =
+    let mut acc = a
+    (acc <- (acc + b))
+    (acc <- (acc * 2))
+    acc
+let accumulate =
+    let mut running = 0
+    let tally x =
+        (running <- (running + x))
+        running
+    let first = (tally 10)
+    (tally 5)
+let describeSign n =
+    match n:
+        case 0: "zero"
+        case _:
+            let positive = (n > 0)
+            (if positive then "positive" else "negative")
+let unwrap o =
+    match o:
+        case (Some v): v
+        case None: 0
+let answer = (unwrap (Some 42))
+let doubleIfSome o =
+    match o:
+        case ((Some v) as w): w
+        case None: None
+let stillFortyTwo = (doubleIfSome (Some 42))
+let rank c =
+    match c:
+        case Red: 1
+        case Green: 2
+        case Blue: 3
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+let tenEven = (isEven 10)
+let size n =
+    match n:
+        case (1 | 2 | 3): "small"
+        case _: "big"
+let sign n =
+    match n:
+        case 0: "zero"
+        case m if (m > 0): "positive"
+        case _: "negative"
+let grade n = (if (n >= 90) then "A" elif (n >= 80) then "B" elif (n >= 70) then "C" else "F")
+let compose = (fun f g x -> (f (g x)))
+let inc2 = ((compose inc) inc)
+let seven = (inc2 five)
+let twice x = (x * 2)
+let incThenDouble = (inc >> twice)
+let doubleThenInc = (inc << twice)
+let eight = (incThenDouble 3)
+let sevenC = (doubleThenInc 3)
+let sevenB = (inc <| (twice 3))
+module Geom =
+    let square x = (x * x)
+    let area w h = (w * h)
+    let diagSq w h = ((square w) + (square h))
+let floorArea = ((Geom.area 4) 5)
+let diag = ((Geom.diagSq 3) 4)
+let checked ok v = result { let! x = (if ok then (Ok v) else (Error 0)) return (x + 1) }
+let firstTwo xs = option { let! a = ((List.get 0) xs) let! b = ((List.get 1) xs) return (a + b) }
+(print (firstTwo [10, 20, 30]))
+(print (firstTwo [10]))
+let small = seq { yield 1 yield 2 yield 3 }
+extern runAsync: (Async a) -> a = asyncio.run
+let computed = async { let! x = async { return 20 } return (x + 1) }
+(print (runAsync computed))
+module Maybe =
+    let bind m f =
+        match m:
+            case (Some x): (f x)
+            case None: None
+    let return_ x = (Some x)
+let addOpt a b = Maybe { let! x = a let! y = b return (x + y) }
+let pairUp a b = (a, b)
+let origin = (0, 0)
+let swap p =
+    match p:
+        case (a, b): (b, a)
+let labelled = (1, "one", true)
+let firstOf t =
+    match t:
+        case (a, _, _): a
+measure m
+measure s
+measure kg
+measure N = kg m/s^2
+measure Pa = N/m^2
+let push = 10<N>
+let panel = 2<m^2>
+let stress = (push / panel)
+let distance = 100<m>
+let elapsed = 10<s>
+let speed = (distance / elapsed)
+let trip = (distance // 4<m>)
+let leftover = (distance % 30<m>)
+let area w h = (w * h)
+let floor = ((area 4<m>) 5<m>)
+let side = (sqrt 16.0<m^2>)
+let edge = (cbrt 64.0<m^3>)
+let lightSpeed = 300000000.0<m/s>
+let planck = 6.626e-34
+let depth = (- 20<m>)
+let rebound = (- (3 + 4))
+let rounded = (round 3.7)
+let truncated = (truncate speed)
+let parsedF = ((Option.withDefault 0.0) (String.toFloat "2.71828"))
+let cube = (3.0 ** 3.0)
+let tower = (2.0 ** (3.0 ** 2.0))
+let negPow = (- (2.0 ** 2.0))
+let million = 1000000
+let mask = 255
+extern show: a -> string = str
+extern pure fabs: float -> float = math.fabs
+extern sleepAsync: float ->{async} Async unit = asyncio.sleep
+let label = (show 42)
+let root = (fabs (0.0 - 3.0))
+extern parseInt: string -> int = int
+let parsed42 = ((Result.withDefault 0) (try (parseInt "42")))
+let parsedBad = ((Result.withDefault 0) (try (parseInt "oops")))
+let errorKindOf s =
+    match (try (parseInt s)):
+        case (Ok n): "ok"
+        case (Error e): e.errorKind
+let ns = [1, 2, 3, 4, 5]
+let squares = ((List.map (fun x -> (x * x))) ns)
+let bigs = ((List.filter (fun x -> (x > 2))) ns)
+let total = (((List.fold (fun a b -> (a + b))) 0) ns)
+let count = (List.len ns)
+let product = (((List.fold (*)) 1) ns)
+let doubled = ((List.map ((*) 2)) ns)
+let third = ((Option.withDefault 0) ((List.get 2) ns))
+let missing = ((Option.withDefault 0) ((List.get 9) ns))
+let hasThree = ((List.contains 3) ns)
+let joined = ((List.concat ns) [6, 7])
+let ordered = (List.sort [3, 1, 2])
+let sortedColors = (List.sort [Blue, Red, Green])
+let redFirst = (Red < Green)
+let sortedOpts = (List.sort [(Some 3), None, (Some 1)])
+let firstBig = ((List.find (fun x -> (x > 3))) ns)
+let uniq = (Set.ofList [1, 1, 2, 3])
+let scores = (((Map.add "ada") 10) (((Map.add "alan") 9) Map.empty))
+let ada = ((Option.withDefault 0) ((Map.tryFind "ada") scores))
+let nobody = ((Option.withDefault 0) ((Map.tryFind "x") scores))
+let doubled = ((Option.bind (fun n -> (Some (n * 2)))) ((Map.tryFind "ada") scores))
+let bigScore = ((Option.filter (fun n -> (n > 9))) ((Map.tryFind "alan") scores))
+let adaOrErr = ((Option.toResult "no ada") ((Map.tryFind "ada") scores))
+let names = ["ada", "alan"]
+let ages = [36, 41]
+let byName = (Map.ofList ((List.zip names) ages))
+let adaAge = ((Option.withDefault 0) ((Map.tryFind "ada") byName))
+let entries = (Map.toList byName)
+let title = ((String.concat "Hello, ") "World")
+let loud = (String.upper title)
+let words = ((String.split ", ") title)
+let csv = ((String.join ",") words)
+let sub = (((String.slice 0) 5) title)
+let commaAt = ((Option.withDefault (0 - 1)) ((String.tryIndexOf ",") title))
+let parsed = ((Option.withDefault 0) (String.toInt "41"))
+let unparsed = ((Option.withDefault 0) (String.toInt "x"))
+let cafeLen = (String.len "café")
+let emojiLen = (String.len "hi 😀")
+let winPath = "C:\\Users\\pyfun"
+let rawLen = (String.len "a\\nb")
+let who = "Ada"
+let scoreLine = f"{who} scored {parsed} ({(String.upper who)})"
+let sumLine = f"{parsed} doubled is {(parsed + parsed)}"
+let debugLine = f"parsed={parsed}"
+let banner = "== pyfun ==\na \"quoted\" word"
+let summary = f"who: {who}\nscore: {parsed}"
+let rawBlock = "C:\\logs\na\\tb"
+(print answer)
+(print dropped)
+(print stillFortyTwo)
+(print tenEven)
+(print (fact 5))
+(print seven)
+(print eight)
+(print sevenC)
+(print sevenB)
+(print (rank Green))
+(print floor)
+(print speed)
+(print trip)
+(print leftover)
+(print lightSpeed)
+(print planck)
+(print rounded)
+(print truncated)
+(print side)
+(print edge)
+(print parsedF)
+(print cube)
+(print tower)
+(print negPow)
+(print million)
+(print mask)
+(print stress)
+(print ((max distance) 50<m>))
+(print depth)
+(print rebound)
+(print (answer == 42))
+(print (seven < 10))
+(print (speed < 50<m/s>))
+(print ((Some 42) == (Some answer)))
+(print (0 <= seven < 10))
+(print ((seven < 10) and (answer == 42)))
+(print ((not (seven == 8)) or false))
+let here = Point { x = 3, y = 4 }
+let shifted = { here with x = 10 }
+let dot r = (r.x + r.y)
+(print here.x)
+(print shifted.x)
+(print (dot here))
+(print here)
+type Segment = { start: Point, finish: Point }
+let seg = Segment { start = Point { x = 0, y = 0 }, finish = here }
+let moved = { seg with start.x = 99 }
+(print moved.start.x)
+(print moved.start.y)
+(print moved.finish.x)
+(print ((scaled 3) 4))
+(print accumulate)
+let describe p =
+    match p:
+        case Point { x = 0, y = 0 }: "origin"
+        case Point { x = 0 }: "y-axis"
+        case Point { x, y }: "elsewhere"
+(print (describe Point { x = 0, y = 0 }))
+(print (describe here))
+let shape xs =
+    match xs:
+        case []: "empty"
+        case [only]: "one"
+        case [a, *mid, z]: "first and last, some middle"
+let lastOf xs =
+    match xs:
+        case []: 0
+        case [*init, last]: last
+(print (shape [1, 2, 3, 4]))
+(print (shape [7]))
+(print (lastOf [10, 20, 30]))
+(print label)
+(print root)
+(print parsed42)
+(print parsedBad)
+(print (errorKindOf "nope"))
+(print squares)
+(print bigs)
+(print total)
+(print count)
+(print product)
+(print doubled)
+(print third)
+(print hasThree)
+(print joined)
+(print ordered)
+(print sortedColors)
+(print sortedOpts)
+(print redFirst)
+(print firstBig)
+(print (Set.len uniq))
+(print ada)
+(print nobody)
+(print doubled)
+(print bigScore)
+(print adaOrErr)
+(print adaAge)
+(print entries)
+(print loud)
+(print words)
+(print csv)
+(print sub)
+(print commaAt)
+(print (String.len title))
+(print parsed)
+(print unparsed)
+(print cafeLen)
+(print emojiLen)
+(print winPath)
+(print rawLen)
+(print scoreLine)
+(print sumLine)
+(print debugLine)
+(print banner)
+(print summary)
+(print (String.len rawBlock))
+(print floorArea)
+(print diag)
+(print (describeSign 0))
+(print (describeSign 7))
+(print (describeSign (0 - 3)))
+(print (size 2))
+(print (size 9))
+(print (sign 5))
+(print (sign (0 - 4)))
+(print (grade 95))
+(print (grade 83))
+(print (grade 68))
+(print ((addOpt (Some 3)) (Some 4)))
+(print ((addOpt (Some 3)) None))
+(print ((pairUp 1) 2))
+(print origin)
+(print (swap (1, 2)))
+(print (firstOf labelled))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let parity n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+let (|Positive|_|) n = (if (n > 0) then (Some n) else None)
+let clamped n =
+    match n:
+        case (Positive p): p
+        case _: 0
+let (|Blank|_|) s = ((String.strip s) == "")
+let lineKind s =
+    match s:
+        case Blank: "empty"
+        case _: "text"
+(print (parity 4))
+(print (parity 7))
+(print (clamped 9))
+(print (clamped (0 - 5)))
+(print (lineKind "   "))
+(print (lineKind "hi"))
+--- stderr ---

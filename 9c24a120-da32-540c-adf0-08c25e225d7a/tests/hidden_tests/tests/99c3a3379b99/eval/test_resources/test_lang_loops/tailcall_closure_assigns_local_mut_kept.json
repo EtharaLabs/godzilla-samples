@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "def walk(n, acc):\n    total = 0\n    def bump(k):\n        nonlocal total\n        total = total + k\n        return None\n    bump(n)\n    if n == 0:\n        return acc + total\n    else:\n        return walk(n - 1, acc + 1)\n",
+ "stderr": "note: `walk` calls itself in tail position but keeps its recursive form: a closure in it captures `total`\n"
+}

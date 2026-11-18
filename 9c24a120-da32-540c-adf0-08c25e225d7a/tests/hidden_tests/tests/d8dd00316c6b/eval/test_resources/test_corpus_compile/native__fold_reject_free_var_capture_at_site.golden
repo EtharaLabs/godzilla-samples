@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+base: int = 10
+def addb(acc: list[int], x: int) -> list[int]:
+    return _pf_concat(acc, [x + base])
+def usefn(n) -> list[int]:
+    base = 99
+    return _pf_fold(addb, [], [1])
+out: list[int] = usefn(0)
+--- stderr ---

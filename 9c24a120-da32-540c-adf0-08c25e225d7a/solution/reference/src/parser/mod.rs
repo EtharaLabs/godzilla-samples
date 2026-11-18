@@ -1,0 +1,2993 @@
+//! Recursive-descent parser for the Phase 1 Pyfun subset.
+//!
+//! Grammar (informal):
+//! ```text
+//! module      := item*
+//! item        := let | expr
+//! let         := "let" ["mut"] ident ident* "=" (block | expr)
+//! block       := INDENT stmt (SEP stmt)* DEDENT      // last stmt is the value
+//! stmt        := let | expr
+//! expr        := assign
+//! assign      := head ("<-" expr)?                   // target must be a variable
+//! head        := fun | if | match | pipe
+//! fun         := "fun" ident+ "->" expr
+//! if          := "if" expr "then" expr "else" expr
+//! match       := "match" expr "with" ("|" pattern "->" expr)+
+//! pipe        := or ("|>" or)*
+//! or          := and ("or" and)*
+//! and         := not ("and" not)*
+//! not         := "not" not | comparison
+//! comparison  := additive (("=="|"!="|"<"|">"|"<="|">=") additive)*
+//! additive    := multiplicative (("+"|"-") multiplicative)*
+//! multiplicative := application (("*"|"/"|"//") application)*
+//! application := postfix postfix*    // juxtaposition; curried, left-assoc
+//! postfix     := atom ("." ident)*   // record field access, binds tightest
+//! atom        := int | float | string | "true" | "false" | ident | "(" expr ")"
+//!              | record
+//! record      := "{" ident "=" expr ("," ident "=" expr)* "}"   // literal
+//!              | "{" expr "with" ident "=" expr ("," ...)* "}"   // update
+//! pattern     := ctor | atom_pattern
+//! ctor        := UpperIdent atom_pattern*
+//! atom_pattern:= "_" | ident | int | "true" | "false" | "(" pattern ")"
+//! ```
+//! Operator precedence, lowest to highest:
+//! `|>` < `or` < `and` < `not` < comparison/equality < `+ -` < `* / //` < application.
+
+pub mod ast;
+
+use crate::lexer::{FStrPart, Span, Tok, Token};
+use ast::{
+    ActivePatternDecl, ApCase, BinOp, BlockStmt, CeBuilder, CeItem, Expr, ExprKind, ExternArg,
+    ExternDecl, FieldDecl, FieldInit, FieldPattern, FieldUpdate, InterpPart, Item, LetBinding,
+    MatchArm, Module, NodeSpan, Param, Pattern, Receiver, TypeDecl, TypeDeclKind, TypeExpr, UnOp,
+    UnitExpr, VariantDecl,
+};
+
+/// An error produced during parsing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ParseError {
+    pub message: String,
+    pub span: Span,
+}
+
+impl std::fmt::Display for ParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} (at {}..{})",
+            self.message, self.span.start, self.span.end
+        )
+    }
+}
+
+/// Parse a token stream (terminated by [`Tok::Eof`]) into a [`Module`].
+pub fn parse(tokens: Vec<Token>) -> Result<Module, ParseError> {
+    Parser::new(tokens).parse_module()
+}
+
+/// Parse a token stream into a [`Module`], **recovering** from errors at item
+/// boundaries. Always returns a module — of the items that parsed — together with
+/// every error encountered, so a single broken `let` no longer hides the rest of
+/// the file. This is the entry point the editor tooling uses ([`crate::analyze`]);
+/// the compiler keeps the strict [`parse`] (it must reject any broken program).
+pub fn parse_recover(tokens: Vec<Token>) -> (Module, Vec<ParseError>) {
+    Parser::new(tokens).parse_module_recover()
+}
+
+struct Parser {
+    tokens: Vec<Token>,
+    pos: usize,
+    /// The computation-expression items being parsed, innermost last. Each
+    /// frame is the item's start column plus the bracket depth just inside its
+    /// CE's braces; [`Self::ce_item_ends_here`] compares upcoming line-leading
+    /// tokens against the innermost frame.
+    ce_items: Vec<CeFrame>,
+}
+
+/// See [`Parser::ce_items`].
+struct CeFrame {
+    /// Column of the item's leading keyword.
+    col: u32,
+    /// Bracket depth just inside the CE's braces.
+    depth: u32,
+    /// The 1-based source line the item starts on, for diagnostics.
+    line: u32,
+    /// The item's leading keyword (`let!`, `do!`, …), for diagnostics.
+    kind: &'static str,
+}
+
+impl Parser {
+    fn new(tokens: Vec<Token>) -> Parser {
+        Parser {
+            tokens,
+            pos: 0,
+            ce_items: Vec::new(),
+        }
+    }
+
+    fn peek(&self) -> &Tok {
+        &self.tokens[self.pos].tok
+    }
+
+    fn peek2(&self) -> &Tok {
+        &self.tokens[(self.pos + 1).min(self.tokens.len() - 1)].tok
+    }
+
+    fn peek3(&self) -> &Tok {
+        &self.tokens[(self.pos + 2).min(self.tokens.len() - 1)].tok
+    }
+
+    fn peek4(&self) -> &Tok {
+        &self.tokens[(self.pos + 3).min(self.tokens.len() - 1)].tok
+    }
+
+    fn span(&self) -> Span {
+        self.tokens[self.pos].span
+    }
+
+    fn at_eof(&self) -> bool {
+        matches!(self.peek(), Tok::Eof)
+    }
+
+    /// Consume and return the current token kind.
+    fn bump(&mut self) -> Tok {
+        let tok = self.tokens[self.pos].tok.clone();
+        if self.pos + 1 < self.tokens.len() {
+            self.pos += 1;
+        }
+        tok
+    }
+
+    fn eat(&mut self, expected: &Tok) -> bool {
+        if self.peek() == expected {
+            self.bump();
+            true
+        } else {
+            false
+        }
+    }
+
+    fn expect(&mut self, expected: &Tok, what: &str) -> Result<(), ParseError> {
+        if self.eat(expected) {
+            Ok(())
+        } else {
+            Err(self.error(&format!("expected {what}")))
+        }
+    }
+
+    fn error(&self, message: &str) -> ParseError {
+        ParseError {
+            message: format!("{message}, found {}", describe(self.peek())),
+            span: self.span(),
+        }
+    }
+
+    /// Start offset of the current (next-to-consume) token.
+    fn cur_start(&self) -> usize {
+        self.tokens[self.pos].span.start
+    }
+
+    /// End offset of the most recently consumed token.
+    fn prev_end(&self) -> usize {
+        if self.pos == 0 {
+            0
+        } else {
+            self.tokens[self.pos - 1].span.end
+        }
+    }
+
+    /// Build an expression spanning from `start` to the end of the last token.
+    fn mk(&self, start: usize, kind: ExprKind) -> Expr {
+        Expr::new(kind, Span::new(start, self.prev_end()))
+    }
+
+    /// The line (1-based) and column (0-based) of the token at `pos`: its own
+    /// `line_start` when it opens its line, otherwise derived from the nearest
+    /// preceding line-leading token. The derivation adds the byte distance to
+    /// the column, which equals the column distance because everything between
+    /// the two tokens sits on the same line.
+    fn token_pos(&self, pos: usize) -> (u32, u32) {
+        let mut i = pos;
+        loop {
+            if let Some(ls) = self.tokens[i].line_start {
+                let col = ls.col + (self.tokens[pos].span.start - self.tokens[i].span.start) as u32;
+                return (ls.line, col);
+            }
+            if i == 0 {
+                return (1, 0);
+            }
+            i -= 1;
+        }
+    }
+
+    /// Inside a computation expression, an item's expression ends at the first
+    /// line that is not indented past the item — the CE analogue of the offside
+    /// rule, whose layout tokens the braces suppress. True when the upcoming
+    /// token opens a source line at or left of the innermost CE item's column,
+    /// directly inside that CE's braces: the caller stops extending the current
+    /// expression, so the item loop examines the line as a CE item and rejects
+    /// a bare statement with the message naming the item keywords. Brackets
+    /// nested within an item sit at a greater depth, so line breaks inside
+    /// them continue to separate nothing, and lines led by an operator or
+    /// another continuation token never reach the application loop that asks.
+    /// Inside CE braces `for` is a keyword (the loop item), so it can never be
+    /// an application argument there: `yield a for c in cs: …` on one line is
+    /// two items, not `a` applied to `for`.
+    fn ce_for_keyword_here(&self) -> bool {
+        !self.ce_items.is_empty() && matches!(self.peek(), Tok::Ident(name) if name == "for")
+    }
+
+    fn ce_item_ends_here(&self) -> bool {
+        let Some(frame) = self.ce_items.last() else {
+            return false;
+        };
+        let t = &self.tokens[self.pos];
+        t.depth == frame.depth && matches!(t.line_start, Some(ls) if ls.col <= frame.col)
+    }
+
+    /// Inside a CE item, an application argument that opens a source line must
+    /// start at or right of the function expression it attaches to (F#'s
+    /// FS0058 offside rule, applied to application). A line indented past the
+    /// item but left of the expression is almost always a statement the writer
+    /// meant as a new item, and reading it as an argument would resurface as a
+    /// type error on the wrong line (issue #64); reject it here, at the
+    /// offending token, naming the item being continued and both fixes. An
+    /// atom start can never begin a CE item, so becoming a new item takes a
+    /// binding, not just un-indenting; the message says so (`let _ = …`).
+    /// Judged only directly inside the CE's braces, like
+    /// [`Self::ce_item_ends_here`], so brackets nested within an item stay
+    /// exempt.
+    fn check_ce_argument_alignment(&self, head_pos: usize) -> Result<(), ParseError> {
+        let Some(frame) = self.ce_items.last() else {
+            return Ok(());
+        };
+        let t = &self.tokens[self.pos];
+        let Some(ls) = t.line_start else {
+            return Ok(());
+        };
+        if t.depth != frame.depth {
+            return Ok(());
+        }
+        let (_, head_col) = self.token_pos(head_pos);
+        if ls.col >= head_col {
+            return Ok(());
+        }
+        Err(ParseError {
+            message: format!(
+                "{} is indented as a continuation of the `{}` item on line {}, where it \
+                 can only be an argument to that item's expression; to make it a new \
+                 item, align it with that item, or indent it past the start of the \
+                 expression to continue it",
+                describe(self.peek()),
+                frame.kind,
+                frame.line
+            ),
+            span: self.span(),
+        })
+    }
+
+    // ----- grammar -----
+
+    fn parse_module(&mut self) -> Result<Module, ParseError> {
+        let mut items = Vec::new();
+        self.skip_seps();
+        while !self.at_eof() {
+            let doc = self.collect_docs();
+            if self.at_eof() {
+                break; // trailing doc lines with no declaration to attach to
+            }
+            let mut item = self.parse_item()?;
+            attach_doc(&mut item, doc);
+            items.push(item);
+            // An item is delimited by the offside-inserted separators (or EOF).
+            self.skip_seps();
+        }
+        Ok(Module { items })
+    }
+
+    /// Consume a run of doc-comment lines (`Tok::Doc`, separated by the offside
+    /// `Sep`s) preceding a top-level item, joining them with `\n`. `None` when the
+    /// next token is not a doc comment.
+    fn collect_docs(&mut self) -> Option<String> {
+        let mut lines: Vec<String> = Vec::new();
+        while let Tok::Doc(text) = self.peek() {
+            lines.push(text.clone());
+            self.bump();
+            self.skip_seps();
+        }
+        if lines.is_empty() {
+            None
+        } else {
+            Some(lines.join("\n"))
+        }
+    }
+
+    /// Error-recovering variant of [`Self::parse_module`]: parse items one by one,
+    /// and on a failure record the error, ensure forward progress, then
+    /// [`synchronize`](Self::synchronize) to the next item boundary and carry on.
+    /// The result is the module of the items that did parse plus all the errors.
+    fn parse_module_recover(&mut self) -> (Module, Vec<ParseError>) {
+        let mut items = Vec::new();
+        let mut errors = Vec::new();
+        self.skip_seps();
+        while !self.at_eof() {
+            let doc = self.collect_docs();
+            if self.at_eof() {
+                break; // trailing doc lines with no declaration to attach to
+            }
+            let before = self.pos;
+            match self.parse_item() {
+                Ok(mut item) => {
+                    attach_doc(&mut item, doc);
+                    items.push(item);
+                }
+                Err(e) => {
+                    errors.push(e);
+                    // Guarantee progress even if `parse_item` consumed nothing,
+                    // then skip ahead to the next plausible item start.
+                    if self.pos == before {
+                        self.bump();
+                    }
+                    self.synchronize();
+                }
+            }
+            self.skip_seps();
+        }
+        (Module { items }, errors)
+    }
+
+    /// Skip tokens after a failed item until the next top-level item boundary: a
+    /// statement separator at block depth 0 (left for [`skip_seps`](Self::skip_seps)
+    /// to consume) or end of input. `Indent`/`Dedent` are tracked so a separator
+    /// *inside* a broken block is not mistaken for the boundary.
+    fn synchronize(&mut self) {
+        let mut depth = 0i32;
+        loop {
+            match self.peek() {
+                Tok::Eof => return,
+                Tok::Sep if depth <= 0 => return,
+                Tok::Indent => depth += 1,
+                Tok::Dedent => depth -= 1,
+                _ => {}
+            }
+            self.bump();
+        }
+    }
+
+    /// Consume any statement separators between top-level items.
+    fn skip_seps(&mut self) {
+        while matches!(self.peek(), Tok::Sep) {
+            self.bump();
+        }
+    }
+
+    /// `def area w h = …` or `def area(w, h):` is Python muscle memory. `def` is an
+    /// ordinary identifier in Pyfun, so the line would otherwise fail at its `=` or
+    /// `:` with "expected an expression". The hint fires only when `def name` is
+    /// followed on the same line by `=` or `:` outside brackets, the shape of a
+    /// definition, so a function the program itself calls `def` still works.
+    fn def_hint(&self) -> Option<ParseError> {
+        let (Tok::Ident(def), Tok::Ident(name)) = (self.peek(), self.peek2()) else {
+            return None;
+        };
+        if def != "def" {
+            return None;
+        }
+        // Parameter names come bare (`def area w h =`) or first in each slot of a
+        // Python parameter list (`def area(w: int, h: int) -> int:`); annotations
+        // and a return type are skipped.
+        let mut params = Vec::new();
+        let mut depth = 0usize;
+        let mut slot_open = false;
+        let mut returns = false;
+        let mut parenthesized = false;
+        for token in &self.tokens[self.pos + 2..] {
+            match &token.tok {
+                Tok::LParen | Tok::LBracket | Tok::LBrace => {
+                    parenthesized |= depth == 0 && !returns;
+                    depth += 1;
+                    slot_open = depth == 1 && !returns;
+                }
+                Tok::RParen | Tok::RBracket | Tok::RBrace => depth = depth.saturating_sub(1),
+                Tok::Comma if depth == 1 => slot_open = !returns,
+                Tok::Ident(p) if depth == 1 && slot_open => {
+                    params.push(p.clone());
+                    slot_open = false;
+                }
+                Tok::Ident(p) if depth == 0 && !returns => params.push(p.clone()),
+                Tok::Arrow if depth == 0 => returns = true,
+                Tok::Sep | Tok::Indent | Tok::Dedent | Tok::Eof => return None,
+                Tok::Eq | Tok::Colon if depth == 0 => {
+                    let mut shape = vec!["let".to_string(), name.clone()];
+                    if parenthesized && params.is_empty() {
+                        // `def greet():` takes no arguments: Pyfun gives it one it
+                        // ignores (`let greet _ = …`), called as `greet ()`.
+                        params.push("_".to_string());
+                    }
+                    shape.extend(params);
+                    return Some(ParseError {
+                        message: format!(
+                            "Pyfun defines functions with `let`: write `{} = …`",
+                            shape.join(" ")
+                        ),
+                        span: self.span(),
+                    });
+                }
+                _ if depth > 0 || returns => {}
+                _ => return None,
+            }
+        }
+        None
+    }
+
+    fn parse_item(&mut self) -> Result<Item, ParseError> {
+        if let Some(err) = self.def_hint() {
+            return Err(err);
+        }
+        match self.peek() {
+            Tok::Measure => self.parse_measure(),
+            Tok::Type => Ok(Item::Type(self.parse_type_decl()?)),
+            // `extern type Conn` declares an opaque handle type; `extern import m`
+            // a boundary module import; `extern name : …` a value.
+            Tok::Extern if *self.peek2() == Tok::Type => Ok(Item::Type(self.parse_extern_type()?)),
+            // `opaque type UserId = string` — a zero-cost newtype. `opaque` is a
+            // contextual keyword: only the exact `opaque type` sequence triggers it
+            // (`opaque` alone stays an ordinary identifier).
+            Tok::Ident(name) if name == "opaque" && *self.peek2() == Tok::Type => {
+                Ok(Item::Type(self.parse_opaque_type()?))
+            }
+            Tok::Extern if *self.peek2() == Tok::Import => self.parse_extern_import(),
+            Tok::Extern => Ok(Item::Extern(self.parse_extern()?)),
+            Tok::Module => self.parse_module_item(),
+            Tok::Import => self.parse_import(),
+            // `let (|…` opens an active-pattern definition (`DESIGN.md` §7.2): an
+            // `(` immediately after `let` is unambiguous, since a binding name is
+            // an identifier or `_`.
+            Tok::Let if *self.peek2() == Tok::LParen && *self.peek3() == Tok::Bar => {
+                Ok(Item::ActivePattern(self.parse_active_pattern()?))
+            }
+            Tok::Let => Ok(Item::Let(self.parse_let_binding()?)),
+            _ => Ok(Item::Expr(self.parse_expr()?)),
+        }
+    }
+
+    /// `module Name = <indented let bindings>` — an in-file namespace. The body is
+    /// an indented block (opened by the offside rule after `=`) of `let` bindings
+    /// only (MVP; `type`/`measure`/`extern` inside a module are deferred).
+    fn parse_module_item(&mut self) -> Result<Item, ParseError> {
+        self.expect(&Tok::Module, "`module`")?;
+        let name_start = self.cur_start();
+        let name = self.parse_upper_ident("module name")?;
+        let name_span = NodeSpan::new(Span::new(name_start, self.prev_end()));
+        self.expect(&Tok::Eq, "`=`")?;
+        self.expect(&Tok::Indent, "an indented module body")?;
+        let mut items = Vec::new();
+        loop {
+            if !matches!(self.peek(), Tok::Let) {
+                return Err(self.error("a module body may only contain `let` bindings"));
+            }
+            items.push(self.parse_let_binding()?);
+            if self.eat(&Tok::Sep) {
+                if matches!(self.peek(), Tok::Dedent) {
+                    break;
+                }
+                continue;
+            }
+            break;
+        }
+        self.expect(&Tok::Dedent, "end of the module body")?;
+        Ok(Item::Module {
+            name,
+            name_span,
+            items,
+        })
+    }
+
+    /// `import Name` — bring another source file's module into scope under its
+    /// capitalized name (`DESIGN.md` §6.1). The name is a single capitalized
+    /// identifier (flat namespace; dotted/nested packages are deferred). The
+    /// multi-file driver that resolves the import lands in a later slice.
+    fn parse_import(&mut self) -> Result<Item, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Import, "`import`")?;
+        let name = self.parse_upper_ident("an imported module name")?;
+        let span = NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(Item::Import { name, span })
+    }
+
+    fn parse_measure(&mut self) -> Result<Item, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Measure, "`measure`")?;
+        let name = self.parse_ident("measure name")?;
+        // `measure N = kg m / s^2` declares a derived alias; bare `measure m` a base
+        // measure. The alias body is a unit expression without the `<>` brackets.
+        let definition = if self.eat(&Tok::Eq) {
+            Some(self.parse_unit_body()?)
+        } else {
+            None
+        };
+        let span = NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(Item::Measure {
+            name,
+            definition,
+            span,
+        })
+    }
+
+    /// `extern import python.path [as alias]` — a boundary module-import
+    /// declaration (`DESIGN.md` §6), mirroring Python's own import statement. A
+    /// used extern target rooted at the declared path (or at its alias) imports
+    /// the module exactly as written here, overriding the lowercase-prefix
+    /// heuristic. Binds no Pyfun name.
+    fn parse_extern_import(&mut self) -> Result<Item, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Extern, "`extern`")?;
+        self.expect(&Tok::Import, "`import`")?;
+        let mut path = vec![self.parse_ident("Python module")?];
+        while self.eat(&Tok::Dot) {
+            path.push(self.parse_ident("Python module")?);
+        }
+        let alias = if self.eat(&Tok::As) {
+            Some(self.parse_ident("import alias")?)
+        } else {
+            None
+        };
+        let span = NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(Item::ExternImport { path, alias, span })
+    }
+
+    /// `extern [pure] name : type [= a.b.c]` — a typed import of a Python callable
+    /// or value (`DESIGN.md` §6). The optional `= …` clause gives the dotted Python
+    /// path; omitted, the target is the Pyfun name itself.
+    fn parse_extern(&mut self) -> Result<ExternDecl, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Extern, "`extern`")?;
+        let pure = self.eat(&Tok::Pure);
+        let name = self.parse_ident("extern name")?;
+        self.expect(&Tok::Colon, "`:`")?;
+        let ty = self.parse_type()?;
+        // Optional `= a.b.c` Python target; defaults to the Pyfun name. A leading
+        // `.` marks an instance-access form on the first argument (the receiver):
+        // `= .read()` calls the method (`resp.read()`), `= .text` reads the
+        // attribute/property (`resp.text`) — trailing `()` is the "call" marker.
+        // A trailing `(kw = lit, …)` pins fixed Python keyword arguments on the
+        // target, appended to every emitted call (`open(path, encoding="utf-8")`);
+        // a `kw = ...` slot instead takes one of the caller's arguments.
+        let kw_start = self.cur_start();
+        let (target, receiver, kwargs) = if self.eat(&Tok::Eq) {
+            let dotted = self.eat(&Tok::Dot);
+            let mut segs = vec![self.parse_ident("Python target")?];
+            while self.eat(&Tok::Dot) {
+                segs.push(self.parse_ident("Python attribute")?);
+            }
+            // Parentheses (present in all three receiver forms) may hold pinned
+            // keyword arguments. For a leading-dot target they also mark the method
+            // form; an empty `()` stays the bare method marker.
+            let (has_parens, kwargs) = if matches!(self.peek(), Tok::LParen) {
+                (true, self.parse_extern_kwargs()?)
+            } else {
+                (false, Vec::new())
+            };
+            let receiver = if dotted {
+                if has_parens {
+                    Some(Receiver::Method)
+                } else {
+                    Some(Receiver::Property)
+                }
+            } else {
+                None
+            };
+            (segs, receiver, kwargs)
+        } else {
+            (vec![name.clone()], None, Vec::new())
+        };
+        // A `...` slot consumes one argument of the declared arrow, so the type must
+        // have an argument to spare. A receiver takes the first one, and a `unit`
+        // parameter contributes no argument (lowering drops it, #123), so neither
+        // leaves anything for a slot to claim.
+        let slots = kwargs.iter().filter(|(_, v)| *v == ExternArg::Slot).count();
+        if slots > 0 {
+            let kw_span = Span::new(kw_start, self.prev_end());
+            let units = type_unit_param_count(&ty);
+            let available = type_arrow_arity(&ty) - usize::from(receiver.is_some()) - units;
+            if available == 0 && units > 0 {
+                return Err(ParseError {
+                    message: "`...` needs an argument to take, but this extern's only \
+                              argument is the `unit` that a nullary call drops"
+                        .to_string(),
+                    span: kw_span,
+                });
+            }
+            if slots > available {
+                let slot_s = if slots == 1 { "" } else { "s" };
+                let arg_s = if available == 1 { "" } else { "s" };
+                return Err(ParseError {
+                    message: format!(
+                        "{slots} `...` slot{slot_s}, but the type leaves only \
+                         {available} argument{arg_s} to fill {}",
+                        if slots == 1 { "it" } else { "them" }
+                    ),
+                    span: kw_span,
+                });
+            }
+        }
+        let span = NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(ExternDecl {
+            doc: None,
+            pure,
+            name,
+            ty,
+            target,
+            receiver,
+            kwargs,
+            span,
+        })
+    }
+
+    /// Parse a `( kw = lit , … )` keyword-argument suffix on an `extern` target,
+    /// with the opening `(` at the cursor. Each `kw` is a lowercase identifier and
+    /// each `lit` a string / int (optionally negated) / float / bool literal — the
+    /// only forms Python needs pinned at the boundary. Rejects a duplicate keyword
+    /// and a non-literal value with a clear diagnostic. An empty `()` yields no
+    /// kwargs (its only role is then the receiver-method marker).
+    fn parse_extern_kwargs(&mut self) -> Result<Vec<(String, ExternArg)>, ParseError> {
+        self.expect(&Tok::LParen, "`(`")?;
+        let mut kwargs: Vec<(String, ExternArg)> = Vec::new();
+        while !matches!(self.peek(), Tok::RParen) {
+            let key_span = self.span();
+            let key = self.parse_ident("keyword-argument name")?;
+            if kwargs.iter().any(|(k, _)| *k == key) {
+                return Err(ParseError {
+                    message: format!("duplicate keyword argument `{key}`"),
+                    span: key_span,
+                });
+            }
+            self.expect(&Tok::Eq, "`=`")?;
+            let value = self.parse_extern_arg()?;
+            kwargs.push((key, value));
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        self.expect(&Tok::RParen, "`)`")?;
+        Ok(kwargs)
+    }
+
+    /// Parse a single keyword-argument value: `...` (a caller-supplied slot), or a
+    /// pinned literal — a string, an int (with an optional leading unary minus), a
+    /// float (likewise), or a bool.
+    fn parse_extern_arg(&mut self) -> Result<ExternArg, ParseError> {
+        if self.eat(&Tok::Ellipsis) {
+            return Ok(ExternArg::Slot);
+        }
+        // A leading `-` negates the following numeric literal.
+        if self.eat(&Tok::Minus) {
+            return match self.peek().clone() {
+                Tok::Int(n) => {
+                    self.bump();
+                    Ok(ExternArg::Int(-n))
+                }
+                Tok::Float(f) => {
+                    self.bump();
+                    Ok(ExternArg::Float(-f))
+                }
+                _ => Err(self.error("expected a numeric literal after `-`")),
+            };
+        }
+        match self.peek().clone() {
+            Tok::Str(s) => {
+                self.bump();
+                Ok(ExternArg::Str(s))
+            }
+            Tok::Int(n) => {
+                self.bump();
+                Ok(ExternArg::Int(n))
+            }
+            Tok::Float(f) => {
+                self.bump();
+                Ok(ExternArg::Float(f))
+            }
+            Tok::True => {
+                self.bump();
+                Ok(ExternArg::Bool(true))
+            }
+            Tok::False => {
+                self.bump();
+                Ok(ExternArg::Bool(false))
+            }
+            _ => Err(self.error("expected `...` or a string, number, or bool literal")),
+        }
+    }
+
+    /// `extern type Conn` (or `extern type Ref a`) — an opaque handle type: a nominal
+    /// type name with type parameters but no constructors. It only crosses the `extern`
+    /// boundary, so there is no body — the phantom-ADT idiom `type Conn = ConnH` shrinks
+    /// to one line, with no spurious constructor to misuse.
+    fn parse_extern_type(&mut self) -> Result<TypeDecl, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Extern, "`extern`")?;
+        self.expect(&Tok::Type, "`type`")?;
+        let name_start = self.cur_start();
+        let name = self.parse_upper_ident("type name")?;
+        let name_span = NodeSpan::new(Span::new(name_start, self.prev_end()));
+        let mut params = Vec::new();
+        while let Tok::Ident(_) = self.peek() {
+            params.push(self.parse_ident("type parameter")?);
+        }
+        let span = NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(TypeDecl {
+            doc: None,
+            name,
+            name_span,
+            params,
+            kind: TypeDeclKind::Opaque,
+            span,
+        })
+    }
+
+    /// `opaque type UserId = string` (or parameterized, `opaque type Tag a = List a`)
+    /// — a zero-cost newtype (`DESIGN.md` §7.3). The body is a single type
+    /// expression (the underlying type), inline after `=`; the constructor and the
+    /// single-case pattern are derived from the type name, so there is no variant
+    /// list and no offside body form.
+    fn parse_opaque_type(&mut self) -> Result<TypeDecl, ParseError> {
+        let start = self.cur_start();
+        // The dispatcher matched `Tok::Ident("opaque")` followed by `type`.
+        self.bump();
+        self.expect(&Tok::Type, "`type`")?;
+        let name_start = self.cur_start();
+        let name = self.parse_upper_ident("type name")?;
+        let name_span = NodeSpan::new(Span::new(name_start, self.prev_end()));
+        let mut params = Vec::new();
+        while let Tok::Ident(_) = self.peek() {
+            params.push(self.parse_ident("type parameter")?);
+        }
+        self.expect(&Tok::Eq, "`=`")?;
+        let underlying = self.parse_type()?;
+        let span = NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(TypeDecl {
+            doc: None,
+            name,
+            name_span,
+            params,
+            kind: TypeDeclKind::Newtype(underlying),
+            span,
+        })
+    }
+
+    fn parse_type_decl(&mut self) -> Result<TypeDecl, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Type, "`type`")?;
+        let name_start = self.cur_start();
+        let name = self.parse_upper_ident("type name")?;
+        let name_span = crate::parser::ast::NodeSpan::new(Span::new(name_start, self.prev_end()));
+        let mut params = Vec::new();
+        while let Tok::Ident(_) = self.peek() {
+            params.push(self.parse_ident("type parameter")?);
+        }
+        self.expect(&Tok::Eq, "`=`")?;
+        // The body may sit inline after `=` or on the next indented line — the
+        // lexer opens an offside `Indent` in the latter case (the F#/ML layout).
+        let indented = self.eat(&Tok::Indent);
+        // A `{` introduces a record body; otherwise it is a sum of constructors.
+        let kind = if matches!(self.peek(), Tok::LBrace) {
+            TypeDeclKind::Record(self.parse_record_decl_fields()?)
+        } else {
+            // A sum, either inline (`= A | B | C`) or one `| Variant` per line.
+            // In the indented form lines are separated by `Sep`; a leading `|`
+            // on each line is optional.
+            self.eat(&Tok::Bar); // optional leading bar
+            let mut variants = vec![self.parse_variant()?];
+            loop {
+                if self.eat(&Tok::Bar) {
+                    variants.push(self.parse_variant()?);
+                } else if indented && self.eat(&Tok::Sep) {
+                    if matches!(self.peek(), Tok::Dedent) {
+                        break;
+                    }
+                    self.eat(&Tok::Bar); // optional leading bar on the next line
+                    variants.push(self.parse_variant()?);
+                } else {
+                    break;
+                }
+            }
+            TypeDeclKind::Sum(variants)
+        };
+        if indented {
+            self.expect(&Tok::Dedent, "end of the type declaration")?;
+        }
+        let span = crate::parser::ast::NodeSpan::new(Span::new(start, self.prev_end()));
+        Ok(TypeDecl {
+            doc: None,
+            name,
+            name_span,
+            params,
+            kind,
+            span,
+        })
+    }
+
+    /// Parse a record body `{ x: type, y: type }` in a `type` declaration.
+    fn parse_record_decl_fields(&mut self) -> Result<Vec<FieldDecl>, ParseError> {
+        self.expect(&Tok::LBrace, "`{`")?;
+        let mut fields = Vec::new();
+        while !matches!(self.peek(), Tok::RBrace) {
+            let name = self.parse_ident("field name")?;
+            self.expect(&Tok::Colon, "`:`")?;
+            let ty = self.parse_type()?;
+            fields.push(FieldDecl { name, ty });
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        self.expect(&Tok::RBrace, "`}`")?;
+        if fields.is_empty() {
+            return Err(self.error("a record must have at least one field"));
+        }
+        Ok(fields)
+    }
+
+    fn parse_variant(&mut self) -> Result<VariantDecl, ParseError> {
+        let start = self.cur_start();
+        let name = self.parse_upper_ident("constructor name")?;
+        let name_span = NodeSpan::new(Span::new(start, self.prev_end()));
+        let mut fields = Vec::new();
+        while starts_type_atom(self.peek()) {
+            fields.push(self.parse_type_atom()?);
+        }
+        Ok(VariantDecl {
+            name,
+            name_span,
+            fields,
+        })
+    }
+
+    /// A type expression: an application optionally followed by `-> result`,
+    /// where the arrow may carry an effect annotation (`->{io} result`,
+    /// `->{io, async} result` — `DESIGN.md` §4). A bare `->` stays pure.
+    fn parse_type(&mut self) -> Result<TypeExpr, ParseError> {
+        let head = self.parse_type_app()?;
+        if self.eat(&Tok::Arrow) {
+            let effects = self.parse_effect_annotation()?;
+            let result = self.parse_type()?;
+            Ok(TypeExpr::Fun(Box::new(head), Box::new(result), effects))
+        } else {
+            Ok(head)
+        }
+    }
+
+    /// An optional effect annotation right after `->` in a type: `{label, …}`.
+    /// Labels are lowercase identifiers, collected as written — the type checker
+    /// validates them against the known label set (`io`, `async`).
+    fn parse_effect_annotation(&mut self) -> Result<Vec<String>, ParseError> {
+        if !self.eat(&Tok::LBrace) {
+            return Ok(Vec::new());
+        }
+        let mut labels = vec![self.parse_ident("effect label")?];
+        while self.eat(&Tok::Comma) {
+            labels.push(self.parse_ident("effect label")?);
+        }
+        self.expect(&Tok::RBrace, "`}`")?;
+        Ok(labels)
+    }
+
+    /// Consume a type's head name: an identifier, optionally **module-qualified**
+    /// (`Shapes.Placed`), returning it dotted with the span covering both segments.
+    ///
+    /// Qualification needs an uppercase segment on each side of the dot, matching
+    /// the `Module.member` rule for values, and it is one dot deep because module
+    /// names do not nest. The checker validates the qualifier and resolves the pair
+    /// to the same type as the bare name (`types::resolve`), so the qualifier reads
+    /// as documentation at the use site rather than naming a different type.
+    fn parse_type_name(&mut self, name: String) -> (String, NodeSpan) {
+        let start = self.cur_start();
+        self.bump();
+        let mut full = name;
+        if is_upper(&full)
+            && matches!(self.peek(), Tok::Dot)
+            && matches!(self.peek2(), Tok::Ident(m) if is_upper(m))
+        {
+            self.bump();
+            if let Tok::Ident(member) = self.peek().clone() {
+                self.bump();
+                full = format!("{full}.{member}");
+            }
+        }
+        (full, NodeSpan::new(Span::new(start, self.prev_end())))
+    }
+
+    fn parse_type_app(&mut self) -> Result<TypeExpr, ParseError> {
+        // A capitalized head may be applied to argument atoms (`List a`).
+        if let Tok::Ident(name) = self.peek().clone()
+            && is_upper(&name)
+        {
+            let (name, name_span) = self.parse_type_name(name);
+            let mut args = Vec::new();
+            while starts_type_atom(self.peek()) {
+                args.push(self.parse_type_atom()?);
+            }
+            return Ok(TypeExpr::Con(name, name_span, args));
+        }
+        self.parse_type_atom()
+    }
+
+    fn parse_type_atom(&mut self) -> Result<TypeExpr, ParseError> {
+        match self.peek().clone() {
+            Tok::Ident(name) => {
+                let (name, name_span) = self.parse_type_name(name);
+                Ok(TypeExpr::Con(name, name_span, Vec::new()))
+            }
+            Tok::LParen => {
+                self.bump();
+                let first = self.parse_type()?;
+                if self.eat(&Tok::Comma) {
+                    let mut elems = vec![first];
+                    loop {
+                        elems.push(self.parse_type()?);
+                        if !self.eat(&Tok::Comma) {
+                            break;
+                        }
+                    }
+                    self.expect(&Tok::RParen, "`)`")?;
+                    return Ok(TypeExpr::Tuple(elems));
+                }
+                self.expect(&Tok::RParen, "`)`")?;
+                Ok(first)
+            }
+            _ => Err(self.error("expected a type")),
+        }
+    }
+
+    /// Parse `let (|A|B|) params… = body` / `let (|A|_|) params… = body` — an
+    /// active-pattern definition (`DESIGN.md` §7.2). The `let` has not been
+    /// consumed. Case names sit between bars; a trailing `|_|` before the `|)`
+    /// marks the pattern partial. The last parameter is the match input.
+    fn parse_active_pattern(&mut self) -> Result<ActivePatternDecl, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Let, "`let`")?;
+        self.expect(&Tok::LParen, "`(`")?;
+        self.expect(&Tok::Bar, "`|`")?;
+        let mut cases = Vec::new();
+        let mut partial = false;
+        // First case, then `| Name`* with an optional final `| _`, then `|)`.
+        loop {
+            if self.eat(&Tok::Underscore) {
+                if cases.is_empty() {
+                    return Err(self.error("expected an active-pattern case name before `_`"));
+                }
+                partial = true;
+                self.expect(&Tok::Bar, "`|`")?;
+                break;
+            }
+            let case_start = self.cur_start();
+            let name = self.parse_upper_ident("an active-pattern case name")?;
+            let name_span = NodeSpan::new(Span::new(case_start, self.prev_end()));
+            cases.push(ApCase { name, name_span });
+            self.expect(&Tok::Bar, "`|`")?;
+            if matches!(self.peek(), Tok::RParen) {
+                break;
+            }
+        }
+        self.expect(&Tok::RParen, "`)` closing the active pattern")?;
+        if partial && cases.len() != 1 {
+            return Err(ParseError {
+                message: "a partial active pattern has exactly one case (`(|Name|_|)`)".to_string(),
+                span: Span::new(start, self.prev_end()),
+            });
+        }
+        let mut params = Vec::new();
+        while starts_param(self.peek()) {
+            params.push(self.parse_param()?);
+        }
+        if params.is_empty() {
+            return Err(self.error("an active pattern needs a parameter (the match input)"));
+        }
+        if !partial && params.len() != 1 {
+            return Err(ParseError {
+                message: "a total active pattern takes exactly one parameter (the match \
+                          input); only a partial active pattern (`(|A|_|)`) can take extra \
+                          parameters"
+                    .to_string(),
+                span: Span::new(start, self.prev_end()),
+            });
+        }
+        self.expect(&Tok::Eq, "`=`")?;
+        let value = self.parse_block_or_expr()?;
+        Ok(ActivePatternDecl {
+            doc: None,
+            cases,
+            partial,
+            params,
+            value,
+            span: NodeSpan::new(Span::new(start, self.prev_end())),
+        })
+    }
+
+    fn parse_let_binding(&mut self) -> Result<LetBinding, ParseError> {
+        self.expect(&Tok::Let, "`let`")?;
+        // Optional `mut` / `pure` modifiers, in any order.
+        let mut mutable = false;
+        let mut pure = false;
+        loop {
+            if self.eat(&Tok::Mut) {
+                mutable = true;
+            } else if self.eat(&Tok::Pure) {
+                pure = true;
+            } else {
+                break;
+            }
+        }
+        // `let (|…` here means an active pattern in a position that doesn't allow
+        // one (inside a block / module body, or after `mut`/`pure`).
+        if matches!(self.peek(), Tok::LParen) && matches!(self.peek2(), Tok::Bar) {
+            return Err(self.error(
+                "an active pattern is declared as a plain top-level `let (|A|B|) …` \
+                 (no `mut`/`pure`, not inside a block or module)",
+            ));
+        }
+        let (target, name_span) = self.parse_binding_target()?;
+        let is_discard = matches!(target, Pattern::Wildcard);
+        let name = match &target {
+            Pattern::Var { name, .. } => name.clone(),
+            _ => String::new(),
+        };
+        let mut params = Vec::new();
+        while starts_param(self.peek()) {
+            params.push(self.parse_param()?);
+        }
+        // `let rec f x = …` is F#/ML muscle memory: Pyfun has no `rec` keyword — a
+        // function binding is already recursive in its own body (like a Python `def`,
+        // `DESIGN.md` §"Implicit recursion"). Left alone this would silently define a
+        // function *named* `rec` with parameters `f x`, then fail downstream with a
+        // baffling `unbound name f`. Catch the shape and say so.
+        if name == "rec" && !params.is_empty() {
+            return Err(ParseError {
+                message: "`rec` is not a keyword in Pyfun — a `let` function is already \
+                          recursive in its own body, so drop `rec` (write `let f x = …`)"
+                    .to_string(),
+                span: name_span.span(),
+            });
+        }
+        if is_discard && !params.is_empty() {
+            return Err(self.error("a discard binding `_` cannot take parameters"));
+        }
+        if is_discard && mutable {
+            return Err(self.error("a discard binding `_` cannot be `mut`"));
+        }
+        // A destructuring target binds several names at once, so there is no one
+        // name for a `def` to take or for `<-` to reassign.
+        if !matches!(target, Pattern::Var { .. } | Pattern::Wildcard) {
+            if !params.is_empty() {
+                return Err(ParseError {
+                    message: "a function binding needs a name, so it cannot destructure \
+                              (bind the value first, then take it apart)"
+                        .to_string(),
+                    span: name_span.span(),
+                });
+            }
+            if mutable {
+                return Err(ParseError {
+                    message: "a `mut` binding needs a name for `<-` to reassign, so it cannot \
+                              destructure (bind each part with its own `let mut`)"
+                        .to_string(),
+                    span: name_span.span(),
+                });
+            }
+        }
+        self.expect(&Tok::Eq, "`=`")?;
+        let value = self.parse_block_or_expr()?;
+        Ok(LetBinding {
+            doc: None,
+            mutable,
+            pure,
+            target,
+            target_span: name_span,
+            params,
+            value,
+        })
+    }
+
+    /// Parse a body that is either an indented block (the lexer opened one as a
+    /// leading `Indent`) or an inline expression. Used wherever a block may open:
+    /// a `let` body, a `match` arm, an `if` branch, a lambda body.
+    fn parse_block_or_expr(&mut self) -> Result<Expr, ParseError> {
+        if matches!(self.peek(), Tok::Indent) {
+            self.parse_block()
+        } else {
+            self.parse_expr()
+        }
+    }
+
+    /// Parse an indented block `Indent stmt (Sep stmt)* Dedent`. A block with a
+    /// single expression statement is unwrapped to that expression so existing
+    /// single-expression bodies (a multi-line `match`/`if`) keep their plain AST.
+    fn parse_block(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Indent, "an indented block")?;
+        let mut stmts = Vec::new();
+        loop {
+            if let Some(err) = self.def_hint() {
+                return Err(err);
+            }
+            let stmt = if matches!(self.peek(), Tok::Let) {
+                BlockStmt::Let(self.parse_let_binding()?)
+            } else {
+                BlockStmt::Expr(self.parse_expr()?)
+            };
+            stmts.push(stmt);
+            if self.eat(&Tok::Sep) {
+                if matches!(self.peek(), Tok::Dedent) {
+                    break;
+                }
+                continue;
+            }
+            break;
+        }
+        self.expect(&Tok::Dedent, "end of the block")?;
+        if matches!(stmts.last(), Some(BlockStmt::Let(_))) {
+            return Err(self.error("a block must end with an expression"));
+        }
+        if stmts.len() == 1
+            && let Some(BlockStmt::Expr(_)) = stmts.last()
+        {
+            let BlockStmt::Expr(e) = stmts.pop().unwrap() else {
+                unreachable!()
+            };
+            return Ok(e);
+        }
+        Ok(self.mk(start, ExprKind::Block { stmts }))
+    }
+
+    fn parse_expr(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let lhs = self.parse_expr_head()?;
+        // `target <- value` — reassignment, the lowest-precedence form.
+        if matches!(self.peek(), Tok::LArrow) {
+            self.bump();
+            let value = self.parse_expr()?;
+            let ExprKind::Var(target) = lhs.kind else {
+                return Err(ParseError {
+                    message: "the target of `<-` must be a variable".to_string(),
+                    span: lhs.span(),
+                });
+            };
+            return Ok(self.mk(
+                start,
+                ExprKind::Assign {
+                    target,
+                    value: Box::new(value),
+                },
+            ));
+        }
+        Ok(lhs)
+    }
+
+    fn parse_expr_head(&mut self) -> Result<Expr, ParseError> {
+        match self.peek() {
+            Tok::Fun => self.parse_fun(),
+            Tok::If => self.parse_if(),
+            Tok::Match => self.parse_match(),
+            _ => self.parse_pipe(),
+        }
+    }
+
+    fn parse_fun(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Fun, "`fun`")?;
+        let mut params = vec![self.parse_param()?];
+        while starts_param(self.peek()) {
+            params.push(self.parse_param()?);
+        }
+        self.expect(&Tok::Arrow, "`->`")?;
+        let body = Box::new(self.parse_block_or_expr()?);
+        Ok(self.mk(start, ExprKind::Fn { params, body }))
+    }
+
+    /// Parse what a binding binds, with its span: `_` discards the value (useful
+    /// for a non-`unit` expression whose value isn't needed but whose effect is), a
+    /// `(`-led pattern or a record tag destructures it (`let (r, c) = …`), and
+    /// anything else is a plain name. Shared by `let` bindings and the `let`/`let!`
+    /// items of a computation expression, which admit exactly the same targets.
+    ///
+    /// A record tag is unambiguous here because `Point {` cannot begin a binding
+    /// *name* (a name is followed by `=` or a parameter), and a `(`-led target is
+    /// held to irrefutability for the same reason a parameter is: a binding has no
+    /// second arm to fall through to.
+    fn parse_binding_target(&mut self) -> Result<(Pattern, NodeSpan), ParseError> {
+        let start = self.cur_start();
+        let destructures = matches!(self.peek(), Tok::LParen)
+            || (matches!(self.peek(), Tok::Ident(_)) && matches!(self.peek2(), Tok::LBrace));
+        let target = if matches!(self.peek(), Tok::Underscore) {
+            self.bump();
+            Pattern::Wildcard
+        } else if destructures {
+            let pattern = self.parse_pattern()?;
+            if let Some(what) = refutable_shape(&pattern) {
+                return Err(ParseError {
+                    message: format!(
+                        "a `let` binding must always match, so it takes a name, `_`, or a \
+                         tuple or record of those, not {what} (use `match` instead, which \
+                         has somewhere to fall through to)"
+                    ),
+                    span: Span::new(start, self.prev_end()),
+                });
+            }
+            pattern
+        } else {
+            let name = self.parse_ident("binding name")?;
+            // A capitalised name is a constructor (or a module) everywhere else, so
+            // `let Some x = …` never means a function called `Some`: it is a
+            // constructor pattern written without its brackets. Say so, rather than
+            // quietly defining a function that shadows the constructor.
+            if name.starts_with(|c: char| c.is_ascii_uppercase()) {
+                return Err(ParseError {
+                    message: format!(
+                        "`{name}` starts with a capital letter, so it reads as a constructor, \
+                         not a name to bind; name a value in lowercase, and take a value \
+                         apart with `match`, which has somewhere to fall through to"
+                    ),
+                    span: Span::new(start, self.prev_end()),
+                });
+            }
+            Pattern::Var {
+                name,
+                span: NodeSpan::new(Span::new(start, self.prev_end())),
+            }
+        };
+        Ok((target, NodeSpan::new(Span::new(start, self.prev_end()))))
+    }
+
+    /// Parse a single parameter, capturing its span (for editor jump/hover): a
+    /// name, `_`, or a parenthesized **irrefutable** pattern (`fun (t, sq) -> …`).
+    ///
+    /// A bare identifier deliberately does *not* go through the pattern parser: it
+    /// would read `let f Some x = …` as one constructor pattern rather than the two
+    /// parameters `Some` and `x` that it has always meant. Only a `(`-led parameter
+    /// takes the full pattern grammar, and it is then held to irrefutability, since
+    /// a parameter has no second arm to fall through to.
+    fn parse_param(&mut self) -> Result<Param, ParseError> {
+        let start = self.cur_start();
+        let pattern = match self.peek() {
+            Tok::Underscore => {
+                self.bump();
+                Pattern::Wildcard
+            }
+            Tok::LParen => {
+                let pattern = self.parse_pattern()?;
+                if let Some(what) = refutable_shape(&pattern) {
+                    return Err(ParseError {
+                        message: format!(
+                            "a parameter must always match, so it takes a name, `_`, or a tuple \
+                             or record of those, not {what} (match on the value in the body \
+                             instead)"
+                        ),
+                        span: Span::new(start, self.prev_end()),
+                    });
+                }
+                pattern
+            }
+            _ => {
+                let name_start = self.cur_start();
+                let name = self.parse_ident("parameter name")?;
+                Pattern::Var {
+                    name,
+                    span: NodeSpan::new(Span::new(name_start, self.prev_end())),
+                }
+            }
+        };
+        Ok(Param {
+            pattern,
+            span: NodeSpan::new(Span::new(start, self.prev_end())),
+        })
+    }
+
+    fn parse_if(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::If, "`if`")?;
+        self.parse_if_rest(start)
+    }
+
+    /// Parse the `cond then branch (elif … | else …)` tail of an `if`/`elif`. `elif`
+    /// is pure sugar for `else if` (`DESIGN.md` §7.2): it produces a nested `If` in
+    /// the else branch, so there is no distinct AST node.
+    fn parse_if_rest(&mut self, start: usize) -> Result<Expr, ParseError> {
+        let cond = Box::new(self.parse_expr()?);
+        self.expect(&Tok::Then, "`then`")?;
+        let then = Box::new(self.parse_block_or_expr()?);
+        let else_ = if matches!(self.peek(), Tok::Elif) {
+            let elif_start = self.cur_start();
+            self.bump();
+            Box::new(self.parse_if_rest(elif_start)?)
+        } else {
+            self.expect(&Tok::Else, "`else` or `elif`")?;
+            Box::new(self.parse_block_or_expr()?)
+        };
+        Ok(self.mk(start, ExprKind::If { cond, then, else_ }))
+    }
+
+    /// Parse `match e: case pat [if guard]: body …` (`DESIGN.md` §7.2). At bracket
+    /// depth 0 the `:` after the scrutinee opens an offside block of `case` arms;
+    /// inside brackets there is no `Indent` and the arms simply follow.
+    fn parse_match(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        self.expect(&Tok::Match, "`match`")?;
+        let scrutinee = Box::new(self.parse_expr()?);
+        if matches!(self.peek(), Tok::With) {
+            return Err(self.error(
+                "match now uses `match e:` with `case pattern: body` arms, \
+                 not `with | pattern -> body` (DESIGN.md §7.2)",
+            ));
+        }
+        self.expect(&Tok::Colon, "`:` after the match scrutinee")?;
+        let indented = self.eat(&Tok::Indent);
+        let mut arms = Vec::new();
+        while matches!(self.peek(), Tok::Case) {
+            arms.push(self.parse_case_arm()?);
+            if indented {
+                if !self.eat(&Tok::Sep) {
+                    break;
+                }
+                if matches!(self.peek(), Tok::Dedent) {
+                    break;
+                }
+            }
+        }
+        if indented {
+            self.expect(&Tok::Dedent, "end of the match arms")?;
+        }
+        if arms.is_empty() {
+            return Err(self.error("a match needs at least one `case pattern: body` arm"));
+        }
+        Ok(self.mk(start, ExprKind::Match { scrutinee, arms }))
+    }
+
+    /// Parse one `case pattern [if guard]: body` arm. The pattern may be an
+    /// or-pattern (`case a | b:`); the optional `if guard` makes the arm refutable.
+    fn parse_case_arm(&mut self) -> Result<MatchArm, ParseError> {
+        self.expect(&Tok::Case, "`case`")?;
+        let pattern = self.parse_pattern()?;
+        let guard = if self.eat(&Tok::If) {
+            Some(self.parse_expr()?)
+        } else {
+            None
+        };
+        self.expect(&Tok::Colon, "`:` after the case pattern")?;
+        let body = self.parse_block_or_expr()?;
+        Ok(MatchArm {
+            pattern,
+            guard,
+            body,
+        })
+    }
+
+    /// Pipes: forward `|>` (left-associative) and backward `<|` (right-associative,
+    /// `f <| g <| x` = `f (g x)`), both at the lowest precedence.
+    fn parse_pipe(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut lhs = self.parse_compose()?;
+        loop {
+            if self.eat(&Tok::PipeOp) {
+                let rhs = self.parse_compose()?;
+                lhs = self.mk(
+                    start,
+                    ExprKind::Pipe {
+                        lhs: Box::new(lhs),
+                        rhs: Box::new(rhs),
+                        backward: false,
+                    },
+                );
+            } else if self.eat(&Tok::PipeLeft) {
+                // Right-associative: the whole remaining pipe is the argument.
+                let rhs = self.parse_pipe()?;
+                return Ok(self.mk(
+                    start,
+                    ExprKind::Pipe {
+                        lhs: Box::new(lhs),
+                        rhs: Box::new(rhs),
+                        backward: true,
+                    },
+                ));
+            } else {
+                break;
+            }
+        }
+        Ok(lhs)
+    }
+
+    /// Function composition `>>` / `<<` — tighter than `|>`, looser than everything
+    /// else, and **left-associative** (`f >> g >> h` = `(f >> g) >> h`).
+    fn parse_compose(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut lhs = self.parse_or()?;
+        loop {
+            let right_to_left = match self.peek() {
+                Tok::GtGt => false,
+                Tok::LtLt => true,
+                _ => break,
+            };
+            self.bump();
+            let rhs = self.parse_or()?;
+            lhs = self.mk(
+                start,
+                ExprKind::Compose {
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                    right_to_left,
+                },
+            );
+        }
+        Ok(lhs)
+    }
+
+    /// Logical `or` — looser than `and`.
+    fn parse_or(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut lhs = self.parse_and()?;
+        while self.eat(&Tok::Or) {
+            let rhs = self.parse_and()?;
+            lhs = self.mk(
+                start,
+                ExprKind::Binary {
+                    op: BinOp::Or,
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                },
+            );
+        }
+        Ok(lhs)
+    }
+
+    /// Logical `and` — looser than `not`/comparison, tighter than `or`.
+    fn parse_and(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut lhs = self.parse_not()?;
+        while self.eat(&Tok::And) {
+            let rhs = self.parse_not()?;
+            lhs = self.mk(
+                start,
+                ExprKind::Binary {
+                    op: BinOp::And,
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                },
+            );
+        }
+        Ok(lhs)
+    }
+
+    /// Prefix `not` — binds looser than comparison (`not a == b` is `not (a == b)`,
+    /// matching Python), tighter than `&&`.
+    fn parse_not(&mut self) -> Result<Expr, ParseError> {
+        if matches!(self.peek(), Tok::Not) {
+            let start = self.cur_start();
+            self.bump();
+            let expr = Box::new(self.parse_not()?);
+            return Ok(self.mk(
+                start,
+                ExprKind::Unary {
+                    op: UnOp::Not,
+                    expr,
+                },
+            ));
+        }
+        // `try body` binds looser than `+`/comparison but tighter than `|>`/`and`/
+        // `or`, so `try parse s` is `try (parse s)` and `try parse s |> f` pipes the
+        // resulting `Result` out (`(try parse s) |> f`). Parens capture a wider body.
+        if matches!(self.peek(), Tok::Try) {
+            let start = self.cur_start();
+            self.bump();
+            let body = Box::new(self.parse_not()?);
+            return Ok(self.mk(start, ExprKind::Try { body }));
+        }
+        self.parse_comparison()
+    }
+
+    /// Comparison and equality: `== != < > <= >=`, looser than `+ -`, tighter than
+    /// `not`. Left-associative (chained comparisons type-check arm by arm).
+    fn parse_comparison(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let first = self.parse_additive()?;
+        // Collect the chain of `op operand` links. Python-style: `a < b < c` is a
+        // *single* chained comparison (`a < b and b < c`, `b` evaluated once), not
+        // the left-associative `(a < b) < c`. A lone link stays a plain `Binary`.
+        let mut rest = Vec::new();
+        loop {
+            let op = match self.peek() {
+                Tok::EqEq => BinOp::Eq,
+                Tok::BangEq => BinOp::Ne,
+                Tok::Lt => BinOp::Lt,
+                Tok::Gt => BinOp::Gt,
+                Tok::Le => BinOp::Le,
+                Tok::Ge => BinOp::Ge,
+                _ => break,
+            };
+            self.bump();
+            rest.push((op, self.parse_additive()?));
+        }
+        match rest.len() {
+            0 => Ok(first),
+            1 => {
+                let (op, rhs) = rest.pop().expect("one link");
+                Ok(self.mk(
+                    start,
+                    ExprKind::Binary {
+                        op,
+                        lhs: Box::new(first),
+                        rhs: Box::new(rhs),
+                    },
+                ))
+            }
+            _ => Ok(self.mk(
+                start,
+                ExprKind::Compare {
+                    first: Box::new(first),
+                    rest,
+                },
+            )),
+        }
+    }
+
+    fn parse_additive(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut lhs = self.parse_multiplicative()?;
+        loop {
+            let op = match self.peek() {
+                Tok::Plus => BinOp::Add,
+                Tok::Minus => BinOp::Sub,
+                _ => break,
+            };
+            self.bump();
+            let rhs = self.parse_multiplicative()?;
+            lhs = self.mk(
+                start,
+                ExprKind::Binary {
+                    op,
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                },
+            );
+        }
+        Ok(lhs)
+    }
+
+    fn parse_multiplicative(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut lhs = self.parse_unary()?;
+        loop {
+            let op = match self.peek() {
+                Tok::Star => BinOp::Mul,
+                Tok::Slash => BinOp::Div,
+                Tok::SlashSlash => BinOp::FloorDiv,
+                Tok::Percent => BinOp::Mod,
+                _ => break,
+            };
+            self.bump();
+            let rhs = self.parse_unary()?;
+            lhs = self.mk(
+                start,
+                ExprKind::Binary {
+                    op,
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                },
+            );
+        }
+        Ok(lhs)
+    }
+
+    /// Prefix arithmetic negation `-e`, binding tighter than `*`/`/` and looser
+    /// than application (`-f x` is `-(f x)`, `2 * -3` is `2 * (-3)`). A prefix
+    /// operator, not a lexer negative-literal, so `x-1` stays subtraction and only
+    /// `f (-1)` (parenthesized) applies `f` to a negative. `-` is subtraction when
+    /// it has a left operand (handled in `parse_additive`); here it has none.
+    fn parse_unary(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        if matches!(self.peek(), Tok::Minus) {
+            self.bump();
+            let operand = self.parse_unary()?;
+            return Ok(self.mk(
+                start,
+                ExprKind::Unary {
+                    op: UnOp::Neg,
+                    expr: Box::new(operand),
+                },
+            ));
+        }
+        self.parse_power()
+    }
+
+    /// Exponentiation `a ** b` — binds tighter than unary minus (`-2 ** 2` is
+    /// `-(2 ** 2)`) and is **right-associative** (`2 ** 3 ** 2` is `2 ** (3 ** 2)`).
+    /// The exponent is parsed at the unary level (a Python `factor`), so both the
+    /// right-associativity and a signed exponent (`2 ** -3`) fall out.
+    fn parse_power(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let lhs = self.parse_application()?;
+        if matches!(self.peek(), Tok::StarStar) {
+            self.bump();
+            let rhs = self.parse_unary()?;
+            return Ok(self.mk(
+                start,
+                ExprKind::Binary {
+                    op: BinOp::Pow,
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                },
+            ));
+        }
+        Ok(lhs)
+    }
+
+    fn parse_application(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let head_pos = self.pos;
+        let mut func = self.parse_postfix()?;
+        while starts_atom(self.peek()) && !self.ce_item_ends_here() && !self.ce_for_keyword_here() {
+            self.check_ce_argument_alignment(head_pos)?;
+            let arg = self.parse_postfix()?;
+            func = self.mk(
+                start,
+                ExprKind::App {
+                    func: Box::new(func),
+                    arg: Box::new(arg),
+                },
+            );
+        }
+        Ok(func)
+    }
+
+    /// An atom followed by zero or more `.field` accesses. Field access binds
+    /// tighter than application (`f p.x` is `f (p.x)`) and chains left-to-right
+    /// (`p.x.y` is `(p.x).y`).
+    fn parse_postfix(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let mut base = self.parse_atom()?;
+        while self.eat(&Tok::Dot) {
+            let name = self.parse_ident("field name")?;
+            base = self.mk(
+                start,
+                ExprKind::Field {
+                    base: Box::new(base),
+                    name,
+                },
+            );
+        }
+        Ok(base)
+    }
+
+    fn parse_atom(&mut self) -> Result<Expr, ParseError> {
+        let start = self.cur_start();
+        let kind = match self.peek().clone() {
+            Tok::Int(n) => {
+                self.bump();
+                return self.maybe_unit(start, ExprKind::Int(n));
+            }
+            Tok::Float(f) => {
+                self.bump();
+                return self.maybe_unit(start, ExprKind::Float(f));
+            }
+            Tok::Str(s) => {
+                self.bump();
+                ExprKind::Str(s)
+            }
+            Tok::FStr(parts) => {
+                self.bump();
+                ExprKind::Interp {
+                    parts: Self::parse_interp(parts)?,
+                }
+            }
+            Tok::Hole(name) => {
+                self.bump();
+                ExprKind::Hole { name }
+            }
+            Tok::True => {
+                self.bump();
+                ExprKind::Bool(true)
+            }
+            Tok::False => {
+                self.bump();
+                ExprKind::Bool(false)
+            }
+            Tok::Ident(name) => {
+                // `async`/`seq`/`result`/`option` are computation-expression
+                // builders only when immediately followed by `{`; otherwise they are
+                // ordinary identifiers.
+                if let Some(builder) = CeBuilder::from_name(&name)
+                    && *self.peek2() == Tok::LBrace
+                {
+                    self.bump(); // builder name
+                    return self.parse_ce(builder, start);
+                }
+                // `Geometry.Point { x = 1, … }` — a qualified (cross-module) record
+                // literal (`DESIGN.md` §8.3). An uppercase module name, `.`, an
+                // uppercase record name, then a `{` — distinguished from a qualified
+                // constructor application (`Geometry.Circle 2.0`) and a qualified
+                // member (`Geometry.area x`) by the immediately-following brace.
+                if is_upper(&name)
+                    && *self.peek2() == Tok::Dot
+                    && matches!(self.peek3(), Tok::Ident(n) if is_upper(n))
+                    && *self.peek4() == Tok::LBrace
+                {
+                    self.bump(); // module name
+                    self.bump(); // `.`
+                    let Tok::Ident(rec) = self.bump() else {
+                        unreachable!("peek3 guaranteed an identifier")
+                    };
+                    let ty = format!("{name}.{rec}");
+                    let ty_span = NodeSpan::new(Span::new(start, self.prev_end()));
+                    return self.parse_record_literal(ty, ty_span, start);
+                }
+                // A user builder: an uppercase (module) name immediately before a
+                // `{` whose first token starts a CE item. The CE-keyword lookahead
+                // distinguishes `Maybe { let! … }` (a CE) from `Some { x = 1 }`
+                // (a constructor applied to a record literal).
+                if is_upper(&name) && *self.peek2() == Tok::LBrace && starts_ce_item(self.peek3()) {
+                    // A built-in spelled with its type's capital is the one likely
+                    // near-miss: `Option { let! … }` would otherwise resolve against
+                    // the *prelude module* `Option`, whose members are ordered for
+                    // `|>` rather than for the builder protocol, and fail with a
+                    // signature error pointing into prelude code. Name the fix here.
+                    if let Some(builtin) = CeBuilder::from_name(&name.to_lowercase()) {
+                        let lower = builtin.name();
+                        return Err(ParseError {
+                            message: format!(
+                                "`{name}` is not a computation-expression builder — the \
+                                 built-in one is spelled `{lower}` (write `{lower} {{ … }}`)"
+                            ),
+                            span: Span::new(start, start + name.len()),
+                        });
+                    }
+                    self.bump(); // builder name
+                    return self.parse_ce(CeBuilder::User(name), start);
+                }
+                // The near-miss the lookahead cannot take the CE path on: an
+                // uppercase name, `{`, then an identifier that is not followed by
+                // `=`. As a record literal it would fail with "expected `=`" on the
+                // token after the identifier, which is the wrong complaint when the
+                // line was meant as a CE item (a builder custom operation,
+                // `Html { class_ "board"`, which the item protocol does not have).
+                // Name what the position takes.
+                if is_upper(&name)
+                    && *self.peek2() == Tok::LBrace
+                    && matches!(self.peek3(), Tok::Ident(_))
+                    && !matches!(self.peek4(), Tok::Eq | Tok::RBrace | Tok::Comma)
+                {
+                    let Tok::Ident(head) = self.peek3().clone() else {
+                        unreachable!("peek3 checked to be an identifier")
+                    };
+                    let head_span = self.tokens[self.pos + 2].span;
+                    return Err(ParseError {
+                        message: format!(
+                            "`{head}` is not a computation-expression item: a `{name} {{ … }}` \
+                             block takes `let!`, `let`, `do!`, `return`, `yield`, `for`, or an \
+                             expression, and a `{name} {{ … }}` record literal takes \
+                             `field = value` pairs"
+                        ),
+                        span: head_span,
+                    });
+                }
+                // `Point { x = 1, y = 2 }` — a constructor-tagged record literal
+                // (`DESIGN.md` §8.3): an uppercase name before a `{` whose body is
+                // not a CE item (that case was handled just above).
+                if is_upper(&name) && *self.peek2() == Tok::LBrace {
+                    self.bump(); // type tag
+                    let ty_span = NodeSpan::new(Span::new(start, self.prev_end()));
+                    return self.parse_record_literal(name, ty_span, start);
+                }
+                self.bump();
+                ExprKind::Var(name)
+            }
+            Tok::LParen => {
+                self.bump();
+                // `()` is the unit value; `(expr)` is grouping; `(a, b)` is a tuple;
+                // `(op)` is an operator section (a binary operator as a function).
+                if self.eat(&Tok::RParen) {
+                    return Ok(self.mk(start, ExprKind::Unit));
+                }
+                if let Some(op) = binop_from_tok(self.peek())
+                    && matches!(self.peek2(), Tok::RParen)
+                {
+                    self.bump(); // the operator
+                    self.bump(); // `)`
+                    return Ok(self.mk(start, ExprKind::OpFunc(op)));
+                }
+                let first = self.parse_expr()?;
+                if self.eat(&Tok::Comma) {
+                    let mut elems = vec![first];
+                    loop {
+                        elems.push(self.parse_expr()?);
+                        if !self.eat(&Tok::Comma) {
+                            break;
+                        }
+                    }
+                    self.expect(&Tok::RParen, "`)`")?;
+                    return Ok(self.mk(start, ExprKind::Tuple { elems }));
+                }
+                self.expect(&Tok::RParen, "`)`")?;
+                // Keep the inner node's own (paren-free) span.
+                return Ok(first);
+            }
+            Tok::LBrace => return self.parse_record(start),
+            Tok::LBracket => return self.parse_list(start),
+            // Built directly: `self.error` would append `, found `|``.
+            Tok::Bar if matches!(self.peek2(), Tok::Bar) => {
+                return Err(ParseError {
+                    message: "use `or` instead of `||`".to_string(),
+                    span: self.span(),
+                });
+            }
+            Tok::Return if self.ce_items.is_empty() => {
+                return Err(ParseError {
+                    message:
+                        "`return` is only valid inside a computation expression; a function's \
+                             value is its last expression, so drop `return`"
+                            .to_string(),
+                    span: self.span(),
+                });
+            }
+            _ => return Err(self.error("expected an expression")),
+        };
+        Ok(self.mk(start, kind))
+    }
+
+    /// Parse the segments of an interpolated string into `InterpPart`s. Literal
+    /// chunks pass through; each hole's pre-lexed tokens (absolute spans, `Eof`-
+    /// terminated) are parsed as a full expression by a fresh sub-parser, and any
+    /// leftover tokens after that expression are an error.
+    fn parse_interp(parts: Vec<FStrPart>) -> Result<Vec<InterpPart>, ParseError> {
+        let mut out = Vec::with_capacity(parts.len());
+        for part in parts {
+            match part {
+                FStrPart::Lit(s) => out.push(InterpPart::Lit(s)),
+                FStrPart::Hole(tokens) => {
+                    let mut sub = Parser::new(tokens);
+                    let expr = sub.parse_expr()?;
+                    if !sub.at_eof() {
+                        return Err(sub.error("unexpected token after f-string hole expression"));
+                    }
+                    out.push(InterpPart::Expr(Box::new(expr)));
+                }
+            }
+        }
+        Ok(out)
+    }
+
+    /// Parse a list literal `[a, b, c]` — comma-separated, possibly empty, with an
+    /// optional trailing comma.
+    fn parse_list(&mut self, start: usize) -> Result<Expr, ParseError> {
+        self.expect(&Tok::LBracket, "`[`")?;
+        let mut elems = Vec::new();
+        while !matches!(self.peek(), Tok::RBracket) {
+            elems.push(self.parse_expr()?);
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        self.expect(&Tok::RBracket, "`]`")?;
+        Ok(self.mk(start, ExprKind::List { elems }))
+    }
+
+    /// Parse the `{ … }` body of a constructor-tagged record literal `ty { … }`
+    /// (`DESIGN.md` §8.3); the tag `ty` has already been consumed.
+    fn parse_record_literal(
+        &mut self,
+        ty: String,
+        ty_span: NodeSpan,
+        start: usize,
+    ) -> Result<Expr, ParseError> {
+        self.expect(&Tok::LBrace, "`{`")?;
+        let fields = self.parse_field_inits()?;
+        self.expect(&Tok::RBrace, "`}`")?;
+        Ok(self.mk(
+            start,
+            ExprKind::Record {
+                ty,
+                ty_span,
+                fields,
+            },
+        ))
+    }
+
+    /// Parse a functional record update `{ base with x = 3 }`. Record *literals*
+    /// are constructor-tagged (`Point { … }`, parsed in `parse_atom`), so a bare
+    /// `{` in expression position is always an update (`DESIGN.md` §8.3).
+    fn parse_record(&mut self, start: usize) -> Result<Expr, ParseError> {
+        self.expect(&Tok::LBrace, "`{`")?;
+        // A targeted migration error for the old bare record literal `{ x = 1 }`.
+        if matches!(self.peek(), Tok::Ident(_)) && matches!(self.peek2(), Tok::Eq) {
+            return Err(self.error(
+                "record literals are now constructor-tagged: write `T { x = … }` \
+                 naming the record type (DESIGN.md §8.3)",
+            ));
+        }
+        let base = Box::new(self.parse_expr()?);
+        self.expect(&Tok::With, "`with`")?;
+        let fields = self.parse_field_updates()?;
+        self.expect(&Tok::RBrace, "`}`")?;
+        Ok(self.mk(start, ExprKind::RecordUpdate { base, fields }))
+    }
+
+    /// Parse `path = expr (, path = expr)*` record-update assignments up to `}`,
+    /// where a `path` is a dotted field path `ident (. ident)*` — `x` for a plain
+    /// update, `a.b` for the nested-update sugar (`DESIGN.md` §8.3).
+    fn parse_field_updates(&mut self) -> Result<Vec<FieldUpdate>, ParseError> {
+        let mut fields = Vec::new();
+        while !matches!(self.peek(), Tok::RBrace) {
+            let mut path = vec![self.parse_ident("field name")?];
+            while self.eat(&Tok::Dot) {
+                path.push(self.parse_ident("field name")?);
+            }
+            self.expect(&Tok::Eq, "`=`")?;
+            let value = self.parse_expr()?;
+            fields.push(FieldUpdate { path, value });
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        if fields.is_empty() {
+            return Err(self.error("a record update needs at least one field"));
+        }
+        Ok(fields)
+    }
+
+    /// Parse `ident = expr (, ident = expr)*` field initializers up to `}`.
+    fn parse_field_inits(&mut self) -> Result<Vec<FieldInit>, ParseError> {
+        let mut fields = Vec::new();
+        while !matches!(self.peek(), Tok::RBrace) {
+            let name = self.parse_ident("field name")?;
+            self.expect(&Tok::Eq, "`=`")?;
+            let value = self.parse_expr()?;
+            fields.push(FieldInit { name, value });
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        if fields.is_empty() {
+            return Err(self.error("a record needs at least one field"));
+        }
+        Ok(fields)
+    }
+
+    /// Wrap a freshly-parsed numeric literal in a unit annotation if one follows.
+    ///
+    /// A `<` is a unit annotation only when it sits *immediately* after the
+    /// literal (no whitespace), e.g. `5<m>`. With a space, `5 < m`, it is the
+    /// less-than operator — the F# rule, which keeps units and comparison apart.
+    fn maybe_unit(&mut self, start: usize, kind: ExprKind) -> Result<Expr, ParseError> {
+        let literal = self.mk(start, kind);
+        let adjacent = self.cur_start() == self.prev_end();
+        if adjacent && matches!(self.peek(), Tok::Lt) {
+            let unit = self.parse_unit_annotation()?;
+            Ok(self.mk(
+                start,
+                ExprKind::Annot {
+                    value: Box::new(literal),
+                    unit,
+                },
+            ))
+        } else {
+            Ok(literal)
+        }
+    }
+
+    /// Parse `<unit>`, e.g. `<m>`, `<m s>`, `<m/s^2>`, or `<1>` (dimensionless).
+    fn parse_unit_annotation(&mut self) -> Result<UnitExpr, ParseError> {
+        self.expect(&Tok::Lt, "`<`")?;
+        let unit = self.parse_unit_body()?;
+        self.expect(&Tok::Gt, "`>`")?;
+        Ok(unit)
+    }
+
+    /// Parse the body of a unit expression (without the surrounding `<>`): numerator
+    /// factors, an optional `/` then denominator factors. A leading `1` is the
+    /// empty numerator — bare `1` is dimensionless, `1/s` is "per second". Shared by
+    /// `<…>` annotations and `measure N = …` aliases.
+    fn parse_unit_body(&mut self) -> Result<UnitExpr, ParseError> {
+        let mut factors = Vec::new();
+        // `1` stands for an empty numerator (so it also leads `1/s`); otherwise
+        // collect numerator factors.
+        let unit_numerator = matches!(self.peek(), Tok::Int(1));
+        if unit_numerator {
+            self.bump();
+        } else {
+            while matches!(self.peek(), Tok::Ident(_)) {
+                factors.push(self.parse_unit_factor(1)?);
+            }
+        }
+        if self.eat(&Tok::Slash) {
+            while matches!(self.peek(), Tok::Ident(_)) {
+                factors.push(self.parse_unit_factor(-1)?);
+            }
+        }
+        // Valid: `1` (dimensionless), `m…`, `m…/s…`, `1/s…`. A bare empty body is not.
+        if !unit_numerator && factors.is_empty() {
+            return Err(self.error("expected a unit (e.g. `m`, `m/s`, or `1`)"));
+        }
+        Ok(UnitExpr { factors })
+    }
+
+    fn parse_unit_factor(&mut self, sign: i32) -> Result<(String, i32), ParseError> {
+        let name = self.parse_ident("measure name")?;
+        let exp = if self.eat(&Tok::Caret) {
+            match self.peek().clone() {
+                Tok::Int(n) => {
+                    self.bump();
+                    n as i32
+                }
+                _ => return Err(self.error("expected an integer exponent after `^`")),
+            }
+        } else {
+            1
+        };
+        Ok((name, sign * exp))
+    }
+
+    /// Parse `builder { items }`. Items are delimited by their leading keyword
+    /// (`let!`, `let`, `do!`, `return`, `yield`) plus the offside rule: an
+    /// item's expression owns the rest of its line and any following lines
+    /// indented past the item, so a line that starts at or left of it is the
+    /// next item (see [`Self::ce_item_ends_here`]).
+    fn parse_ce(&mut self, builder: CeBuilder, start: usize) -> Result<Expr, ParseError> {
+        self.expect(&Tok::LBrace, "`{`")?;
+        // The bracket depth just inside the braces. Item boundaries are judged
+        // at this depth only, so brackets nested within an item keep treating
+        // line breaks as continuations.
+        let depth = self.tokens[self.pos - 1].depth + 1;
+        let mut items = Vec::new();
+        while !matches!(self.peek(), Tok::RBrace) {
+            if self.at_eof() {
+                return Err(self.error("unterminated computation expression"));
+            }
+            items.push(self.parse_ce_item(depth)?);
+        }
+        self.expect(&Tok::RBrace, "`}`")?;
+        Ok(self.mk(start, ExprKind::Ce { builder, items }))
+    }
+
+    /// Parse one CE item with its offside frame in place, so the item's
+    /// expression stops at the first following line that is not indented past
+    /// the item. Control then returns to the item loop, which rejects a bare
+    /// statement line with the `expected `let!`, …` message on that line
+    /// instead of swallowing it as application arguments (issue #64).
+    fn parse_ce_item(&mut self, depth: u32) -> Result<CeItem, ParseError> {
+        let (line, col) = self.token_pos(self.pos);
+        let kind = match (self.peek(), self.peek2()) {
+            (Tok::Let, Tok::Bang) => "let!",
+            (Tok::Let, _) => "let",
+            (Tok::Do, _) => "do!",
+            (Tok::Return, Tok::Bang) => "return!",
+            (Tok::Return, _) => "return",
+            (Tok::Yield, Tok::Bang) => "yield!",
+            (Tok::Yield, _) => "yield",
+            (Tok::Ident(name), _) if name == "for" => "for",
+            // A bare expression item; anything that is not one fails the match
+            // below before the frame is read.
+            _ => "expression",
+        };
+        self.ce_items.push(CeFrame {
+            col,
+            depth,
+            line,
+            kind,
+        });
+        let item = self.parse_ce_item_inner(depth);
+        self.ce_items.pop();
+        item
+    }
+
+    /// `for target in source:` then the body items. Braces carry no layout
+    /// tokens, so the body is delimited by columns like every other item: it
+    /// runs to the first token that starts a line at or left of the `for` (or
+    /// the closing brace). A body that begins on the same line as the `:` is
+    /// exactly one item (`for x in xs: yield x`), as in Python, so a one-line
+    /// block stays unambiguous; a longer body goes on indented lines.
+    fn parse_ce_for(&mut self, depth: u32) -> Result<CeItem, ParseError> {
+        let (_, for_col) = self.token_pos(self.pos);
+        self.bump(); // `for`
+        let (target, target_span) = self.parse_binding_target()?;
+        match self.peek() {
+            Tok::Ident(name) if name == "in" => {
+                self.bump();
+            }
+            _ => return Err(self.error("expected `in` after the `for` target")),
+        }
+        let source = self.parse_expr()?;
+        self.expect(&Tok::Colon, "`:` after the `for` source")?;
+        let mut body = Vec::new();
+        let same_line = !self.at_eof()
+            && !matches!(self.peek(), Tok::RBrace)
+            && self.tokens[self.pos].line_start.is_none();
+        if same_line {
+            body.push(self.parse_ce_item(depth)?);
+        } else {
+            loop {
+                if self.at_eof() || matches!(self.peek(), Tok::RBrace) {
+                    break;
+                }
+                let t = &self.tokens[self.pos];
+                if t.depth != depth {
+                    break;
+                }
+                if let Some(ls) = t.line_start
+                    && ls.col <= for_col
+                {
+                    break;
+                }
+                body.push(self.parse_ce_item(depth)?);
+            }
+        }
+        if body.is_empty() {
+            return Err(self.error("a `for` needs at least one item in its body"));
+        }
+        Ok(CeItem::For {
+            target,
+            target_span,
+            source,
+            body,
+        })
+    }
+
+    fn parse_ce_item_inner(&mut self, depth: u32) -> Result<CeItem, ParseError> {
+        match self.peek() {
+            // `for target in source: body` — a contextual keyword, only in item
+            // position inside CE braces (Pyfun has no `for` loop elsewhere).
+            Tok::Ident(name) if name == "for" => self.parse_ce_for(depth),
+            Tok::Let => {
+                self.bump();
+                let bang = self.eat(&Tok::Bang);
+                let (target, target_span) = self.parse_binding_target()?;
+                self.expect(&Tok::Eq, "`=`")?;
+                let value = self.parse_expr()?;
+                Ok(if bang {
+                    CeItem::LetBang {
+                        target,
+                        target_span,
+                        value,
+                    }
+                } else {
+                    CeItem::Let {
+                        target,
+                        target_span,
+                        value,
+                    }
+                })
+            }
+            Tok::Return => {
+                self.bump();
+                let bang = self.eat(&Tok::Bang);
+                let value = self.parse_expr()?;
+                Ok(if bang {
+                    CeItem::ReturnBang(value)
+                } else {
+                    CeItem::Return(value)
+                })
+            }
+            Tok::Yield => {
+                self.bump();
+                let bang = self.eat(&Tok::Bang);
+                let value = self.parse_expr()?;
+                Ok(if bang {
+                    CeItem::YieldBang(value)
+                } else {
+                    CeItem::Yield(value)
+                })
+            }
+            Tok::Do => {
+                self.bump();
+                self.expect(&Tok::Bang, "`!`")?;
+                Ok(CeItem::DoBang(self.parse_expr()?))
+            }
+            // A bare expression on its own line (`print reply`, a unit-typed
+            // `match`/`if`) is an item too, as in F#: it is `let _ = e`, which is
+            // what the checker requires of it (`unit`) and what the canonical
+            // pretty-print spells. Anything that cannot start an expression
+            // (a closing bracket, an operator) still gets the item list.
+            _ if starts_expr(self.peek()) => {
+                let start = self.cur_start();
+                let value = self.parse_expr()?;
+                let target_span = NodeSpan::new(Span::new(start, start));
+                Ok(CeItem::Let {
+                    target: Pattern::Wildcard,
+                    target_span,
+                    value,
+                })
+            }
+            _ => Err(self.error(
+                "expected `let!`, `let`, `do!`, `return`, `yield`, `for`, or an expression",
+            )),
+        }
+    }
+
+    /// Parse a full pattern, including a top-level or-pattern `a | b | c`
+    /// (`DESIGN.md` §7.2). Alternatives are joined at the constructor-application
+    /// level, so `Some a | None` is `(Some a) | None`, not `Some (a | None)`.
+    fn parse_pattern(&mut self) -> Result<Pattern, ParseError> {
+        let first = self.parse_pattern_app()?;
+        let pat = if matches!(self.peek(), Tok::Bar) {
+            let mut alts = vec![first];
+            while self.eat(&Tok::Bar) {
+                alts.push(self.parse_pattern_app()?);
+            }
+            Pattern::Or(alts)
+        } else {
+            first
+        };
+        // `p as x` binds the whole matched value to `x`. `as` binds looser than `|`,
+        // so `a | b as x` is `(a | b) as x`.
+        if self.eat(&Tok::As) {
+            let name_start = self.cur_start();
+            let name = self.parse_ident("a name after `as`")?;
+            let name_span = NodeSpan::new(Span::new(name_start, self.prev_end()));
+            return Ok(Pattern::As {
+                pattern: Box::new(pat),
+                name,
+                name_span,
+            });
+        }
+        Ok(pat)
+    }
+
+    /// Parse a constructor-application pattern (no top-level `|`). A capitalized
+    /// identifier is a constructor that may take argument patterns, a
+    /// constructor-tagged record pattern (`Point { … }`), or — after a `.` — a
+    /// qualified constructor from an imported module (`Geometry.Circle r`,
+    /// `DESIGN.md` §6.1). Everything else is a single atom pattern.
+    fn parse_pattern_app(&mut self) -> Result<Pattern, ParseError> {
+        if let Tok::Ident(name) = self.peek().clone()
+            && is_upper(&name)
+        {
+            let start = self.cur_start();
+            self.bump();
+            // Consume a `.Ctor`/`.Record` suffix first, so a qualified record pattern
+            // (`Geometry.Point { … }`) and a qualified constructor (`Geometry.Circle r`)
+            // are both recognized (`DESIGN.md` §8.3, §6.1).
+            let name = self.maybe_qualify_ctor(name)?;
+            let name_span = NodeSpan::new(Span::new(start, self.prev_end()));
+            // `Point { … }` / `Geometry.Point { … }` — a constructor-tagged record
+            // pattern (the tag may be qualified for an imported record).
+            if matches!(self.peek(), Tok::LBrace) {
+                return self.parse_record_pattern_body(name, name_span);
+            }
+            let mut args = Vec::new();
+            while starts_atom_pattern(self.peek()) {
+                args.push(self.parse_atom_pattern()?);
+            }
+            return Ok(Pattern::Ctor {
+                name,
+                name_span,
+                args,
+            });
+        }
+        self.parse_atom_pattern()
+    }
+
+    /// After a capitalized identifier in pattern position, consume a `.Ctor`
+    /// suffix if present, yielding the qualified constructor name
+    /// (`Geometry.Circle`); otherwise return the bare name.
+    fn maybe_qualify_ctor(&mut self, base: String) -> Result<String, ParseError> {
+        if self.eat(&Tok::Dot) {
+            let ctor = self.parse_upper_ident("a constructor name after `.`")?;
+            Ok(format!("{base}.{ctor}"))
+        } else {
+            Ok(base)
+        }
+    }
+
+    fn parse_atom_pattern(&mut self) -> Result<Pattern, ParseError> {
+        match self.peek().clone() {
+            Tok::Underscore => {
+                self.bump();
+                Ok(Pattern::Wildcard)
+            }
+            Tok::Ident(name) => {
+                let start = self.cur_start();
+                self.bump();
+                if is_upper(&name) {
+                    // A `.Ctor`/`.Record` suffix is consumed first (qualified imports).
+                    let name = self.maybe_qualify_ctor(name)?;
+                    let name_span = NodeSpan::new(Span::new(start, self.prev_end()));
+                    // `Point { … }` / `Geometry.Point { … }` — a constructor-tagged
+                    // record pattern as an atom (e.g. a constructor argument), else a
+                    // nullary constructor, possibly qualified (`Geometry.Nothing`).
+                    if matches!(self.peek(), Tok::LBrace) {
+                        return self.parse_record_pattern_body(name, name_span);
+                    }
+                    Ok(Pattern::Ctor {
+                        name,
+                        name_span,
+                        args: Vec::new(),
+                    })
+                } else {
+                    Ok(Pattern::Var {
+                        name,
+                        span: NodeSpan::new(Span::new(start, self.prev_end())),
+                    })
+                }
+            }
+            Tok::Int(n) => {
+                self.bump();
+                Ok(Pattern::Int(n))
+            }
+            // A negative integer literal pattern `case -1:` — the sign folds into
+            // the literal (Python's `match` likewise allows `-` before a number in a
+            // literal pattern). Only integers have literal patterns, so `- Int` only.
+            Tok::Minus if matches!(self.peek2(), Tok::Int(_)) => {
+                self.bump();
+                let Tok::Int(n) = self.bump() else {
+                    unreachable!("peek2 guaranteed an integer")
+                };
+                Ok(Pattern::Int(-n))
+            }
+            Tok::Str(s) => {
+                self.bump();
+                Ok(Pattern::Str(s))
+            }
+            Tok::True => {
+                self.bump();
+                Ok(Pattern::Bool(true))
+            }
+            Tok::False => {
+                self.bump();
+                Ok(Pattern::Bool(false))
+            }
+            Tok::LParen => {
+                self.bump();
+                let first = self.parse_pattern()?;
+                if self.eat(&Tok::Comma) {
+                    let mut elems = vec![first];
+                    loop {
+                        elems.push(self.parse_pattern()?);
+                        if !self.eat(&Tok::Comma) {
+                            break;
+                        }
+                    }
+                    self.expect(&Tok::RParen, "`)`")?;
+                    return Ok(Pattern::Tuple { elems });
+                }
+                self.expect(&Tok::RParen, "`)`")?;
+                Ok(first)
+            }
+            Tok::LBracket => self.parse_list_pattern(),
+            // Float literals are deliberately not matchable: a literal pattern
+            // compiles to `==`, and float equality is unreliable (`0.1 + 0.2 ≠
+            // 0.3`, `NaN ≠ NaN`). Point at the guard alternative rather than the
+            // generic "expected a pattern". Covers `case 1.5:` and `case -1.5:`.
+            Tok::Float(_) => Err(self.float_pattern_error()),
+            Tok::Minus if matches!(self.peek2(), Tok::Float(_)) => Err(self.float_pattern_error()),
+            _ => Err(self.error("expected a pattern")),
+        }
+    }
+
+    /// The guiding error for a float used as a pattern (see `parse_atom_pattern`).
+    fn float_pattern_error(&self) -> ParseError {
+        ParseError {
+            message: "float literals can't be matched — float equality is \
+                      unreliable; bind a variable and use a guard instead, \
+                      e.g. `case x if x == 1.5:`"
+                .to_string(),
+            span: self.span(),
+        }
+    }
+
+    /// Parse a list/sequence pattern `[a, b, *mid, z]` (`DESIGN.md` §7.2). Elements
+    /// are comma-separated; an element is a normal pattern, or `*pat` — the rest
+    /// binder, which may sit **anywhere** (Python's rule): elements before it are
+    /// the `prefix`, elements after it the `suffix`. `[]` is allowed. At most one
+    /// star.
+    fn parse_list_pattern(&mut self) -> Result<Pattern, ParseError> {
+        self.expect(&Tok::LBracket, "`[`")?;
+        let mut prefix = Vec::new();
+        let mut rest: Option<Box<Pattern>> = None;
+        let mut suffix = Vec::new();
+        while !matches!(self.peek(), Tok::RBracket) {
+            if self.eat(&Tok::Star) {
+                if rest.is_some() {
+                    return Err(self.error("a list pattern can have at most one `*` rest element"));
+                }
+                // The rest binder `*rest` / `*_` — a variable or wildcard (it binds
+                // the unmatched middle slice, itself a list).
+                let start = self.cur_start();
+                let binder = match self.peek().clone() {
+                    Tok::Underscore => {
+                        self.bump();
+                        Pattern::Wildcard
+                    }
+                    Tok::Ident(name) if !is_upper(&name) => {
+                        self.bump();
+                        Pattern::Var {
+                            name,
+                            span: NodeSpan::new(Span::new(start, self.prev_end())),
+                        }
+                    }
+                    _ => {
+                        return Err(self.error("the `*` rest binder must be a variable or `_`"));
+                    }
+                };
+                rest = Some(Box::new(binder));
+            } else {
+                let elem = self.parse_pattern()?;
+                if rest.is_some() {
+                    suffix.push(elem);
+                } else {
+                    prefix.push(elem);
+                }
+            }
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        self.expect(&Tok::RBracket, "`]`")?;
+        Ok(Pattern::List {
+            prefix,
+            rest,
+            suffix,
+        })
+    }
+
+    /// Parse the `{ name [= pattern] (, name [= pattern])* }` body of a
+    /// constructor-tagged record pattern `ty { … }` (`DESIGN.md` §8.3); the tag
+    /// `ty` has already been consumed. A bare `name` is shorthand for `name = name`
+    /// (binds the field to a same-named variable).
+    fn parse_record_pattern_body(
+        &mut self,
+        ty: String,
+        ty_span: NodeSpan,
+    ) -> Result<Pattern, ParseError> {
+        self.expect(&Tok::LBrace, "`{`")?;
+        let mut fields = Vec::new();
+        while !matches!(self.peek(), Tok::RBrace) {
+            let start = self.cur_start();
+            let name = self.parse_ident("field name")?;
+            let name_span = NodeSpan::new(Span::new(start, self.prev_end()));
+            let pattern = if self.eat(&Tok::Eq) {
+                self.parse_pattern()?
+            } else {
+                Pattern::Var {
+                    name: name.clone(),
+                    span: name_span,
+                }
+            };
+            fields.push(FieldPattern {
+                name,
+                name_span,
+                pattern,
+            });
+            if !self.eat(&Tok::Comma) {
+                break;
+            }
+        }
+        self.expect(&Tok::RBrace, "`}`")?;
+        if fields.is_empty() {
+            return Err(self.error("a record pattern needs at least one field"));
+        }
+        Ok(Pattern::Record {
+            ty,
+            ty_span,
+            fields,
+        })
+    }
+
+    fn parse_ident(&mut self, what: &str) -> Result<String, ParseError> {
+        match self.peek().clone() {
+            Tok::Ident(name) => {
+                self.bump();
+                Ok(name)
+            }
+            _ => Err(self.error(&format!("expected {what}"))),
+        }
+    }
+
+    fn parse_upper_ident(&mut self, what: &str) -> Result<String, ParseError> {
+        match self.peek().clone() {
+            Tok::Ident(name) if is_upper(&name) => {
+                self.bump();
+                Ok(name)
+            }
+            _ => Err(self.error(&format!("expected {what}"))),
+        }
+    }
+}
+
+/// The `BinOp` an operator section `(op)` denotes, or `None` if the token isn't a
+/// sectionable binary operator. `and`/`or` are deliberately excluded: they are
+/// keywords, and a strict function value would silently drop their short-circuit
+/// evaluation (F# excludes `&&`/`||` for the same reason).
+fn binop_from_tok(tok: &Tok) -> Option<BinOp> {
+    Some(match tok {
+        Tok::Plus => BinOp::Add,
+        Tok::Minus => BinOp::Sub,
+        Tok::Star => BinOp::Mul,
+        Tok::Slash => BinOp::Div,
+        Tok::SlashSlash => BinOp::FloorDiv,
+        Tok::Percent => BinOp::Mod,
+        Tok::StarStar => BinOp::Pow,
+        Tok::EqEq => BinOp::Eq,
+        Tok::BangEq => BinOp::Ne,
+        Tok::Lt => BinOp::Lt,
+        Tok::Gt => BinOp::Gt,
+        Tok::Le => BinOp::Le,
+        Tok::Ge => BinOp::Ge,
+        _ => return None,
+    })
+}
+
+fn starts_atom(tok: &Tok) -> bool {
+    matches!(
+        tok,
+        Tok::Int(_)
+            | Tok::Float(_)
+            | Tok::Str(_)
+            | Tok::FStr(_)
+            | Tok::Hole(_)
+            | Tok::True
+            | Tok::False
+            | Tok::Ident(_)
+            | Tok::LParen
+            | Tok::LBrace
+            | Tok::LBracket
+    )
+}
+
+/// Whether `tok` can begin an expression: an atom, a prefix form (`fun`, `if`,
+/// `match`, `not`), or a leading unary minus. Used to admit a bare expression as
+/// a CE item without turning a stray closing bracket into one.
+fn starts_expr(tok: &Tok) -> bool {
+    starts_atom(tok) || matches!(tok, Tok::Fun | Tok::If | Tok::Match | Tok::Not | Tok::Minus)
+}
+
+fn starts_atom_pattern(tok: &Tok) -> bool {
+    // A `{` no longer starts a pattern on its own: record patterns are
+    // constructor-tagged (`Point { … }`), so they begin with an `Ident`
+    // (`DESIGN.md` §8.3).
+    matches!(
+        tok,
+        Tok::Underscore
+            | Tok::Ident(_)
+            | Tok::Int(_)
+            | Tok::Str(_)
+            | Tok::True
+            | Tok::False
+            | Tok::LParen
+            | Tok::LBracket
+    )
+}
+
+/// Does this token begin a computation-expression item (`let`/`let!`, `do!`,
+/// `return`/`return!`, `yield`/`yield!`)? Used to tell a user CE (`Maybe { let!
+/// … }`) from a constructor applied to a record (`Some { x = 1 }`).
+fn starts_ce_item(tok: &Tok) -> bool {
+    matches!(tok, Tok::Let | Tok::Return | Tok::Yield | Tok::Do)
+        || matches!(tok, Tok::Ident(name) if name == "for")
+}
+
+fn starts_type_atom(tok: &Tok) -> bool {
+    matches!(tok, Tok::Ident(_) | Tok::LParen)
+}
+
+fn is_upper(name: &str) -> bool {
+    name.chars().next().is_some_and(|c| c.is_uppercase())
+}
+
+/// Attach collected doc-comment text to the item it precedes. Docs attach to the
+/// documentable declarations — `let` / `type` / `extern` (MVP: top level only);
+/// preceding anything else (`measure`, `module`, `import`, an expression) they are
+/// accepted and dropped, like an ordinary comment.
+fn attach_doc(item: &mut Item, doc: Option<String>) {
+    let Some(doc) = doc else { return };
+    match item {
+        Item::Let(binding) => binding.doc = Some(doc),
+        Item::Type(decl) => decl.doc = Some(doc),
+        Item::Extern(decl) => decl.doc = Some(doc),
+        Item::ActivePattern(decl) => decl.doc = Some(doc),
+        _ => {}
+    }
+}
+
+/// The number of leading arrows in a surface type — how many arguments an `extern`
+/// of that type takes. (Lowering has its own copy for the lowered form; this one
+/// keeps the parser from depending on a later phase.)
+fn type_arrow_arity(ty: &TypeExpr) -> usize {
+    match ty {
+        TypeExpr::Fun(_, ret, _) => 1 + type_arrow_arity(ret),
+        TypeExpr::Con(..) | TypeExpr::Tuple(_) => 0,
+    }
+}
+
+/// The number of plain `unit` parameters along an `extern`'s arrow — arguments
+/// lowering drops (`DESIGN.md` §6, #123), so a `...` slot cannot claim one.
+fn type_unit_param_count(ty: &TypeExpr) -> usize {
+    let mut n = 0;
+    let mut cur = ty;
+    while let TypeExpr::Fun(domain, ret, _) = cur {
+        if matches!(domain.as_ref(),
+            TypeExpr::Con(name, _, args) if name == "unit" && args.is_empty())
+        {
+            n += 1;
+        }
+        cur = ret;
+    }
+    n
+}
+
+/// Whether `tok` can begin a parameter: a name, `_`, or a `(`-led pattern.
+fn starts_param(tok: &Tok) -> bool {
+    matches!(tok, Tok::Ident(_) | Tok::Underscore | Tok::LParen)
+}
+
+/// Whether `pattern` can fail to match, and if so what to call it in the error.
+/// The two **binding** positions — a parameter and a `let` target — admit only the
+/// shapes that always match: a name, `_`, tuples, and **record** patterns, each
+/// over irrefutable sub-patterns. A tuple's arity is fixed by its type and a
+/// record has exactly one shape (naming a subset of its fields still matches every
+/// value), so both are irrefutable when their parts are. Everything else (a
+/// literal, a constructor, a list pattern, an or-pattern) can fail, and neither
+/// position has anywhere to fail *to*.
+///
+/// A record pattern's tag is only *checked* to name a record later, in the type
+/// checker; a tag that turns out to be a sum-type constructor is rejected there as
+/// "not a record type", so nothing refutable slips through this way.
+fn refutable_shape(pattern: &Pattern) -> Option<&'static str> {
+    match pattern {
+        Pattern::Wildcard | Pattern::Var { .. } => None,
+        Pattern::Tuple { elems } => elems.iter().find_map(refutable_shape),
+        Pattern::Record { fields, .. } => fields.iter().find_map(|f| refutable_shape(&f.pattern)),
+        Pattern::Int(_) | Pattern::Str(_) | Pattern::Bool(_) => Some("a literal pattern"),
+        Pattern::Ctor { .. } => Some("a constructor pattern"),
+        Pattern::List { .. } => Some("a list pattern"),
+        Pattern::Or(_) => Some("an or-pattern"),
+        Pattern::As { .. } => Some("an as-pattern"),
+    }
+}
+
+/// A short human-readable name for a token, used in error messages.
+fn describe(tok: &Tok) -> String {
+    match tok {
+        Tok::Int(n) => format!("integer `{n}`"),
+        Tok::Float(f) => format!("float `{f}`"),
+        Tok::Str(_) => "string literal".to_string(),
+        Tok::Ident(name) => format!("identifier `{name}`"),
+        Tok::Eof => "end of input".to_string(),
+        Tok::Doc(_) => "doc comment".to_string(),
+        Tok::Sep => "end of statement".to_string(),
+        Tok::Indent => "start of an indented block".to_string(),
+        Tok::Dedent => "end of block".to_string(),
+        other => format!("`{}`", token_symbol(other)),
+    }
+}
+
+fn token_symbol(tok: &Tok) -> &'static str {
+    match tok {
+        Tok::Let => "let",
+        Tok::Mut => "mut",
+        Tok::Pure => "pure",
+        Tok::If => "if",
+        Tok::Then => "then",
+        Tok::Else => "else",
+        Tok::Match => "match",
+        Tok::With => "with",
+        Tok::Fun => "fun",
+        Tok::Type => "type",
+        Tok::Return => "return",
+        Tok::Yield => "yield",
+        Tok::Do => "do",
+        Tok::Measure => "measure",
+        Tok::Extern => "extern",
+        Tok::Module => "module",
+        Tok::Import => "import",
+        Tok::Not => "not",
+        Tok::And => "and",
+        Tok::Or => "or",
+        Tok::Bang => "!",
+        Tok::Caret => "^",
+        Tok::Lt => "<",
+        Tok::Gt => ">",
+        Tok::LBrace => "{",
+        Tok::RBrace => "}",
+        Tok::LBracket => "[",
+        Tok::RBracket => "]",
+        Tok::True => "true",
+        Tok::False => "false",
+        Tok::Eq => "=",
+        Tok::EqEq => "==",
+        Tok::BangEq => "!=",
+        Tok::Le => "<=",
+        Tok::Ge => ">=",
+        Tok::GtGt => ">>",
+        Tok::LtLt => "<<",
+        Tok::LArrow => "<-",
+        Tok::Plus => "+",
+        Tok::Minus => "-",
+        Tok::Star => "*",
+        Tok::Slash => "/",
+        Tok::SlashSlash => "//",
+        Tok::PipeOp => "|>",
+        Tok::PipeLeft => "<|",
+        Tok::Bar => "|",
+        Tok::Arrow => "->",
+        Tok::LParen => "(",
+        Tok::RParen => ")",
+        Tok::Comma => ",",
+        Tok::Colon => ":",
+        Tok::Dot => ".",
+        Tok::Ellipsis => "...",
+        Tok::Underscore => "_",
+        _ => "token",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::lexer::lex;
+
+    fn names(module: &Module) -> Vec<&str> {
+        module
+            .items
+            .iter()
+            .filter_map(|i| match i {
+                Item::Let(b) => b.name(),
+                _ => None,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn recovers_items_around_a_broken_let() {
+        // The middle `let bad =` has no body; recovery should still yield the
+        // surrounding well-formed items.
+        let src = "let good = 1\nlet bad =\nlet also = 2";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert_eq!(names(&module), ["good", "also"]);
+        assert_eq!(errors.len(), 1, "errors: {errors:?}");
+    }
+
+    #[test]
+    fn recovers_after_a_broken_block() {
+        // A garbage expression statement inside an indented block is one broken
+        // item; the following top-level `let` must still parse.
+        let src = "let f x =\n  x +\nlet g = 2";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert!(names(&module).contains(&"g"), "names: {:?}", names(&module));
+        assert!(!errors.is_empty());
+    }
+
+    #[test]
+    fn clean_source_recovers_with_no_errors() {
+        let src = "let a = 1\nlet b = 2";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert_eq!(names(&module), ["a", "b"]);
+        assert!(errors.is_empty());
+    }
+
+    /// Assert that `src` parses with its `print` line as a CE item of its own
+    /// (issue #64: the line after a binding must be examined as a CE item, not
+    /// swallowed as application arguments of the binding's value; since #105 a
+    /// bare expression *is* an item, `let _ = e`, so the line parses). The
+    /// binding's value is the CE itself (a one-expression block unwraps).
+    fn assert_statement_line_is_an_item(src: &str, expected_items: usize) {
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert!(errors.is_empty(), "{src:?} reported: {errors:?}");
+        let Some(Item::Let(b)) = module.items.first() else {
+            panic!("{src:?}: expected a `let` item");
+        };
+        let ExprKind::Ce { items, .. } = &b.value.kind else {
+            panic!(
+                "{src:?}: the binding's value is not a CE: {:?}",
+                b.value.kind
+            );
+        };
+        assert_eq!(items.len(), expected_items, "{src:?}: items {items:?}");
+        let expr_item = items.iter().find(|it| {
+            matches!(it, CeItem::Let { target: Pattern::Wildcard, value, .. }
+                if matches!(&value.kind, ExprKind::App { .. }))
+        });
+        assert!(
+            expr_item.is_some(),
+            "{src:?}: no expression item (`let _ = print …`) among {items:?}"
+        );
+    }
+
+    #[test]
+    fn a_statement_line_after_a_ce_binding_is_an_item() {
+        // The issue #64 repro: without the item-offside rule, `print …` was
+        // parsed as extra arguments to `x * 2` and surfaced as a type error on
+        // the line above. It is now the third item, `let _ = print …`.
+        assert_statement_line_is_an_item(
+            "let f n =\n  result {\n    let! x = Option.toResult \"bad\" (String.toInt n)\n    let y = x * 2\n    print f\"y is {y}\"\n    return y\n  }",
+            4,
+        );
+    }
+
+    #[test]
+    fn every_builder_takes_a_statement_line_after_any_item() {
+        for (src, n) in [
+            // after a plain `let` in `seq`
+            (
+                "let s =\n  seq {\n    let y = 1 * 2\n    print y\n    yield y\n  }",
+                3,
+            ),
+            // after a `do!` in `async`
+            (
+                "let a =\n  async {\n    do! pause 1\n    print \"done\"\n    return 0\n  }",
+                3,
+            ),
+            // after a `let!` in `option`
+            (
+                "let o =\n  option {\n    let! x = Some 1\n    print x\n    return x\n  }",
+                3,
+            ),
+            // after a `yield` in `seq`
+            ("let q =\n  seq {\n    yield f 1\n    print 2\n  }", 2),
+            // a user-defined builder goes through the same item loop
+            (
+                "let m =\n  Maybe {\n    let! x = lookup 1\n    print x\n    return x\n  }",
+                3,
+            ),
+        ] {
+            assert_statement_line_is_an_item(src, n);
+        }
+    }
+
+    #[test]
+    fn a_ce_item_position_that_cannot_start_an_expression_lists_the_items() {
+        let src = "let m =\n  async {\n    let! x = m\n    )\n  }";
+        let (_, errors) = parse_recover(lex(src).unwrap());
+        let err = errors.first().expect("a parse error");
+        assert!(
+            err.message.contains(
+                "expected `let!`, `let`, `do!`, `return`, `yield`, `for`, or an expression"
+            ),
+            "reported: {}",
+            err.message
+        );
+        assert_eq!(err.span.start, src.find(')').unwrap());
+    }
+
+    #[test]
+    fn a_first_item_that_is_not_a_ce_item_is_named_rather_than_read_as_a_record() {
+        // `Html { class_ "board"` fails the CE lookahead and used to be diagnosed
+        // as a record literal missing its `=`.
+        let src = "let q = Html { class_ \"board\" }";
+        let (_, errors) = parse_recover(lex(src).unwrap());
+        let err = errors.first().expect("a parse error");
+        assert!(
+            err.message
+                .contains("`class_` is not a computation-expression item"),
+            "{src:?} reported: {}",
+            err.message
+        );
+        assert_eq!(err.span.start, src.find("class_").unwrap(), "{err:?}");
+        // The record spellings the lookahead exists for still parse as records.
+        for src in [
+            "let p = Point { x = 1, y = 2 }",
+            "let p = Some (Cell { x = 1 })",
+        ] {
+            let (_, errors) = parse_recover(lex(src).unwrap());
+            assert!(errors.is_empty(), "{src:?} reported: {errors:?}");
+        }
+    }
+
+    #[test]
+    fn an_offside_argument_line_inside_a_ce_names_both_readings() {
+        // The indented spelling of the issue #64 repro: `print` sits past the
+        // item, so the item-boundary rule reads it as a continuation, yet it
+        // sits left of the expression it would extend (F#'s FS0058, applied to
+        // application). The error points at `print`, names the item being
+        // continued by keyword and line, and offers both fixes without column
+        // numbers. The new-item fix must include the binding: an atom start
+        // can never begin a CE item, so un-indenting alone is not a fix.
+        let src = "let f n =\n  result {\n    let! x = Option.toResult \"bad\" (String.toInt n)\n    let y = x * 2\n      print f\"y is {y}\"\n    return y\n  }";
+        let (_, errors) = parse_recover(lex(src).unwrap());
+        let err = errors
+            .first()
+            .unwrap_or_else(|| panic!("expected a parse error in {src:?}"));
+        assert!(
+            err.message
+                .contains("continuation of the `let` item on line 4"),
+            "reported: {}",
+            err.message
+        );
+        assert!(
+            err.message.contains("align it with that item"),
+            "reported: {}",
+            err.message
+        );
+        assert!(!err.message.contains("column"), "reported: {}", err.message);
+        assert_eq!(err.span.start, src.find("print").unwrap(), "{err:?}");
+
+        // The bracket-opening shape: no item spelling exists for a `(` line at
+        // all, so the same message (naming the `let!` item) must carry it.
+        let src = "let f n =\n  result {\n    let! x = Option.toResult \"bad\"\n      (String.toInt n)\n    return x\n  }";
+        let (_, errors) = parse_recover(lex(src).unwrap());
+        let err = errors
+            .first()
+            .unwrap_or_else(|| panic!("expected a parse error in {src:?}"));
+        assert!(
+            err.message
+                .contains("continuation of the `let!` item on line 3"),
+            "reported: {}",
+            err.message
+        );
+        assert_eq!(err.span.start, src.find('(').unwrap(), "{err:?}");
+    }
+
+    #[test]
+    fn a_line_opening_argument_at_its_functions_column_keeps_parsing() {
+        // The boundary of the FS0058-style rule: a trailing argument opening a
+        // line at exactly the function's column (or beyond) is a continuation.
+        let src = "let f =\n  result {\n    let! x =\n      g\n      1\n    return x\n  }";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert!(errors.is_empty(), "errors: {errors:?}");
+        assert_eq!(names(&module), ["f"]);
+    }
+
+    #[test]
+    fn a_ce_item_expression_may_span_lines_indented_past_the_item() {
+        // Legal multi-line items keep parsing: a value continued on deeper
+        // lines, a pipeline broken across lines, a multi-line `match`, and a
+        // nested CE.
+        let src = "let f n =\n  result {\n    let! x =\n      Option.toResult \"bad\"\n        (String.toInt n)\n    let y = x\n      |> (fun v -> v * 2)\n    let z =\n      match y:\n        case 0: 0\n        case other: other\n    let! w = result { return z }\n    return w\n  }";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert!(errors.is_empty(), "errors: {errors:?}");
+        assert_eq!(names(&module), ["f"]);
+    }
+
+    #[test]
+    fn brackets_inside_a_ce_item_still_continue_across_lines() {
+        // Inside explicit brackets a line break never separates, whatever its
+        // column — both the item-boundary rule and the argument-alignment rule
+        // apply only directly inside the CE's braces. Here `i` opens a line at
+        // column 0, left of everything, and is still the argument of `h`.
+        let src = "let f =\n  result {\n    let! x = g (h\ni)\n    return x\n  }";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert!(errors.is_empty(), "errors: {errors:?}");
+        assert_eq!(names(&module), ["f"]);
+    }
+
+    /// The message of the single parse error in `src` (panics if it parses).
+    fn parse_error(src: &str) -> String {
+        let (_, errors) = parse_recover(lex(src).unwrap());
+        errors
+            .first()
+            .unwrap_or_else(|| panic!("expected a parse error in {src:?}"))
+            .message
+            .clone()
+    }
+
+    #[test]
+    fn a_let_target_admits_only_patterns_that_always_match() {
+        // The same rule a parameter is held to, and for the same reason: there is
+        // no second arm to fall through to (`DESIGN.md` §7).
+        for (src, what) in [
+            ("let (Some x) = Some 1", "a constructor pattern"),
+            ("let ([a, b]) = [1, 2]", "a list pattern"),
+        ] {
+            let msg = parse_error(src);
+            assert!(msg.contains(what), "{src:?} reported: {msg}");
+            assert!(msg.contains("must always match"), "{src:?} reported: {msg}");
+        }
+    }
+
+    #[test]
+    fn a_destructuring_target_takes_no_parameters_and_no_mut() {
+        assert!(parse_error("let (a, b) c = (1, 2)").contains("a function binding needs a name"));
+        assert!(parse_error("let mut (a, b) = (1, 2)").contains("needs a name for `<-`"));
+    }
+
+    #[test]
+    fn a_destructuring_let_binds_every_name_in_its_target() {
+        let src = "type P = { x: int, y: int }\nlet (a, (b, _)) = (1, (2, 3))\nlet P { x, y } = P { x = 1, y = 2 }";
+        let (module, errors) = parse_recover(lex(src).unwrap());
+        assert!(errors.is_empty(), "errors: {errors:?}");
+        let bound: Vec<String> = module
+            .items
+            .iter()
+            .filter_map(|i| match i {
+                Item::Let(b) => Some(b.bound_names()),
+                _ => None,
+            })
+            .flatten()
+            .collect();
+        assert_eq!(bound, ["a", "b", "x", "y"]);
+    }
+}

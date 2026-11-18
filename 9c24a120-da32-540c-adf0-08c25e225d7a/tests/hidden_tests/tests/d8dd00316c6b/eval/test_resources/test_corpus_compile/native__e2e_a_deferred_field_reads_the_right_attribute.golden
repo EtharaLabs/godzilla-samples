@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Placed:
+    row: int
+    col: int
+    letter: str
+@dataclass(frozen=True, slots=True)
+class Cell:
+    row: int
+    col: int
+    letter: str
+    blank: bool
+def describe(c: Cell) -> str:
+    l = c.letter
+    flag = c.blank
+    return f"{l}/{flag}"
+out: str = describe(Cell(1, 2, "A", False))
+--- stderr ---

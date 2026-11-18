@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def _pf_str_upper(s):
+    return s.upper()
+name: str = "Ada"
+a: int = 3
+b: int = 4
+g: str = f"hi {name}: {a + b}"
+u: str = f"upper {_pf_str_upper(name)}"
+e: str = f"brace {{ {a}"
+--- stderr ---

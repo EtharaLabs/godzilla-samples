@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+let f o =
+    match o:
+        case (Some (1 | 2)): "low"
+        case (Some ((3 | 4) as n)): f"mid {n}"
+        case (Some _): "high"
+        case None: "none"
+(print (f (Some 2)))
+(print (f (Some 4)))
+(print (f (Some 9)))
+(print (f None))
+--- stderr ---

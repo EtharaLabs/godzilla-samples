@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class PH:
+    def __repr__(self):
+        return "PH"
+_PH = PH()
+def f(p, text):
+    return p.write_text(text, encoding="utf-8")
+--- stderr ---

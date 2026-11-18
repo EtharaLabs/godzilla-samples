@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class UH:
+    def __repr__(self):
+        return "UH"
+_UH: UH = UH()
+U = UH
+def f(u: U) -> str:
+    return u.scheme
+--- stderr ---

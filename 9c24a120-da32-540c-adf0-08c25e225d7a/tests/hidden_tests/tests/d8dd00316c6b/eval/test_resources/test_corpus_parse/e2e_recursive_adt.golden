@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+type Lst a = Nil | Cons a (Lst a)
+let head d xs =
+    match xs:
+        case Nil: d
+        case (Cons h t): h
+let r = ((head 0) ((Cons 7) ((Cons 8) Nil)))
+--- stderr ---

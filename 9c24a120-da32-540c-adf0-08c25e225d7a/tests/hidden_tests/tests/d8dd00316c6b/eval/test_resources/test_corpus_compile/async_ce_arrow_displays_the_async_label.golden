@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+def go(x):
+    async def _pf_fn0():
+        return x
+    return _pf_Async(_pf_fn0)
+--- stderr ---

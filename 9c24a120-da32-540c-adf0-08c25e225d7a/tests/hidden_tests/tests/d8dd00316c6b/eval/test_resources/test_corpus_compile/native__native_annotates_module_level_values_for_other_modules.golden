@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+@dataclass(frozen=True, slots=True, repr=False)
+class Plain:
+    def __repr__(self):
+        return "Plain"
+_Plain: Plain = Plain()
+@dataclass(frozen=True, slots=True, repr=False)
+class Double:
+    def __repr__(self):
+        return "Double"
+_Double: Double = Double()
+Cell = Plain | Double
+layout: list[Cell] = [_Plain, _Double]
+size: int = len(layout)
+empty: dict[Any, Any] = dict()
+print(size)
+print(len(_pf_map_add(1, "a", empty)))
+--- stderr ---

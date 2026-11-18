@@ -1,0 +1,76 @@
+# asyncio — structured concurrency with `Task.scope`/`Task.start`, and a mailbox
+# agent over `asyncio.Queue`, the F# `MailboxProcessor` shape.
+#
+#   pyfun run examples/interop/structured_concurrency.pyfun
+#
+# Runs offline. Every task is owned by a scope: `Task.scope` opens an
+# `asyncio.TaskGroup` around an async body and does not return until every task
+# started with `Task.start` has finished (or cancels them all if one fails).
+# `Task.start` performs the `spawn` effect, and a `Task.scope` body is the only
+# place that effect is discharged, so there is no way to start a task nothing
+# will join, and no `cancel` to forget.
+
+extern import asyncio
+extern runAsync: Async a -> a = asyncio.run
+
+# The mailbox: an asyncio queue as an opaque handle. `put_nowait` posts from
+# anywhere; `get` is a coroutine, so its result is the `Async` type and `let!`
+# is where the agent waits for the next message.
+extern type Queue
+extern newQueue: unit -> Queue = asyncio.Queue
+extern post: Queue -> a -> unit = .put_nowait
+extern take: Queue -> Async a = .get()
+
+# The protocol is one ADT: spectators, reconnection or a clock are new
+# constructors, not new plumbing.
+type Msg = Said string | Tick | Quit
+
+# One step of the agent's state: an effect and the next count. Sync, so the
+# recursive call below stays a *direct* tail call.
+let heard count s =
+  print f"agent heard {s}"
+  count + 1
+
+let finished count = async { return count }
+
+# The agent: one loop that is a `match` over the message, the loop's state
+# threaded through the recursion. The self tail call compiles to a `while True:`
+# inside the one coroutine (`DESIGN.md` §5.4), so an agent that handles a
+# message a second for a year is still on its first stack frame.
+let agentLoop inbox count =
+  async {
+    let! msg = take inbox
+    return! (match msg:
+      case Said s: agentLoop inbox (heard count s)
+      case Tick: agentLoop inbox count
+      case Quit: finished count)
+  }
+
+# A producer posts from its own task. The block ends in a plain call, which is
+# `return ()` for a fire-and-forget block.
+let producer inbox =
+  async {
+    for s in ["hello", "world"]:
+      do! Async.sleep 0.01
+      post inbox (Said s)
+    post inbox Tick
+    post inbox Quit
+  }
+
+# The session: the producer runs as a task of the scope while the agent awaits
+# in the body; the closing of the scope joins the producer. Nothing here can
+# leak past the end of `session`.
+let session =
+  Task.scope (async {
+    let inbox = newQueue ()
+    Task.start (producer inbox)
+    let! count = agentLoop inbox 0
+    return count
+  })
+
+let count = runAsync session
+print f"agent handled {count} messages"
+
+# `Task.start` performs `spawn`, and only a `Task.scope` body discharges it, so a
+# start outside a scope is a compile error ("this starts a task outside any
+# `Task.scope`"), not a leaked task at run time.

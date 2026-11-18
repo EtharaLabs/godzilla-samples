@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Red:
+    def __repr__(self):
+        return "Red"
+_Red = Red()
+@dataclass(frozen=True, slots=True, repr=False)
+class Amber:
+    def __repr__(self):
+        return "Amber"
+_Amber = Amber()
+@dataclass(frozen=True, slots=True, repr=False)
+class Green:
+    def __repr__(self):
+        return "Green"
+_Green = Green()
+def action(l):
+    match l:
+        case Red():
+            return "stop"
+        case Amber():
+            return "wait"
+        case Green():
+            return "go"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(action(_Red))
+print(action(_Amber))
+print(action(_Green))
+--- stderr ---

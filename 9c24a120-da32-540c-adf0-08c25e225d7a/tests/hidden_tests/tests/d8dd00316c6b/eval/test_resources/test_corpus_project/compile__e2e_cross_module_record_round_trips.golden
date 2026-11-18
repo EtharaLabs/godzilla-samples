@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+# ==== geometry.py ====
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Point:
+    x: int
+    y: int
+origin = Point(0, 0)
+def mag(p):
+    return p.x + p.y
+
+# ==== main.py ====
+import geometry
+p = geometry.Point(3, 4)
+_pf_t0 = p
+shifted = geometry.Point(10, _pf_t0.y)
+def sum_(q):
+    match q:
+        case geometry.Point(x=x, y=y):
+            return x + y
+print(sum_(p))
+print(shifted.x)
+print(geometry.mag(p))
+print(geometry.mag(geometry.origin))
+
+--- stderr ---

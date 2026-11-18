@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+type Point = { x: int, y: int }
+let p = Point { x = 3, y = 4 }
+let moved = { p with x = 10 }
+let sx = p.x
+let sy = moved.y
+let mx = moved.x
+let sumxy r = (r.x + r.y)
+let total = (sumxy p)
+--- stderr ---

@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Empty:
+    def __repr__(self):
+        return "Empty"
+_Empty: Empty = Empty()
+@dataclass(frozen=True, slots=True, repr=False)
+class Has:
+    _0: Any
+    def __repr__(self):
+        return f"Has({self._0!r})"
+Opt = Empty | Has
+def unwrap(o: Opt) -> int:
+    if isinstance(o, Has):
+        v = o._0
+        return v
+    else:
+        return 0
+r: int = unwrap(Has(7))
+--- stderr ---

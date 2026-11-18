@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def f(xs):
+    match xs:
+        case [*init, last]:
+            return last + sum(init)
+        case []:
+            return 0
+        case _:
+            raise RuntimeError("non-exhaustive match")
+--- stderr ---

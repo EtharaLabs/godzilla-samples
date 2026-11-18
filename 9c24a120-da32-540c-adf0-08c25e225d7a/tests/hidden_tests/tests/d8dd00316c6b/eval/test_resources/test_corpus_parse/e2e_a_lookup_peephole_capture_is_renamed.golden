@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let f m k =
+    let v = 100
+    let found =
+        match ((Map.tryFind k) m):
+            case (Some v): v
+            case None: 0
+    (found + v)
+let r = ((f (Map.ofList [(1, 5)])) 1)
+let s = ((f (Map.ofList [(1, 5)])) 2)
+--- stderr ---

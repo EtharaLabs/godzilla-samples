@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+# ==== wrap.py ====
+import textwrap
+fillText = textwrap.fill
+def fill(width, text):
+    return textwrap.fill(text, width)
+
+# ==== extras.py ====
+def _pf_str_upper(s):
+    return s.upper()
+def banner(s):
+    return _pf_str_upper(s)
+
+# ==== main.py ====
+import extras
+import wrap
+print(wrap.fill(10, extras.banner("a long line of text")))
+
+--- stderr ---

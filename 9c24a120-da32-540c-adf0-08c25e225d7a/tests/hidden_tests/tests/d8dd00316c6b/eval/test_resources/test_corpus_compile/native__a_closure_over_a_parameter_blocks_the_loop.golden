@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def _pf_concat(xs, ys):
+    return xs + ys
+def collect(n: int, acc):
+    if n == 0:
+        return acc
+    else:
+        return collect(n - 1, _pf_concat(acc, [lambda k: n]))
+--- stderr ---
+note: `collect` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

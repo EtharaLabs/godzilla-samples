@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Across:
+    def __repr__(self):
+        return "Across"
+@dataclass(frozen=True, slots=True, repr=False)
+class Down:
+    def __repr__(self):
+        return "Down"
+_Down: Down = Down()
+_Across: int = 1
+Dir = Across | Down
+d: Dir = Across()
+e: Dir = _Down
+--- stderr ---

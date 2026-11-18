@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let a = ((Format.fixed 2) 3.14159)
+let b = ((Format.thousands 2) 1234567.5)
+let c = ((Format.percent 1) 0.256)
+let d = (((Format.currency "$") 2) 1234.5)
+let e = (Format.grouped 1234567)
+let f = (((Format.padLeft 6) "0") "42")
+let g = (((Format.padRight 6) ".") "42")
+--- stderr ---

@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_str_contains(sub, s):
+    return sub in s
+f = functools.partial(_pf_str_contains, "x")
+r: list[str] = _pf_filter(f, ["xy", "ab"])
+--- stderr ---

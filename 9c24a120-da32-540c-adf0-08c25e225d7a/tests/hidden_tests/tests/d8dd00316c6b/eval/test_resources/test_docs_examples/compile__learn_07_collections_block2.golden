@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+import itertools
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+ns = [4, 8, 15, 16, 23]
+print(list(_pf_seq_take(2, filter(lambda n: n > 100, map(lambda n: n * n, iter(ns))))))
+print(list(_pf_seq_take(4, _pf_seq_init_inf(lambda i: i * 3))))
+--- stderr ---

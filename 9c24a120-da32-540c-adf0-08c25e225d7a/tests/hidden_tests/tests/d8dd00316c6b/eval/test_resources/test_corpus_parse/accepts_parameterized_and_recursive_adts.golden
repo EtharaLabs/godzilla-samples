@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+type Either a b = Left a | Right b
+type Lst a = Nil | Cons a (Lst a)
+let xs = ((Cons 1) ((Cons 2) Nil))
+let e = (Left 1)
+--- stderr ---

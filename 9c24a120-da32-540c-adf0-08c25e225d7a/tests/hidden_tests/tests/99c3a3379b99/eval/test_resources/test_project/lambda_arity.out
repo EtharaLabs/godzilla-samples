@@ -1,0 +1,14 @@
+# ==== util.py ====
+add = lambda a, b: a + b
+twice = lambda f, x: f(f(x))
+
+# ==== main.py ====
+import functools
+import util
+def _pf_map(f, xs):
+    return list(map(f, xs))
+inc = functools.partial(util.add, 1)
+print(inc(41))
+print(util.twice(inc, 0))
+print(_pf_map(functools.partial(util.add, 10), [1, 2]))
+

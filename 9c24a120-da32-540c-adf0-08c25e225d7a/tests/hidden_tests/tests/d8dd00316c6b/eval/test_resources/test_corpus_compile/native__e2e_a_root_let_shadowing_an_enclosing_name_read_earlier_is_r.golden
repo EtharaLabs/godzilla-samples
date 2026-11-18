@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def f(x: int) -> int:
+    def g(o: int) -> int:
+        y = x + 1
+        _x = 2
+        return _x + y + o
+    return g(10)
+r: int = f(5)
+--- stderr ---

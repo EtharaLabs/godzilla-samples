@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+module Geometry =
+    let pi = 3
+    let area r = ((pi * r) * r)
+    let double a = ((area a) + (area a))
+let a = (Geometry.area 10)
+let d = (Geometry.double 2)
+let p = Geometry.pi
+--- stderr ---

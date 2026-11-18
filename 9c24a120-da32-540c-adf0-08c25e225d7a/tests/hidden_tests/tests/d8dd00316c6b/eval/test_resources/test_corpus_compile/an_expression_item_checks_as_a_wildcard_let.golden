@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fn0():
+    _pf_t0 = Some(1)
+    if isinstance(_pf_t0, Some):
+        x = _pf_t0._0
+        _ = print(x)
+        return Some(x)
+    else:
+        return _pf_t0
+a = _pf_fn0()
+--- stderr ---

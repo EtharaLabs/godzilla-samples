@@ -1,0 +1,15 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+note: hole `?titleDec` has type `Decoder string` — try: Decode.string, Decode.auto — or: Decode.succeed ?, Decode.fail ?, Decode.oneOf ?, Decode.field ? ?, and 2 more
+ --> 5:27
+  |
+5 |     (Decode.field "title" ?titleDec)
+  |                           ^^^^^^^^^
+
+note: hole `?pagesDec` has type `Decoder int` — try: Decode.int, Decode.auto — or: Decode.succeed ?, Decode.fail ?, Decode.oneOf ?, Decode.field ? ?, and 2 more
+ --> 6:27
+  |
+6 |     (Decode.field "pages" ?pagesDec)
+  |                           ^^^^^^^^^
+2 unfilled holes

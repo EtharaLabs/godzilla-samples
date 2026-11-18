@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def dup(acc, x):
+    match acc:
+        case (m, n):
+            return (_pf_map_add(x, x, m), m)
+match _pf_fold(dup, (dict(), dict()), [1, 2]):
+    case (a, b):
+        _pf_t0 = (_pf_map_to_list(a), _pf_map_to_list(b))
+out = _pf_t0
+--- stderr ---

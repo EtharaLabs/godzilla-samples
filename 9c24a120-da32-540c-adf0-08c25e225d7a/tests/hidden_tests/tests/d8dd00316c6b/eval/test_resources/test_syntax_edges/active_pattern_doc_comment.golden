@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+## Classify parity.
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+(print (match 3: case Even: "even" case Odd: "odd"))
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+extern import asyncio
+extern sleep: float -> Async unit = asyncio.sleep
+extern runAsync: (Async a) -> a = asyncio.run
+let nap = async { let! _ = (sleep 0.001) let _ = (print "napped") let _ = (match 1: case 1: (print "one") case _: (print "other")) let _ = (if true then (print "yes") else ()) do! (sleep 0.001) }
+(print (runAsync nap))
+--- stderr ---

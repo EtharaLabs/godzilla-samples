@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _pf_option_is_none(o):\n    return not isinstance(o, Some)\ndef _pf_option_is_some(o):\n    return isinstance(o, Some)\ndef _pf_option_map(f, o):\n    if isinstance(o, Some):\n        return Some(f(o._0))\n    return _None_\ndef _pf_option_with_default(d, o):\n    if isinstance(o, Some):\n        return o._0\n    return d\nsome = Some(5)\nnone = _None_\na = _pf_option_with_default(0, some)\nb = _pf_option_with_default(0, none)\nc = _pf_option_is_some(some)\nd = _pf_option_is_none(none)\ne = _pf_option_map(lambda x: x + 1, some)\n",
+ "stderr": ""
+}

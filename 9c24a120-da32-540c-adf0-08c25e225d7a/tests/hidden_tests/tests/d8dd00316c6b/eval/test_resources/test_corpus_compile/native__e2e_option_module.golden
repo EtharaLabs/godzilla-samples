@@ -1,0 +1,34 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_option_is_none(o):
+    return not isinstance(o, Some)
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+some: Some | None_ = Some(5)
+none: Some | None_ = _None_
+a: int = _pf_option_with_default(0, some)
+b: int = _pf_option_with_default(0, none)
+c: bool = _pf_option_is_some(some)
+d: bool = _pf_option_is_none(none)
+e: Some | None_ = _pf_option_map(lambda x: x + 1, some)
+--- stderr ---

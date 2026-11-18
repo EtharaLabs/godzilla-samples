@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `cb` performs {io}, but `runIo` takes this callback as `int -> unit`, which performs nothing; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `int ->{io} int ->{e} unit`
+ --> 5:15
+  |
+5 | let r = runIo cb
+  |               ^^
+
+1 error

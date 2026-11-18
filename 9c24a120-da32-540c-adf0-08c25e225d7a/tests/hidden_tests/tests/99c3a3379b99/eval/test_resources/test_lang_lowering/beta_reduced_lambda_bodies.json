@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True)\nclass P:\n    x: int\np0 = P(1)\nless = lambda b: 1 < b\nbetween = lambda b: 0 <= 1 < b\npick = lambda b: (b if True else 0)\nnand = lambda b: not (True and b)\npair = lambda b: [1, b]\ntup = lambda b: (1, b)\nlabel = lambda b: f\"x{1}y{b}\"\nshadow = lambda b: lambda a: a + b\nclose = lambda b: lambda c: 1 + b + c\nhex = lambda b: int(\"ff\", base=b)\nfield = lambda b: p0.x + b\nneg = lambda b: -1 + b\nhas = lambda b: \"x\" in b\nsize = lambda b: len(\"x\") + b\naddTen = shadow(10)\naddThree = close(2)\nprint((less(2), between(5), pick(7), nand(False), pair(2), tup(3), label(4)))\nprint((addTen(20), addThree(3), hex(16), field(5), neg(3), has(\"axe\"), size(2)))\n",
+ "stderr": ""
+}

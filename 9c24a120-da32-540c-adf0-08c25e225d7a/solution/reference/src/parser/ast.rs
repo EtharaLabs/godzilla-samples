@@ -1,0 +1,918 @@
+//! Pyfun abstract syntax.
+//!
+//! Per `DESIGN.md` §9 the AST lives under `parser/`. Every [`Expr`] carries a
+//! source [`NodeSpan`] so the type checker can point diagnostics at the offending
+//! code (Phase 3). Spans compare *equal to each other unconditionally*
+//! ([`NodeSpan`]'s `PartialEq`), so derived structural equality on the AST ignores
+//! them — which is what keeps the parse→print→parse roundtrip tests meaningful.
+
+use crate::lexer::Span;
+
+/// A source span attached to an AST node. Two `NodeSpan`s are always considered
+/// equal, so `#[derive(PartialEq)]` on the AST compares structure only.
+#[derive(Debug, Clone, Copy)]
+pub struct NodeSpan(pub Span);
+
+impl NodeSpan {
+    pub fn new(span: Span) -> Self {
+        NodeSpan(span)
+    }
+
+    pub fn span(self) -> Span {
+        self.0
+    }
+}
+
+impl PartialEq for NodeSpan {
+    fn eq(&self, _: &Self) -> bool {
+        true
+    }
+}
+
+impl Eq for NodeSpan {}
+
+/// A whole compilation unit: a sequence of top-level items.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Module {
+    pub items: Vec<Item>,
+}
+
+/// A top-level item: a measure/type declaration, a binding, or a bare expression.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Item {
+    /// `measure name` declares a base unit of measure; `measure name = <unit>`
+    /// (e.g. `measure N = kg m / s^2`) declares a **derived alias** that expands to
+    /// a compound of base measures (`DESIGN.md` §8.2). `definition` is `None` for a
+    /// base measure, `Some(body)` for an alias.
+    Measure {
+        name: String,
+        definition: Option<UnitExpr>,
+        span: NodeSpan,
+    },
+    Type(TypeDecl),
+    /// `extern [pure] name : type [= python.path]` — import a Python function or
+    /// value with a declared Pyfun type (`DESIGN.md` §6). The boundary is
+    /// effectful-by-default (`io` on the innermost arrow) unless `pure` is asserted.
+    Extern(ExternDecl),
+    Let(LetBinding),
+    /// `module Name = <indented let bindings>` — an in-file namespace (`DESIGN.md`
+    /// §6). Members are accessed `Name.member` outside and see each other
+    /// unqualified inside. MVP: the body holds only `let` bindings.
+    Module {
+        name: String,
+        name_span: NodeSpan,
+        items: Vec<LetBinding>,
+    },
+    /// `import Name` — bring another source file's module into scope under its
+    /// capitalized name, accessed `Name.member` (`DESIGN.md` §6.1). Top-of-file
+    /// only. Slice 1 parses and pretty-prints it; the multi-file driver that
+    /// resolves it lands in a later slice (semantics stubbed for now).
+    Import {
+        name: String,
+        span: NodeSpan,
+    },
+    /// `extern import python.path [as alias]` — declare the Python module that
+    /// extern targets in this file are rooted at (`DESIGN.md` §6), mirroring
+    /// Python's own import statement (`as` and all). A used target whose prefix
+    /// matches the declared path — or whose first segment is the alias — imports
+    /// the module exactly as declared, overriding the lowercase-prefix heuristic
+    /// (which cannot see that `datetime.datetime` is a class, not a submodule).
+    /// Purely an import/lowering concern: no Pyfun name is bound, nothing is
+    /// type-checked, and an unused declaration emits nothing.
+    ExternImport {
+        path: Vec<String>,
+        alias: Option<String>,
+        span: NodeSpan,
+    },
+    /// `let (|A|B|) input = …` / `let (|A|_|) params… input = …` — an active
+    /// pattern (`DESIGN.md` §7.2): a named recognizer whose cases are used as
+    /// constructors in `case` patterns. Top level only.
+    ActivePattern(ActivePatternDecl),
+    Expr(Expr),
+}
+
+/// One case name of an active pattern's banana brackets, with its span (for
+/// editor navigation; `NodeSpan` compares equal — invisible to roundtrip).
+#[derive(Debug, Clone, PartialEq)]
+pub struct ApCase {
+    pub name: String,
+    pub name_span: NodeSpan,
+}
+
+/// `let (|Even|Odd|) n = body` — an **active pattern** (`DESIGN.md` §7.2).
+///
+/// A *total* pattern (`partial: false`) names 1+ cases and is conceptually a
+/// hidden ADT (the case set) plus a function `input -> <hidden>`; its cases are
+/// used like ADT constructors in `case` patterns and form a closed set for
+/// exhaustiveness. A *partial* pattern (`(|A|_|)`, `partial: true`) has exactly
+/// one case and a body returning `Option a` (the case binds the payload) or
+/// `bool` (a pure predicate — the case binds nothing). The last parameter is the
+/// match input; a partial pattern may take leading extra parameters
+/// (`(|DivisibleBy|_|) d n`), filled by expressions at the use site.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ActivePatternDecl {
+    /// Doc-comment lines (`## …`) preceding the declaration, as on [`LetBinding`].
+    pub doc: Option<String>,
+    /// The case names between the bars, e.g. `Even`, `Odd`. One for a partial.
+    pub cases: Vec<ApCase>,
+    /// `(|A|_|)` — the trailing `|_|` marks the pattern partial.
+    pub partial: bool,
+    /// All parameters; the **last** is the match input (a total pattern has
+    /// exactly one, a partial pattern may have leading extra parameters).
+    pub params: Vec<Param>,
+    pub value: Expr,
+    pub span: NodeSpan,
+}
+
+/// `extern [pure] name : type [= a.b.c]`.
+///
+/// `target` is the dotted Python path to reference (e.g. `["math", "sqrt"]`); when
+/// the `= …` clause is omitted it defaults to `[name]` (Pyfun name = Python name,
+/// the existing prelude convention). Type variables in `ty` are bare lowercase
+/// identifiers (as in `type` declarations); they are collected and generalized.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ExternDecl {
+    /// Doc-comment lines (`## …` at column 0 immediately preceding the
+    /// declaration), joined with `\n`. Attached metadata: the pretty-printer
+    /// re-emits it (so it round-trips), LSP hover surfaces it, lowering ignores it.
+    pub doc: Option<String>,
+    /// `extern pure …` — assert the boundary introduces no effect (no `io`).
+    pub pure: bool,
+    pub name: String,
+    pub ty: TypeExpr,
+    pub target: Vec<String>,
+    /// Instance-access form for a target beginning with `.` (`DESIGN.md` §6). The
+    /// `target` is a member path applied to the first argument (the receiver);
+    /// `None` is an ordinary module-qualified target. Sidesteps naming (and
+    /// importing) the receiver's class, and reaches inherited/delegated members the
+    /// unbound `Class.member` form cannot.
+    pub receiver: Option<Receiver>,
+    /// Python keyword arguments on the target (`DESIGN.md` §6), from a
+    /// `(kw = lit | ..., …)` suffix on the `= …` clause. Appended to every emitted
+    /// call (`open(path, mode="rt", encoding="utf-8")`); empty when absent. A
+    /// pinned literal is purely a lowering concern, invisible to the Pyfun type; a
+    /// `...` slot consumes one argument of the declared arrow, so it changes where
+    /// that argument lands in the emitted call but not the type either.
+    pub kwargs: Vec<(String, ExternArg)>,
+    pub span: NodeSpan,
+}
+
+/// A value bound to a keyword argument on an `extern` target: either a literal
+/// pinned at the declaration, or a `...` slot the caller fills. Only the literal
+/// forms Python needs at the boundary — no Pyfun expressions.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ExternArg {
+    Str(String),
+    Int(i64),
+    Float(f64),
+    Bool(bool),
+    /// `...` — a caller-supplied slot (`DESIGN.md` §6). Consumes one argument of
+    /// the declared arrow: the target takes the leading arguments positionally and
+    /// the slots take the trailing ones, in the order the keywords are written.
+    Slot,
+}
+
+/// How an instance-access `extern` (`= .member`) uses its first argument.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Receiver {
+    /// `= .read()` — call the method on the receiver: `read resp` → `resp.read()`,
+    /// `execute conn sql` → `conn.execute(sql)`.
+    Method,
+    /// `= .text` — read the attribute/property of the receiver (no call):
+    /// `text resp` → `resp.text`.
+    Property,
+}
+
+/// A surface unit expression, e.g. `<m/s^2>`, stored as `(measure, exponent)`
+/// factors (denominator factors carry negative exponents; dimensionless is empty).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UnitExpr {
+    pub factors: Vec<(String, i32)>,
+}
+
+/// `type Name params... = ...` — either a sum of constructors or a record.
+///
+/// A named, possibly parameterized type. Type names and constructor names are
+/// capitalized; type parameters and record field names are lowercase
+/// (`DESIGN.md` §7 convention).
+#[derive(Debug, Clone, PartialEq)]
+pub struct TypeDecl {
+    /// Doc-comment lines (`## …` at column 0 immediately preceding the
+    /// declaration), joined with `\n`. Attached metadata: the pretty-printer
+    /// re-emits it (so it round-trips), LSP hover surfaces it, lowering ignores it.
+    pub doc: Option<String>,
+    pub name: String,
+    /// The span of the declared type name, so an editor can find-references /
+    /// rename it. `NodeSpan` compares equal — invisible to roundtrip.
+    pub name_span: NodeSpan,
+    pub params: Vec<String>,
+    pub kind: TypeDeclKind,
+    pub span: NodeSpan,
+}
+
+/// The right-hand side of a `type` declaration.
+#[derive(Debug, Clone, PartialEq)]
+pub enum TypeDeclKind {
+    /// `V1 fields | V2 fields | ...` — an algebraic data type (sum of constructors).
+    Sum(Vec<VariantDecl>),
+    /// `{ x: t, y: t }` — a record (named-field product type).
+    Record(Vec<FieldDecl>),
+    /// `extern type Conn` — an opaque nominal type with no constructors: a typed
+    /// handle over a Python object Pyfun never looks inside. Registers a type name
+    /// (and its arity) but emits no Python class and has no way to be constructed or
+    /// matched — it only ever crosses the `extern` boundary. Replaces the phantom-ADT
+    /// idiom `type Conn = ConnH` (`DESIGN.md` §6).
+    Opaque,
+    /// `opaque type UserId = string` — a zero-cost newtype (Scala 3's opaque
+    /// types, adapted): nominally distinct from its underlying type everywhere,
+    /// wrapped by the constructor of the same name (`UserId : string -> UserId`)
+    /// and unwrapped by the single-case pattern (`case UserId s:`) — and **fully
+    /// erased** at lowering: no Python class, wrap compiles to the bare value, so
+    /// the underlying value is what crosses the `extern` boundary (`DESIGN.md`
+    /// §7.3). The payload is the underlying type expression.
+    Newtype(TypeExpr),
+}
+
+/// One constructor of a sum [`TypeDecl`], e.g. `Cons a (List a)`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct VariantDecl {
+    pub name: String,
+    /// The span of the constructor name, so an editor can find-references / rename
+    /// it. `NodeSpan` compares equal — invisible to roundtrip.
+    pub name_span: NodeSpan,
+    pub fields: Vec<TypeExpr>,
+}
+
+/// One field of a record [`TypeDecl`], e.g. `x: int`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FieldDecl {
+    pub name: String,
+    pub ty: TypeExpr,
+}
+
+/// A type expression appearing in a constructor field.
+#[derive(Debug, Clone, PartialEq)]
+pub enum TypeExpr {
+    /// A named type — variable, builtin, or type constructor — applied to zero or
+    /// more arguments. `a`, `int`, `List a`, `Option int` are all `Con`. The
+    /// `NodeSpan` is the span of the type *name* (for editor find-references /
+    /// rename of a user type); it compares equal — invisible to roundtrip.
+    Con(String, NodeSpan, Vec<TypeExpr>),
+    /// A function type `arg -> result`, optionally carrying declared effect
+    /// labels on the arrow (`arg ->{io} result`, `arg ->{io, async} result` —
+    /// `DESIGN.md` §4). The labels are stored as written (validated against the
+    /// known label set when the type is resolved); an unannotated arrow has an
+    /// empty list and stays pure.
+    Fun(Box<TypeExpr>, Box<TypeExpr>, Vec<String>),
+    /// A tuple type `(a, b)` — a structural product of two or more types.
+    Tuple(Vec<TypeExpr>),
+}
+
+/// `let [mut] target params... = value`.
+///
+/// Parameters make this a (curried) function definition; with no parameters it
+/// is a value binding. `mutable` records the `let mut` opt-in (§3); a non-`mut`
+/// binding cannot be the target of `<-` (checked in the type phase). A binding
+/// appears both as a top-level [`Item`] and as a local [`BlockStmt`].
+#[derive(Debug, Clone, PartialEq)]
+pub struct LetBinding {
+    /// Doc-comment lines (`## …` at column 0 immediately preceding a *top-level*
+    /// binding), joined with `\n`. Always `None` on local/module-member bindings
+    /// (doc comments attach at top level only, MVP). Attached metadata: the
+    /// pretty-printer re-emits it (so it round-trips), LSP hover surfaces it,
+    /// lowering ignores it.
+    pub doc: Option<String>,
+    pub mutable: bool,
+    /// `let pure …` — an opt-in assertion that the binding introduces no effect
+    /// (no `io`). Checked in the type phase; erased at lowering.
+    pub pure: bool,
+    /// What the binding binds: a name, `_`, or an **irrefutable** pattern that
+    /// destructures the value (`let (r, c) = …`, `DESIGN.md` §7). Held to the
+    /// same shapes as a [`Param`] and by the same rule
+    /// (`parser::refutable_shape`), since a binding has no second arm to fall
+    /// through to. A binding with `params` — or with `mut` — takes a plain name;
+    /// only a value binding destructures.
+    pub target: Pattern,
+    /// The span of the whole binding target, so an editor can hover the
+    /// definition site to see its inferred type and diagnostics have somewhere to
+    /// point when the target is not a single name (`NodeSpan` compares equal, so
+    /// this is invisible to structural/roundtrip equality).
+    pub target_span: NodeSpan,
+    pub params: Vec<Param>,
+    pub value: Expr,
+}
+
+impl LetBinding {
+    /// The bound name when the target is a plain variable, which is the case
+    /// every phase has a shortcut for (and the only case a *function* binding can
+    /// be); `None` when it destructures or discards.
+    pub fn name(&self) -> Option<&str> {
+        match &self.target {
+            Pattern::Var { name, .. } => Some(name),
+            _ => None,
+        }
+    }
+
+    /// How to refer to this binding in a diagnostic: its name in backticks, or a
+    /// neutral phrase when it destructures and has no one name to blame.
+    pub fn describe(&self) -> String {
+        match self.name() {
+            Some(name) => format!("`{name}`"),
+            None => "this binding".to_string(),
+        }
+    }
+
+    /// Every name this binding introduces: one for a plain name, none for `_`, and
+    /// one per variable for a destructuring target. This is what scope tracking
+    /// needs, since a single `let` no longer means a single name.
+    pub fn bound_names(&self) -> Vec<String> {
+        self.target.bound_names()
+    }
+
+    /// Every name this binding introduces, paired with the span it was written at
+    /// — the definition site an editor navigates to, and the span the checker
+    /// records each name's inferred type against.
+    pub fn bound_vars(&self) -> Vec<(&str, Span)> {
+        self.target.bound_vars()
+    }
+}
+
+/// A function/value-binding parameter: the **irrefutable** pattern it binds, and
+/// its source span. The span lets an editor jump to / hover the parameter
+/// (`NodeSpan` compares equal, so it is invisible to structural/roundtrip
+/// equality).
+///
+/// Almost every parameter is a plain [`Pattern::Var`], which is why [`Param::name`]
+/// exists: that case keeps its own name all the way into the emitted Python. The
+/// parser admits only patterns that cannot fail to match — a name, `_`, or a tuple
+/// of those, nested (`parser::param_pattern_error`) — since a parameter has no
+/// second arm to fall through to.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Param {
+    pub pattern: Pattern,
+    pub span: NodeSpan,
+}
+
+impl Param {
+    /// A plain named parameter.
+    pub fn var(name: impl Into<String>, span: NodeSpan) -> Self {
+        let name = name.into();
+        Param {
+            pattern: Pattern::Var { name, span },
+            span,
+        }
+    }
+
+    /// The bound name when this parameter is a plain variable, which is the case
+    /// every phase has a shortcut for; `None` when it destructures.
+    pub fn name(&self) -> Option<&str> {
+        match &self.pattern {
+            Pattern::Var { name, .. } => Some(name),
+            _ => None,
+        }
+    }
+}
+
+/// One statement inside a block (an indented `let … =` body). The final statement
+/// is the block's value and must be an expression.
+#[derive(Debug, Clone, PartialEq)]
+pub enum BlockStmt {
+    /// A local binding: `let [mut] name params... = value`.
+    Let(LetBinding),
+    /// An expression evaluated for its effect (non-final) or value (final).
+    Expr(Expr),
+}
+
+/// An expression node: its [`ExprKind`] plus the source span it came from.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Expr {
+    pub kind: ExprKind,
+    pub span: NodeSpan,
+}
+
+impl Expr {
+    pub fn new(kind: ExprKind, span: Span) -> Self {
+        Expr {
+            kind,
+            span: NodeSpan::new(span),
+        }
+    }
+
+    /// The underlying source span.
+    pub fn span(&self) -> Span {
+        self.span.span()
+    }
+}
+
+/// Expression shapes. Application is single-argument so currying is structural:
+/// One segment of an interpolated string ([`ExprKind::Interp`]): a literal chunk
+/// (escapes and `{{`/`}}` already resolved) or an embedded expression (a "hole").
+#[derive(Debug, Clone, PartialEq)]
+pub enum InterpPart {
+    Lit(String),
+    Expr(Box<Expr>),
+}
+
+/// `f a b` parses to `App(App(f, a), b)` (see `DESIGN.md` §7).
+#[derive(Debug, Clone, PartialEq)]
+pub enum ExprKind {
+    Int(i64),
+    Float(f64),
+    Str(String),
+    /// A typed hole `?` / `?name` (`DESIGN.md` §9): a placeholder the type checker
+    /// accepts (as a fresh type variable, unifying freely) and reports the inferred
+    /// type of. It blocks lowering — a program with holes does not compile.
+    Hole {
+        name: Option<String>,
+    },
+    /// An interpolated string `f"...{expr}..."`: a sequence of literal chunks and
+    /// embedded expressions. Evaluates to a `string`; each hole may be any type
+    /// (stringified by the emitted Python f-string).
+    Interp {
+        parts: Vec<InterpPart>,
+    },
+    Bool(bool),
+    /// The unit value `()` — the sole inhabitant of the `unit` type (lowers to
+    /// Python `None`).
+    Unit,
+    Var(String),
+
+    /// `fun a b -> body`
+    Fn {
+        params: Vec<Param>,
+        body: Box<Expr>,
+    },
+
+    /// Curried application of a single argument.
+    App {
+        func: Box<Expr>,
+        arg: Box<Expr>,
+    },
+
+    /// `if cond then a else b` — an expression, so the `else` branch is required.
+    If {
+        cond: Box<Expr>,
+        then: Box<Expr>,
+        else_: Box<Expr>,
+    },
+
+    /// `try body` — run `body`, converting a thrown Python exception into an
+    /// `Error`. Evaluates to `Result <body-type> Exception` (`DESIGN.md` §6). The
+    /// only way to catch an exception (e.g. from an `extern` call); Pyfun code
+    /// itself signals failure with `Error`, so there is no `raise`.
+    Try {
+        body: Box<Expr>,
+    },
+
+    /// `match scrutinee with | pat -> body ...`
+    Match {
+        scrutinee: Box<Expr>,
+        arms: Vec<MatchArm>,
+    },
+
+    /// Binary operator application (arithmetic, comparison, equality, logical).
+    Binary {
+        op: BinOp,
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+    },
+
+    /// Unary operator application (`not e`).
+    Unary {
+        op: UnOp,
+        expr: Box<Expr>,
+    },
+
+    /// A chained comparison `a < b < c` — two or more comparison operators,
+    /// Python-style: means `a < b and b < c` with each operand evaluated once and
+    /// short-circuiting. `rest` holds the `(op, operand)` links (length ≥ 2); a
+    /// *single* comparison stays `Binary`. Lowers 1:1 to Python's native chained
+    /// comparison. Each link's operator may be any of `== != < > <= >=`.
+    Compare {
+        first: Box<Expr>,
+        rest: Vec<(BinOp, Expr)>,
+    },
+
+    /// `(op)` — a binary operator as a first-class curried function (an F#-style
+    /// operator section), e.g. `(*)` denotes `fun a b -> a * b`. Desugared to that
+    /// lambda at inference and lowering (`desugar::op_func`), so ordinary currying,
+    /// partial application (`(*) 2`), and the operator's own constraints all fall
+    /// out; the pretty-printer keeps the `(op)` spelling. `and`/`or` are excluded
+    /// (keywords, and a strict function would drop their short-circuiting).
+    OpFunc(BinOp),
+
+    /// A pipe, kept explicit in the AST. Forward `lhs |> rhs` (`backward: false`)
+    /// is sugar for `rhs lhs`; backward `lhs <| rhs` (`backward: true`) is sugar
+    /// for `lhs rhs` (apply the left function to the right argument).
+    Pipe {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        backward: bool,
+    },
+
+    /// Function composition: `lhs >> rhs` (left-to-right, `right_to_left = false`:
+    /// `fun x -> rhs (lhs x)`) or `lhs << rhs` (right-to-left / math ∘,
+    /// `right_to_left = true`: `fun x -> lhs (rhs x)`). Desugared to that lambda at
+    /// inference and lowering (`desugar::compose`); the pretty-printer keeps the
+    /// operator spelling.
+    Compose {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        right_to_left: bool,
+    },
+
+    /// A computation expression: `builder { items }` (`DESIGN.md` §8.1).
+    Ce {
+        builder: CeBuilder,
+        items: Vec<CeItem>,
+    },
+
+    /// A unit-annotated numeric literal: `value<unit>` (`DESIGN.md` §8.2).
+    Annot {
+        value: Box<Expr>,
+        unit: UnitExpr,
+    },
+
+    /// A list literal: `[1, 2, 3]` (comma-separated, possibly empty). Lowers to a
+    /// Python `list`; its element type is inferred by unifying the elements.
+    List {
+        elems: Vec<Expr>,
+    },
+
+    /// A tuple literal: `(a, b, c)` — a structural (anonymous) product of two or
+    /// more values. `()` is the unit value (not a 0-tuple) and `(x)` is grouping
+    /// (not a 1-tuple), so a tuple always has at least two elements. Lowers ~1:1 to
+    /// a Python tuple.
+    Tuple {
+        elems: Vec<Expr>,
+    },
+
+    /// A record literal: `Point { x = 1, y = 2 }` — constructor-tagged
+    /// (`DESIGN.md` §8.3). `ty` names the record type; `ty_span` is the tag's
+    /// span (for editor nav; `NodeSpan` compares equal — roundtrip-invisible).
+    Record {
+        ty: String,
+        ty_span: NodeSpan,
+        fields: Vec<FieldInit>,
+    },
+
+    /// A functional record update: `{ base with x = 3 }` — a copy of `base` with
+    /// the listed fields replaced. A field may be a **dotted path** (`{ p with a.b =
+    /// v }`), sugar for the nested reconstruction `{ p with a = { p.a with b = v } }`
+    /// — see [`FieldUpdate`].
+    RecordUpdate {
+        base: Box<Expr>,
+        fields: Vec<FieldUpdate>,
+    },
+
+    /// Record field access: `base.name`.
+    Field {
+        base: Box<Expr>,
+        name: String,
+    },
+
+    /// An indentation block: a sequence of statements whose final statement is
+    /// the value. Introduced by an indented `let … =` body. A block with a single
+    /// expression statement is unwrapped to that expression at parse time, so a
+    /// `Block` always has either multiple statements or a leading binding.
+    Block {
+        stmts: Vec<BlockStmt>,
+    },
+
+    /// Reassignment of a `mut` binding: `target <- value` (type `unit`).
+    Assign {
+        target: String,
+        value: Box<Expr>,
+    },
+}
+
+/// One `name = value` initializer in a record literal or update.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FieldInit {
+    pub name: String,
+    pub value: Expr,
+}
+
+/// One assignment in a record update `{ base with path = value }`. `path` is a
+/// dotted field path (length ≥ 1): `[x]` is the ordinary single-field update
+/// `x = v`; `[a, b]` is the nested-update sugar `a.b = v`. Desugars to nested
+/// reconstruction at type-check + lowering (the base is evaluated once).
+#[derive(Debug, Clone, PartialEq)]
+pub struct FieldUpdate {
+    pub path: Vec<String>,
+    pub value: Expr,
+}
+
+/// A computation-expression builder: one of the four built-ins (each with a
+/// bespoke native Python lowering) or a user-defined builder named by an in-file
+/// `module` (desugared to that module's `bind`/`return_`/`yield_`/… functions).
+///
+/// The built-in set is closed by a rule rather than by taste: **one per built-in
+/// short-circuit type** (`Option`, `Result`) and **one per Python control-flow
+/// form** (`async`, `seq`). There is no fifth candidate, which is what keeps the
+/// set at four instead of open-ended — anything else is a user builder.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CeBuilder {
+    Async,
+    Seq,
+    Result,
+    Option,
+    /// A user builder, named by an (uppercase) module.
+    User(String),
+}
+
+impl CeBuilder {
+    /// The built-in builder keyword, if `name` is one (builder names are
+    /// contextual, not reserved words). User builders are resolved by the parser
+    /// from an uppercase name, not here.
+    pub fn from_name(name: &str) -> Option<CeBuilder> {
+        match name {
+            "async" => Some(CeBuilder::Async),
+            "seq" => Some(CeBuilder::Seq),
+            "result" => Some(CeBuilder::Result),
+            "option" => Some(CeBuilder::Option),
+            _ => None,
+        }
+    }
+
+    pub fn name(&self) -> &str {
+        match self {
+            CeBuilder::Async => "async",
+            CeBuilder::Seq => "seq",
+            CeBuilder::Result => "result",
+            CeBuilder::Option => "option",
+            CeBuilder::User(name) => name,
+        }
+    }
+}
+
+/// One item inside a computation-expression block.
+#[derive(Debug, Clone, PartialEq)]
+pub enum CeItem {
+    /// `let! target = value` — monadic bind. The target takes the same irrefutable
+    /// patterns a `let` binding does (`let! (r, c) = …`); `target_span` is its span
+    /// (for editor jump/hover; `NodeSpan` compares equal, so roundtrip-invisible).
+    LetBang {
+        target: Pattern,
+        target_span: NodeSpan,
+        value: Expr,
+    },
+    /// `let target = value` — ordinary binding.
+    Let {
+        target: Pattern,
+        target_span: NodeSpan,
+        value: Expr,
+    },
+    /// `do! value` — monadic bind discarding the result.
+    DoBang(Expr),
+    /// `return value` — wrap a value into the monad.
+    Return(Expr),
+    /// `return! value` — yield an already-monadic value.
+    ReturnBang(Expr),
+    /// `yield value` — emit one element (seq).
+    Yield(Expr),
+    /// `yield! value` — splice a sub-sequence (seq).
+    YieldBang(Expr),
+    /// `for target in source: body` — run the body items once per element of
+    /// `source` (a `List` or `Seq`) with `target` bound (`DESIGN.md` §8.1). The
+    /// Python spelling, offside like `match e:`; `for` is a keyword only here.
+    For {
+        target: Pattern,
+        target_span: NodeSpan,
+        source: Expr,
+        body: Vec<CeItem>,
+    },
+}
+
+/// One arm of a `match` expression: `case pattern [if guard]: body`
+/// (`DESIGN.md` §7.2). A guarded arm does not count toward exhaustiveness (its
+/// `guard` may be false), so the checker excludes it from coverage.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MatchArm {
+    pub pattern: Pattern,
+    pub guard: Option<Expr>,
+    pub body: Expr,
+}
+
+/// Patterns. Constructor names are capitalized identifiers; lowercase
+/// identifiers bind variables (`DESIGN.md` §7 convention).
+#[derive(Debug, Clone, PartialEq)]
+pub enum Pattern {
+    Wildcard,
+    /// A variable binding pattern. Carries the binding's span so an editor can
+    /// jump to / hover it (`NodeSpan` compares equal — invisible to roundtrip).
+    Var {
+        name: String,
+        span: NodeSpan,
+    },
+    Int(i64),
+    /// A string literal pattern `case "foo":`. Like `Int`, a refutable leaf over an
+    /// infinite type, so a `match` on strings still needs a wildcard to be exhaustive.
+    Str(String),
+    Bool(bool),
+    Ctor {
+        name: String,
+        /// The span of the constructor name (qualified or bare), so an editor can
+        /// find-references / rename it. `NodeSpan` compares equal — invisible to
+        /// roundtrip.
+        name_span: NodeSpan,
+        args: Vec<Pattern>,
+    },
+    /// `Point { x = p, y }` — a constructor-tagged record pattern (`DESIGN.md`
+    /// §8.3). `ty` names the record type (`ty_span` is the tag's span). May mention
+    /// a subset of fields; an omitted field is left unmatched. `{ x }` shorthand
+    /// binds field `x` to the variable `x` (a `Var` sub-pattern).
+    Record {
+        ty: String,
+        ty_span: NodeSpan,
+        fields: Vec<FieldPattern>,
+    },
+    /// `(a, b)` — a tuple pattern (two or more sub-patterns). Irrefutable iff every
+    /// element is; lowers to a Python sequence pattern `case (a, b):`.
+    Tuple {
+        elems: Vec<Pattern>,
+    },
+    /// `[a, b, *mid, z]` — a sequence pattern over a `List` (`DESIGN.md` §7.2).
+    /// `prefix` are the fixed element patterns before the star; `rest` is the
+    /// star's sub-pattern (`*rest` → `Var`, `*_` → `Wildcard`), or `None` when there
+    /// is no star; `suffix` are the fixed element patterns **after** the star. So
+    /// `[]` → all empty; `[a, b]` → prefix `[a, b]`; `[a, *r]` → prefix `[a]`, rest
+    /// `Some(r)`; `[*r, z]` → rest `Some(r)`, suffix `[z]`; `[a, *r, z]` uses all
+    /// three. At most one star (Python's rule); invariant: a non-empty `suffix`
+    /// implies `rest` is `Some` (suffix elements exist only after a star). The star
+    /// binds the unmatched middle slice, itself a `List`. Lowers 1:1 to a Python
+    /// list sequence pattern `case [a, b, *mid, z]:` (brackets, unlike a tuple's
+    /// parens).
+    List {
+        prefix: Vec<Pattern>,
+        rest: Option<Box<Pattern>>,
+        suffix: Vec<Pattern>,
+    },
+    /// `a | b | c` — an or-pattern (`DESIGN.md` §7.2): matches if any alternative
+    /// does. All alternatives must bind the same variables at the same types; lowers
+    /// to a Python or-pattern `case a | b | c:`. Two or more alternatives.
+    Or(Vec<Pattern>),
+    /// `p as x` — an as-pattern: match `p` and also bind the whole matched value to
+    /// `x`. Transparent for exhaustiveness (covers exactly what `p` does); lowers 1:1
+    /// to Python `case p as x`.
+    As {
+        pattern: Box<Pattern>,
+        name: String,
+        name_span: NodeSpan,
+    },
+}
+
+impl Pattern {
+    /// Every name this pattern binds, in source order. Used wherever a phase needs
+    /// the set a pattern brings into scope: match arms, parameters, and `let`
+    /// targets.
+    pub fn bound_names(&self) -> Vec<String> {
+        self.bound_vars()
+            .into_iter()
+            .map(|(name, _)| name.to_string())
+            .collect()
+    }
+
+    /// Every name this pattern binds, paired with the span it was written at, in
+    /// source order. The span is what lets an editor hover or jump to the one
+    /// element of a destructuring the cursor is actually over.
+    pub fn bound_vars(&self) -> Vec<(&str, Span)> {
+        let mut out = Vec::new();
+        self.collect_bound_vars(&mut out);
+        out
+    }
+
+    fn collect_bound_vars<'a>(&'a self, out: &mut Vec<(&'a str, Span)>) {
+        match self {
+            Pattern::Var { name, span } => out.push((name, span.span())),
+            Pattern::Ctor { args, .. } => {
+                for a in args {
+                    a.collect_bound_vars(out);
+                }
+            }
+            Pattern::Record { fields, .. } => {
+                for f in fields {
+                    f.pattern.collect_bound_vars(out);
+                }
+            }
+            Pattern::Tuple { elems } => {
+                for e in elems {
+                    e.collect_bound_vars(out);
+                }
+            }
+            // A list pattern binds its prefix/suffix elements' vars plus the rest binder.
+            Pattern::List {
+                prefix,
+                rest,
+                suffix,
+            } => {
+                for p in prefix {
+                    p.collect_bound_vars(out);
+                }
+                if let Some(r) = rest {
+                    r.collect_bound_vars(out);
+                }
+                for p in suffix {
+                    p.collect_bound_vars(out);
+                }
+            }
+            // Every alternative binds the same variables (enforced by the checker), so
+            // the first alternative's bindings are representative.
+            Pattern::Or(alts) => {
+                if let Some(first) = alts.first() {
+                    first.collect_bound_vars(out);
+                }
+            }
+            // `p as x` binds `x` plus whatever `p` binds.
+            Pattern::As {
+                pattern,
+                name,
+                name_span,
+            } => {
+                pattern.collect_bound_vars(out);
+                out.push((name, name_span.span()));
+            }
+            Pattern::Wildcard | Pattern::Int(_) | Pattern::Str(_) | Pattern::Bool(_) => {}
+        }
+    }
+}
+
+/// One `name [= pattern]` entry in a record pattern. Shorthand `{ x }` carries a
+/// `Pattern::Var { name: "x" }` so it binds the field to a same-named variable.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FieldPattern {
+    pub name: String,
+    pub name_span: NodeSpan,
+    pub pattern: Pattern,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BinOp {
+    Add,
+    Sub,
+    Mul,
+    /// `/` — true division (Python `/`), result is `float`.
+    Div,
+    /// `//` — floor division (Python `//`), result is `int`.
+    FloorDiv,
+    /// `%` — modulo (Python `%`), result matches the operands' numeric type and
+    /// preserves their (shared) unit.
+    Mod,
+    /// `**` — exponentiation (Python `**`). Float-only and dimensionless
+    /// (`float -> float -> float`); right-associative, binds tighter than unary
+    /// minus (`-2 ** 2 == -4`).
+    Pow,
+    /// `==` / `!=` — equality, result `bool` (operands of the same type).
+    Eq,
+    Ne,
+    /// `< > <= >=` — ordering comparison, result `bool` (orderable operands).
+    Lt,
+    Gt,
+    Le,
+    Ge,
+    /// `and` / `or` — logical and/or, result `bool` (short-circuiting in Python).
+    And,
+    Or,
+}
+
+impl BinOp {
+    /// The source spelling, used by the pretty-printer.
+    pub fn symbol(self) -> &'static str {
+        match self {
+            BinOp::Add => "+",
+            BinOp::Sub => "-",
+            BinOp::Mul => "*",
+            BinOp::Div => "/",
+            BinOp::FloorDiv => "//",
+            BinOp::Mod => "%",
+            BinOp::Pow => "**",
+            BinOp::Eq => "==",
+            BinOp::Ne => "!=",
+            BinOp::Lt => "<",
+            BinOp::Gt => ">",
+            BinOp::Le => "<=",
+            BinOp::Ge => ">=",
+            BinOp::And => "and",
+            BinOp::Or => "or",
+        }
+    }
+}
+
+/// Unary operators.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UnOp {
+    /// `not e` — logical negation.
+    Not,
+    /// `-e` — arithmetic negation (numeric, unit-preserving).
+    Neg,
+}
+
+impl UnOp {
+    /// The source spelling, used by the pretty-printer.
+    pub fn symbol(self) -> &'static str {
+        match self {
+            UnOp::Not => "not",
+            UnOp::Neg => "-",
+        }
+    }
+}

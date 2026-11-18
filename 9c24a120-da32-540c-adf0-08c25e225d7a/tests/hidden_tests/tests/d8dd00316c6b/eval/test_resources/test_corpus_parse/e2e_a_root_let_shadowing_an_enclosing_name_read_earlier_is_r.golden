@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let f x =
+    let g o =
+        let y = (x + 1)
+        let x = 2
+        ((x + y) + o)
+    (g 10)
+let r = (f 5)
+--- stderr ---

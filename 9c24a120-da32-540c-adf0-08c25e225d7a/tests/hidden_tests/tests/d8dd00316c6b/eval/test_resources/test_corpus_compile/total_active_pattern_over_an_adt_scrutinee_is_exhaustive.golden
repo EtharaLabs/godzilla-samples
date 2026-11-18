@@ -1,0 +1,39 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Round:
+    def __repr__(self):
+        return "_Round"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Angular:
+    def __repr__(self):
+        return "_Angular"
+def _ap_Round_Angular(s):
+    match s:
+        case Circle(r):
+            return _Round()
+        case Rect(w, h):
+            return _Angular()
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def f(s):
+    _pf_t0 = _ap_Round_Angular(s)
+    if isinstance(_pf_t0, _Round):
+        return 1
+    elif isinstance(_pf_t0, _Angular):
+        return 2
+    else:
+        raise RuntimeError("non-exhaustive match")
+--- stderr ---

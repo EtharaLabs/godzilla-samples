@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_id(x):
+    return x
+def _pf_fn0(acc, u):
+    match u:
+        case s:
+            return acc + len(s)
+total = _pf_fold(_pf_fn0, 0, _pf_map(_pf_id, ["ab", "c"]))
+--- stderr ---

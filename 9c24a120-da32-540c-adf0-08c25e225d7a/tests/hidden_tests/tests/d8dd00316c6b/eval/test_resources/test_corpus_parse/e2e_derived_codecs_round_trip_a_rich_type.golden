@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+type Placed = { letter: string, score: int }
+type Player = Ann | Bob
+type Msg = Hello Player | Move string | Resign
+type Tree = Leaf | Node Tree int Tree
+type View = { board: Map (int, int) Placed, players: List Player, turn: Option Player, last: Msg, tree: Tree, pair: (string, float), tags: Set string }
+let view = View { board = (Map.ofList [((1, 2), Placed { letter = "Q", score = 10 })]), players = [Ann, Bob], turn = (Some Bob), last = (Move "K11 a QUIZ"), tree = (((Node Leaf) 1) (((Node Leaf) 2) Leaf)), pair = ("x", 1.5), tags = (Set.ofList ["a"]) }
+let wire = (Encode.auto view)
+(print wire)
+let back = ((Decode.decodeString Decode.auto) wire)
+match back:
+    case (Ok v): (print (v == view))
+    case (Error e): (print f"failed: {e.errorKind} {e.errorMessage}")
+let showMsg m =
+    match m:
+        case (Hello p): f"hello {p}"
+        case (Move s): f"move {s}"
+        case Resign: "resign"
+let decodeMsg s =
+    match ((Decode.decodeString Decode.auto) s):
+        case (Ok m): (showMsg m)
+        case (Error e): f"error {e.errorKind}: {e.errorMessage}"
+(print (decodeMsg "{\"type\": \"Resign\"}"))
+(print (decodeMsg "{\"type\": \"Hello\", \"fields\": [{\"type\": \"Ann\"}]}"))
+(print (decodeMsg "{\"type\": \"Nope\"}"))
+(print (decodeMsg "[1, 2]"))
+(print (decodeMsg "{\"type\": \"Move\", \"fields\": [1]}"))
+--- stderr ---

@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Cell:
+    row: int
+    col: int
+    letter: str
+def describe(_pf_arg0: Cell) -> str:
+    letter = _pf_arg0.letter
+    row = _pf_arg0.row
+    return letter
+--- stderr ---

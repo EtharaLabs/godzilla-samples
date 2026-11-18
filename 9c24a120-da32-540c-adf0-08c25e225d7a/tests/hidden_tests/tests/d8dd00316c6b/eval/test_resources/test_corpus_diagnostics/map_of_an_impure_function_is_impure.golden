@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `shoutAll` is declared `pure` but performs `io`
+ --> 1:24
+  |
+1 | let pure shoutAll xs = List.map (fun x -> print x) xs
+  |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def f(xs: list[int]) -> int:
+    if len(xs) >= 1:
+        last = xs[-1]
+        init = xs[0:len(xs) - 1]
+        return last
+    else:
+        return 0
+--- stderr ---

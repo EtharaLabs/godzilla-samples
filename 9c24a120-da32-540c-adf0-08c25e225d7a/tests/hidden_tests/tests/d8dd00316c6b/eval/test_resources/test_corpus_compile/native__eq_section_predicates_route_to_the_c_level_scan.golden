@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_find_eq(x, xs):
+    try:
+        return Some(xs[xs.index(x)])
+    except ValueError:
+        return _None_
+def _pf_index_of(x, xs):
+    try:
+        return Some(xs.index(x))
+    except ValueError:
+        return _None_
+def a(l, rack) -> Some | None_:
+    return _pf_index_of(l, rack)
+def b(l, rack) -> Some | None_:
+    return _pf_find_eq(l, rack)
+def c(l, rack) -> bool:
+    return l in rack
+def d(l, rack) -> Some | None_:
+    return _pf_index_of(l, rack)
+def e(l, rack) -> Some | None_:
+    return _pf_index_of(l, rack)
+--- stderr ---

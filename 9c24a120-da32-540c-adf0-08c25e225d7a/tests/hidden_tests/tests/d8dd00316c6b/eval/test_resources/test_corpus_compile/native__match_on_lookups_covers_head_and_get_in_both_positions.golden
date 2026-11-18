@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+def hd(xs: list[int]) -> int:
+    if xs:
+        h = xs[0]
+        return h
+    else:
+        return 0
+def g(i: int, xs: list[tuple[int, int]]) -> int:
+    _pf_t1 = i + 1
+    if 0 <= _pf_t1 < len(xs):
+        a, b = xs[_pf_t1]
+        _pf_t0 = a + b
+    else:
+        _pf_t0 = 0
+    return 1 + _pf_t0
+def w(m) -> int:
+    if 1 in m:
+        return 1
+    else:
+        return 0
+--- stderr ---

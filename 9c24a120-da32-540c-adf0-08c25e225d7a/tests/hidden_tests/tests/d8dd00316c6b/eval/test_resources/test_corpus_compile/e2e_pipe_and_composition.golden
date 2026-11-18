@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import functools
+def add(a, b):
+    return a + b
+inc = functools.partial(add, 1)
+compose = lambda f, g, x: f(g(x))
+r = inc(inc(4))
+r2 = compose(inc, inc, 10)
+--- stderr ---

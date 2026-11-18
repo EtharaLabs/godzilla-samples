@@ -1,0 +1,49 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def multiply(a, b):
+    def _pf_fn0():
+        _pf_t1 = _pf_option_to_result("not a number", _pf_str_to_int(a))
+        if isinstance(_pf_t1, Ok):
+            x = _pf_t1._0
+            _pf_t0 = _pf_option_to_result("not a number", _pf_str_to_int(b))
+            if isinstance(_pf_t0, Ok):
+                y = _pf_t0._0
+                return Ok(x * y)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+print(multiply("6", "7"))
+print(multiply("6", "nope"))
+--- stderr ---

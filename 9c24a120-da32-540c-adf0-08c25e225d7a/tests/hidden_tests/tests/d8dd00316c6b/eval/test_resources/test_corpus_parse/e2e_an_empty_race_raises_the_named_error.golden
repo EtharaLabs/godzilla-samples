@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+extern import asyncio
+extern runAsync: (Async a) -> a = asyncio.run
+let main = async { let! r = (Async.catch (Async.race [])) let _ = (match r: case (Ok _): (print "ok") case (Error e): (print f"{e.errorKind}: {e.errorMessage}")) return () }
+(runAsync main)
+--- stderr ---

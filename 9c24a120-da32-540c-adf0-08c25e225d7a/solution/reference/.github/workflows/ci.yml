@@ -1,0 +1,150 @@
+# The project's own gate: the three commands CLAUDE.md names (test, clippy, fmt)
+# on the pinned toolchain. Everything else in .github/workflows publishes or
+# deploys something; this is the one that decides whether a change is sound.
+#
+# Tests run on all three OSes because the end-to-end suite shells out to a Python
+# interpreter and the emitted code has to run everywhere the wheel installs.
+# Clippy and fmt are toolchain-deterministic, so once is enough for them.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.12']
+        # The newest Python too, so a behaviour that differs between the ends of
+        # the supported range fails here (3.12's `asyncio.run` takes only a
+        # coroutine, where 3.14's takes any awaitable).
+        include:
+          - os: ubuntu-latest
+            python: '3.14'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      # Pyfun targets Python 3.12+ (the emitted code uses `match` and PEP 701
+      # f-strings). Without an interpreter the e2e tests skip rather than fail,
+      # which would quietly hollow out this job.
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.97.0'
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.97.0'
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo fmt --check
+      # The Sublime syntax is generated from the VS Code TextMate grammar.
+      - run: python3 editors/sublime/build.py --check
+
+  # The learner track is executable documentation: every lesson's solution runs
+  # and its output is compared against what the lesson prints. A compiler change
+  # that alters a diagnostic or a stdlib suggestion shows up here.
+  lessons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.97.0'
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build
+      - run: python docs/verify_lessons.py
+      - run: python docs/build_notebooks.py --check
+
+  # A native build must print what the plain build prints. Every runnable lesson
+  # program and the offline examples go through `pyfun build --native` (mypyc)
+  # and are diffed against `pyfun run`.
+  native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.97.0'
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build
+      - run: pip install mypy setuptools
+      - run: python tests/native_parity.py
+
+  # MELPA builds pyfun-mode.el straight from main, so it gets the checks MELPA
+  # reviewers run (byte-compile, checkdoc, package-lint) on every change. 29.1
+  # is the floor the file's Package-Requires declares.
+  emacs:
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs: ['29.1', '30.1']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs }}
+      - run: emacs -Q --batch -l editors/emacs/lint.el
+
+  # The Tree-sitter grammar feeds five editors' queries (the grammar's own
+  # highlights, Neovim, Helix, Zed). The corpus goldens pin the parse trees, and
+  # compiling every query file against the grammar catches a renamed node before
+  # an editor does. Pinned to the CLI version the grammar is generated with.
+  tree-sitter:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: editors/tree-sitter-pyfun
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g tree-sitter-cli@0.26.11
+      - run: tree-sitter test
+      - name: Compile every editor query against the grammar
+        run: |
+          for q in queries/*.scm ../helix/queries/pyfun/*.scm ../nvim/queries/pyfun/*.scm ../zed/languages/pyfun/*.scm; do
+            echo "$q"
+            tree-sitter query "$q" test/stress.pyfun > /dev/null
+          done
+
+  # The Pygments lexer (editors/pygments) must lex every example in the repo
+  # without an error token, so a new syntax form shows up here first.
+  pygments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install pygments
+      - run: python editors/pygments/tests/test_lexer.py

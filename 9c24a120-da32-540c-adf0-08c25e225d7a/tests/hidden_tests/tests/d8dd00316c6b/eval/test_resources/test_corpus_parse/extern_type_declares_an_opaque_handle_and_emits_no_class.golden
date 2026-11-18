@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+extern type Conn
+extern connect: string -> Conn = sqlite3.connect
+let db = (connect ":memory:")
+--- stderr ---

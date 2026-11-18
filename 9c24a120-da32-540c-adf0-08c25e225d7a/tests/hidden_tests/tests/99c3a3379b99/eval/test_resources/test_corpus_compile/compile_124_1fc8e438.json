@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "def _pf_map_add(k, v, m):\n    return dict(list(m.items()) + [[k, v]])\ndef step(acc, x):\n    match acc:\n        case (m, keep):\n            return (_pf_map_add(x, x, m), keep)\nseed = dict()\nseed2 = dict()\nm = dict(seed)\nkeep = seed2\nfor x in [1, 2]:\n    m[x] = x\nr = (m, keep)\nmatch r:\n    case (m, keep):\n        _pf_t0 = (len(m), len(keep), len(seed2))\nout = _pf_t0\n",
+ "stderr": ""
+}

@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+opaque type UserId = string
+type Row = { class: string, id: UserId, ok: Result int string }
+let row = Row { class = "a", id = (UserId "u1"), ok = (Error "no") }
+let wire = (Encode.auto row)
+(print wire)
+match ((Decode.decodeString Decode.auto) wire):
+    case (Ok r): (print (r == row))
+    case (Error e): (print e.errorMessage)
+--- stderr ---

@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+let f o p = option { do! p let! x = o return! (if (x > 0) then (Some (x * 2)) else None) }
+let a =
+    match ((f (Some 3)) (Some ())):
+        case (Some n): n
+        case None: 0
+let b =
+    match ((f (Some 3)) None):
+        case (Some n): n
+        case None: 0
+let c =
+    match ((f (Some 0)) (Some ())):
+        case (Some n): n
+        case None: 0
+--- stderr ---

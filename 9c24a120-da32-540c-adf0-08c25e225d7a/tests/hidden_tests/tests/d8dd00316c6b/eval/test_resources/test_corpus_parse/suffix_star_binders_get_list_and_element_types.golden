@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let f xs =
+    match xs:
+        case [*init, last]: (last + (List.sum init))
+        case []: 0
+--- stderr ---

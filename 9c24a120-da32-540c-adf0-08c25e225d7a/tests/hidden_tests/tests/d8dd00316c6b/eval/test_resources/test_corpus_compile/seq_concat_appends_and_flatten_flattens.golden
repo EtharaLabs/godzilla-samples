@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+import itertools
+def _pf_seq_collect(f, xs):
+    return itertools.chain.from_iterable(map(f, xs))
+def _pf_seq_concat(xs, ys):
+    return itertools.chain(xs, ys)
+def _pf_seq_flatten(xs):
+    return itertools.chain.from_iterable(xs)
+a = list(_pf_seq_concat(iter([1]), iter([2])))
+b = list(_pf_seq_flatten(iter([iter([1])])))
+c = list(_pf_seq_collect(lambda x: iter([x]), iter([1])))
+--- stderr ---

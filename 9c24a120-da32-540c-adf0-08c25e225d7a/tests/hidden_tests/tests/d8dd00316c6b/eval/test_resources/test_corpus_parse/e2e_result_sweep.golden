@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let ok1 = (Ok 1)
+let ok2 = (Ok 2)
+let bad = (Error "boom")
+let both = (((Result.map2 (fun a b -> (a + b))) ok1) ok2)
+let failed = (((Result.map2 (fun a b -> (a + b))) bad) ok2)
+let kept = ((Result.orElse ok2) ok1)
+let fellBack = ((Result.orElse ok2) bad)
+let listed = (Result.toList ok1)
+let empty = (Result.toList bad)
+--- stderr ---

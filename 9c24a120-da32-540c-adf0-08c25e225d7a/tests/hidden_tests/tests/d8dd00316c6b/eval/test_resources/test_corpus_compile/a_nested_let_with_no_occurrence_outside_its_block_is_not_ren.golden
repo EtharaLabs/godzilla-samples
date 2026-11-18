@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def f(flag):
+    if flag:
+        t = 10
+        _pf_t0 = t + 1
+    else:
+        _pf_t0 = 0
+    y = _pf_t0
+    return y
+r = f(True)
+--- stderr ---

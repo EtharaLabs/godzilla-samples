@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_flatten(xs):
+    out = []
+    for x in xs:
+        out.extend(x)
+    return out
+def _pf_init(n, f):
+    out = []
+    for i in range(max(n, 0)):
+        out.append(f(i))
+    return out
+def _pf_insert_at(i, v, xs):
+    out = list(xs)
+    out.insert(max(i, 0), v)
+    return out
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_remove_at(i, xs):
+    out = list(xs)
+    if 0 <= i < len(out):
+        out.pop(i)
+    return out
+def _pf_replicate(n, x):
+    return [x] * max(n, 0)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_unzip(xs):
+    a = []
+    b = []
+    for p in xs:
+        a.append(p[0])
+        b.append(p[1])
+    return (a, b)
+def _pf_update_at(i, v, xs):
+    out = list(xs)
+    if 0 <= i < len(out):
+        out[i] = v
+    return out
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_average(xs):
+    return Some(sum(xs) / len(xs)) if xs else _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_min(xs):
+    return Some(min(xs)) if xs else _None_
+def _pf_reduce(f, xs):
+    return Some(functools.reduce(f, xs)) if xs else _None_
+xs = [3, 1, 4, 1, 5]
+biggest = _pf_max(xs)
+smallest = _pf_min(xs)
+noMax = _pf_max(_pf_drop(9, [1]))
+doubled = _pf_sum_by(lambda x: x * 2, [1, 2, 3])
+mean = _pf_average([1.0, 2.0, 4.0])
+joined = _pf_reduce(lambda a, b: a + b, [1, 2, 3])
+split = _pf_partition(lambda x: x > 2, xs)
+apart = _pf_unzip(_pf_zip([1, 2], ["a", "b"]))
+flat = _pf_flatten([[1, 2], [3]])
+squares = _pf_init(4, lambda i: i * i)
+copies = _pf_replicate(3, "x")
+updated = _pf_update_at(1, 99, [1, 2, 3])
+untouched = _pf_update_at(9, 99, [1, 2, 3])
+inserted = _pf_insert_at(1, 99, [1, 2, 3])
+removed = _pf_remove_at(1, [1, 2, 3])
+pairs = _pf_pairwise([1, 2, 3])
+windows = _pf_windowed(2, [1, 2, 3])
+chunks = _pf_chunk(2, [1, 2, 3])
+--- stderr ---

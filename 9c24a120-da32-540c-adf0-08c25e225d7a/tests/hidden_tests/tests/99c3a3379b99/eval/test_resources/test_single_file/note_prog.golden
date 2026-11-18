@@ -1,0 +1,9 @@
+def _pf_concat(xs, ys):
+    return xs + ys
+def collect(n, acc):
+    if n == 0:
+        return acc
+    else:
+        return collect(n - 1, _pf_concat(acc, [lambda k: n]))
+fns = collect(3, [])
+print(len(fns))

@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> id : 'a -> 'a
+pyfun> id : 'a -> 'a
+pyfun> (+) : int<'a> -> int<'a> -> int<'a>
+pyfun> Some 3 : Option int
+pyfun> print : 'a ->{io} unit
+pyfun> (could not determine a type — is `let z = 1` an expression?)
+pyfun> pyfun> --- stderr ---
+error: expected int, found bool
+ --> 3:5
+  |
+3 | 1 + true
+  |     ^^^^

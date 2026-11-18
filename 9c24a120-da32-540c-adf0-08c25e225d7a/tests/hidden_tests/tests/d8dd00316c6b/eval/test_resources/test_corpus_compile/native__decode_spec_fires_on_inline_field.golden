@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+try:
+    _pf_t0 = json.loads("{\"name\": \"ada\"}")
+    if not isinstance(_pf_t0, dict):
+        raise ValueError("expected a JSON object")
+    _pf_t1 = _pf_t0["name"]
+    if not isinstance(_pf_t1, str):
+        raise ValueError("expected a string, got " + type(_pf_t1).__name__)
+    _pf_t2 = Ok(_pf_t1)
+except Exception as e:
+    _pf_t2 = Error(_Exception(type(e).__name__, str(e)))
+r: Ok | Error = _pf_t2
+--- stderr ---

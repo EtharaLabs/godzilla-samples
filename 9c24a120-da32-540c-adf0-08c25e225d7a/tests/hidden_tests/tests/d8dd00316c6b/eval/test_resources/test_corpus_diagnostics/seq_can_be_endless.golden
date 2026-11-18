@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected Option ('a, int), found (int, int)
+ --> 1:21
+  |
+1 | let s = Seq.toList (Seq.unfold (fun n -> (n, n + 1)) 0)
+  |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_split_at(n, xs):
+    m = max(n, 0)
+    return (xs[0:m], xs[m:len(xs)])
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+a = _pf_take(2, [1, 2, 3])
+b = _pf_drop(2, [1, 2, 3])
+c = _pf_split_at(2, [1, 2, 3])
+--- stderr ---

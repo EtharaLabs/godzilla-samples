@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "import functools\nimport sqlite3\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndb = sqlite3.connect(\":memory:\")\n_ = db.execute(\"create table t (x int)\")\n_ = db.execute(\"insert into t values (1), (2), (3)\")\ndef firstCol(r):\n    match r:\n        case (x, _):\n            return x\nrows = db.execute(\"select x, x * x from t order by x\").fetchall()\ntotal = _pf_fold(lambda acc, r: acc + firstCol(r), 0, rows)\nprint(rows)\nprint(total)\n",
+ "stderr": ""
+}

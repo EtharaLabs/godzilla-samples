@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "class _pf_Async:\n    __slots__ = (\"fn\", \"args\")\n    def __init__(self, fn, *args):\n        self.fn = fn\n        self.args = args\n    def __await__(self):\n        return self.fn(*self.args).__await__()\n    async def __call__(self):\n        return await self\n    def __repr__(self):\n        return \"<Async>\"\ndef finished(acc):\n    async def _pf_fn0():\n        return acc\n    return _pf_Async(_pf_fn0)\ndef loop(n):\n    _pf_fn1 = 3\n    y = _pf_fn1 + 1\n    async def _pf_fn1():\n        if n == 0:\n            return await finished(y)\n        else:\n            return await loop(n - 1)\n    return _pf_Async(_pf_fn1)\n",
+ "stderr": ""
+}

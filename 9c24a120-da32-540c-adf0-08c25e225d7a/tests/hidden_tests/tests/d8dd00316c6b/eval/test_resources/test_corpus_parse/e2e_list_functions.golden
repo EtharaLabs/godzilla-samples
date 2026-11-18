@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+let xs = [1, 2, 3, 4]
+let doubled = ((List.map (fun x -> (x * 2))) xs)
+let small = ((List.filter (fun x -> (x < 3))) xs)
+let total = (((List.fold (fun a b -> (a + b))) 0) xs)
+let n = (List.len xs)
+let s = (List.sum xs)
+let r = (List.rev xs)
+let q = ((List.range 1) 4)
+--- stderr ---

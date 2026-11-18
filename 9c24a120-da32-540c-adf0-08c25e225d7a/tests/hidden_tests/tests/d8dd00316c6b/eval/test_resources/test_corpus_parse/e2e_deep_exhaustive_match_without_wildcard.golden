@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+let f o =
+    match o:
+        case (Some true): 1
+        case (Some false): 2
+        case None: 3
+let a = (f (Some true))
+let b = (f (Some false))
+let c = (f None)
+--- stderr ---

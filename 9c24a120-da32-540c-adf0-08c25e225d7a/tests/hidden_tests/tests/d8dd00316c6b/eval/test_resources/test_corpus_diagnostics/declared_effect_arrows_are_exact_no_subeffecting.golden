@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: this function performs nothing, but `H` takes this callback as `string ->{io} unit`, which performs exactly {io}; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `string ->{e} unit`
+ --> 2:12
+  |
+2 | let h = H (fun s -> ())
+  |            ^^^^^^^^^^^
+
+1 error

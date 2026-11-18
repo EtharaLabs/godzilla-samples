@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+let sum3 a b c =
+    let mut acc = 0
+    (acc <- (acc + a))
+    (acc <- (acc + b))
+    (acc <- (acc + c))
+    acc
+let nested x =
+    let y =
+        let mut t = x
+        (t <- (t * 2))
+        t
+    (y + 1)
+let r1 = (((sum3 1) 2) 3)
+let r2 = (nested 10)
+--- stderr ---

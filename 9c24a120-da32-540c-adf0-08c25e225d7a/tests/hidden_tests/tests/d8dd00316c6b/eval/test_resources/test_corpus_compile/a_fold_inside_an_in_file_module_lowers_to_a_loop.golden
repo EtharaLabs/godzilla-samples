@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def _pf_map_to_list(m):
+    return list(m.items())
+Stats_scale = 3
+def Stats_tally(xs):
+    acc = dict()
+    for x in xs:
+        _pf_t0 = x * Stats_scale
+        acc[x] = _pf_t0
+    return acc
+out = _pf_map_to_list(Stats_tally([1, 2]))
+--- stderr ---

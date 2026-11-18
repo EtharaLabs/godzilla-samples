@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+type Point = { x: int, y: int }
+let f p =
+    match p:
+        case Point { z = 0 }: 1
+        case _: 0
+--- stderr ---

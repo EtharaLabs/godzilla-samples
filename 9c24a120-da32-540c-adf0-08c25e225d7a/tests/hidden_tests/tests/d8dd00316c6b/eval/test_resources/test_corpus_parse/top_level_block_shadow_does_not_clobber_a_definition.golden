@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let bump n = (n + 100)
+let useBump x = (bump x)
+let useIt =
+    let bump = 0
+    (useBump 5)
+let after = (useBump 7)
+--- stderr ---

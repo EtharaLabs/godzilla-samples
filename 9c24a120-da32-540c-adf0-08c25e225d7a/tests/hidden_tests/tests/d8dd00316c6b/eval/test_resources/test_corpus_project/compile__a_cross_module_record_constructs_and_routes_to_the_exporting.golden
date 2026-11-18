@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+# ==== geometry.py ====
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Point:
+    x: int
+    y: int
+
+# ==== main.py ====
+import geometry
+p = geometry.Point(1, 2)
+sx = p.x
+_pf_t0 = p
+shifted = geometry.Point(10, _pf_t0.y)
+def describe(q):
+    match q:
+        case geometry.Point(x=0, y=y):
+            return y
+        case geometry.Point(x=x, y=y):
+            return x + y
+d = describe(p)
+
+--- stderr ---

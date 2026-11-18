@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+import itertools
+def _pf_seq_drop(n, xs):
+    return itertools.islice(xs, max(n, 0), None)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+s = list(_pf_seq_drop(1, _pf_seq_take_while(lambda x: x < 3, iter([1, 2]))))
+--- stderr ---

@@ -1,0 +1,34 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_list_find(f, xs):
+    return next(map(Some, filter(f, xs)), _None_)
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+xs = [3, 1, 2]
+a = _pf_option_with_default(0, _pf_list_get(0, xs))
+b = _pf_option_with_default(0, _pf_list_get(9, xs))
+c = 2 in xs
+d = _pf_concat(xs, [4])
+e = _pf_sort(xs)
+f = _pf_option_with_default(0, _pf_list_find(lambda x: x > 1, xs))
+g = not []
+--- stderr ---

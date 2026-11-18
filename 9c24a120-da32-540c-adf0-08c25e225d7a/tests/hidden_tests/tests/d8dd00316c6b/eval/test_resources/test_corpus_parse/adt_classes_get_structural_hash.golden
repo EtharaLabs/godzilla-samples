@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+type Color = Red | Green | Blue
+let s = (Set.ofList [Red, Red, Green])
+let n = (Set.len s)
+let hasRed = ((Set.contains Red) s)
+let hasBlue = ((Set.contains Blue) s)
+--- stderr ---

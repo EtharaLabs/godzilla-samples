@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+here = Point(3, 4)
+_pf_t0 = here
+moved = Point(10, _pf_t0.y)
+print(here.x)
+print(moved.x)
+print(here.x)
+print(here)
+--- stderr ---

@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let f o =
+    let n = 1
+    (match o: case (Some k): 
+    let n = ((n * 10) + k)
+    (n + 1) case None: n)
+let r = (f (Some 2))
+let s = (f None)
+--- stderr ---

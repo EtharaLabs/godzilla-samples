@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let swap p =
+    match p:
+        case (a, b): (b, a)
+let fst t =
+    match t:
+        case (a, _): a
+let pair = (10, 20)
+let s = (swap pair)
+let first = (fst pair)
+--- stderr ---

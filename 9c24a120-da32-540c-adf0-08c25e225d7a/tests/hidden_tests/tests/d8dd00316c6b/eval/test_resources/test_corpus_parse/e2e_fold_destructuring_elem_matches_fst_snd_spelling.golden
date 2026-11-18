@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let steps = [("a", 1), ("b", 2), ("a", 3)]
+let slow = (((List.fold (fun m (p, l) -> (((Map.add p) l) m))) Map.empty) steps)
+let fast = (((List.fold (fun m s -> (((Map.add (fst s)) (snd s)) m))) Map.empty) steps)
+let out = ((Map.toList slow), (Map.toList fast), (slow == fast))
+--- stderr ---

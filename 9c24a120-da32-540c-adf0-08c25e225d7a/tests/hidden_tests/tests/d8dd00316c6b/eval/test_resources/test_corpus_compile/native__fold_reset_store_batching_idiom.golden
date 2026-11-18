@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+def _pf_concat(xs, ys):
+    return xs + ys
+def step(acc: tuple[list[int], list[list[int]]], x: int) -> tuple[list[int], list[list[int]]]:
+    cur = acc[0]
+    groups = acc[1]
+    if x == 0:
+        return ([], _pf_concat(groups, [cur]))
+    else:
+        return (_pf_concat(cur, [x]), groups)
+cur = []
+groups = []
+for x in [1, 2, 0, 3, 0]:
+    if x == 0:
+        _pf_t1 = []
+        _pf_t2 = cur
+        cur = _pf_t1
+        groups.append(_pf_t2)
+    else:
+        cur.append(x)
+_pf_t3 = (cur, groups)
+cur = _pf_t3[0]
+groups = _pf_t3[1]
+_pf_t0 = (cur, groups)
+out: tuple[list[int], list[list[int]]] = _pf_t0
+--- stderr ---

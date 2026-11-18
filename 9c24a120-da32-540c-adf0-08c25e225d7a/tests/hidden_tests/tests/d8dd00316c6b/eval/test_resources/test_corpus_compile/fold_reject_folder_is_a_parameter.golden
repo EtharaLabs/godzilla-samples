@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def foldWith(f):
+    return _pf_fold(f, dict(), [1, 2, 3])
+out = len(foldWith(lambda m, x: _pf_map_add(x, x, m)))
+--- stderr ---

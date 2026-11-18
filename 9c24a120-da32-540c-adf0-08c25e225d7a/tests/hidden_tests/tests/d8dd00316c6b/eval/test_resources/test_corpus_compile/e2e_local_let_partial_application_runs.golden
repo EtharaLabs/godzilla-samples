@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def addAll(xs, ys):
+    def pair(a, b):
+        return a + b
+    return _pf_map(functools.partial(pair, 10), ys)
+r = addAll([], [1, 2])
+--- stderr ---

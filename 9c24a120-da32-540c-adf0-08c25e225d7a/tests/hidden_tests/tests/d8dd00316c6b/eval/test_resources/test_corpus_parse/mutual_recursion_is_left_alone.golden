@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let evens n = (if (n == 0) then true else (odds (n - 1)))
+let odds n = (if (n == 0) then false else (evens (n - 1)))
+--- stderr ---

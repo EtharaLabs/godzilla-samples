@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_opt_exists(f, o):
+    return isinstance(o, Some) and f(o._0)
+def _pf_opt_to_list(o):
+    return [o._0] if isinstance(o, Some) else []
+xs = _pf_opt_to_list(Some(1))
+n = len(xs)
+b = _pf_opt_exists(lambda x: x > 0, Some(1))
+--- stderr ---

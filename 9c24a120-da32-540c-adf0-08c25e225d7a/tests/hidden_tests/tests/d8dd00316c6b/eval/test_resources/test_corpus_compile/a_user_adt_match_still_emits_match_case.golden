@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Across:
+    def __repr__(self):
+        return "Across"
+_Across = Across()
+@dataclass(frozen=True, slots=True, repr=False)
+class Down:
+    def __repr__(self):
+        return "Down"
+_Down = Down()
+def delta(d):
+    match d:
+        case Across():
+            return (0, 1)
+        case Down():
+            return (1, 0)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+--- stderr ---

@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class A:
+    def __repr__(self):
+        return "A"
+_A: A = A()
+@dataclass(frozen=True, slots=True, repr=False)
+class B:
+    _0: int
+    def __repr__(self):
+        return f"B({self._0!r})"
+T = A | B
+@dataclass(frozen=True, slots=True)
+class P:
+    x: int
+m: dict[int, str] = dict([(1, "one")])
+def v(k: int) -> int:
+    if k in m:
+        _pf_t0 = 1
+    else:
+        _pf_t0 = 0
+    r = _pf_t0
+    return r * 10
+def w(o: Some | None_) -> int:
+    if isinstance(o, Some) and isinstance(o._0, P):
+        x = o._0.x
+        return x
+    else:
+        return 0
+u: None = None
+def f(t: T, y):
+    if isinstance(t, A):
+        pass
+    else:
+        n = t._0
+        print(n)
+    return y
+print((v(1), v(2), w(Some(P(3))), f(_A, 4)))
+--- stderr ---

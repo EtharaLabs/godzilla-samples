@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def fact(n):
+    if n == 0:
+        return 1
+    else:
+        return n * fact(n - 1)
+def id(x):
+    return x
+a = id(1)
+b = id(True)
+c = fact(4)
+--- stderr ---

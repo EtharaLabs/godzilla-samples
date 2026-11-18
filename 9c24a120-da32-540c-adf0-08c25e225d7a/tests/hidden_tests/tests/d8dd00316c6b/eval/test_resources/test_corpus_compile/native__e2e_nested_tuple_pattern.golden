@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+def f(t: tuple[tuple[int, int], int]) -> int:
+    a = t[0][0]
+    b = t[0][1]
+    c = t[1]
+    return a + b + c
+r: int = f(((1, 2), 3))
+--- stderr ---

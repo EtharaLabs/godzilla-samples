@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: cannot derive a decoder for `int -> int`: a function has no JSON form
+ --> 1:29
+  |
+1 | let f = Decode.decodeString Decode.auto "1"
+  |                             ^^^^^^^^^^^
+
+1 error

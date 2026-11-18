@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class A:
+    def __repr__(self):
+        return "A"
+_A = A()
+@dataclass(frozen=True, slots=True, repr=False)
+class B:
+    def __repr__(self):
+        return "B"
+_B = B()
+@dataclass(frozen=True, slots=True, repr=False)
+class C:
+    def __repr__(self):
+        return "C"
+_C = C()
+--- stderr ---

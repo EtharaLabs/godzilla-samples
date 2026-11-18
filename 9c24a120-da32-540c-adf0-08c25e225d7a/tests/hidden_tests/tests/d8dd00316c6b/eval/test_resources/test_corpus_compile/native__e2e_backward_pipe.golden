@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def inc(n: int) -> int:
+    return n + 1
+def twice(n: int) -> int:
+    return n * 2
+a: int = inc(5)
+b: int = inc(twice(5))
+c: int = twice(inc(5))
+--- stderr ---

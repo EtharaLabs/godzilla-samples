@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+import functools
+import itertools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+s = iter([1, 2, 3])
+a = map(lambda x: x + 1, s)
+b = filter(lambda x: x < 2, s)
+c = _pf_seq_take(2, s)
+d = _pf_fold(lambda acc, x: acc + x, 0, s)
+e = list(range(0, 5))
+--- stderr ---

@@ -1,0 +1,16 @@
+# ==== shared.py ====
+s = 10
+
+# ==== left.py ====
+import shared
+l = shared.s + 1
+
+# ==== right.py ====
+import shared
+r = shared.s + 2
+
+# ==== main.py ====
+import left
+import right
+print(left.l + right.r)
+

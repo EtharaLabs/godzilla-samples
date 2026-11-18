@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let countdown label n =
+    let _ = (print label)
+    (if (n <= 0) then 0 else ((countdown label) (n - 1)))
+let done = ((countdown "tick") 2)
+--- stderr ---
