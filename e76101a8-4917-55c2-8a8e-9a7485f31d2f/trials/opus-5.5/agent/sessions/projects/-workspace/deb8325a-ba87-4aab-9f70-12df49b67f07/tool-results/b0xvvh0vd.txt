@@ -1,0 +1,629 @@
+== room 100009: {"guid": "43640e2f-dd88-4c5a-8496-410254f7cc0d", "category": "room", "level": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "point": [2000.0, 3000.0], "name": "Living", "number": "1", "top_level": "4ce7cef2-23a0-40e0-ad3a-f3fada9b1c83", "limit_offset": -300.0}
+-- level (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              modify: no level or plan view named `x` (the levels are: Level 1, Level 2)
+   1.5              E: 1.5 is not an element id
+   5                room 100009: level 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- point (now [2000.0, 3000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK point=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- name (now "Living")
+   "x"              OK name="x"
+-- number (now "1")
+   "x"              OK number="x"
+-- colour (now "<absent>")
+   "x"              E: invalid type: string "x", expected an array of length 3
+   1.5              E: invalid type: floating point `1.5`, expected an array of length 3
+   5                E: invalid type: integer `5`, expected an array of length 3
+   -1               E: invalid type: integer `-1`, expected an array of length 3
+   true             E: invalid type: boolean `true`, expected an array of length 3
+   null             OK (no change)
+   [1,2]            E: invalid length 2, expected an array of length 3
+   [[1,2],[3,4]]    E: invalid type: sequence, expected u8
+   {}               E: invalid type: map, expected an array of length 3
+-- params (now "<absent>")
+   {}               OK (no change)
+-- base_offset (now "<absent>")
+   1.5              OK base_offset=1.5
+   5                OK base_offset=5.0
+   -1               OK base_offset=-1.0
+-- top_level (now "4ce7cef2-23a0-40e0-ad3a-f3fada9b1c83")
+   "x"              modify: no level or plan view named `x` (the levels are: Level 1, Level 2)
+   1.5              E: 1.5 is not an element id
+   5                room 100009: level 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             room 100009: the room's top (its upper limit 0 + limit offset -300) must be above its bottom (its level 0 + base offset 0); raise the limit offset or lower the base offset
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- limit_offset (now -300.0)
+   1.5              OK limit_offset=1.5
+   5                OK limit_offset=5.0
+   -1               OK limit_offset=-1.0
+-- frozen (now "<absent>")
+   true             OK frozen=true; kept={"centre": {"outer": [[0.0, 0.0], [4000.0, 0.0], [4000.0, 6000.0], [0.0, 6000.0]], "holes": []}, "finish": {"outer": [[100.0, 100.0], [3950.0, 100.0],
+-- kept (now "<absent>")
+   "x"              E: invalid type: string "x", expected struct Kept
+   1.5              E: invalid type: floating point `1.5`, expected struct Kept
+   5                E: invalid type: integer `5`, expected struct Kept
+   -1               E: invalid type: integer `-1`, expected struct Kept
+   true             E: invalid type: boolean `true`, expected struct Kept
+   null             OK (no change)
+   [1,2]            E: invalid type: integer `1`, expected struct Region
+   [[1,2],[3,4]]    E: invalid type: integer `1`, expected a sequence
+   {}               OK (no change)
+== floor 100011: {"guid": "358b8da3-2a10-4218-adc9-e6c8042f8247", "category": "floor", "type": "300947fa-c956-4b28-a32d-69944d63eab4", "level": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "boundary": [[8000.0, 0.0], [8000.0, 6000.0], [4000.0, 6000.0], [0.0, 6000.0], [0.0, 0.0], [4000.0, 0.0]]}
+== roomseparator 100025: {"guid": "55c62ada-8181-4aed-b22a-8350a2344447", "category": "roomseparator", "level": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "start": [0.0, 12000.0], "end": [4000.0, 12000.0]}
+-- level (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              modify: no level or plan view named `x` (the levels are: Level 1, Level 2)
+   1.5              E: 1.5 is not an element id
+   5                roomseparator 100025: level 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- start (now [0.0, 12000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK start=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- end (now [4000.0, 12000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK end=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+== grid 100026: {"guid": "ce1b9a2e-46d3-4764-bb85-966ee099a958", "category": "grid", "name": "1", "start": [-1000.0, -1000.0], "end": [-1000.0, 7000.0]}
+-- name (now "1")
+   "x"              OK name="x"
+-- start (now [-1000.0, -1000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK start=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- end (now [-1000.0, 7000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK end=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+== component 100027: {"guid": "c8387c79-2938-4ac3-8a43-8003abf9b26a", "category": "component", "family": "9aec91e7-6737-45f2-9123-41033a0df4d8", "type": "d6d1f2c5-beef-49c5-9335-3088b941ce56", "level": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "at": [2000.0, 4000.0], "angle": 0.0, "offset": 0.0}
+-- family (now "9aec91e7-6737-45f2-9123-41033a0df4d8")
+   "x"              component 100027: family `x` doesn't exist (there are: Air Terminal, Base Cabinet, Bathtub, Bed, Casement Window, Ceiling Luminaire, Chair, Data Outlet, Desk, Distribution Board, Double Door, Earthing Electrode, Elbow 90, Fixed Window, Floor Drain, Gate Valve, Inspection Box, Kitchen Sink, Outlet, P
+-- type (now "d6d1f2c5-beef-49c5-9335-3088b941ce56")
+   "x"              component 100027: type `x` doesn't exist (there are: 1600 x 2000, 1800 x 2000, 900 x 2000)
+-- level (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              modify: no level or plan view named `x` (the levels are: Level 1, Level 2)
+   1.5              E: 1.5 is not an element id
+   5                component 100027: level 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- at (now [2000.0, 4000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK at=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- angle (now 0.0)
+   1.5              OK angle=1.5
+   5                OK angle=5.0
+   -1               OK angle=-1.0
+-- offset (now 0.0)
+   1.5              OK offset=1.5
+   5                OK offset=5.0
+   -1               OK offset=-1.0
+-- mirrored (now "<absent>")
+   true             OK mirrored=true
+-- params (now "<absent>")
+   {}               OK (no change)
+== line 100028: {"guid": "7f02b80d-54d3-4f3d-a2e6-8edcb42acbbf", "category": "line", "view": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "style": "6fb35484-17e3-45a4-b442-cf1abea5206c", "start": [0.0, 14000.0], "end": [4000.0, 14000.0]}
+-- view (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                line 100028: view 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- style (now "6fb35484-17e3-45a4-b442-cf1abea5206c")
+   "x"              line 100028: there's no line style `x` (there are: Centre Lines, Hairline, Hidden Lines, Medium Lines, Overhead Lines, Thin Lines, Wide Lines)
+-- insulation (now "<absent>")
+   1.5              OK insulation=1.5
+   5                OK insulation=5.0
+   -1               line 100028: its insulation is -1 mm wide; it's more than 1 mm and at most 10000
+   null             OK (no change)
+-- centre_mark (now "<absent>")
+   true             OK centre_mark=true
+-- cloud (now "<absent>")
+   1.5              OK cloud=1.5
+   5                OK cloud=5.0
+   -1               line 100028: its cloud's arcs are -1 mm long; they're more than 1 mm and at most 10000
+   null             OK (no change)
+-- revision (now "<absent>")
+   "x"              OK revision="x"
+   null             OK (no change)
+-- start (now [0.0, 14000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` and `end_tangent`)
+   [1,2]            OK start=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- end (now [4000.0, 14000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` and `end_tangent`)
+   [1,2]            OK end=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- through (now "<absent>")
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             OK (no change)
+   [1,2]            OK arc=328.1042655642777
+   {}               E: invalid type: map, expected tuple struct P2
+-- arc (now "<absent>")
+   1.5              OK arc=1.5
+   5                OK arc=5.0
+   -1               OK arc=-1.0
+   null             OK (no change)
+-- points (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             OK (no change)
+   [1,2]            E: invalid type: integer `1`, expected tuple struct P2
+   [[1,2],[3,4]]    E: `points` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` 
+   {}               E: invalid type: map, expected a sequence
+-- arcs (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             OK (no change)
+   [1,2]            E: `arcs` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` an
+   {}               E: invalid type: map, expected a sequence
+-- closed (now "<absent>")
+   true             E: `closed` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` 
+-- centre (now "<absent>")
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             OK (no change)
+   [1,2]            E: `centre` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` 
+   {}               E: invalid type: map, expected tuple struct P2
+-- radius (now "<absent>")
+   1.5              E: `radius` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` 
+   5                E: `radius` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` 
+   -1               E: `radius` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` 
+   null             OK (no change)
+-- radii (now "<absent>")
+   "x"              E: invalid type: string "x", expected an array of length 2
+   1.5              E: invalid type: floating point `1.5`, expected an array of length 2
+   5                E: invalid type: integer `5`, expected an array of length 2
+   -1               E: invalid type: integer `-1`, expected an array of length 2
+   true             E: invalid type: boolean `true`, expected an array of length 2
+   null             OK (no change)
+   [1,2]            E: `radii` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` a
+   {}               E: invalid type: map, expected an array of length 2
+-- angle (now "<absent>")
+   1.5              E: `angle` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` a
+   5                E: `angle` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` a
+   -1               E: `angle` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` a
+   null             OK (no change)
+-- span (now "<absent>")
+   "x"              E: invalid type: string "x", expected an array of length 2
+   1.5              E: invalid type: floating point `1.5`, expected an array of length 2
+   5                E: invalid type: integer `5`, expected an array of length 2
+   -1               E: invalid type: integer `-1`, expected an array of length 2
+   true             E: invalid type: boolean `true`, expected an array of length 2
+   null             OK (no change)
+   [1,2]            E: `span` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` an
+   {}               E: invalid type: map, expected an array of length 2
+-- control (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             OK (no change)
+   [1,2]            E: invalid type: integer `1`, expected tuple struct P2
+   [[1,2],[3,4]]    E: `control` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent`
+   {}               E: invalid type: map, expected a sequence
+-- knots (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             OK (no change)
+   [1,2]            E: `knots` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` a
+   {}               E: invalid type: map, expected a sequence
+-- fit (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             OK (no change)
+   [1,2]            E: invalid type: integer `1`, expected tuple struct P2
+   [[1,2],[3,4]]    E: `fit` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tangent` and
+   {}               E: invalid type: map, expected a sequence
+-- start_tangent (now "<absent>")
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             OK (no change)
+   [1,2]            E: `start_tangent` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_ta
+   {}               E: invalid type: map, expected tuple struct P2
+-- end_tangent (now "<absent>")
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             OK (no change)
+   [1,2]            E: `end_tangent` doesn't go with the start, end, through, arc given: a line is `start` and `end` (with `arc` degrees or a `through` point), `points` (with `arcs` and `closed`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`), or `fit` (with `start_tang
+   {}               E: invalid type: map, expected tuple struct P2
+== text 100029: {"guid": "0f0a78f3-8210-4855-9351-5cdea5b4a006", "category": "text", "view": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "at": [0.0, 15000.0], "text": "Hello", "type": "05da4634-40a8-4c0d-a787-09850283edc0", "angle": 0.0}
+-- view (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                text 100029: view 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- at (now [0.0, 15000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK at=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- text (now "Hello")
+   "x"              OK text="x"
+-- type (now "05da4634-40a8-4c0d-a787-09850283edc0")
+   "x"              text 100029: there's no text type `x` (there are: 2.5mm, 3.5mm, 5mm)
+-- size (now "<absent>")
+   1.5              text 100029: a note's size is its text type's; give it a `type` of that size (text_type makes one)
+   5                text 100029: a note's size is its text type's; give it a `type` of that size (text_type makes one)
+   -1               text 100029: a note's size is its text type's; give it a `type` of that size (text_type makes one)
+   null             OK (no change)
+-- angle (now 0.0)
+   1.5              OK angle=1.5
+   5                OK angle=5.0
+   -1               OK angle=-1.0
+-- leader (now "<absent>")
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             OK (no change)
+   [1,2]            OK leader=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- override_format (now "<absent>")
+   true             OK override_format=true
+-- runs (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             E: invalid type: null, expected a sequence
+   [1,2]            E: invalid type: integer `1`, expected struct Run
+   [[1,2],[3,4]]    text 100029: run 0 overrides nothing; give it `bold`, `italic` or `underline`
+   {}               E: invalid type: map, expected a sequence
+== dimension 100030: {"guid": "411a40ed-9834-4b50-a8e5-d0b0fcec55ad", "category": "dimension", "level": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "kind": "aligned", "refs": [{"id": "a7b0baff-5093-41ff-a3df-6e5bb376c300", "face": "start"}, {"id": "a7b0baff-5093-41ff-a3df-6e5bb376c300", "face": "end"}], "at": [4000.0, -1000.0], "type": "9c231122-63e0-48fd-ad61-01ff30efe594"}
+-- level (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              modify: no level or plan view named `x` (the levels are: Level 1, Level 2)
+   1.5              E: 1.5 is not an element id
+   5                dimension 100030: level 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- view (now "<absent>")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                dimension 100030: view 5 isn't a plan view of its level
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             OK (no change)
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- kind (now "aligned")
+   "x"              E: unknown variant `x`, expected one of `aligned`, `linear`, `angular`, `radial`, `diameter`, `arc_length`
+   1.5              E: invalid type: floating point `1.5`, expected string or map
+   5                E: invalid type: integer `5`, expected string or map
+   -1               E: invalid type: integer `-1`, expected string or map
+   true             E: invalid type: boolean `true`, expected string or map
+   null             E: invalid type: null, expected string or map
+   [1,2]            E: invalid type: sequence, expected string or map
+   [[1,2],[3,4]]    E: invalid type: sequence, expected string or map
+   {}               E: invalid value: map, expected map with a single key
+-- orient (now "<absent>")
+   "x"              E: unknown variant `x`, expected `horizontal` or `vertical`
+   1.5              E: invalid type: floating point `1.5`, expected string or map
+   5                E: invalid type: integer `5`, expected string or map
+   -1               E: invalid type: integer `-1`, expected string or map
+   true             E: invalid type: boolean `true`, expected string or map
+   null             OK (no change)
+   [1,2]            E: invalid type: sequence, expected string or map
+   [[1,2],[3,4]]    E: invalid type: sequence, expected string or map
+   {}               E: invalid value: map, expected map with a single key
+-- refs (now [{"id": "a7b0baff-5093-41ff-a3df-6e5bb376c300", "face": "start"}, {"id": "a7b0baff-5093-41ff-a3df-6e5bb376c300", "face": "end"}])
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             E: invalid type: null, expected a sequence
+   [1,2]            E: invalid type: integer `1`, expected struct Reference
+   [[1,2],[3,4]]    E: invalid type: integer `2`, expected string or map
+   {}               E: invalid type: map, expected a sequence
+-- at (now [4000.0, -1000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK at=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- type (now "9c231122-63e0-48fd-ad61-01ff30efe594")
+   "x"              dimension 100030: there's no dimension type `x` (there are: Arrow - 2.5mm Arial, Diagonal - 2.5mm Arial)
+-- prefix (now "<absent>")
+   "x"              OK prefix="x"
+-- suffix (now "<absent>")
+   "x"              OK suffix="x"
+-- above (now "<absent>")
+   "x"              OK above="x"
+-- below (now "<absent>")
+   "x"              OK below="x"
+-- replace (now "<absent>")
+   "x"              OK replace="x"
+-- equality (now "<absent>")
+   true             OK equality=true
+-- texts (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             E: invalid type: null, expected a sequence
+   [1,2]            E: invalid type: integer `1`, expected struct SegmentText
+   {}               E: invalid type: map, expected a sequence
+-- equal (now "<absent>")
+   true             dimension 100030: only an aligned or a linear dimension of two segments or more is kept equal
+-- locked (now "<absent>")
+   "x"              E: invalid type: string "x", expected a sequence
+   1.5              E: invalid type: floating point `1.5`, expected a sequence
+   5                E: invalid type: integer `5`, expected a sequence
+   -1               E: invalid type: integer `-1`, expected a sequence
+   true             E: invalid type: boolean `true`, expected a sequence
+   null             E: invalid type: null, expected a sequence
+   [1,2]            E: invalid type: integer `1`, expected struct Lock
+   [[1,2],[3,4]]    OK locked=[{"segment": 1, "length": 2.0}, {"segment": 3, "length": 4.0}]
+   {}               E: invalid type: map, expected a sequence
+-- alignment (now "<absent>")
+   true             OK alignment=true
+== tag 100031: {"guid": "a6405c35-efdc-4fb6-88bc-a06c65e145de", "category": "tag", "host": "8a4547d5-3c42-4714-9689-b793e7be9ec8", "offset": [0.0, -500.0], "leader": false}
+-- host (now "8a4547d5-3c42-4714-9689-b793e7be9ec8")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                tag 100031: element 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- view (now "<absent>")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                tag 100031: view 5 isn't a plan view of its host's level
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             OK (no change)
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- offset (now [0.0, -500.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK offset=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- leader (now false)
+   true             OK leader=true
+-- label (now "<absent>")
+   "x"              tag 100031: door 8a4547d5-3c42-4714-9689-b793e7be9ec8 has no field `x`; its fields are: Mark, Type, Width, Height, Level, Wall, Family, Operation, Count, Phase Created, Phase Demolished, Design Option
+   null             OK (no change)
+== spot 100032: {"guid": "17227561-1268-40e3-8317-577e41537d09", "category": "spot", "view": "34ecd7b4-9b89-43be-9be9-e006210eaab1", "at": [2000.0, 3000.0], "host": "c8387c79-2938-4ac3-8a43-8003abf9b26a"}
+-- view (now "34ecd7b4-9b89-43be-9be9-e006210eaab1")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                spot 100032: view 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             E: invalid type: null, expected an element's GUID, or its id
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- at (now [2000.0, 3000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK at=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- host (now "c8387c79-2938-4ac3-8a43-8003abf9b26a")
+   "x"              E: `x` is not a GUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx) or an id
+   1.5              E: 1.5 is not an element id
+   5                spot 100032: element 5 doesn't exist
+   -1               E: -1 is not an element id
+   true             E: invalid type: boolean `true`, expected an element's GUID, or its id
+   null             spot 100032: a spot elevation in a plan reads an element's top; give `host`
+   [1,2]            E: invalid type: sequence, expected an element's GUID, or its id
+   [[1,2],[3,4]]    E: invalid type: sequence, expected an element's GUID, or its id
+   {}               E: invalid type: map, expected an element's GUID, or its id
+-- slope (now "<absent>")
+   true             OK slope=true
+== section 100033: {"guid": "e6504dd4-643c-4685-b533-01c8bb722102", "category": "section", "name": "Section 1", "start": [-2000.0, 3000.0], "end": [10000.0, 3000.0], "depth": null}
+-- name (now "Section 1")
+   "x"              OK name="x"
+-- start (now [-2000.0, 3000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK start=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- end (now [10000.0, 3000.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK end=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- depth (now null)
+   1.5              OK depth=1.5
+   5                OK depth=5.0
+   -1               section 100033 depth must be above zero, got -1
+   null             OK (no change)
+-- crop (now "<absent>")
+   "x"              E: invalid type: string "x", expected an array of length 2
+   1.5              E: invalid type: floating point `1.5`, expected an array of length 2
+   5                E: invalid type: integer `5`, expected an array of length 2
+   -1               E: invalid type: integer `-1`, expected an array of length 2
+   true             E: invalid type: boolean `true`, expected an array of length 2
+   null             OK (no change)
+   [1,2]            section 100033: its crop runs from a bottom up to a top above it, not from 1 to 2
+   {}               E: invalid type: map, expected an array of length 2
+-- graphics (now "<absent>")
+   "x"              E: invalid type: string "x", expected struct Graphics
+   1.5              E: invalid type: floating point `1.5`, expected struct Graphics
+   5                E: invalid type: integer `5`, expected struct Graphics
+   -1               E: invalid type: integer `-1`, expected struct Graphics
+   true             E: invalid type: boolean `true`, expected struct Graphics
+   null             E: invalid type: null, expected struct Graphics
+   {}               OK (no change)
+== elevation 100034: {"guid": "019292a7-f392-41d8-aa9a-16d7cbf1e2f1", "category": "elevation", "name": "South", "start": [-1100.0, -3100.0], "end": [9100.0, -3100.0], "depth": null}
+-- name (now "South")
+   "x"              OK name="x"
+-- start (now [-1100.0, -3100.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK start=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- end (now [9100.0, -3100.0])
+   "x"              E: invalid type: string "x", expected tuple struct P2
+   1.5              E: invalid type: floating point `1.5`, expected tuple struct P2
+   5                E: invalid type: integer `5`, expected tuple struct P2
+   -1               E: invalid type: integer `-1`, expected tuple struct P2
+   true             E: invalid type: boolean `true`, expected tuple struct P2
+   null             E: invalid type: null, expected tuple struct P2
+   [1,2]            OK end=[1.0, 2.0]
+   {}               E: invalid type: map, expected tuple struct P2
+-- depth (now null)
+   1.5              OK depth=1.5
+   5                OK depth=5.0
+   -1               elevation 100034 depth must be above zero, got -1
+   null             OK (no change)
+-- crop (now "<absent>")
+   "x"              E: invalid type: string "x", expected an array of length 2
+   1.5              E: invalid type: floating point `1.5`, expected an array of length 2
+   5                E: invalid type: integer `5`, expected an array of length 2
+   -1               E: invalid type: integer `-1`, expected an array of length 2
+   true             E: invalid type: boolean `true`, expected an array of length 2
+   null             OK (no change)
+   [1,2]            elevation 100034: its crop runs from a bottom up to a top above it, not from 1 to 2
+   {}               E: invalid type: map, expected an array of length 2
+-- graphics (now "<absent>")
+   "x"              E: invalid type: string "x", expected struct Graphics
+   1.5              E: invalid type: floating point `1.5`, expected struct Graphics
+   5                E: invalid type: integer `5`, expected struct Graphics
+   -1               E: invalid type: integer `-1`, expected struct Graphics
+   true             E: invalid type: boolean `true`, expected struct Graphics
+   null             E: invalid type: null, expected struct Graphics
+   {}               OK (no change)
+== sheet 100035: {"guid": "5da7309a-895b-401a-bd20-494e4fa0babc", "category": "sheet", "number": "A101", "name": "Unnamed", "size": "A3"}
+-- number (now "A101")
+   "x"              OK number="x"
+-- name (now "Unnamed")
+   "x"              OK name="x"
+-- size (now "A3")
+   "x"              sheet 100035: size `x` isn't A0, A1, A2, A3 or A4, or an Arch / ANSI size

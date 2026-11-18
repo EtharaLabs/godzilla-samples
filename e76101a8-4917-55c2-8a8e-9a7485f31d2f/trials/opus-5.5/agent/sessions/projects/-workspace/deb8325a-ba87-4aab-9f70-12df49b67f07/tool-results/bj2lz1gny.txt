@@ -1,0 +1,181 @@
+## Drive it from agents, MCP and the CLI
+
+`bimcraft-cli mcp` serves the [Model Context Protocol](https://modelcontextprotocol.io) over stdio, on a model of its own.
+Add it to Claude Code:
+
+```sh
+claude mcp add bimcraft -- /path/to/bimcraft-cli mcp
+```
+
+or to any MCP client's configuration:
+
+```json
+{ "mcpServers": { "bimcraft": { "command": "/path/to/bimcraft-cli", "args": ["mcp"] } } }
+```
+
+| Tool | What it does |
+|---|---|
+| `execute {command, params}` | Any command with JSON parameters |
+| `script {text, atomic?}` | Several commands, one per line; `atomic`: all or nothing, one undo step |
+| `list_commands {filter?}` | The catalog, with parameters and shortcuts |
+| `inspect_model` | Levels, counts, types, warnings and undo history |
+| `query_elements {category?, level?}` | Elements with derived values: wall length and height, room area, door position |
+| `schedule {name?, category?, fields?, filters?, sort?, grouped?}` | A schedule's columns, rows and totals; a new one, or one changed, as the command makes it |
+| `render {view?, ceiling?, width?, height?, azimuth?, elevation?}` | A level's floor plan (or reflected ceiling plan), a section or elevation by name, a sheet by number, or with `view: "{3D}"` the 3D view, as a PNG the agent can look at |
+| `new_model`, `open`, `save` | Projects; `open` imports `.ifc` files, `save` to `.ifc`, `.svg` or `.png` exports |
+
+A command that fails comes back as a tool error saying what to fix (`door: no wall at [4000, 3000] on Level 1`), and it
+changes nothing.
+
+### On the project you have open
+
+Start the window with `--control PORT` (`0` for any free port) and an agent can work on the project in front of you instead of
+a copy of its own: what it makes appears in the window, as an undo step you can take back, and is saved with Ctrl+S.
+
+```sh
+bimcraft --control 0                       # the window says the port; bridge.json beside the favorites holds it and a token
+claude mcp add bimcraft -- /path/to/bimcraft-cli mcp --connect
+```
+
+`mcp --connect` takes the port from that file (or `--connect PORT` names it, which must be the window's). The port is on this
+machine's own address only, a connection that does not say the token in its first line is dropped, and only the user can read
+the file. The tools are the same, except `new_model` and `open`, which would replace your project: start or open another in
+the window. The window answers between its frames, so a long command holds the window as it would from a button.
+
+File > Settings > Agents opens the same port without `--control` (and again at each start), on a port you choose or any free one,
+and closes it. With **Allow agents to edit this project** off, an agent only reads your project: it inspects it, reads its schedules,
+renders its views and exports it to new files (the sheets to PDF among them), and every change it asks for comes back as an error
+that says so. The view control bar shows the port: off, listening on its number, or how many agents are connected, and read-only.
+An agent's own side can ask the same: `bimcraft-cli mcp --connect --read-only`, or `bimcraft-cli mcp --read-only house.bimcraft`
+for a headless server that opens the file and then only reads it.
+
+## Commands
+
+| Command | Shortcut | Parameters |
+|---|---|---|
+| `autosave` | | `path`: atomically write a native recovery snapshot without changing the project path or undo history |
+| `recover` | | `path`, `project?`: validate and open a recovery snapshot; later Save targets `project`, or asks for Save As without it |
+| `wall` | WA | `points`, `closed?`, `type?`, `level?`, `top_level?`, `top_offset?` (mm above `top_level`, negative below it), `height?`, `base_offset?`, `arc?` (degrees each turns, counter-clockwise), `location?` (`centre`, `core-centre`, `exterior-finish`, `interior-finish`, `exterior-core`, `interior-core`), `attach_top?`, `attach_base?` (a roof or a floor), `room_bounding?` (false: rooms run past it, as Revit's Room Bounding off; `modify` turns it on and off) |
+| `door` | DR | `at`, or `wall` and `offset?`; `type?`, `family?` (a door family's `type`, its first by default), `mark?`, `flip_facing?`, `flip_hand?` |
+| `window` | WN | as `door`, plus `sill?` (a family's `Sill Height` by default) |
+| `sketch` | | `lines` ([[[x, y], [x, y]], …]; an arc [[x, y], [x, y], [x, y]], its ends then a point it passes through): solves a sketch without making anything, the loops it closes into (outlines and their holes) and their area, or every problem with the lines it's about: ends no other line meets, lines that intersect or overlap (a line that crosses itself too), three or more lines at a point. A sketch is solved as the straight pieces its lines are drawn with (an arc or a circle is cut into chords): past 200,000 of them it is refused at once |
+| `edit_boundary` | | `id` (a floor, a ceiling, a roof by footprint or a shaft), `sketch?`: its outline and holes redrawn as one sketch, a line sent back with its `id` keeping it; without `sketch`, the lines it has now, each with its id once it has one |
+| `floor` | | `boundary?` (else the walls of the level) or `sketch?` (lines, in any order, solved into its outline and openings), `openings?` (holes in it, inside it and apart; over the walls, by default each loop of them standing free inside, joined to none of the outer ones and with no room in it), `level?`, `type?`, `offset?` (its top above the level), `slope?` (degrees) and `arrow?` (its tail and head: it rises from the tail toward the head), `structural?` (a floor that carries load, as Revit's Floor: Structural). An outline, and each opening, is simple: no edge across another or along it, none ending part way along one, no spike or keyhole slit (`ceiling`, `roof`, `shaft`, `modify`, `move` and `edit_boundary` hold to it too, saying which edges); a saved file that has one still opens. Its model pattern starts at `pattern_origin` and turns by `pattern_angle` (set with `modify`) |
+| `ceiling` | | `point` (in a room: out to its walls' faces, open round the walls standing free inside it), `boundary` or `sketch`, `openings?` (holes in it, inside it and apart), `level?`, `type?`, `offset?` (its underside above the level, 2600) |
+| `shaft` | | `boundary` or `sketch`, `level?`, `top_level?`, `height?`, `base_offset?`: a hole through the floors, ceilings and roofs on its way |
+| `room` | RM | `point`, `name?`, `number?`, `level?`, `top_level?`, `limit_offset?`, `base_offset?`, `frozen?` (keeps its boundary: it isn't found from the walls again) |
+| `room_separator` | | `points` [[x, y], …], `level?`, `closed?`: room separation lines, one per segment, that bound rooms where there is no wall (an open plan) and nothing else |
+| `column` | CL | `at`, `type?`, `angle?`, `level?`, `top_level?`, `height?`, `base_offset?` |
+| `structural_column` | CL | as `column`, in its own category and types |
+| `reinforcement_preset` | | `name?`, `kind?` (beam, column, footing, floor), `params?` (what `reinforce` takes, but the host), `rename?`, `delete?`: a named set of parameters, kept in the project; no `name` lists them |
+| `voltage` | | `name?`, `nominal?` (volts), `min?`, `max?` (the band a device may read within; 10 per cent either way unless given), `rename?`, `delete?`: a voltage of the electrical settings; one a distribution system supplies cannot be deleted; no `name` lists them |
+| `distribution_system` | | `name?`, `phases?` (1, 2, 3), `wires?` (the line conductors and the neutral), `l_l?`, `l_n?`, `l_g?` (names of voltages; "" takes one away), `ground?` (TN-S, TN-C, TN-C-S, TT, IT), `rename?`, `delete?`: a distribution system of the electrical settings; a voltage the project lacks is refused; no `name` lists them |
+| `wire_type` | | `name?`, `material?` (copper, aluminium), `temperature?` (°C), `insulation?`, `note?`, `sizes?` (`[{section, ampacity, label?}]`, mm² and amperes, which replaces the table), `rename?`, `delete?`: a wire type of the electrical settings; no `name` lists them |
+| `reinforce` | | `host` (a beam, a column, a footing or a floor) or `hosts` (a list), `preset?`, `cover?`, `grade?`, `grade_stirrup?`, `clearance?`, and by host: `bottom`, `top`, `stirrup`, `skin`, `anchor` (beam), `bars`, `stirrup`, `ties`, `anchor` (column), `mesh` (footing), `bottom`, `top` (floor), `check?`, `aggressiveness?`, `fck?`: bars by rules, as `rebar` elements on layers, and notes from the check |
+| `footing` | FI | `at`, `type?`, `thickness?` (400), `offset?` (its top over the level, 0), `angle?`, `level?`: an isolated footing |
+| `beam` | BM | `points`, `closed?`, `type?`, `level?`, `offset?` (the height of its `justify` line over the level at its start, 0), `end_offset?` (at its end, for one segment: it slopes), `justify?` (`top`, `centre`, `bottom`), `system?`: a beam for each segment |
+| `pipe` | PI | `points`, `closed?`, `type?`, `level?`, `offset?` (the height of its `justify` line over the level at its start, 0), `end_offset?` (at its end, for one segment: it falls or rises, or stands if the two points are one), `justify?` (`centre` by default), `system?`: a pipe for each segment |
+| `conduit` | CN | as `pipe`: a conduit (eletroduto) for each segment, round |
+| `cable_tray` | CT | as `pipe`, its type a `width` across by a `depth` deep: a cable tray (eletrocalha) for each segment |
+| `wire` | EW | as `pipe`: a wire (condutor) for each segment, round; its `system` the circuit |
+| `down_conductor` | DC | as `pipe`: a down conductor (condutor de descida) for each segment; the same point twice and two heights stand it upright |
+| `ground_conductor` | GC | as `pipe`: an earthing conductor (the ring or mesh), usually under the level (a negative `offset`) |
+| `cabling` | CB | as `pipe`: structured cabling for each segment, round; its `system` the link or the network |
+| `strip_footing` | FW | `points`, `closed?`, `type?`, `level?`, `offset?` (its top over the level, 0), `system?`: a footing under a wall for each segment |
+| `stair` | | `start`, `end?` or `angle?` (the way it climbs), `level?`, `top_level?`, `height?`, `width?`, `riser?` (the most each riser may rise), `tread?`, `landings?` ([{`at`, `turn`}]: after `at` risers, the next run going on (0), turned left or right (90, -90), or back beside it (180, -180)), `railings?` |
+| `ramp` | | `start`, `end?` or `angle?`, `level?`, `top_level?`, `height?`, `width?`, `slope?` (percent, 8.33), `landings?` (`at` mm up), `railings?` |
+| `railing` | | `host` (a stair or a ramp) and `side?` (`left` or `right`; both by default), or `path`, `level?`, `base_offset?`; `type?` |
+| `roof` | | `level?` (the one above the lowest), `offset?`, `boundary?` (else the walls of the level below) or `sketch?` (its outline and courtyards), `courtyards?` (holes in it with eaves of their own, inside it and apart; over the walls, by default each loop of them standing free inside, joined to none of the outer ones and with no room in it), `overhang?`, `slope?` (0 is flat), `slopes?` (a slope in degrees for each edge, numbered as `gables` are, 0 for the roof's `slope`), `gables?` (edges left upright, edge i from point i to the next, a courtyard's numbered on after the boundary's), `gable?` (a rectangle's short ends), `extrusion?` (`line`, `profile` of `[along, up]` points, `from?`, `to`: swept across to the line's left), `openings?`, `join?` (a roof it ends against), `type?` |
+| `dormer` | | `host` (a roof), `at` (on its slope: the front wall's middle), `width?`, `height?` (over the roof at the front), `slope?`, `window?` (a window type), `type?` (its walls') |
+| `dimension` | DI | `refs` (each `{id, face?, point?}`: a wall's `centre`, `left` or `right` face, `start` or `end`; a door's or window's `centre`, or its jamb at the `start` or `end` side; a grid's line; with `point: start|end` that line's end; or a point on one, or `{endpoint: [x, y]}`), `at`, `level?`, `kind?` (`aligned`, `linear` with `orient?` horizontal or vertical, `angular` between two lines that meet, `radial` and `diameter` on what is round, `arc_length` along a curved wall or an arc), `type?`, `prefix?`, `suffix?`, `above?`, `below?`, `replace?`, `equality?` |
+| `dimension_constraint` | | `id`, `equal?`, `locked?: [segment, …]`: keep an aligned or linear dimension's segments equal (EQ) or locked at their lengths; what it measures to then moves with what a command moves, or the command is refused |
+| `dimension_text` | | `id`, `segment?`, `prefix?`, `suffix?`, `above?`, `below?`, `replace?`: a dimension's text, or with `segment` (0 west to east, as `labels` lists them) one segment's own |
+| `dimension_type` | | `name?`, `like?`, `rename?`, `delete?` and Revit's type parameters (`string`, `tick`, `tick_size`, `line_pen`, `tick_pen`, `color`, `line_extension`, `witness`, `witness_length`, `witness_gap`, `witness_extension`, `baseline_spacing`, `centre_mark`, `font`, `text_size`, `bold`, `italic`, `underline`, `width_factor`, `text_offset`, `background`, `read`, `units`, `decimals`, `radius_symbol`, `diameter_symbol`, `equality_text`): create, edit, rename or delete a dimension type; without `name`, lists them |
+| `tag` | TG | `ids?` (without them, every door and window on the level not tagged yet, or of `category`), `label?` (the field it shows: any of its category's schedule fields), `level?`, `category?`, `offset?`, `leader?` |
+| `text` | TX | `text`, `at` (its top left), `view?` (a level's plan by default; a section, an elevation, or a sheet by number), `size?` (mm on paper, 2.5), `angle?`, `leader?` |
+| `spot` | EL | `at`, `view?`, `host?`: in a plan, the top of what stands there; in a section or an elevation, the point's height |
+| `section` | CR | `start`, `end` (it looks to the left of the line), `depth?`, `name?` |
+| `elevation` | | `facing?` (north, south, east or west: the side it shows), `at?`, or `start` and `end`; none of them: the four building elevations |
+| `sheet` | | `number?` (A101, A102… by default), `name?`, `size?` (A0 to A4; A3 by default) |
+| `place` | | `sheet` (its number), `view` (a level's, section's, elevation's, schedule's or 3D view's name: Room Schedule, `{3D}`…), `at?` (mm on the paper), `scale?` (100 for 1 : 100), `azimuth?` and `elevation?` for the 3D view |
+| `delete_type` | | `category` and `type`, or `family`, or `family` and `type`: deletes a type of a category, a family, or one of a family's types; refused while an element uses it (it says how many) and for the last type of a category or of a family |
+| `rename_type` | | `category` and `type`, or `family` and `type`, and `name`: renames a type of a category or one of a family's types; what's of it and what names it follow, and it keeps its GUID; refused for a name another type of it has |
+| `purge` | PU | `kinds?` (`type`, `family`, `material`, `picture`, `filter`, `template`; types and families by default), `dry_run?`: takes out what nothing uses, again for what that frees; a category keeps a type and a family a type; `dry_run` lists what would go |
+| `duplicate_view` | DP | `view` (a plan: a level's or a plan view's name or id), `mode?` (`duplicate`, `detailing`, `dependent`), `name?`: a new plan view of the same level; `detailing` copies the annotation in it, `dependent` follows its parent's range and graphics |
+| `crop` | | `view`, `region?` (two corners: plan mm, or along a section and up), or `null` to uncrop; none: to what the view shows |
+| `scale` | | `view?`, `scale?` (the n of 1 : n, 1 to 100000; 1 : 100, or 1 : 96 in feet and inches, until set): a plan's, section's or elevation's scale, the paper it stands for, which sizes its annotation and its line weights; a viewport placed with no `scale` takes it; without `scale`, what the view has |
+| `detail` | | `view?`, `detail?` (`coarse`, `medium` or `fine`): how much a plan, a section or an elevation draws of what it cuts; without `detail`, what the view has |
+| `visual_style` | | `view?` (`{3D}`), `style?` (`shaded`, `hidden_line` or `wireframe`): how a 3D view draws its surfaces; the default 3D view comes to be as it is first changed; without `style`, what the view has |
+| `graphic_display_options` | GD | `view?` (`{3D}`), `edges?`, `silhouette?` (px, 0 to 10), `ambient_shadows?`: Revit's Graphic Display Options for a 3D view: its edges on or off in Shaded, a silhouette that wide round what stands against what is behind, soft shadows where faces meet; what is left out stays; with none, what the view has |
+| `graphics` | | `view?` (a level's, section's or elevation's name or id, or `{3D}`), `hide?` and `show?` ([categories]: walls, rooms, grids, levels…), `hide_elements?` and `show_elements?` ([ids]), `categories?` and `elements?` ({category or id: override}; an override is {`hidden?`, `projection?` and `cut?` ({`color?`, `weight?` (a pen: 0 a hairline at any scale, 1 to 16 from 0.10 to 2 mm on paper at 1 : 100), `dash?` (`solid`, `dashed`, `dotted`), `fill?`}), `halftone?`, `transparency?` (percent, seen in 3D)}, merged into the last, null takes it away), `filters?` ([{`filter`, plus an override's fields}, …], the first prevailing), `template?` (a view template's name, or null), `phase?` and `phase_filter?` (names, or null), `options?` ({set: option, null takes the choice away}), `reset?`: what a view hides and how it draws the rest; none of them: the view's settings as they are |
+| `filter` | | `name`, `categories?` (any a schedule can be of), `rules?` ([{`field`, `op`, `value`}, …] as a schedule's `filters`), `delete?`: a view filter, and the ids it picks out; a view applies it with `graphics` |
+| `template` | | `name`, `from?` (a view to take the categories, filters, a plan's view range, scale, detail level and visual style from, and its kind), `like?` (a template to copy), `kind?` (`plan`, `section`, `3d`, null for any), `rename?`, `controls?` ([`categories`, `filters`, `range`, `phase`, `options`, `scale`, `detail`, `style`]), `view_range?`, `scale?`, `detail?`, `visual_style?`, the changes `graphics` makes to a view's categories, filters, phase and options, `delete?`: a view template, for views to follow with `graphics {template}`; a view that follows one that controls the scale, the detail level or the visual style can't set it (`scale`, `detail` and `visual_style` refuse) |
+| `phase` | | `name?`, `before?` or `after?` (to add one in place), `rename?`, `delete?` with `into?` (the phase that takes what was in it), `now?` (the phase this session makes elements in), `overrides?` ({`new`, `existing`, `demolished` or `temporary`: an override, null takes it away}): the project's phases in order, and how a phase filter draws a status it says overridden. An element is made in a phase by its `Phase Created` parameter and taken down in one by `Phase Demolished` (`modify {params}`) |
+| `phase_filter` | | `name`, `new?`, `existing?`, `demolished?`, `temporary?` (`by-category`, `overridden` or `not-displayed`), `delete?`: how a view shows each status of what is in its phase; a view applies one with `graphics {phase_filter}` |
+| `option` | | `set?`, `options?` ([names]), `primary?`, `option?`, `rename?`, `delete?`, `accept?`, `now?` (`set: option`, or null: the option this session makes elements in): sets of design options; an element is in one by its `Design Option` parameter, and a view chooses which to show with `graphics {options}` |
+| `level` | LL | `elevation`, `name?`, `extent?` [[x,y],[x,y]] |
+| `measure` | ME | `from`, `to` (points, mm): what a ruler laid between them reads: `length`, `dx`, `dy`, and `angle` in degrees from east, counter-clockwise; it changes nothing |
+| `line_weights` | | `model?` ([{`scale`, `widths`: the 16 pens' widths, mm}, …]), `annotation?` (the 16 pens' widths), `reset?`: the project's Line Weights, each pen's width on paper: the model's at each scale (a view takes the nearest scale's), the annotation's at any; pen 0 is always a hairline; without any, what they are |
+| `object_styles` | | `categories?` ({category: {`projection?`, `cut?`}: pens 0 to 16}), `reset?`: the project's Object Styles, the pen each model category draws its own lines in, seen and cut, in every plan and section, under a view's Visibility/Graphics; without either, each category's |
+| `line_pattern` | | `name?`, `segments?` (1–32 freely ordered Gap/`space`, Straight/`dash`, `dot_length`, `offset`, `wave`, `zigzag`, `text` segments; lengths in paper mm), `rename?`, `delete?`: create/edit a graphic line pattern. Offset has `length`, `count` (2–9), `distance`; waves/zigzags have `length`, `frequency` (cycles per segment), `amplitude`; text has `length`, `size`, `text`, in bundled IBM Plex Sans, flowing along curves. Geometry and dimensions retain the centerline. Without a name, lists every pattern |
+| `line_style` | | `name?`, `pen?` (0 to 16), `color?`, `pattern?` (a line pattern's name, or `Solid`), `rename?`, `delete?`: a line style of the project's, what detail lines draw in; without `name`, every one |
+| `fill_pattern` | | `name?`, `target?` (drafting, mm on paper; model, mm in the building), `lines?` ([{`angle`, `spacing`, `origin?`, `shift?`, `dashes?`}, …]; none, solid), `rename?`, `delete?`: a fill pattern, families of lines as a PAT file has them; without `name`, every pattern |
+| `filled_region_type` | | `name?`, `foreground?`, `foreground_color?`, `background?`, `background_color?`, `masking?`, `rename?`, `delete?`: a filled region type; without `name`, every type |
+| `import_fill_patterns` | | `path` or `text` (a PAT file), `replace?` (false): its patterns, in mm unless it says `;%UNITS=INCH`; one the project has is kept unless `replace`. At most 2,000 patterns are read; it returns those `imported`, the first 100 `left_out` each with why, and `left_out_count` of them all |
+| `export_fill_patterns` | | `path?`, `names?`: the project's fill patterns as a PAT file, written to `path` or returned as `text` |
+| `filled_region` | FR | `sketch` (lines, any number of loops), `view?`, `type?` (Solid Black), `line_style?` (Thin Lines; null, invisible): a filled or masking region in one view, over model backgrounds (over the model when masking) and under detail annotation; a non-masking one keeps the ink of the model in plans, elevations, sections and on sheets. Its sketch has to close; its model pattern starts at `pattern_origin` and turns by `pattern_angle` (set with `modify`) |
+| `detail_line` | DL | a curve: `points` ([[x, y], …], with `arcs` and `closed`), `start` and `end` (with `arc` or `through`), `centre` and `radius`, `centre` and `radii` (with `angle` and `span`), `control` (with `knots`) or `fit` (with `start_tangent` and `end_tangent`); `view?` (a level's plan, a section, an elevation or a sheet: in its own terms), `style?` (Thin Lines), `insulation?` (a width: batt insulation along it), `cloud?` (an arc length: a revision cloud along it) with `revision?` (its label), `centre_mark?`: a line, arc, polyline, circle, ellipse or spline drawn in one view only, in a line style (Thin Lines by the project's language). An arc, circle or ellipse lies within 1,000 km of the origin, and a polyline's arcs take no more than 8,192 points to draw within 0.25 mm |
+| `join_polyline` | PJ | `ids`: detail lines meeting end to end joined into one polyline |
+| `create_group` | GP | `ids` (detail lines, filled regions and text notes of one view), `name?`: a detail group type made of them, and one group of it in their place |
+| `detail_group` | | `type`, `at`, `angle?`, `mirrored?`, `view?`: a detail group placed in a view; a view draws up to 10,000 group members in all |
+| `repeating_detail` | | `type`, `start`, `end`, `spacing`, `mirrored?`, `view?`: a detail group repeated along a line, at most 2,000 times, and members times repeats within the 10,000 a view draws |
+| `ungroup` | UG | `id`: a detail group's members as lines, regions and notes of the view again |
+| `group_type` | | `name?`, `rename?`, `delete?`: a detail group type; without `name`, every one with its members and how many are placed |
+| `linework` | LW | `view?`, `id`, `at`, `style?` or `invisible?` or `remove?`: the edge of an element a plan draws nearest `at` drawn in a line style in that view only (at most 2,000 edges a view); `remove` takes the nearest one off again |
+| `explode` | EX | `id`: a polyline taken apart into lines and arcs (Revit has no shortcut; PX is the desktop's Plumbing Fixture) |
+| `vertex` | | `id`, `at`, `delete?`: a vertex more (or fewer) in a polyline or a spline; a control point added keeps the curve |
+| `convert_spline` | | `id`: a spline through points to the same curve by control points, or back within 0.05 mm |
+| `fillet` | FL | `ids` (two straight detail lines, or two walls), `radius`: the corner rounded by an arc, the lines cut back to it (a wall's doors and windows stay where they stand in plan, as in `corner`, and only their offset along the wall changes) |
+| `units` | UN | `length?` (`mm`, `cm`, `m`, `in`, `ft` or `ft-in`): how lengths show in drawings, schedules and the desktop; commands keep mm |
+| `room_area` | | `at?` (`centre` or `finish`): where rooms are measured, at the walls' centre lines or at their faces |
+| `language` | | `code?` (`en`, `pt`, `es`, `sv`, `cs`, `fr` or `de`): the language the project's drawings print and new names come in; names already given stay |
+| `grid` | GR | `start`, `end`, `name?` |
+| `point_cloud` | | `path` (a PTS, XYZ, PLY, LAS or E57 scan, or a list of a survey's station files) or `cloud` (one the project holds), `name?`, `level?`, `at?`, `offset?`, `angle?`, `units?` (`m` by default), `spacing?` (one point in each cube that wide), `origin?` (`centre`, its middle on `at` and its foot on the level; or `file`, where its coordinates put it). Drawn in the 3D view, plans and sections, snapped to in plans; IFC export leaves it out |
+| `type` | | `category` (a column's, a structural column's, a footing's, a beam's, a strip footing's or a pipe's types are a `width` by `depth`, or `round`; a run's also its `material`), `name`, and its sizes: creates the type, or edits it everywhere it's used; a wall, floor, roof or ceiling type's `layers` [{`function?`, `material?`, `thickness`}, …], a wall's exterior first and the others' top first, make up its thickness |
+| `family` | | `name`, `category?` (`furniture`, `casework`, `plumbing`, `lighting`, `generic`), `parameters?` [{`name`, `kind?` (`length`, `number`, `angle`, `yesno`, `material`), `instance?`, `value?`, `formula?`}, …], `types?` {type: {parameter: value}} (merged in; a null takes one away), `forms?` [{`plane?` (`xy`, `xz`, `yz`), `profile?` [[a, b], …] or `circle?` {`centre`, `radius`}, `from?`, `to`, `material?`, `visible?`}, …], `rename?`, `delete?`, `path?` (a .json file), `save?` (a .json file): a family, created, changed, loaded or saved; sizes in mm or formulas over its parameters. A form may have an `axis` [[a, b], [a, b]] in its plane (it's turned about it from `from` to `to` degrees, up to 360) and be a `void` (it cuts the solid forms listed before it); `category` may be `door` or `window`: a family hosted in a wall, saying how it opens with `operation?` (`swing`, `double-swing`, `sliding`, `double-sliding`, `folding` or `fixed`), with length parameters `Width` and `Height`, drawn in the opening's axes (x along the wall from its middle, y across it, + toward its exterior, z up from the sill) and reading `Wall Thickness`, and `symbols?` [{`line?` [[x, y], …] or `arc?` {`centre`, `radius`, `from?`, `to`}, `visible?`}, …]: the lines its plan draws |
+| `component` | CM | `family`, `type?` (its first), `at`, `level?`, `angle?`, `offset?`, `mirrored?`, `params?` {parameter: value}: a family's type placed |
+| `parameter` | | `name`, `kind?` (`text`, `number`, `length`, `yesno`), `categories?` (`wall`, `floor`, `ceiling`, `roof`, `door`, `window`, `room`, `column`, `structuralcolumn`, `footing`, `beam`, `stripfooting`, `pipe`, `conduit`, `cabletray`, `wire`, `downconductor`, `groundconductor`, `cable`, `component`, `stair`, `ramp`, `railing`), `rename?`, `delete?`: a project parameter; an element of its categories holds a value of it with `modify {id, params: {name: value}}` |
+| `schedule` | | `name?`, `category?`, `fields?` [a field's name, or {`name`, `formula?`, `kind?` (`number`, `length`, `area`, `yesno`), `heading?`, `total?`}, …], `filters?` [{`field`, `op` (`equals`, `not-equals`, `greater`, `greater-or-equal`, `less`, `less-or-equal`, `contains`, `not-contains`, `begins-with`, `not-begins-with`, `ends-with`, `not-ends-with`, `has-value`, `has-no-value`), `value?`}, …], `sort?` [a field's name, or {`field`, `descending?`}, …] (`Phase Created` and `Phase Demolished` go by the project's order of phases, a phase never demolished after the last), `grouped?`, `path?` (.csv, or .xlsx for a workbook whose numbers a spreadsheet sums): a schedule made or changed, and its columns, rows and totals; `category` alone reads its own (Room Schedule…); `available` lists the fields there are |
+| `material` | | `name`, `color?` (`#rrggbb` or `[r, g, b]`), `cut?` and `surface?` (`none`, `solid`, `diagonal`, `crosshatch`, `horizontal`, `vertical`, `grid`, `brick`, `concrete`, `insulation`), `texture?` ({`kind?` (`brick`, `block`, `boards`, `concrete`, `plaster`, `tile`, `roof`, `fabric`, `metal`, `insulation` or `image`), `size?` [width, height] mm, `angle?`, `offset?` [x, y], `path?` (a PNG or JPEG file taken into the project), `image?` (a picture's id)}, or null), `rename?`, `delete?`: a material of the project's library, created or changed; layers pick theirs from it |
+| `paint` | PT | `id` or `ids`, `face?` (a wall's `exterior` or `interior`; a floor's, roof's or ceiling's `top` or `bottom`; `all`), `material` (null takes the paint off): a face of the elements painted with a material of the library, shown in the 3D view over what their types are made of |
+| `favorite` | | `action?` (`list`, `save`, `load`, `delete`), `kind?` (`material` or `family`), `name?`, `as?`, `replace?`, `path?`: the favorites kept for every project in a file of the user's own; a material is kept with its picture, a family with the materials it's made of |
+| `flip` | | `ids`: turns walls round about their location lines, their exterior side to the other side; their doors and windows stay where they are |
+| `modify` | | `id` (or `ids`, several in one step) and the fields to change; into a field that is an object, such as a level's `view_range` (`top`, `cut`, `bottom`, `depth`), they merge |
+| `move` | MV | `ids`, `by`; `end` to move one end of a wall |
+| `copy` | CO | `ids`, `by` |
+| `rotate` | RO | `ids`, `about`, `angle` in degrees, `copy?` |
+| `mirror` | MM, DM | `ids`, `axis` (two points), `copy?` |
+| `corner` | TR | two `ids`, walls or detail lines (lines and arcs, of one view), `keep?` (a point on the part of each to keep) |
+| `trim_extend` | | `boundary` (a detail line, a wall or a grid), `ids` (detail lines of the boundary's view), `keep` (a point on each): each trimmed or extended to the boundary |
+| `offset` | OF | `id` (a detail line), `distance`, `toward` (a point on the side), `copy?` (true): the line drawn again beside itself, arcs round the same centres; a polyline moves each side and makes its corners where the moved sides meet |
+| `split` | SL | `id` (a wall or a detail line of any shape), `at` |
+| `delete` | DE | `ids` |
+| `undo`, `redo` | | `count`: how many steps (1 by default) |
+| `inspect`, `elements`, `render` | | read the model |
+| `new`, `open`, `save` | | projects; `new` takes `name?` and `language?`; `open` imports IFC, listing what it left out; `save` exports by extension |
+| `library` | | `kind?` (`type:wall`, `material`, `family`, `parameter`, `view-filter`, `view-template`, `phase`, `phase-filter`, `option-set`, `design-option`…), `name?`: the library's entries, each with its id, GUID, kind and name |
+| `select_by_id` | | `text` (ids, GUIDs, with or without dashes and braces, or IFC GlobalIds, any number, separated by spaces, commas, semicolons or lines): the elements found, each once in order, what named none, and the plan that shows them with where; a front end selects them |
+| `ids_of` | | `ids`: what names each element: its id, its GUID, its IFC GlobalId, its category and its name |
+| `insert` | | `path` (a .bimcraft or .ifc), `ids?`: Insert from File, those elements of the other project (all of them without `ids`) and what they point at that this one hasn't; an id taken here is given a new one, a GUID already here makes a copy with a GUID of its own |
+| `link` | LK | `path` (a .bimcraft or .ifc, relative to the project's file or not), `name?`, `at?` `[x, y]`, `angle?` (degrees): Link Model, the other project shown in this one as a reference that can't be edited: its built elements (walls, floors, roofs, columns, stairs, runs, components…) are drawn halftone in plans, sections and 3D, and snapped to; nothing of it is selected, scheduled, checked or exported. Stands origin to origin, turned `angle` about it; its levels stand at their own elevations, on the project's where one is at the same height (the others come in named `link: level`). The file is read now, and again by `reload` and when the project opens; the project keeps its path alone. Returns `id`, `name`, `elements` |
+| `reload` | | `id?`: reads the link's file again, or every link's; returns `reloaded` and `failed` |
+| `import_cad` | | `path` (a DXF) or `cad` (a drawing the project holds), `name?`, `level?`, `view?` (one plan only), `at?`, `position?` (`center` or `origin`), `units?` (`auto`, `mm`, `cm`, `m`, `in`, `ft`), `scale?`, `angle?`, `layers?` (`visible`, `all` or a list), `colors?` (`preserve`, `invert`, `black`), `link?`: Import CAD and Link CAD. Returns `id`, the drawing's name, unit, entities, layers, extents, what lies far off and what was left out |
+| `cad_layers` | | `id`, `hide?`, `show?`, `view?`: an import's layers, hidden or shown everywhere or in one view |
+| `reload_cad` | | `cad` (a linked drawing's name): reads its file again, so every import of it shows what the file holds now |
+| `cad_query` | | `id`, `at`, `reach?` (100 mm): the entity of an import nearest a point: its layer, kind, colour and linetype |
+
+A `level` can be given by name or id; without one, commands use the lowest level. `render {view}` draws a plan (with
+`ceiling: true`, its reflected ceiling plan), a section or an elevation by name, a sheet by number (a path ending .pdf prints it), or with `{3D}` (and `azimuth?`, `elevation?`) the 3D
+view. `save` to a .pdf prints every sheet, a page each.
+
+## Roadmap
