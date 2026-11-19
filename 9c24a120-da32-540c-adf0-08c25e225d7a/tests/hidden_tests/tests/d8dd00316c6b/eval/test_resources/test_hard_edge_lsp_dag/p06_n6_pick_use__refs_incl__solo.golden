@@ -1,0 +1,127 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/golf.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 0,
+      "character": 0
+     },
+     "end": {
+      "line": 0,
+      "character": 0
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "imported type `Kind` (from `Echo`) clashes with an existing type"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 7,
+      "character": 8
+     },
+     "end": {
+      "line": 7,
+      "character": 9
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unknown constructor `Echo.KaE`"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": [
+  {
+   "uri": "{root}/echo.pyfun",
+   "range": {
+    "start": {
+     "line": 3,
+     "character": 4
+    },
+    "end": {
+     "line": 3,
+     "character": 9
+    }
+   }
+  },
+  {
+   "uri": "{root}/foxtrot.pyfun",
+   "range": {
+    "start": {
+     "line": 13,
+     "character": 27
+    },
+    "end": {
+     "line": 13,
+     "character": 32
+    }
+   }
+  },
+  {
+   "uri": "{root}/foxtrot.pyfun",
+   "range": {
+    "start": {
+     "line": 15,
+     "character": 40
+    },
+    "end": {
+     "line": 15,
+     "character": 45
+    }
+   }
+  },
+  {
+   "uri": "{root}/golf.pyfun",
+   "range": {
+    "start": {
+     "line": 10,
+     "character": 27
+    },
+    "end": {
+     "line": 10,
+     "character": 32
+    }
+   }
+  }
+ ]
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

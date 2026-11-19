@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def lift(n):
+    return n + 33
+def useHelper(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 8
+    tmp = useHelper(lift)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [7]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + useHelper(1)
+    else:
+        return 0
+beta = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, beta, third, useHelper(0)))
+def layer(start):
+    level = start
+    g0 = lambda y: level + y
+    level = level * 4
+    def g1(y):
+        return level * y
+    level = g1(level)
+    g2 = lambda y: level + y
+    level = level * 5
+    return (g0(3), g1(1), g2(5), level)
+print(layer(9))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [4, 2, 3, 6]))
+print(_pf_str_rev(str.upper("max")))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "100"])))
+reversed_ = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+str_ = "tom"
+print((str(2), str_, _pf_str_concat(str_, str(1))))
+len_ = 2
+print((len([1, 2, 3]) + len_, len("abc")))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([0, 9, 2, 0]), _pf_sort([3, 1, 2])))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(4, 7, 1))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(1231, 0))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [18, 2, 27, 22, 0]))
+--- stderr ---

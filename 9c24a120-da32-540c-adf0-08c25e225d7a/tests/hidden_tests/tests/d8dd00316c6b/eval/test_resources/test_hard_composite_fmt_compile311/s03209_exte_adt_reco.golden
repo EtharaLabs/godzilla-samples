@@ -1,0 +1,126 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    def __repr__(self):
+        return "Halt"
+_Halt = Halt()
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    def __repr__(self):
+        return "Mark"
+_Mark = Mark()
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Store({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("100") + int("121", base=8))
+print(_pf_str_rev(str.upper("tom")))
+def explain(t):
+    match t:
+        case Rest(n0) if n0 > 9:
+            return f"rest!({n0})"
+        case Rest(n0):
+            return f"rest({n0})"
+        case Store(n0, s1) if 0 <= n0 < 11:
+            return f"store!({n0},{s1})"
+        case Store(n0, s1):
+            return f"store({n0},{s1})"
+        case Halt() | Mark():
+            return "halt/mark"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def score(t):
+    match t:
+        case Rest(x0):
+            return x0 * 3
+        case Halt():
+            return 5
+        case Mark():
+            return 8
+        case _:
+            return 0
+batch = [Store(3, "ivy"), Rest(3), _Mark, Store(-1, "cy"), _Mark]
+print(_pf_str_join(" ", _pf_map(explain, batch)))
+grandSum = _pf_sum_by(score, batch)
+print(f"grandSum={grandSum}")
+print(len(_pf_filter(lambda t: score(t) > 5, batch)))
+parcels = [Invoice(100, "ned", 134, False), Invoice(101, "max", 290, False), Invoice(102, "eli", 258, False), Invoice(103, "max", 266, False), Invoice(104, "eli", 254, True)]
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(rushSum)
+cheap, dear = _pf_partition(lambda o: o.amount < 119, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, parcels))
+print(byOwner)
+def _pf_fn1(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn1, (0, 0), parcels)
+print(f"{cnt} records, {sumAmt} total")
+def classify(o):
+    match o:
+        case Invoice(urgent=True, amount=amount) if amount > 88:
+            return "rush-big"
+        case Invoice(urgent=True):
+            return "rush"
+        case Invoice(amount=amount):
+            if amount > 88:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(classify, parcels))
+print(_pf_count_by(classify, parcels))
+--- stderr ---

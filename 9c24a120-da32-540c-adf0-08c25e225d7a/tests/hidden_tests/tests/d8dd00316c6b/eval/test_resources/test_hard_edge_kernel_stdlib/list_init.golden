@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+00000002ok00000041List.init : int -> (int -> 'a) -> List 'a0000000000000002ok0000000000000120def _pf_init(n, f):
+    out = []
+    for i in range(max(n, 0)):
+        out.append(f(i))
+    return out
+print(_pf_init)
+--- stderr ---

@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def g(acc, x):
+    match acc:
+        case (names, log):
+            return (_pf_map_add(x, x, names), _pf_concat(log, [names]))
+match _pf_fold(g, (dict(), []), [1, 2]):
+    case (m, log):
+        _pf_t0 = (len(m), _pf_map(len, log))
+out = _pf_t0
+--- stderr ---

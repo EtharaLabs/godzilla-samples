@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let build sel xs =
+    let step acc x = ((List.concat acc) [(x + 100)])
+    (match sel: case (Some step): (((List.fold step) []) xs) case None: [])
+let out = ((build (Some (fun acc x -> ((List.concat acc) [(x * 2)])))) [1, 2, 3])
+--- stderr ---

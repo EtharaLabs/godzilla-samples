@@ -1,0 +1,162 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True)
+class Pilot:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def grow(n):
+    return n * 4
+def _pf_fn0():
+    _pf_t0 = [8, 2]
+    if _pf_t0:
+        grow = _pf_t0[0]
+        return grow + 1
+    else:
+        return 0
+picked = _pf_fn0()
+print((picked, grow(7)))
+def cross(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn1(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn1, pairs))
+print(cross([(8, 5), (8, 3)]))
+def outer(xs):
+    def twice(x):
+        return x * 2
+    def go(twice):
+        return twice + 1
+    return _pf_map(lambda x: go(twice(x)), xs)
+print(outer([2, 7, 7]))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t1 = p
+            return Active(Pilot(_pf_t1.name, p.age + 1))
+        case Parked(t) if t.size > 5:
+            _pf_t2 = t
+            return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [_Gone, Active(Pilot("ada", 20)), Parked(Crew("pin", 2))])
+print(roster)
+members = [Pilot("quin", 5), Pilot("bo", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+def done(acc):
+    async def _pf_fn2():
+        return acc
+    return _pf_Async(_pf_fn2)
+def loop(n, acc):
+    async def _pf_fn4():
+        async def _pf_fn3():
+            return n * 3
+        k = await _pf_fn3()
+        if n <= 0:
+            return await done(acc)
+        else:
+            return await loop(n - 1, acc + k)
+    return _pf_Async(_pf_fn4)
+print(asyncio.run(_pf_run(loop(31, 0))))
+def digits(n, acc):
+    while True:
+        if n < 10:
+            return acc + 1
+        else:
+            n, acc = (n // 10, acc + 1)
+            continue
+async def _pf_fn5():
+    a = await loop(4, 0)
+    return digits(a * 72297, 0)
+main = _pf_Async(_pf_fn5)
+print(asyncio.run(_pf_run(main)))
+log = ["fay", "ada", "eli", "cy", "cy", "fay", "cy", "fay"]
+m = dict()
+for w in log:
+    _pf_t3 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t3
+hist = m
+def _pf_fn6(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn6, _pf_map_to_list(hist)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, hist))))
+--- stderr ---
+note: `loop` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

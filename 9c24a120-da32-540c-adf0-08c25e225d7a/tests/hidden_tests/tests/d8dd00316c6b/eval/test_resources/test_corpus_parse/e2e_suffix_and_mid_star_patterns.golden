@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+let lastOr fallback xs =
+    match xs:
+        case [*_, last]: last
+        case []: fallback
+let bounds xs =
+    match xs:
+        case []: 0
+        case [x]: x
+        case [first, *mid, last]: ((first + last) + (List.len mid))
+let a = ((lastOr 0) [5, 6, 7])
+let b = ((lastOr 9) [])
+let c = (bounds [1, 2, 3, 4])
+let d = (bounds [7])
+--- stderr ---

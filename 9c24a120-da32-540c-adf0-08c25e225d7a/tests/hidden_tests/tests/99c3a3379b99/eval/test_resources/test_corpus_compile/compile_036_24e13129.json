@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _pf_drop(n, xs):\n    return xs[max(n, 0):len(xs)]\ndef _pf_split_at(n, xs):\n    m = max(n, 0)\n    return (xs[0:m], xs[m:len(xs)])\ndef _pf_take(n, xs):\n    return xs[0:max(n, 0)]\ndef _pf_head(xs):\n    return Some(xs[0]) if xs else _None_\ndef _pf_tail(xs):\n    return Some(xs[1:len(xs)]) if xs else _None_\nxs = [3, 1, 4, 1, 5]\nfirst = _pf_head(xs)\nnone = _pf_head(_pf_drop(9, [1]))\nrest = _pf_tail(xs)\ntaken = _pf_take(2, xs)\ndropped = _pf_drop(3, xs)\noverTake = _pf_take(99, xs)\nnegTake = _pf_take(-1, xs)\nsplit = _pf_split_at(2, xs)\n",
+ "stderr": ""
+}

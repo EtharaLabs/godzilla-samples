@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+let ins x acc = ((List.concat [x]) acc)
+let rev xs = (((List.fold (fun acc x -> ((ins x) acc))) []) xs)
+let out = (rev [1, 2, 3])
+--- stderr ---

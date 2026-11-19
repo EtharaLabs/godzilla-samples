@@ -1,0 +1,63 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+legs = [301.4, 344.6, 338.4, 378.8, 374.2]
+durations = [75.0, 15.7, 45.9, 72.1, 82.7]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+dur = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = dist / dur
+print(_pf_fmt_fixed(1, rate))
+edge = math.sqrt(4.0)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+speeds = _pf_map2(lambda d, t: d / t, legs, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def build(start):
+    level = start
+    g0 = lambda y: level + y
+    level = g0(level)
+    def g1(y):
+        return level * y
+    level = level + 19
+    return (g0(5), g1(5), level)
+print(build(2))
+dict_ = dict([("k", 9)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+def sum_(a, b):
+    return a - b
+print((sum_(13, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+acc = []
+for k in [7, 2, 2]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def offsets(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 4
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(3, [6, 5, 2]))
+--- stderr ---

@@ -1,0 +1,47 @@
+exit: 0
+--- stdout ---
+let pure margin price qty = ((price * qty) - (5 * qty))
+let emit label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let overall = (([("gear", 40, 3), ("wick", 35, 1), ("tap", 17, 6)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (margin k))
+(print ((scaled 7) [1, 2, 3]))
+module Text =
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let square x = (x * x)
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+let pts = [8, 8, 16, (- 13), 4, 12]
+(print (pts |> (List.map ((Text.clamp 0) 7))))
+(print ((List.map Text.square) pts))
+(print (Text.norm1 pts))
+(print (Text.mean pts))
+let collatz n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((collatz (n // 2)) (acc + 1)) else ((collatz ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((collatz n) 0))) [48, 11, 55]))
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [29, 29, 21, 25, 24]))
+type Cmd = Mark int | Store string string | Skip
+let show t =
+    match t:
+        case (Mark n0) if ((n0 % 2) == 0): f"mark!({n0})"
+        case (Mark n0): f"mark({n0})"
+        case (Store s0 s1): f"store({s0},{s1})"
+        case Skip: f"skip"
+let weight t =
+    match t:
+        case (Store _ _): 5
+        case (Mark x0): x0
+        case _: 3
+let stream = [Skip, ((Store "gus") "fay"), Skip, ((Store "pam") "sue")]
+(print ((String.join " ") ((List.map show) stream)))
+let tally = (stream |> (List.sumBy weight))
+(print f"tally={tally}")
+(print (List.sort stream))
+let values = [40, 38, 10, 41, 39, 29, 16, 1]
+let accept n = ((n > 10) and ((n % 5) != 0))
+let digest = ((List.forall (fun x -> (x >= 0))) ((List.map (fun x -> (if (x < 0) then (- x) else (x * 4)))) ((List.map ((+) 4)) ((List.filter (fun x -> ((x % 4) == 3))) (List.sortDescending ((List.drop 1) (List.sort values)))))))
+(print digest)
+--- stderr ---

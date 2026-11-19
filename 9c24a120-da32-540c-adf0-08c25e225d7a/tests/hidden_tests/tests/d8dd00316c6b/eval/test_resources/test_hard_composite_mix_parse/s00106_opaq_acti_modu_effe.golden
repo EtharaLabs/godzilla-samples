@@ -1,0 +1,34 @@
+exit: 0
+--- stdout ---
+opaque type AccountNo = string
+opaque type Handle = string
+let rawOf x =
+    match x:
+        case (AccountNo s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let keys = ((makeIds "u") 2)
+(print ((keys |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head keys) == (Some (AccountNo "u-1"))))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let kindOf n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([24, 31, 5, 6, (- 3), 9] |> (List.map kindOf)) |> (List.iter print))
+module Calc =
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let between lo hi x = (lo <= x <= hi)
+let obs = [14, 15, 9, (- 8), 15]
+(print ((Calc.scaleAll 5) obs))
+(print (obs |> (List.map ((Calc.clamp 0) 17))))
+(print ((List.filter ((Calc.between (- 5)) 17)) obs))
+let pure discount price qty = ((price * qty) - (8 * qty))
+let report label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let overall = (([("gear", 49, 2), ("pin", 9, 3), ("nut", 22, 4), ("tap", 50, 2)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (discount k))
+(print ((scaled 6) [1, 2, 3]))
+--- stderr ---

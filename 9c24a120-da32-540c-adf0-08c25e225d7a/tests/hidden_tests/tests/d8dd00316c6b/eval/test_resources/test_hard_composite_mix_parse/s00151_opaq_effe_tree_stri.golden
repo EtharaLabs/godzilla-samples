@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+opaque type Sku = string
+opaque type Email = string
+let unwrap x =
+    match x:
+        case (Sku s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (Sku f"{prefix}-{i}"))))
+let keys = ((mint "acc") 4)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (Sku "u-1"))))
+let pure net price qty = ((price * qty) - (8 * qty))
+let report label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let overall = (([("cog", 29, 3), ("cap", 50, 4), ("hub", 37, 1)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (net k))
+(print ((scaled 6) [1, 2, 3]))
+type Bst = Leaf | Node Bst int Bst
+let add x t =
+    match t:
+        case Leaf: (((Node Leaf) x) Leaf)
+        case (Node l v rt) if (x < v): (((Node ((add x) l)) v) rt)
+        case (Node l v rt) if (x > v): (((Node l) v) ((add x) rt))
+        case (Node _ _ _): t
+let tree = ([8, 44, 52, 40, 16, 58, 31, 47, 33] |> ((List.fold (flip add)) Leaf))
+let toListT t =
+    match t:
+        case Leaf: []
+        case (Node l v rt): ((List.concat (toListT l)) ((List.concat [v]) (toListT rt)))
+(print (toListT tree))
+let minT t =
+    match t:
+        case Leaf: None
+        case (Node Leaf v _): (Some v)
+        case (Node l _ _): (minT l)
+(print (minT tree))
+let containsT x t =
+    match t:
+        case Leaf: false
+        case (Node l v rt): (if (x == v) then true elif (x < v) then ((containsT x) l) else ((containsT x) rt))
+(print ((List.map (fun k -> ((containsT k) tree))) [8, 34, 9]))
+let text = "nut,jo,kit,ada,tom"
+let tokens = ((String.split ",") text)
+(print ((tokens |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+let nums = (((String.split ",") "5a,5a,7,7,12") |> (List.map String.toInt))
+(print nums)
+(print ((nums |> (List.choose id)) |> List.sum))
+(print (((tokens |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((tokens |> (List.map String.upper)) |> (String.join "|")))
+--- stderr ---

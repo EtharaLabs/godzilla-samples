@@ -1,0 +1,145 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import asyncio
+import math
+import math as mth
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_upper(s):
+    return s.upper()
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Delta = Put | Push | Noop
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: "Team"
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Seat = Active | Parked | Gone
+def apply(acc: tuple[int, int], op: Delta) -> tuple[int, int]:
+    puts = acc[0]
+    total = acc[1]
+    if isinstance(op, Put):
+        v = op._1
+        return (puts + 1, total + v)
+    elif isinstance(op, Push):
+        n = op._0
+        return (puts, total + n)
+    else:
+        return acc
+def execute(script: list[Delta]) -> tuple[int, int]:
+    return _pf_fold(apply, (0, 0), script)
+changes: list[Delta] = [Put("cog", 4), _Noop, _Noop, Put("nut", 8), _Noop]
+state: tuple[int, int] = execute(changes)
+print(state)
+sumSq: int = _pf_fold(lambda apply, x: apply + x * x, 0, [5, 9, 1, 7])
+print(sumSq)
+def done(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def countUp(n: int, acc: int):
+    async def _pf_fn2():
+        async def _pf_fn1():
+            return n * 2
+        k = await _pf_fn1()
+        if n <= 0:
+            return await done(acc)
+        else:
+            return await countUp(n - 1, acc + k)
+    return _pf_Async(_pf_fn2)
+print(asyncio.run(_pf_run(countUp(48, 0))))
+def digits(n: int, acc: int) -> int:
+    while True:
+        if n < 10:
+            return acc + 1
+        else:
+            n, acc = (n // 10, acc + 1)
+            continue
+async def _pf_fn3():
+    a = await countUp(5, 0)
+    return digits(a * 38734, 0)
+main = _pf_Async(_pf_fn3)
+print(asyncio.run(_pf_run(main)))
+span: float = math.hypot(2.0 / 1.0, 3.0 / 1.0) * 1.0
+factor: float = math.sqrt(3.0)
+side: float = math.sqrt(4.0)
+vol: float = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, factor), side, vol))
+print(mth.floor(span / 1.0))
+def rateOf(d: int, t: int) -> float:
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(span, 2.0)))
+def promote(s: Seat) -> Seat:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t0 = p
+        return Active(Person(_pf_t0.name, p.age + 1))
+    else:
+        if isinstance(s, Parked):
+            t = s._0
+            if t.size > 4:
+                _pf_t1 = t
+                return Parked(Team(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+roster: list[Seat] = _pf_map(promote, [Active(Person("eli", 46)), Parked(Team("cap", 7)), Parked(Team("cap", 3)), _Gone])
+print(roster)
+members: list[Person] = [Person("kit", 7), Person("dee", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+--- stderr ---
+note: `countUp` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

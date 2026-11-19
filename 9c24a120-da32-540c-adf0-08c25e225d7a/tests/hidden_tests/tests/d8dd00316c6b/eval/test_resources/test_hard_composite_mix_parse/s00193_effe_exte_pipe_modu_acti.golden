@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+let pure margin price qty = ((price * qty) - (7 * qty))
+let report label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let overall = (([("pin", 10, 5), ("tap", 27, 6)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+extern readBase: string -> int -> int = int(base=...)
+let fromBin s = ((readBase s) 2)
+(print ((fromBin "1001101") + ((readBase "125") 8)))
+extern pure choose: int -> int -> int = math.comb
+let row n = (((List.range 0) (n + 1)) |> (List.map (choose n)))
+(print (row 5))
+extern pure intRoot: int -> int = math.isqrt
+(print ((List.map intRoot) [247, 262, 289, 182]))
+let readings = [32, (- 9), (- 2), 27, 28, 40, 3, 5]
+let shift k x = (x + k)
+let outcome = (((((readings |> (List.filter (fun x -> (x > (- 5))))) |> List.rev) |> (List.map ((+) 4))) |> (List.filter (fun x -> ((x % 4) == 3)))) |> (List.exists (fun x -> (x > 24))))
+(print outcome)
+(print <| (List.len readings))
+module Geo =
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let square x = (x * x)
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+let obs = [15, 21, 13, 25]
+(print (obs |> (List.map ((Geo.clamp 0) 14))))
+(print ((List.map Geo.square) obs))
+(print (Geo.norm1 obs))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 21) then (Some (n - 21)) else None)
+let (|Zero|_|) n = (n == 0)
+let bucketOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case Even: "even"
+        case _: "odd"
+(([38, 37, 28, 28, 13, 25, 8, 18] |> (List.map bucketOf)) |> (List.iter print))
+--- stderr ---

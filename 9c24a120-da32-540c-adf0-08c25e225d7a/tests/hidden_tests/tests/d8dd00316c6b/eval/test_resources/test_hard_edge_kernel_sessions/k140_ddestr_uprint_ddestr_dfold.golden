@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+00000002ok00000019a : int
+b : string
+00000018a, b = (1, "two")
+00000002ok0000000000000021print("side effect")
+00000002ok00000019a : int
+b : string
+0000000000000002ok00000040index : (List string) -> Map string int
+00000106def index(xs):
+    m = dict()
+    for x in xs:
+        _pf_t0 = len(x)
+        m[x] = _pf_t0
+    return m
+--- stderr ---

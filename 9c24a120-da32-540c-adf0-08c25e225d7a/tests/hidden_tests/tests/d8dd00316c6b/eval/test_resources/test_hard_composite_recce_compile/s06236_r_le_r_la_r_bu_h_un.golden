@@ -1,0 +1,86 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fst(p):
+    return p[0]
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [8, 11, 14, 3]))
+nums2 = [10, 1, -6, 10, 8, -7]
+factor = 3
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(nums2))))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn2, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 4], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(1, 4), (3, 3)], _pf_fn3), Grid_delay(lambda _: Grid_yield_(4)))
+print(combos)
+span = math.hypot(5.0 / 1.0, 7.0 / 1.0) * 1.0
+ratio = math.sqrt(2.0)
+side = math.sqrt(25.0)
+vol = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+def velocity(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, velocity(span, 5.0)))
+--- stderr ---

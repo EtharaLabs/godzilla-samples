@@ -1,0 +1,113 @@
+exit: 0
+--- stdout ---
+# ==== echo.py ====
+base = 4
+def step(x):
+    return x + 4
+
+# ==== alpha.py ====
+import echo
+print("loading Alpha")
+base = 1 + echo.base
+def step(x):
+    return echo.step(x) + 1
+
+# ==== golf.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaG:
+    _0: int
+    def __repr__(self):
+        return f"KaG({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbG:
+    def __repr__(self):
+        return "KbG"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbG = KbG()
+def pickG(n):
+    if n > 2:
+        return KaG(n)
+    else:
+        return _KbG
+base = 3 + alpha.base
+def step(x):
+    return alpha.step(x) + 3
+
+# ==== foxtrot.py ====
+import alpha
+base = 9 + alpha.base
+def step(x):
+    return alpha.step(x) + 9
+
+# ==== delta.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import foxtrot
+import golf
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaD:
+    _0: int
+    def __repr__(self):
+        return f"KaD({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbD:
+    def __repr__(self):
+        return "KbD"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbD = KbD()
+@dataclass(frozen=True, slots=True, order=True)
+class RecD:
+    id: int
+    kind: object
+def pickD(n):
+    if n > 2:
+        return KaD(n)
+    else:
+        return _KbD
+base = 4 + foxtrot.base + golf.base
+def step(x):
+    return golf.step(foxtrot.step(x)) + 4
+def describe(k):
+    match k:
+        case golf.KaG(v):
+            return v * 10
+        case golf.KbG():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(golf.pickG(base))
+def make(n):
+    return RecD(n, golf.pickG(n))
+def unwrap(r):
+    return describe(r.kind)
+
+# ==== main.py ====
+import delta
+print(delta.base)
+print(delta.step(1))
+print(delta.probe)
+print(delta.unwrap(delta.make(5)))
+print(delta.make(1).id)
+
+--- stderr ---

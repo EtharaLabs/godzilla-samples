@@ -1,0 +1,82 @@
+exit: 0
+--- stdout ---
+00000002ok00000151isEven2 : int -> bool
+oddP : int -> bool
+pts : List int
+tell : 'a -> (unit, List 'a)
+compute : int -> (int, List string)
+nums2 : List int
+factor : int
+00001956import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fst(p):
+    return p[0]
+def isEven2(n):
+    if n == 0:
+        return True
+    else:
+        return oddP(n - 1)
+def oddP(n):
+    if n == 0:
+        return False
+    else:
+        return isEven2(n - 1)
+print(_pf_partition(isEven2, [22, 8, 6, 26, 9]))
+def Stats_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Stats_square(x):
+    return x * x
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+pts = [26, 19, 14, 1, -6]
+print(Stats_norm1(pts))
+print(_pf_map(Stats_square, pts))
+print(_pf_map(functools.partial(Stats_clamp, 0, 15), pts))
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def compute(x):
+    return Writer_bind(tell(f"start {x}"), lambda _: Writer_bind((x * 4, ["scaled"]), lambda y: (lambda z: Writer_bind(tell(f"z={z}"), lambda _: Writer_return_(z)))(y + 9)))
+print(_pf_map(compute, [5, 3]))
+nums2 = [13, 0, 4, -2, 9, -1, 23, -1]
+factor = 3
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), nums2))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(nums2))))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+00000002ok00000035compute : int -> (int, List string)0000000000000002ok00000018oddP : int -> bool00000000--- stderr ---

@@ -1,0 +1,151 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Instr = Put | Append | Noop
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Box"
+    bottom: "Box"
+    slot: int
+def step(m: dict[str, int], op: Instr) -> dict[str, int]:
+    if isinstance(op, Put):
+        k = op._0
+        v = op._1
+        return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+    elif isinstance(op, Append):
+        n = op._0
+        return _pf_map_add("pushed", n, m)
+    else:
+        return m
+def runAll(script: list[Instr]) -> dict[str, int]:
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t0 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t0
+            case Append(n):
+                m["pushed"] = n
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+changes: list[Instr] = [Put("cog", 8), Append(6), Append(7), Put("nut", 5)]
+state: dict[str, int] = runAll(changes)
+print(_pf_map_to_list(state))
+sumSq: int = _pf_fold(lambda step, x: step + x * x, 0, [5, 4, 5, 8])
+print(sumSq)
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 10:
+        return _Low()
+    elif scaled < 35:
+        return _Mid()
+    else:
+        return _High()
+def label(n: int) -> str:
+    _pf_t1 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t1, _Low):
+        return "low"
+    if isinstance(_pf_t1, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t1, _Mid):
+        return "mid"
+    if isinstance(_pf_t1, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(label, [23, 1, -5, -4, 5]))
+tiles: list[Box] = [Box(6, 3, "hub"), Box(7, 6, "tap"), Box(4, 7, "gear"), Box(9, 4, "bolt"), Box(8, 7, "nut"), Box(4, 4, "sq")]
+def grow(b: Box) -> Box:
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Box(w + 3, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def surface(_pf_arg0: Box) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+def stackOf(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Box):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def describe(b: Box) -> str:
+    if isinstance(b, Box):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Box) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, tiles)))
+--- stderr ---

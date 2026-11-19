@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unknown effect label `e` (known labels: `io`, `async`; an effect variable is only allowed in an `extern` signature)
+ --> 1:1
+  |
+1 | type Callbacks = { onData: string ->{e} unit }
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

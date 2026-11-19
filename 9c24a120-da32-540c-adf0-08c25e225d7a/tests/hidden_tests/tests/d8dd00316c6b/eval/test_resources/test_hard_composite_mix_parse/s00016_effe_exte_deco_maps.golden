@@ -1,0 +1,39 @@
+exit: 0
+--- stdout ---
+let pure net price qty = ((price * qty) - (6 * qty))
+let emit label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let overall = (([("hub", 28, 4), ("bolt", 16, 6)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (net k))
+(print ((scaled 6) [1, 2, 3]))
+extern pure intRoot: int -> int = math.isqrt
+(print ((List.map intRoot) [346, 24, 231, 311]))
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "1000") + ((parseIn "23") 8)))
+extern pure gcd: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((gcd a) b))
+(print (((List.fold lcm) 1) [12, 5, 5, 2]))
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x6", "45"] |> (List.map safe)) |> (List.iter print))
+type Player = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"ada\", \"points\": 88, \"active\": false}, {\"name\": \"fay\", \"points\": 35, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list dec)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let log = ["fay", "eli", "ada", "fay", "dee", "fay", "fay", "bo", "cy"]
+let hist = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) log)
+(print ((hist |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((Map.tryFind "fay") hist), ((Map.contains "fay") hist)))
+let extra = (Map.ofList [("zed", 5), ("fay", 0)])
+(print ((((Map.union extra) hist) |> Map.toList) |> List.sort))
+--- stderr ---

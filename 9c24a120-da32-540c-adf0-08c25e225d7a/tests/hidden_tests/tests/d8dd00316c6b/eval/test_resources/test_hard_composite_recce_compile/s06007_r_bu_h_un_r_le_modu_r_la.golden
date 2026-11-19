@@ -1,0 +1,120 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 3))))
+print((safeDiv("92", "6"), safeDiv("4", "0"), safeDiv("x", "1")))
+span = math.hypot(9.0 / 1.0, 2.0 / 1.0) * 1.0
+factor = math.sqrt(5.0)
+side = math.sqrt(81.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, factor), side, vol))
+print(mth.floor(span / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(span, 2.0)))
+def inWord(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return inWord(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("eli ray bo"), 0))
+def Text_square(x):
+    return x * x
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+pts = [2, -1, -14, 23, 21, 1]
+print(_pf_map(Text_square, pts))
+print(Text_norm1(pts))
+print(Text_mean(pts))
+seriesA = [20, 29, 17, -8, 7, 21, 20, 7]
+gain = 2
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(seriesA), seriesA))
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), seriesA))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(5), scalers))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(seriesA))))
+--- stderr ---

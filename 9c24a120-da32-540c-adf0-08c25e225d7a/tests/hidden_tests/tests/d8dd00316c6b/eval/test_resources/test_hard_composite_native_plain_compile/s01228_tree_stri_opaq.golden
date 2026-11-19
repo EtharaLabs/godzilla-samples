@@ -1,0 +1,130 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [46, 6, 22, 59, 52, 16, 29, 49, 13])
+def toListOf(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListOf(tree))
+def containsT(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsT(k, tree), [46, 14, 29]))
+def sumOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumOf(l) + v + sumOf(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumOf(tree))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+sentence = "fay,ivy,dee,tom,ned,lu,ada"
+words = _pf_str_split(",", sentence)
+print(_pf_str_slice(1, 5, sentence))
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), words))
+print(_pf_option_with_default("?", longest))
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, words))))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, words)))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = makeIds("acc", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+--- stderr ---

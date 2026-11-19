@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+let readPair line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let entries = ["quin=54", "ray=5=1", "gus=x", "oz=6=1"]
+let results = ((List.map readPair) entries)
+((List.iter print) results)
+let errs = ((results |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let firstGood = ((((results |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine results) |> (Result.mapError String.upper)))
+let evens = seq {
+    for x in ((List.range 1) 12):
+        let y = (x * x)
+        yield y
+}
+(print (((Seq.fold (+)) 0) evens))
+(((((Seq.initInfinite (fun i -> (i * 7))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 4)) |> Seq.toList) |> print)
+let visits = ["eli", "fay", "eli", "bo", "dee", "dee", "ada", "fay"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let counts = (((List.fold bump) Map.empty) visits)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let sa = (Set.ofList [5, 6, 10, 14, 15, 18])
+let sb = (Set.ofList [3, 4, 7, 8, 17, 19])
+(print ((((Set.intersect sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 2) sb), ((Set.isSubset (Set.ofList [5])) sa)))
+let extra = (Map.ofList [("zed", 5), ("eli", 0)])
+(print ((((Map.union extra) counts) |> Map.toList) |> List.sort))
+(print (((Map.fold (fun acc k v -> (acc + v))) 0) counts))
+(print (((Map.tryFind "bo") counts), ((Map.contains "bo") counts)))
+type Order = { id: int, owner: string, amount: int, urgent: bool }
+let orders = [Order { id = 100, owner = "oz", amount = 161, urgent = true }, Order { owner = "oz", id = 101, amount = 54, urgent = false }, Order { id = 102, owner = "oz", amount = 290, urgent = true }, Order { id = 103, owner = "oz", amount = 145, urgent = true }, Order { id = 104, owner = "cy", amount = 63, urgent = false }]
+let byOwner = ((orders |> (List.groupBy (fun o -> o.owner))) |> (List.map (fun (k, os) -> (k, (List.len os), ((List.sumBy (fun o -> o.amount)) os)))))
+(print byOwner)
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 138))) orders)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+curried = functools.partial(math.pow, 2.0)
+both = lambda _pf_x: (lambda v: [v])(curried(_pf_x))
+print(both(10.0))
+--- stderr ---

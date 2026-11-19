@@ -1,0 +1,189 @@
+exit: 0
+--- stdout ---
+00000002ok00000243visits : List string
+hist : Map string int
+obs : List int
+show : Instr -> string
+weight : Instr -> int
+stream : List Instr
+grandSum : int
+add : int -> Tree -> Tree
+root : Tree
+depthT : Tree -> int
+sumT : Tree -> int
+minOf : Tree -> Option int
+00004849from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    def __repr__(self):
+        return "Store"
+_Store = Store()
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+visits = ["ada", "eli", "eli", "ada", "eli", "bo", "cy"]
+m = dict()
+for w in visits:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+print((_pf_map_try_find("eli", hist), "eli" in hist))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+obs = [1, 8, 3, 11, 22, 22]
+print(Text_mean(obs))
+print(Text_norm1(obs))
+print(_pf_filter(functools.partial(Text_between, -1, 22), obs))
+def show(t):
+    match t:
+        case Mark(n0) if n0 % 2 == 0:
+            return f"mark!({n0})"
+        case Mark(n0):
+            return f"mark({n0})"
+        case Store():
+            return f"store"
+        case Drop(n0, n1):
+            return f"drop({n0},{n1})"
+        case Load(n0):
+            return f"load({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Load(x0):
+            return x0
+        case _:
+            return 0
+stream = [Drop(7, -1), Drop(6, 10), Load(7), Mark(4), _Store, Drop(3, 2), Drop(3, 1)]
+print(_pf_str_join("; ", _pf_map(show, stream)))
+grandSum = _pf_sum_by(weight, stream)
+print(f"grandSum={grandSum}")
+print((_pf_head(stream), _pf_last(stream)))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [22, 55, 4, 48, 54, 11, 42, 32, 1])
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(root))
+def sumT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumT(l) + v + sumT(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumT(root))
+def minOf(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minOf(root))
+00000002ok00000026minOf : Tree -> Option int0000000000000002ok00000018sumT : Tree -> int00000000--- stderr ---

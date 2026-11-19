@@ -1,0 +1,138 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Box"
+    bottom: "Box"
+    slot: int
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+tiles: list[Box] = [Box(2, 5, "wick"), Box(1, 4, "hub"), Box(9, 6, "gear"), Box(4, 4, "sq")]
+def stackOf(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Box):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def caption(b: Box) -> str:
+    if isinstance(b, Box):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Box) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, tiles)))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 10:
+        return _Low()
+    elif scaled < 37:
+        return _Mid()
+    else:
+        return _High()
+def grade(n: int) -> str:
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(grade, [4, 12, 21, -4, 18]))
+def census(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(census([13, 12, 0, 8]))
+journal: list[str] = []
+def logged(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [9, 5]))
+print((out, journal))
+def running(xs: list[int]) -> tuple[int, int]:
+    peak = 0
+    def step(acc: int, x: int) -> int:
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([1, 4, 9, 2]))
+--- stderr ---

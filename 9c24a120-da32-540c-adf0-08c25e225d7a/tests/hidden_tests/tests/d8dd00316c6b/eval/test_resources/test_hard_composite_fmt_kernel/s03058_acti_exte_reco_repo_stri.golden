@@ -1,0 +1,189 @@
+exit: 0
+--- stdout ---
+00000002ok00000293bucketOf : int -> string
+lcm : int -> int -> int
+safe : string ->{io} string
+parcels : List Order
+urgentTotal : int
+cheap : List Order
+dear : List Order
+byOwner : List (string, int, int)
+entries : List Stock
+showRow : Stock -> string
+text : string
+tokens : List string
+longest : Option string
+00005372from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True)
+class Stock:
+    name: str
+    qty: int
+    price: float
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def _ap_Above(n):
+    if n > 8:
+        return Some(n - 8)
+    else:
+        return _None_
+def bucketOf(n):
+    _pf_t0 = _ap_Above(n)
+    _pf_t1 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    elif isinstance(_pf_t1, _Even):
+        return "even"
+    else:
+        return "odd"
+_pf_iter(print, _pf_map(bucketOf, [38, -1, 9, 0, 33, 17, -4, -4]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [9, 4, 10, 10]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+def safe(s):
+    try:
+        _pf_t2 = Ok(int(s))
+    except Exception as _pf_t3:
+        _pf_t2 = Error(_Exception(type(_pf_t3).__name__, str(_pf_t3)))
+    if isinstance(_pf_t2, Ok):
+        n = _pf_t2._0
+        return f"ok {n}"
+    else:
+        e = _pf_t2._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x3", "31"]))
+parcels = [Order(100, "max", 256, True), Order(101, "max", 101, False), Order(102, "kit", 6, False), Order(103, "max", 276, True)]
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(urgentTotal)
+cheap, dear = _pf_partition(lambda o: o.amount < 84, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, parcels))
+print(byOwner)
+print(_pf_max_by(lambda o: o.amount, parcels))
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, parcels))))
+entries = [Stock("cog", 23, 6.58), Stock("tap", 11, 24.61), Stock("nut", 24, 30.95)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(8, " ", x.name)} {_pf_fmt_pad_left(4, " ", str(x.qty))} {_pf_fmt_fixed(2, x.price)} {"restock" if x.qty > 14 else "ok"} {_pf_fmt_currency("$", 2, x.price * 5.0)}"
+_pf_iter(print, _pf_map(showRow, entries))
+print(f"{len(entries)} rows, {_pf_str_upper("total")}={_pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, entries))}")
+text = "ada;rod;tom;ned"
+tokens = _pf_str_split(";", text)
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, tokens))))
+print(_pf_str_replace("e", "E", text))
+print(_pf_map(lambda w: (w, len(w)), tokens))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, tokens)))
+print(_pf_str_slice(3, 4, text))
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), tokens))
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+print(_pf_option_with_default("?", longest))
+00000002ok00000027safe : string ->{io} string0000000000000002ok00000013text : string00000000--- stderr ---

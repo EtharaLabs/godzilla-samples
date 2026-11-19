@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let k acc x = (if ((List.contains acc) [[]]) then acc else ((List.concat acc) [x]))
+let out = (((List.fold k) []) [1, 2, 3])
+--- stderr ---

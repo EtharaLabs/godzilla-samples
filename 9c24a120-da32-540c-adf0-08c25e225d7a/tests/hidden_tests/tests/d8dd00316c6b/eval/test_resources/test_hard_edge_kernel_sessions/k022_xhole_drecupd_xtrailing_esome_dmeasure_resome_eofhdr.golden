@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+00000005error00000334error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 59 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 2:18
+  |
+2 | let h = List.map ?f [1]
+  |                  ^^0000000000000005error00000101error: unbound name `p`
+ --> 2:15
+  |
+2 | let older = { p with age = p.age + 1 }
+  |               ^
+0000000000000005error00000075error: expected int, found bool
+ --> 4:7
+  |
+4 | ok2 + true
+  |       ^^^^
+0000000000000002ok0000000000000314from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+print(Some([1, 2]))
+00000002ok00000019speed : float<m/s>
+00000021speed = 100.0 / 10.0
+00000002ok0000000000000037_None_ = None_()
+print(Some([1, 2]))
+--- stderr ---

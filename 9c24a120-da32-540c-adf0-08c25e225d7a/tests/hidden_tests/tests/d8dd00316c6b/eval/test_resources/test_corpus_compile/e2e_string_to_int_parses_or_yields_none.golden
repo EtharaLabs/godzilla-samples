@@ -1,0 +1,26 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+ok = _pf_option_with_default(0, _pf_str_to_int("41"))
+bad = _pf_option_with_default(0, _pf_str_to_int("nope"))
+neg = _pf_option_with_default(0, _pf_str_to_int("-5"))
+--- stderr ---

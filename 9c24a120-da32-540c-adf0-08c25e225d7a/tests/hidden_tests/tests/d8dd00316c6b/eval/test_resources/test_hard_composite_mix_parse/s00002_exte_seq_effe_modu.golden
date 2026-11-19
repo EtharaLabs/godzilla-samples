@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x8", "-36"] |> (List.map safe)) |> (List.iter print))
+extern pure hcf: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((hcf a) b))
+(print (((List.fold lcm) 1) [4, 2, 5, 5]))
+extern readBase: string -> int -> int = int(base=...)
+let fromBin s = ((readBase s) 2)
+(print ((fromBin "1001001") + ((readBase "106") 8)))
+let squares = seq {
+    for x in ((List.range 1) 8):
+        let y = (x * x)
+        yield y
+}
+(print (((Seq.fold (+)) 0) squares))
+(((((Seq.initInfinite (fun i -> (i * 4))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 1815)))) |> Seq.toList) |> print)
+let pure margin price qty = ((price * qty) - (3 * qty))
+let announce label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let grand = (([("cap", 12, 2), ("hub", 12, 5), ("wick", 13, 3), ("pin", 6, 6)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print grand)
+module Geo =
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let between lo hi x = (lo <= x <= hi)
+let obs = [8, (- 6), 13, (- 3), (- 4), 1]
+(print (obs |> (List.map ((Geo.clamp 0) 11))))
+(print (Geo.mean obs))
+(print ((List.filter ((Geo.between 4) 22)) obs))
+--- stderr ---

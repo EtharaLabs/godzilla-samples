@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected AccountNo, found Email
+  --> 59:13
+   |
+59 | let wrong = unwrap (Email "x@y")
+   |             ^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int` — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 11 more
+  --> 11:23
+   |
+11 | print (String.slice 1 ? raw)
+   |                       ^
+
+1 error
+1 unfilled hole

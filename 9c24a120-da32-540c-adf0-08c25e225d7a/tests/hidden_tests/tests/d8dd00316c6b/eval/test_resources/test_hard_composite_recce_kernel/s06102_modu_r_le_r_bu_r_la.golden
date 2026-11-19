@@ -1,0 +1,128 @@
+exit: 0
+--- stdout ---
+00000002ok00000187obs : List int
+evenP : int -> bool
+oddP : int -> bool
+parseForm : string -> string -> Result Signup string
+seriesA : List int
+factor : int
+tweak2 : int -> int
+scalers : List (int -> int)
+00003374from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Signup:
+    user: str
+    age: int
+def Calc_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Calc_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Calc_square(x):
+    return x * x
+def Calc_norm1(xs):
+    return sum(_pf_map(abs, xs))
+obs = [12, 28, 25, 11]
+print(Calc_scaleAll(2, obs))
+print(_pf_map(functools.partial(Calc_clamp, 0, 14), obs))
+print(_pf_map(Calc_square, obs))
+print(Calc_norm1(obs))
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return oddP(n - 1)
+def oddP(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [8, 32, 11, 40, 37]))
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def parseForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 20 else Error("too young"), lambda adult: Check_return_(Signup(name, adult)))))
+print(parseForm("pam", "51"))
+print((parseForm("a", "30"), parseForm("bob", "x")))
+seriesA = [15, 23, -4, 19, 20, 30]
+factor = 4
+tweak2 = lambda _pf_x: (lambda z: z - 9)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, seriesA))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(2), scalers))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(seriesA))))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(seriesA), seriesA))
+00000002ok00000052parseForm : string -> string -> Result Signup string0000000000000002ok00000012factor : int00000000--- stderr ---

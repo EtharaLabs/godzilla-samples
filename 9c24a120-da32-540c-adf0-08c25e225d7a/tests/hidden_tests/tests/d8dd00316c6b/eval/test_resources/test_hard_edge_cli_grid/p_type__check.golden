@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Util` (util.pyfun) --
+error: expected int, found bool
+ --> 2:15
+  |
+2 | let bad = 1 + true
+  |               ^^^^
+-- module `Main` (main.pyfun) --
+error: `nope` is not a member of `Util`
+ --> 3:9
+  |
+3 | let s = Util.nope
+  |         ^^^^^^^^^
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 4:13
+  |
+4 | let t = 2 + "x"
+  |             ^^^
+
+3 errors

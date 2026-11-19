@@ -1,0 +1,125 @@
+exit: 0
+--- stdout ---
+00000002ok00000201female : int -> int
+mal : int -> int
+nums2 : List int
+factor : int
+scalers : List (int -> int)
+combos : List int
+panels : List Box
+surface : Box -> int
+caption : Box -> string
+stackOf : Rack -> string
+00003199from dataclasses import dataclass
+import functools
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: object
+    bottom: object
+    slot: int
+def female(n):
+    if n == 0:
+        return 1
+    else:
+        return n - mal(female(n - 1))
+def mal(n):
+    if n == 0:
+        return 0
+    else:
+        return n - female(mal(n - 1))
+print((_pf_map(female, _pf_range(0, 8)), _pf_map(mal, _pf_range(0, 6))))
+nums2 = [26, 29, 3, 21, 16]
+factor = 2
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(7), scalers))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(nums2), nums2))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 2], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(4, 2), (4, 4)], _pf_fn2), Grid_delay(lambda _: Grid_yield_(4)))
+print(combos)
+panels = [Box(2, 7, "nut"), Box(9, 2, "pin"), Box(9, 8, "hub"), Box(2, 3, "hub"), Box(4, 4, "sq")]
+def _pf_fn3(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn4(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn3, _pf_filter(_pf_fn4, panels)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+def caption(b):
+    match b:
+        case Box(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Box(label=label, w=1):
+            return f"{label} thin"
+        case Box(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, panels)))
+def stackOf(s):
+    match s:
+        case Rack(top=Box(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Rack(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), panels, _pf_rev(panels)))
+00000002ok00000024stackOf : Rack -> string0000000000000002ok00000020surface : Box -> int00000000--- stderr ---

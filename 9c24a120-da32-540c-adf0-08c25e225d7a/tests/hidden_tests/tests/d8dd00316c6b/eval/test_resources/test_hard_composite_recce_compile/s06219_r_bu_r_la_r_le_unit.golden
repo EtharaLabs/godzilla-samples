@@ -1,0 +1,83 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 2], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(2, 3), (2, 2)], _pf_fn0), Grid_delay(lambda _: Grid_yield_(8)))
+print(combos)
+seriesA = [-5, -5, 22, 20, -2]
+gain = 3
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(1), makers2))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(seriesA), seriesA))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+tweak2 = lambda _pf_x: (lambda z: z - 6)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, seriesA))
+def fem(n):
+    if n == 0:
+        return 1
+    else:
+        return n - mal(fem(n - 1))
+def mal(n):
+    if n == 0:
+        return 0
+    else:
+        return n - fem(mal(n - 1))
+print((_pf_map(fem, _pf_range(0, 10)), _pf_map(mal, _pf_range(0, 8))))
+segments = [285.8, 121.3, 354.7, 462.7]
+durations = [79.4, 68.4, 63.1, 43.7]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = dist / elapsed
+print(_pf_fmt_fixed(2, rate))
+speeds = _pf_map2(lambda d, t: d / t, segments, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+edge = math.sqrt(6.25)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+--- stderr ---

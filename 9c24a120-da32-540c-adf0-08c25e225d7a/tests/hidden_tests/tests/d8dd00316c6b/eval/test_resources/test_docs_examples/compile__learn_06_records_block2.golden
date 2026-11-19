@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+def name(p):
+    match p:
+        case Point(x=0, y=0):
+            return "origin"
+        case Point(x=x, y=y):
+            return "elsewhere"
+print(name(Point(0, 0)))
+print(name(Point(3, 4)))
+--- stderr ---

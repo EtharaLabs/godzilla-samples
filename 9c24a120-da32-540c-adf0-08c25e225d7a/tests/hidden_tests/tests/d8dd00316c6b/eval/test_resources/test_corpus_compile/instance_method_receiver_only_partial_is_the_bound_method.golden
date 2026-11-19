@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class CH:
+    def __repr__(self):
+        return "CH"
+_CH = CH()
+def g(c):
+    return c.execute
+--- stderr ---

@@ -1,0 +1,158 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+stock = [("cap", 8), ("hub", 4), ("pin", 9), ("rod", 0), ("cog", 10)]
+def _pf_fn0():
+    for (name, qty) in stock:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn0()
+print(_pf_str_join(",", list(lines2)))
+spans = [("ray", (4, 17)), ("tom", (0, 20)), ("lu", (2, 18))]
+def _pf_fn1():
+    for (name, (lo, hi)) in spans:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+spansOut = _pf_fn1()
+print(list(spansOut))
+def _pf_fn2(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn2, _pf_indexed(stock))
+def lookupAll(keys, table):
+    def _pf_fn3():
+        for (k, expected) in keys:
+            _pf_t0 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t0, Some):
+                v = _pf_t0._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t0
+        return Some(len(keys))
+    return _pf_fn3()
+print((lookupAll(_pf_take(2, stock), dict(stock)), lookupAll([("zz", 0)], dict(stock))))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [31, 14, 18, 33, 46, 23, 20, 39, 30])
+def minOf(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minOf(root))
+def sumOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumOf(l) + v + sumOf(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumOf(root))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(root))
+panels = [Panel(5, 6, "rod"), Panel(8, 5, "cog"), Panel(2, 5, "tap"), Panel(9, 5, "nut"), Panel(4, 4, "sq")]
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+def rename(prefix, b):
+    label = b.label
+    _pf_t2 = b
+    return Panel(_pf_t2.w, _pf_t2.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "x-"), panels)))
+def _pf_fn4(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn5(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn4, _pf_filter(_pf_fn5, panels)))
+def grow(b):
+    w = b.w
+    h = b.h
+    _pf_t4 = b
+    return Panel(w + 1, h * 2, _pf_t4.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+--- stderr ---

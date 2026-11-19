@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let describe n =
+    match n:
+        case Even if (n > 100): "big even"
+        case Even: "even"
+        case Odd: "odd"
+let a = (describe 200)
+let b = (describe 4)
+let c = (describe 7)
+--- stderr ---

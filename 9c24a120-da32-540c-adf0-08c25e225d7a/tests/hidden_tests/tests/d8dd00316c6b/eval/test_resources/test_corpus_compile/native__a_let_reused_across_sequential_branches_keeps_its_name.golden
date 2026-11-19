@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def f(a: bool, b: bool) -> int:
+    if a:
+        t = 1
+        _pf_t0 = t + 1
+    else:
+        _pf_t0 = 0
+    x = _pf_t0
+    if b:
+        t = 10
+        _pf_t1 = t + 1
+    else:
+        _pf_t1 = 0
+    y = _pf_t1
+    return x + y
+r: int = f(True, True)
+--- stderr ---

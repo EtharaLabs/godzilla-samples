@@ -1,0 +1,157 @@
+exit: 0
+--- stdout ---
+00000002ok00000316data : List int
+offset : int<'a> -> int<'a> -> int<'a>
+stage : (List int) -> List int
+digest : Option int
+inputs2 : List int
+gain : int
+tweak2 : int -> int
+makers2 : List (int -> int)
+pts : List int
+reading : (List string) -> int -> int
+inSpace : (List string) -> int -> int
+safeDiv : string -> string -> Option int
+00004370from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_distinct_by(f, xs):
+    seen = set()
+    out = []
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+def _pf_drop_while(f, xs):
+    return list(itertools.dropwhile(f, xs))
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+data = [49, 49, 18, 19, 21, 35, 28, 16, 40, 35, 31]
+def offset(k, x):
+    return x + k
+stage = lambda _pf_x: _pf_drop_while(lambda x: x < 3, (lambda _pf_x: _pf_distinct_by(lambda x: x % 2, (lambda _pf_x: _pf_filter(lambda x: x % 5 == 0, (lambda _pf_x: _pf_map(functools.partial(offset, 3), (lambda _pf_x: _pf_rev((lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(2, _pf_x)))(_pf_x)))(_pf_x)))(_pf_x)))(_pf_x)))(_pf_x))
+digest = _pf_head(stage(data))
+print(digest)
+print(len(data))
+inputs2 = [-3, 0, -7, 15, 9, 10]
+gain = 3
+tweak2 = lambda _pf_x: (lambda z: z - 3)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(6), makers2))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), inputs2))
+def Calc_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Calc_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Calc_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+pts = [27, -11, 13, 0, 10]
+print(Calc_scaleAll(5, pts))
+print(_pf_map(functools.partial(Calc_clamp, 0, 6), pts))
+print(Calc_norm1(pts))
+print(Calc_mean(pts))
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("  eli max bo tom "), 0))
+def Perhaps_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Perhaps_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Perhaps_bind(_pf_str_to_int(a), lambda x: Perhaps_bind(_pf_str_to_int(b), lambda y: Perhaps_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Perhaps_return_(shown))(q * 4))))
+print((safeDiv("71", "1"), safeDiv("4", "0"), safeDiv("x", "1")))
+00000002ok00000037inSpace : (List string) -> int -> int0000000000000002ok00000038offset : int<'a> -> int<'a> -> int<'a>00000000--- stderr ---

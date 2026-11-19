@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def g(o: Some | None_) -> str:
+    if isinstance(o, Some):
+        x = o._0
+        if x > 10:
+            return "big"
+    if isinstance(o, Some):
+        x = o._0
+        return "small"
+    else:
+        return "none"
+--- stderr ---

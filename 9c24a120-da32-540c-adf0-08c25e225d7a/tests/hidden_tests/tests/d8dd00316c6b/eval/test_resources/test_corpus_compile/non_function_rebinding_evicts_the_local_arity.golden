@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import functools
+def f(x):
+    def pair(a, b):
+        return a + b
+    pair = functools.partial(pair, 1)
+    return pair(x)
+r = f(2)
+--- stderr ---

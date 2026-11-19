@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let f o =
+    let total a b = (a + b)
+    ((1 + (match o: case (Some total): total case None: 0)) + ((total 1) 1))
+let r = (f (Some 5))
+--- stderr ---

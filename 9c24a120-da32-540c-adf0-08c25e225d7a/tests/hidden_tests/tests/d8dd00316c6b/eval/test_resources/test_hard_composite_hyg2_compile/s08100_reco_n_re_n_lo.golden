@@ -1,0 +1,84 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Place:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+orders = [Booking(100, "eli", 95, False, Place("Oslo", 3)), Booking(101, "ray", 114, True, Place("Baku", 1)), Booking(102, "quin", 290, True, Place("Oslo", 3)), Booking(103, "eli", 85, True, Place("Lima", 4))]
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, orders))
+print(perOwner)
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, orders))))
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, orders)))
+def adjust(o):
+    if o.urgent:
+        _pf_t1 = o
+        return Booking(_pf_t1.id, _pf_t1.owner, o.amount + 7, _pf_t1.urgent, _pf_t1.dest)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(adjust, orders)))
+def build(start):
+    level = start
+    def g0(y):
+        return level * y
+    level = g0(level)
+    g1 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 2
+    g2 = lambda y: level + y
+    level = level + 8
+    g3 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 1
+    return (g0(1), g1([1, 2]), g2(2), g3([1, 2]), level)
+print(build(2))
+def _pf_fn1():
+    for (name, k) in [("a", 1), ("b", 7)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn1()
+print(_pf_map(lambda h: h(5), list(handlers)))
+acc = []
+for k in [5, 6, 1]:
+    _pf_t2 = lambda y: y * k
+    acc.append(_pf_t2)
+steps = acc
+print(_pf_map(lambda h: h(3), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 2
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(3, [8, 0, 4]))
+--- stderr ---

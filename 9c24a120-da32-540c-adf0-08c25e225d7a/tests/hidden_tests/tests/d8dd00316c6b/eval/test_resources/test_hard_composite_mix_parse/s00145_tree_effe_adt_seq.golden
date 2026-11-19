@@ -1,0 +1,55 @@
+exit: 0
+--- stdout ---
+type Heap = Leaf | Node Heap int Heap
+let add x t =
+    match t:
+        case Leaf: (((Node Leaf) x) Leaf)
+        case (Node l v rt) if (x < v): (((Node ((add x) l)) v) rt)
+        case (Node l v rt) if (x > v): (((Node l) v) ((add x) rt))
+        case (Node _ _ _): t
+let root = ([18, 33, 36, 54, 48, 32, 6, 51, 58] |> ((List.fold (flip add)) Leaf))
+let minOf t =
+    match t:
+        case Leaf: None
+        case (Node Leaf v _): (Some v)
+        case (Node l _ _): (minOf l)
+(print (minOf root))
+let containsOf x t =
+    match t:
+        case Leaf: false
+        case (Node l v rt): (if (x == v) then true elif (x < v) then ((containsOf x) l) else ((containsOf x) rt))
+(print ((List.map (fun k -> ((containsOf k) root))) [18, 59, 43]))
+let pure margin price qty = ((price * qty) - (9 * qty))
+let announce label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let overall = (([("wick", 28, 1), ("wick", 31, 4), ("hub", 11, 4), ("hub", 20, 1)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (margin k))
+(print ((scaled 12) [1, 2, 3]))
+type Signal = Push string | Drop | Pop string int
+let explain t =
+    match t:
+        case (Push s0): f"push({s0})"
+        case Drop: f"drop"
+        case (Pop s0 n1): f"pop({s0},{n1})"
+let weight t =
+    match t:
+        case (Push _): 8
+        case (Pop _ x1): x1
+        case _: 0
+let batch = [Drop, (Push "ned"), Drop, Drop]
+(print ((batch |> (List.map explain)) |> (String.join "; ")))
+let total = (batch |> (List.sumBy weight))
+(print f"total={total}")
+(print ((batch |> (List.filter (fun t -> ((weight t) > 4)))) |> List.len))
+let squares = seq {
+    for x in ((List.range 1) 8):
+        let y = (x * x)
+        yield y
+}
+(((squares |> (Seq.filter (fun n -> ((n % 3) == 0)))) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 3))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 2)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 1500)))) |> Seq.toList) |> print)
+--- stderr ---

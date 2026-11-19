@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_set_add(x, s):
+    return s.union([x])
+init_a = 7
+init_b = set([0])
+def step(_pf_arg0, x):
+    a, b = _pf_arg0
+    return (x if x > a else a, _pf_set_add(x, b))
+result = _pf_fold(step, (init_a, init_b), _pf_range(1, 6))
+r_a, r_b = result
+print(r_a)
+print(list(r_b))
+--- stderr ---

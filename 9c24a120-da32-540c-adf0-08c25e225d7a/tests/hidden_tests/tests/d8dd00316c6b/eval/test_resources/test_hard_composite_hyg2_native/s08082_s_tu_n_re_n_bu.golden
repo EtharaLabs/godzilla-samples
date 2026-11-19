@@ -1,0 +1,79 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_snd(p):
+    return p[1]
+pairs: list[tuple[str, int]] = [("bolt", 17), ("cap", 13), ("gear", 14), ("wick", 9)]
+def _pf_fn0():
+    for (name, qty) in pairs:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn0()
+print(_pf_str_join(",", list(lines2)))
+def validate(rows) -> Ok | Error:
+    def _pf_fn1():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t0 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t0, Ok):
+            total = _pf_t0._0
+            return Ok(total)
+        else:
+            return _pf_t0
+    return _pf_fn1()
+print((validate(pairs), validate([("ok", 1)])))
+widths: list[tuple[str, tuple[int, int]]] = [("lu", (0, 20)), ("quin", (4, 7)), ("ned", (1, 14))]
+def _pf_fn2():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn2()
+print(list(widthsOut))
+def stack2(start: int) -> tuple[list[int], int, list[int], int]:
+    base = start
+    g0 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 7
+    g1 = lambda y: base + y
+    base = base * 2
+    g2 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 7
+    return (g0([1, 2]), g1(3), g2([1, 2]), base)
+print(stack2(6))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+str_: str = "ivy"
+print((str(7), str_, _pf_str_concat(str_, str(1))))
+list_: list[int] = [4, 7, 5]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def set_(n: int) -> int:
+    return n * 3
+print((set_(3), len(set([4, 2, 0, 5]))))
+--- stderr ---

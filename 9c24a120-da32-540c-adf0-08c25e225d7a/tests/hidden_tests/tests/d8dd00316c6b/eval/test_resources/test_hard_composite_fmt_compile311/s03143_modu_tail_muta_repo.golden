@@ -1,0 +1,99 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+def Stats_square(x):
+    return x * x
+def Stats_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+pts = [6, -10, 8, 19, -1]
+print(_pf_map(Stats_square, pts))
+print(Stats_scaleAll(2, pts))
+print(_pf_map(functools.partial(Stats_clamp, 0, 13), pts))
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(159, 378))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [12, 5, 19, 15, 2]))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(7, 6, 1))
+ticks = 0
+def record(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 4
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([-20, 5, -1, 27, -9, -19, -13]))
+doubled = _pf_map(record, [-20, 5, -1, 27])
+print(f"{doubled} after {ticks} calls")
+recordTwice = lambda _pf_x: record(record(_pf_x))
+print((recordTwice(3), ticks))
+entries = [Entry("pin", 21, 9.33), Entry("rod", 12, 7.24), Entry("hub", 30, 19.95)]
+def showRow(x):
+    return "{} {} {} {}".format(_pf_fmt_pad_right(10, ".", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(2, x.price), _pf_fmt_currency("$", 2, x.price * 7.0))
+_pf_iter(print, _pf_map(showRow, entries))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 10, entries))
+print("low: {} ({})".format(_pf_str_join("", low), _pf_fmt_percent(1, 0.5 * 1.0)))
+--- stderr ---

@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+type P = { name: string, age: int }
+let ps = [P { name = "a", age = 2 }]
+let byAge = ((List.sortBy (fun p -> p.age)) ps)
+let oldest = ((List.maxBy (fun p -> p.age)) ps)
+--- stderr ---

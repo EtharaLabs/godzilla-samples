@@ -1,0 +1,75 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_distinct_by(f, xs):
+    seen = set()
+    out = []
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+values: list[int] = [38, -9, -5, 2, 29, 1, 38, 12, 48, 37]
+def accept(n: int) -> bool:
+    return n > 11 and n % 4 != 0
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn2, _pf_indexed(_pf_x))
+answer: int = _pf_fold(lambda acc, x: acc * 2 - x, 0, _pf_filter(accept, _pf_take(5, _pf_fn1(_pf_distinct_by(lambda x: x % 4, values)))))
+print(answer)
+trail: list[str] = []
+def logged(tag, f, x):
+    global trail
+    y = f(x)
+    trail = _pf_concat(trail, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [4, 1]))
+print((out, trail))
+def stamp(xs) -> tuple[list[str], int]:
+    i = 3
+    def tag(x) -> str:
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(stamp(["jo", "kit", "tom"]))
+def running(xs: list[int]) -> tuple[int, int]:
+    peak = 0
+    def step(acc: int, x: int) -> int:
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([2, -6, -5, -5]))
+def Stats_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Stats_square(x):
+    return x * x
+def Stats_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+nums: list[int] = [26, -5, 25, 28, 1, 28]
+print(Stats_mean(nums))
+print(_pf_map(Stats_square, nums))
+print(Stats_scaleAll(4, nums))
+--- stderr ---

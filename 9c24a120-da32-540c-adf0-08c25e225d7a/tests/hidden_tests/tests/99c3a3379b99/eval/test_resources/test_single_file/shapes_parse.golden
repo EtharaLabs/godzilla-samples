@@ -1,0 +1,7 @@
+type Shape = Circle float | Rect float float
+let area s =
+    match s:
+        case (Circle r): ((3.14159 * r) * r)
+        case (Rect w h): (w * h)
+let who = "Ada"
+(print f"{who}: {(area ((Rect 2.0) 3.0))}")

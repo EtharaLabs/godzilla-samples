@@ -1,0 +1,117 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import math
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: "Team"
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Slot = Active | Parked | Gone
+def promote(s: Slot) -> Slot:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t0 = p
+        return Active(Person(_pf_t0.name, p.age + 1))
+    else:
+        if isinstance(s, Parked):
+            t = s._0
+            if t.size > 2:
+                _pf_t1 = t
+                return Parked(Team(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+roster: list[Slot] = _pf_map(promote, [Active(Person("ada", 22)), Parked(Team("nut", 9)), Active(Person("max", 37))])
+print(roster)
+people: list[Person] = [Person("quin", 4), Person("kit", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+values: list[int] = [-10, 39, 37, 5, 35, 20, 39]
+def accept(n: int) -> bool:
+    return n > 13 and n % 2 != 0
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        a, b = _pf_arg0
+        return b - a
+    return _pf_map(_pf_fn2, _pf_pairwise(_pf_x))
+def _pf_fn4(_pf_x):
+    def _pf_fn5(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn5, _pf_indexed(_pf_x))
+answer: int = len(_pf_filter(accept, _pf_fn1(_pf_fn4(_pf_take(8, values)))))
+print(answer)
+def inspect(xs: list[int]) -> int:
+    seen = 0
+    best = 0
+    def note(x: int):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n: int, acc: int) -> int:
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(2, 0)
+print(inspect([29, 16, 5, 12]))
+events: list[str] = []
+def push2(msg: str) -> int:
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts: list[int] = _pf_map(push2, ["start", "sue", "stop"])
+print((events, counts))
+reach: float = math.hypot(9.0 / 1.0, 9.0 / 1.0) * 1.0
+ratio: float = math.sqrt(5.0)
+side: float = math.sqrt(81.0)
+vol: float = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+def velocity(d: int, t: int) -> float:
+    return d / t
+print(_pf_fmt_fixed(2, velocity(reach, 8.0)))
+--- stderr ---

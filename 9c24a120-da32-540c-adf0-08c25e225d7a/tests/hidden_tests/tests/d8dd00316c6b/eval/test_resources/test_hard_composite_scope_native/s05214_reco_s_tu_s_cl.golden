@@ -1,0 +1,98 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+orders: list[Parcel] = [Parcel(100, "jo", 271, False), Parcel(101, "quin", 23, True), Parcel(102, "jo", 93, True), Parcel(103, "quin", 147, False), Parcel(104, "quin", 104, False), Parcel(105, "jo", 85, True)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), orders)
+print(f"{cnt} records, {amt} total")
+def label(o: Parcel) -> str:
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(label, orders)))
+urgentTotal: int = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(urgentTotal)
+tallies: list[tuple[str, int]] = [("nut", 16), ("hub", 1), ("cog", 8), ("pin", 5), ("cap", 5)]
+def _pf_fn1():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn1()
+print(_pf_str_join(",", list(labels)))
+widths: list[tuple[str, tuple[int, int]]] = [("oz", (0, 7)), ("ray", (0, 14)), ("quin", (4, 12))]
+def _pf_fn2():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn2()
+print(list(widthsOut))
+def validate(rows) -> Ok | Error:
+    def _pf_fn3():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t1 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t1, Ok):
+            total = _pf_t1._0
+            return Ok(total)
+        else:
+            return _pf_t1
+    return _pf_fn3()
+print((validate(tallies), validate([("ok", 1)])))
+trail: list[str] = []
+def logged(tag, f, x):
+    global trail
+    y = f(x)
+    trail = _pf_concat(trail, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [4, 1]))
+print((out, trail))
+def ticker(start: int):
+    n = start
+    def next_(u) -> int:
+        nonlocal n
+        n = n + 3
+        return n
+    return next_
+clock = ticker(9)
+print((clock(None), clock(None), clock(None)))
+--- stderr ---

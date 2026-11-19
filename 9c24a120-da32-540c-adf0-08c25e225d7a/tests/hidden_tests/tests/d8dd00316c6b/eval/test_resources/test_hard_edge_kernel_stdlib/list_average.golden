@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000002ok00000043List.average : (List float) -> Option float0000000000000002ok0000000000000387from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_average(xs):
+    return Some(sum(xs) / len(xs)) if xs else _None_
+print(_pf_average)
+--- stderr ---

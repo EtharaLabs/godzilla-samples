@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+00000002ok00000043Seq.concat : (Seq 'a) -> (Seq 'a) -> Seq 'a0000000000000002ok0000000000000102import itertools
+def _pf_seq_concat(xs, ys):
+    return itertools.chain(xs, ys)
+print(_pf_seq_concat)
+--- stderr ---

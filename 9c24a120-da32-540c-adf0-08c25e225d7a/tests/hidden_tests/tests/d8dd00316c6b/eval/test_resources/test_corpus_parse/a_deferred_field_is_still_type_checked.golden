@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+type Placed = { row: int, letter: string }
+type Cell = { row: int, letter: string, blank: bool }
+let bad c =
+    let l = c.letter
+    let flag = c.blank
+    (l + 1)
+--- stderr ---

@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "def _pf_concat(xs, ys):\n    return xs + ys\ndef _pf_map(f, xs):\n    return list(map(f, xs))\ndef B_bind(m, f):\n    return _pf_concat(_pf_map(f, m), [])\ndef B_return_(x):\n    return [x]\ndef B_yield_(x):\n    return [x]\ndef B_yieldFrom(xs):\n    return xs\ndef B_combine(a, b):\n    return _pf_concat(a, b(None))\ndef B_delay(f):\n    return f\ndef d(xs):\n    return B_bind(xs, lambda x: [None])\ny = B_combine(B_yieldFrom([1, 2]), B_delay(lambda _: B_yield_(3)))\n",
+ "stderr": ""
+}

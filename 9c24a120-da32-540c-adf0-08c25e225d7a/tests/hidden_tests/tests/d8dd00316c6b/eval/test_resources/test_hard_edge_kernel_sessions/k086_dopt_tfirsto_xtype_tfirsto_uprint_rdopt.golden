@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000093def firstOr(d, xs):
+    if xs:
+        x = xs[0]
+        return x
+    else:
+        return d
+00000002ok00000031firstOr : 'a -> (List 'a) -> 'a0000000000000005error00000141error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 6:15
+  |
+6 | let bad = 1 + "x"
+  |               ^^^
+0000000000000002ok00000031firstOr : 'a -> (List 'a) -> 'a0000000000000002ok0000000000000021print("side effect")
+00000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000000--- stderr ---

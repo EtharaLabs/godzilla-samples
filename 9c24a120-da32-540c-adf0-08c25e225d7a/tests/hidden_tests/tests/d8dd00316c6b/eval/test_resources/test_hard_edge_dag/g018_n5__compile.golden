@@ -1,0 +1,86 @@
+exit: 0
+--- stdout ---
+# ==== bravo.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaB:
+    _0: int
+    def __repr__(self):
+        return f"KaB({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbB:
+    def __repr__(self):
+        return "KbB"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbB = KbB()
+def pickB(n):
+    if n > 2:
+        return KaB(n)
+    else:
+        return _KbB
+base = 3
+def step(x):
+    return x + 3
+
+# ==== delta.py ====
+import bravo
+base = 2 + bravo.base
+def step(x):
+    return bravo.step(x) + 2
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))
+
+# ==== echo.py ====
+from dataclasses import dataclass
+import bravo
+@dataclass(frozen=True, slots=True, order=True)
+class RecE:
+    id: int
+    kind: object
+base = 4 + bravo.base
+def step(x):
+    return bravo.step(x) + 4
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))
+def make(n):
+    return RecE(n, bravo.pickB(n))
+def unwrap(r):
+    return describe(r.kind)
+
+# ==== alpha.py ====
+import delta
+import echo
+base = 6 + delta.base + echo.base
+def step(x):
+    return echo.step(delta.step(x)) + 6
+
+# ==== main.py ====
+import alpha
+print(alpha.base)
+print(alpha.step(1))
+
+--- stderr ---

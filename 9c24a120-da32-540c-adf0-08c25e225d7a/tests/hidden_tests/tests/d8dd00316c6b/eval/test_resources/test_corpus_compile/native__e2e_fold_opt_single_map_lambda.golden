@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def _pf_map_to_list(m):
+    return list(m.items())
+m: dict[int, int] = dict()
+for x in [1, 2, 3]:
+    _pf_t0 = x * 2
+    m[x] = _pf_t0
+out: list[tuple[int, int]] = _pf_map_to_list(m)
+--- stderr ---

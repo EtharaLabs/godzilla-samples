@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+00000002ok00000076Decode.map2 : ('a -> 'b -> 'c) -> (Decoder 'a) -> (Decoder 'b) -> Decoder 'c0000000000000002ok0000000000000109def _pf_dec_map2(f, da, db):
+    def go(v):
+        return f(da(v), db(v))
+    return go
+print(_pf_dec_map2)
+--- stderr ---

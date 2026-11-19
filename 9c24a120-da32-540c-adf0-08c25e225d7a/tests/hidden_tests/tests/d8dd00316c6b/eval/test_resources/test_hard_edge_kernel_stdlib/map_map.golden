@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+00000002ok00000054Map.map : ('a -> 'b -> 'c) -> (Map 'a 'b) -> Map 'a 'c0000000000000002ok0000000000000136def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+print(_pf_map_map)
+--- stderr ---

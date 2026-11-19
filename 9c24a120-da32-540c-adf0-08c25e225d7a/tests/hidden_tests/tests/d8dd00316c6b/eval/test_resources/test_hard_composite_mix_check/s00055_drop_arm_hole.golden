@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Node _ _ _` is not matched
+ --> 5:3
+  |
+5 |   match t:
+  |   ^^^^^^^^
+
+note: hole `?` has type `'a`
+  --> 28:82
+   |
+28 | let rushSum = parcels |> List.filter (fun o -> o.urgent) |> List.sumBy (fun o -> ?)
+   |                                                                                  ^
+
+1 error
+1 unfilled hole

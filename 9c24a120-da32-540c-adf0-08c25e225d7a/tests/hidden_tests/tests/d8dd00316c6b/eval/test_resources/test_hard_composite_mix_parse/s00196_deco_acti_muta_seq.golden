@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+type Reading = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Reading { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let jsonText = "[{\"name\": \"cy\", \"points\": 42, \"active\": false}, {\"name\": \"kit\", \"points\": 36, \"active\": false}, {\"name\": \"oz\", \"points\": 22, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list dec)) jsonText):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 16) then (Some (n - 16)) else None)
+let classify n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Even: "even"
+        case _: "odd"
+(([13, 25, 21, 38, 0, 25, 5, 22] |> (List.map classify)) |> (List.iter print))
+let mut hits = 0
+let track x =
+    (hits <- (hits + 1))
+    (x * 3)
+let summarize xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (summarize [43, 26, 21, (- 4), (- 17), (- 15)]))
+let doubled = ([43, 26, 21, (- 4)] |> (List.map track))
+(print f"{doubled} after {hits} calls")
+let series = seq {
+    for x in ((List.range 1) 12):
+        let y = (x * x)
+        yield y
+}
+((((series |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 4)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 4))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 5)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 877)))) |> Seq.toList) |> print)
+--- stderr ---

@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+import functools
+import math
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_Emit = Emit()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: str
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    _0: str
+    def __repr__(self):
+        return f"Halt({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (3, self._0)
+def render(t):
+    match t:
+        case Load(n0):
+            return f"load({n0})"
+        case Emit():
+            return f"emit"
+        case Rest(s0):
+            return f"rest({s0})"
+        case Halt(s0):
+            return f"halt({s0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def score(t):
+    match t:
+        case Halt(_):
+            return 1
+        case _:
+            return 1
+prog = [Rest("ada"), _Emit, Halt("ivy"), Rest("eli"), Load(-2)]
+_pf_iter(lambda t: print(render(t)), prog)
+total = _pf_sum_by(score, prog)
+print(f"total={total}")
+print(_pf_sort(prog))
+def ticker(start):
+    n = start
+    def next_(u):
+        nonlocal n
+        n = n + 1
+        return n
+    return next_
+tick = ticker(8)
+print((tick(None), tick(None), tick(None)))
+def stamp(xs):
+    i = 3
+    def tag(x):
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(stamp(["cy", "tom", "ned"]))
+def tally(xs):
+    evens = 0
+    odds = 0
+    def visit(x):
+        def bump(isEven):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([2, 4, 1, 20, 15, 1]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "c0"])))
+print(_pf_map(math.isqrt, [292, 270, 284, 364]))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(6))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("1011111") + int("121", base=8))
+--- stderr ---

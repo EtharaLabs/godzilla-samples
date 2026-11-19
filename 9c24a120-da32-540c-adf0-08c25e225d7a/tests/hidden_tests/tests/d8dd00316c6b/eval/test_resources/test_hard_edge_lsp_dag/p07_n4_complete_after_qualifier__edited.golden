@@ -1,0 +1,2549 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/alpha.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/bravo.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/delta.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/echo.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 17,
+      "character": 0
+     },
+     "end": {
+      "line": 17,
+      "character": 0
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected field name, found end of input"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/main.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 2,
+      "character": 6
+     },
+     "end": {
+      "line": 2,
+      "character": 15
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`base` is not a member of `Echo`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 3,
+      "character": 7
+     },
+     "end": {
+      "line": 3,
+      "character": 16
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`step` is not a member of `Echo`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 4,
+      "character": 6
+     },
+     "end": {
+      "line": 4,
+      "character": 16
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`probe` is not a member of `Echo`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 5,
+      "character": 7
+     },
+     "end": {
+      "line": 5,
+      "character": 18
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`unwrap` is not a member of `Echo`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 6,
+      "character": 8
+     },
+     "end": {
+      "line": 6,
+      "character": 17
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`make` is not a member of `Echo`"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": [
+  {
+   "label": "Alpha",
+   "kind": 9
+  },
+  {
+   "label": "Bravo",
+   "kind": 9
+  },
+  {
+   "label": "KindE",
+   "kind": 7
+  },
+  {
+   "label": "KaE",
+   "kind": 4
+  },
+  {
+   "label": "KbE",
+   "kind": 4
+  },
+  {
+   "label": "pickE",
+   "kind": 12
+  },
+  {
+   "label": "base",
+   "kind": 12
+  },
+  {
+   "label": "step",
+   "kind": 12
+  },
+  {
+   "label": "describe",
+   "kind": 12
+  },
+  {
+   "label": "probe",
+   "kind": 12
+  },
+  {
+   "label": "RecE",
+   "kind": 7
+  },
+  {
+   "label": "make",
+   "kind": 12
+  },
+  {
+   "label": "unwrap",
+   "kind": 12
+  },
+  {
+   "label": "print",
+   "kind": 3,
+   "detail": "'a ->{io} unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Write a value and a newline to stdout. Performs `io`."
+   }
+  },
+  {
+   "label": "input",
+   "kind": 3,
+   "detail": "string ->{io} string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Read one line from stdin, without its newline. Performs `io`."
+   }
+  },
+  {
+   "label": "abs",
+   "kind": 3,
+   "detail": "int<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Absolute value."
+   }
+  },
+  {
+   "label": "min",
+   "kind": 3,
+   "detail": "int<'a> -> int<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The smaller of two values. Needs `comparison`."
+   }
+  },
+  {
+   "label": "max",
+   "kind": 3,
+   "detail": "int<'a> -> int<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The larger of two values. Needs `comparison`."
+   }
+  },
+  {
+   "label": "round",
+   "kind": 3,
+   "detail": "float<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Nearest integer, halves to even (Python's rule)."
+   }
+  },
+  {
+   "label": "floor",
+   "kind": 3,
+   "detail": "float<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Largest integer not above the value."
+   }
+  },
+  {
+   "label": "ceil",
+   "kind": 3,
+   "detail": "float<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Smallest integer not below the value."
+   }
+  },
+  {
+   "label": "truncate",
+   "kind": 3,
+   "detail": "float<'a> -> int<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop the fractional part, rounding toward zero."
+   }
+  },
+  {
+   "label": "sqrt",
+   "kind": 3,
+   "detail": "float<'a^2> -> float<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Square root. Unit-aware: `float<m^2>` gives `float<m>`."
+   }
+  },
+  {
+   "label": "cbrt",
+   "kind": 3,
+   "detail": "float<'a^3> -> float<'a>",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Cube root. Unit-aware: `float<m^3>` gives `float<m>`."
+   }
+  },
+  {
+   "label": "id",
+   "kind": 3,
+   "detail": "'a -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Return the argument unchanged."
+   }
+  },
+  {
+   "label": "const",
+   "kind": 3,
+   "detail": "'a -> 'b -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Return the first argument, ignoring the second."
+   }
+  },
+  {
+   "label": "ignore",
+   "kind": 3,
+   "detail": "'a -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Discard a value, giving unit. For calling something only for its effect."
+   }
+  },
+  {
+   "label": "flip",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c) -> 'b -> 'a -> 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Call a two-argument function with its arguments swapped."
+   }
+  },
+  {
+   "label": "fst",
+   "kind": 3,
+   "detail": "('a, 'b) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first element of a pair."
+   }
+  },
+  {
+   "label": "snd",
+   "kind": 3,
+   "detail": "('a, 'b) -> 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The second element of a pair."
+   }
+  },
+  {
+   "label": "sign",
+   "kind": 3,
+   "detail": "int<'a> -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "-1, 0 or 1 according to the sign of a number."
+   }
+  },
+  {
+   "label": "List.map",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> List 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to every element. O(n), and carries the function's effect."
+   }
+  },
+  {
+   "label": "List.filter",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Keep the elements passing a test. O(n)."
+   }
+  },
+  {
+   "label": "List.fold",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'a) -> 'a -> (List 'b) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine every element into an accumulator, left to right. O(n). A fold that builds a collection lowers to an in-place loop."
+   }
+  },
+  {
+   "label": "List.len",
+   "kind": 3,
+   "detail": "(List 'a) -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "How many elements. O(1)."
+   }
+  },
+  {
+   "label": "List.sum",
+   "kind": 3,
+   "detail": "(List int) -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Add every element. O(n); an empty list sums to zero."
+   }
+  },
+  {
+   "label": "List.rev",
+   "kind": 3,
+   "detail": "(List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh list in the opposite order. O(n)."
+   }
+  },
+  {
+   "label": "List.range",
+   "kind": 3,
+   "detail": "int -> int -> List int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The integers from the first bound up to but not including the second. O(n) — it builds the list, where `Seq.range` does not."
+   }
+  },
+  {
+   "label": "List.zip",
+   "kind": 3,
+   "detail": "(List 'a) -> (List 'b) -> List ('a, 'b)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Pair up two lists, stopping at the shorter. O(n)."
+   }
+  },
+  {
+   "label": "List.get",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The element at an index, or `None` when out of range. O(1), and total: there is no bare `xs[i]`."
+   }
+  },
+  {
+   "label": "List.isEmpty",
+   "kind": 3,
+   "detail": "(List 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the list has no elements. O(1)."
+   }
+  },
+  {
+   "label": "List.contains",
+   "kind": 3,
+   "detail": "'a -> (List 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the list holds this element. O(n) linear scan — `Set.contains` is O(1)."
+   }
+  },
+  {
+   "label": "List.concat",
+   "kind": 3,
+   "detail": "(List 'a) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Append two lists into a fresh one. O(n+m). Note this appends, where F#'s `concat` flattens: use `List.flatten` for that."
+   }
+  },
+  {
+   "label": "List.sort",
+   "kind": 3,
+   "detail": "(List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh list in ascending order. O(n log n). Needs `comparison`."
+   }
+  },
+  {
+   "label": "List.find",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first element passing a test, or `None`. O(n), stopping at the first match."
+   }
+  },
+  {
+   "label": "List.choose",
+   "kind": 3,
+   "detail": "('a -> Option 'b) -> (List 'a) -> List 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Map and keep only the `Some` payloads, in one O(n) pass."
+   }
+  },
+  {
+   "label": "List.collect",
+   "kind": 3,
+   "detail": "('a -> List 'b) -> (List 'a) -> List 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Map each element to a list and concatenate the results (flatMap). O(total)."
+   }
+  },
+  {
+   "label": "List.head",
+   "kind": 3,
+   "detail": "(List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first element, or `None` when empty. O(1)."
+   }
+  },
+  {
+   "label": "List.last",
+   "kind": 3,
+   "detail": "(List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The final element, or `None` when empty. O(1)."
+   }
+  },
+  {
+   "label": "List.tail",
+   "kind": 3,
+   "detail": "(List 'a) -> Option (List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Everything after the first element, or `None` when empty. O(n) — it copies."
+   }
+  },
+  {
+   "label": "List.take",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first n elements. O(n); a count past the end takes everything, a negative one takes nothing."
+   }
+  },
+  {
+   "label": "List.drop",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Everything after the first n elements. O(n); a count past the end drops everything."
+   }
+  },
+  {
+   "label": "List.splitAt",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> (List 'a, List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The pair of `take n` and `drop n`. O(n)."
+   }
+  },
+  {
+   "label": "List.map2",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c) -> (List 'a) -> (List 'b) -> List 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine two lists element by element, stopping at the shorter (F# raises instead). O(n)."
+   }
+  },
+  {
+   "label": "List.indexed",
+   "kind": 3,
+   "detail": "(List 'a) -> List (int, 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Pair every element with its index. O(n)."
+   }
+  },
+  {
+   "label": "List.iter",
+   "kind": 3,
+   "detail": "('a -> unit) -> (List 'a) -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a function for its effect on every element, giving unit. O(n), and carries the function's effect."
+   }
+  },
+  {
+   "label": "List.exists",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether any element passes a test. O(n), short-circuiting."
+   }
+  },
+  {
+   "label": "List.forall",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether every element passes a test. O(n), short-circuiting."
+   }
+  },
+  {
+   "label": "List.findIndex",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> Option int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The index of the first element passing a test, or `None`. O(n)."
+   }
+  },
+  {
+   "label": "List.sortBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Sort by a key computed per element. O(n log n). The key needs `comparison`, the element does not."
+   }
+  },
+  {
+   "label": "List.sortDescending",
+   "kind": 3,
+   "detail": "(List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh list in descending order. O(n log n). Needs `comparison`."
+   }
+  },
+  {
+   "label": "List.distinct",
+   "kind": 3,
+   "detail": "(List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop later duplicates, keeping first-seen order. O(n), and elements must be hashable."
+   }
+  },
+  {
+   "label": "List.distinctBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Keep the first element for each key, in first-seen order. O(n)."
+   }
+  },
+  {
+   "label": "List.groupBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> List ('b, List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Group elements by a key into (key, members) pairs, in first-seen key order. O(n)."
+   }
+  },
+  {
+   "label": "List.max",
+   "kind": 3,
+   "detail": "(List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The largest element, or `None` when empty. O(n). Needs `comparison`."
+   }
+  },
+  {
+   "label": "List.min",
+   "kind": 3,
+   "detail": "(List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The smallest element, or `None` when empty. O(n). Needs `comparison`."
+   }
+  },
+  {
+   "label": "List.maxBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The element with the largest key, or `None` when empty. O(n)."
+   }
+  },
+  {
+   "label": "List.minBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The element with the smallest key, or `None` when empty. O(n)."
+   }
+  },
+  {
+   "label": "List.sumBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Add a number computed per element. O(n); an empty list sums to zero, so no `Option`."
+   }
+  },
+  {
+   "label": "List.average",
+   "kind": 3,
+   "detail": "(List float) -> Option float",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The mean, or `None` when empty. O(n). Floats in, float out."
+   }
+  },
+  {
+   "label": "List.reduce",
+   "kind": 3,
+   "detail": "('a -> 'a -> 'a) -> (List 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Fold with no seed, using the first element. O(n); `None` when empty."
+   }
+  },
+  {
+   "label": "List.partition",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> (List 'a, List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Split into the elements passing and failing a test. O(n), testing each element once."
+   }
+  },
+  {
+   "label": "List.unzip",
+   "kind": 3,
+   "detail": "(List ('a, 'b)) -> (List 'a, List 'b)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Split a list of pairs into a pair of lists. O(n)."
+   }
+  },
+  {
+   "label": "List.flatten",
+   "kind": 3,
+   "detail": "(List (List 'a)) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Concatenate a list of lists into one. O(total)."
+   }
+  },
+  {
+   "label": "List.init",
+   "kind": 3,
+   "detail": "int -> (int -> 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Build a list of n elements from their indices. O(n)."
+   }
+  },
+  {
+   "label": "List.replicate",
+   "kind": 3,
+   "detail": "int -> 'a -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A list of n copies of one value. O(n)."
+   }
+  },
+  {
+   "label": "List.updateAt",
+   "kind": 3,
+   "detail": "int -> 'a -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh list with one index replaced. O(n) — it copies; an index outside the list changes nothing."
+   }
+  },
+  {
+   "label": "List.insertAt",
+   "kind": 3,
+   "detail": "int -> 'a -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh list with a value inserted at an index. O(n); the index clamps to the ends."
+   }
+  },
+  {
+   "label": "List.removeAt",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh list without the element at an index. O(n); an index outside the list changes nothing."
+   }
+  },
+  {
+   "label": "List.pairwise",
+   "kind": 3,
+   "detail": "(List 'a) -> List ('a, 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Every consecutive pair. O(n); fewer than two elements gives an empty list."
+   }
+  },
+  {
+   "label": "List.windowed",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> List (List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Every sliding window of the given size, full ones only. O(n*size)."
+   }
+  },
+  {
+   "label": "List.chunkBySize",
+   "kind": 3,
+   "detail": "int -> (List 'a) -> List (List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Consecutive chunks of the given size, the last one short if it does not divide evenly. O(n)."
+   }
+  },
+  {
+   "label": "List.takeWhile",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Take elements while a test passes; stops at the first failure. O(n)."
+   }
+  },
+  {
+   "label": "List.dropWhile",
+   "kind": 3,
+   "detail": "('a -> bool) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Skip elements while a test passes; keeps the rest from the first failure. O(n)."
+   }
+  },
+  {
+   "label": "List.sortByDescending",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Sort by a key, largest first. O(n log n). The key needs `comparison`, the element does not."
+   }
+  },
+  {
+   "label": "List.countBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (List 'a) -> List ('b, int)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "How many elements share each key, in first-seen key order. O(n)."
+   }
+  },
+  {
+   "label": "Set.empty",
+   "kind": 3,
+   "detail": "Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The set with no elements."
+   }
+  },
+  {
+   "label": "Set.isEmpty",
+   "kind": 3,
+   "detail": "(Set 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the set has no elements. O(1)."
+   }
+  },
+  {
+   "label": "Set.map",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Set 'a) -> Set 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to every element. O(n); the result can be smaller, since two elements may map onto one."
+   }
+  },
+  {
+   "label": "Set.filter",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Set 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Keep the elements passing a test. O(n)."
+   }
+  },
+  {
+   "label": "Set.fold",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'a) -> 'a -> (Set 'b) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine every element into an accumulator. O(n), in Python's set order — not sorted."
+   }
+  },
+  {
+   "label": "Set.exists",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Set 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether any element passes a test. O(n), short-circuiting."
+   }
+  },
+  {
+   "label": "Set.forall",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Set 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether every element passes a test. O(n), short-circuiting."
+   }
+  },
+  {
+   "label": "Set.partition",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Set 'a) -> (Set 'a, Set 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Split into the elements passing and failing a test. O(n), testing each element once."
+   }
+  },
+  {
+   "label": "Set.isSubset",
+   "kind": 3,
+   "detail": "(Set 'a) -> (Set 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether every element of the first set is in the second. O(n)."
+   }
+  },
+  {
+   "label": "Set.isSuperset",
+   "kind": 3,
+   "detail": "(Set 'a) -> (Set 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the first set holds every element of the second. O(m)."
+   }
+  },
+  {
+   "label": "Set.max",
+   "kind": 3,
+   "detail": "(Set 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The largest element, or `None` when empty. O(n). Needs `comparison`."
+   }
+  },
+  {
+   "label": "Set.min",
+   "kind": 3,
+   "detail": "(Set 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The smallest element, or `None` when empty. O(n). Needs `comparison`."
+   }
+  },
+  {
+   "label": "Set.add",
+   "kind": 3,
+   "detail": "'a -> (Set 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh set with this element included. O(n) — it copies."
+   }
+  },
+  {
+   "label": "Set.remove",
+   "kind": 3,
+   "detail": "'a -> (Set 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh set without this element. O(n) — it copies."
+   }
+  },
+  {
+   "label": "Set.contains",
+   "kind": 3,
+   "detail": "'a -> (Set 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the set holds this element. O(1) — this is what `Set` is for."
+   }
+  },
+  {
+   "label": "Set.len",
+   "kind": 3,
+   "detail": "(Set 'a) -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "How many elements. O(1)."
+   }
+  },
+  {
+   "label": "Set.union",
+   "kind": 3,
+   "detail": "(Set 'a) -> (Set 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Every element of either set. O(n+m)."
+   }
+  },
+  {
+   "label": "Set.intersect",
+   "kind": 3,
+   "detail": "(Set 'a) -> (Set 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The elements in both sets. O(min(n,m))."
+   }
+  },
+  {
+   "label": "Set.difference",
+   "kind": 3,
+   "detail": "(Set 'a) -> (Set 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The elements of the first set not in the second. O(n)."
+   }
+  },
+  {
+   "label": "Set.ofList",
+   "kind": 3,
+   "detail": "(List 'a) -> Set 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A set of a list's elements, dropping duplicates. O(n)."
+   }
+  },
+  {
+   "label": "Set.toList",
+   "kind": 3,
+   "detail": "(Set 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The elements as a list, in no guaranteed order. O(n)."
+   }
+  },
+  {
+   "label": "Set.iter",
+   "kind": 3,
+   "detail": "('a -> unit) -> (Set 'a) -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a function for its effect on every element. O(n), in Python's set order."
+   }
+  },
+  {
+   "label": "Map.empty",
+   "kind": 3,
+   "detail": "Map 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The map with no entries."
+   }
+  },
+  {
+   "label": "Map.isEmpty",
+   "kind": 3,
+   "detail": "(Map 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the map has no entries. O(1)."
+   }
+  },
+  {
+   "label": "Map.map",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c) -> (Map 'a 'b) -> Map 'a 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to every value, keeping the keys. The function takes the key and the value. O(n)."
+   }
+  },
+  {
+   "label": "Map.filter",
+   "kind": 3,
+   "detail": "('a -> 'b -> bool) -> (Map 'a 'b) -> Map 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Keep the entries whose key and value pass a test. O(n)."
+   }
+  },
+  {
+   "label": "Map.fold",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c -> 'a) -> 'a -> (Map 'b 'c) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine every entry into an accumulator, in insertion order. The function takes the accumulator, the key and the value. O(n)."
+   }
+  },
+  {
+   "label": "Map.exists",
+   "kind": 3,
+   "detail": "('a -> 'b -> bool) -> (Map 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether any entry passes a test. O(n), short-circuiting."
+   }
+  },
+  {
+   "label": "Map.forall",
+   "kind": 3,
+   "detail": "('a -> 'b -> bool) -> (Map 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether every entry passes a test. O(n), short-circuiting."
+   }
+  },
+  {
+   "label": "Map.partition",
+   "kind": 3,
+   "detail": "('a -> 'b -> bool) -> (Map 'a 'b) -> (Map 'a 'b, Map 'a 'b)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Split into the entries passing and failing a test. O(n), testing each entry once."
+   }
+  },
+  {
+   "label": "Map.union",
+   "kind": 3,
+   "detail": "(Map 'a 'b) -> (Map 'a 'b) -> Map 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Every entry of both maps, the second winning a shared key. O(n+m)."
+   }
+  },
+  {
+   "label": "Map.add",
+   "kind": 3,
+   "detail": "'a -> 'b -> (Map 'a 'b) -> Map 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh map with this key set. O(n) — it copies; a fold that builds a map lowers to an in-place loop."
+   }
+  },
+  {
+   "label": "Map.remove",
+   "kind": 3,
+   "detail": "'a -> (Map 'a 'b) -> Map 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fresh map without this key. O(n) — it copies."
+   }
+  },
+  {
+   "label": "Map.contains",
+   "kind": 3,
+   "detail": "'a -> (Map 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the map holds this key. O(1)."
+   }
+  },
+  {
+   "label": "Map.findOr",
+   "kind": 3,
+   "detail": "'a -> 'b -> (Map 'a 'b) -> 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The value for a key, or the given default. O(1)."
+   }
+  },
+  {
+   "label": "Map.tryFind",
+   "kind": 3,
+   "detail": "'a -> (Map 'a 'b) -> Option 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The value for a key, or `None`. O(1)."
+   }
+  },
+  {
+   "label": "Map.len",
+   "kind": 3,
+   "detail": "(Map 'a 'b) -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "How many entries. O(1)."
+   }
+  },
+  {
+   "label": "Map.keys",
+   "kind": 3,
+   "detail": "(Map 'a 'b) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The keys as a list, in insertion order. O(n)."
+   }
+  },
+  {
+   "label": "Map.values",
+   "kind": 3,
+   "detail": "(Map 'a 'b) -> List 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The values as a list, in insertion order. O(n)."
+   }
+  },
+  {
+   "label": "Map.ofList",
+   "kind": 3,
+   "detail": "(List ('a, 'b)) -> Map 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A map from (key, value) pairs; a later pair wins. O(n)."
+   }
+  },
+  {
+   "label": "Map.toList",
+   "kind": 3,
+   "detail": "(Map 'a 'b) -> List ('a, 'b)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The entries as (key, value) pairs, in insertion order. O(n)."
+   }
+  },
+  {
+   "label": "Map.iter",
+   "kind": 3,
+   "detail": "('a -> 'b -> unit) -> (Map 'a 'b) -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a function for its effect on every entry, in insertion order. O(n). The function takes the key and the value."
+   }
+  },
+  {
+   "label": "Option.map2",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c) -> (Option 'a) -> (Option 'b) -> Option 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine two options with a function; `Some` only when both are."
+   }
+  },
+  {
+   "label": "Option.orElse",
+   "kind": 3,
+   "detail": "(Option 'a) -> (Option 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The second option if it has a payload, else the first. The fallback comes first, so it reads as `primary |> Option.orElse fallback`."
+   }
+  },
+  {
+   "label": "Option.flatten",
+   "kind": 3,
+   "detail": "(Option (Option 'a)) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Collapse a nested option into one."
+   }
+  },
+  {
+   "label": "Option.iter",
+   "kind": 3,
+   "detail": "('a -> unit) -> (Option 'a) -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a function for its effect on the payload, if there is one."
+   }
+  },
+  {
+   "label": "Option.toList",
+   "kind": 3,
+   "detail": "(Option 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A one-element list, or the empty list."
+   }
+  },
+  {
+   "label": "Option.exists",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Option 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether there is a payload and it passes a test. `None` fails."
+   }
+  },
+  {
+   "label": "Option.map",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Option 'a) -> Option 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to the payload if there is one."
+   }
+  },
+  {
+   "label": "Option.bind",
+   "kind": 3,
+   "detail": "('a -> Option 'b) -> (Option 'a) -> Option 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Chain a function that itself answers with `Option`."
+   }
+  },
+  {
+   "label": "Option.filter",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Option 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Keep the payload only if it passes a test."
+   }
+  },
+  {
+   "label": "Option.withDefault",
+   "kind": 3,
+   "detail": "'a -> (Option 'a) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The payload, or the given fallback."
+   }
+  },
+  {
+   "label": "Option.isSome",
+   "kind": 3,
+   "detail": "(Option 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether there is a payload."
+   }
+  },
+  {
+   "label": "Option.isNone",
+   "kind": 3,
+   "detail": "(Option 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether there is no payload."
+   }
+  },
+  {
+   "label": "Option.toResult",
+   "kind": 3,
+   "detail": "'a -> (Option 'b) -> Result 'b 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "`Some x` becomes `Ok x`; `None` becomes `Error` with the given value."
+   }
+  },
+  {
+   "label": "Option.forall",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Option 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the payload passes a test. `None` passes, like `List.forall` over an empty list."
+   }
+  },
+  {
+   "label": "Option.contains",
+   "kind": 3,
+   "detail": "'a -> (Option 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether there is a payload equal to this value."
+   }
+  },
+  {
+   "label": "Result.map2",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c) -> (Result 'a 'd) -> (Result 'b 'd) -> Result 'c 'd",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine two results with a function; `Ok` only when both are, otherwise the first `Error`."
+   }
+  },
+  {
+   "label": "Result.orElse",
+   "kind": 3,
+   "detail": "(Result 'a 'b) -> (Result 'a 'b) -> Result 'a 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The second result if it is `Ok`, else the first. The fallback comes first, so it reads as `primary |> Result.orElse fallback`."
+   }
+  },
+  {
+   "label": "Result.iter",
+   "kind": 3,
+   "detail": "('a -> unit) -> (Result 'a 'b) -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a function for its effect on the `Ok` value; an `Error` does nothing."
+   }
+  },
+  {
+   "label": "Result.toList",
+   "kind": 3,
+   "detail": "(Result 'a 'b) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A one-element list from an `Ok`, or the empty list from an `Error`."
+   }
+  },
+  {
+   "label": "Result.map",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Result 'a 'c) -> Result 'b 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to the `Ok` value, leaving an `Error` untouched."
+   }
+  },
+  {
+   "label": "Result.mapError",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Result 'c 'a) -> Result 'c 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to the `Error` value, leaving an `Ok` untouched."
+   }
+  },
+  {
+   "label": "Result.bind",
+   "kind": 3,
+   "detail": "('a -> Result 'b 'c) -> (Result 'a 'c) -> Result 'b 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Chain a function that itself answers with `Result`, short-circuiting on `Error`."
+   }
+  },
+  {
+   "label": "Result.withDefault",
+   "kind": 3,
+   "detail": "'a -> (Result 'a 'b) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The `Ok` value, or the given fallback."
+   }
+  },
+  {
+   "label": "Result.isOk",
+   "kind": 3,
+   "detail": "(Result 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether this is an `Ok`."
+   }
+  },
+  {
+   "label": "Result.isError",
+   "kind": 3,
+   "detail": "(Result 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether this is an `Error`."
+   }
+  },
+  {
+   "label": "Result.toOption",
+   "kind": 3,
+   "detail": "(Result 'a 'b) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "`Ok x` becomes `Some x`; any `Error` becomes `None`."
+   }
+  },
+  {
+   "label": "Result.exists",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Result 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether this is an `Ok` whose value passes a test. An `Error` fails."
+   }
+  },
+  {
+   "label": "Result.forall",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Result 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether an `Ok` value passes a test. An `Error` passes, like `Option.forall` over `None`."
+   }
+  },
+  {
+   "label": "Result.contains",
+   "kind": 3,
+   "detail": "'a -> (Result 'a 'b) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether this is an `Ok` equal to this value."
+   }
+  },
+  {
+   "label": "Seq.drop",
+   "kind": 3,
+   "detail": "int -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Skip the first n elements, lazily."
+   }
+  },
+  {
+   "label": "Seq.takeWhile",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Take elements while a test passes, lazily; stops at the first failure."
+   }
+  },
+  {
+   "label": "Seq.dropWhile",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Skip elements while a test passes, lazily; keeps the rest from the first failure."
+   }
+  },
+  {
+   "label": "Seq.concat",
+   "kind": 3,
+   "detail": "(Seq 'a) -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Append two sequences, lazily. Note this appends, where F#'s `concat` flattens: use `Seq.flatten` for that."
+   }
+  },
+  {
+   "label": "Seq.flatten",
+   "kind": 3,
+   "detail": "(Seq (Seq 'a)) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Concatenate a sequence of sequences, lazily."
+   }
+  },
+  {
+   "label": "Seq.collect",
+   "kind": 3,
+   "detail": "('a -> Seq 'b) -> (Seq 'a) -> Seq 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Map each element to a sequence and concatenate the results, lazily (flatMap)."
+   }
+  },
+  {
+   "label": "Seq.zip",
+   "kind": 3,
+   "detail": "(Seq 'a) -> (Seq 'b) -> Seq ('a, 'b)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Pair up two sequences, lazily, stopping at the shorter."
+   }
+  },
+  {
+   "label": "Seq.indexed",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Seq (int, 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Pair every element with its index, lazily."
+   }
+  },
+  {
+   "label": "Seq.distinct",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop later duplicates, lazily, keeping first-seen order. Remembers what it has seen."
+   }
+  },
+  {
+   "label": "Seq.pairwise",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Seq ('a, 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Every consecutive pair, lazily."
+   }
+  },
+  {
+   "label": "Seq.init",
+   "kind": 3,
+   "detail": "int -> (int -> 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Build a sequence of n elements from their indices, lazily."
+   }
+  },
+  {
+   "label": "Seq.initInfinite",
+   "kind": 3,
+   "detail": "(int -> 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "An endless sequence built from the indices 0, 1, 2, …, lazily. Pair it with `Seq.take`."
+   }
+  },
+  {
+   "label": "Seq.unfold",
+   "kind": 3,
+   "detail": "('a -> Option ('b, 'a)) -> 'a -> Seq 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Generate from a state until the function answers `None`, lazily. The way to build a sequence with no list behind it."
+   }
+  },
+  {
+   "label": "Seq.head",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first element, or `None` when empty. Consumes it — a Python iterator is single-pass."
+   }
+  },
+  {
+   "label": "Seq.isEmpty",
+   "kind": 3,
+   "detail": "(Seq 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the sequence has no elements. Consumes one element to find out."
+   }
+  },
+  {
+   "label": "Seq.len",
+   "kind": 3,
+   "detail": "(Seq 'a) -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "How many elements. Consumes the whole sequence, and does not terminate on an endless one."
+   }
+  },
+  {
+   "label": "Seq.exists",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Seq 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether any element passes a test. Consumes up to the first match."
+   }
+  },
+  {
+   "label": "Seq.forall",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Seq 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether every element passes a test. Consumes up to the first failure."
+   }
+  },
+  {
+   "label": "Seq.contains",
+   "kind": 3,
+   "detail": "'a -> (Seq 'a) -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the sequence holds this element. Consumes up to the first match."
+   }
+  },
+  {
+   "label": "Seq.sum",
+   "kind": 3,
+   "detail": "(Seq int) -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Add every element. Consumes the whole sequence."
+   }
+  },
+  {
+   "label": "Seq.iter",
+   "kind": 3,
+   "detail": "('a -> unit) -> (Seq 'a) -> unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a function for its effect on every element. Consumes the whole sequence."
+   }
+  },
+  {
+   "label": "Seq.find",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first element passing a test, or `None`. Consumes up to the first match."
+   }
+  },
+  {
+   "label": "Seq.map",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Seq 'a) -> Seq 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to every element, lazily. Nothing runs until the sequence is consumed."
+   }
+  },
+  {
+   "label": "Seq.filter",
+   "kind": 3,
+   "detail": "('a -> bool) -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Keep the elements passing a test, lazily."
+   }
+  },
+  {
+   "label": "Seq.take",
+   "kind": 3,
+   "detail": "int -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The first n elements, lazily — safe on an endless sequence."
+   }
+  },
+  {
+   "label": "Seq.fold",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'a) -> 'a -> (Seq 'b) -> 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine every element into an accumulator. Consumes the whole sequence."
+   }
+  },
+  {
+   "label": "Seq.toList",
+   "kind": 3,
+   "detail": "(Seq 'a) -> List 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Force the sequence into a list. Consumes the whole sequence, and does not terminate on an endless one."
+   }
+  },
+  {
+   "label": "Seq.ofList",
+   "kind": 3,
+   "detail": "(List 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "View a list as a sequence. O(1) — no copy, and the result is single-pass."
+   }
+  },
+  {
+   "label": "Seq.range",
+   "kind": 3,
+   "detail": "int -> int -> Seq int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The integers from the first bound up to but not including the second, lazily."
+   }
+  },
+  {
+   "label": "Seq.empty",
+   "kind": 3,
+   "detail": "Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The sequence with no elements."
+   }
+  },
+  {
+   "label": "Seq.distinctBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Seq 'a) -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop later elements with a seen key, lazily. Remembers the keys it has seen."
+   }
+  },
+  {
+   "label": "Seq.replicate",
+   "kind": 3,
+   "detail": "int -> 'a -> Seq 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "n copies of one value, lazily."
+   }
+  },
+  {
+   "label": "Seq.get",
+   "kind": 3,
+   "detail": "int -> (Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The element at a position, or `None`. Consumes up to it."
+   }
+  },
+  {
+   "label": "Seq.last",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The final element, or `None` when empty. Consumes the whole sequence."
+   }
+  },
+  {
+   "label": "Seq.sumBy",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Seq 'a) -> 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Add a number computed per element. Consumes the whole sequence."
+   }
+  },
+  {
+   "label": "Seq.max",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The largest element, or `None` when empty. Consumes the whole sequence. Needs `comparison`."
+   }
+  },
+  {
+   "label": "Seq.min",
+   "kind": 3,
+   "detail": "(Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The smallest element, or `None` when empty. Consumes the whole sequence. Needs `comparison`."
+   }
+  },
+  {
+   "label": "Seq.reduce",
+   "kind": 3,
+   "detail": "('a -> 'a -> 'a) -> (Seq 'a) -> Option 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Fold with no seed, using the first element. Consumes the whole sequence; `None` when empty."
+   }
+  },
+  {
+   "label": "String.len",
+   "kind": 3,
+   "detail": "string -> int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "How many characters. O(1)."
+   }
+  },
+  {
+   "label": "String.isEmpty",
+   "kind": 3,
+   "detail": "string -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the string has no characters. O(1)."
+   }
+  },
+  {
+   "label": "String.get",
+   "kind": 3,
+   "detail": "int -> string -> Option string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The character at an index as a one-character string, or `None` when out of range. O(1), and total."
+   }
+  },
+  {
+   "label": "String.repeat",
+   "kind": 3,
+   "detail": "int -> string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The string repeated n times; a non-positive count gives the empty string. O(n*k)."
+   }
+  },
+  {
+   "label": "String.trimStart",
+   "kind": 3,
+   "detail": "string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop leading whitespace. O(n). `String.strip` does both ends."
+   }
+  },
+  {
+   "label": "String.trimEnd",
+   "kind": 3,
+   "detail": "string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop trailing whitespace. O(n). `String.strip` does both ends."
+   }
+  },
+  {
+   "label": "String.splitLines",
+   "kind": 3,
+   "detail": "string -> List string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Split on any line ending. O(n). A trailing newline does not add an empty last line."
+   }
+  },
+  {
+   "label": "String.rev",
+   "kind": 3,
+   "detail": "string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The characters in the opposite order. O(n)."
+   }
+  },
+  {
+   "label": "String.ofList",
+   "kind": 3,
+   "detail": "(List string) -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Join a list of strings with nothing between them. O(total). The inverse of `String.toList`."
+   }
+  },
+  {
+   "label": "String.concat",
+   "kind": 3,
+   "detail": "string -> string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Join two strings. O(n+m)."
+   }
+  },
+  {
+   "label": "String.join",
+   "kind": 3,
+   "detail": "string -> (List string) -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Join a list of strings with a separator. O(total)."
+   }
+  },
+  {
+   "label": "String.split",
+   "kind": 3,
+   "detail": "string -> string -> List string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Split on a separator into a list of parts. O(n)."
+   }
+  },
+  {
+   "label": "String.upper",
+   "kind": 3,
+   "detail": "string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Upper case. O(n)."
+   }
+  },
+  {
+   "label": "String.lower",
+   "kind": 3,
+   "detail": "string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Lower case. O(n)."
+   }
+  },
+  {
+   "label": "String.strip",
+   "kind": 3,
+   "detail": "string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Drop leading and trailing whitespace. O(n)."
+   }
+  },
+  {
+   "label": "String.contains",
+   "kind": 3,
+   "detail": "string -> string -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the string holds this substring. O(n*m) worst case — it is a search, not a lookup."
+   }
+  },
+  {
+   "label": "String.startsWith",
+   "kind": 3,
+   "detail": "string -> string -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the string begins with this prefix. O(m), the prefix length."
+   }
+  },
+  {
+   "label": "String.endsWith",
+   "kind": 3,
+   "detail": "string -> string -> bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Whether the string ends with this suffix. O(m), the suffix length."
+   }
+  },
+  {
+   "label": "String.replace",
+   "kind": 3,
+   "detail": "string -> string -> string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Every occurrence of one substring replaced by another. O(n)."
+   }
+  },
+  {
+   "label": "String.fromInt",
+   "kind": 3,
+   "detail": "int -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The decimal spelling of an integer."
+   }
+  },
+  {
+   "label": "String.fromFloat",
+   "kind": 3,
+   "detail": "float -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The decimal spelling of a float."
+   }
+  },
+  {
+   "label": "String.toInt",
+   "kind": 3,
+   "detail": "string -> Option int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Parse an integer, or `None` when it does not parse. Total. O(n)."
+   }
+  },
+  {
+   "label": "String.toFloat",
+   "kind": 3,
+   "detail": "string -> Option float",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Parse a float, or `None` when it does not parse. Total. O(n)."
+   }
+  },
+  {
+   "label": "String.toList",
+   "kind": 3,
+   "detail": "string -> List string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The characters as single-character strings — there is no `char` type. O(n)."
+   }
+  },
+  {
+   "label": "String.slice",
+   "kind": 3,
+   "detail": "int -> int -> string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "The characters between two positions, end-exclusive. O(k) in the slice length. Total: out-of-range bounds clamp."
+   }
+  },
+  {
+   "label": "String.tryIndexOf",
+   "kind": 3,
+   "detail": "string -> string -> Option int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Where a substring first occurs, or `None`. O(n*m) worst case — it is a search."
+   }
+  },
+  {
+   "label": "Format.fixed",
+   "kind": 3,
+   "detail": "int -> float<'a> -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A float with exactly this many decimal places."
+   }
+  },
+  {
+   "label": "Format.thousands",
+   "kind": 3,
+   "detail": "int -> float<'a> -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A float with thousands separators and this many decimal places."
+   }
+  },
+  {
+   "label": "Format.percent",
+   "kind": 3,
+   "detail": "int -> float<'a> -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A fraction as a percentage with this many decimal places."
+   }
+  },
+  {
+   "label": "Format.currency",
+   "kind": 3,
+   "detail": "string -> int -> float<'a> -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "An amount with a currency symbol and this many decimal places."
+   }
+  },
+  {
+   "label": "Format.grouped",
+   "kind": 3,
+   "detail": "int<'a> -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "An integer with thousands separators."
+   }
+  },
+  {
+   "label": "Format.padLeft",
+   "kind": 3,
+   "detail": "int -> string -> string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Right-align in a field of this width, padded with this fill string."
+   }
+  },
+  {
+   "label": "Format.padRight",
+   "kind": 3,
+   "detail": "int -> string -> string -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Left-align in a field of this width, padded with this fill string."
+   }
+  },
+  {
+   "label": "Decode.string",
+   "kind": 3,
+   "detail": "Decoder string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode a JSON string."
+   }
+  },
+  {
+   "label": "Decode.int",
+   "kind": 3,
+   "detail": "Decoder int",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode a JSON integer."
+   }
+  },
+  {
+   "label": "Decode.float",
+   "kind": 3,
+   "detail": "Decoder float",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode a JSON number."
+   }
+  },
+  {
+   "label": "Decode.bool",
+   "kind": 3,
+   "detail": "Decoder bool",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode a JSON boolean."
+   }
+  },
+  {
+   "label": "Decode.field",
+   "kind": 3,
+   "detail": "string -> (Decoder 'a) -> Decoder 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode one named field of a JSON object."
+   }
+  },
+  {
+   "label": "Decode.list",
+   "kind": 3,
+   "detail": "(Decoder 'a) -> Decoder (List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode a JSON array, every element with the same decoder."
+   }
+  },
+  {
+   "label": "Decode.nullable",
+   "kind": 3,
+   "detail": "(Decoder 'a) -> Decoder (Option 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Decode a value that may be JSON null, giving `Option`."
+   }
+  },
+  {
+   "label": "Decode.map",
+   "kind": 3,
+   "detail": "('a -> 'b) -> (Decoder 'a) -> Decoder 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Apply a function to a decoder's result."
+   }
+  },
+  {
+   "label": "Decode.map2",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c) -> (Decoder 'a) -> (Decoder 'b) -> Decoder 'c",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine two decoders with a function."
+   }
+  },
+  {
+   "label": "Decode.map3",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c -> 'd) -> (Decoder 'a) -> (Decoder 'b) -> (Decoder 'c) -> Decoder 'd",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine three decoders with a function."
+   }
+  },
+  {
+   "label": "Decode.map4",
+   "kind": 3,
+   "detail": "('a -> 'b -> 'c -> 'd -> 'e) -> (Decoder 'a) -> (Decoder 'b) -> (Decoder 'c) -> (Decoder 'd) -> Decoder 'e",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Combine four decoders with a function."
+   }
+  },
+  {
+   "label": "Decode.succeed",
+   "kind": 3,
+   "detail": "'a -> Decoder 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A decoder that ignores its input and always gives this value."
+   }
+  },
+  {
+   "label": "Decode.fail",
+   "kind": 3,
+   "detail": "string -> Decoder 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A decoder that always fails with this message."
+   }
+  },
+  {
+   "label": "Decode.andThen",
+   "kind": 3,
+   "detail": "('a -> Decoder 'b) -> (Decoder 'a) -> Decoder 'b",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Pick the next decoder from what has been decoded so far."
+   }
+  },
+  {
+   "label": "Decode.oneOf",
+   "kind": 3,
+   "detail": "(List (Decoder 'a)) -> Decoder 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Try each decoder in turn, taking the first that succeeds."
+   }
+  },
+  {
+   "label": "Decode.decodeString",
+   "kind": 3,
+   "detail": "(Decoder 'a) -> string -> Result 'a Exception",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a decoder over JSON text, giving `Result`."
+   }
+  },
+  {
+   "label": "Decode.auto",
+   "kind": 3,
+   "detail": "Decoder 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "A decoder derived from the type it is used at: records, sum types (`{\"type\": …, \"fields\": […]}`), tuples, `List`, `Set`, `Map`, `Option` (`null` or the value) and the primitives, recursively. Round-trips `Encode.auto`."
+   }
+  },
+  {
+   "label": "Async.sleep",
+   "kind": 3,
+   "detail": "float -> Async unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Pause for the given seconds. `asyncio.sleep`."
+   }
+  },
+  {
+   "label": "Async.timeout",
+   "kind": 3,
+   "detail": "float -> (Async 'a) -> Async (Option 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Await a value with a deadline in seconds: `Some` the result, or `None` if it ran out. `asyncio.wait_for`."
+   }
+  },
+  {
+   "label": "Async.toThread",
+   "kind": 3,
+   "detail": "(unit -> 'a) -> Async 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run a blocking thunk on a worker thread and await its result, keeping the event loop free. `asyncio.to_thread`."
+   }
+  },
+  {
+   "label": "Async.parallel",
+   "kind": 3,
+   "detail": "(List (Async 'a)) -> Async (List 'a)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Await every value at once and collect the results in order. `asyncio.gather`."
+   }
+  },
+  {
+   "label": "Async.race",
+   "kind": 3,
+   "detail": "(List (Async 'a)) -> Async 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Await the first value to finish and cancel the rest; the list must be non-empty (an empty race raises `ValueError` at the await). `asyncio.wait(FIRST_COMPLETED)`."
+   }
+  },
+  {
+   "label": "Async.catch",
+   "kind": 3,
+   "detail": "(Async 'a) -> Async (Result 'a Exception)",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Await a value, turning an exception raised at the await into `Error` with the same `Exception` record `try` builds. Cancellation passes through."
+   }
+  },
+  {
+   "label": "Task.scope",
+   "kind": 3,
+   "detail": "(Async 'a) -> Async 'a",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Run an async body inside a scope: every task started in it is joined or cancelled when the body ends, and one failure cancels the rest. `asyncio.TaskGroup`."
+   }
+  },
+  {
+   "label": "Task.start",
+   "kind": 3,
+   "detail": "(Async unit) ->{spawn} unit",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Start a task in the enclosing `Task.scope`, which owns it. Performs `spawn`, which only a scope discharges, so a start outside one is a compile error."
+   }
+  },
+  {
+   "label": "Encode.auto",
+   "kind": 3,
+   "detail": "'a -> string",
+   "documentation": {
+    "kind": "markdown",
+    "value": "Encode any value with a JSON form to a JSON string: records as objects, sum-type cases as `{\"type\": …, \"fields\": […]}`, `Option` as `null` or the value, a `Map` with string keys as an object and any other as a list of pairs. Round-trips `Decode.auto`."
+   }
+  },
+  {
+   "label": "Ok",
+   "kind": 4
+  },
+  {
+   "label": "Error",
+   "kind": 4
+  },
+  {
+   "label": "Some",
+   "kind": 4
+  },
+  {
+   "label": "None",
+   "kind": 4
+  },
+  {
+   "label": "int",
+   "kind": 7
+  },
+  {
+   "label": "float",
+   "kind": 7
+  },
+  {
+   "label": "bool",
+   "kind": 7
+  },
+  {
+   "label": "string",
+   "kind": 7
+  },
+  {
+   "label": "unit",
+   "kind": 7
+  },
+  {
+   "label": "Result",
+   "kind": 7
+  },
+  {
+   "label": "Async",
+   "kind": 7
+  },
+  {
+   "label": "Seq",
+   "kind": 7
+  },
+  {
+   "label": "List",
+   "kind": 7
+  },
+  {
+   "label": "Set",
+   "kind": 7
+  },
+  {
+   "label": "Map",
+   "kind": 7
+  },
+  {
+   "label": "Option",
+   "kind": 7
+  },
+  {
+   "label": "Decoder",
+   "kind": 7
+  },
+  {
+   "label": "let",
+   "kind": 14
+  },
+  {
+   "label": "mut",
+   "kind": 14
+  },
+  {
+   "label": "pure",
+   "kind": 14
+  },
+  {
+   "label": "type",
+   "kind": 14
+  },
+  {
+   "label": "measure",
+   "kind": 14
+  },
+  {
+   "label": "extern",
+   "kind": 14
+  },
+  {
+   "label": "if",
+   "kind": 14
+  },
+  {
+   "label": "then",
+   "kind": 14
+  },
+  {
+   "label": "else",
+   "kind": 14
+  },
+  {
+   "label": "match",
+   "kind": 14
+  },
+  {
+   "label": "with",
+   "kind": 14
+  },
+  {
+   "label": "fun",
+   "kind": 14
+  },
+  {
+   "label": "and",
+   "kind": 14
+  },
+  {
+   "label": "or",
+   "kind": 14
+  },
+  {
+   "label": "not",
+   "kind": 14
+  },
+  {
+   "label": "true",
+   "kind": 14
+  },
+  {
+   "label": "false",
+   "kind": 14
+  },
+  {
+   "label": "return",
+   "kind": 14
+  },
+  {
+   "label": "in",
+   "kind": 14
+  },
+  {
+   "label": "async",
+   "kind": 14
+  },
+  {
+   "label": "seq",
+   "kind": 14
+  },
+  {
+   "label": "result",
+   "kind": 14
+  },
+  {
+   "label": "option",
+   "kind": 14
+  }
+ ]
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

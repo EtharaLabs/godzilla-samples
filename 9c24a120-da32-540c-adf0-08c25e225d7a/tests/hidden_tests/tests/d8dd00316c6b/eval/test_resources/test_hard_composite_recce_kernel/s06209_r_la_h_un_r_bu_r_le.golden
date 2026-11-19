@@ -1,0 +1,95 @@
+exit: 0
+--- stdout ---
+00000002ok00000220inputs2 : List int
+factor : int
+makers2 : List (int -> int)
+reach : float<m>
+ratio : float
+side : float<m>
+vol : float<m>
+rateOf : int<'a> -> int<'b> -> float<'a/'b>
+cells : List int
+female : int -> int
+mal : int -> int
+00002223import functools
+import math
+import math as mth
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fst(p):
+    return p[0]
+inputs2 = [1, 14, -5, -7, -8, 18, -4]
+factor = 2
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(8), makers2))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), inputs2))
+def _pf_fn2(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn2, _pf_indexed(inputs2))))
+reach = math.hypot(6.0 / 1.0, 9.0 / 1.0) * 1.0
+ratio = math.sqrt(5.0)
+side = math.sqrt(36.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(reach / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 8.0)))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 3], lambda k: Grid_yield_(a * b + k))
+cells = Grid_combine(Grid_for_([(5, 2), (4, 1)], _pf_fn3), Grid_delay(lambda _: Grid_yield_(7)))
+print(cells)
+def female(n):
+    if n == 0:
+        return 1
+    else:
+        return n - mal(female(n - 1))
+def mal(n):
+    if n == 0:
+        return 0
+    else:
+        return n - female(mal(n - 1))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+print((_pf_map(female, _pf_range(0, 6)), _pf_map(mal, _pf_range(0, 5))))
+00000002ok00000019female : int -> int0000000000000002ok00000016reach : float<m>00000000--- stderr ---

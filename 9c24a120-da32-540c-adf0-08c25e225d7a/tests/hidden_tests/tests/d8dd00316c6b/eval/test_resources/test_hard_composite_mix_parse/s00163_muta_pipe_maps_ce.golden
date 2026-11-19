@@ -1,0 +1,41 @@
+exit: 0
+--- stdout ---
+let mut ticks = 0
+let record x =
+    (ticks <- (ticks + 1))
+    (x * 4)
+let profile xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (profile [5, (- 2), 33, 52]))
+let doubled = ([5, (- 2), 33, 52] |> (List.map record))
+(print f"{doubled} after {ticks} calls")
+let readings = [10, 14, 31, 40, 16, 4, 18, 15, 15]
+let digest = ((List.forall (fun x -> (x >= 0))) ((List.filter (fun x -> (x > (- 4)))) ((List.map (max 2)) ((List.distinctBy (fun x -> (x % 4))) readings))))
+(print digest)
+let visits = ["bo", "eli", "eli", "cy", "cy", "eli", "bo", "dee"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) visits)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print ((counts |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+(print (((Map.fold (fun acc k v -> (acc + v))) 0) counts))
+let sa = (Set.ofList [2, 5, 13, 15, 16, 18])
+let sb = (Set.ofList [1, 2, 7, 9, 13, 17])
+(print ((((Set.union sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 19) sb), ((Set.isSubset (Set.ofList [2])) sa)))
+(print (((counts |> Map.keys) |> List.sort) |> (String.join ",")))
+let readPair line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let lines = ["sue=6=1", "dee = 0", "hal = 8", "ned = 5", "oz = 5"]
+let results = ((List.map readPair) lines)
+((List.iter print) results)
+let errs = ((results |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine results) |> (Result.mapError String.upper)))
+--- stderr ---

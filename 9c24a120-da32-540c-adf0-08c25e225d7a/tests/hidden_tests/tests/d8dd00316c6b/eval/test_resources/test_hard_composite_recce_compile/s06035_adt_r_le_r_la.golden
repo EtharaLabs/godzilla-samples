@@ -1,0 +1,118 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: str
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Load({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Skip({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (3, self._0, self._1)
+def render(t):
+    match t:
+        case Pop(s0):
+            return f"pop({s0})"
+        case Load(n0, n1) if n0 > 3:
+            return f"load!({n0},{n1})"
+        case Load(n0, n1):
+            return f"load({n0},{n1})"
+        case Push(n0):
+            return f"push({n0})"
+        case Skip(3, _):
+            return "skip-3"
+        case Skip(n0, s1):
+            return f"skip({n0},{s1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Pop(_):
+            return 7
+        case Push(x0):
+            return x0 * 5
+        case Load(x0, x1):
+            return x0 + x1
+        case _:
+            return 1
+stream = [Push(10), Push(12), Push(6), Pop("oz"), Push(1), Load(5, 3)]
+print(_pf_str_join(" ", _pf_map(render, stream)))
+total = _pf_sum_by(weight, stream)
+print(f"total={total}")
+print(_pf_sort(stream))
+def ping(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pong(n - 1, acc + 1)
+def pong(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return ping(n - 3, acc - 1)
+print(_pf_map(lambda n: ping(n, 1), [5, 15, 17, 17]))
+inputs2 = [24, 13, 25, 17, -4, 10, 26]
+factor = 2
+shape2 = lambda _pf_x: (lambda z: z - 9)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, inputs2))
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), inputs2))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(6), makers2))
+--- stderr ---

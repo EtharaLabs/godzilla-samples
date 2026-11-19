@@ -1,0 +1,145 @@
+exit: 0
+--- stdout ---
+00000002ok00000334rawOf : AccountNo -> string
+mint : 'a -> int -> List AccountNo
+keys : List AccountNo
+events : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+counts : Map string int
+sa : Set int
+sb : Set int
+accumulate : int -> int -> int
+ipow : int -> int -> int<'a> -> int<'a>
+digitSum : int -> int
+lines : List Entry
+fmtLine : Entry -> string
+00003663from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("sku", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+events = ["bo", "dee", "dee", "bo", "dee", "dee", "fay", "cy"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+sa = set([4, 8, 9, 11, 13, 17])
+sb = set([1, 4, 5, 6, 16, 17])
+print(_pf_sort(list(_pf_set_union(sa, sb))))
+print((len(sa), 13 in sb, _pf_set_is_subset(set([4]), sa)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(1530, 0))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(2, 12, 1))
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(8656))
+lines = [Entry("cog", 30, 10.5), Entry("cap", 25, 4.1), Entry("rod", 18, 33.8), Entry("wick", 16, 24.72)]
+def fmtLine(x):
+    return f"{_pf_fmt_pad_right(6, " ", x.name)}|{_pf_fmt_pad_left(4, " ", str(x.qty))}|{_pf_fmt_fixed(1, x.price)}|{"restock" if x.qty > 14 else "ok"}"
+_pf_iter(print, _pf_map(fmtLine, lines))
+print(f"items: {_pf_str_join(", ", _pf_map(lambda x: x.name, lines))}")
+00000002ok00000034mint : 'a -> int -> List AccountNo0000000000000002ok00000030accumulate : int -> int -> int00000000--- stderr ---

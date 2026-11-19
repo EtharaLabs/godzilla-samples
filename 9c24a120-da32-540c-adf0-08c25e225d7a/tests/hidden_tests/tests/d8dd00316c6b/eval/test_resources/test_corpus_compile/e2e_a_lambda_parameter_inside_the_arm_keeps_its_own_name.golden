@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def f(x, o):
+    if isinstance(o, Some):
+        _x = o._0
+        _pf_t0 = _pf_map(lambda x: x + 1, _x)
+    else:
+        _pf_t0 = []
+    r = _pf_t0
+    return len(r) + x
+r = f(10, Some([1, 2, 3]))
+--- stderr ---

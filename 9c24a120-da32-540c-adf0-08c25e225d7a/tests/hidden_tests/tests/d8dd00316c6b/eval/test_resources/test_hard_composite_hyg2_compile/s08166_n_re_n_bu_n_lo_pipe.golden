@@ -1,0 +1,79 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take_while(f, xs):
+    return list(itertools.takewhile(f, xs))
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def build(start):
+    x = start
+    g0 = lambda y: x + y
+    x = x * 3
+    g1 = lambda y: x + y
+    x = x + 6
+    return (g0(5), g1(5), x)
+print(build(6))
+list_ = [6, 3, 1]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+dict_ = dict([("k", 9)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 8
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(3, [1, 1, 0]))
+def _pf_fn0():
+    for (name, k) in [("a", 8), ("b", 9)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(3), list(handlers)))
+acc = []
+for k in [5, 3, 3]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+chain = acc
+print(_pf_map(lambda h: h(2), chain))
+print(_pf_fold(lambda v, h: h(v), 1, chain))
+readings = [44, -6, 47, 27, 9, 8]
+def isBig(n):
+    return n > 2 and n % 4 != 0
+answer = len(_pf_filter(lambda x: x % 2 == 1, _pf_drop(1, _pf_sort_by(lambda x: x % 3, _pf_take_while(lambda x: x < 35, (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(3, _pf_x)))(readings))))))
+print(answer)
+--- stderr ---

@@ -1,0 +1,147 @@
+exit: 0
+--- stdout ---
+00000002ok00000250value : (Map string int) -> Val -> int
+runSt : (Map string int) -> Cmd2 -> Map string int
+safeDiv : string -> string -> Option int
+nums2 : List int
+gain : int
+tweak2 : int -> int
+readings : List int
+addK : int<'a> -> int<'a> -> int<'a>
+answer : bool
+00004236from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_exists(f, xs):
+    return any(map(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_take_while(f, xs):
+    return list(itertools.takewhile(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+def value(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return value(env, a) + value(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(runSt, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def runSt(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, value(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", value(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(value(dict(), Block([Set("a", Lit(7)), Set("b", Plus(Ref("a"), Lit(4))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 3))))
+print((safeDiv("49", "8"), safeDiv("4", "0"), safeDiv("x", "1")))
+nums2 = [14, -3, 16, 2, 0, 1, 26]
+gain = 3
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(nums2))))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+tweak2 = lambda _pf_x: (lambda z: z - 1)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(nums2), nums2))
+readings = [42, 27, 26, -10, 38, 9, 41, 29]
+def addK(k, x):
+    return x + k
+answer = _pf_exists(lambda x: x > 27, _pf_map(lambda b: 31 - b, _pf_map(functools.partial(addK, 1), _pf_take_while(lambda x: x < 46, _pf_map(lambda x: x * x - 5, readings)))))
+print(answer)
+print(len(readings))
+00000002ok00000016nums2 : List int0000000000000002ok00000013answer : bool00000000--- stderr ---

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+00000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000093def firstOr(d, xs):
+    if xs:
+        x = xs[0]
+        return x
+    else:
+        return d
+00000005error00000074error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^0000000000000005error00000074error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^0000000000000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000000--- stderr ---

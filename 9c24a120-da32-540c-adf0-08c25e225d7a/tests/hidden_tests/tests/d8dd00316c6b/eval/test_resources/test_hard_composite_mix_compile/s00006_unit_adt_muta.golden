@@ -1,0 +1,135 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    def __repr__(self):
+        return "Halt"
+_Halt = Halt()
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    def __repr__(self):
+        return "Load"
+_Load = Load()
+laps = [423.3, 474.0, 87.8, 282.4]
+durations = [31.9, 43.3, 82.8, 61.8]
+total = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, laps)
+dur = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = total / dur
+print(_pf_fmt_fixed(2, rate))
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(laps, durations))
+print(best)
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(total, dur) * 1000.0))
+speeds = _pf_map2(lambda d, t: d / t, laps, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+mass = 46.0
+accel = 9.5
+push = mass * accel
+limit = 308.0
+print("over" if push > limit else "under")
+def render(t):
+    match t:
+        case Push(2):
+            return "push-2"
+        case Push(n0):
+            return f"push({n0})"
+        case Pop(n0) if n0 > 9:
+            return f"pop!({n0})"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Rest(n0) if 0 <= n0 < 7:
+            return f"rest!({n0})"
+        case Rest(n0):
+            return f"rest({n0})"
+        case Halt() | Load():
+            return "halt/load"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Load():
+            return 5
+        case _:
+            return 3
+queue = [Pop(4), Pop(0), _Halt, _Load, Push(11)]
+print(_pf_str_join(" ", _pf_map(render, queue)))
+total2 = _pf_sum_by(rank, queue)
+print(f"total2={total2}")
+print(len(_pf_filter(lambda t: rank(t) > 3, queue)))
+hits = 0
+def track(x):
+    global hits
+    hits = hits + 1
+    return x * 4
+def stats(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(stats([-8, 44, 48, 40, 40, -9, 36]))
+doubled = _pf_map(track, [-8, 44, 48, 40])
+print(f"{doubled} after {hits} calls")
+--- stderr ---

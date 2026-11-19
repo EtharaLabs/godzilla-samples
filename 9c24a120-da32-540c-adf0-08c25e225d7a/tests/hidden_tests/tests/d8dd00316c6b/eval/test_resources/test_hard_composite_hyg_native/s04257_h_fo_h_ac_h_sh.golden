@@ -1,0 +1,153 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Instr = Put | Push | Noop
+def replay(script: list[Instr]) -> tuple[dict[str, int], list[int]]:
+    def apply(acc: tuple[dict[str, int], list[int]], op: Instr) -> tuple[dict[str, int], list[int]]:
+        m = acc[0]
+        xs = acc[1]
+        if isinstance(op, Put):
+            k = op._0
+            v = op._1
+            return (_pf_map_add(k, v, m), xs)
+        elif isinstance(op, Push):
+            n = op._0
+            return (m, _pf_concat(xs, [n]))
+        else:
+            return acc
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Push(n):
+                xs.append(n)
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+changes: list[Instr] = [_Noop, _Noop, Push(7), _Noop, _Noop, Push(5)]
+final: tuple[dict[str, int], list[int]] = replay(changes)
+mm, items = final
+print((_pf_map_to_list(mm), items))
+acc: int = _pf_fold(lambda apply, x: apply + x * x, 0, [8, 2, 9, 6])
+print(acc)
+def _ap_KeyVal(s):
+    _pf_t0 = _pf_str_split("=", s)
+    if len(_pf_t0) == 2:
+        k = _pf_t0[0]
+        v = _pf_t0[1]
+        _pf_t1 = _pf_str_to_int(v)
+        if isinstance(_pf_t1, Some):
+            n = _pf_t1._0
+            return Some((_pf_str_strip(k), n))
+        else:
+            return _None_
+    else:
+        return _None_
+def grade(s: str) -> str:
+    _pf_t2 = _ap_KeyVal(s)
+    if isinstance(_pf_t2, Some):
+        pair = _pf_t2._0
+        if _pf_snd(pair) > 9:
+            return f"{_pf_fst(pair)} big"
+    if isinstance(_pf_t2, Some):
+        pair = _pf_t2._0
+        return f"{_pf_fst(pair)}={_pf_snd(pair)}"
+    return "?"
+_pf_iter(print, _pf_map(grade, ["bo", "dee", "ray=x", "cy=x"]))
+def combine(o: Some | None_) -> int:
+    def pair(a: int, b: int) -> int:
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t3 = _pair
+    else:
+        _pf_t3 = 1
+    r = _pf_t3
+    return pair(r, 6)
+print((combine(Some(7)), combine(_None_)))
+def adjust(x: int, flag: bool) -> tuple[int, int]:
+    y = x * 2
+    if flag:
+        _y = x + 775
+        _pf_t4 = _y - 1
+    else:
+        _pf_t4 = y
+    z = _pf_t4
+    return (y, z)
+print((adjust(9, True), adjust(3, False)))
+makers = _pf_map(lambda k: lambda x: x * 10 + k, [1, 8, 4])
+print(_pf_map(lambda g: g(3), makers))
+def swapSum(pairs: list[tuple[int, int]]) -> list[int]:
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn0(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn0, pairs))
+print(swapSum([(1, 6), (2, 3)]))
+--- stderr ---

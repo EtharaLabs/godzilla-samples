@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+00000005error00000351error: this function performs {io}, but `each` takes this callback as `int -> unit`, which performs nothing; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `int ->{e} unit`
+ --> 7:17
+  |
+7 | let g u = each (fun x -> counter <- counter + x)
+  |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+0000000000000005error00000058error: unbound name `each`
+ --> 2:1
+  |
+2 | each
+  | ^^^^
+0000000000000005error00000049error: unbound name `g`
+ --> 2:1
+  |
+2 | g
+  | ^
+00000000--- stderr ---

@@ -1,0 +1,54 @@
+exit: 0
+--- stdout ---
+00000005error00000141error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 2:15
+  |
+2 | let bad = 1 + "x"
+  |               ^^^
+0000000000000002ok00000020flip : Coin -> Coin
+00000497from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Heads:
+    def __repr__(self):
+        return "Heads"
+_Heads = Heads()
+@dataclass(frozen=True, slots=True, repr=False)
+class Tails:
+    def __repr__(self):
+        return "Tails"
+_Tails = Tails()
+def flip(c):
+    match c:
+        case Heads():
+            return _Tails
+        case Tails():
+            return _Heads
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(flip(_Heads))
+00000002ok00000006p : P
+00000089@dataclass(frozen=True, slots=True)
+class P:
+    name: str
+    age: int
+p = P("Ada", 36)
+00000002ok00000052safeDiv : int<'a> -> int -> Result float<'a> string
+00000366@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def safeDiv(a, b):
+    if b == 0:
+        return Error("div0")
+    else:
+        return Ok(a / b)
+00000002ok00000008t : int
+00000019t = 3
+print(t * t)
+--- stderr ---

@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+# ==== ffi.py ====
+import textwrap as tw
+indent = tw.indent
+
+# ==== main.py ====
+import functools
+import ffi
+def _pf_map(f, xs):
+    return list(map(f, xs))
+print(ffi.indent("a\nb", "> "))
+print(_pf_map(functools.partial(ffi.indent, "a\nb"), ["> "]))
+
+--- stderr ---

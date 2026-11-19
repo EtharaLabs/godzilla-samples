@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unknown measure `furlong`
+ --> 7:3
+  |
+7 |   3.0<furlong>
+  |   ^^^^^^^^^^^^
+
+error: field `x` is set twice
+ --> 9:29
+  |
+9 | let i2 = if Pt { x = 1, x = 2, y = 3 } then 1 else 2
+  |                             ^
+
+error: non-exhaustive match: `Some _` is not matched
+  --> 11:3
+   |
+11 |   match o:
+   |   ^^^^^^^^
+
+3 errors

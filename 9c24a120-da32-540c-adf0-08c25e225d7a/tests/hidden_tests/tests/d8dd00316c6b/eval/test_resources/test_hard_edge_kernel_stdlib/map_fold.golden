@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+00000002ok00000060Map.fold : ('a -> 'b -> 'c -> 'a) -> 'a -> (Map 'b 'c) -> 'a0000000000000002ok0000000000000124def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+print(_pf_map_fold)
+--- stderr ---

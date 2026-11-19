@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+type Entry = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Entry { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let payload = "[{\"name\": \"jo\", \"points\": 68, \"active\": false}, {\"name\": \"oz\", \"points\": 69, \"active\": true}, {\"name\": \"quin\", \"points\": 4, \"active\": false}, {\"name\": \"ray\", \"points\": 0, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list dec)) payload):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let mut calls = 0
+let record x =
+    (calls <- (calls + 1))
+    (x * 2)
+let summarize xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (summarize [24, 57, 44, 39, 60, 1, 59]))
+let doubled = ([24, 57, 44, 39] |> (List.map record))
+(print f"{doubled} after {calls} calls")
+let recordTwice = (record >> record)
+(print ((recordTwice 3), calls))
+let sentence = "gear rod tom hub"
+let parts = ((String.split " ") sentence)
+(print (((String.slice 1) 8) sentence))
+(print (((String.tryIndexOf "hu") sentence), ((String.contains "hu") sentence)))
+let longest = ((parts |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+let count = (List.len parts)
+(print f"count={count} {{braces}} {(String.len sentence)}")
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+let nums = (((String.split ",") ",7,40,40,x") |> (List.map String.toInt))
+(print nums)
+(print ((nums |> (List.choose id)) |> List.sum))
+let accumulate n acc = (if (n == 0) then acc else ((accumulate (n - 1)) (acc + (n * n))))
+(print ((accumulate 2112) 0))
+let ipow b e acc =
+    match e:
+        case 0: acc
+        case k if ((k % 2) == 1): (((ipow b) (k - 1)) (acc * b))
+        case k: (((ipow (b * b)) (k // 2)) acc)
+(print (((ipow 7) 9) 1))
+let euclid a b = (if (b == 0) then a else ((euclid b) (a % b)))
+(print ((euclid 20) 181))
+--- stderr ---

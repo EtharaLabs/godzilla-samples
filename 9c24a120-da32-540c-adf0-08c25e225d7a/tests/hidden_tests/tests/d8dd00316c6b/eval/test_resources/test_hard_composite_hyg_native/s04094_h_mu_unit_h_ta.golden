@@ -1,0 +1,113 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import asyncio
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def inspect(xs: list[int]) -> int:
+    seen = 0
+    best = 0
+    def note(x: int):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n: int, acc: int) -> int:
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(3, 0)
+print(inspect([32, 37, 9]))
+events: list[str] = []
+def logEvent(msg: str) -> int:
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts: list[int] = _pf_map(logEvent, ["start", "ray", "stop"])
+print((events, counts))
+segments: list[float] = [457.1, 42.6, 282.9, 51.2]
+times: list[float] = [45.6, 31.1, 56.8, 60.1]
+dist: float = _pf_fold(lambda acc, d: acc + d, 0.0, segments)
+elapsed: float = _pf_fold(lambda a, b: a + b, 0.0, times)
+pace: float = dist / elapsed
+print(_pf_fmt_fixed(2, pace))
+edge: float = math.sqrt(25.0)
+cube: float = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+speeds: list[float] = _pf_map2(lambda d, t: d / t, segments, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best: Some | None_ = _pf_max_by(_pf_fn0, _pf_zip(segments, times))
+print(best)
+km: float = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def finished(acc):
+    async def _pf_fn1():
+        return acc
+    return _pf_Async(_pf_fn1)
+def spin(n: int, acc: int):
+    async def _pf_fn3():
+        async def _pf_fn2():
+            return n * 3
+        k = await _pf_fn2()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await spin(n - 1, acc + k)
+    return _pf_Async(_pf_fn3)
+print(asyncio.run(_pf_run(spin(35, 0))))
+--- stderr ---
+note: `spin` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

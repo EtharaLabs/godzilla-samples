@@ -1,0 +1,192 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+import json
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    points: int
+    active: bool
+decoder = _pf_dec_map3(lambda n, p, a: Entry(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+jsonText: str = "[{\"name\": \"gus\", \"points\": 48, \"active\": true}, {\"name\": \"ada\", \"points\": 60, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+_pf_t1 = lambda n, p, a: Entry(n, p, a)
+try:
+    _pf_t2 = json.loads(jsonText)
+    if not isinstance(_pf_t2, list):
+        raise ValueError("expected a JSON array")
+    _pf_t3 = []
+    for _pf_t4 in _pf_t2:
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t5 = _pf_t4["name"]
+        if not isinstance(_pf_t5, str):
+            raise ValueError("expected a string, got " + type(_pf_t5).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t6 = _pf_t4["points"]
+        if not (isinstance(_pf_t6, int) and not isinstance(_pf_t6, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t6).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t7 = _pf_t4["active"]
+        if not isinstance(_pf_t7, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t7).__name__)
+        _pf_t3.append(_pf_t1(_pf_t5, _pf_t6, _pf_t7))
+    _pf_t8 = Ok(_pf_t3)
+except Exception as e:
+    _pf_t8 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t8, Ok):
+    ps = _pf_t8._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t0 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t8._0
+    _pf_t0 = print(f"decode failed: {e.errorKind}")
+_pf_t0
+visits: list[str] = ["ada", "dee", "ada", "cy", "cy", "bo", "eli", "fay"]
+m = dict()
+for w in visits:
+    _pf_t9 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t9
+hist: dict[str, int] = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+sa: set[int] = set([2, 4, 12, 15, 17, 19])
+sb: set[int] = set([1, 2, 11, 12, 13, 16])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 7 in sb, _pf_set_is_subset(set([2]), sa)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+extra: dict[str, int] = dict([("zed", 5), ("ada", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, hist))))
+def unwrap(x) -> str:
+    s = x
+    return s
+def makeIds(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = makeIds("u", 2)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("u-1"))
+def _pf_fn1():
+    for x in _pf_range(1, 7):
+        y = x * x
+        yield y
+evens = _pf_fn1()
+print(list(filter(lambda n: n % 2 == 0, evens)))
+print(list(_pf_seq_take(2, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 3)))))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn2, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 505, fib)))
+def row(n: int) -> list[int]:
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(7))
+def fromBin(s: str) -> int:
+    return int(s, base=2)
+print(fromBin("1011011") + int("41", base=8))
+--- stderr ---

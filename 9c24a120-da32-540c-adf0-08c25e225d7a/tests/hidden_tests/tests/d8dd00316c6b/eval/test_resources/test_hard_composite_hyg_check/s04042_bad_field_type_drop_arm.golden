@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+  --> 43:77
+   |
+43 | let members = [Member { name = "cy", age = 3 }, Member { name = "cy", age = "1" }]
+   |                                                                             ^^^
+
+error: non-exhaustive match: `Push _` is not matched
+  --> 50:5
+   |
+50 |     match op:
+   |     ^^^^^^^^^
+
+2 errors

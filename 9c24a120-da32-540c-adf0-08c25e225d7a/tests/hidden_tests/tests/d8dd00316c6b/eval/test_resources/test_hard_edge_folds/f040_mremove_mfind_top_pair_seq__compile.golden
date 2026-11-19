@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_remove(k, m):
+    r = dict(m)
+    r.pop(k, None)
+    return r
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+init_a = dict([(1, 1), (3, 3), (5, 5)])
+pairs = [(5, 50), (6, 60), (5, 70)]
+def step(_pf_arg0, _pf_arg1):
+    a, b = _pf_arg0
+    k, v = _pf_arg1
+    return (_pf_map_remove(k, a), _pf_map_add(k, _pf_option_with_default(0, _pf_map_try_find(k, b)) + 1, b))
+def compute(u):
+    return _pf_fold(step, (init_a, dict()), iter(pairs))
+result = compute(None)
+r_a, r_b = result
+print(_pf_map_to_list(r_a))
+print(_pf_map_to_list(r_b))
+--- stderr ---

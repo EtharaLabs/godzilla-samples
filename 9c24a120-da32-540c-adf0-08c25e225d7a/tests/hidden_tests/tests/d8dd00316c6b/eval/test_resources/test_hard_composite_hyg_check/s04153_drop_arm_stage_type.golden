@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected string, found int
+ --> 5:115
+  |
+5 | let digest = (List.exists (fun x -> x > 25)) ((List.indexed >> List.map (fun (i, x) -> i * x)) (List.map (max 2) (List.map String.upper (List.collect (fun x -> [x, x + 1]) (List.map (max 5) ((List.chunkBySize 5 >> List.map List.sum) (List.sort (values))))))))
+  |                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: non-exhaustive match: add a wildcard `_` arm
+  --> 50:3
+   |
+50 |   match s:
+   |   ^^^^^^^^
+
+2 errors

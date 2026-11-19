@@ -1,0 +1,165 @@
+exit: 0
+--- stdout ---
+00000002ok00000232evenP : int -> bool
+isOdd2 : int -> bool
+readForm : string -> string -> Result Form string
+describe : Token -> string
+weight : Token -> int
+batch : List Token
+grandSum : int
+seriesA : List int
+gain : int
+makers2 : List (int -> int)
+00004263from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Rest({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd2(n - 1)
+def isOdd2(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [37, 12, 28, 31, 2]))
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 18 else Error("too young"), lambda adult: Check_return_(Form(name, adult)))))
+print(readForm("ned", "47"))
+print((readForm("a", "30"), readForm("bob", "x")))
+def describe(t):
+    match t:
+        case Load(n0) if n0 % 2 == 0:
+            return f"load!({n0})"
+        case Load(n0):
+            return f"load({n0})"
+        case Skip():
+            return f"skip"
+        case Rest(s0, s1):
+            return f"rest({s0},{s1})"
+        case Store(n0) if n0 % 2 == 0:
+            return f"store!({n0})"
+        case Store(n0):
+            return f"store({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Rest(_, _):
+            return 5
+        case Load(x0):
+            return x0
+        case _:
+            return 1
+batch = [Load(5), _Skip, Store(8), Load(11), Rest("ned", "fay"), Store(7), _Skip]
+_pf_iter(lambda t: print(describe(t)), batch)
+grandSum = _pf_sum_by(weight, batch)
+print(f"grandSum={grandSum}")
+print(len(_pf_filter(lambda t: weight(t) > 6, batch)))
+seriesA = [24, 27, 5, 3, 18, -1, 26]
+gain = 4
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(seriesA))))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(8), makers2))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+00000002ok00000014grandSum : int0000000000000002ok00000020isOdd2 : int -> bool00000000--- stderr ---

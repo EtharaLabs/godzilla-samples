@@ -1,0 +1,131 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Shape2 = Sq | Ci | Wedge
+tallies: list[tuple[str, int]] = [("rod", 8), ("nut", 12), ("wick", 2), ("hub", 1), ("tap", 16)]
+def _pf_fn0(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn0, _pf_indexed(tallies))
+def lookupAll(keys, table) -> Some | None_:
+    def _pf_fn1():
+        for (k, expected) in keys:
+            _pf_t0 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t0, Some):
+                v = _pf_t0._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t0
+        return Some(len(keys))
+    return _pf_fn1()
+print((lookupAll(_pf_take(2, tallies), dict(tallies)), lookupAll([("zz", 0)], dict(tallies))))
+def _pf_fn2():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn2()
+print(_pf_str_join(",", list(labels)))
+def extent(s: Shape2) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Sq(9), Ci(4), Wedge(5, 7), Wedge(1, 9)]))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 5
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(6, []), weigh(1, [6]), weigh(1, [7, 2, 3])))
+def probe2(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t1 = _pf_last(xs)
+        if isinstance(_pf_t1, Some):
+            _x = _pf_t1._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t1, Some):
+            y = _pf_t1._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([0, 7]), probe2([4, 9]), probe2([])))
+def Calc_square(x):
+    return x * x
+def Calc_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+nums: list[int] = [14, -11, 30, -6, 8, -10]
+print(_pf_map(Calc_square, nums))
+print(Calc_scaleAll(3, nums))
+print(Calc_mean(nums))
+--- stderr ---

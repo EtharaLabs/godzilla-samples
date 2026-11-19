@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type `List` expects 1 argument(s), found 2
+  --> 10:1
+   |
+10 | type W2 = Wrap2 (List int string)
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 8:11
+  |
+8 |     yield { pt with z = 4 }
+  |           ^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 11:13
+   |
+11 | let i3 = if (1, 2) == (1, "b") then 1 else 2
+   |             ^^^^^^^^^^^^^^^^^^
+
+3 errors

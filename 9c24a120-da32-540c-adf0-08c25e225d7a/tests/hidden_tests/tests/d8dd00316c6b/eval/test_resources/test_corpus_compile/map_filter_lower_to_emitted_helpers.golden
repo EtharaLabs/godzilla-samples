@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+r = _pf_map(lambda x: x, _pf_filter(lambda x: True, [1, 2]))
+--- stderr ---

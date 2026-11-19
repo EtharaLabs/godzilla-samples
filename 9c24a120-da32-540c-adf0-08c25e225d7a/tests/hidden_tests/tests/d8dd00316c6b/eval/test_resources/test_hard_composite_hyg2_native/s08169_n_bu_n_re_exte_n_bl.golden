@@ -1,0 +1,61 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+str_: str = "eli"
+print((str(87), str_, _pf_str_concat(str_, str(1))))
+list_: list[int] = [1, 0, 4]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def build(start: int) -> tuple[list[int], int, int, int]:
+    level = start
+    g0 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 4
+    def g1(y: int) -> int:
+        return level * y
+    level = g1(level)
+    def g2(y: int) -> int:
+        return level * y
+    level = level + 12
+    return (g0([1, 2]), g1(3), g2(3), level)
+print(build(6))
+print(_pf_str_rev(str.upper("fay")))
+def fromBin(s: str) -> int:
+    return int(s, base=2)
+print(fromBin("110100") + int("75", base=8))
+def row(n: int) -> list[int]:
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(6))
+def nudge(n: int) -> int:
+    return n + 44
+def useHelper(x: int) -> int:
+    return nudge(x)
+def _pf_fn0():
+    nudge = 2
+    tmp = useHelper(nudge)
+    return tmp * 2
+first: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [4]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+second: int = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+third: int = _pf_fn2()
+print((first, second, third, useHelper(0)))
+--- stderr ---

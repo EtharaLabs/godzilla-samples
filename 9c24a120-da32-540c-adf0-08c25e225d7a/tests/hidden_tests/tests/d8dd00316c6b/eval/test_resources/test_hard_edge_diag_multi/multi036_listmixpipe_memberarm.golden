@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 6:15
+  |
+6 | let p1 = [[1, "a"]] |> List.len
+  |               ^^^
+
+error: `filtr` is not a member of `List` (did you mean `List.filter`?)
+ --> 9:13
+  |
+9 |     case 0: List.filtr (fun x -> true) [1]
+  |             ^^^^^^^^^^
+
+2 errors

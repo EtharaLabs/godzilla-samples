@@ -1,0 +1,118 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_fn0():
+    for (name, k) in [("a", 4), ("b", 7)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(2), list(handlers)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 5
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(4, [0, 8, 0]))
+segments = [419.2, 252.1, 295.4]
+durations = [73.1, 56.4, 70.1]
+dist = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, segments)
+dur = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = dist / dur
+print(_pf_fmt_fixed(1, rate))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, dur) * 1000.0))
+edge = math.sqrt(49.0)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+mass = 80.0
+accel = 5.5
+push = mass * accel
+limit = 356.0
+print("over" if push > limit else "under")
+speeds = _pf_map2(lambda d, t: d / t, segments, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+len_ = 9
+print((len([1, 2, 3]) + len_, len("abc")))
+reversed_ = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+def sum_(a, b):
+    return a - b
+print((sum_(12, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+list_ = [7, 1, 8]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+log = ["dee", "dee", "eli", "dee", "bo", "eli", "ada", "eli"]
+m = dict()
+for w in log:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts = m
+def _pf_fn1(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn1, _pf_map_to_list(counts)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, counts))))
+extra = dict([("zed", 5), ("dee", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+print((_pf_map_try_find("hal", counts), "hal" in counts))
+sa = set([5, 6, 8, 9, 17, 18])
+sb = set([2, 8, 15, 17, 18, 19])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 20 in sb, _pf_set_is_subset(set([5]), sa)))
+--- stderr ---

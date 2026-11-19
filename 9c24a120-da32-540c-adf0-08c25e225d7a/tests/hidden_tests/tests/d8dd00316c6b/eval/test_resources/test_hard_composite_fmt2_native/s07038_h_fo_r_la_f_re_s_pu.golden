@@ -1,0 +1,148 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Instr = Put | Push | Skip
+@dataclass(frozen=True, slots=True)
+class Mark:
+    who: str
+    pts: int
+    ratio: float
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Box"
+    bottom: "Box"
+    slot: int
+def replay(script: list[Instr]) -> tuple[int, int]:
+    def apply(acc: tuple[int, int], op: Instr) -> tuple[int, int]:
+        puts = acc[0]
+        total = acc[1]
+        if isinstance(op, Put):
+            v = op._1
+            return (puts + 1, total + v)
+        elif isinstance(op, Push):
+            n = op._0
+            return (puts, total + n)
+        else:
+            return acc
+    return _pf_fold(apply, (0, 0), script)
+script: list[Instr] = [Put("bolt", 4), Put("nut", 7), _Skip, Put("cog", 8), Push(3), Put("gear", 1)]
+outcome: tuple[int, int] = replay(script)
+print(outcome)
+nums2: list[int] = [17, 18, 18, 23, 24]
+factor: int = 4
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), nums2))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(9), scalers))
+scores: list[Mark] = [Mark("bo", 53, 0.47), Mark("ivy", 6, 0.71), Mark("ray", 23, 0.29)]
+def fmtRow(_pf_arg0: Mark) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{_pf_fmt_percent(1, ratio)},{{{pts}}},{"pass" if pts >= 42 else "fail"},{_pf_str_upper(_pf_str_slice(0, 2, who))}"
+_pf_iter(print, _pf_map(fmtRow, scores))
+print(f"best: {_pf_option_with_default("none", _pf_option_map(lambda s: s.who, _pf_max_by(lambda s: s.pts, scores)))}")
+panels: list[Box] = [Box(8, 2, "pin"), Box(2, 3, "hub"), Box(1, 4, "cap"), Box(6, 8, "rod"), Box(3, 7, "rod"), Box(4, 4, "sq")]
+def surface(_pf_arg0: Box) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+def stretch(b: Box) -> Box:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Box(w + 3, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, panels)))
+def relabel(prefix: str, b: Box) -> Box:
+    label = b.label
+    _pf_t3 = b
+    return Box(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "old-"), panels)))
+def heavier(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Box):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Rack(a, b, a.w + b.h)), panels, _pf_rev(panels)))
+--- stderr ---

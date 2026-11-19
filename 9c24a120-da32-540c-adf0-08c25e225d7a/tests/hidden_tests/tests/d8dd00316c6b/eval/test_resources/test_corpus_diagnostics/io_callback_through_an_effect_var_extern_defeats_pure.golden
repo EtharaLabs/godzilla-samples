@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `bad` is declared `pure` but performs `io`
+ --> 2:16
+  |
+2 | let pure bad = app (fun x -> print x) 3
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

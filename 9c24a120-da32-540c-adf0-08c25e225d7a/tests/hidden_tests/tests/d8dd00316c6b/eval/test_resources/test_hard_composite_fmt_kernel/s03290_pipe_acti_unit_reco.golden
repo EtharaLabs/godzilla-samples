@@ -1,0 +1,126 @@
+exit: 0
+--- stdout ---
+00000002ok00000435values : List int
+addK : int<'a> -> int<'a> -> int<'a>
+isBig : int -> bool
+result : bool
+classify : int -> string
+segments : List float<m>
+times : List float<s>
+total : float<m>
+elapsed : float<s>
+speed : float<m/s>
+km : float<m>
+mass : float<kg>
+accel : float<m/s^2>
+push : float<kg m/s^2>
+limit : float<kg m/s^2>
+book : List Booking
+line : Booking -> string
+bump2 : int -> Booking -> Booking
+cheap : List Booking
+dear : List Booking
+00003136from dataclasses import dataclass
+import functools
+def _pf_exists(f, xs):
+    return any(map(f, xs))
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sort_desc(xs):
+    return sorted(xs, reverse=True)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+@dataclass(frozen=True, slots=True)
+class Place:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+values = [7, 47, 29, 20, 34, 18, 15]
+def addK(k, x):
+    return x + k
+def isBig(n):
+    return n > 15 and n % 5 != 0
+result = _pf_exists(lambda x: x > 9, _pf_sort_desc(_pf_map(functools.partial(addK, 2), _pf_map(lambda x: x * x - 5, _pf_filter(lambda x: x % 3 == 0, _pf_filter(isBig, values))))))
+print(result)
+print(len(values))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def classify(n):
+    _pf_t0 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    elif isinstance(_pf_t0, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+_pf_iter(print, _pf_map(classify, [14, 37, 0, 35, 22]))
+segments = [471.4, 261.9, 231.0]
+times = [77.2, 87.4, 19.6]
+total = _pf_fold(lambda acc, d: acc + d, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+speed = total / elapsed
+print(_pf_fmt_fixed(3, speed))
+km = total / 1000.0
+print(_pf_fmt_fixed(1, km))
+mass = 74.0
+accel = 4.5
+push = mass * accel
+limit = 383.0
+print("over" if push > limit else "under")
+book = [Booking(100, "quin", 187, True, Place("Kyiv", 1)), Booking(101, "jo", 252, False, Place("Rome", 4)), Booking(102, "quin", 128, True, Place("Kyiv", 4)), Booking(103, "fay", 274, True, Place("Rome", 3))]
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, book)))
+def bump2(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t2 = o
+    return Booking(_pf_t2.id, _pf_t2.owner, o.amount + extra, False, _pf_t2.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(bump2, 18), book)))
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, book))))
+cheap, dear = _pf_partition(lambda o: o.amount < 129, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+00000002ok00000019book : List Booking0000000000000002ok00000016total : float<m>00000000--- stderr ---

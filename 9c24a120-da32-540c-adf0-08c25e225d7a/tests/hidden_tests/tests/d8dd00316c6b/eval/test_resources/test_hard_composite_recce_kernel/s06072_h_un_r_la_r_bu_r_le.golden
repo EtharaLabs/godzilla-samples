@@ -1,0 +1,104 @@
+exit: 0
+--- stdout ---
+00000002ok00000250reach : float<m>
+ratio : float
+side : float<m>
+vol : float<m>
+velocity : int<'a> -> int<'b> -> float<'a/'b>
+nums2 : List int
+gain : int
+shape2 : int -> int
+cells : List int
+reading : (List string) -> int -> int
+skipping : (List string) -> int -> int
+00002607import functools
+import math
+import math as mth
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fst(p):
+    return p[0]
+reach = math.hypot(4.0 / 1.0, 4.0 / 1.0) * 1.0
+ratio = math.sqrt(2.0)
+side = math.sqrt(16.0)
+vol = math.cbrt(64.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(reach / 1.0))
+def velocity(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, velocity(reach, 6.0)))
+nums2 = [15, 4, 11, 28, -5, 8, 8]
+gain = 3
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), nums2))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(nums2))))
+shape2 = lambda _pf_x: (lambda z: z - 2)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, nums2))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 2], lambda k: Many_yield_(a * b + k))
+cells = Many_combine(Many_for_([(3, 4), (5, 1)], _pf_fn2), Many_delay(lambda _: Many_yield_(3)))
+print(cells)
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("pam gus kit hal jo tom"), 0))
+00000002ok00000038skipping : (List string) -> int -> int0000000000000002ok00000014vol : float<m>00000000--- stderr ---

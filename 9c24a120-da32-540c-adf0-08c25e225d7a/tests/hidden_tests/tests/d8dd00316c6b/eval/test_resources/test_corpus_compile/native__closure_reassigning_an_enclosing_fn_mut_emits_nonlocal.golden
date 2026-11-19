@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def make(base: int) -> int:
+    n = base
+    def bump(x: int) -> int:
+        nonlocal n
+        n = n + x
+        return n
+    return bump(5)
+--- stderr ---

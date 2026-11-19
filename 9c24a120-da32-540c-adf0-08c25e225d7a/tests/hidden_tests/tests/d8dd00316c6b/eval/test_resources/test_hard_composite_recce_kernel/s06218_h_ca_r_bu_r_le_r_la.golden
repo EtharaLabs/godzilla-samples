@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+00000002ok00000298visitAll : ('a -> unit) -> (List 'a) -> unit
+mapTwice : ('a -> 'a) -> (List 'a) -> List 'a
+shout : 'a ->{io} unit
+maybeLog : bool -> int<'a> ->{io} int<'a>
+quiet : int -> int
+combos : List int
+inWord : (List string) -> int -> int
+inSpace : (List string) -> int -> int
+inputs2 : List int
+gain : int
+00002563def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def visitAll(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def shout(x):
+    return print(f"* {x}")
+visitAll(shout, [8, 9, 2])
+print(mapTwice(lambda x: x + 2, [1, 2, 3]))
+def maybeLog(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(maybeLog(True, 8) + maybeLog(False, 8))
+def quiet(x):
+    return x + 8
+print(mapTwice(quiet, [5]))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 4], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(4, 2), (5, 1)], _pf_fn0), Grid_delay(lambda _: Grid_yield_(2)))
+print(combos)
+def inWord(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return inWord(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("kit pam ivy"), 0))
+inputs2 = [15, 15, 16, 10, 22, 3, -3]
+gain = 5
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+00000002ok00000044visitAll : ('a -> unit) -> (List 'a) -> unit0000000000000002ok00000022shout : 'a ->{io} unit00000000--- stderr ---

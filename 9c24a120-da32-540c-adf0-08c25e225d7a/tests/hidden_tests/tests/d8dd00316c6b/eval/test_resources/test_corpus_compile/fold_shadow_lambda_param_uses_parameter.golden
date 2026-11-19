@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def build(combiner, xs):
+    def step(acc, x):
+        return _pf_concat(acc, [x + 100])
+    return (lambda step: _pf_fold(step, [], xs))(combiner)
+out = build(lambda acc, x: _pf_concat(acc, [x * 2]), [1, 2, 3])
+--- stderr ---

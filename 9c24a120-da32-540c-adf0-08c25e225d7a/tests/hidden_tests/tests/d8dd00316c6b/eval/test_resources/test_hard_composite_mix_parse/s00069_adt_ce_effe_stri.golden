@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+type Cmd = Jump int | Drop int int | Skip string string | Pop int | Emit int
+let describe t =
+    match t:
+        case (Jump n0): f"jump({n0})"
+        case (Drop 2 _): "drop-2"
+        case (Drop n0 n1): f"drop({n0},{n1})"
+        case (Skip s0 s1): f"skip({s0},{s1})"
+        case (Pop n0) if (0 <= n0 < 11): f"pop!({n0})"
+        case (Pop n0): f"pop({n0})"
+        case (Emit n0) if (n0 > 3): f"emit!({n0})"
+        case (Emit n0): f"emit({n0})"
+let cost t =
+    match t:
+        case (Emit x0): x0
+        case (Drop x0 x1): (x0 + x1)
+        case (Skip _ _): 7
+        case (Pop x0): x0
+        case _: 0
+let prog = [(Jump (- 3)), (Jump 8), (Emit 7), (Emit 1), (Emit 5)]
+(print ((String.join " ") ((List.map describe) prog)))
+let tally = (prog |> (List.sumBy cost))
+(print f"tally={tally}")
+(print ((List.head prog), (List.last prog)))
+let readPair line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 3) }
+let lines = ["oz=33", "lu=1=1", "sue", "gus=x", "tom"]
+let results = ((List.map readPair) lines)
+((List.iter print) results)
+(print ((results |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((results |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+let pure net price qty = ((price * qty) - (4 * qty))
+let report label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let overall = (([("hub", 19, 5), ("bolt", 8, 2)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+let text = "max,sue,cog,dee,ada"
+let tokens = ((String.split ",") text)
+(print ((tokens |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+(print (((String.tryIndexOf "ma") text), ((String.contains "ma") text)))
+(print (((String.slice 3) 9) text))
+--- stderr ---

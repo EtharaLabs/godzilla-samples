@@ -1,0 +1,135 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Heap"
+    _1: int
+    _2: "Heap"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Heap = Leaf | Node
+def lift(n: int) -> int:
+    return n + 18
+def callHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn0():
+    lift = 5
+    tmp = callHelper(lift)
+    return tmp * 2
+alpha: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [1]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + callHelper(1)
+    else:
+        return 0
+second: int = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+gamma: int = _pf_fn2()
+print((alpha, second, gamma, callHelper(0)))
+def insert(x: int, t: Heap) -> Heap:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(insert(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, insert(x, rt))
+        return t
+root: Heap = _pf_fold(lambda acc, x: insert(x, acc), _Leaf, [33, 55, 28, 50, 52, 6, 22, 8, 41])
+def toListOf(t: Heap) -> list[int]:
+    if isinstance(t, Leaf):
+        return []
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+print(toListOf(root))
+def sumOf(t: Heap) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumOf(l) + v + sumOf(rt)
+print(sumOf(root))
+def containsOf(x: int, t: Heap) -> bool:
+    while True:
+        if isinstance(t, Leaf):
+            return False
+        else:
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x == v:
+                return True
+            elif x < v:
+                x, t = (x, l)
+                continue
+            else:
+                x, t = (x, rt)
+                continue
+print(_pf_map(lambda k: containsOf(k, root), [33, 42, 36]))
+def minOf(t: Heap) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minOf(root))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+str_: str = "cy"
+print((str(72), str_, _pf_str_concat(str_, str(1))))
+--- stderr ---

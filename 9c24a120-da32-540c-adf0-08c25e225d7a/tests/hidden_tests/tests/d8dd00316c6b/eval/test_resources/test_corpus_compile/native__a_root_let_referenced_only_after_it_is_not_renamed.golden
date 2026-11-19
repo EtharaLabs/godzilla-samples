@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+n: int = 5
+def f(u: int) -> int:
+    n = 2
+    return n + u
+def g(u: int) -> int:
+    k = 1
+    return k + u
+r: int = f(10) + g(1)
+--- stderr ---

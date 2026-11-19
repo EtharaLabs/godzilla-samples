@@ -1,0 +1,83 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fn0():
+    for (name, k) in [("a", 4), ("b", 3)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn0()
+print(_pf_map(lambda h: h(1), list(callbacks2)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 3
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(1, [7, 4, 9]))
+def layer(start):
+    base = start
+    g0 = lambda y: base + y
+    base = g0(base)
+    g1 = lambda y: base + y
+    base = base + 6
+    g2 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 8
+    g3 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 4
+    return (g0(1), g1(4), g2([1, 2]), g3([1, 2]), base)
+print(layer(6))
+readings = [7, 14, 42, 39, 44, 8, 26, -5]
+def shift(k, x):
+    return x + k
+def keep(n):
+    return n > 1 and n % 2 != 0
+process = lambda _pf_x: _pf_rev((lambda _pf_x: _pf_choose(lambda x: (Some(x // 2) if x % 2 == 0 else _None_), _pf_sort(_pf_x)))(_pf_x))
+outcome = len(process(readings))
+print(outcome)
+print(len(readings))
+def inspect(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    return f"seen={seen} best={best}"
+print(inspect([0, 23, 38]))
+events = []
+def logEvent(msg):
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts = _pf_map(logEvent, ["start", "tom", "stop"])
+print((events, counts))
+--- stderr ---

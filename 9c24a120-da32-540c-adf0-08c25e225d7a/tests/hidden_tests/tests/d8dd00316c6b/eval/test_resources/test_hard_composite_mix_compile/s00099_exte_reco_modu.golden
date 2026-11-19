@@ -1,0 +1,84 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(4))
+print(_pf_str_rev(str.upper("ivy")))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "c0"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("1011010") + int("26", base=8))
+book = [Ticket(100, "gus", 45, False), Ticket(101, "jo", 67, False), Ticket(102, "max", 276, False), Ticket(103, "max", 154, True), Ticket(104, "max", 217, False)]
+def line(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(line, book)))
+def adjust(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Ticket(_pf_t0.id, _pf_t0.owner, o.amount + 14, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(adjust, book)))
+cheap, dear = _pf_partition(lambda o: o.amount < 152, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, book))
+print(byOwner)
+def Calc_between(lo, hi, x):
+    return lo <= x <= hi
+def Calc_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Calc_norm1(xs):
+    return sum(_pf_map(abs, xs))
+nums = [7, -15, 23, 30, 28, 18]
+print(_pf_filter(functools.partial(Calc_between, -4, 21), nums))
+print(_pf_map(functools.partial(Calc_clamp, 0, 20), nums))
+print(Calc_mean(nums))
+print(Calc_norm1(nums))
+--- stderr ---

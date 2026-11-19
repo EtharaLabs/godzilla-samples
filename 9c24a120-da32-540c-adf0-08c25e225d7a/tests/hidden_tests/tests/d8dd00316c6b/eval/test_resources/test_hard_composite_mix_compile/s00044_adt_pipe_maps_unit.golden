@@ -1,0 +1,142 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_distinct_by(f, xs):
+    seen = set()
+    out = []
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Mark({self._0!r}, {self._1!r})"
+def explain(t):
+    match t:
+        case Emit(n0) if n0 % 2 == 0:
+            return f"emit!({n0})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case Rest(n0):
+            return f"rest({n0})"
+        case Mark(n0, s1) if 0 <= n0 < 8:
+            return f"mark!({n0},{s1})"
+        case Mark(n0, s1):
+            return f"mark({n0},{s1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Rest(x0):
+            return x0 * 5
+        case Emit(x0):
+            return x0
+        case _:
+            return 0
+batch = [Emit(-2), Emit(12), Emit(7), Mark(8, "gus")]
+print(_pf_str_join(" ", _pf_map(explain, batch)))
+tally = _pf_sum_by(cost, batch)
+print(f"tally={tally}")
+print(_pf_max_by(cost, batch))
+values = [45, 48, 35, -4, 19, -9, -8, 49, 3]
+def offset(k, x):
+    return x + k
+def isBig(n):
+    return n > 17 and n % 2 != 0
+process = lambda _pf_x: _pf_distinct_by(lambda x: x % 3, (lambda _pf_x: _pf_collect(lambda x: [x, x + 1], (lambda _pf_x: _pf_rev((lambda _pf_x: _pf_map(lambda b: 2 * b, (lambda _pf_x: _pf_filter(lambda x: x % 4 == 1, _pf_sort(_pf_x)))(_pf_x)))(_pf_x)))(_pf_x)))(_pf_x))
+outcome = _pf_max(process(values))
+print(outcome)
+print(len(values))
+log = ["ada", "bo", "dee", "ada", "bo", "eli", "dee"]
+m = dict()
+for w in log:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+legs = [192.2, 426.8, 147.3]
+durations = [36.8, 46.7, 36.2]
+total = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+dur = _pf_fold(lambda a, b: a + b, 0.0, durations)
+pace = total / dur
+print(_pf_fmt_fixed(2, pace))
+km = total / 1000.0
+print(_pf_fmt_fixed(1, km))
+speeds = _pf_map2(lambda d, t: d / t, legs, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+--- stderr ---

@@ -1,0 +1,173 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_upper(s):
+    return s.upper()
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: "Crew"
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Seat = Active | Parked | Gone
+def promote(s: Seat) -> Seat:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t0 = p
+        return Active(Person(_pf_t0.name, p.age + 1))
+    else:
+        if isinstance(s, Parked):
+            t = s._0
+            if t.size > 4:
+                _pf_t1 = t
+                return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+slots: list[Seat] = _pf_map(promote, [Parked(Crew("tap", 7)), Active(Person("pam", 63)), Parked(Crew("rod", 7)), Active(Person("ned", 26)), _Gone])
+print(slots)
+members: list[Person] = [Person("ned", 4), Person("gus", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+def visitAll(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def shout(x):
+    return print(f"* {x}")
+visitAll(shout, [7, 4, 7])
+print(mapTwice(lambda x: x + 1, [1, 2, 3]))
+def chatty(verbose: bool, x: int) -> int:
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(chatty(True, 7) + chatty(False, 6))
+def quiet(x: int) -> int:
+    return x + 2
+print(mapTwice(quiet, [5]))
+print(_pf_str_rev(str.upper("eli")))
+def safe(s: str) -> str:
+    try:
+        _pf_t2 = Ok(int(s))
+    except Exception as _pf_t3:
+        _pf_t2 = Error(_Exception(type(_pf_t3).__name__, str(_pf_t3)))
+    if isinstance(_pf_t2, Ok):
+        n = _pf_t2._0
+        return f"ok {n}"
+    else:
+        e = _pf_t2._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x5", "20"]))
+values: list[int] = [27, 0, 39, 5, 29, 30, 11, 20, 4, 25, 35]
+def accept(n: int) -> bool:
+    return n > 15 and n % 2 != 0
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        a, b = _pf_arg0
+        return b - a
+    return _pf_map(_pf_fn2, _pf_pairwise(_pf_x))
+outcome: str = (lambda _pf_x: _pf_str_join("-", _pf_map(str, _pf_x)))(_pf_fn1(_pf_filter(lambda x: x % 2 == 1, _pf_choose(lambda x: (Some(x // 3) if x % 3 == 0 else _None_), _pf_sort_by(lambda x: x % 2, _pf_take(3, _pf_map(lambda b: 33 - b, values)))))))
+print(outcome)
+print(len(values))
+def finished(acc):
+    async def _pf_fn3():
+        return acc
+    return _pf_Async(_pf_fn3)
+def loop(n: int, acc: int):
+    async def _pf_fn5():
+        async def _pf_fn4():
+            return n * 3
+        k = await _pf_fn4()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await loop(n - 1, acc + k)
+    return _pf_Async(_pf_fn5)
+print(asyncio.run(_pf_run(loop(55, 0))))
+--- stderr ---
+note: `loop` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

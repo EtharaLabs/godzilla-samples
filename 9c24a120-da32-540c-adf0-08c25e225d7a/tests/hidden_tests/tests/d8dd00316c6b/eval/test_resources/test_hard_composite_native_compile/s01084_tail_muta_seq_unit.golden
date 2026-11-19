@@ -1,0 +1,111 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def steps(n: int, acc: int) -> int:
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [6, 51, 20]))
+def accumulate(n: int, acc: int) -> int:
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(938, 0))
+ticks: int = 0
+def track(x: int) -> int:
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def profile(xs: list[int]) -> str:
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x: int):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([39, 5, -16, 51, -15, 14]))
+doubled: list[int] = _pf_map(track, [39, 5, -16, 51])
+print(f"{doubled} after {ticks} calls")
+trackTwice = lambda _pf_x: track(track(_pf_x))
+print((trackTwice(3), ticks))
+def _pf_fn0():
+    for x in _pf_range(1, 8):
+        y = x * x
+        yield y
+    yield 166
+series = _pf_fn0()
+print(_pf_fold(lambda a, b: a + b, 0, series))
+print(list(_pf_seq_take(3, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 7)))))
+legs: list[float] = [261.2, 453.6, 139.2, 69.7, 232.6]
+splits: list[float] = [15.2, 44.6, 61.2, 20.2, 56.7]
+dist: float = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+dur: float = _pf_fold(lambda a, b: a + b, 0.0, splits)
+pace: float = dist / dur
+print(_pf_fmt_fixed(3, pace))
+def _pf_fn1(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best: Some | None_ = _pf_max_by(_pf_fn1, _pf_zip(legs, splits))
+print(best)
+km: float = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def paceOf(d: int, t: int) -> float:
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, dur) * 1000.0))
+speeds: list[float] = _pf_map2(lambda d, t: d / t, legs, splits)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+--- stderr ---

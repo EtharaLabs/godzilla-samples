@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def shadow(b: int, xs: list[int]) -> list[int]:
+    return _pf_map(functools.partial(lambda a, b: a + b, b), xs)
+--- stderr ---

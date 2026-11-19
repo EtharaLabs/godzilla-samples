@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_str_contains(sub, s):
+    return sub in s
+f = functools.partial(_pf_str_contains, "lo")
+a = f("hello")
+b = f("hi")
+r = _pf_filter(functools.partial(_pf_str_contains, "a"), ["cat", "dog", "bat"])
+n = len(r)
+--- stderr ---

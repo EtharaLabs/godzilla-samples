@@ -1,0 +1,135 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+def choose2(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((0, 3)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 9)))
+def dig(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((dig([6, 4]), dig([7, 9]), dig([])))
+def adjust(n: int) -> int:
+    _pf_t1 = n % 3
+    if _pf_t1 == 0:
+        _n = n // 3
+        return _n + 6
+    else:
+        k = _pf_t1
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(adjust, [22, 27, 11, 6]))
+stock: list[tuple[str, int]] = [("cog", 17), ("hub", 3), ("wick", 18)]
+def _pf_fn0():
+    for (name, qty) in stock:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn0()
+print(_pf_str_join(",", list(lines2)))
+def audit2(rows) -> Ok | Error:
+    def _pf_fn1():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t2 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t2, Ok):
+            total = _pf_t2._0
+            return Ok(total)
+        else:
+            return _pf_t2
+    return _pf_fn1()
+print((audit2(stock), audit2([("ok", 1)])))
+def _pf_fn2(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+bounds: tuple[int, int] = _pf_fold(_pf_fn2, (1000, -1000), stock)
+print(bounds)
+acc = dict()
+for (k, v) in _pf_concat(stock, stock):
+    _pf_t3 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t3
+byName: dict[str, int] = acc
+print(_pf_map_to_list(byName))
+spans: list[tuple[str, tuple[int, int]]] = [("dee", (1, 13)), ("ned", (4, 19)), ("bo", (3, 6))]
+def _pf_fn3():
+    for (name, (lo, hi)) in spans:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+spansOut = _pf_fn3()
+print(list(spansOut))
+def fem(n: int) -> int:
+    if n == 0:
+        return 1
+    else:
+        return n - mal(fem(n - 1))
+def mal(n: int) -> int:
+    if n == 0:
+        return 0
+    else:
+        return n - fem(mal(n - 1))
+print((_pf_map(fem, _pf_range(0, 9)), _pf_map(mal, _pf_range(0, 6))))
+--- stderr ---

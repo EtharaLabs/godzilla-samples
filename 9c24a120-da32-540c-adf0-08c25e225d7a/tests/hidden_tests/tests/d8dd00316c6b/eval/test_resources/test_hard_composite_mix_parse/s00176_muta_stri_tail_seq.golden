@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+let mut ticks = 0
+let record x =
+    (ticks <- (ticks + 1))
+    (x * 3)
+let profile xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (profile [1, (- 8), 41, 58, 27, 12]))
+let doubled = ([1, (- 8), 41, 58] |> (List.map record))
+(print f"{doubled} after {ticks} calls")
+let recordTwice = (record >> record)
+(print ((recordTwice 3), ticks))
+let sentence = "tom gear bolt sue"
+let parts = ((String.split " ") sentence)
+let count = (List.len parts)
+(print f"count={count} {{braces}} {(String.len sentence)}")
+(print (((String.tryIndexOf "ge") sentence), ((String.contains "ge") sentence)))
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((parts |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+(print (((String.replace "e") "E") sentence))
+let longest = ((parts |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+let countDown n acc = (if (n == 0) then acc else ((countDown (n - 1)) (acc + (n * n))))
+(print ((countDown 498) 0))
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [0, 26, 17, 0, 21]))
+let sumDigits n =
+    match n:
+        case 0: 0
+        case _: ((n % 10) + (sumDigits (n // 10)))
+(print (sumDigits 26154))
+let squares = seq {
+    for x in ((List.range 1) 7):
+        let y = (x * x)
+        yield y
+    yield 154
+}
+(print (((Seq.fold (+)) 0) squares))
+(((((Seq.initInfinite (fun i -> (i * 3))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 1474)))) |> Seq.toList) |> print)
+--- stderr ---

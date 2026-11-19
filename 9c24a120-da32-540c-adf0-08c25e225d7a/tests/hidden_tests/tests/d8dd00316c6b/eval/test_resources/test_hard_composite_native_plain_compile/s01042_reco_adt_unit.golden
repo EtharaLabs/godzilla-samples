@@ -1,0 +1,162 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: str
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    def __repr__(self):
+        return "Load"
+_Load = Load()
+book = [Booking(100, "eli", 78, True, Addr("Bern", 3)), Booking(101, "oz", 28, False, Addr("Doha", 2)), Booking(102, "eli", 227, False, Addr("Baku", 4)), Booking(103, "oz", 139, False, Addr("Kyiv", 2)), Booking(104, "oz", 218, False, Addr("Baku", 2))]
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, book))
+print(perOwner)
+def _pf_fn1(o):
+    if o.dest.zone > 2:
+        _pf_t2 = o
+        return Booking(_pf_t2.id, _pf_t2.owner, _pf_t2.amount, _pf_t2.urgent, Addr("Hub", 1))
+    else:
+        return o
+rerouted = _pf_map(_pf_fn1, book)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", rerouted))
+def _pf_fn2(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn2, (0, 0), book)
+print(f"{cnt} records, {amt} total")
+def line(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(line, book)))
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by(lambda o: o.amount, book))))
+def describe(t):
+    match t:
+        case Emit(s0):
+            return f"emit({s0})"
+        case Drop(3, _):
+            return "drop-3"
+        case Drop(n0, s1):
+            return f"drop({n0},{s1})"
+        case Pop(n0) if 0 <= n0 < 9:
+            return f"pop!({n0})"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Load():
+            return f"load"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Emit(_):
+            return 5
+        case Pop(x0):
+            return x0 * 4
+        case Load():
+            return 8
+        case Drop(x0, _):
+            return x0 * 5
+        case _:
+            return 1
+batch = [Drop(6, "ray"), Emit("dee"), Pop(1), Skip(0), _Load, Pop(11), Skip(7)]
+print(_pf_str_join(" ", _pf_map(describe, batch)))
+total = _pf_sum_by(cost, batch)
+print(f"total={total}")
+print((_pf_head(batch), _pf_last(batch)))
+segments = [111.3, 238.4, 73.7, 192.4]
+durations = [44.2, 9.9, 56.7, 36.0]
+total2 = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = total2 / elapsed
+print(_pf_fmt_fixed(1, rate))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(total2, elapsed) * 1000.0))
+km = total2 / 1000.0
+print(_pf_fmt_fixed(1, km))
+def _pf_fn3(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn3, _pf_zip(segments, durations))
+print(best)
+mass = 12.0
+accel = 9.5
+push = mass * accel
+limit = 178.0
+print("over" if push > limit else "under")
+--- stderr ---

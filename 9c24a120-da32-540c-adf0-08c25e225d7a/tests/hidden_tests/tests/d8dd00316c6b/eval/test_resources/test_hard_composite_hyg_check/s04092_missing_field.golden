@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Invoice` is missing field(s) `amount`
+  --> 21:15
+   |
+21 | let orders = [Invoice { urgent = true, id = 100, owner = "max" }, Invoice { id = 101, owner = "gus", amount = 257, urgent = true }, Invoice { id = 102, owner = "max", amount = 16, urgent = true }, Invoice { id = 103, owner = "dee", amount = 33, urgent = true }, Invoice { id = 104, owner = "dee", amount = 276, urgent = false }, Invoice { owner = "dee", id = 105, urgent = true, amount = 184 }]
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

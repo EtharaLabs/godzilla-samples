@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+ --> 9:11
+  |
+9 | let p2 = [3.0<m> + 2.0<s>] |> List.len
+  |           ^^^^^^^^^^^^^^^
+
+note: hole `?gap` has type `'a`
+ --> 7:11
+  |
+7 |   let w = ?gap
+  |           ^^^^
+
+1 error
+1 unfilled hole

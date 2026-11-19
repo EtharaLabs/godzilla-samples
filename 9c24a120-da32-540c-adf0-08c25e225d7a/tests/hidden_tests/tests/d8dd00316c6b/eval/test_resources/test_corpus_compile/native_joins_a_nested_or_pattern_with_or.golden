@@ -1,0 +1,30 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def f(o):
+    match o:
+        case Some(1 | 2):
+            return "low"
+        case Some(3 | 4 as n):
+            return f"mid {n}"
+        case Some(_):
+            return "high"
+        case None_():
+            return "none"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(f(Some(2)))
+print(f(Some(4)))
+print(f(Some(9)))
+print(f(_None_))
+--- stderr ---

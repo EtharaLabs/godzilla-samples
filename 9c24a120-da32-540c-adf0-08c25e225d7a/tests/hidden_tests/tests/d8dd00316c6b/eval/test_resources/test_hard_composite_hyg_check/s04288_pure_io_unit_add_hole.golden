@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `quiet` is declared `pure` but performs `io`
+  --> 23:20
+   |
+23 | let pure quiet x = chatty true x
+   |                    ^^^^^^^^^^^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 50:11
+   |
+50 | let vol = cbrt 27.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `'a`
+ --> 4:18
+  |
+4 |   let square x = ?
+  |                  ^
+
+2 errors
+1 unfilled hole

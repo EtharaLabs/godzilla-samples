@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+extern readFile: string -> string = pathlib.Path.read_text
+extern pure path: string -> string = pathlib.Path
+let main = (print (readFile (path "data.txt")))
+main
+--- stderr ---

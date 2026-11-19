@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+  --> 43:3
+   |
+43 |   match n:
+   |   ^^^^^^^^
+
+note: hole `?` has type `string` — try: raw — or: input ?, show ?, String.trimStart ?, String.trimEnd ?, and 15 more
+  --> 23:35
+   |
+23 |     case Halt n0 if 0 <= n0 < 15: ?
+   |                                   ^
+
+1 error
+1 unfilled hole

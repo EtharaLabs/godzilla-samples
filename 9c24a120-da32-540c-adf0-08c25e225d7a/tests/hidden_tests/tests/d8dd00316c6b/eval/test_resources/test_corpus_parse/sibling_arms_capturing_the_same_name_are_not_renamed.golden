@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let f r =
+    match r:
+        case (Ok x): x
+        case (Error x): (0 - x)
+--- stderr ---

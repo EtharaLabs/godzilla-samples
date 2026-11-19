@@ -1,0 +1,66 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+def net(price, qty):
+    return price * qty - 2 * qty
+def announce(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("pin", 13, 1), ("rod", 32, 1), ("cap", 31, 2), ("tap", 19, 4)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(net, k))
+print(scaled(10)([1, 2, 3]))
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Calc_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Calc_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Calc_between(lo, hi, x):
+    return lo <= x <= hi
+nums = [17, 24, -10, 8, -15, -6, 0]
+print(Calc_mean(nums))
+print(_pf_map(functools.partial(Calc_clamp, 0, 13), nums))
+print(Calc_scaleAll(3, nums))
+print(_pf_filter(functools.partial(Calc_between, 0, 22), nums))
+def _pf_fn1():
+    for (name, k) in [("a", 7), ("b", 7)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn1()
+print(_pf_map(lambda h: h(4), list(handlers)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 3
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(4, [0, 9, 0]))
+def sum_(a, b):
+    return a - b
+print((sum_(8, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+str_ = "cy"
+print((str(95), str_, _pf_str_concat(str_, str(1))))
+def set_(n):
+    return n * 5
+print((set_(3), len(set([4, 4, 2, 1]))))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([9, 3, 5, 8]), _pf_sort([3, 1, 2])))
+--- stderr ---

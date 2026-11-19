@@ -1,0 +1,141 @@
+exit: 0
+--- stdout ---
+00000002ok00000264seriesA : List int
+gain : int
+scalers : List (int -> int)
+tweak2 : int -> int
+gcdLoop : int -> int -> int
+sumDigits : int -> int
+ipow : int -> int -> int<'a> -> int<'a>
+readForm : string -> string -> Result Signup string
+visits : List string
+freq : Map string int
+00003706from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Signup:
+    user: str
+    age: int
+seriesA = [7, -2, 26, 8, 5, 4, 25]
+gain = 3
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(6), scalers))
+tweak2 = lambda _pf_x: (lambda z: z - 2)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, seriesA))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(seriesA), seriesA))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(172, 319))
+def sumDigits(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + sumDigits(n // 10)
+print(sumDigits(1521))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(5, 6, 1))
+def Valid_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Valid_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Valid_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Valid_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Valid_bind(Ok(years) if years >= 18 else Error("too young"), lambda adult: Valid_return_(Signup(name, adult)))))
+print(readForm("quin", "38"))
+print((readForm("a", "30"), readForm("bob", "x")))
+visits = ["eli", "fay", "bo", "eli", "ada", "bo"]
+m = dict()
+for w in visits:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq = m
+def _pf_fn1(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn1, _pf_map_to_list(freq)))
+print((_pf_map_try_find("hal", freq), "hal" in freq))
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+print(len(_pf_map_filter(lambda k, v: v > 1, freq)))
+00000002ok00000051readForm : string -> string -> Result Signup string0000000000000002ok00000027gcdLoop : int -> int -> int00000000--- stderr ---

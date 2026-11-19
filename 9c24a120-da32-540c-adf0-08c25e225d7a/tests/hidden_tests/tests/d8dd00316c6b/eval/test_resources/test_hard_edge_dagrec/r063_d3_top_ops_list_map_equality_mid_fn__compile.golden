@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Ops` (ops.pyfun) --
+error: `Pos` is not a member of `Base`
+ --> 5:23
+  |
+5 | print (v.placed.at == Base.Pos { x = 4, y = 0 })
+  |                       ^^^^^^^^
+error: `shift` is not a member of `Place`
+ --> 6:9
+  |
+6 | print ((Place.shift v.placed).at.x)
+  |         ^^^^^^^^^^^
+
+2 errors

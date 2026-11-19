@@ -1,0 +1,117 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 2))))
+print((safeDiv("20", "5"), safeDiv("4", "0"), safeDiv("x", "1")))
+def decodeLine(line):
+    def _pf_fn0():
+        _pf_t1 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t1, Some):
+            v = _pf_t1._0
+            _pf_t0 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some(n * 4)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+inputs = ["fay=7", "ned = 2", "oz", "ivy", "ada=x", "tom=97"]
+results = _pf_map(decodeLine, inputs)
+_pf_iter(print, results)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), results)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), results))))
+nums2 = [12, 16, 8, 21, 11]
+factor = 4
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+tweak2 = lambda _pf_x: (lambda z: z - 8)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(nums2))))
+def Text_square(x):
+    return x * x
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+obs = [24, 29, 0, 2, 18, -14, 20]
+print(_pf_map(Text_square, obs))
+print(Text_scaleAll(2, obs))
+print(_pf_map(functools.partial(Text_clamp, 0, 17), obs))
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pang(n - 2, acc * 2)
+def pang(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [19, 2, 3, 1]))
+--- stderr ---

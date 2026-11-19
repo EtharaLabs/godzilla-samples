@@ -1,0 +1,47 @@
+exit: 0
+--- stdout ---
+opaque type AccountNo = string
+opaque type Handle = string
+let rawOf x =
+    match x:
+        case (AccountNo s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let ids = ((makeIds "sku") 4)
+(print ((ids |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head ids) == (Some (AccountNo "u-1"))))
+extern pure comb: int -> int -> int = math.comb
+let row n = (((List.range 0) (n + 1)) |> (List.map (comb n)))
+(print (row 5))
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "10110") + ((parseIn "113") 8)))
+let text = "bo,fay,hub,jo,nut"
+let words = ((String.split ",") text)
+(print (((words |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((List.map (fun w -> (w, (String.len w)))) words))
+(print (((String.slice 1) 7) text))
+let n2 = (List.len words)
+(print f"n2={n2} {{braces}} {(String.len text)}")
+let row2 (i, w) = ((String.concat (((Format.padRight 8) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((words |> List.indexed) |> (List.map row2)) |> (List.iter print))
+(print ((words |> (List.map String.upper)) |> (String.join "|")))
+let log = ["eli", "bo", "cy", "fay", "eli", "fay", "eli"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let counts = (((List.fold bump) Map.empty) log)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((counts |> (Map.map (fun k v -> (v * 10)))) |> Map.values) |> List.sort))
+(print (((counts |> Map.keys) |> List.sort) |> (String.join ",")))
+let sa = (Set.ofList [1, 2, 7, 9, 14, 15])
+let sb = (Set.ofList [3, 6, 7, 14, 15, 16])
+(print ((((Set.intersect sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 15) sb), ((Set.isSubset (Set.ofList [1])) sa)))
+let values = [12, 3, 13, 13, 34, 29, 2, 33, 24, 48]
+let addK k x = (x + k)
+let accept n = ((n > 14) and ((n % 4) != 0))
+let answer = (((List.map String.fromInt) >> (String.join "-")) ((List.collect (fun x -> [x, (x + 1)])) (List.distinct ((List.filter (fun x -> ((x % 4) == 1))) ((List.map (fun x -> ((x * x) - 4))) ((List.sortBy (fun x -> (x % 4))) ((List.pairwise >> (List.map (fun (a, b) -> (b - a)))) values)))))))
+(print answer)
+(print <| (List.len values))
+--- stderr ---

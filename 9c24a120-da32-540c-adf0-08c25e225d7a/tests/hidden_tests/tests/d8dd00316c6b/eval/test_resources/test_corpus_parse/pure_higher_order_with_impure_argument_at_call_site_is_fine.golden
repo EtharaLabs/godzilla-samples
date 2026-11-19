@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let pure twice f x = (f (f x))
+let inc a = (a + 1)
+let log a =
+    (print a)
+    a
+let r1 = ((twice inc) 0)
+let r2 = ((twice log) 0)
+--- stderr ---

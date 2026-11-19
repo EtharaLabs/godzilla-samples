@@ -1,0 +1,152 @@
+exit: 0
+--- stdout ---
+00000002ok00000398add : int -> Heap -> Heap
+tree : Heap
+containsOf : int -> Heap -> bool
+minT : Heap -> Option int
+toListT : Heap -> List int
+laps : List float<m>
+durations : List float<s>
+dist : float<m>
+elapsed : float<s>
+pace : float<m/s>
+km : float<m>
+side : float<m>
+cube : float<m^3>
+best : Option (float<m>, float<s>)
+isEven : int -> bool
+isOdd : int -> bool
+digitSum : int -> int
+fromBin : string ->{io} int
+00003626from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [11, 27, 49, 52, 33, 30])
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, tree), [11, 31, 26]))
+def minT(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minT(tree))
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(tree))
+laps = [409.5, 396.9, 232.3, 279.8]
+durations = [62.0, 8.7, 58.4, 51.1]
+dist = _pf_fold(lambda a, b: a + b, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+pace = dist / elapsed
+print(_pf_fmt_fixed(3, pace))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+side = math.sqrt(25.0)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(laps, durations))
+print(best)
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [21, 9, 17, 13, 6]))
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(92906))
+print(_pf_str_rev(str.upper("eli")))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("110") + int("21", base=8))
+00000002ok00000011tree : Heap0000000000000002ok00000025minT : Heap -> Option int00000000--- stderr ---

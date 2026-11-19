@@ -1,0 +1,54 @@
+exit: 0
+--- stdout ---
+let pure net price qty = ((price * qty) - (8 * qty))
+let report label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("pin", 22, 2), ("wick", 31, 3), ("cap", 7, 6)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print grand)
+let evens = seq {
+    for x in ((List.range 1) 6):
+        let y = (x * x)
+        yield y
+    yield 187
+}
+(print (((Seq.fold (+)) 0) evens))
+(((((Seq.initInfinite (fun i -> (i * 7))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+type Term = Num int | Add Term Term | Mul Term Term | Neg Term | Var string
+let vars = (Map.ofList [("x", 3), ("y", 1)])
+let evaluate e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evaluate a) + (evaluate b))
+        case (Mul a b): ((evaluate a) * (evaluate b))
+        case (Neg a): (- (evaluate a))
+        case (Var v): (((Map.findOr v) 0) vars)
+let render e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(render a)} + {(render b)})"
+        case (Mul a b): f"{(render a)} * {(render b)}"
+        case (Neg a): f"-{(render a)}"
+        case (Var v): v
+let terms = [((Add (Num 0)) ((Add (Num 1)) ((Mul (Var "y")) (Num 7)))), (Var "x")]
+((terms |> (List.map render)) |> (List.iter print))
+(print ((List.map evaluate) terms))
+let raw = "cap,quin,pam,gear"
+let parts = ((String.split ",") raw)
+(print ((List.map (fun w -> (w, (String.len w)))) parts))
+let n2 = (List.len parts)
+(print f"n2={n2} {{braces}} {(String.len raw)}")
+let row2 (i, w) = ((String.concat (((Format.padRight 10) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((parts |> List.indexed) |> (List.map row2)) |> (List.iter print))
+module Geo =
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let square x = (x * x)
+    let between lo hi x = (lo <= x <= hi)
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+let obs = [(- 13), 24, 17, 29]
+(print (Geo.mean obs))
+(print ((List.map Geo.square) obs))
+(print ((List.filter ((Geo.between (- 4)) 21)) obs))
+(print ((Geo.scaleAll 2) obs))
+--- stderr ---

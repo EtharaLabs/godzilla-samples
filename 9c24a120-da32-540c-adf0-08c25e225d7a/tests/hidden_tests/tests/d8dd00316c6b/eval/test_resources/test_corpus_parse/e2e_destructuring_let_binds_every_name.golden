@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+type Point = { x: int, y: int }
+let (a, b) = (1, 2)
+let (c, (d, e)) = (3, (4, 5))
+let Point { x, y } = Point { x = 6, y = 7 }
+let total = ((((((a + b) + c) + d) + e) + x) + y)
+--- stderr ---

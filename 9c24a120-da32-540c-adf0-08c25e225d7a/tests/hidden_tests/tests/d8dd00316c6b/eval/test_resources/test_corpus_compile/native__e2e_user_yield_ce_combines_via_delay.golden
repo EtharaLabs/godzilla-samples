@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def Sum_yield_(x):
+    return x
+def Sum_combine(a, b):
+    return a + b
+def Sum_delay(f):
+    return f(0)
+total: int = Sum_combine(Sum_yield_(1), Sum_delay(lambda _: Sum_combine(Sum_yield_(2), Sum_delay(lambda _: Sum_combine(Sum_yield_(3), Sum_delay(lambda _: Sum_yield_(4)))))))
+--- stderr ---

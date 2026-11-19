@@ -1,0 +1,82 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def sum_(a, b):
+    return a - b
+print((sum_(10, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+list_ = [4, 4, 8]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def set_(n):
+    return n * 4
+print((set_(3), len(set([1, 3, 0, 3]))))
+def _pf_fn0():
+    for (name, k) in [("a", 1), ("b", 4)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(5), list(handlers)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 5
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(3, [3, 5, 2]))
+acc = []
+for k in [6, 2, 8]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+chain = acc
+print(_pf_map(lambda h: h(4), chain))
+print(_pf_fold(lambda v, h: h(v), 1, chain))
+def countDown(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(2913, 0))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [24, 10, 16, 22, 5]))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(2, 8, 1))
+def layer(start):
+    acc = start
+    def g0(y):
+        return acc * y
+    acc = acc * 4
+    g1 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 3
+    return (g0(4), g1([1, 2]), acc)
+print(layer(4))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [10, 8, 12, 9]))
+print(_pf_map(math.isqrt, [216, 235, 129, 359]))
+--- stderr ---

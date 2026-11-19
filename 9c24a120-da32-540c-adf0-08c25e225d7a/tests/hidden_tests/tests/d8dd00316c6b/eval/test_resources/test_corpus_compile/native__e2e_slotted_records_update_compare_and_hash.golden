@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Point:
+    x: int
+    y: int
+p: Point = Point(1, 2)
+_pf_t0 = p
+q: Point = Point(3, _pf_t0.y)
+lt: bool = p < q
+s: int = len(set([p, q, p]))
+--- stderr ---

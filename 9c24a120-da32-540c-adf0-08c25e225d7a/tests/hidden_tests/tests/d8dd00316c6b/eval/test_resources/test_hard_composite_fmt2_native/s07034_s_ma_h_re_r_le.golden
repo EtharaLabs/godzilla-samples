@@ -1,0 +1,181 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: "Team"
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Status = Active | Idle | Gone
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: "Ex"
+    _1: "Ex"
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: "Ex"
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+Ex = Lit | Ref | Plus | Block
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: "Ex"
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: "Ex"
+    def __repr__(self):
+        return f"Show({self._0!r})"
+Cmd2 = Set | Show
+def probe2(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([1, 6]), probe2([4, 9]), probe2([])))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 4
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(8, []), weigh(1, [3]), weigh(1, [9, 2, 3])))
+def pick(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((3, 8)), 0), pick(Some((1, 5)), 0), pick(_None_, 1)))
+def settle(n: int) -> int:
+    _pf_t1 = n % 3
+    if _pf_t1 == 0:
+        _n = n // 3
+        return _n + 2
+    else:
+        k = _pf_t1
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(settle, [23, 4, 2, 20]))
+def promote(s: Status) -> Status:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t2 = p
+        return Active(Person(_pf_t2.name, p.age + 1))
+    else:
+        if isinstance(s, Idle):
+            t = s._0
+            if t.size > 6:
+                _pf_t3 = t
+                return Idle(Team(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+slots: list[Status] = _pf_map(promote, [Active(Person("ned", 36)), Idle(Team("tap", 6)), Active(Person("ned", 49))])
+print(slots)
+members: list[Person] = [Person("hal", 5), Person("bo", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+def value(env: dict[str, int], e: Ex) -> int:
+    while True:
+        if isinstance(e, Lit):
+            n = e._0
+            return n
+        elif isinstance(e, Ref):
+            v = e._0
+            return _pf_map_find_or(v, 0, env)
+        elif isinstance(e, Plus):
+            a = e._0
+            b = e._1
+            return value(env, a) + value(env, b)
+        else:
+            body = e._0
+            last = e._1
+            env, e = (_pf_fold(exec, env, body), last)
+            continue
+def exec(env: dict[str, int], s: Cmd2) -> dict[str, int]:
+    if isinstance(s, Set):
+        v = s._0
+        e = s._1
+        return _pf_map_add(v, value(env, e), env)
+    else:
+        e = s._0
+        return _pf_map_add("shown", value(env, e), env)
+print(value(dict(), Block([Set("a", Lit(4)), Set("b", Plus(Ref("a"), Lit(5))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+--- stderr ---

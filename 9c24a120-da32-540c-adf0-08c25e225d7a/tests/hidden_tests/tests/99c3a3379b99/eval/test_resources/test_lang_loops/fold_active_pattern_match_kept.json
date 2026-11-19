@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\nimport functools\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndef _pf_set_add(x, s):\n    return s.union([x])\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Even:\n    def __repr__(self):\n        return \"_Even\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Odd:\n    def __repr__(self):\n        return \"_Odd\"\ndef _ap_Even_Odd(n):\n    if n % 2 == 0:\n        return _Even()\n    else:\n        return _Odd()\ndef build(xs):\n    def _pf_fn0(acc, x):\n        _pf_t2 = _ap_Even_Odd(x)\n        if isinstance(_pf_t2, _Even):\n            return _pf_set_add(x, acc)\n        elif isinstance(_pf_t2, _Odd):\n            return acc\n        else:\n            raise RuntimeError(\"non-exhaustive match\")\n    return _pf_fold(_pf_fn0, set(), xs)\n",
+ "stderr": ""
+}

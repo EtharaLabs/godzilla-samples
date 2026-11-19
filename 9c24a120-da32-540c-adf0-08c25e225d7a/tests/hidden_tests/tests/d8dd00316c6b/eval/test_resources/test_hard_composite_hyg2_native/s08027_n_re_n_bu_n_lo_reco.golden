@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def stack2(start: int) -> tuple[list[int], int, int]:
+    level = start
+    g0 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 4
+    def g1(y: int) -> int:
+        return level * y
+    level = g1(level)
+    return (g0([1, 2]), g1(3), level)
+print(stack2(3))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(15, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+def offsets(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 4
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(2, [2, 1, 5]))
+acc = []
+for k in [5, 1, 6]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+chain = acc
+print(_pf_map(lambda h: h(2), chain))
+print(_pf_fold(lambda v, h: h(v), 1, chain))
+def _pf_fn0():
+    for (name, k) in [("a", 8), ("b", 9)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn0()
+print(_pf_map(lambda h: h(5), list(callbacks2)))
+book: list[Invoice] = [Invoice(100, "jo", 275, True), Invoice(101, "pam", 33, False), Invoice(102, "pam", 207, True), Invoice(103, "jo", 52, True), Invoice(104, "jo", 255, True), Invoice(105, "max", 124, True)]
+cheap, dear = _pf_partition(lambda o: o.amount < 94, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def bucket(o: Invoice) -> str:
+    if isinstance(o, Invoice) and o.urgent is True:
+        amount = o.amount
+        if amount > 174:
+            return "rush-big"
+    if isinstance(o, Invoice) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 174:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(bucket, book))
+print(_pf_count_by(bucket, book))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner: list[tuple[str, int, int]] = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, book))
+print(perOwner)
+def adjust(pct: int, o: Invoice) -> Invoice:
+    extra = o.amount * pct // 100
+    _pf_t1 = o
+    return Invoice(_pf_t1.id, _pf_t1.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(adjust, 10), book)))
+--- stderr ---

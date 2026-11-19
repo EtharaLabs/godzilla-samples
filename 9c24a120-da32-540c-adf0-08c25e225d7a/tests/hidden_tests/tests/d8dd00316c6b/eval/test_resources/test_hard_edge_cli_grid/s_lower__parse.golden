@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let f n =
+    match n:
+        case x if (match x: case 0: true case _: false): "zero"
+        case _: "other"
+(print (f 0))
+--- stderr ---

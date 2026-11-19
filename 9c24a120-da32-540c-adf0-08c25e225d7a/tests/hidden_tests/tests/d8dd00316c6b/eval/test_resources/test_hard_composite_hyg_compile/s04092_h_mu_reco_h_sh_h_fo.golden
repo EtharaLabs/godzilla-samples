@@ -1,0 +1,125 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+def scan(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n, acc):
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(4, 0)
+print(scan([24, 37, 11, 11, 39, 36]))
+events = []
+def logEvent(msg):
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts = _pf_map(logEvent, ["start", "sue", "stop"])
+print((events, counts))
+orders = [Invoice(100, "max", 172, True), Invoice(101, "gus", 257, True), Invoice(102, "max", 16, True), Invoice(103, "dee", 33, True), Invoice(104, "dee", 276, False), Invoice(105, "dee", 184, True)]
+print(_pf_max_by(lambda o: o.amount, orders))
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn0, (0, 0), orders)
+print(f"{cnt} records, {sumAmt} total")
+print(_pf_map(lambda o: o.id, _pf_take(3, _pf_sort_by(lambda o: o.amount, orders))))
+def step1(x):
+    return x + 1
+def step2(x):
+    return x * 2
+def both(x):
+    return (lambda _pf_x: (lambda _pf_x: step2(step1(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(both, [9, 3, 6]))
+def grow(n):
+    return n * 3
+def _pf_fn1():
+    _pf_t0 = [1, 2]
+    if _pf_t0:
+        grow = _pf_t0[0]
+        return grow + 1
+    else:
+        return 0
+chosen = _pf_fn1()
+print((chosen, grow(7)))
+adders = _pf_map(lambda k: lambda x: x * 10 + k, [2, 2, 9])
+print(_pf_map(lambda g: g(2), adders))
+def execute(script):
+    def apply(acc, op):
+        match acc:
+            case (puts, total):
+                match op:
+                    case Put(_, v):
+                        return (puts + 1, total + v)
+                    case Push(n):
+                        return (puts, total + n)
+                    case Skip():
+                        return acc
+                    case _:
+                        raise RuntimeError("non-exhaustive match")
+    return _pf_fold(apply, (0, 0), script)
+script = [Push(4), Push(0), _Skip, _Skip, Push(8)]
+outcome = execute(script)
+print(outcome)
+acc = _pf_fold(lambda apply, x: apply + x * x, 0, [3, 9, 2, 5])
+print(acc)
+--- stderr ---

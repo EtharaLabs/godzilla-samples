@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+def lastOr(fallback, xs):
+    match xs:
+        case [*_, last]:
+            return last
+        case []:
+            return fallback
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def bounds(xs):
+    match xs:
+        case []:
+            return 0
+        case [x]:
+            return x
+        case [first, *mid, last]:
+            return first + last + len(mid)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+a = lastOr(0, [5, 6, 7])
+b = lastOr(9, [])
+c = bounds([1, 2, 3, 4])
+d = bounds([7])
+--- stderr ---

@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+00000002ok00000006p : P
+00000123from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class P:
+    name: str
+    age: int
+p = P("Ada", 36)
+00000005error00000128error: type `P` is already defined
+ --> 4:1
+  |
+4 | type P = { name: string, age: int }
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+0000000000000005error00000128error: type `P` is already defined
+ --> 4:1
+  |
+4 | type P = { name: string, age: int }
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+00000000--- stderr ---

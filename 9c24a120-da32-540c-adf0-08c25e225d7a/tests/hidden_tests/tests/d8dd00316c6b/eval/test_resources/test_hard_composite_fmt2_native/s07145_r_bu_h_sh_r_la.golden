@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def Writer_bind(m, f):
+    v = m[0]
+    log = m[1]
+    _pf_t0 = f(v)
+    w = _pf_t0[0]
+    log2 = _pf_t0[1]
+    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def compute(x: int) -> tuple[int, list[str]]:
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 4, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 9)))
+print(_pf_map(compute, [2, 0]))
+def combine(o: Some | None_) -> int:
+    def pair(a: int, b: int) -> int:
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t1 = _pair
+    else:
+        _pf_t1 = 5
+    r = _pf_t1
+    return pair(r, 7)
+print((combine(Some(6)), combine(_None_)))
+def inc(x: int) -> int:
+    return x + 1
+def dbl(x: int) -> int:
+    return x * 2
+def both(x: int) -> int:
+    return (lambda _pf_x: (lambda _pf_x: dbl(inc(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(both, [5, 9, 2]))
+def adjust(x: int, flag: bool) -> tuple[int, int]:
+    y = x * 2
+    if flag:
+        _y = x + 590
+        _pf_t2 = _y - 1
+    else:
+        _pf_t2 = y
+    z = _pf_t2
+    return (y, z)
+print((adjust(4, True), adjust(5, False)))
+def bump2(n: int) -> int:
+    return n + 25
+def applyLift(x: int) -> int:
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 3
+    return applyLift(bump2)
+sample: int = _pf_fn0()
+print((sample, applyLift(5)))
+nums2: list[int] = [27, 23, -5, 0, 4]
+factor: int = 4
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(nums2), nums2))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn2, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(5), scalers))
+--- stderr ---

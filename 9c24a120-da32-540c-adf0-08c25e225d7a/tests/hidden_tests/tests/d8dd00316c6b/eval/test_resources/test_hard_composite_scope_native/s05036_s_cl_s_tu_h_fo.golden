@@ -1,0 +1,139 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Change = Put | Push | Skip
+def ticker(start: int):
+    n = start
+    def next_(u) -> int:
+        nonlocal n
+        n = n + 1
+        return n
+    return next_
+clock = ticker(7)
+print((clock(None), clock(None), clock(None)))
+def tally(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([2, 9, 4, 19]))
+def numbered(xs) -> tuple[list[str], int]:
+    i = 2
+    def tag(x) -> str:
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(numbered(["gus", "dee", "ivy"]))
+tallies: list[tuple[str, int]] = [("gear", 7), ("hub", 16), ("tap", 1), ("pin", 3), ("cog", 17)]
+def _pf_fn0(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+extremes: tuple[int, int] = _pf_fold(_pf_fn0, (1000, -1000), tallies)
+print(extremes)
+def _pf_fn1(acc, _pf_arg1):
+    k, v = _pf_arg1
+    return _pf_map_add(k, v + _pf_map_find_or(k, 0, acc), acc)
+index: dict[str, int] = _pf_fold(_pf_fn1, dict(), _pf_concat(tallies, tallies))
+print(_pf_map_to_list(index))
+def _pf_fn2():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn2()
+print(_pf_str_join(",", list(labels)))
+def lookupAll(keys, table) -> Some | None_:
+    def _pf_fn3():
+        for (k, expected) in keys:
+            _pf_t0 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t0, Some):
+                v = _pf_t0._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t0
+        return Some(len(keys))
+    return _pf_fn3()
+print((lookupAll(_pf_take(2, tallies), dict(tallies)), lookupAll([("zz", 0)], dict(tallies))))
+def apply(acc: tuple[int, int], op: Change) -> tuple[int, int]:
+    puts = acc[0]
+    total = acc[1]
+    if isinstance(op, Put):
+        v = op._1
+        return (puts + 1, total + v)
+    elif isinstance(op, Push):
+        n = op._0
+        return (puts, total + n)
+    else:
+        return acc
+def execute(script: list[Change]) -> tuple[int, int]:
+    return _pf_fold(apply, (0, 0), script)
+changes: list[Change] = [Put("nut", 8), Put("gear", 8), Push(8), Put("nut", 5), _Skip, _Skip]
+state: tuple[int, int] = execute(changes)
+print(state)
+acc: int = _pf_fold(lambda apply, x: apply + x * x, 0, [7, 1, 4, 4])
+print(acc)
+--- stderr ---

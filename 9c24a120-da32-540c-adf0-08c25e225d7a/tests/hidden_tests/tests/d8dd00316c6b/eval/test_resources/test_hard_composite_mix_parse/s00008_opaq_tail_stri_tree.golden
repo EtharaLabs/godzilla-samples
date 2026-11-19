@@ -1,0 +1,48 @@
+exit: 0
+--- stdout ---
+opaque type Sku = string
+opaque type Handle = string
+let rawOf x =
+    match x:
+        case (Sku s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (Sku f"{prefix}-{i}"))))
+let ids = ((makeIds "u") 4)
+(print ((ids |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head ids) == (Some (Sku "u-1"))))
+let euclid a b = (if (b == 0) then a else ((euclid b) (a % b)))
+(print ((euclid 186) 162))
+let accumulate n acc = (if (n == 0) then acc else ((accumulate (n - 1)) (acc + (n * n))))
+(print ((accumulate 2998) 0))
+let steps n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((steps (n // 2)) (acc + 1)) else ((steps ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((steps n) 0))) [57, 59, 53]))
+let raw = "ned,pin,eli,bo,ray,cap,rod"
+let tokens = ((String.split ",") raw)
+let n2 = (List.len tokens)
+(print f"n2={n2} {{braces}} {(String.len raw)}")
+(print (((String.replace "o") "O") raw))
+(print ((tokens |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+(print (((String.slice 3) 4) raw))
+(print ((List.map (fun w -> (w, (String.len w)))) tokens))
+let cell (i, w) = ((String.concat (((Format.padRight 6) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((tokens |> List.indexed) |> (List.map cell)) |> (List.iter print))
+type Term = Num int | Add Term Term | Mul Term Term | Neg Term | Var string
+let env = (Map.ofList [("x", 3), ("y", 7)])
+let evalE e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evalE a) + (evalE b))
+        case (Mul a b): ((evalE a) * (evalE b))
+        case (Neg a): (- (evalE a))
+        case (Var v): (((Map.findOr v) 0) env)
+let show e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(show a)} + {(show b)})"
+        case (Mul a b): f"{(show a)} * {(show b)}"
+        case (Neg a): f"-{(show a)}"
+        case (Var v): v
+let terms = [(Neg (Neg ((Mul (Num 8)) (Var "x")))), ((Add (Num 1)) (Var "x")), ((Add ((Add (Num 0)) ((Add (Var "y")) (Num (- 2))))) ((Add (Num 0)) (Var "y")))]
+((terms |> (List.map show)) |> (List.iter print))
+(print ((List.map evalE) terms))
+--- stderr ---

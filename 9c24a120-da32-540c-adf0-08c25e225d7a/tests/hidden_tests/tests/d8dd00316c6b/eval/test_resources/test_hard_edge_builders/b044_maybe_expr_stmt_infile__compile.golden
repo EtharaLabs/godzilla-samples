@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def go(a, b):
+    def _pf_fn1(x):
+        def _pf_fn2(_):
+            return Maybe_return_(x)
+        return _pf_fn2(print(f"got {x}"))
+    return Maybe_bind(a, _pf_fn1)
+print(go(Some(7), _None_))
+--- stderr ---

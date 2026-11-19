@@ -1,0 +1,131 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(lambda acc, x: insert(x, acc), _Leaf, [15, 30, 12, 57, 35, 6, 3, 48])
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, root), [15, 49, 43]))
+def toListOf(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListOf(root))
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd2(n - 1)
+def isOdd2(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [38, 15, 3, 0, 9]))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 2], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(3, 5), (2, 3)], _pf_fn0), Grid_delay(lambda _: Grid_yield_(0)))
+print(combos)
+seriesA = [-7, -8, 14, 17, -9, 15, 17, 16]
+gain = 4
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(seriesA), seriesA))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def _pf_fn2(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn2, _pf_indexed(seriesA))))
+shape2 = lambda _pf_x: (lambda z: z - 2)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, seriesA))
+--- stderr ---

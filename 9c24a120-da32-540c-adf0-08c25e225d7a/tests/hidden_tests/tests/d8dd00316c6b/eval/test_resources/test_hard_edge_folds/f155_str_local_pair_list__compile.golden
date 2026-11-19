@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_str_concat(a, b):
+    return a + b
+init_a = ">"
+pairs = [(5, 50), (6, 60), (5, 70)]
+def compute(u):
+    def step(a, _pf_arg1):
+        k, v = _pf_arg1
+        return _pf_str_concat(a, str(k))
+    return _pf_fold(step, init_a, pairs)
+result = compute(None)
+print(result)
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let bump x = (x + 100)
+let f xs =
+    let seen = (((List.fold (fun acc o -> (match o: case (Some bump): (((Map.add bump) 1) acc) case None: acc))) Map.empty) xs)
+    (bump (Map.len seen))
+let r = (f [(Some 1), None, (Some 2)])
+--- stderr ---

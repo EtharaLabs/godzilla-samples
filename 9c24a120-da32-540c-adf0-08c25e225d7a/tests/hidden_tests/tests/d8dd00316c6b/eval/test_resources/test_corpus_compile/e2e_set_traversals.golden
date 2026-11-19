@@ -1,0 +1,66 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_set_exists(f, s):
+    return any(map(f, s))
+def _pf_set_filter(f, s):
+    return set(filter(f, s))
+def _pf_set_forall(f, s):
+    return all(map(f, s))
+def _pf_set_is_empty(s):
+    return not s
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_is_superset(a, b):
+    return a.issuperset(b)
+def _pf_set_map(f, s):
+    return set(map(f, s))
+def _pf_set_max(s):
+    return Some(max(s)) if s else _None_
+def _pf_set_min(s):
+    return Some(min(s)) if s else _None_
+def _pf_set_partition(f, s):
+    yes = set()
+    no = set()
+    for x in s:
+        if f(x):
+            yes.add(x)
+        else:
+            no.add(x)
+    return (yes, no)
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+s = set([3, 1, 4, 1, 5])
+empty = _pf_set_is_empty(set([]))
+full = _pf_set_is_empty(s)
+halved = _pf_sort(list(_pf_set_map(lambda x: x % 2, s)))
+kept = _pf_sort(list(_pf_set_filter(lambda x: x > 2, s)))
+total = _pf_fold(lambda acc, x: acc + x, 0, s)
+any = _pf_set_exists(lambda x: x > 4, s)
+all = _pf_set_forall(lambda x: x > 0, s)
+sub = _pf_set_is_subset(set([1, 3]), s)
+sup = _pf_set_is_superset(s, set([1, 3]))
+biggest = _pf_set_max(s)
+smallest = _pf_set_min(s)
+noMax = _pf_set_max(set([]))
+split = _pf_set_partition(lambda x: x > 2, s)
+passing = _pf_sort(list(_pf_fst(split)))
+failing = _pf_sort(list(_pf_snd(split)))
+--- stderr ---

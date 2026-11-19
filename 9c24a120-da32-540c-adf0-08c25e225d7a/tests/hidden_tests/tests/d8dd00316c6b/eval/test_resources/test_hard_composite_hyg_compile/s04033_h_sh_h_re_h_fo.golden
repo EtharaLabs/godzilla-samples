@@ -1,0 +1,153 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: object
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+def grow(n):
+    return n * 5
+def _pf_fn0():
+    _pf_t0 = [4, 2]
+    if _pf_t0:
+        grow = _pf_t0[0]
+        return grow + 1
+    else:
+        return 0
+picked = _pf_fn0()
+print((picked, grow(1)))
+def tweak(x, flag):
+    y = x * 2
+    if flag:
+        _y = x + 253
+        _pf_t1 = _y - 1
+    else:
+        _pf_t1 = y
+    z = _pf_t1
+    return (y, z)
+print((tweak(4, True), tweak(9, False)))
+def outer(xs):
+    def twice(x):
+        return x * 2
+    def go(twice):
+        return twice + 1
+    return _pf_map(lambda x: go(twice(x)), xs)
+print(outer([6, 2, 0]))
+def combine(o):
+    def pair(a, b):
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t2 = _pair
+    else:
+        _pf_t2 = 0
+    r = _pf_t2
+    return pair(r, 3)
+print((combine(Some(8)), combine(_None_)))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t3 = p
+            return Active(Person(_pf_t3.name, p.age + 1))
+        case Idle(t) if t.size > 3:
+            _pf_t4 = t
+            return Idle(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Idle(Crew("pin", 5)), Idle(Crew("tap", 8)), Idle(Crew("nut", 1)), Idle(Crew("wick", 7)), Idle(Crew("nut", 4))])
+print(roster)
+people = [Person("lu", 7), Person("bo", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+def step(acc, op):
+    match acc:
+        case (m, xs):
+            match op:
+                case Put(k, v):
+                    return (_pf_map_add(k, v, m), xs)
+                case Push(n):
+                    return (m, _pf_concat(xs, [n]))
+                case Skip():
+                    return acc
+                case _:
+                    raise RuntimeError("non-exhaustive match")
+def replay(script):
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Push(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+script = [Push(2), Put("nut", 5), Put("bolt", 6), Push(2), Push(7), _Skip, Put("cog", 3)]
+state = replay(script)
+mm, items = state
+print((_pf_map_to_list(mm), items))
+acc = _pf_fold(lambda step, x: step + x * x, 0, [6, 7, 1, 8])
+print(acc)
+--- stderr ---

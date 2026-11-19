@@ -1,0 +1,7 @@
+import delta
+import echo
+import foxtrot
+print("loading Alpha")
+base = 5 + echo.base + foxtrot.base + delta.base
+def step(x):
+    return delta.step(foxtrot.step(echo.step(x))) + 5

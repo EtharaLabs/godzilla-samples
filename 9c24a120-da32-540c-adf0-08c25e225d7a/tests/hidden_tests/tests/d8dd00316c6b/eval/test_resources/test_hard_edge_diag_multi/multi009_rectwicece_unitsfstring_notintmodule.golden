@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: field `x` is set twice
+ --> 9:28
+  |
+9 |     return Pt { x = 1, x = 2, y = 3 }
+  |                            ^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 11:17
+   |
+11 | let s2 = f"got {3.0<m> + 2.0<s>}"
+   |                 ^^^^^^^^^^^^^^^
+
+error: type mismatch: expected bool, found int
+  --> 13:15
+   |
+13 |   let w = not 3
+   |               ^
+
+3 errors

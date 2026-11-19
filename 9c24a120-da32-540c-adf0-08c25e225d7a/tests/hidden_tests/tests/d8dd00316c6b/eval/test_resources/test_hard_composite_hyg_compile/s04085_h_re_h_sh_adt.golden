@@ -1,0 +1,154 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: object
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0)
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Person(_pf_t0.name, p.age + 1))
+        case Idle(t) if t.size > 5:
+            _pf_t1 = t
+            return Idle(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Idle(Crew("wick", 6)), _Gone, Idle(Crew("wick", 5)), _Gone, Idle(Crew("nut", 2))])
+print(roster)
+people = [Person("max", 5), Person("gus", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+def cross(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn0(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn0, pairs))
+print(cross([(6, 8), (6, 3)]))
+def scale(n):
+    return n * 4
+def _pf_fn1():
+    _pf_t2 = [9, 2]
+    if _pf_t2:
+        scale = _pf_t2[0]
+        return scale + 1
+    else:
+        return 0
+picked = _pf_fn1()
+print((picked, scale(6)))
+def adjust(x, flag):
+    y = x * 2
+    if flag:
+        _y = x + 632
+        _pf_t3 = _y - 1
+    else:
+        _pf_t3 = y
+    z = _pf_t3
+    return (y, z)
+print((adjust(3, True), adjust(5, False)))
+def explain(t):
+    match t:
+        case Pop(1):
+            return "pop-1"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Push(n0) if 0 <= n0 < 4:
+            return f"push!({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Skip(3):
+            return "skip-3"
+        case Skip(n0):
+            return f"skip({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Skip(x0):
+            return x0
+        case _:
+            return 1
+prog = [Skip(5), Pop(6), Push(12), Skip(1), Skip(4)]
+print(_pf_str_join(" ", _pf_map(explain, prog)))
+grandSum = _pf_sum_by(weight, prog)
+print(f"grandSum={grandSum}")
+print(_pf_sort(prog))
+--- stderr ---

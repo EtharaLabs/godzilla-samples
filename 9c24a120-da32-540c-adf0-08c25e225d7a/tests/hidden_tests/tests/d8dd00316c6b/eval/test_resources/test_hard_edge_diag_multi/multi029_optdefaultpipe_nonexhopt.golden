@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 6:11
+  |
+6 | let p1 = [Option.withDefault 0 (Some "s")] |> List.len
+  |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: non-exhaustive match: `Some _` is not matched
+ --> 9:3
+  |
+9 |   match o:
+  |   ^^^^^^^^
+
+2 errors

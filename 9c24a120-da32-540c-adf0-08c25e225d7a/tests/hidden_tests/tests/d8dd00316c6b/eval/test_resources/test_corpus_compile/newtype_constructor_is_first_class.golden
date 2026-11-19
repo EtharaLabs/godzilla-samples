@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_id(x):
+    return x
+def firstLen(ids):
+    match ids:
+        case [s, *_]:
+            return len(s)
+        case []:
+            return 0
+        case _:
+            raise RuntimeError("non-exhaustive match")
+n = firstLen(_pf_map(_pf_id, ["ab", "c"]))
+--- stderr ---

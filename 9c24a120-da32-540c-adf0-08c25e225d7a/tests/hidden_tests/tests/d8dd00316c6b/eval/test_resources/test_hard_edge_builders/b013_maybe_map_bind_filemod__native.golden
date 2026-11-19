@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+# ==== maybe.py ====
+from _pyfun_rt import Some, None_, _None_
+def bind(m: Some | None_, f) -> Some | None_:
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def return_(x) -> Some | None_:
+    return Some(x)
+
+# ==== main.py ====
+import maybe
+from _pyfun_rt import Some, None_, _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def go(a: Some | None_, b) -> Some | None_:
+    return maybe.bind(_pf_option_map(lambda v: v + 1, a), lambda x: maybe.return_(x * 10))
+print(go(Some(1), _None_))
+print(go(_None_, _None_))
+
+# ==== _pyfun_rt.py ====
+from dataclasses import dataclass
+from typing import Any
+import contextvars
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Ok and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Error and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Some and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __eq__(self, other):
+        return type(other) is None_ and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+_pf_scope = contextvars.ContextVar("_pf_scope")
+
+--- stderr ---

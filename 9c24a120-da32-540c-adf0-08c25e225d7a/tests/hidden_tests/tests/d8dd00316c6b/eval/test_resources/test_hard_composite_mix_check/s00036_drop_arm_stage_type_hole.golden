@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Store _ _` is not matched
+  --> 32:3
+   |
+32 |   match t:
+   |   ^^^^^^^^
+
+error: type mismatch: expected string, found int
+  --> 49:48
+   |
+49 | let answer = (List.reduce (fun a b -> a + b)) (List.map String.upper ((List.windowed 3 >> List.map (fun w -> Option.withDefault 0 (List.max w))) ((List.chunkBySize 4 >> List.map List.sum) (List.rev (List.map ((+) 4) (samples))))))
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `string` — try: show — or: input ?, String.trimStart ?, String.trimEnd ?, String.rev ?, and 14 more
+  --> 33:34
+   |
+33 |     case Mark n0 if n0 % 2 == 0: ?
+   |                                  ^
+
+2 errors
+1 unfilled hole

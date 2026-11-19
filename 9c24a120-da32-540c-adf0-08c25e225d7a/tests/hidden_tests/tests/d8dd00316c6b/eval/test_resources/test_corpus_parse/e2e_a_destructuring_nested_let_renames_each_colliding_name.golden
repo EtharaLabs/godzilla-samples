@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let f flag =
+    let a = 1
+    let y =
+        if flag then
+            let (a, b) = (10, 20)
+            (a + b)
+        else 0
+    (a + y)
+let r = (f true)
+--- stderr ---

@@ -1,0 +1,118 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_forall(f, xs):
+    return all(map(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_desc(xs):
+    return sorted(xs, reverse=True)
+def _pf_take_while(f, xs):
+    return list(itertools.takewhile(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+ticks = 0
+def record(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([55, 28, 16, 44, 43]))
+doubled = _pf_map(record, [55, 28, 16, 44])
+print(f"{doubled} after {ticks} calls")
+readings = [33, 25, -2, 6, 35, 12, 15, -4, -3, 15]
+stage = lambda _pf_x: _pf_filter(lambda x: x % 4 == 2, (lambda _pf_x: _pf_take_while(lambda x: x < 43, _pf_sort_desc(_pf_x)))(_pf_x))
+digest = _pf_forall(lambda x: x >= 0, stage(readings))
+print(digest)
+print(len(readings))
+book = [Order(100, "pam", 259, False, Addr("Lima", 1)), Order(101, "pam", 256, True, Addr("Riga", 4)), Order(102, "kit", 58, True, Addr("Baku", 3)), Order(103, "ray", 295, False, Addr("Bern", 4)), Order(104, "kit", 75, False, Addr("Lima", 2)), Order(105, "kit", 54, False, Addr("Bern", 4))]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, sumAmt = _pf_fold(_pf_fn0, (0, 0), book)
+print(f"{nrec} records, {sumAmt} total")
+def _pf_fn1(o):
+    if o.dest.zone > 2:
+        _pf_t2 = o
+        return Order(_pf_t2.id, _pf_t2.owner, _pf_t2.amount, _pf_t2.urgent, Addr("Hub", 1))
+    else:
+        return o
+rerouted = _pf_map(_pf_fn1, book)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", rerouted))
+def label(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(label, book)))
+cheap, dear = _pf_partition(lambda o: o.amount < 160, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def bucket(o):
+    match o:
+        case Order(urgent=True, amount=amount) if amount > 107:
+            return "rush-big"
+        case Order(urgent=True):
+            return "rush"
+        case Order(amount=amount):
+            if amount > 107:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, book))
+print(_pf_count_by(bucket, book))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("111010") + int("53", base=8))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [4, 4, 6, 4]))
+--- stderr ---

@@ -1,0 +1,42 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def a(k, m):
+    match _pf_map_try_find(k, m):
+        case Some(0):
+            return "zero"
+        case Some(_):
+            return "other"
+        case None_():
+            return "none"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def b(k, m):
+    _pf_t0 = _pf_map_try_find(k, m)
+    if isinstance(_pf_t0, Some):
+        v = _pf_t0._0
+        if v > 0:
+            return v
+    return 0
+def c(f):
+    _pf_t1 = f(1)
+    if isinstance(_pf_t1, Some):
+        v = _pf_t1._0
+        return v
+    else:
+        return 0
+--- stderr ---

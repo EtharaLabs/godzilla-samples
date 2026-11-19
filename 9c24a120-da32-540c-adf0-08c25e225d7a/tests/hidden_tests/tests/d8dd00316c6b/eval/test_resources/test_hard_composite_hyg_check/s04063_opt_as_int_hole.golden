@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: expected int, found Option int
+  --> 26:18
+   |
+26 | let firstCount = Map.tryFind "fay" freq + 1
+   |                  ^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int` — or: logEvent ?, List.sum ?, Seq.sum ?, String.len ?, and 15 more
+  --> 20:45
+   |
+20 | let freq = List.fold (fun m w -> Map.add w (? + 1) m) Map.empty events2
+   |                                             ^
+
+1 error
+1 unfilled hole

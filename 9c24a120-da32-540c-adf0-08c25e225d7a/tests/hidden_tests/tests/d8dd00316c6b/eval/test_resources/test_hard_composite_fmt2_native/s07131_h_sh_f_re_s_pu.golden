@@ -1,0 +1,128 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: "Tile"
+    bottom: "Tile"
+    slot: int
+def scale(n: int) -> int:
+    return n * 4
+def _pf_fn0():
+    _pf_t0 = [2, 2]
+    if _pf_t0:
+        scale = _pf_t0[0]
+        return scale + 1
+    else:
+        return 0
+chosen: int = _pf_fn0()
+print((chosen, scale(3)))
+def step1(x: int) -> int:
+    return x + 1
+def dbl(x: int) -> int:
+    return x * 2
+def pipeline2(x: int) -> int:
+    return (lambda _pf_x: (lambda _pf_x: dbl(step1(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(pipeline2, [4, 3, 9]))
+def cross(pairs: list[tuple[int, int]]) -> list[int]:
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn1(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn1, pairs))
+print(cross([(6, 6), (7, 3)]))
+def tweak(x: int, flag: bool) -> tuple[int, int]:
+    y = x * 2
+    if flag:
+        _y = x + 884
+        _pf_t1 = _y - 1
+    else:
+        _pf_t1 = y
+    z = _pf_t1
+    return (y, z)
+print((tweak(1, True), tweak(7, False)))
+scores: list[Result2] = [Result2("max", 14, 0.28), Result2("cy", 83, 0.75), Result2("hal", 28, 0.38), Result2("bo", 61, 0.54)]
+def fmtRow(_pf_arg0: Result2) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{{{pts}}},pts={pts},{"pass" if pts >= 60 else "fail"},{_pf_fmt_pad_right(6, ".", who)}"
+_pf_iter(print, _pf_map(fmtRow, scores))
+print(f"{len(scores)} rows; names={_pf_str_join(", ", _pf_map(lambda s: f"[{s.who}]", scores))}")
+boxes: list[Tile] = [Tile(6, 5, "pin"), Tile(6, 6, "hub"), Tile(8, 3, "nut"), Tile(3, 4, "bolt"), Tile(6, 2, "cog"), Tile(4, 4, "sq")]
+def area(_pf_arg0: Tile) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, boxes)))
+def heavier(s: Shelf) -> str:
+    if isinstance(s, Shelf) and isinstance(s.top, Tile):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Shelf(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def describe(b: Tile) -> str:
+    if isinstance(b, Tile):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Tile) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, boxes)))
+--- stderr ---

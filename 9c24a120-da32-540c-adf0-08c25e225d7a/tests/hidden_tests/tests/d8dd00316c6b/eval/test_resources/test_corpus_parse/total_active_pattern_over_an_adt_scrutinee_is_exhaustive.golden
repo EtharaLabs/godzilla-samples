@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+type Shape = Circle float | Rect float float
+let (|Round|Angular|) s =
+    match s:
+        case (Circle r): Round
+        case (Rect w h): Angular
+let f s =
+    match s:
+        case Round: 1
+        case Angular: 2
+--- stderr ---

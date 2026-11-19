@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    def __repr__(self):
+        return "Pop"
+_Pop = Pop()
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Skip({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Line:
+    name: str
+    qty: int
+    price: float
+def describe(t):
+    match t:
+        case Turn(n0) if n0 > 0:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Pop():
+            return f"pop"
+        case Mark(n0) if n0 % 2 == 0:
+            return f"mark!({n0})"
+        case Mark(n0):
+            return f"mark({n0})"
+        case Load(n0) if n0 > 0:
+            return f"load!({n0})"
+        case Load(n0):
+            return f"load({n0})"
+        case Skip(s0, n1):
+            return f"skip({s0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Mark(x0):
+            return x0 * 2
+        case _:
+            return 2
+prog = [Turn(8), _Pop, Load(3), _Pop, Skip("cy", 6), _Pop]
+_pf_iter(lambda t: print(describe(t)), prog)
+tally = _pf_sum_by(weight, prog)
+print(f"tally={tally}")
+print(len(_pf_filter(lambda t: weight(t) > 4, prog)))
+rows = [Line("hub", 21, 12.7), Line("bolt", 17, 31.45), Line("nut", 8, 20.65), Line("pin", 22, 14.33)]
+def fmtLine(x):
+    return "{} {} {} {}".format(_pf_fmt_pad_right(8, ".", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(2, x.price), "restock" if x.qty > 7 else "ok")
+_pf_iter(print, _pf_map(fmtLine, rows))
+print("items: {}".format(_pf_str_join(", ", _pf_map(lambda x: x.name, rows))))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("acc", 2)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+values = [47, -4, 1, -5, 37, 22, 44]
+result = _pf_head(_pf_filter(lambda x: x % 4 == 3, _pf_map(lambda b: 52 - b, _pf_take(6, _pf_collect(lambda x: [x, x + 1], _pf_sort_by(lambda x: x % 4, values))))))
+print(result)
+--- stderr ---

@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+ --> 6:17
+  |
+6 | let s1 = f"got {3.0<m> + 2.0<s>}"
+  |                 ^^^^^^^^^^^^^^^
+
+error: type mismatch: expected bool, found int
+ --> 9:19
+  |
+9 |   let inner = not 3
+  |                   ^
+
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+  --> 11:29
+   |
+11 | let l3 = List.map (fun q -> len [1]) [1, 2]
+   |                             ^^^
+
+error: type mismatch: expected bool, found int
+  --> 13:18
+   |
+13 | let t4 = (0, not 3, "z")
+   |                  ^
+
+4 errors

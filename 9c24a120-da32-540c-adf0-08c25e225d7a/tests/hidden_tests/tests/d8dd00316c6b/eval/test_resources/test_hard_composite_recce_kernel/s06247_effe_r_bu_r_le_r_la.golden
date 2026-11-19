@@ -1,0 +1,107 @@
+exit: 0
+--- stdout ---
+00000002ok00000289discount : int -> int<'a> -> int<'a>
+announce : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+tell : 'a -> (unit, List 'a)
+trace2 : int -> (int, List string)
+reading : (List string) -> int -> int
+skipping : (List string) -> int -> int
+inputs2 : List int
+gain : int
+tweak2 : int -> int
+00002900def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+def discount(price, qty):
+    return price * qty - 3 * qty
+def announce(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("tap", 37, 4), ("nut", 21, 2), ("cog", 17, 2)]))
+print(overall)
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def trace2(x):
+    return Writer_bind(tell(f"start {x}"), lambda _: Writer_bind((x * 4, ["scaled"]), lambda y: (lambda z: Writer_bind(tell(f"z={z}"), lambda _: Writer_return_(z)))(y + 7)))
+print(_pf_map(trace2, [2, 7]))
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("bo dee hal cy ray lu"), 0))
+inputs2 = [-7, 20, 30, 15, -3, -9, -1]
+gain = 5
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(inputs2))))
+tweak2 = lambda _pf_x: (lambda z: z - 0)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn2, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_fn3(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn3, (0, 0), inputs2))
+00000002ok00000018inputs2 : List int0000000000000002ok00000019tweak2 : int -> int00000000--- stderr ---

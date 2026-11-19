@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+00000005error00000361error: this function performs nothing, but `choose` takes this callback as `'a ->{io} unit`, which performs exactly {io}; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `'a ->{e} unit`
+ --> 7:35
+  |
+7 | let pure p u = choose true shout (fun z -> ()) 4
+  |                                   ^^^^^^^^^^^
+0000000000000005error00000064error: unbound name `choose`
+ --> 2:1
+  |
+2 | choose
+  | ^^^^^^
+0000000000000005error00000049error: unbound name `p`
+ --> 2:1
+  |
+2 | p
+  | ^
+00000000--- stderr ---

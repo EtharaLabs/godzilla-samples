@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 6:30
+  |
+6 | let v1 = if true then 1 else "s"
+  |                              ^^^
+
+error: type mismatch: expected int, found string
+ --> 7:31
+  |
+7 | let p2 = [if true then 1 else "s"] |> List.len
+  |                               ^^^
+
+error: unbound name `Triangle`
+ --> 9:29
+  |
+9 | let l3 = List.map (fun q -> Triangle 1.0) [1, 2]
+  |                             ^^^^^^^^
+
+3 errors

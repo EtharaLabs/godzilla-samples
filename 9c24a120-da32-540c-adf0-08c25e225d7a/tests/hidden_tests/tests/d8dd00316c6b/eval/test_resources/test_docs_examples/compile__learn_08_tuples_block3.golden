@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_map(f, xs):
+    return list(map(f, xs))
+@dataclass(frozen=True, slots=True)
+class Cell:
+    letter: str
+    points: int
+def line(_pf_arg0):
+    name, score = _pf_arg0
+    return f"{name}: {score}"
+def label(_pf_arg0):
+    letter = _pf_arg0.letter
+    points = _pf_arg0.points
+    return f"{letter} is worth {points}"
+print(line(("ada", 10)))
+print(label(Cell("Q", 10)))
+print(_pf_map(line, [("ada", 10), ("alan", 9)]))
+--- stderr ---

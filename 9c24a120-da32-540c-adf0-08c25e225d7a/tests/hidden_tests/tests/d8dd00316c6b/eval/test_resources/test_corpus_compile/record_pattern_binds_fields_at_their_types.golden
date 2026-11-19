@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Box:
+    item: int
+def f(b):
+    match b:
+        case Box(item=n):
+            return n + 1
+--- stderr ---

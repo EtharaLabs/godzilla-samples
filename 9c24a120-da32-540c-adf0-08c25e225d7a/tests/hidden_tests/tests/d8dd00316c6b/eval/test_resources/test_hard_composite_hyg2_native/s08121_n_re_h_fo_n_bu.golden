@@ -1,0 +1,71 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Change = Put | Push | Noop
+def stack2(start: int) -> tuple[int, int, int, int, int]:
+    acc = start
+    g0 = lambda y: acc + y
+    acc = g0(acc)
+    g1 = lambda y: acc + y
+    acc = g1(acc)
+    def g2(y: int) -> int:
+        return acc * y
+    acc = acc + 11
+    g3 = lambda y: acc + y
+    acc = g3(acc)
+    return (g0(1), g1(1), g2(5), g3(3), acc)
+print(stack2(3))
+def fold1(acc: tuple[int, int], op: Change) -> tuple[int, int]:
+    puts = acc[0]
+    total = acc[1]
+    if isinstance(op, Put):
+        v = op._1
+        return (puts + 1, total + v)
+    elif isinstance(op, Push):
+        n = op._0
+        return (puts, total + n)
+    else:
+        return acc
+def runAll(script: list[Change]) -> tuple[int, int]:
+    return _pf_fold(fold1, (0, 0), script)
+ops: list[Change] = [Put("cog", 1), Push(9), Put("cog", 7), Push(0), Put("gear", 1), _Noop, Put("nut", 6)]
+state: tuple[int, int] = runAll(ops)
+print(state)
+list_: list[int] = [1, 5, 0]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(5, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([4, 6, 3, 4]), _pf_sort([3, 1, 2])))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+--- stderr ---

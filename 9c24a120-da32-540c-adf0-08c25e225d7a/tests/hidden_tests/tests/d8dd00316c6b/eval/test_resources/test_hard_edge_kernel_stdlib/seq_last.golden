@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+00000002ok00000032Seq.last : (Seq 'a) -> Option 'a0000000000000002ok0000000000000407from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_seq_last(xs):
+    out = _None_
+    for x in xs:
+        out = Some(x)
+    return out
+print(_pf_seq_last)
+--- stderr ---

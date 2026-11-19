@@ -1,0 +1,88 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("u", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+book = [Booking(100, "tom", 176, True), Booking(101, "lu", 242, False), Booking(102, "hal", 203, False), Booking(103, "hal", 251, True)]
+print(_pf_max_by(lambda o: o.amount, book))
+def label(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(label, book)))
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), book)
+print(f"{cnt} records, {amt} total")
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, book))
+print(perOwner)
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("10000") + int("107", base=8))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [11, 6, 6, 9]))
+def discount(price, qty):
+    return price * qty - 9 * qty
+def emit(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn2(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+overall = sum(_pf_map(_pf_fn2, [("rod", 24, 4), ("wick", 12, 2), ("hub", 9, 3)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(15)([1, 2, 3]))
+--- stderr ---

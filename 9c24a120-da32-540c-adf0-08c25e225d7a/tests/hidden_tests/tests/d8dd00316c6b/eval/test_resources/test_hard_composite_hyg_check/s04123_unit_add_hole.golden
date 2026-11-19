@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+  --> 56:11
+   |
+56 | let vol = cbrt 8.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `Cmd -> 'a` — try: rank, render, print, id, ignore, Some, and 21 more — or: List.replicate ?, List.updateAt ?, List.insertAt ?, Seq.replicate ?, and 9 more
+  --> 32:35
+   |
+32 | let grandSum = prog |> List.sumBy ?
+   |                                   ^
+
+1 error
+1 unfilled hole

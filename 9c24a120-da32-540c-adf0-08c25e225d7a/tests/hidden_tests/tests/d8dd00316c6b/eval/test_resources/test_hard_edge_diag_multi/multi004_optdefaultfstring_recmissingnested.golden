@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 6:17
+  |
+6 | let s1 = f"got {Option.withDefault 0 (Some "s")}"
+  |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: record `Pt` is missing field(s) `y`
+ --> 8:15
+  |
+8 |   let inner = Pt { x = 1 }
+  |               ^^^^^^^^^^^^
+
+2 errors

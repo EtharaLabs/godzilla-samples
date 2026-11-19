@@ -1,0 +1,133 @@
+exit: 0
+--- stdout ---
+00000002ok00000305digitSum : int -> int
+accumulate : int -> int -> int
+powAcc : int -> int -> int<'a> -> int<'a>
+raw : string
+words : List string
+row2 : (int, string) -> string
+longest : Option string
+evens : Seq int
+fib : Seq int
+discount : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+00003407from dataclasses import dataclass
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(90049))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(581, 0))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(2, 5, 1))
+raw = "ray dee eli hub oz"
+words = _pf_str_split(" ", raw)
+print(_pf_str_join("|", _pf_map(_pf_str_upper, words)))
+print(_pf_map(lambda w: (w, len(w)), words))
+def row2(_pf_arg0):
+    i, w = _pf_arg0
+    return _pf_str_concat(_pf_fmt_pad_right(7, ".", w), _pf_fmt_pad_left(4, " ", str(i + 1)))
+_pf_iter(print, _pf_map(row2, _pf_indexed(words)))
+print(_pf_str_slice(3, 8, raw))
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), words))
+print(_pf_option_with_default("?", longest))
+def _pf_fn0():
+    for x in _pf_range(1, 11):
+        y = x * x
+        yield y
+evens = _pf_fn0()
+print(list(filter(lambda n: n % 2 == 0, evens)))
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 3)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 998, fib)))
+def discount(price, qty):
+    return price * qty - 5 * qty
+def emit(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn2(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn2, [("cog", 38, 6), ("cog", 33, 5), ("rod", 11, 4), ("hub", 27, 1)]))
+print(grand)
+00000002ok00000011grand : int0000000000000002ok00000013fib : Seq int00000000--- stderr ---

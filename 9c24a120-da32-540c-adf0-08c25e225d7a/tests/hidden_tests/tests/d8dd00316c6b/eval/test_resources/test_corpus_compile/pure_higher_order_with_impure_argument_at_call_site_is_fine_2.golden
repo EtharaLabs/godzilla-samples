@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def loop2(x, n):
+    while True:
+        _ = print(x)
+        if n <= 0:
+            return 0
+        else:
+            x, n = (x, n - 1)
+            continue
+--- stderr ---

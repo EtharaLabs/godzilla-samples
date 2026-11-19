@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 8:15
+  |
+8 |     yield 1 + "x"
+  |               ^^^
+
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+  --> 13:12
+   |
+13 |     return len [1]
+   |            ^^^
+
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 16:21
+   |
+16 | let s3 = f"got {1 + "x"}"
+   |                     ^^^
+
+3 errors

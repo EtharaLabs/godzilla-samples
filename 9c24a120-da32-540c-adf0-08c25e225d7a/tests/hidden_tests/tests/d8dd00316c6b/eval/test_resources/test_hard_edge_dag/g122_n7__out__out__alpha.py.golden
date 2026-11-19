@@ -1,0 +1,13 @@
+import echo
+base = 6 + echo.base
+def step(x):
+    return echo.step(x) + 6
+def describe(k):
+    match k:
+        case echo.KaE(v):
+            return v * 10
+        case echo.KbE():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(echo.pickE(base))

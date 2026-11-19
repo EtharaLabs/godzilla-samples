@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: cannot assign to `seen`: it is immutable (declare it with `let mut`)
+ --> 5:5
+  |
+5 |     seen <- seen + 1
+  |     ^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int` — try: n, w — or: logEvent ?, List.sum ?, Seq.sum ?, String.len ?, and 15 more
+  --> 21:28
+   |
+21 |     case Some n: Map.add w ? m
+   |                            ^
+
+1 error
+1 unfilled hole

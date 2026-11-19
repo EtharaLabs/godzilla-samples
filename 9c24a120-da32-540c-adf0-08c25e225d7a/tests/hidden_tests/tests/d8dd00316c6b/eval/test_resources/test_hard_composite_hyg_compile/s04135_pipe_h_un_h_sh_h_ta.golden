@@ -1,0 +1,110 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import asyncio
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+values = [-9, 26, 14, 42, 50, 47]
+def offset(k, x):
+    return x + k
+def accept(n):
+    return n > 16 and n % 4 != 0
+outcome = _pf_head(_pf_map(lambda b: 2 * b, _pf_choose(lambda x: (Some(x // 2) if x % 2 == 0 else _None_), _pf_take(2, _pf_map(lambda x: x // 5 + x % 5, values)))))
+print(outcome)
+print(len(values))
+span = math.hypot(7.0 / 1.0, 7.0 / 1.0) * 1.0
+ratio = math.sqrt(10.0)
+side = math.sqrt(49.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(span / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(span, 4.0)))
+def swapSum(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn0(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn0, pairs))
+print(swapSum([(4, 2), (2, 3)]))
+def lift(n):
+    return n + 86
+def useBump(x):
+    return lift(x)
+def _pf_fn1():
+    lift = 3
+    return useBump(lift)
+probe = _pf_fn1()
+print((probe, useBump(6)))
+def combine(o):
+    def pair(a, b):
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t0 = _pair
+    else:
+        _pf_t0 = 3
+    r = _pf_t0
+    return pair(r, 8)
+print((combine(Some(4)), combine(_None_)))
+def finished(acc):
+    async def _pf_fn2():
+        return acc
+    return _pf_Async(_pf_fn2)
+def spin(n, acc):
+    async def _pf_fn4():
+        async def _pf_fn3():
+            return n * 3
+        k = await _pf_fn3()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await spin(n - 1, acc + k)
+    return _pf_Async(_pf_fn4)
+print(asyncio.run(_pf_run(spin(39, 0))))
+--- stderr ---
+note: `spin` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

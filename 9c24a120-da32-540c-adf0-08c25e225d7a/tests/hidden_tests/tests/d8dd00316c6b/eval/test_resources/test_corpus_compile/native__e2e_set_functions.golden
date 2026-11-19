@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def _pf_set_difference(a, b):
+    return a.difference(b)
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+s: set[int] = set([1, 2, 3, 3])
+n: int = len(s)
+has: bool = 2 in s
+u: int = len(_pf_set_union(s, set([3, 4])))
+i: int = len(_pf_set_intersect(s, set([3, 4])))
+d: int = len(_pf_set_difference(s, set([3, 4])))
+e: int = len(set())
+--- stderr ---

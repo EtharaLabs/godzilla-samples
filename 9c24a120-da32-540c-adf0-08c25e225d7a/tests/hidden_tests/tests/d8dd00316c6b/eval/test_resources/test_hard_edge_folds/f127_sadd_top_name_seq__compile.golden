@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def _pf_set_add(x, s):
+    return s.union([x])
+init_a = set([0])
+nums = [2, 7, 1, 8, 2, 8]
+def step(a, x):
+    return _pf_set_add(x, a)
+def compute(u):
+    a = set(init_a)
+    for x in iter(nums):
+        a.add(x)
+    return a
+print(list(compute(None)))
+--- stderr ---

@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Box:
+    label: str
+    item: int
+t = ("first", "mixed Case".upper)
+lbl, v = t
+print(lbl)
+print(v)
+--- stderr ---

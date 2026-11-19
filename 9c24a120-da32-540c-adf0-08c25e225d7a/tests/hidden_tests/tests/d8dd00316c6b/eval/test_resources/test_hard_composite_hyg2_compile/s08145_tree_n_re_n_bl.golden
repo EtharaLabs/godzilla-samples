@@ -1,0 +1,129 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [40, 25, 53, 18, 30])
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, tree), [40, 31, 29]))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+def minOf(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minOf(tree))
+def sumOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumOf(l) + v + sumOf(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumOf(tree))
+def build(start):
+    base = start
+    def g0(y):
+        return base * y
+    base = base + 12
+    def g1(y):
+        return base * y
+    base = base * 2
+    g2 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 6
+    return (g0(2), g1(5), g2([1, 2]), base)
+print(build(3))
+def nudge(n):
+    return n + 48
+def useHelper(x):
+    return nudge(x)
+def _pf_fn0():
+    nudge = 4
+    tmp = useHelper(nudge)
+    return tmp * 2
+alpha = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [7]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+third = _pf_fn2()
+print((alpha, second, third, useHelper(0)))
+--- stderr ---

@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: str
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+Cmd = Rest | Mark | Skip
+def build(start: int) -> tuple[int, list[int], int]:
+    level = start
+    def g0(y: int) -> int:
+        return level * y
+    level = g0(level)
+    g1 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 2
+    return (g0(3), g1([1, 2]), level)
+print(build(8))
+list_: list[int] = [3, 3, 8]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([3, 1, 3, 9]), _pf_sort([3, 1, 2])))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(13, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+len_: int = 6
+print((len([1, 2, 3]) + len_, len("abc")))
+def _pf_fn0():
+    for (name, k) in [("a", 4), ("b", 2)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(2), list(handlers)))
+acc = []
+for k in [9, 1, 4]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def explain(t: Cmd) -> str:
+    if isinstance(t, Rest):
+        s0 = t._0
+        return f"rest({s0})"
+    else:
+        if isinstance(t, Mark):
+            n0 = t._0
+            if n0 % 2 == 0:
+                return f"mark!({n0})"
+        if isinstance(t, Mark):
+            n0 = t._0
+            return f"mark({n0})"
+        elif isinstance(t, Skip) and t._0 == 1:
+            return "skip-1"
+        else:
+            n0 = t._0
+            return f"skip({n0})"
+def weight(t: Cmd) -> int:
+    if isinstance(t, Rest):
+        return 8
+    else:
+        return 0
+queue: list[Cmd] = [Skip(5), Skip(-3), Rest("hal"), Rest("ned"), Rest("tom"), Mark(-3), Rest("pam")]
+print(_pf_str_join("; ", _pf_map(explain, queue)))
+tally: int = _pf_sum_by(weight, queue)
+print(f"tally={tally}")
+print((_pf_head(queue), _pf_last(queue)))
+--- stderr ---

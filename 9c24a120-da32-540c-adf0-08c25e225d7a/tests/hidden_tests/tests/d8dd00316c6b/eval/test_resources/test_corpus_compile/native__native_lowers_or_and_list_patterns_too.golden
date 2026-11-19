@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+def f(xs) -> str:
+    if len(xs) == 0:
+        return "short"
+    elif len(xs) == 1:
+        return "short"
+    elif len(xs) == 2:
+        a = xs[0]
+        b = xs[1]
+        return f"pair {a}{b}"
+    else:
+        a = xs[0]
+        z = xs[-1]
+        mid = xs[1:len(xs) - 1]
+        return f"{a}..{z} with {len(mid)} inside"
+def g(n: int) -> str:
+    if n == 1:
+        return "small"
+    elif n == 2:
+        return "small"
+    elif n == 3:
+        return "small"
+    else:
+        return "big"
+print(f([]))
+print(f([7]))
+print(f([1, 2]))
+print(f([1, 2, 3, 4]))
+print(g(2))
+print(g(9))
+--- stderr ---

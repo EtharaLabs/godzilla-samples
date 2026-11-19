@@ -1,0 +1,132 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+journal: list[str] = []
+def logged(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [3, 1]))
+print((out, journal))
+def running(xs: list[int]) -> tuple[int, int]:
+    peak = 0
+    def step(acc: int, x: int) -> int:
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([-5, 3, 9, 9, -1]))
+def choose2(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((0, 9)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 5)))
+def dig(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((dig([9, 2]), dig([0, 9]), dig([])))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 5
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(9, []), score(1, [1]), score(1, [7, 2, 3])))
+events: list[str] = ["bo", "eli", "dee", "cy", "ada", "fay", "bo", "fay", "eli", "cy"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t1 = n + 1
+            m[w] = _pf_t1
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts: dict[str, int] = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+extra: dict[str, int] = dict([("zed", 5), ("bo", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+--- stderr ---

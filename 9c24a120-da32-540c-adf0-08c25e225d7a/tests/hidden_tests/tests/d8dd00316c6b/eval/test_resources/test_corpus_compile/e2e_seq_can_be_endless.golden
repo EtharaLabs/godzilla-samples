@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_seq_find(f, xs):
+    return next(map(Some, filter(f, xs)), _None_)
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+doubles = list(_pf_seq_take(5, _pf_seq_init_inf(lambda i: i * 2)))
+powers = list(_pf_seq_take(4, _pf_seq_unfold(lambda s: (_None_ if s > 100 else Some((s, s * 2))), 1)))
+firstBig = _pf_seq_find(lambda x: x > 6, _pf_seq_init_inf(lambda i: i * 2))
+--- stderr ---

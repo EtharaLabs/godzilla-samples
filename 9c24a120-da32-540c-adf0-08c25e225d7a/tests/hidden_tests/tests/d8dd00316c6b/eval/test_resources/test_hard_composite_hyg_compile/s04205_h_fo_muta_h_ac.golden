@@ -1,0 +1,146 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def step(xs, op):
+    match op:
+        case Put(k, v):
+            return _pf_concat(xs, [v])
+        case Push(n) if n > 0:
+            return _pf_concat(xs, [n * 10])
+        case _:
+            return xs
+def replay(script):
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Push(n) if n > 0:
+                _pf_t0 = n * 10
+                xs.append(_pf_t0)
+            case _:
+                pass
+    return xs
+ops = [_Skip, Push(4), Push(-2), Put("gear", 4), Put("bolt", 3), _Skip, Push(9)]
+final = replay(ops)
+print(final)
+hits = 0
+def note(x):
+    global hits
+    hits = hits + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([30, 52, 20, 32, 38]))
+doubled = _pf_map(note, [30, 52, 20, 32])
+print(f"{doubled} after {hits} calls")
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 6:
+        return _Low()
+    elif scaled < 40:
+        return _Mid()
+    else:
+        return _High()
+def _ap_KeyVal(s):
+    match _pf_str_split("=", s):
+        case [k, v]:
+            _pf_t1 = _pf_str_to_int(v)
+            if isinstance(_pf_t1, Some):
+                n = _pf_t1._0
+                return Some((_pf_str_strip(k), n))
+            else:
+                return _None_
+        case _:
+            return _None_
+def band(n):
+    _pf_t2 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t2, _Low):
+        return "low"
+    elif isinstance(_pf_t2, _Mid):
+        return "mid"
+    elif isinstance(_pf_t2, _High):
+        return "high"
+    else:
+        raise RuntimeError("non-exhaustive match")
+def grade(s):
+    _pf_t3 = _ap_KeyVal(s)
+    if isinstance(_pf_t3, Some):
+        pair = _pf_t3._0
+        if _pf_snd(pair) < 0:
+            return f"{_pf_fst(pair)}: negative"
+    if isinstance(_pf_t3, Some):
+        pair = _pf_t3._0
+        return f"{_pf_fst(pair)}: {band(_pf_snd(pair))}"
+    return "?"
+_pf_iter(print, _pf_map(grade, ["max=x", "lu=13", "cy", "ivy=x"]))
+--- stderr ---

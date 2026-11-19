@@ -1,0 +1,83 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+import math as mth
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+reach = math.hypot(5.0 / 1.0, 9.0 / 1.0) * 1.0
+ratio = math.sqrt(5.0)
+side = math.sqrt(25.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(reach / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 9.0)))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 3:
+        return _Low()
+    elif scaled < 33:
+        return _Mid()
+    else:
+        return _High()
+def grade(n):
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(grade, [21, 30, 19, 0, 10]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [10, 11, 9, 6]))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("10001") + int("45", base=8))
+def visitAll(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def shout(x):
+    return print(f"* {x}")
+visitAll(shout, [0, 6, 6])
+print(mapTwice(lambda x: x + 1, [1, 2, 3]))
+def maybeLog(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(maybeLog(True, 6) + maybeLog(False, 2))
+def quiet(x):
+    return x + 7
+print(mapTwice(quiet, [4]))
+--- stderr ---

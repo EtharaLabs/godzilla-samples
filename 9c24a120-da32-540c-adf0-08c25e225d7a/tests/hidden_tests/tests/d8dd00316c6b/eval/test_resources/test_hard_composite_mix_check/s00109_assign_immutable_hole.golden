@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: cannot assign to `total`: it is immutable (declare it with `let mut`)
+  --> 29:5
+   |
+29 |     total <- total + x
+   |     ^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int` — try: calls, n, result — or: digitSum ?, List.sum ?, Seq.sum ?, String.len ?, and 14 more
+  --> 44:22
+   |
+44 |     case _: n % 10 + ?
+   |                      ^
+
+1 error
+1 unfilled hole

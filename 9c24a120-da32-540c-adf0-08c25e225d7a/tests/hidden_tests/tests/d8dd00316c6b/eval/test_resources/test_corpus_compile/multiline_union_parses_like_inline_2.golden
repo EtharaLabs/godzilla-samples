@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+--- stderr ---

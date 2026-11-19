@@ -1,0 +1,148 @@
+exit: 0
+--- stdout ---
+00000002ok00000303obs : List int
+text : string
+parts : List string
+count : int
+longest : Option string
+events : List string
+freq : Map string int
+sa : Set int
+sb : Set int
+extra : Map string int
+rawOf : UserId -> string
+makeIds : 'a -> int -> List UserId
+keys : List UserId
+entries : List Stock
+showRow : Stock -> string
+00003923from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_index_of(sub, s):
+    i = s.find(sub)
+    return Some(i) if i >= 0 else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+@dataclass(frozen=True, slots=True)
+class Stock:
+    name: str
+    qty: int
+    price: float
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+obs = [9, 7, 12, 21, 22]
+print(Text_norm1(obs))
+print(Text_mean(obs))
+print(_pf_filter(functools.partial(Text_between, 3, 25), obs))
+text = "bolt hub kit sue"
+parts = _pf_str_split(" ", text)
+print((_pf_str_index_of("ki", text), "ki" in text))
+count = len(parts)
+print(f"count={count} {{braces}} {len(text)}")
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), parts))
+print(_pf_option_with_default("?", longest))
+print(_pf_str_slice(0, 7, text))
+print(_pf_str_replace("u", "U", text))
+events = ["dee", "ada", "cy", "cy", "cy", "bo", "fay", "dee"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, freq))
+sa = set([3, 4, 8, 11, 17, 18])
+sb = set([2, 3, 4, 6, 7, 13])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 9 in sb, _pf_set_is_subset(set([3]), sa)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(freq))))
+extra = dict([("zed", 5), ("dee", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("u", 3)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+entries = [Stock("bolt", 5, 11.9), Stock("hub", 30, 7.56), Stock("nut", 6, 25.6)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(9, ".", x.name)}|{_pf_fmt_pad_left(4, " ", str(x.qty))}|{_pf_fmt_fixed(2, x.price)}"
+_pf_iter(print, _pf_map(showRow, entries))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_str_upper(s):
+    return s.upper()
+print(f"{len(entries)} rows, {_pf_str_upper("total")}={_pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, entries))}")
+00000002ok00000011count : int0000000000000002ok00000020events : List string00000000--- stderr ---

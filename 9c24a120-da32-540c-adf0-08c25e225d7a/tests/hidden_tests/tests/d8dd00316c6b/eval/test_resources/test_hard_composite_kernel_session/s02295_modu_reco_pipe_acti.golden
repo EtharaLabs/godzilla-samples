@@ -1,0 +1,135 @@
+exit: 0
+--- stdout ---
+00000002ok00000166pts : List int
+book : List Parcel
+nrec : int
+amt : int
+data : List int
+addK : int<'a> -> int<'a> -> int<'a>
+isBig : int -> bool
+result : int
+bucketOf : int -> string
+00003598from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_take_while(f, xs):
+    return list(itertools.takewhile(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True)
+class Place:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+pts = [21, 26, 19, -6]
+print(_pf_filter(functools.partial(Text_between, -1, 10), pts))
+print(Text_norm1(pts))
+print(Text_scaleAll(2, pts))
+print(_pf_map(functools.partial(Text_clamp, 0, 19), pts))
+book = [Parcel(100, "ray", 14, False, Place("Baku", 1)), Parcel(101, "ray", 179, True, Place("Rome", 1)), Parcel(102, "ray", 98, False, Place("Baku", 4)), Parcel(103, "max", 151, False, Place("Riga", 3))]
+print(_pf_max_by(lambda o: o.amount, book))
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, book))))
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn0, (0, 0), book)
+print(f"{nrec} records, {amt} total")
+data = [37, 45, 3, 24, -7, 26, 38]
+def addK(k, x):
+    return x + k
+def isBig(n):
+    return n > 17 and n % 4 != 0
+def _pf_fn2(_pf_x):
+    def _pf_fn3(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn3, _pf_indexed(_pf_x))
+def _pf_fn5(_pf_x):
+    def _pf_fn6(_pf_arg0):
+        a, b = _pf_arg0
+        return b - a
+    return _pf_map(_pf_fn6, _pf_pairwise(_pf_x))
+result = _pf_fold(lambda acc, x: acc * 2 - x, 0, _pf_fn2(_pf_take_while(lambda x: x < 45, _pf_fn5(_pf_rev(_pf_choose(lambda x: (Some(x // 3) if x % 3 == 0 else _None_), _pf_take(2, data)))))))
+print(result)
+print(len(data))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def _ap_Above(n):
+    if n > 10:
+        return Some(n - 10)
+    else:
+        return _None_
+def bucketOf(n):
+    _pf_t0 = _ap_Above(n)
+    _pf_t1 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    elif isinstance(_pf_t1, _Even):
+        return "even"
+    else:
+        return "odd"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+_pf_iter(print, _pf_map(bucketOf, [-1, 25, -4, 18, 40, 27, -4]))
+00000002ok00000024bucketOf : int -> string0000000000000002ok00000036addK : int<'a> -> int<'a> -> int<'a>00000000--- stderr ---

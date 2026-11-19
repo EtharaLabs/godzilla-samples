@@ -1,0 +1,148 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: int
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Tri:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Tri({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: str
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+def pick(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((3, 8)), 0), pick(Some((1, 5)), 0), pick(_None_, 4)))
+def weigh(x, items):
+    match items:
+        case []:
+            return x
+        case [_x]:
+            return _x * 4
+        case [_x2, *rest]:
+            return _x2 + len(rest)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print((weigh(4, []), weigh(1, [4]), weigh(1, [7, 2, 3])))
+def extent(s):
+    match s:
+        case Square(n) | Disc(n):
+            return n
+        case Tri(n, m) if n > m:
+            return n
+        case Tri(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(extent, [Square(4), Disc(6), Tri(3, 8), Tri(1, 9)]))
+def explain(t):
+    match t:
+        case Drop(s0):
+            return f"drop({s0})"
+        case Pop(n0) if n0 > 5:
+            return f"pop!({n0})"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Store(n0):
+            return f"store({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Drop(_):
+            return 2
+        case Pop(x0):
+            return x0
+        case _:
+            return 2
+batch = [Drop("gus"), Push(-1), Store(7), Store(-3)]
+print(_pf_str_join(" ", _pf_map(explain, batch)))
+tally = _pf_sum_by(weight, batch)
+print(f"tally={tally}")
+print(_pf_max_by(weight, batch))
+panels = [Panel(5, 2, "pin"), Panel(6, 8, "cap"), Panel(7, 9, "gear"), Panel(4, 4, "sq")]
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+def describe(b):
+    match b:
+        case Panel(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Panel(label=label, w=1):
+            return f"{label} thin"
+        case Panel(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, panels)))
+--- stderr ---

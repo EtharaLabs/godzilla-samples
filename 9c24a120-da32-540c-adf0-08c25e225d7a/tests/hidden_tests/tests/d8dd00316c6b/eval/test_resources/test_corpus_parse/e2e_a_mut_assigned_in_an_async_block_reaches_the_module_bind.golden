@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+extern import asyncio
+extern runAsync: (Async a) -> a = asyncio.run
+let mut flag = false
+let raiseFlag _ = async { let _ = (flag <- true) return () }
+(runAsync (raiseFlag ()))
+(print flag)
+--- stderr ---

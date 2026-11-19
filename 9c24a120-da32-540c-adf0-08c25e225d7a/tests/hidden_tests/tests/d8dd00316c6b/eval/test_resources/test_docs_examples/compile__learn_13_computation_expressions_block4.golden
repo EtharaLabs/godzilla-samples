@@ -1,0 +1,26 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def double(s):
+    return _pf_option_map(lambda n: n * 2, _pf_str_to_int(s))
+print(double("21"))
+--- stderr ---

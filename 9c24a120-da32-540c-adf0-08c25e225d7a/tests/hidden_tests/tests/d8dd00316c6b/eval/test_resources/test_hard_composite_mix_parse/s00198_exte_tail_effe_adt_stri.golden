@@ -1,0 +1,51 @@
+exit: 0
+--- stdout ---
+extern pure shout: string -> string = str.upper
+(print (("ivy" |> shout) |> String.rev))
+extern pure isqrt: int -> int = math.isqrt
+(print ((List.map isqrt) [267, 276, 210, 347]))
+extern pure hcf: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((hcf a) b))
+(print (((List.fold lcm) 1) [4, 2, 12, 8]))
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [30, 28, 28, 0, 19]))
+let steps n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((steps (n // 2)) (acc + 1)) else ((steps ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((steps n) 0))) [13, 55, 58]))
+let ipow b e acc =
+    match e:
+        case 0: acc
+        case k if ((k % 2) == 1): (((ipow b) (k - 1)) (acc * b))
+        case k: (((ipow (b * b)) (k // 2)) acc)
+(print (((ipow 4) 14) 1))
+let pure net price qty = ((price * qty) - (7 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("pin", 43, 3), ("tap", 28, 4), ("bolt", 27, 2)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print grand)
+type Token = Emit int | Drop int | Jump
+let show t =
+    match t:
+        case (Emit n0) if ((n0 % 2) == 0): f"emit!({n0})"
+        case (Emit n0): f"emit({n0})"
+        case (Drop n0) if ((n0 % 2) == 0): f"drop!({n0})"
+        case (Drop n0): f"drop({n0})"
+        case Jump: f"jump"
+let cost t =
+    match t:
+        case (Emit x0): (x0 * 4)
+        case Jump: 4
+        case _: 0
+let stream = [Jump, (Emit (- 3)), (Drop 11), (Drop 10), Jump, (Drop 8), Jump]
+((stream |> (List.map show)) |> print)
+let grandSum = (stream |> (List.sumBy cost))
+(print f"grandSum={grandSum}")
+(print ((List.maxBy cost) stream))
+let sentence = "bo;ray;kit;nut;sue"
+let parts = ((String.split ";") sentence)
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+let longest = ((parts |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+--- stderr ---

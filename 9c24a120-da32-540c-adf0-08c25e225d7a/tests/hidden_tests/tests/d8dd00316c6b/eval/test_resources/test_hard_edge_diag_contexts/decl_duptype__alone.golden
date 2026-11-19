@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type `Pt` is already defined
+ --> 6:1
+  |
+6 | type Pt = { z: int }
+  | ^^^^^^^^^^^^^^^^^^^^
+
+error: record `Pt` has no field `x`
+ --> 5:19
+  |
+5 | let pt = Pt { x = 1, y = 2 }
+  |                   ^
+
+2 errors

@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 7) then (Some (n - 7)) else None)
+let bucketOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Even: "even"
+        case _: "odd"
+(([17, 25, (- 6), 27, (- 6), 39, 30] |> (List.map bucketOf)) |> (List.iter print))
+opaque type Sku = string
+opaque type Handle = string
+let unwrap x =
+    match x:
+        case (Sku s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (Sku f"{prefix}-{i}"))))
+let ids = ((makeIds "sku") 3)
+(print ((ids |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head ids) == (Some (Sku "u-1"))))
+let pure margin price qty = ((price * qty) - (9 * qty))
+let report label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let overall = (([("tap", 46, 2), ("bolt", 39, 3), ("hub", 30, 3)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+type Booking = { id: int, owner: string, amount: int, urgent: bool }
+let book = [Booking { id = 100, owner = "ivy", amount = 159, urgent = true }, Booking { id = 101, amount = 128, urgent = false, owner = "dee" }, Booking { id = 102, owner = "dee", amount = 173, urgent = false }, Booking { urgent = true, amount = 216, owner = "tom", id = 103 }]
+let bump2 o = (if o.urgent then { o with amount = (o.amount + 4) } else o)
+(print ((book |> (List.map bump2)) |> (List.map (fun o -> o.amount))))
+(print ((List.maxBy (fun o -> o.amount)) book))
+let rushSum = ((book |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print rushSum)
+let perOwner = ((book |> (List.groupBy (fun o -> o.owner))) |> (List.map (fun (k, os) -> (k, (List.len os), ((List.sumBy (fun o -> o.amount)) os)))))
+(print perOwner)
+--- stderr ---

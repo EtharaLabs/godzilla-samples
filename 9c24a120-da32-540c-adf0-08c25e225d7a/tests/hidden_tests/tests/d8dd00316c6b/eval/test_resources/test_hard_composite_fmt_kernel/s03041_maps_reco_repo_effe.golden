@@ -1,0 +1,156 @@
+exit: 0
+--- stdout ---
+00000002ok00000381visits : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+counts : Map string int
+sa : Set int
+sb : Set int
+extra : Map string int
+parcels : List Booking
+surcharge : int -> Booking -> Booking
+perOwner : List (string, int, int)
+nrec : int
+amt : int
+entries : List Row
+showRow : Row -> string
+net : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+00004415from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+visits = ["fay", "bo", "fay", "bo", "ada", "eli", "ada", "ada", "bo", "eli"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+sa = set([1, 5, 7, 10, 12, 14])
+sb = set([1, 5, 10, 11, 15, 16])
+print(_pf_sort(list(_pf_set_union(sa, sb))))
+print((len(sa), 14 in sb, _pf_set_is_subset(set([1]), sa)))
+extra = dict([("zed", 5), ("fay", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+parcels = [Booking(100, "fay", 11, False, Addr("Riga", 4)), Booking(101, "fay", 180, True, Addr("Riga", 3)), Booking(102, "kit", 241, True, Addr("Lima", 2)), Booking(103, "kit", 150, False, Addr("Baku", 2)), Booking(104, "fay", 71, False, Addr("Lima", 3)), Booking(105, "kit", 15, False, Addr("Doha", 2))]
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t1 = o
+    return Booking(_pf_t1.id, _pf_t1.owner, o.amount + extra, False, _pf_t1.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 4), parcels)))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, parcels))
+print(perOwner)
+def _pf_fn2(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn2, (0, 0), parcels)
+print(f"{nrec} records, {amt} total")
+entries = [Row("bolt", 8, 5.25), Row("rod", 21, 24.38), Row("gear", 21, 21.48), Row("cog", 23, 0.76)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(6, " ", x.name)} {_pf_fmt_pad_left(4, " ", str(x.qty))} {_pf_fmt_fixed(2, x.price)} {"restock" if x.qty > 5 else "ok"} {_pf_fmt_currency("$", 2, x.price * 4.0)}"
+_pf_iter(print, _pf_map(showRow, entries))
+print(f"items: {_pf_str_join(", ", _pf_map(lambda x: x.name, entries))}")
+def net(price, qty):
+    return price * qty - 2 * qty
+def emit(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn3(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn3, [("tap", 46, 2), ("bolt", 20, 6)]))
+print(grand)
+00000002ok00000018entries : List Row0000000000000002ok00000012sa : Set int00000000--- stderr ---

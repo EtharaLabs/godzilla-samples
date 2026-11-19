@@ -1,0 +1,57 @@
+exit: 0
+--- stdout ---
+type Msg = Rest string | Skip | Load | Push | Emit int
+let explain t =
+    match t:
+        case (Rest s0): f"rest({s0})"
+        case Push: f"push"
+        case (Emit n0): f"emit({n0})"
+        case (Skip | Load): "skip/load"
+let cost t =
+    match t:
+        case (Rest _): 8
+        case Load: 1
+        case _: 3
+let prog = [(Emit 9), Skip, (Rest "quin"), Load, (Emit (- 1)), Push]
+(print ((String.join " ") ((List.map explain) prog)))
+let total = (prog |> (List.sumBy cost))
+(print f"total={total}")
+(print ((prog |> (List.filter (fun t -> ((cost t) > 3)))) |> List.len))
+type Expr = Num int | Add Expr Expr | Mul Expr Expr | Neg Expr
+let evaluate e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evaluate a) + (evaluate b))
+        case ((Mul (Num 0) _) | (Mul _ (Num 0))): 0
+        case (Mul a b): ((evaluate a) * (evaluate b))
+        case (Neg a): (- (evaluate a))
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let exprs = [((Add (Num 2)) (Neg (Num 0))), (Neg ((Add ((Mul (Num 2)) (Num 5))) ((Add (Num 0)) (Num 6)))), ((Add (Num 1)) (Num 3))]
+(((exprs |> (List.map simplify)) |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evaluate) exprs))
+let sentence = "pin max ray oz fay gus cy"
+let tokens = ((String.split " ") sentence)
+let longest = ((tokens |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+(print (((tokens |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((List.map (fun w -> (w, (String.len w)))) tokens))
+let nums = (((String.split ",") "40,x,7,12,12") |> (List.map String.toInt))
+(print nums)
+(print ((nums |> (List.choose id)) |> List.sum))
+let row2 (i, w) = ((String.concat (((Format.padRight 8) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((tokens |> List.indexed) |> (List.map row2)) |> (List.iter print))
+--- stderr ---

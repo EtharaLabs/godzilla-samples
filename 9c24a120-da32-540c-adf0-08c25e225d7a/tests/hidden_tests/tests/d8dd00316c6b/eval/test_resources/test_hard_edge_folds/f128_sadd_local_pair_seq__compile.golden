@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_set_add(x, s):
+    return s.union([x])
+init_a = set([0])
+def compute(u):
+    def step(a, _pf_arg1):
+        k, v = _pf_arg1
+        return _pf_set_add(k, a)
+    a = set(init_a)
+    for (k, v) in iter(_pf_zip([1, 2, 3, 5], [7, 8, 9, 6])):
+        a.add(k)
+    return a
+result = compute(None)
+print(list(result))
+--- stderr ---

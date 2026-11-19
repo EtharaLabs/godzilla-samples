@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+00000002ok00000051Option.map : ('a -> 'b) -> (Option 'a) -> Option 'b0000000000000002ok0000000000000417from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+print(_pf_option_map)
+--- stderr ---

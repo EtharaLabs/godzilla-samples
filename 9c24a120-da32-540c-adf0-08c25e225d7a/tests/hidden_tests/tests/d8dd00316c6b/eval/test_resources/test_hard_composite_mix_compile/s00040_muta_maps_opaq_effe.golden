@@ -1,0 +1,98 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+hits = 0
+def track(x):
+    global hits
+    hits = hits + 1
+    return x * 4
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([11, 5, -5, 4, 43, -6, -5, 17]))
+doubled = _pf_map(track, [11, 5, -5, 4])
+print(f"{doubled} after {hits} calls")
+events = ["bo", "ada", "ada", "bo", "cy", "cy", "cy", "bo", "ada"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+extra = dict([("zed", 5), ("bo", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+print((_pf_map_try_find("fay", freq), "fay" in freq))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = makeIds("u", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+def discount(price, qty):
+    return price * qty - 7 * qty
+def announce(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand = sum(_pf_map(_pf_fn1, [("hub", 8, 3), ("hub", 9, 2), ("cog", 9, 4)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(18)([1, 2, 3]))
+--- stderr ---

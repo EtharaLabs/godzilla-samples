@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+## Shapes and their areas.
+type Shape = Circle float | Rect float float
+let area s =
+    match s:
+        case (Circle r): ((3.0 * r) * r)
+        case (Rect w h): (w * h)
+let total xs = (((List.fold (fun acc s -> (acc + (area s)))) 0.0) xs)
+let names = ["ann", "bo"]
+let shown =
+    match (List.head names):
+        case (Some n): n
+        case None: "-"
+(print f"total={(total [(Circle 1.0), ((Rect 2.0) 3.0)])} first={shown} all={((String.join ", ") names)}")
+--- stderr ---

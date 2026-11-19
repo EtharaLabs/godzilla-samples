@@ -1,0 +1,82 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [60, 40, 40]))
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(298))
+def countDown(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(475, 0))
+def net(price, qty):
+    return price * qty - 9 * qty
+def report(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("tap", 39, 4), ("nut", 44, 5)]))
+print(overall)
+orders = [Booking(100, "ivy", 106, False), Booking(101, "quin", 111, False), Booking(102, "eli", 152, False), Booking(103, "eli", 235, True)]
+def priority(o):
+    match o:
+        case Booking(urgent=True, amount=amount) if amount > 186:
+            return "rush-big"
+        case Booking(urgent=True):
+            return "rush"
+        case Booking(amount=amount):
+            if amount > 186:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(priority, orders))
+print(_pf_count_by(priority, orders))
+print(_pf_map(lambda o: o.id, _pf_take(3, _pf_sort_by_desc(lambda o: o.amount, orders))))
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, orders)))
+--- stderr ---

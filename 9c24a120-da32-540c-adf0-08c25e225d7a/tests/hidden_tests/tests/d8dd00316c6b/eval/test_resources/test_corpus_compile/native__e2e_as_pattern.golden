@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+def _pf_fn0(n):
+    if n == 0:
+        return 0
+    else:
+        v = n
+        x = n
+        return v
+describe = _pf_fn0
+def _pf_fn1(p):
+    w = p
+    a = p[0]
+    b = p[1]
+    return w
+both = _pf_fn1
+a: int = describe(7)
+b: tuple[int, int] = both((3, 4))
+--- stderr ---

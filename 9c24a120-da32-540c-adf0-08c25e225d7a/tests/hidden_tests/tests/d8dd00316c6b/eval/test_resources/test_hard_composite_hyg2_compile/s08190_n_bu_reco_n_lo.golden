@@ -1,0 +1,69 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+len_ = 4
+print((len([1, 2, 3]) + len_, len("abc")))
+dict_ = dict([("k", 8)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+parcels = [Parcel(100, "pam", 118, False, Site("Lima", 1)), Parcel(101, "ray", 234, False, Site("Baku", 1)), Parcel(102, "cy", 34, False, Site("Lima", 1)), Parcel(103, "ray", 272, True, Site("Bern", 4)), Parcel(104, "pam", 23, False, Site("Lima", 1)), Parcel(105, "pam", 155, False, Site("Lima", 1))]
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by_desc(lambda o: o.amount, parcels))))
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, parcels))
+print(perOwner)
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, parcels)))
+def adjust(o):
+    if o.urgent:
+        _pf_t1 = o
+        return Parcel(_pf_t1.id, _pf_t1.owner, o.amount + 19, _pf_t1.urgent, _pf_t1.dest)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(adjust, parcels)))
+def _pf_fn1():
+    for (name, k) in [("a", 4), ("b", 7)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn1()
+print(_pf_map(lambda h: h(4), list(handlers)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 4
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(3, [7, 4, 0]))
+--- stderr ---

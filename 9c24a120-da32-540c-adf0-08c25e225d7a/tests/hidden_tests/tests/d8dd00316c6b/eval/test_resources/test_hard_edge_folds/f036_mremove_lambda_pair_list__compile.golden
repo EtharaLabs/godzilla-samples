@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def _pf_map_to_list(m):
+    return list(m.items())
+def compute(u):
+    a = dict()
+    for (k, v) in [(1, 10), (2, 20), (1, 30), (4, 40)]:
+        a.pop(k, None)
+    return a
+result = compute(None)
+print(_pf_map_to_list(result))
+--- stderr ---

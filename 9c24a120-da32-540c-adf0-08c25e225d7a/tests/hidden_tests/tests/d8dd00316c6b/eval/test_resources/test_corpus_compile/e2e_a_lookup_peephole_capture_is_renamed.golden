@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def f(m, k):
+    v = 100
+    if k in m:
+        _v = m[k]
+        _pf_t0 = _v
+    else:
+        _pf_t0 = 0
+    found = _pf_t0
+    return found + v
+r = f(dict([(1, 5)]), 1)
+s = f(dict([(1, 5)]), 2)
+--- stderr ---

@@ -1,0 +1,109 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Rest({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: str
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+Instr = Drop | Rest | Store | Jump
+def render(t: Instr) -> str:
+    if isinstance(t, Drop):
+        n0 = t._0
+        if 0 <= n0 < 14:
+            return f"drop!({n0})"
+    if isinstance(t, Drop):
+        n0 = t._0
+        return f"drop({n0})"
+    elif isinstance(t, Rest):
+        n0 = t._0
+        n1 = t._1
+        return f"rest({n0},{n1})"
+    elif isinstance(t, Store):
+        s0 = t._0
+        return f"store({s0})"
+    else:
+        if isinstance(t, Jump):
+            n0 = t._0
+            if n0 > 6:
+                return f"jump!({n0})"
+        n0 = t._0
+        return f"jump({n0})"
+def weight(t: Instr) -> int:
+    if isinstance(t, Jump):
+        x0 = t._0
+        return x0 * 5
+    elif isinstance(t, Rest):
+        x0 = t._0
+        x1 = t._1
+        return x0 + x1 * 3
+    elif isinstance(t, Store):
+        return 9
+    else:
+        return 3
+prog: list[Instr] = [Drop(7), Rest(11, 0), Jump(9), Jump(5), Drop(7), Drop(1)]
+print(_pf_str_join("; ", _pf_map(render, prog)))
+tally: int = _pf_sum_by(weight, prog)
+print(f"tally={tally}")
+print(len(_pf_filter(lambda t: weight(t) > 4, prog)))
+legs: list[float] = [174.6, 363.7, 231.2, 484.8, 176.5]
+splits: list[float] = [33.0, 21.8, 71.3, 47.2, 56.3]
+dist: float = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, legs)
+elapsed: float = _pf_fold(lambda a, b: a + b, 0.0, splits)
+pace: float = dist / elapsed
+print(_pf_fmt_fixed(2, pace))
+speeds: list[float] = _pf_map2(lambda d, t: d / t, legs, splits)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+edge: float = math.sqrt(2.25)
+cube: float = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+def _pf_fn0():
+    for x in _pf_range(1, 12):
+        y = x * x
+        yield y
+squares = _pf_fn0()
+print(list(filter(lambda n: n % 2 == 0, squares)))
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 4)))))
+--- stderr ---

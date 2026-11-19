@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+00000002ok00000054List.collect : ('a -> List 'b) -> (List 'a) -> List 'b0000000000000002ok0000000000000113def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+print(_pf_collect)
+--- stderr ---

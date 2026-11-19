@@ -1,0 +1,49 @@
+exit: 0
+--- stdout ---
+let data = [(- 10), (- 4), (- 9), 43, 11, 30, 16, 0]
+let answer = ((List.exists (fun x -> (x > 6))) ((List.choose (fun x -> (if ((x % 4) == 0) then (Some (x // 4)) else None))) ((List.sortBy (fun x -> (x % 3))) (((List.windowed 2) >> (List.map (fun w -> ((Option.withDefault 0) (List.max w))))) (List.rev ((List.dropWhile (fun x -> (x < (- 1)))) ((List.map (fun x -> ((x // 4) + (x % 4)))) data)))))))
+(print answer)
+let pure net price qty = ((price * qty) - (8 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("cap", 31, 3), ("cap", 6, 5)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (net k))
+(print ((scaled 15) [1, 2, 3]))
+type Reading = { name: string, points: int, active: bool }
+let playerDecoder = ((((Decode.map3 (fun n p a -> Reading { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let payload = "[{\"name\": \"quin\", \"points\": 46, \"active\": false}, {\"name\": \"tom\", \"points\": 42, \"active\": true}, {\"name\": \"oz\", \"points\": 36, \"active\": false}, {\"name\": \"kit\", \"points\": 76, \"active\": false}]"
+match ((Decode.decodeString (Decode.list playerDecoder)) payload):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+measure m
+measure s
+measure kg
+let segments = [479.9<m>, 432.0<m>, 256.5<m>]
+let durations = [78.1<s>, 75.0<s>, 44.6<s>]
+let total = (((List.fold (+)) 0.0<m>) segments)
+let dur = (((List.fold (+)) 0.0<s>) durations)
+let rate = (total / dur)
+(print ((Format.fixed 3) rate))
+let best = (((List.zip segments) durations) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let sentence = "cy lu dee sue wick"
+let parts = ((String.split " ") sentence)
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print (((String.tryIndexOf "su") sentence), ((String.contains "su") sentence)))
+(print (((String.replace "a") "A") sentence))
+(print (((String.slice 2) 7) sentence))
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x1", "5"] |> (List.map safe)) |> (List.iter print))
+extern pure hcf: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((hcf a) b))
+(print (((List.fold lcm) 1) [5, 11, 10, 8]))
+--- stderr ---

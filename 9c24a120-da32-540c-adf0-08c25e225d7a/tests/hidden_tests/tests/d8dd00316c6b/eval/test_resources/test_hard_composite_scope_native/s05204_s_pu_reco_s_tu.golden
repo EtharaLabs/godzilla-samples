@@ -1,0 +1,190 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: "Addr"
+panels: list[Panel] = [Panel(9, 1, "gear"), Panel(6, 5, "bolt"), Panel(1, 4, "gear"), Panel(1, 7, "cog"), Panel(4, 4, "sq")]
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def caption(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, panels)))
+def area(_pf_arg0: Panel) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, panels)))
+parcels: list[Ticket] = [Ticket(100, "gus", 66, False, Addr("Riga", 1)), Ticket(101, "gus", 28, False, Addr("Oslo", 2)), Ticket(102, "max", 88, False, Addr("Riga", 1)), Ticket(103, "gus", 85, True, Addr("Oslo", 3)), Ticket(104, "max", 243, True, Addr("Bern", 3)), Ticket(105, "gus", 141, False, Addr("Bern", 1))]
+urgentTotal: int = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(urgentTotal)
+cheap, dear = _pf_partition(lambda o: o.amount < 115, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def line(_pf_arg0: Ticket) -> str:
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(line, parcels)))
+def priority(o: Ticket) -> str:
+    if isinstance(o, Ticket) and o.urgent is True:
+        amount = o.amount
+        if amount > 124:
+            return "rush-big"
+    if isinstance(o, Ticket) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 124:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(priority, parcels))
+print(_pf_count_by(priority, parcels))
+def bump2(pct: int, o: Ticket) -> Ticket:
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Ticket(_pf_t0.id, _pf_t0.owner, o.amount + extra, False, _pf_t0.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(bump2, 9), parcels)))
+tallies: list[tuple[str, int]] = [("cap", 1), ("nut", 7), ("rod", 14), ("gear", 2)]
+def lookupAll(keys, table) -> Some | None_:
+    def _pf_fn2():
+        for (k, expected) in keys:
+            _pf_t1 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t1, Some):
+                v = _pf_t1._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t1
+        return Some(len(keys))
+    return _pf_fn2()
+print((lookupAll(_pf_take(2, tallies), dict(tallies)), lookupAll([("zz", 0)], dict(tallies))))
+def validate(rows) -> Ok | Error:
+    def _pf_fn3():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t2 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t2, Ok):
+            total = _pf_t2._0
+            return Ok(total)
+        else:
+            return _pf_t2
+    return _pf_fn3()
+print((validate(tallies), validate([("ok", 1)])))
+widths: list[tuple[str, tuple[int, int]]] = [("ray", (1, 16)), ("ada", (1, 12)), ("gus", (2, 18))]
+def _pf_fn4():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn4()
+print(list(widthsOut))
+def _pf_fn5(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+extremes: tuple[int, int] = _pf_fold(_pf_fn5, (1000, -1000), tallies)
+print(extremes)
+acc = dict()
+for (k, v) in _pf_concat(tallies, tallies):
+    _pf_t3 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t3
+index: dict[str, int] = acc
+print(_pf_map_to_list(index))
+--- stderr ---

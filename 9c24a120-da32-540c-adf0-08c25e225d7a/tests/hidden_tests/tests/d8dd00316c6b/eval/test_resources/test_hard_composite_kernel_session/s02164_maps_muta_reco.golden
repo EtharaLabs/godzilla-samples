@@ -1,0 +1,133 @@
+exit: 0
+--- stdout ---
+00000002ok00000330log : List string
+freq : Map string int
+extra : Map string int
+sa : Set int
+sb : Set int
+hits : int
+track : int<'a> ->{io} int<'a>
+summarize : (List int) ->{io} string
+doubled : List int
+trackTwice : int<'a> ->{io} int<'a>
+book : List Ticket
+cheap : List Ticket
+dear : List Ticket
+nrec : int
+sumAmt : int
+bump2 : Ticket -> Ticket
+00003201from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+log = ["eli", "eli", "eli", "eli", "fay", "cy"]
+m = dict()
+for w in log:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+extra = dict([("zed", 5), ("eli", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+print((_pf_map_try_find("bo", freq), "bo" in freq))
+sa = set([3, 6, 8, 11, 14, 17])
+sb = set([4, 5, 6, 15, 16, 18])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 11 in sb, _pf_set_is_subset(set([3]), sa)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, freq))
+hits = 0
+def track(x):
+    global hits
+    hits = hits + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([7, 2, 32, 32, 54, -7, 1, -15]))
+doubled = _pf_map(track, [7, 2, 32, 32])
+print(f"{doubled} after {hits} calls")
+trackTwice = lambda _pf_x: track(track(_pf_x))
+print((trackTwice(3), hits))
+book = [Ticket(100, "gus", 207, True), Ticket(101, "gus", 123, True), Ticket(102, "bo", 157, True), Ticket(103, "bo", 166, True), Ticket(104, "gus", 22, False)]
+cheap, dear = _pf_partition(lambda o: o.amount < 124, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn1(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, sumAmt = _pf_fold(_pf_fn1, (0, 0), book)
+print(f"{nrec} records, {sumAmt} total")
+def bump2(o):
+    if o.urgent:
+        _pf_t1 = o
+        return Ticket(_pf_t1.id, _pf_t1.owner, o.amount + 16, _pf_t1.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(bump2, book)))
+00000002ok00000018book : List Ticket0000000000000002ok00000035trackTwice : int<'a> ->{io} int<'a>00000000--- stderr ---

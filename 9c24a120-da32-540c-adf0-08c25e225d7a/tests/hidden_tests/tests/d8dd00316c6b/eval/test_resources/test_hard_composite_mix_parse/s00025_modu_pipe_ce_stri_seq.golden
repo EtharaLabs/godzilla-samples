@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+module Text =
+    let square x = (x * x)
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let clamp lo hi x = ((max lo) ((min hi) x))
+let pts = [6, 1, 8, 16, (- 13), 28]
+(print ((List.map Text.square) pts))
+(print (Text.mean pts))
+(print (pts |> (List.map ((Text.clamp 0) 13))))
+let readings = [19, (- 2), (- 9), 50, 48, 10, 38, 41, 39, 6]
+let keep n = ((n > 7) and ((n % 4) != 0))
+let pipeline = ((List.rev >> (List.filter (fun x -> ((x % 3) == 2)))) >> (List.drop 1))
+let answer = ((readings |> pipeline) |> (List.forall (fun x -> (x >= 0))))
+(print answer)
+let readPair line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let inputs = ["ada=x", "bo", "fay=x", "dee=57", "sue=5=1", "ray=0=1"]
+let results = ((List.map readPair) inputs)
+((List.iter print) results)
+let errs = ((results |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let sumAll xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((sumAll results) |> (Result.mapError String.upper)))
+let raw = "cog wick cap fay hub gear tom"
+let parts = ((String.split " ") raw)
+let fieldsN = (((String.split ",") "40,x,x,7,5a") |> (List.map String.toInt))
+(print fieldsN)
+(print ((fieldsN |> (List.choose id)) |> List.sum))
+(print (((String.slice 3) 4) raw))
+(print (((String.tryIndexOf "hu") raw), ((String.contains "hu") raw)))
+let squares = seq {
+    for x in ((List.range 1) 8):
+        let y = (x * x)
+        yield y
+}
+(((squares |> (Seq.filter (fun n -> ((n % 4) == 0)))) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 4))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 5)) |> Seq.toList) |> print)
+--- stderr ---

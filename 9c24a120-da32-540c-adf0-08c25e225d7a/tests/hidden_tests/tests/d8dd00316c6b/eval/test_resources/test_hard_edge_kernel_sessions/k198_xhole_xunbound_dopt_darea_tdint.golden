@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+00000005error00000334error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 59 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 2:18
+  |
+2 | let h = List.map ?f [1]
+  |                  ^^0000000000000005error00000062error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^
+0000000000000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000093def firstOr(d, xs):
+    if xs:
+        x = xs[0]
+        return x
+    else:
+        return d
+00000005error00000078error: unknown constructor `Circle`
+ --> 7:9
+  |
+7 |   match s:
+  |         ^
+0000000000000005error00000066(could not determine a type — is `let n = 6 * 7` an expression?)00000000--- stderr ---

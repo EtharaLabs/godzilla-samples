@@ -1,0 +1,85 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_concat(xs, ys):
+    return xs + ys
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Op = Put | Append | Skip
+def build(start: int) -> tuple[int, int, int, int]:
+    acc = start
+    g0 = lambda y: acc + y
+    acc = acc + 8
+    def g1(y: int) -> int:
+        return acc * y
+    acc = acc + 2
+    g2 = lambda y: acc + y
+    acc = g2(acc)
+    return (g0(5), g1(2), g2(3), acc)
+print(build(4))
+def fold1(xs: list[int], op: Op) -> list[int]:
+    if isinstance(op, Put):
+        k = op._0
+        v = op._1
+        return _pf_concat(xs, [v])
+    else:
+        if isinstance(op, Append):
+            n = op._0
+            if n > 4:
+                return _pf_concat(xs, [n * 10])
+        return xs
+def execute(script: list[Op]) -> list[int]:
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Append(n) if n > 4:
+                _pf_t0 = n * 10
+                xs.append(_pf_t0)
+            case _:
+                pass
+    return xs
+script: list[Op] = [Put("nut", 4), _Skip, _Skip, _Skip]
+outcome: list[int] = execute(script)
+print(outcome)
+def lift(n: int) -> int:
+    return n + 78
+def useHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn0():
+    lift = 8
+    tmp = useHelper(lift)
+    return tmp * 2
+alpha: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t1 = [3]
+    if _pf_t1:
+        lift = _pf_t1[0]
+        return lift + useHelper(1)
+    else:
+        return 0
+second: int = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+gamma: int = _pf_fn2()
+print((alpha, second, gamma, useHelper(0)))
+--- stderr ---

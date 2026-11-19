@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def Opt_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Opt_return_(x):
+    return Some(x)
+def Opt_returnFrom(m):
+    return m
+Opt_zero = _None_
+def go(a, b):
+    return (lambda k: Opt_returnFrom(a if k > 3 else b))(5)
+print(go(Some(1), Some(2)))
+--- stderr ---

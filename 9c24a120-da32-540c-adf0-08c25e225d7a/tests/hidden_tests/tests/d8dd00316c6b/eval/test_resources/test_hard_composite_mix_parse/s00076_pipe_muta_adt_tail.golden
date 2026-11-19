@@ -1,0 +1,50 @@
+exit: 0
+--- stdout ---
+let data = [50, 29, 33, 22, (- 3), (- 4), 14, 29, 18]
+let accept n = ((n > 2) and ((n % 5) != 0))
+let stage = (((((List.distinct >> (List.collect (fun x -> [x, (x + 1)]))) >> (List.drop 2)) >> ((List.chunkBySize 4) >> (List.map List.sum))) >> (List.filter accept)) >> (List.choose (fun x -> (if ((x % 2) == 0) then (Some (x // 2)) else None))))
+let outcome = ((data |> stage) |> (List.reduce (fun a b -> (a + b))))
+(print outcome)
+let mut hits = 0
+let record x =
+    (hits <- (hits + 1))
+    (x * 2)
+let summarize xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (summarize [(- 13), (- 14), (- 11), 26, 52]))
+let doubled = ([(- 13), (- 14), (- 11), 26] |> (List.map record))
+(print f"{doubled} after {hits} calls")
+type Move = Emit int | Skip string int | Rest int | Turn int
+let explain t =
+    match t:
+        case (Emit 2): "emit-2"
+        case (Emit n0): f"emit({n0})"
+        case (Skip s0 n1): f"skip({s0},{n1})"
+        case (Rest n0): f"rest({n0})"
+        case (Turn 0): "turn-0"
+        case (Turn n0): f"turn({n0})"
+let cost t =
+    match t:
+        case (Emit x0): (x0 * 4)
+        case _: 1
+let queue = [(Rest 5), (Emit 0), ((Skip "gus") 11), ((Skip "quin") (- 2)), (Rest 10), ((Skip "max") 8), (Turn (- 1))]
+(print ((queue |> (List.map explain)) |> (String.join "; ")))
+let tally = (queue |> (List.sumBy cost))
+(print f"tally={tally}")
+(print ((List.head queue), (List.last queue)))
+let gcdLoop a b = (if (b == 0) then a else ((gcdLoop b) (a % b)))
+(print ((gcdLoop 474) 27))
+let steps n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((steps (n // 2)) (acc + 1)) else ((steps ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((steps n) 0))) [12, 23, 11]))
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [8, 14, 6, 29, 11]))
+--- stderr ---

@@ -1,0 +1,128 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    def __repr__(self):
+        return "Turn"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_Turn = Turn()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2,)
+_Emit = Emit()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (3, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (4, self._0)
+def bump2(n):
+    return n + 51
+def useHelper(x):
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 0
+    tmp = useHelper(bump2)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [8]
+    if _pf_t0:
+        bump2 = _pf_t0[0]
+        return bump2 + useHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+gamma = _pf_fn2()
+print((first, second, gamma, useHelper(0)))
+def explain(t):
+    match t:
+        case Push(n0) if 0 <= n0 < 16:
+            return f"push!({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Pop(n0) if n0 % 2 == 0:
+            return f"pop!({n0})"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Turn() | Emit():
+            return "turn/emit"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Emit():
+            return 7
+        case _:
+            return 2
+stream = [Pop(2), _Emit, Skip(-1), Skip(5)]
+print(_pf_str_join("; ", _pf_map(explain, stream)))
+grandSum = _pf_sum_by(weight, stream)
+print(f"grandSum={grandSum}")
+print(_pf_sort(stream))
+def stack2(start):
+    level = start
+    def g0(y):
+        return level * y
+    level = g0(level)
+    def g1(y):
+        return level * y
+    level = g1(level)
+    def g2(y):
+        return level * y
+    level = level + 18
+    return (g0(4), g1(1), g2(5), level)
+print(stack2(6))
+--- stderr ---

@@ -1,0 +1,117 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [1, 35, 11, 25, 58, 42, 22, 37])
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(tree))
+parcels = [Ticket(100, "bo", 278, False, Site("Bern", 4)), Ticket(101, "cy", 161, True, Site("Lima", 3)), Ticket(102, "max", 274, False, Site("Riga", 2)), Ticket(103, "cy", 118, False, Site("Kyiv", 1)), Ticket(104, "cy", 53, False, Site("Baku", 1))]
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, parcels)))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(rushSum)
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t1 = o
+    return Ticket(_pf_t1.id, _pf_t1.owner, o.amount + extra, False, _pf_t1.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 18), parcels)))
+def classify(o):
+    match o:
+        case Ticket(urgent=True, amount=amount) if amount > 174:
+            return "rush-big"
+        case Ticket(urgent=True):
+            return "rush"
+        case Ticket(amount=amount):
+            if amount > 174:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(classify, parcels))
+print(_pf_count_by(classify, parcels))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(3))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("100111") + int("100", base=8))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "100"])))
+--- stderr ---

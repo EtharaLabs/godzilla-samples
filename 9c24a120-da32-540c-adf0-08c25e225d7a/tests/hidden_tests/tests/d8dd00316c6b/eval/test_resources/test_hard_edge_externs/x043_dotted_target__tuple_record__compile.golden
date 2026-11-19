@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import posixpath
+@dataclass(frozen=True, slots=True)
+class Box:
+    label: str
+    item: int
+t = ("first", posixpath.basename("/x/y/z.txt"))
+lbl, v = t
+print(lbl)
+print(v)
+--- stderr ---

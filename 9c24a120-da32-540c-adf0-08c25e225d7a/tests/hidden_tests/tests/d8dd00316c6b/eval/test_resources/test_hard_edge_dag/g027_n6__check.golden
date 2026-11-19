@@ -1,0 +1,36 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Golf` (golf.pyfun) --
+error: imported type `Kind` (from `Alpha`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Golf.
+  | ^
+error: imported type `Kind` (from `Foxtrot`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Golf.
+  | ^
+error: unknown type `Alpha.Kind`
+  --> 15:1
+   |
+15 | type RecG = { id: int, kind: Alpha.Kind }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+error: unknown constructor `Alpha.KaA`
+  --> 11:9
+   |
+11 |   match k:
+   |         ^
+error: `RecG` is not a record type
+  --> 16:14
+   |
+16 | let make n = RecG { id = n, kind = Alpha.pickA n }
+   |              ^^^^
+error: unknown record field `kind`
+  --> 17:25
+   |
+17 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+
+6 errors

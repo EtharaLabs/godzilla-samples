@@ -1,0 +1,29 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 6:37
+  |
+6 | let s1 = f"got {if true then 1 else "s"}"
+  |                                     ^^^
+
+error: type mismatch: expected float<m>, found float<s>
+ --> 8:10
+  |
+8 | let v2 = 3.0<m> + 2.0<s>
+  |          ^^^^^^^^^^^^^^^
+
+error: field `x` is set twice
+ --> 9:45
+  |
+9 | let l3 = List.map (fun q -> Pt { x = 1, x = 2, y = 3 }) [1, 2]
+  |                                             ^
+
+note: hole `?gap` has type `'a`
+  --> 12:11
+   |
+12 |     yield ?gap
+   |           ^^^^
+
+3 errors
+1 unfilled hole

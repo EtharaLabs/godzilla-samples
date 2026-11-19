@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+00000005error00000076(could not determine a type — is `let (a, b) = (1, "two")` an expression?)0000000000000005error00000118(could not determine a type — is `let count k acc = if k == 0 then acc else count (k - 1) (acc + k)` an expression?)0000000000000002ok0000000000000058Geo_pi = 3.0
+def Geo_circ(r):
+    return 2.0 * Geo_pi * r
+00000002ok00000016job : Async int
+00000436class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_fn1():
+    async def _pf_fn0():
+        return 20
+    x = await _pf_fn0()
+    return x + 1
+job = _pf_Async(_pf_fn1)
+00000005error00000089error: module `Geo` is already defined
+  --> 10:8
+   |
+10 | module Geo =
+   |        ^^^
+00000000--- stderr ---

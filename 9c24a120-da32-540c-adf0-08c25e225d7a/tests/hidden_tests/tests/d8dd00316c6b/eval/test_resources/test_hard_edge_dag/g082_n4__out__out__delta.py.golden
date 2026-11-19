@@ -1,0 +1,41 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+import bravo
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaD:
+    _0: int
+    def __repr__(self):
+        return f"KaD({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbD:
+    def __repr__(self):
+        return "KbD"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbD = KbD()
+def pickD(n):
+    if n > 2:
+        return KaD(n)
+    else:
+        return _KbD
+base = 2 + alpha.base + bravo.base
+def step(x):
+    return bravo.step(alpha.step(x)) + 2
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))

@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+type P = { x: int }
+let pure wire p = (Encode.auto p)
+let s = (wire P { x = 1 })
+let t = (Encode.auto [(Some 1), None])
+--- stderr ---

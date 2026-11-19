@@ -1,0 +1,130 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+cap = 12
+def clip(o):
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((clip(Some(4)), clip(Some(-3)), clip(_None_), cap))
+def score(x, items):
+    match items:
+        case []:
+            return x
+        case [_x]:
+            return _x * 3
+        case [_x2, *rest]:
+            return _x2 + len(rest)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print((score(9, []), score(1, [7]), score(1, [7, 2, 3])))
+def dig(xs):
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((dig([8, 5]), dig([1, 9]), dig([])))
+def adjust(n):
+    match n % 3:
+        case 0:
+            _n = n // 3
+            return _n + 7
+        case k:
+            _n2 = n * k
+            _k = _n2 - 1
+            return _k
+print(_pf_map(adjust, [23, 17, 25, 17]))
+legs = [79.0, 376.8, 378.5, 353.6, 404.3]
+times = [74.7, 35.3, 30.1, 7.1, 59.5]
+dist = _pf_fold(lambda a, b: a + b, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+speed = dist / elapsed
+print(_pf_fmt_fixed(1, speed))
+speeds = _pf_map2(lambda d, t: d / t, legs, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t1 = p
+            return Active(Person(_pf_t1.name, p.age + 1))
+        case Parked(t) if t.size > 4:
+            _pf_t2 = t
+            return Parked(Team(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Parked(Team("cog", 5)), Parked(Team("cog", 4)), _Gone, _Gone, _Gone])
+print(roster)
+people = [Person("max", 2), Person("dee", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+--- stderr ---

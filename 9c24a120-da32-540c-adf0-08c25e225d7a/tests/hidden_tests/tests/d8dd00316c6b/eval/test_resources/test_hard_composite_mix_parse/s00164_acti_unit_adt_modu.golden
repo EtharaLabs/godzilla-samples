@@ -1,0 +1,56 @@
+exit: 0
+--- stdout ---
+let (|Above|_|) n = (if (n > 11) then (Some (n - 11)) else None)
+let (|Zero|_|) n = (n == 0)
+let bucketOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case m if (m < 0): "negative"
+        case _: "small"
+(([25, (- 3), 20, 37, (- 4), 8, 2, 1] |> (List.map bucketOf)) |> (List.iter print))
+measure m
+measure s
+measure kg
+measure N = kg m/s^2
+let segments = [410.4<m>, 115.7<m>, 166.8<m>, 248.5<m>, 345.2<m>]
+let splits = [72.3<s>, 35.9<s>, 38.9<s>, 19.4<s>, 47.6<s>]
+let total = (((List.fold (fun acc d -> (acc + d))) 0.0<m>) segments)
+let dur = (((List.fold (+)) 0.0<s>) splits)
+let pace = (total / dur)
+(print ((Format.fixed 1) pace))
+let mass = 13.0<kg>
+let accel = 6.5<m/s^2>
+let push = (mass * accel)
+let limit = 73.0<N>
+(print (if (push > limit) then "over" else "under"))
+let side = (sqrt 36.0<m^2>)
+let cube = ((side * side) * side)
+(print f"{side} {(cbrt cube)}")
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf total) dur) * 1000.0)))
+type Cmd = Skip int | Store int | Rest
+let explain t =
+    match t:
+        case (Skip n0) if (0 <= n0 < 19): f"skip!({n0})"
+        case (Skip n0): f"skip({n0})"
+        case (Store n0): f"store({n0})"
+        case Rest: f"rest"
+let score t =
+    match t:
+        case Rest: 7
+        case _: 3
+let stream = [(Store 6), (Store 6), (Store 2), (Skip 2), Rest]
+(print ((stream |> (List.map explain)) |> (String.join "; ")))
+let grandSum = (stream |> (List.sumBy score))
+(print f"grandSum={grandSum}")
+(print (List.sort stream))
+module Geo =
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+let obs = [11, 7, (- 8), 17]
+(print (Geo.mean obs))
+(print ((Geo.scaleAll 3) obs))
+(print (Geo.norm1 obs))
+--- stderr ---

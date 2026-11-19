@@ -1,0 +1,15 @@
+import foxtrot
+import golf
+print("loading Hotel")
+base = 6 + foxtrot.base + golf.base
+def step(x):
+    return golf.step(foxtrot.step(x)) + 6
+def describe(k):
+    match k:
+        case foxtrot.KaF(v):
+            return v * 10
+        case foxtrot.KbF():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(foxtrot.pickF(base))

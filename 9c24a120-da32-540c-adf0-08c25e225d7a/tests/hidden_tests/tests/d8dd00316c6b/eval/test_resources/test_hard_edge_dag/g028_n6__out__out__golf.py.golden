@@ -1,0 +1,49 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import echo
+import foxtrot
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaG:
+    _0: int
+    def __repr__(self):
+        return f"KaG({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbG:
+    def __repr__(self):
+        return "KbG"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbG = KbG()
+@dataclass(frozen=True, slots=True, order=True)
+class RecG:
+    id: int
+    kind: object
+def pickG(n):
+    if n > 2:
+        return KaG(n)
+    else:
+        return _KbG
+base = 7 + echo.base + foxtrot.base
+def step(x):
+    return foxtrot.step(echo.step(x)) + 7
+def describe(k):
+    match k:
+        case echo.KaE(v):
+            return v * 10
+        case echo.KbE():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(echo.pickE(base))
+def make(n):
+    return RecG(n, echo.pickE(n))
+def unwrap(r):
+    return describe(r.kind)

@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 27) then (Some (n - 27)) else None)
+let classify n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Even: "even"
+        case _: "odd"
+(([2, 15, 24, 16, 8, 16, 32, 11] |> (List.map classify)) |> (List.iter print))
+let log = ["dee", "eli", "eli", "cy", "ada", "ada", "eli", "ada", "dee", "bo"]
+let freq = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) log)
+(print ((freq |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((Map.tryFind "ada") freq), ((Map.contains "ada") freq)))
+let extra = (Map.ofList [("zed", 5), ("dee", 0)])
+(print ((((Map.union extra) freq) |> Map.toList) |> List.sort))
+let raw = "sue;eli;bolt;bo"
+let tokens = ((String.split ";") raw)
+(print ((List.map (fun w -> (w, (String.len w)))) tokens))
+(print (((String.replace "i") "I") raw))
+(print ((tokens |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+type Action = Turn string | Jump int | Halt string | Drop int | Store int int
+let show t =
+    match t:
+        case (Turn s0): f"turn({s0})"
+        case (Jump n0): f"jump({n0})"
+        case (Halt s0): f"halt({s0})"
+        case (Drop n0) if (0 <= n0 < 9): f"drop!({n0})"
+        case (Drop n0): f"drop({n0})"
+        case (Store n0 n1): f"store({n0},{n1})"
+let cost t =
+    match t:
+        case (Jump x0): x0
+        case (Store x0 x1): (x0 + x1)
+        case (Drop x0): x0
+        case (Turn _): 7
+        case _: 3
+let batch = [(Drop 11), (Drop 9), (Halt "hal"), (Turn "jo"), (Drop 1)]
+(print ((batch |> (List.map show)) |> (String.join "; ")))
+let grandSum = (batch |> (List.sumBy cost))
+(print f"grandSum={grandSum}")
+(print ((batch |> (List.filter (fun t -> ((cost t) > 6)))) |> List.len))
+--- stderr ---

@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` is missing field(s) `y`
+ --> 9:12
+  |
+9 |     return Pt { x = 1 }
+  |            ^^^^^^^^^^^^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+  --> 11:29
+   |
+11 | let l2 = List.map (fun q -> { pt with z = 4 }) [1, 2]
+   |                             ^^^^^^^^^^^^^^^^^
+
+error: field `x` is set twice
+  --> 16:28
+   |
+16 |     return Pt { x = 1, x = 2, y = 3 }
+   |                            ^
+
+3 errors

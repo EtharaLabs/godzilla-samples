@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+00000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000093def firstOr(d, xs):
+    if xs:
+        x = xs[0]
+        return x
+    else:
+        return d
+00000005error00000334error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 60 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 6:18
+  |
+6 | let h = List.map ?f [1]
+  |                  ^^0000000000000005error00000125error: `loud` is declared `pure` but performs `io`
+ --> 6:19
+  |
+6 | let pure loud x = print x
+  |                   ^^^^^^^
+0000000000000002ok0000000000000026print(firstOr(0, [7, 8]))
+00000002ok00000031firstOr : 'a -> (List 'a) -> 'a0000000000000002ok00000028double : int<'a> -> int<'a>
+00000032def double(x):
+    return x * 2
+--- stderr ---

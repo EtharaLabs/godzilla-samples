@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+00000005error00000161(could not determine a type — is `let isEven k = if k == 0 then true else isOdd (k - 1)
+let isOdd k = if k == 0 then false else isEven (k - 1)` an expression?)0000000000000005error00000074(could not determine a type — is `let pure sq x = x * x` an expression?)0000000000000002ok00000041isEven : int -> bool
+isOdd : int -> bool
+00000177def isEven(k):
+    if k == 0:
+        return True
+    else:
+        return isOdd(k - 1)
+def isOdd(k):
+    if k == 0:
+        return False
+    else:
+        return isEven(k - 1)
+00000005error00000073error: a `case` guard must be a simple expression
+ --> 1:1
+  |
+1 | 
+  | ^0000000000000002ok00000006p : P
+00000123from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class P:
+    name: str
+    age: int
+p = P("Ada", 36)
+00000002ok00000052safeDiv : int<'a> -> int -> Result float<'a> string
+00000366@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def safeDiv(a, b):
+    if b == 0:
+        return Error("div0")
+    else:
+        return Ok(a / b)
+--- stderr ---

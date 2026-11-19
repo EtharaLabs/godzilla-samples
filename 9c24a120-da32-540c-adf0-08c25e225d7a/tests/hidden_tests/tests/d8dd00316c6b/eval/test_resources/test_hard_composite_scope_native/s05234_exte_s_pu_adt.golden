@@ -1,0 +1,175 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: "Box"
+    bottom: "Box"
+    slot: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Emit({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Halt({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    def __repr__(self):
+        return "Jump"
+_Jump: Jump = Jump()
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Store({self._0!r}, {self._1!r})"
+Action = Pop | Emit | Halt | Jump | Store
+def safe(s: str) -> str:
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x8", "-4"]))
+print(_pf_map(math.isqrt, [266, 241, 24, 132]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "100"])))
+tiles: list[Box] = [Box(4, 9, "bolt"), Box(1, 4, "bolt"), Box(2, 3, "tap"), Box(7, 8, "nut"), Box(4, 4, "sq")]
+def grow(b: Box) -> Box:
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Box(w + 2, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def area(_pf_arg0: Box) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+def stackOf(s: Shelf) -> str:
+    if isinstance(s, Shelf) and isinstance(s.top, Box):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Shelf(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def show(t: Action) -> str:
+    if isinstance(t, Pop):
+        n0 = t._0
+        if n0 > 0:
+            return f"pop!({n0})"
+    if isinstance(t, Pop):
+        n0 = t._0
+        return f"pop({n0})"
+    elif isinstance(t, Emit):
+        s0 = t._0
+        s1 = t._1
+        return f"emit({s0},{s1})"
+    elif isinstance(t, Halt):
+        n0 = t._0
+        n1 = t._1
+        return f"halt({n0},{n1})"
+    elif isinstance(t, Jump):
+        return f"jump"
+    else:
+        if isinstance(t, Store):
+            n0 = t._0
+            s1 = t._1
+            if n0 > 1:
+                return f"store!({n0},{s1})"
+        n0 = t._0
+        s1 = t._1
+        return f"store({n0},{s1})"
+def score(t: Action) -> int:
+    if isinstance(t, Store):
+        x0 = t._0
+        return x0 * 2
+    elif isinstance(t, Emit):
+        return 4
+    elif isinstance(t, Halt):
+        x0 = t._0
+        x1 = t._1
+        return x0 + x1 * 4
+    elif isinstance(t, Jump):
+        return 2
+    else:
+        return 1
+queue: list[Action] = [Halt(-2, 9), Emit("gus", "jo"), _Jump, _Jump]
+print(_pf_str_join(" ", _pf_map(show, queue)))
+total: int = _pf_sum_by(score, queue)
+print(f"total={total}")
+print((_pf_head(queue), _pf_last(queue)))
+--- stderr ---

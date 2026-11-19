@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def step(acc, x):
+    match acc:
+        case (m, keep):
+            return (_pf_map_add(x, x, m), keep)
+seed = dict()
+seed2 = dict()
+m = dict(seed)
+keep = seed2
+for x in [1, 2]:
+    m[x] = x
+r = (m, keep)
+match r:
+    case (m, keep):
+        _pf_t0 = (len(m), len(keep), len(seed2))
+out = _pf_t0
+--- stderr ---

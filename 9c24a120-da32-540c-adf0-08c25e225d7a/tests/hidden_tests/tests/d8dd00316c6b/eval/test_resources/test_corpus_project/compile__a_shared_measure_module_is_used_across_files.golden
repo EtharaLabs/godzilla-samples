@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+# ==== units.py ====
+pass
+
+# ==== dist.py ====
+def far(d):
+    return d + 1
+
+# ==== main.py ====
+import dist
+here = 100
+f = 10
+g = dist.far(5)
+
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+extern runAsync: (Async a) -> a = asyncio.run
+let check n = (if (n > 0) then (Ok n) else (Error "negative"))
+let describe n = async { return! (match (check n): case (Ok v): async { return f"ok {v}" } case (Error why): async { return why }) }
+(print (runAsync (describe 3)))
+(print (runAsync (describe (0 - 1))))
+--- stderr ---

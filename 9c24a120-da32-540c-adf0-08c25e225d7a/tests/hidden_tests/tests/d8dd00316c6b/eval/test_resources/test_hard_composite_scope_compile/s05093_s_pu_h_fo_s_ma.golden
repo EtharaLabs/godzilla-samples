@@ -1,0 +1,141 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_concat(a, b):
+    return a + b
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop = Noop()
+tiles = [Panel(1, 5, "hub"), Panel(7, 6, "pin"), Panel(9, 7, "nut"), Panel(3, 8, "pin"), Panel(4, 4, "sq")]
+def relabel(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Panel(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "old-"), tiles)))
+def area(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Panel(w + 2, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, tiles)))
+def step(m, op):
+    match op:
+        case Put(k, v):
+            return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+        case Append(n):
+            return _pf_map_add("pushed", n, m)
+        case Noop():
+            return m
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def replay(script):
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t4 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t4
+            case Append(n):
+                m["pushed"] = n
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+changes = [Append(9), Put("bolt", 1), _Noop, _Noop, Put("bolt", 5)]
+outcome = replay(changes)
+print(_pf_map_to_list(outcome))
+def pick(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((7, 3)), 0), pick(Some((1, 5)), 0), pick(_None_, 6)))
+def probe2(xs):
+    if xs:
+        x = xs[0]
+        _pf_t5 = _pf_last(xs)
+        if isinstance(_pf_t5, Some):
+            _x = _pf_t5._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t5, Some):
+            y = _pf_t5._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([4, 8]), probe2([1, 9]), probe2([])))
+def adjust(n):
+    match n % 3:
+        case 0:
+            _n = n // 3
+            return _n + 7
+        case k:
+            _n2 = n * k
+            _k = _n2 - 1
+            return _k
+print(_pf_map(adjust, [17, 14, 23, 11]))
+--- stderr ---

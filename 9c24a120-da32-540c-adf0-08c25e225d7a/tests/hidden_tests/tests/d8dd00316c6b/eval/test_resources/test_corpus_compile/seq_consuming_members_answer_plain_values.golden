@@ -1,0 +1,31 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_seq_contains(x, xs):
+    return x in xs
+def _pf_seq_exists(f, xs):
+    return any(map(f, xs))
+def _pf_seq_forall(f, xs):
+    return all(map(f, xs))
+def _pf_seq_is_empty(xs):
+    return not isinstance(next(map(Some, xs), _None_), Some)
+def _pf_seq_len(xs):
+    return len(list(xs))
+s = iter([1, 2, 3])
+n = _pf_seq_len(s)
+e = _pf_seq_is_empty(s)
+x = _pf_seq_exists(lambda v: v > 1, s)
+a = _pf_seq_forall(lambda v: v > 0, s)
+c = _pf_seq_contains(2, s)
+t = sum(s)
+--- stderr ---

@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+ --> 5:3
+  |
+5 |   match n:
+  |   ^^^^^^^^
+
+error: type mismatch: expected Sku, found Email
+  --> 28:13
+   |
+28 | let wrong = rawOf (Email "x@y")
+   |             ^^^^^^^^^^^^^^^^^^^
+
+2 errors

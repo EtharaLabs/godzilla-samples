@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 9:12
+  |
+9 |     return Option.withDefault 0 (Some "s")
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: cannot assign to `fixed2`: it is immutable (declare it with `let mut`)
+  --> 13:3
+   |
+13 |   fixed2 <- 2
+   |   ^^^^^^^^^^^
+
+error: `filtr` is not a member of `List` (did you mean `List.filter`?)
+  --> 14:29
+   |
+14 | let l3 = List.map (fun q -> List.filtr (fun x -> true) [1]) [1, 2]
+   |                             ^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 18:15
+   |
+18 |     yield [1, "a"]
+   |               ^^^
+
+4 errors

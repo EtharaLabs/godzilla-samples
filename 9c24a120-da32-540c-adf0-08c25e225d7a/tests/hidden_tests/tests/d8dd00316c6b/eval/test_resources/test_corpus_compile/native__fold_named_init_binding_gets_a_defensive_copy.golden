@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+from typing import Any
+seed: dict[Any, Any] = dict()
+m = dict(seed)
+for x in [1, 2]:
+    m[x] = x
+grown: dict[int, int] = m
+a: int = len(seed)
+b: int = len(grown)
+--- stderr ---

@@ -1,0 +1,78 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+legs = [252.0, 34.6, 313.7, 468.6, 410.5]
+times = [42.2, 70.6, 48.1, 66.3, 62.3]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+dur = _pf_fold(lambda a, b: a + b, 0.0, times)
+pace = dist / dur
+print(_pf_fmt_fixed(2, pace))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+mass = 60.0
+accel = 6.5
+push = mass * accel
+limit = 284.0
+print("over" if push > limit else "under")
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(legs, times))
+print(best)
+speeds = _pf_map2(lambda d, t: d / t, legs, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def Geo_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Geo_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Geo_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+nums = [-9, -1, -2, 25, 19]
+print(Geo_scaleAll(5, nums))
+print(_pf_map(functools.partial(Geo_clamp, 0, 12), nums))
+print(Geo_mean(nums))
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("acc", 2)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+--- stderr ---

@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop = Noop()
+def nudge(n):
+    return n + 51
+def callHelper(x):
+    return nudge(x)
+def _pf_fn0():
+    nudge = 3
+    tmp = callHelper(nudge)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [9]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + callHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, second, third, callHelper(0)))
+def _pf_fn3():
+    for (name, k) in [("a", 3), ("b", 4)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn3()
+print(_pf_map(lambda h: h(3), list(handlers)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 9
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(1, [8, 4, 3]))
+acc = []
+for k in [1, 3, 2]:
+    _pf_t1 = lambda y: y * k
+    acc.append(_pf_t1)
+steps = acc
+print(_pf_map(lambda h: h(1), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def runAll(script):
+    def step(xs, op):
+        match op:
+            case Put(k, v):
+                return _pf_concat(xs, [v])
+            case Push(n) if n > 2:
+                return _pf_concat(xs, [n * 10])
+            case _:
+                return xs
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Push(n) if n > 2:
+                _pf_t2 = n * 10
+                xs.append(_pf_t2)
+            case _:
+                pass
+    return xs
+ops = [Push(1), Put("nut", 8), Put("cog", 2), Push(5), Put("gear", 9)]
+final = runAll(ops)
+print(final)
+def stack2(start):
+    x = start
+    g0 = functools.partial(_pf_map, lambda y: y - x)
+    x = x + 1
+    g1 = functools.partial(_pf_map, lambda y: y - x)
+    x = x + 9
+    return (g0([1, 2]), g1([1, 2]), x)
+print(stack2(1))
+--- stderr ---

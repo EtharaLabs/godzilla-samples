@@ -1,0 +1,113 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pong(n - 1, acc + 1)
+def pong(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [11, 16, 3, 2]))
+seriesA = [6, 3, -1, 28, 10, 3, -5]
+factor = 2
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+shape2 = lambda _pf_x: (lambda z: z - 8)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, seriesA))
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), seriesA))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(seriesA), seriesA))
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def compute(x):
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 4, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 8)))
+print(_pf_map(compute, [9, 6]))
+book = [Invoice(100, "max", 289, True, Addr("Bern", 2)), Invoice(101, "max", 261, True, Addr("Rome", 2)), Invoice(102, "max", 117, True, Addr("Kyiv", 4)), Invoice(103, "cy", 228, False, Addr("Doha", 4))]
+def tag(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(tag, book)))
+print(_pf_max_by(lambda o: o.amount, book))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, book))
+print(perOwner)
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Invoice(_pf_t0.id, _pf_t0.owner, o.amount + extra, False, _pf_t0.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 15), book)))
+--- stderr ---

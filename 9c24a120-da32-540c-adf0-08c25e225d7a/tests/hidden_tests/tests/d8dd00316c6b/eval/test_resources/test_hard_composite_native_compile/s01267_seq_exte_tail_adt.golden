@@ -1,0 +1,152 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    def __repr__(self):
+        return "Pop"
+_Pop: Pop = Pop()
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Mark({self._0!r}, {self._1!r})"
+Token = Drop | Pop | Store | Mark
+def _pf_fn0():
+    for x in _pf_range(1, 12):
+        y = x * x
+        yield y
+evens = _pf_fn0()
+print(list(filter(lambda n: n % 4 == 0, evens)))
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 2)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 926, fib)))
+def row(n: int) -> list[int]:
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(3))
+def lcm(a: int, b: int) -> int:
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [4, 7, 11, 4]))
+print(_pf_map(math.isqrt, [312, 1, 391, 320]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "c0"])))
+def isEven(n: int) -> bool:
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n: int) -> bool:
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [23, 3, 28, 23, 21]))
+def collatz(n: int, acc: int) -> int:
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [11, 51, 50]))
+def describe(t: Token) -> str:
+    if isinstance(t, Drop):
+        n0 = t._0
+        if n0 > 1:
+            return f"drop!({n0})"
+    if isinstance(t, Drop):
+        n0 = t._0
+        return f"drop({n0})"
+    elif isinstance(t, Pop):
+        return f"pop"
+    else:
+        if isinstance(t, Store):
+            n0 = t._0
+            if n0 > 1:
+                return f"store!({n0})"
+        if isinstance(t, Store):
+            n0 = t._0
+            return f"store({n0})"
+        elif isinstance(t, Mark) and t._0 == 3:
+            return "mark-3"
+        else:
+            n0 = t._0
+            n1 = t._1
+            return f"mark({n0},{n1})"
+def rank(t: Token) -> int:
+    if isinstance(t, Store):
+        x0 = t._0
+        return x0 * 2
+    elif isinstance(t, Mark):
+        x0 = t._0
+        x1 = t._1
+        return x0 + x1 * 4
+    elif isinstance(t, Drop):
+        x0 = t._0
+        return x0
+    else:
+        return 3
+batch: list[Token] = [Mark(3, 2), _Pop, Drop(10), Store(12)]
+print(_pf_map(describe, batch))
+tally: int = _pf_sum_by(rank, batch)
+print(f"tally={tally}")
+print((_pf_head(batch), _pf_last(batch)))
+--- stderr ---

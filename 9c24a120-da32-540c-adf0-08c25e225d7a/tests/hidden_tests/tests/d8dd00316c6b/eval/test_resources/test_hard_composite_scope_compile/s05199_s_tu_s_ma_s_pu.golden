@@ -1,0 +1,164 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: int
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: object
+    bottom: object
+    slot: int
+pairs = [("gear", 10), ("cog", 15), ("wick", 10), ("rod", 14)]
+def _pf_fn0(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+bounds = _pf_fold(_pf_fn0, (1000, -1000), pairs)
+print(bounds)
+acc = dict()
+for (k, v) in _pf_concat(pairs, pairs):
+    _pf_t0 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t0
+index = acc
+print(_pf_map_to_list(index))
+def _pf_fn1():
+    for (name, qty) in pairs:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn1()
+print(_pf_str_join(",", list(lines2)))
+widths = [("ned", (4, 12)), ("kit", (3, 13)), ("dee", (0, 9))]
+def _pf_fn2():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn2()
+print(list(widthsOut))
+def choose2(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((9, 1)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 7)))
+def adjust(n):
+    match n % 3:
+        case 0:
+            _n = n // 3
+            return _n + 7
+        case k:
+            _n2 = n * k
+            _k = _n2 - 1
+            return _k
+print(_pf_map(adjust, [3, 23, 16, 19]))
+def extent(s):
+    match s:
+        case Sq(n) | Disc(n):
+            return n
+        case Wedge(n, m) if n > m:
+            return n
+        case Wedge(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(extent, [Sq(2), Disc(4), Wedge(9, 7), Wedge(1, 9)]))
+def score(x, items):
+    match items:
+        case []:
+            return x
+        case [_x]:
+            return _x * 5
+        case [_x2, *rest]:
+            return _x2 + len(rest)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print((score(7, []), score(1, [7]), score(1, [8, 2, 3])))
+boxes = [Box(2, 7, "cap"), Box(9, 8, "nut"), Box(7, 2, "cap"), Box(4, 4, "sq")]
+def caption(b):
+    match b:
+        case Box(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Box(label=label, w=1):
+            return f"{label} thin"
+        case Box(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, boxes)))
+def rename(prefix, b):
+    label = b.label
+    _pf_t2 = b
+    return Box(_pf_t2.w, _pf_t2.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "x-"), boxes)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, boxes)))
+def stackOf(s):
+    match s:
+        case Rack(top=Box(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Rack(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+--- stderr ---

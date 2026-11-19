@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+00000002ok00000031Some [1, 2] : Option (List int)0000000000000005error00000072(could not determine a type — is `let mut counter = 0` an expression?)0000000000000002ok0000000000000021print("side effect")
+00000002ok0000000000000021print("side effect")
+00000002ok0000000000000373from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+print(_pf_head([]))
+00000002ok0000000000000058Geo_pi = 3.0
+def Geo_circ(r):
+    return 2.0 * Geo_pi * r
+00000002ok00000019a : int
+b : string
+00000018a, b = (1, "two")
+--- stderr ---

@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+type Shape = Circle float | Square float
+let answer = 42
+(print ((Some 42) == (Some answer)))
+(print ((Some 1) != (Some 1)))
+(print ((Some 1) <= (Some 2)))
+(print ((Circle 1.0) == (Circle 1.0)))
+(print ((Circle 1.0) >= (Square 0.0)))
+(print ((Set.ofList [(Some 1), (Some 1)]) |> Set.len))
+--- stderr ---

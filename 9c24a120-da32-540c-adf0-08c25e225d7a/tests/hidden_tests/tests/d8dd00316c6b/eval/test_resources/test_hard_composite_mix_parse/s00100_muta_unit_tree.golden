@@ -1,0 +1,61 @@
+exit: 0
+--- stdout ---
+let mut ticks = 0
+let track x =
+    (ticks <- (ticks + 1))
+    (x * 4)
+let profile xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (profile [27, (- 4), 55, (- 4), 14]))
+let doubled = ([27, (- 4), 55, (- 4)] |> (List.map track))
+(print f"{doubled} after {ticks} calls")
+measure m
+measure s
+measure kg
+let segments = [75.8<m>, 251.8<m>, 242.1<m>, 495.4<m>]
+let splits = [62.4<s>, 85.7<s>, 22.4<s>, 19.5<s>]
+let dist = (segments |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let dur = (((List.fold (+)) 0.0<s>) splits)
+let rate = (dist / dur)
+(print ((Format.fixed 1) rate))
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf dist) dur) * 1000.0)))
+let edge = (sqrt 36.0<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+let best = (((List.zip segments) splits) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+type Expr = Num int | Add Expr Expr | Mul Expr Expr | Neg Expr
+let evalE e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evalE a) + (evalE b))
+        case (Mul a b): ((evalE a) * (evalE b))
+        case (Neg a): (- (evalE a))
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let terms = [(Neg ((Mul (Neg (Num 1))) (Neg (Num 4)))), ((Add ((Add (Num 0)) (Neg (Num 2)))) (Num (- 2))), (Neg ((Add (Num 1)) ((Mul (Num 0)) (Num 2))))]
+(((terms |> (List.map simplify)) |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evalE) terms))
+--- stderr ---

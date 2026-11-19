@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True)
+class Cell:
+    row: int
+    col: int
+    letter: str
+@dataclass(frozen=True, slots=True)
+class Pair:
+    left: "Cell"
+    right: "Cell"
+def describe(_pf_arg0: Cell) -> str:
+    letter = _pf_arg0.letter
+    row = _pf_arg0.row
+    return letter
+def leftLetter(_pf_arg0: Pair) -> str:
+    _pf_arg0_0 = _pf_arg0.left
+    letter = _pf_arg0_0.letter
+    return letter
+def both(_pf_arg0: Pair) -> tuple[str, str]:
+    left = _pf_arg0.left
+    right = _pf_arg0.right
+    return (left.letter, right.letter)
+a: Cell = Cell(1, 2, "A")
+b: Cell = Cell(3, 4, "B")
+p: Pair = Pair(a, b)
+one: str = describe(a)
+deep: str = leftLetter(p)
+pairOf: tuple[str, str] = both(p)
+--- stderr ---

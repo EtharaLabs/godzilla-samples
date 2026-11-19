@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+import functools
+import itertools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+nats = range(0, 1000000)
+squares = list(_pf_seq_take(5, map(lambda x: x * x, nats)))
+evens = list(_pf_seq_take(3, filter(lambda x: x // 2 * 2 == x, nats)))
+total = _pf_fold(lambda acc, x: acc + x, 0, iter([1, 2, 3, 4]))
+--- stderr ---

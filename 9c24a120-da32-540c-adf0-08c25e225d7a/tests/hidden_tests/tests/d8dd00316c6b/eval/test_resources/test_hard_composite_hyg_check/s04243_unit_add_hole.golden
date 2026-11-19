@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+  --> 25:11
+   |
+25 | let vol = cbrt 27.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int<'a>` — try: factor, hi, lo, side, span, vol, and 1 more — or: push2 ?, List.sum ?, Seq.sum ?, String.len ?, and 16 more
+  --> 32:30
+   |
+32 |   let clamp lo hi x = max lo ?
+   |                              ^
+
+1 error
+1 unfilled hole

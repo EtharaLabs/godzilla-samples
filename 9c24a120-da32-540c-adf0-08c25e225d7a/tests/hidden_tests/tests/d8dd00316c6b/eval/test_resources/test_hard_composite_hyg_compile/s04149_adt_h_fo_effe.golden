@@ -1,0 +1,156 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    def __repr__(self):
+        return "Drop"
+_Drop = Drop()
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip2:
+    def __repr__(self):
+        return "Skip2"
+_Skip2 = Skip2()
+def describe(t):
+    match t:
+        case Skip(n0) if n0 % 2 == 0:
+            return f"skip!({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Push(n0) if 0 <= n0 < 8:
+            return f"push!({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Emit(n0) if n0 > 1:
+            return f"emit!({n0})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case Drop():
+            return f"drop"
+        case Load(s0):
+            return f"load({s0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Emit(x0):
+            return x0
+        case Drop():
+            return 1
+        case Load(_):
+            return 1
+        case Push(x0):
+            return x0
+        case _:
+            return 2
+queue = [Emit(8), Skip(9), Push(5), Emit(1), Load("gus")]
+print(_pf_str_join("; ", _pf_map(describe, queue)))
+tally = _pf_sum_by(cost, queue)
+print(f"tally={tally}")
+print((_pf_head(queue), _pf_last(queue)))
+def replay(script):
+    def fold1(acc, op):
+        match acc:
+            case (m, xs):
+                match op:
+                    case Put(k, v):
+                        return (_pf_map_add(k, v, m), xs)
+                    case Append(n):
+                        return (m, _pf_concat(xs, [n]))
+                    case Skip2():
+                        return acc
+                    case _:
+                        raise RuntimeError("non-exhaustive match")
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Skip2():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+script = [Append(4), Append(5), Put("nut", 9), Put("cog", 7), Append(7), Put("nut", 8), _Skip2]
+outcome = replay(script)
+mm, items = outcome
+print((_pf_map_to_list(mm), items))
+acc = _pf_fold(lambda fold1, x: fold1 + x * x, 0, [4, 4, 5, 8])
+print(acc)
+def margin(price, qty):
+    return price * qty - 5 * qty
+def announce(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("bolt", 28, 4), ("wick", 8, 6), ("pin", 49, 1)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(margin, k))
+print(scaled(8)([1, 2, 3]))
+--- stderr ---

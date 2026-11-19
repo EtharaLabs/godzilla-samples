@@ -1,0 +1,137 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def finished(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def loop(n: int, acc: int):
+    async def _pf_fn2():
+        async def _pf_fn1():
+            return n * 2
+        k = await _pf_fn1()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await loop(n - 1, acc + k)
+    return _pf_Async(_pf_fn2)
+print(asyncio.run(_pf_run(loop(17, 0))))
+def countDigits(n: int, acc: int) -> int:
+    while True:
+        if n < 10:
+            return acc + 1
+        else:
+            n, acc = (n // 10, acc + 1)
+            continue
+async def _pf_fn3():
+    a = await loop(5, 0)
+    return countDigits(a * 57215, 0)
+main = _pf_Async(_pf_fn3)
+print(asyncio.run(_pf_run(main)))
+def discount(price: int, qty: int) -> int:
+    return price * qty - 6 * qty
+def report(label, price: int, qty: int) -> int:
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn4(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+grand: int = sum(_pf_map(_pf_fn4, [("hub", 28, 5), ("bolt", 33, 4), ("nut", 47, 6)]))
+print(grand)
+def scaled(k: int):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(16)([1, 2, 3]))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 3:
+        return _Low()
+    elif scaled < 37:
+        return _Mid()
+    else:
+        return _High()
+def grade(n: int) -> str:
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(grade, [21, 11, 16, 13, 6]))
+def scale(n: int) -> int:
+    return n * 4
+def _pf_fn5():
+    _pf_t1 = [8, 2]
+    if _pf_t1:
+        scale = _pf_t1[0]
+        return scale + 1
+    else:
+        return 0
+chosen: int = _pf_fn5()
+print((chosen, scale(2)))
+def bump2(n: int) -> int:
+    return n + 46
+def applyLift(x: int) -> int:
+    return bump2(x)
+def _pf_fn6():
+    bump2 = 0
+    return applyLift(bump2)
+probe: int = _pf_fn6()
+print((probe, applyLift(9)))
+def combine(o: Some | None_) -> int:
+    def pair(a: int, b: int) -> int:
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t2 = _pair
+    else:
+        _pf_t2 = 5
+    r = _pf_t2
+    return pair(r, 6)
+print((combine(Some(6)), combine(_None_)))
+--- stderr ---
+note: `loop` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

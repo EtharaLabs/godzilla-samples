@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let f t =
+    match t:
+        case ((a, b), c): ((a + b) + c)
+let r = (f ((1, 2), 3))
+--- stderr ---

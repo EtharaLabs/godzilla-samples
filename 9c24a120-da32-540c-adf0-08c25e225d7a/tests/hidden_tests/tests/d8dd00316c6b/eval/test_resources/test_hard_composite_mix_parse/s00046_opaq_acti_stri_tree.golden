@@ -1,0 +1,48 @@
+exit: 0
+--- stdout ---
+opaque type AccountNo = string
+opaque type Handle = string
+let unwrap x =
+    match x:
+        case (AccountNo s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let keys = ((mint "acc") 4)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (AccountNo "acc-1"))))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let bucketOf n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([18, (- 1), 1, 28, 40, 39, 16] |> (List.map bucketOf)) |> (List.iter print))
+let text = "cog quin fay ned pin dee gear"
+let parts = ((String.split " ") text)
+let nums = (((String.split ",") "7,,5a,5a,12") |> (List.map String.toInt))
+(print nums)
+(print ((nums |> (List.choose id)) |> List.sum))
+(print (((String.tryIndexOf "qu") text), ((String.contains "qu") text)))
+(print (((String.replace "i") "I") text))
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+let n2 = (List.len parts)
+(print f"n2={n2} {{braces}} {(String.len text)}")
+type Term = Num int | Add Term Term | Mul Term Term | Neg Term | Var string
+let vars = (Map.ofList [("x", 7), ("y", 9)])
+let calc e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((calc a) + (calc b))
+        case (Mul a b): ((calc a) * (calc b))
+        case (Neg a): (- (calc a))
+        case (Var v): (((Map.findOr v) 0) vars)
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+        case (Var v): v
+let exprs = [((Mul (Num 6)) ((Mul (Num (- 2))) ((Mul (Num 4)) (Var "x")))), ((Add (Neg ((Mul (Num 5)) (Num 4)))) (Var "y"))]
+((exprs |> (List.map pretty)) |> (List.iter print))
+(print ((List.map calc) exprs))
+--- stderr ---

@@ -1,0 +1,132 @@
+exit: 0
+--- stdout ---
+00000002ok00000253book : List Invoice
+surcharge : int -> Invoice -> Invoice
+line : Invoice -> string
+moved : List Invoice
+inWord : (List string) -> int -> int
+skipping : (List string) -> int -> int
+pts : List int
+seriesA : List int
+gain : int
+scalers : List (int -> int)
+00003771from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+book = [Invoice(100, "dee", 268, True, Site("Oslo", 1)), Invoice(101, "dee", 165, True, Site("Riga", 3)), Invoice(102, "bo", 15, False, Site("Oslo", 3)), Invoice(103, "fay", 256, True, Site("Riga", 2)), Invoice(104, "dee", 122, False, Site("Kyiv", 1)), Invoice(105, "bo", 165, True, Site("Rome", 4))]
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Invoice(_pf_t0.id, _pf_t0.owner, o.amount + extra, False, _pf_t0.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 17), book)))
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, book)))
+def _pf_fn0(o):
+    if o.dest.zone > 2:
+        _pf_t4 = o
+        return Invoice(_pf_t4.id, _pf_t4.owner, _pf_t4.amount, _pf_t4.urgent, Site("Hub", 1))
+    else:
+        return o
+moved = _pf_map(_pf_fn0, book)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", moved))
+print(_pf_max_by(lambda o: o.amount, book))
+def inWord(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return inWord(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("  bo lu sue ned "), 0))
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Stats_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Stats_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+pts = [15, -13, 18, 21]
+print(_pf_map(functools.partial(Stats_clamp, 0, 5), pts))
+print(Stats_norm1(pts))
+print(Stats_scaleAll(2, pts))
+seriesA = [25, 23, -6, -6, 22]
+gain = 3
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def _pf_fn2(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn2, (0, 0), seriesA))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(8), scalers))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fst(p):
+    return p[0]
+def _pf_fn3(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn3, _pf_indexed(seriesA))))
+00000002ok00000018seriesA : List int0000000000000002ok00000019book : List Invoice00000000--- stderr ---

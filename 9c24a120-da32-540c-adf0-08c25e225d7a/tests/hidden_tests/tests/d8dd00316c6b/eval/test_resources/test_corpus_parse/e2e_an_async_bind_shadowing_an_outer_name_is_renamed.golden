@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+let n = 5
+let f u = async { let m = (n + 1) let! n = async { return 2 } return (n + m) }
+let r = (f 0)
+--- stderr ---

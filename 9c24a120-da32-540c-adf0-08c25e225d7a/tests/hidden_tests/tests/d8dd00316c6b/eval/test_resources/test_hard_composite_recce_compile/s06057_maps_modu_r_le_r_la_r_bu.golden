@@ -1,0 +1,150 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_fst(p):
+    return p[0]
+visits = ["dee", "cy", "dee", "dee", "bo", "dee", "eli", "dee"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print((_pf_map_try_find("eli", hist), "eli" in hist))
+sa = set([1, 3, 4, 10, 16, 17])
+sb = set([2, 3, 5, 6, 10, 16])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 6 in sb, _pf_set_is_subset(set([1]), sa)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+def Stats_square(x):
+    return x * x
+def Stats_between(lo, hi, x):
+    return lo <= x <= hi
+def Stats_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+obs = [-5, 6, 23, 5, 30, 15, 8]
+print(_pf_map(Stats_square, obs))
+print(_pf_filter(functools.partial(Stats_between, -2, 19), obs))
+print(Stats_mean(obs))
+print(_pf_map(functools.partial(Stats_clamp, 0, 5), obs))
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pang(n - 2, acc * 2)
+def pang(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [13, 3, 12, 12]))
+seriesA = [28, 16, -7, 10, 30, 3, 6]
+factor = 5
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(seriesA))))
+tweak2 = lambda _pf_x: (lambda z: z - 1)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, seriesA))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn2, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def _pf_fn3(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn3, (0, 0), seriesA))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn4(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 4], lambda k: Grid_yield_(a * b + k))
+cells = Grid_combine(Grid_for_([(5, 2), (4, 2)], _pf_fn4), Grid_delay(lambda _: Grid_yield_(5)))
+print(cells)
+--- stderr ---

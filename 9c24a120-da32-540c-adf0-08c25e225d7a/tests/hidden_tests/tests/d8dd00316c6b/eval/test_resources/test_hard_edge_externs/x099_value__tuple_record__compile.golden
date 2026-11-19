@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import math
+@dataclass(frozen=True, slots=True)
+class Box:
+    label: str
+    item: int
+def scaled(k):
+    return k * math.pi
+t = ("first", scaled(2.0))
+lbl, v = t
+print(lbl)
+print(v)
+--- stderr ---

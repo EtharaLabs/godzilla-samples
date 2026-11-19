@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_to_list(m):
+    return list(m.items())
+def compute(u):
+    a = dict()
+    for (k, v) in _pf_zip([1, 2, 3, 5], [7, 8, 9, 6]):
+        if k % 2 == 0:
+            a[k] = v
+    return a
+result = compute(None)
+print(_pf_map_to_list(result))
+--- stderr ---

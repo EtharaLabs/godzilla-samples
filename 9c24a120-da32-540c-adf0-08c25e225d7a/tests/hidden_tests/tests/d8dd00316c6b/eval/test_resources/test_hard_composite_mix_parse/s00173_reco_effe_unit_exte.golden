@@ -1,0 +1,46 @@
+exit: 0
+--- stdout ---
+type Booking = { id: int, owner: string, amount: int, urgent: bool }
+let book = [Booking { id = 100, owner = "gus", amount = 127, urgent = true }, Booking { id = 101, owner = "quin", amount = 10, urgent = false }, Booking { amount = 95, owner = "tom", urgent = false, id = 102 }, Booking { owner = "gus", amount = 263, id = 103, urgent = false }, Booking { id = 104, owner = "tom", amount = 284, urgent = false }]
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 80))) book)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+let surcharge o = (if o.urgent then { o with amount = (o.amount + 13) } else o)
+(print ((book |> (List.map surcharge)) |> (List.map (fun o -> o.amount))))
+let urgentTotal = ((book |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print urgentTotal)
+let pure margin price qty = ((price * qty) - (4 * qty))
+let announce label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let grand = (([("pin", 39, 3), ("cog", 7, 1)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print grand)
+measure m
+measure s
+measure kg
+let legs = [22.5<m>, 461.0<m>, 77.1<m>, 118.2<m>]
+let durations = [6.2<s>, 63.6<s>, 31.8<s>, 66.5<s>]
+let total = (((List.fold (+)) 0.0<m>) legs)
+let elapsed = (((List.fold (+)) 0.0<s>) durations)
+let pace = (total / elapsed)
+(print ((Format.fixed 1) pace))
+let speeds = (((List.map2 (fun d t -> (d / t))) legs) durations)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+let best = (((List.zip legs) durations) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf total) elapsed) * 1000.0)))
+let edge = (sqrt 25.0<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+extern readBase: string -> int -> int = int(base=...)
+let fromBin s = ((readBase s) 2)
+(print ((fromBin "1001100") + ((readBase "127") 8)))
+extern pure loud: string -> string = str.upper
+(print (("ivy" |> loud) |> String.rev))
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x6", "23"] |> (List.map safe)) |> (List.iter print))
+--- stderr ---

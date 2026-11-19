@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+00000002ok00000053Decode.nullable : (Decoder 'a) -> Decoder (Option 'a)0000000000000002ok0000000000000428from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_dec_nullable(dec):
+    def go(v):
+        return None_() if v is None else Some(dec(v))
+    return go
+print(_pf_dec_nullable)
+--- stderr ---

@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+00000002ok00000358legs : List float<m>
+times : List float<s>
+dist : float<m>
+elapsed : float<s>
+pace : float<m/s>
+km : float<m>
+speeds : List float<m/s>
+side : float<m>
+cube : float<m^3>
+data : List int
+keep : int -> bool
+result : string
+book : List Invoice
+rushSum : int
+cnt : int
+amt : int
+rawOf : AccountNo -> string
+mint : 'a -> int -> List AccountNo
+ids : List AccountNo
+00003201from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_drop_while(f, xs):
+    return list(itertools.dropwhile(f, xs))
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+legs = [331.6, 416.0, 95.9, 473.8, 436.9]
+times = [41.2, 42.4, 22.7, 80.2, 86.3]
+dist = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+pace = dist / elapsed
+print(_pf_fmt_fixed(3, pace))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+speeds = _pf_map2(lambda d, t: d / t, legs, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+side = math.sqrt(49.0)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+data = [2, 25, 11, 39, 18, 37, 25, 20, -1, 20, -1]
+def keep(n):
+    return n > 0 and n % 2 != 0
+result = (lambda _pf_x: _pf_str_join("-", _pf_map(str, _pf_x)))(_pf_map(lambda x: x // 3 + x % 3, (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(3, _pf_x)))(_pf_drop_while(lambda x: x < -2, data))))
+print(result)
+book = [Invoice(100, "bo", 128, True), Invoice(101, "fay", 207, True), Invoice(102, "fay", 159, True), Invoice(103, "bo", 267, True)]
+print(_pf_max_by(lambda o: o.amount, book))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, book))
+print(rushSum)
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, book))))
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), book)
+print(f"{cnt} records, {amt} total")
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = mint("u", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, ids)))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+print(_pf_head(ids) == Some("acc-1"))
+00000002ok00000024speeds : List float<m/s>0000000000000002ok00000027rawOf : AccountNo -> string00000000--- stderr ---

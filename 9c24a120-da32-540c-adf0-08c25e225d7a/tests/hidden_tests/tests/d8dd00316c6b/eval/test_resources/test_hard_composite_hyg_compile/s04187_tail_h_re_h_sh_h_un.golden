@@ -1,0 +1,95 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import math
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def countDown(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(1291, 0))
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(299, 125))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Person(_pf_t0.name, p.age + 1))
+        case Parked(t) if t.size > 4:
+            _pf_t1 = t
+            return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+slots = _pf_map(promote, [Active(Person("max", 41)), Active(Person("ivy", 60)), _Gone])
+print(slots)
+members = [Person("ned", 1), Person("fay", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+adders = _pf_map(lambda k: lambda x: x * 10 + k, [5, 4, 8])
+print(_pf_map(lambda g: g(2), adders))
+def lift(n):
+    return n + 92
+def useBump(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 0
+    return useBump(lift)
+sample = _pf_fn0()
+print((sample, useBump(3)))
+def tweak(x, flag):
+    y = x * 2
+    if flag:
+        _y = x + 839
+        _pf_t2 = _y - 1
+    else:
+        _pf_t2 = y
+    z = _pf_t2
+    return (y, z)
+print((tweak(1, True), tweak(2, False)))
+span = math.hypot(2.0 / 1.0, 8.0 / 1.0) * 1.0
+ratio = math.sqrt(2.0)
+side = math.sqrt(4.0)
+vol = math.cbrt(64.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(span, 3.0)))
+--- stderr ---

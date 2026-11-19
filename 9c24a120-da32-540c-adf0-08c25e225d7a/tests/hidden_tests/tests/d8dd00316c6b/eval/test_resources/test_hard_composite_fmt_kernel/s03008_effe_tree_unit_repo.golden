@@ -1,0 +1,175 @@
+exit: 0
+--- stdout ---
+00000002ok00000451discount : int -> int<'a> -> int<'a>
+announce : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+scaled : int -> (List int<'a>) -> List int<'a>
+env : Map string int
+evalE : Expr -> int
+pretty : Expr -> string
+simplify : Expr -> Expr
+exprs : List Expr
+legs : List float<m>
+durations : List float<s>
+dist : float<m>
+elapsed : float<s>
+pace : float<m/s>
+best : Option (float<m>, float<s>)
+rows : List Entry
+renderRow : Entry -> string
+low : List string
+00004732from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Num:
+    _0: int
+    def __repr__(self):
+        return f"Num({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Add:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Add({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mul:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Mul({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Neg:
+    _0: object
+    def __repr__(self):
+        return f"Neg({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Var:
+    _0: str
+    def __repr__(self):
+        return f"Var({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+def discount(price, qty):
+    return price * qty - 6 * qty
+def announce(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("cap", 43, 4), ("gear", 32, 1)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(13)([1, 2, 3]))
+env = dict([("x", 3), ("y", 5)])
+def evalE(e):
+    match e:
+        case Num(n):
+            return n
+        case Add(a, b):
+            return evalE(a) + evalE(b)
+        case Mul(Num(0), _) | Mul(_, Num(0)):
+            return 0
+        case Mul(a, b):
+            return evalE(a) * evalE(b)
+        case Neg(a):
+            return -evalE(a)
+        case Var(v):
+            return _pf_map_find_or(v, 0, env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def pretty(e):
+    match e:
+        case Num(n) if n < 0:
+            return f"({n})"
+        case Num(n):
+            return f"{n}"
+        case Add(a, b):
+            return f"({pretty(a)} + {pretty(b)})"
+        case Mul(a, b):
+            return f"{pretty(a)} * {pretty(b)}"
+        case Neg(a):
+            return f"-{pretty(a)}"
+        case Var(v):
+            return v
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def simplify(e):
+    while True:
+        match e:
+            case Add(Num(0), x) | Add(x, Num(0)):
+                e = x
+                continue
+            case Mul(Num(1), x) | Mul(x, Num(1)):
+                e = x
+                continue
+            case Neg(Neg(x)):
+                e = x
+                continue
+            case Add(a, b):
+                return Add(simplify(a), simplify(b))
+            case Mul(a, b):
+                return Mul(simplify(a), simplify(b))
+            case _:
+                return e
+exprs = [Neg(Add(Mul(Var("y"), Num(8)), Add(Num(-2), Num(-1)))), Var("x")]
+_pf_iter(print, _pf_map(pretty, _pf_map(simplify, exprs)))
+print(_pf_map(evalE, exprs))
+legs = [378.2, 370.9, 387.9, 97.6, 480.1]
+durations = [35.9, 41.0, 73.6, 17.6, 61.0]
+dist = _pf_fold(lambda a, b: a + b, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+pace = dist / elapsed
+print(_pf_fmt_fixed(3, pace))
+def _pf_fn1(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn1, _pf_zip(legs, durations))
+print(best)
+rows = [Entry("cap", 5, 38.57), Entry("tap", 22, 35.19), Entry("hub", 23, 0.56), Entry("nut", 15, 35.85)]
+def renderRow(x):
+    return f"{_pf_fmt_pad_right(6, "-", x.name)}|{_pf_fmt_pad_left(4, " ", str(x.qty))}|{_pf_fmt_fixed(2, x.price)}|{"restock" if x.qty > 10 else "ok"}"
+_pf_iter(print, _pf_map(renderRow, rows))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 15, rows))
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+00000002ok00000023simplify : Expr -> Expr0000000000000002ok00000013overall : int00000000--- stderr ---

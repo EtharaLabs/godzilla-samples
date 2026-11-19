@@ -1,0 +1,153 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: int
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Tri:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Tri({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 21 else Error("too young"), lambda adult: Check_return_(Form(name, adult)))))
+print(readForm("ray", "29"))
+print((readForm("a", "30"), readForm("bob", "x")))
+def pick(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((8, 6)), 0), pick(Some((1, 5)), 0), pick(_None_, 6)))
+def score(x, items):
+    match items:
+        case []:
+            return x
+        case [_x]:
+            return _x * 2
+        case [_x2, *rest]:
+            return _x2 + len(rest)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print((score(4, []), score(1, [7]), score(1, [8, 2, 3])))
+def probe2(xs):
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([6, 2]), probe2([4, 9]), probe2([])))
+def size(s):
+    match s:
+        case Square(n) | Disc(n):
+            return n
+        case Tri(n, m) if n > m:
+            return n
+        case Tri(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(size, [Square(1), Disc(8), Tri(3, 9), Tri(1, 9)]))
+tiles = [Panel(3, 7, "wick"), Panel(1, 7, "cog"), Panel(9, 1, "pin"), Panel(4, 4, "sq")]
+def area(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def caption(b):
+    match b:
+        case Panel(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Panel(label=label, w=1):
+            return f"{label} thin"
+        case Panel(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, tiles)))
+--- stderr ---

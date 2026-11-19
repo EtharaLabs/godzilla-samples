@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Num:
+    _0: int
+    def __repr__(self):
+        return f"Num({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Add:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Add({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+def simp(e):
+    match e:
+        case Add(Num(0), b):
+            return b
+        case Add(a, Num(0)):
+            return a
+        case other:
+            return other
+def quad(p):
+    match p:
+        case Point(x=0, y=0):
+            _pf_t0 = "origin"
+        case Point(x=0):
+            _pf_t0 = "y axis"
+        case Point(x=x, y=y) as whole:
+            _pf_t0 = f"{x},{y} {whole.x}"
+    q = _pf_t0
+    return q
+def name(i):
+    match (i, True):
+        case ("root", True):
+            return "admin"
+        case (s, _):
+            return s
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(simp(Add(Num(0), Num(7))))
+print(simp(Add(Num(5), Num(0))))
+print(quad(Point(0, 0)))
+print(quad(Point(0, 3)))
+print(quad(Point(2, 3)))
+print(name("root"))
+print(name("ada"))
+--- stderr ---

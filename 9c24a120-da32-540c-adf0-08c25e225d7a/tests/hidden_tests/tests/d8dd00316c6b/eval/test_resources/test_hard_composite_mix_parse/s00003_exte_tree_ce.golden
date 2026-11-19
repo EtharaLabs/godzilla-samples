@@ -1,0 +1,54 @@
+exit: 0
+--- stdout ---
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "111") + ((parseIn "111") 8)))
+extern pure loud: string -> string = str.upper
+(print (("tom" |> loud) |> String.rev))
+extern toNum: string -> int = int
+let safe s =
+    match (try (toNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x6", "37"] |> (List.map safe)) |> (List.iter print))
+extern pure gcd: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((gcd a) b))
+(print (((List.fold lcm) 1) [2, 3, 10, 6]))
+type Ast = Num int | Add Ast Ast | Mul Ast Ast | Neg Ast
+let evalE e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evalE a) + (evalE b))
+        case (Mul a b): ((evalE a) * (evalE b))
+        case (Neg a): (- (evalE a))
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let exprs = [(Num 3), ((Add (Num 1)) ((Add (Num 1)) ((Add (Num 8)) (Num 0))))]
+(((exprs |> (List.map simplify)) |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evalE) exprs))
+let parseEntry line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let entries = ["max = 8", "ivy=x", "ned=x", "fay=91", "dee=8=1", "ada=1=1"]
+let parsed = ((List.map parseEntry) entries)
+((List.iter print) parsed)
+let goodOnes = (parsed |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let firstGood = ((((parsed |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine parsed) |> (Result.mapError String.upper)))
+--- stderr ---

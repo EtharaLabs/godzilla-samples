@@ -1,0 +1,139 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: str
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Store({self._0!r}, {self._1!r})"
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("sku", 3)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+log = ["fay", "bo", "eli", "cy", "cy", "cy", "fay", "cy", "dee", "eli"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in log:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+sa = set([3, 4, 6, 7, 11, 16])
+sb = set([2, 3, 5, 6, 16, 17])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 12 in sb, _pf_set_is_subset(set([3]), sa)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, counts))))
+extra = dict([("zed", 5), ("fay", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+def render(t):
+    match t:
+        case Jump(n0) if 0 <= n0 < 11:
+            return f"jump!({n0})"
+        case Jump(n0):
+            return f"jump({n0})"
+        case Turn(s0):
+            return f"turn({s0})"
+        case Store(s0, s1):
+            return f"store({s0},{s1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Turn(_):
+            return 1
+        case _:
+            return 2
+prog = [Jump(6), Jump(6), Store("bo", "ray"), Store("max", "oz"), Store("sue", "sue")]
+print(_pf_map(render, prog))
+total = _pf_sum_by(rank, prog)
+print(f"total={total}")
+print((_pf_head(prog), _pf_last(prog)))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(6))
+--- stderr ---

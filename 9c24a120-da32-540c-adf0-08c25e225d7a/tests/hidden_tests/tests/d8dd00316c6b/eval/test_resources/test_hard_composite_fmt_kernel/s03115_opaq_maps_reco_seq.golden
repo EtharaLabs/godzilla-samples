@@ -1,0 +1,140 @@
+exit: 0
+--- stdout ---
+00000002ok00000310rawOf : Sku -> string
+makeIds : 'a -> int -> List Sku
+keys : List Sku
+events : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+hist : Map string int
+sa : Set int
+sb : Set int
+book : List Invoice
+bump2 : Invoice -> Invoice
+cheap : List Invoice
+dear : List Invoice
+label : Invoice -> string
+series : Seq int
+00003529from dataclasses import dataclass
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("sku", 2)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("u-1"))
+events = ["dee", "ada", "fay", "ada", "eli", "cy", "bo", "bo"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+sa = set([3, 6, 7, 13, 14, 19])
+sb = set([2, 3, 11, 12, 15, 19])
+print(_pf_sort(list(_pf_set_union(sa, sb))))
+print((len(sa), 11 in sb, _pf_set_is_subset(set([3]), sa)))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+print((_pf_map_try_find("gus", hist), "gus" in hist))
+book = [Invoice(100, "tom", 112, False), Invoice(101, "tom", 296, False), Invoice(102, "gus", 53, False), Invoice(103, "gus", 206, False)]
+def bump2(o):
+    if o.urgent:
+        _pf_t1 = o
+        return Invoice(_pf_t1.id, _pf_t1.owner, o.amount + 17, _pf_t1.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(bump2, book)))
+cheap, dear = _pf_partition(lambda o: o.amount < 65, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def label(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(label, book)))
+def _pf_fn1():
+    for x in _pf_range(1, 12):
+        y = x * x
+        yield y
+    yield 177
+series = _pf_fn1()
+print(list(_pf_seq_take(5, map(lambda n: n + 1, series))))
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 5)))))
+00000002ok00000031makeIds : 'a -> int -> List Sku0000000000000002ok00000019book : List Invoice00000000--- stderr ---

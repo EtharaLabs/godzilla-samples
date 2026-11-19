@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+ --> 8:12
+  |
+8 | let pace = total + elapsed
+  |            ^^^^^^^^^^^^^^^
+
+error: expected int, found Option int
+  --> 20:18
+   |
+20 | let firstCount = Map.tryFind "eli" counts + 1
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `float<s> -> float<s> -> float<s>` — try: min, max, const — or: flip ?
+ --> 7:25
+  |
+7 | let elapsed = List.fold ? 0.0<s> durations
+  |                         ^
+
+2 errors
+1 unfilled hole

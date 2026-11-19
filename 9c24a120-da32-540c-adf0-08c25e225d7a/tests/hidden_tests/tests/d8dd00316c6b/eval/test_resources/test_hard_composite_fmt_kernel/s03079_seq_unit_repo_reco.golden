@@ -1,0 +1,144 @@
+exit: 0
+--- stdout ---
+00000002ok00000368squares : Seq int
+fib : Seq int
+segments : List float<m>
+times : List float<s>
+dist : float<m>
+elapsed : float<s>
+rate : float<m/s>
+edge : float<m>
+cube : float<m^3>
+best : Option (float<m>, float<s>)
+entries : List Entry
+renderRow : Entry -> string
+low : List string
+book : List Parcel
+nrec : int
+amt : int
+perOwner : List (string, int, int)
+label : Parcel -> string
+00003920from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def _pf_fn0():
+    for x in _pf_range(1, 12):
+        y = x * x
+        yield y
+    yield 171
+squares = _pf_fn0()
+print(list(_pf_seq_take(5, map(lambda n: n + 1, squares))))
+print(list(_pf_seq_take(5, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 3)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 1632, fib)))
+segments = [24.2, 424.5, 265.8, 322.4, 183.2]
+times = [32.0, 86.1, 36.8, 32.2, 36.2]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+rate = dist / elapsed
+print(_pf_fmt_fixed(2, rate))
+edge = math.sqrt(6.25)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+def _pf_fn2(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn2, _pf_zip(segments, times))
+print(best)
+entries = [Entry("pin", 21, 11.0), Entry("cap", 1, 11.17), Entry("cog", 25, 33.24)]
+def renderRow(x):
+    return f"{_pf_fmt_pad_right(6, ".", x.name)}|{_pf_fmt_pad_left(4, " ", str(x.qty))}|{_pf_fmt_fixed(2, x.price)}|{"restock" if x.qty > 12 else "ok"}"
+_pf_iter(print, _pf_map(renderRow, entries))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 5, entries))
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+book = [Parcel(100, "gus", 176, False), Parcel(101, "ned", 96, True), Parcel(102, "eli", 262, False), Parcel(103, "eli", 216, False), Parcel(104, "eli", 130, True), Parcel(105, "gus", 46, False)]
+def _pf_fn3(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn3, (0, 0), book)
+print(f"{nrec} records, {amt} total")
+def _pf_fn4(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn4, _pf_group_by(lambda o: o.owner, book))
+print(perOwner)
+def label(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(label, book)))
+00000002ok00000024segments : List float<m>0000000000000002ok00000017cube : float<m^3>00000000--- stderr ---

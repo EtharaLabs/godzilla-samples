@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+let values = [43, 21, 42, 1, 50, 31, 3, 47]
+let answer = (((List.map String.fromInt) >> (String.join "-")) ((List.distinctBy (fun x -> (x % 2))) ((List.sortBy (fun x -> (x % 3))) ((List.dropWhile (fun x -> (x < 5))) values))))
+(print answer)
+let pure margin price qty = ((price * qty) - (6 * qty))
+let emit label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let grand = (([("wick", 47, 6), ("tap", 18, 3), ("cap", 17, 3)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (margin k))
+(print ((scaled 20) [1, 2, 3]))
+let digitSum n =
+    match n:
+        case 0: 0
+        case _: ((n % 10) + (digitSum (n // 10)))
+(print (digitSum 54071))
+let euclid a b = (if (b == 0) then a else ((euclid b) (a % b)))
+(print ((euclid 263) 132))
+let countDown n acc = (if (n == 0) then acc else ((countDown (n - 1)) (acc + (n * n))))
+(print ((countDown 13) 0))
+let series = seq {
+    for x in ((List.range 1) 6):
+        let y = (x * x)
+        yield y
+}
+(((series |> (Seq.filter (fun n -> ((n % 3) == 0)))) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 2))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 2)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 1133)))) |> Seq.toList) |> print)
+module Text =
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+let nums = [(- 15), (- 8), 19, (- 12)]
+(print ((Text.scaleAll 4) nums))
+(print (Text.norm1 nums))
+(print (Text.mean nums))
+--- stderr ---

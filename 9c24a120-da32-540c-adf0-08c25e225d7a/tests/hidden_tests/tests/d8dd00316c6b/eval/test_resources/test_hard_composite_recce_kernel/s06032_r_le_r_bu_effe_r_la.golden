@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+00000002ok00000280evenP : int -> bool
+oddP : int -> bool
+readForm : string -> string -> Result Form string
+margin : int -> int<'a> -> int<'a>
+report : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+scaled : int -> (List int<'a>) -> List int<'a>
+nums2 : List int
+factor : int
+tweak2 : int -> int
+00003203from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return oddP(n - 1)
+def oddP(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [10, 9, 24, 40, 33]))
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 19 else Error("too young"), lambda adult: Check_return_(Form(name, adult)))))
+print(readForm("tom", "31"))
+print((readForm("a", "30"), readForm("bob", "x")))
+def margin(price, qty):
+    return price * qty - 6 * qty
+def report(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("pin", 24, 3), ("rod", 15, 1), ("cap", 47, 3), ("pin", 46, 2)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(margin, k))
+print(scaled(15)([1, 2, 3]))
+nums2 = [30, 17, 1, 22, 25]
+factor = 4
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+tweak2 = lambda _pf_x: (lambda z: z - 3)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fst(p):
+    return p[0]
+def _pf_fn2(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn2, _pf_indexed(nums2))))
+00000002ok00000046scaled : int -> (List int<'a>) -> List int<'a>0000000000000002ok00000019evenP : int -> bool00000000--- stderr ---

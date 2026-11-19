@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+# ==== echo.py ====
+base = 3
+def step(x):
+    return x + 3
+
+# ==== bravo.py ====
+import echo
+base = 1 + echo.base
+def step(x):
+    return echo.step(x) + 1
+
+# ==== golf.py ====
+import bravo
+print("loading Golf")
+base = 2 + bravo.base
+def step(x):
+    return bravo.step(x) + 2
+
+# ==== hotel.py ====
+import bravo
+import echo
+import golf
+print("loading Hotel")
+base = 9 + golf.base + bravo.base + echo.base
+def step(x):
+    return echo.step(bravo.step(golf.step(x))) + 9
+
+# ==== main.py ====
+import hotel
+print(hotel.base)
+print(hotel.step(1))
+
+--- stderr ---

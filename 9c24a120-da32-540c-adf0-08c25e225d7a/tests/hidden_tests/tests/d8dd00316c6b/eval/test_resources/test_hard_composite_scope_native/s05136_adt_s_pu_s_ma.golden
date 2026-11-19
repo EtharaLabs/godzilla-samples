@@ -1,0 +1,182 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    _0: int
+    def __repr__(self):
+        return f"Halt({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Store({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+_Emit: Emit = Emit()
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Load({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Push({self._0!r}, {self._1!r})"
+Action = Halt | Store | Emit | Load | Push
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+def describe(t: Action) -> str:
+    if isinstance(t, Halt):
+        n0 = t._0
+        return f"halt({n0})"
+    else:
+        if isinstance(t, Store):
+            n0 = t._0
+            n1 = t._1
+            if n0 > 6:
+                return f"store!({n0},{n1})"
+        if isinstance(t, Store):
+            n0 = t._0
+            n1 = t._1
+            return f"store({n0},{n1})"
+        elif isinstance(t, Emit):
+            return f"emit"
+        elif isinstance(t, Load) and t._0 == 0:
+            return "load-0"
+        elif isinstance(t, Load):
+            n0 = t._0
+            n1 = t._1
+            return f"load({n0},{n1})"
+        else:
+            s0 = t._0
+            n1 = t._1
+            return f"push({s0},{n1})"
+def score(t: Action) -> int:
+    if isinstance(t, Halt):
+        x0 = t._0
+        return x0 * 3
+    elif isinstance(t, Emit):
+        return 8
+    elif isinstance(t, Load):
+        x0 = t._0
+        x1 = t._1
+        return x0 + x1
+    elif isinstance(t, Store):
+        x0 = t._0
+        x1 = t._1
+        return x0 + x1 * 5
+    else:
+        return 2
+prog: list[Action] = [_Emit, Store(-1, 9), Push("bo", -2), Halt(5), Store(-2, 9), Push("jo", 6)]
+print(_pf_map(describe, prog))
+tally: int = _pf_sum_by(score, prog)
+print(f"tally={tally}")
+print(_pf_max_by(score, prog))
+panels: list[Box] = [Box(5, 5, "hub"), Box(4, 7, "cog"), Box(2, 9, "cog"), Box(4, 4, "sq")]
+def surface(_pf_arg0: Box) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+def describe2(b: Box) -> str:
+    if isinstance(b, Box):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Box) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe2, panels)))
+def grow(b: Box) -> Box:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Box(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+def probe2(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t2 = _pf_last(xs)
+        if isinstance(_pf_t2, Some):
+            _x = _pf_t2._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t2, Some):
+            y = _pf_t2._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([8, 8]), probe2([7, 9]), probe2([])))
+def choose2(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((5, 1)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 8)))
+limit2: int = 35
+def bound(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _limit2 = o._0
+        if _limit2 > 0:
+            return _limit2
+    if isinstance(o, Some):
+        return 0
+    else:
+        return limit2
+print((bound(Some(3)), bound(Some(-3)), bound(_None_), limit2))
+def settle(n: int) -> int:
+    _pf_t3 = n % 3
+    if _pf_t3 == 0:
+        _n = n // 3
+        return _n + 2
+    else:
+        k = _pf_t3
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(settle, [26, 3, 22, 25]))
+--- stderr ---

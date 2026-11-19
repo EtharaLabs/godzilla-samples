@@ -1,0 +1,171 @@
+exit: 0
+--- stdout ---
+00000002ok00000287squares : Seq int
+fib : Seq int
+rawOf : UserId -> string
+mint : 'a -> int -> List UserId
+keys : List UserId
+entries : List Row
+showRow : Row -> string
+fromBin : string ->{io} int
+safe : string ->{io} string
+row : int -> List int
+raw : string
+words : List string
+nums : List (Option int)
+00004782from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_index_of(sub, s):
+    i = s.find(sub)
+    return Some(i) if i >= 0 else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+def _pf_fn0():
+    for x in _pf_range(1, 6):
+        y = x * x
+        yield y
+    yield 183
+squares = _pf_fn0()
+print(list(_pf_seq_take(5, map(lambda n: n + 1, squares))))
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 2)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 282, fib)))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("sku", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("u-1"))
+entries = [Row("bolt", 21, 13.41), Row("cog", 20, 20.98), Row("rod", 24, 3.23), Row("gear", 12, 0.4), Row("tap", 10, 28.55)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(6, "-", x.name)}: {_pf_fmt_pad_left(4, " ", str(x.qty))}: {_pf_fmt_fixed(2, x.price)}: {"restock" if x.qty > 4 else "ok"}: {_pf_fmt_currency("$", 2, x.price * 7.0)}"
+_pf_iter(print, _pf_map(showRow, entries))
+print(f"{len(entries)} rows, {_pf_str_upper("total")}={_pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, entries))}")
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("111000") + int("115", base=8))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x0", "-8"]))
+print(_pf_map(math.isqrt, [246, 24, 43, 297]))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(3))
+raw = "cog,lu,gus,rod,kit,cap"
+words = _pf_str_split(",", raw)
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, words))))
+print(_pf_str_join("", _pf_map(lambda w: _pf_str_upper(_pf_str_slice(0, 1, w)), words)))
+nums = _pf_map(_pf_str_to_int, _pf_str_split(",", ",x,5a,7,x"))
+print(nums)
+print(sum(_pf_choose(_pf_id, nums)))
+print((_pf_str_index_of("lu", raw), "lu" in raw))
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+print(_pf_str_replace("e", "E", raw))
+00000002ok00000023showRow : Row -> string0000000000000002ok00000027safe : string ->{io} string00000000--- stderr ---

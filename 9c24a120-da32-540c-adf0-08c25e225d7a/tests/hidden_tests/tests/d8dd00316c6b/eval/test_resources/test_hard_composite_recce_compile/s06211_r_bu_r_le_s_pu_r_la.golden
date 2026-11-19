@@ -1,0 +1,117 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def compute(x):
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 4, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 5)))
+print(_pf_map(compute, [0, 4]))
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pong(n - 1, acc + 1)
+def pong(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pang(n - 2, acc * 2)
+def pang(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [12, 0, 13, 1]))
+panels = [Tile(1, 7, "pin"), Tile(3, 7, "pin"), Tile(9, 1, "hub"), Tile(4, 4, "sq")]
+def caption(b):
+    match b:
+        case Tile(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Tile(label=label, w=1):
+            return f"{label} thin"
+        case Tile(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, panels)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def relabel(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Tile(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "x-"), panels)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+nums2 = [8, 21, 27, 11, 5, 15, 28, 19]
+gain = 5
+shape2 = lambda _pf_x: (lambda z: z - 8)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, nums2))
+def _pf_fn2(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn2, _pf_indexed(nums2))))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(nums2), nums2))
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn3, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+--- stderr ---

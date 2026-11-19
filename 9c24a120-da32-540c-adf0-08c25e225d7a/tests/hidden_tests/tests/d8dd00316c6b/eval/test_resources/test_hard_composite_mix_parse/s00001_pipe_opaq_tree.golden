@@ -1,0 +1,46 @@
+exit: 0
+--- stdout ---
+let samples = [32, 10, 3, 46, 49, (- 9), 0, 6, 23]
+let offset k x = (x + k)
+let answer = ((((((samples |> (List.drop 2)) |> List.sort) |> (List.map (fun x -> ((x * x) - 2)))) |> (List.map ((-) 45))) |> (List.map (offset 3))) |> ((List.fold (fun acc x -> ((acc * 2) - x))) 0))
+(print answer)
+(print <| (List.len samples))
+opaque type UserId = string
+opaque type Email = string
+let unwrap x =
+    match x:
+        case (UserId s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (UserId f"{prefix}-{i}"))))
+let keys = ((mint "acc") 2)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (UserId "u-1"))))
+type Bst = Leaf | Node Bst int Bst
+let add x t =
+    match t:
+        case Leaf: (((Node Leaf) x) Leaf)
+        case (Node l v rt) if (x < v): (((Node ((add x) l)) v) rt)
+        case (Node l v rt) if (x > v): (((Node l) v) ((add x) rt))
+        case (Node _ _ _): t
+let root = (((List.fold (fun acc x -> ((add x) acc))) Leaf) [22, 23, 2, 31, 14, 25, 21, 6, 47])
+let minT t =
+    match t:
+        case Leaf: None
+        case (Node Leaf v _): (Some v)
+        case (Node l _ _): (minT l)
+(print (minT root))
+let containsT x t =
+    match t:
+        case Leaf: false
+        case (Node l v rt): (if (x == v) then true elif (x < v) then ((containsT x) l) else ((containsT x) rt))
+(print ((List.map (fun k -> ((containsT k) root))) [22, 48, 54]))
+let toListOf t =
+    match t:
+        case Leaf: []
+        case (Node l v rt): ((List.concat (toListOf l)) ((List.concat [v]) (toListOf rt)))
+(print (toListOf root))
+let depthOf t =
+    match t:
+        case Leaf: 0
+        case (Node l _ rt): (1 + ((max (depthOf l)) (depthOf rt)))
+(print (depthOf root))
+--- stderr ---

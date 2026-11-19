@@ -1,0 +1,112 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: object
+    bottom: object
+    slot: int
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [20, 43, 35]))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(4, 8, 1))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 8:
+        return _Low()
+    elif scaled < 26:
+        return _Mid()
+    else:
+        return _High()
+def label(n):
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(label, [26, 11, -2, 5, 25]))
+boxes = [Box(4, 7, "wick"), Box(5, 1, "rod"), Box(2, 4, "cog"), Box(4, 4, "sq")]
+def stackOf(s):
+    match s:
+        case Shelf(top=Box(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Shelf(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Shelf(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def area(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, boxes)))
+def rename(prefix, b):
+    label = b.label
+    _pf_t2 = b
+    return Box(_pf_t2.w, _pf_t2.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "x-"), boxes)))
+--- stderr ---

@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+from typing import Any
+def look(k, m) -> str:
+    if k in m:
+        v = m[k]
+        return v
+    else:
+        return "absent"
+m: dict[int, str] = dict([(1, "one"), (2, "")])
+a: str = look(1, m)
+b: str = look(2, m)
+c: str = look(3, m)
+def hd(xs: list[int]) -> int:
+    if xs:
+        h = xs[0]
+        return h
+    else:
+        return -1
+d: int = hd([0, 1])
+e: int = hd([])
+def get(i: int, xs: list[int]) -> int:
+    if 0 <= i < len(xs):
+        x = xs[i]
+        return x
+    else:
+        return -1
+f: int = get(0, [0])
+g: int = get(1, [0])
+h: int = get(0 - 1, [0])
+ok: dict[str, list[Any]] = dict([("k", [])])
+if "k" in ok:
+    xs = ok["k"]
+    _pf_t0 = len(xs)
+else:
+    _pf_t0 = -1
+i: int = _pf_t0
+--- stderr ---

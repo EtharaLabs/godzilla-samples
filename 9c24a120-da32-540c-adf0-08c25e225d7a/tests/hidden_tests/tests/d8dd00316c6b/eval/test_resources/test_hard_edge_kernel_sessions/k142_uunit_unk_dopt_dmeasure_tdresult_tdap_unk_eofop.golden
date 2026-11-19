@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000002ok0000000000000005pass
+00000005error00000018unknown op `reset`0000000000000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000093def firstOr(d, xs):
+    if xs:
+        x = xs[0]
+        return x
+    else:
+        return d
+00000002ok00000019speed : float<m/s>
+00000021speed = 100.0 / 10.0
+00000005error00000114(could not determine a type — is `let safeDiv a b = if b == 0 then Error "div0" else Ok (a / b)` an expression?)0000000000000005error00000174(could not determine a type — is `let (|Even|Odd|) k = if k % 2 == 0 then Even else Odd
+let parity k =
+  match k:
+    case Even: "even"
+    case Odd: "odd"` an expression?)0000000000000005error00000018unknown op `reset`00000000--- stderr ---

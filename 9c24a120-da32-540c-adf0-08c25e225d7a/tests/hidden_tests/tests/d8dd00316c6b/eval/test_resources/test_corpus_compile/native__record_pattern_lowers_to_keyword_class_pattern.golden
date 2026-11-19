@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+def f(p: Point) -> int:
+    if isinstance(p, Point) and p.x == 0:
+        y = p.y
+        return y
+    else:
+        x = p.x
+        return x
+--- stderr ---

@@ -1,0 +1,104 @@
+exit: 0
+--- stdout ---
+00000002ok00000216rawOf : UserId -> string
+makeIds : 'a -> int -> List UserId
+keys : List UserId
+tickets : List Ticket
+adjust : int -> Ticket -> Ticket
+rushSum : int
+fromBin : string ->{io} int
+series : Seq int
+kindOf : int -> string
+00002773from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("acc", 3)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+tickets = [Ticket(100, "pam", 275, False), Ticket(101, "pam", 173, True), Ticket(102, "pam", 48, True), Ticket(103, "max", 13, False)]
+def adjust(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Ticket(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(adjust, 8), tickets)))
+print(_pf_map(lambda o: o.id, _pf_take(3, _pf_sort_by_desc(lambda o: o.amount, tickets))))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(rushSum)
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("10010") + int("123", base=8))
+print(_pf_str_rev(str.upper("ada")))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+def _pf_fn0():
+    for x in _pf_range(1, 11):
+        y = x * x
+        yield y
+series = _pf_fn0()
+print(_pf_fold(lambda a, b: a + b, 0, series))
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 2)))))
+def _ap_Above(n):
+    if n > 21:
+        return Some(n - 21)
+    else:
+        return _None_
+def kindOf(n):
+    _pf_t1 = _ap_Above(n)
+    if isinstance(_pf_t1, Some):
+        d = _pf_t1._0
+        return f"above by {d}"
+    m = n
+    if m < 0:
+        return "negative"
+    return "small"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+_pf_iter(print, _pf_map(kindOf, [20, 6, 28, 22, 7, 33, 4, 8]))
+00000002ok00000016series : Seq int0000000000000002ok00000027fromBin : string ->{io} int00000000--- stderr ---

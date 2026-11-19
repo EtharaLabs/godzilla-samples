@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+type Place = { city: string, zone: int }
+type Invoice = { id: int, owner: string, amount: int, urgent: bool, dest: Place }
+let tickets = [Invoice { id = 100, owner = "hal", amount = 65, urgent = false, dest = Place { city = "Kyiv", zone = 3 } }, Invoice { urgent = true, owner = "tom", id = 101, amount = 258, dest = Place { city = "Doha", zone = 4 } }, Invoice { urgent = false, dest = Place { city = "Riga", zone = 2 }, id = 102, amount = 217, owner = "hal" }, Invoice { amount = 60, dest = Place { city = "Rome", zone = 4 }, id = 103, owner = "tom", urgent = true }, Invoice { urgent = false, owner = "tom", amount = 200, id = 104, dest = Place { city = "Doha", zone = 2 } }]
+let byOwner = ((tickets |> (List.groupBy (fun o -> o.owner))) |> (List.map (fun (k, os) -> (k, (List.len os), ((List.sumBy (fun o -> o.amount)) os)))))
+(print byOwner)
+let rushSum = ((tickets |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print rushSum)
+let bucket o =
+    match o:
+        case Invoice { urgent = true, amount } if (amount > 132): "rush-big"
+        case Invoice { urgent = true }: "rush"
+        case Invoice { amount }: (if (amount > 132) then "big" else "normal")
+(print ((List.map bucket) tickets))
+(print ((List.countBy bucket) tickets))
+let (nrec, sumAmt) = (((List.fold (fun (n, s) o -> ((n + 1), (s + o.amount)))) (0, 0)) tickets)
+(print f"{nrec} records, {sumAmt} total")
+let log = ["fay", "ada", "fay", "cy", "eli", "ada", "bo", "fay", "fay"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) log)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print ((counts |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+(print (((Map.tryFind "hal") counts), ((Map.contains "hal") counts)))
+let parseEntry line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 3) }
+let entries = ["bo=1=1", "cy=x", "eli=5", "sue=98", "ivy=79", "gus=x"]
+let results = ((List.map parseEntry) entries)
+((List.iter print) results)
+(print ((results |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((results |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+extern fromHex: string -> int = int(base=16)
+(print ((["ff", "7"] |> (List.map fromHex)) |> List.sum))
+extern pure gcd: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((gcd a) b))
+(print (((List.fold lcm) 1) [11, 4, 5, 3]))
+--- stderr ---

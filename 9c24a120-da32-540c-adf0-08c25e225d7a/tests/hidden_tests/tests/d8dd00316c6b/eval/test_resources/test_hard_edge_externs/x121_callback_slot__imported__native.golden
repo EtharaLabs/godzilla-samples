@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+# ==== ffi.py ====
+sortBy = lambda _pf_k0, _pf_k1: sorted(_pf_k0, key=_pf_k1)
+
+# ==== main.py ====
+import functools
+import ffi
+def _pf_map(f, xs):
+    return list(map(f, xs))
+print(ffi.sortBy([3, -5, 1], lambda k: k * k))
+print(_pf_map(functools.partial(ffi.sortBy, [3, -5, 1]), [lambda k: k * k]))
+
+--- stderr ---

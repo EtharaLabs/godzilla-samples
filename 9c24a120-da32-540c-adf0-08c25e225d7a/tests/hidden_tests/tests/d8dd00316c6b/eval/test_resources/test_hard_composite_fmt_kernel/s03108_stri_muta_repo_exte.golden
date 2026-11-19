@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+00000002ok00000322text : string
+tokens : List string
+fieldsN : List (Option int)
+count : int
+ticks : int
+track : int<'a> ->{io} int<'a>
+stats : (List int) ->{io} string
+doubled : List int
+trackTwice : int<'a> ->{io} int<'a>
+rows : List Entry
+renderRow : Entry -> string
+low : List string
+fromBin : string ->{io} int
+lcm : int -> int -> int
+00003208from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+text = "jo,ivy,bo,rod"
+tokens = _pf_str_split(",", text)
+print(_pf_str_join("", _pf_map(lambda w: _pf_str_upper(_pf_str_slice(0, 1, w)), tokens)))
+fieldsN = _pf_map(_pf_str_to_int, _pf_str_split(",", "40,5a,7,-3,5a"))
+print(fieldsN)
+print(sum(_pf_choose(_pf_id, fieldsN)))
+count = len(tokens)
+print(f"count={count} {{braces}} {len(text)}")
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, tokens))))
+ticks = 0
+def track(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 4
+def stats(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(stats([35, 34, 39, 26, 2, 57, 60]))
+doubled = _pf_map(track, [35, 34, 39, 26])
+print(f"{doubled} after {ticks} calls")
+trackTwice = lambda _pf_x: track(track(_pf_x))
+print((trackTwice(3), ticks))
+rows = [Entry("tap", 15, 35.12), Entry("wick", 2, 7.57), Entry("rod", 9, 23.1), Entry("hub", 16, 32.34), Entry("cog", 28, 18.51)]
+def renderRow(x):
+    return f"{_pf_fmt_pad_right(6, ".", x.name)}|{_pf_fmt_pad_left(4, " ", str(x.qty))}|{_pf_fmt_fixed(1, x.price)}|{"restock" if x.qty > 11 else "ok"}"
+_pf_iter(print, _pf_map(renderRow, rows))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 5, rows))
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "7"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("10111") + int("27", base=8))
+print(_pf_map(math.isqrt, [175, 230, 49, 364]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+print(_pf_fold(lcm, 1, [3, 8, 4, 4]))
+00000002ok00000013text : string0000000000000002ok00000011count : int00000000--- stderr ---

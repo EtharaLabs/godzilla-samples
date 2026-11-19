@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+extern import asyncio
+extern runAsync: (Async a) -> a = asyncio.run
+extern type Reader
+extern type Writer
+extern type Server
+extern type Bytes
+extern startServer: (Reader -> Writer ->{e} Async unit) -> string -> int -> Async Server = asyncio.start_server
+extern openConnection: string -> int -> Async (Reader, Writer) = asyncio.open_connection
+extern readline: Reader -> Async Bytes = .readline()
+extern write: Writer -> Bytes -> unit = .write
+extern drain: Writer -> Async unit = .drain()
+extern closeWriter: Writer -> unit = .close()
+extern closeServer: Server -> unit = .close()
+extern encode: string -> Bytes = .encode()
+extern decode: Bytes -> string = .decode()
+let shout reader writer = async { let! line = (readline reader) let _ = ((write writer) (encode (String.upper (decode line)))) do! (drain writer) let _ = (closeWriter writer) }
+let main = async { let! server = (((startServer shout) "127.0.0.1") 47321) let! (reader, writer) = ((openConnection "127.0.0.1") 47321) let _ = ((write writer) (encode "hello\n")) do! (drain writer) let! reply = ((Async.timeout 5.0) (readline reader)) let _ = (print (reply |> (Option.map (fun b -> (String.strip (decode b)))))) let _ = (closeWriter writer) let _ = (closeServer server) }
+(runAsync main)
+--- stderr ---

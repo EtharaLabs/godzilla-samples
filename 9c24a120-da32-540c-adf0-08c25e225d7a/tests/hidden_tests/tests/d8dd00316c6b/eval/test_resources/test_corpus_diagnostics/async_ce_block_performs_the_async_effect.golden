@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `go` is declared `pure` but performs `async`
+ --> 1:17
+  |
+1 | let pure go x = async { return x }
+  |                 ^^^^^^^^^^^^^^^^^^
+
+1 error

@@ -1,0 +1,156 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: object
+    bottom: object
+    slot: int
+@dataclass(frozen=True, slots=True)
+class Score:
+    who: str
+    pts: int
+    ratio: float
+def value(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return value(env, a) + value(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(runSt, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def runSt(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, value(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", value(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(value(dict(), Block([Set("a", Lit(7)), Set("b", Plus(Ref("a"), Lit(5))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+tiles = [Tile(2, 5, "rod"), Tile(7, 1, "rod"), Tile(7, 2, "tap"), Tile(7, 9, "gear"), Tile(1, 6, "rod"), Tile(4, 4, "sq")]
+def heavier(s):
+    match s:
+        case Rack(top=Tile(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Rack(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Rack(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def caption(b):
+    match b:
+        case Tile(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Tile(label=label, w=1):
+            return f"{label} thin"
+        case Tile(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, tiles)))
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Tile(w + 1, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, tiles)))
+board = [Score("kit", 81, 0.74), Score("bo", 80, 0.86), Score("lu", 32, 0.55)]
+def line3(_pf_arg0):
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return "{} | {} | {} | {} | {}".format(f"<{pts}>", _pf_str_upper(_pf_str_slice(0, 2, who)), _pf_fmt_pad_right(6, ".", who), "pass" if pts >= 53 else "fail", _pf_fmt_pad_left(5, " ", str(pts * 7)))
+_pf_iter(print, _pf_map(line3, board))
+print("best: {}".format(_pf_option_with_default("none", _pf_option_map(lambda s: s.who, _pf_max_by(lambda s: s.pts, board)))))
+--- stderr ---

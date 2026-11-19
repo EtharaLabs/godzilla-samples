@@ -1,0 +1,139 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Instr = Put | Append | Skip
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Tree"
+    _1: int
+    _2: "Tree"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Tree = Leaf | Node
+def digitSum(n: int) -> int:
+    if n == 0:
+        return 0
+    else:
+        return n % 10 + digitSum(n // 10)
+print(digitSum(26485))
+def collatz(n: int, acc: int) -> int:
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [27, 29, 54]))
+def step(m: dict[str, int], op: Instr) -> dict[str, int]:
+    if isinstance(op, Put):
+        k = op._0
+        v = op._1
+        return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+    elif isinstance(op, Append):
+        n = op._0
+        return _pf_map_add("pushed", n, m)
+    else:
+        return m
+def execute(script: list[Instr]) -> dict[str, int]:
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t0 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t0
+            case Append(n):
+                m["pushed"] = n
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+script: list[Instr] = [Append(0), Append(9), _Skip, Append(4)]
+outcome: dict[str, int] = execute(script)
+print(_pf_map_to_list(outcome))
+span: float = math.hypot(6.0 / 1.0, 3.0 / 1.0) * 1.0
+ratio: float = math.sqrt(2.0)
+side: float = math.sqrt(36.0)
+vol: float = math.cbrt(64.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+def velocity(d: int, t: int) -> float:
+    return d / t
+print(_pf_fmt_fixed(2, velocity(span, 7.0)))
+def insert(x: int, t: Tree) -> Tree:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(insert(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, insert(x, rt))
+        return t
+root: Tree = _pf_fold(lambda acc, x: insert(x, acc), _Leaf, [40, 2, 3, 21, 49, 38, 22, 19])
+def toListT(t: Tree) -> list[int]:
+    if isinstance(t, Leaf):
+        return []
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+print(toListT(root))
+def sumT(t: Tree) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumT(l) + v + sumT(rt)
+print(sumT(root))
+--- stderr ---

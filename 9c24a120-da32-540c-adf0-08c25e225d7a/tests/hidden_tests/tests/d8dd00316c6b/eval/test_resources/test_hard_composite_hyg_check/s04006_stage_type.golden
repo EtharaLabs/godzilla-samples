@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected string, found int
+  --> 34:48
+   |
+34 | let answer = (List.reduce (fun a b -> a + b)) (List.map String.upper (List.drop 1 ((List.windowed 2 >> List.map (fun w -> Option.withDefault 0 (List.max w))) (List.rev (List.distinctBy (fun x -> x % 5) (List.sort (values)))))))
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

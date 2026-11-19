@@ -1,0 +1,128 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def Stats_square(x):
+    return x * x
+def Stats_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Stats_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Stats_between(lo, hi, x):
+    return lo <= x <= hi
+obs = [-3, 20, -13, 13]
+print(_pf_map(Stats_square, obs))
+print(Stats_norm1(obs))
+print(Stats_mean(obs))
+print(_pf_filter(functools.partial(Stats_between, 4, 19), obs))
+def scan(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n, acc):
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(1, 0)
+print(scan([4, 1, 26, 24, 19]))
+events = []
+def push2(msg):
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts = _pf_map(push2, ["start", "oz", "stop"])
+print((events, counts))
+adders = _pf_map(lambda k: lambda x: x * 10 + k, [0, 3, 9])
+print(_pf_map(lambda g: g(2), adders))
+def lift(n):
+    return n + 59
+def applyLift(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 0
+    return applyLift(lift)
+sample = _pf_fn0()
+print((sample, applyLift(1)))
+def combine(o):
+    def pair(a, b):
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t0 = _pair
+    else:
+        _pf_t0 = 2
+    r = _pf_t0
+    return pair(r, 6)
+print((combine(Some(3)), combine(_None_)))
+def finished(acc):
+    async def _pf_fn1():
+        return acc
+    return _pf_Async(_pf_fn1)
+def countUp(n, acc):
+    async def _pf_fn2(n, acc):
+        while True:
+            if n == 0:
+                return await finished(acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return _pf_Async(_pf_fn2, n, acc)
+print(asyncio.run(_pf_run(countUp(2572, 0))))
+def digits(n, acc):
+    while True:
+        if n < 10:
+            return acc + 1
+        else:
+            n, acc = (n // 10, acc + 1)
+            continue
+async def _pf_fn3():
+    a = await countUp(9, 0)
+    return digits(a * 83033, 0)
+main = _pf_Async(_pf_fn3)
+print(asyncio.run(_pf_run(main)))
+--- stderr ---

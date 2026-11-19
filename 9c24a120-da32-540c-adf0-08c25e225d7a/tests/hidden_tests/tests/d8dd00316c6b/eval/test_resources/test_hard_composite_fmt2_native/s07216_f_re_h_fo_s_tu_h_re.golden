@@ -1,0 +1,183 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Instr = Put | Append | Skip
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: "Team"
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Seat = Active | Idle | Gone
+marks: list[Result2] = [Result2("max", 93, 0.46), Result2("pam", 95, 0.42), Result2("gus", 5, 0.06)]
+def line3(_pf_arg0: Result2) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{_pf_str_upper(_pf_str_slice(0, 2, who))}: {_pf_fmt_pad_right(6, ".", who)}: {_pf_str_join("/", [who, str(pts)])}"
+_pf_iter(print, _pf_map(line3, marks))
+print(f"best: {_pf_option_with_default("none", _pf_option_map(lambda s: s.who, _pf_max_by(lambda s: s.pts, marks)))}")
+def replay(script: list[Instr]) -> list[int]:
+    def step(acc, op):
+        return acc
+    def step(xs: list[int], op: Instr) -> list[int]:
+        if isinstance(op, Put):
+            k = op._0
+            v = op._1
+            return _pf_concat(xs, [v])
+        else:
+            if isinstance(op, Append):
+                n = op._0
+                if n > 0:
+                    return _pf_concat(xs, [n * 10])
+            return xs
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Append(n) if n > 0:
+                _pf_t0 = n * 10
+                xs.append(_pf_t0)
+            case _:
+                pass
+    return xs
+changes: list[Instr] = [_Skip, Append(7), Put("cog", 5), Put("nut", 4)]
+outcome: list[int] = replay(changes)
+print(outcome)
+acc: int = _pf_fold(lambda step, x: step + x * x, 0, [1, 5, 3, 1])
+print(acc)
+tallies: list[tuple[str, int]] = [("nut", 4), ("bolt", 7), ("pin", 9), ("cog", 12), ("cap", 9)]
+def _pf_fn0():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn0()
+print(_pf_str_join(",", list(labels)))
+widths: list[tuple[str, tuple[int, int]]] = [("fay", (4, 9)), ("hal", (5, 16)), ("kit", (0, 12))]
+def _pf_fn1():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn1()
+print(list(widthsOut))
+def allKnown(keys, table) -> Some | None_:
+    def _pf_fn2():
+        for (k, expected) in keys:
+            _pf_t1 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t1, Some):
+                v = _pf_t1._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t1
+        return Some(len(keys))
+    return _pf_fn2()
+print((allKnown(_pf_take(2, tallies), dict(tallies)), allKnown([("zz", 0)], dict(tallies))))
+def promote(s: Seat) -> Seat:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t2 = p
+        return Active(Person(_pf_t2.name, p.age + 1))
+    else:
+        if isinstance(s, Idle):
+            t = s._0
+            if t.size > 5:
+                _pf_t3 = t
+                return Idle(Team(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+slots: list[Seat] = _pf_map(promote, [_Gone, Idle(Team("tap", 1)), Idle(Team("nut", 6)), Idle(Team("gear", 3))])
+print(slots)
+members: list[Person] = [Person("hal", 3), Person("lu", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+--- stderr ---

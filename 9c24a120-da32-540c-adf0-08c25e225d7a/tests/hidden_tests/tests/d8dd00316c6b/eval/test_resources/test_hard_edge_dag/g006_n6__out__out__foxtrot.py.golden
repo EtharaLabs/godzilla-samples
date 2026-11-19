@@ -1,0 +1,16 @@
+import alpha
+import bravo
+import delta
+import echo
+base = 6 + echo.base + bravo.base + delta.base + alpha.base
+def step(x):
+    return alpha.step(delta.step(bravo.step(echo.step(x)))) + 6
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))

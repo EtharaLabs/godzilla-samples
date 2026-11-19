@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+let readPair line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 5) }
+let inputs = ["hal=9", "oz", "jo", "gus = 5", "quin"]
+let parsed = ((List.map readPair) inputs)
+((List.iter print) parsed)
+(print ((parsed |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((parsed |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+let squares = seq {
+    for x in ((List.range 1) 12):
+        let y = (x * x)
+        yield y
+}
+((((squares |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 2)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 7))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 2)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 1939)))) |> Seq.toList) |> print)
+opaque type AccountNo = string
+opaque type Email = string
+let rawOf x =
+    match x:
+        case (AccountNo s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let keys = ((mint "u") 3)
+(print ((keys |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head keys) == (Some (AccountNo "acc-1"))))
+let pure net price qty = ((price * qty) - (5 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let overall = (([("cap", 30, 3), ("gear", 27, 3)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (net k))
+(print ((scaled 17) [1, 2, 3]))
+type Player = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let jsonText = "[{\"name\": \"lu\", \"points\": 87, \"active\": false}, {\"name\": \"tom\", \"points\": 27, \"active\": false}, {\"name\": \"tom\", \"points\": 54, \"active\": true}, {\"name\": \"ray\", \"points\": 87, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list dec)) jsonText):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+--- stderr ---

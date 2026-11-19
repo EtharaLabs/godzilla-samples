@@ -1,0 +1,147 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: int
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Form = Square | Disc | Wedge
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Op = Put | Push | Noop
+def choose2(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((0, 6)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 9)))
+def extent(s: Form) -> int:
+    if isinstance(s, Square):
+        n = s._0
+        return n
+    elif isinstance(s, Disc):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Square(2), Disc(2), Wedge(3, 2), Wedge(1, 9)]))
+def adjust(n: int) -> int:
+    _pf_t0 = n % 3
+    if _pf_t0 == 0:
+        _n = n // 3
+        return _n + 8
+    else:
+        k = _pf_t0
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(adjust, [13, 26, 3, 14]))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 2
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(4, []), score(1, [7]), score(1, [6, 2, 3])))
+def replay(script: list[Op]) -> list[int]:
+    def step(xs: list[int], op: Op) -> list[int]:
+        if isinstance(op, Put):
+            k = op._0
+            v = op._1
+            return _pf_concat(xs, [v])
+        else:
+            if isinstance(op, Push):
+                n = op._0
+                if n > 2:
+                    return _pf_concat(xs, [n * 10])
+            return xs
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Push(n) if n > 2:
+                _pf_t1 = n * 10
+                xs.append(_pf_t1)
+            case _:
+                pass
+    return xs
+script: list[Op] = [Push(9), Put("nut", 3), _Noop, _Noop, _Noop, Put("gear", 1), Push(0)]
+outcome: list[int] = replay(script)
+print(outcome)
+acc: int = _pf_fold(lambda step, x: step + x * x, 0, [2, 2, 9, 9])
+print(acc)
+def shifted(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 8
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(3, [7, 2, 0]))
+def _pf_fn0():
+    for (name, k) in [("a", 7), ("b", 1)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn0()
+print(_pf_map(lambda h: h(5), list(callbacks2)))
+steps = _pf_fold(lambda acc, k: _pf_concat(acc, [lambda y: y * k]), [], [8, 6, 7])
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+--- stderr ---

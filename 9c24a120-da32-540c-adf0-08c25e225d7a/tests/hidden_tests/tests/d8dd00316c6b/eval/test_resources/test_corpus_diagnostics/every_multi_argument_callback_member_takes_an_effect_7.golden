@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unbound name `log`
+ --> 1:38
+  |
+1 | let r = Map.iter (fun k v -> ignore (log v)) (Map.ofList [(1, 2)])
+  |                                      ^^^
+
+1 error

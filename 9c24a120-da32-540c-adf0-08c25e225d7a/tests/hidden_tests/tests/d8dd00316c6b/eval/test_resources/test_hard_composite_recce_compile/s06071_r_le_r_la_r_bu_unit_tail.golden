@@ -1,0 +1,115 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [8, 20, 17, 12]))
+seriesA = [-2, 16, -2, 13, 15, 24, 20]
+factor = 5
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(seriesA))))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(seriesA), seriesA))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 1))))
+print((safeDiv("62", "7"), safeDiv("4", "0"), safeDiv("x", "1")))
+segments = [310.6, 346.3, 272.5]
+times = [89.2, 21.6, 58.3]
+total = _pf_fold(lambda a, b: a + b, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+speed = total / elapsed
+print(_pf_fmt_fixed(2, speed))
+edge = math.sqrt(4.0)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+speeds = _pf_map2(lambda d, t: d / t, segments, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(863, 0))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(7, 17, 1))
+--- stderr ---

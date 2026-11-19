@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+ --> 7:3
+  |
+7 |   len [1]
+  |   ^^^
+
+error: type mismatch: expected int, found string
+  --> 11:31
+   |
+11 |     yield if true then 1 else "s"
+   |                               ^^^
+
+error: unbound name `Triangle`
+  --> 14:17
+   |
+14 | let s3 = f"got {Triangle 1.0}"
+   |                 ^^^^^^^^
+
+error: unbound name `missingName`
+  --> 16:3
+   |
+16 |   missingName 3
+   |   ^^^^^^^^^^^
+
+4 errors

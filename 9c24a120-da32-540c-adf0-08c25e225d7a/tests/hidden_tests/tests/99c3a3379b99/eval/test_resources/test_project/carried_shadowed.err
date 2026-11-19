@@ -1,0 +1,13 @@
+-- module `Main` (main.pyfun) --
+error: record `Config` has no field `cSize`; the record `Config` in module `Inner` declares this field, but another type named `Config` is already in scope here, so that record is hidden
+ --> 4:11
+  |
+4 | let bad = x.wConf.cSize
+  |           ^^^^^^^^^^^^^
+error: unknown record field `cSize`; the record `Config` in module `Inner` declares this field, but another type named `Config` is already in scope here, so that record is hidden
+ --> 5:13
+  |
+5 | let get w = w.cSize
+  |             ^^^^^^^
+
+2 errors

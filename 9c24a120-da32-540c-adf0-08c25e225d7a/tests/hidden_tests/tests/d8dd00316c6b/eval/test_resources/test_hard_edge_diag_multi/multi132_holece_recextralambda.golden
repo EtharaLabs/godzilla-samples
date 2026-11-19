@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `w`
+  --> 11:52
+   |
+11 | let l2 = List.map (fun q -> Pt { x = 1, y = 2, w = 3 }) [1, 2]
+   |                                                    ^
+
+note: hole `?gap` has type `'a`
+ --> 9:12
+  |
+9 |     return ?gap
+  |            ^^^^
+
+1 error
+1 unfilled hole

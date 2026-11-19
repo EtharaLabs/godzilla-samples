@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000005error00000074(could not determine a type — is `let pure sq x = x * x` an expression?)0000000000000002ok0000000000000333from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+00000002ok00000008n : int
+00000010n = 6 * 7
+--- stderr ---

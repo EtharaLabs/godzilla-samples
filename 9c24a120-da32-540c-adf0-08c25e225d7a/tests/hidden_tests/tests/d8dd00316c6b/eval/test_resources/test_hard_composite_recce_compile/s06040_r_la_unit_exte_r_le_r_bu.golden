@@ -1,0 +1,115 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Signup:
+    user: str
+    age: int
+seriesA = [30, 1, 4, 26, 22, -9, 18, -2]
+factor = 3
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(seriesA))))
+tweak2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, seriesA))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(2), scalers))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn1, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+laps = [149.5, 11.1, 303.0, 383.6, 56.2]
+durations = [74.2, 7.1, 7.3, 61.3, 8.5]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+speed = dist / elapsed
+print(_pf_fmt_fixed(3, speed))
+mass = 39.0
+accel = 2.5
+push = mass * accel
+limit = 181.0
+print("over" if push > limit else "under")
+edge = math.sqrt(4.0)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+print(_pf_map(math.isqrt, [329, 38, 127, 247]))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(4))
+def fem(n):
+    if n == 0:
+        return 1
+    else:
+        return n - male(fem(n - 1))
+def male(n):
+    if n == 0:
+        return 0
+    else:
+        return n - fem(male(n - 1))
+print((_pf_map(fem, _pf_range(0, 9)), _pf_map(male, _pf_range(0, 9))))
+def Valid_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Valid_return_(x):
+    return Ok(x)
+def parseForm(user, age):
+    return Valid_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Valid_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Valid_bind(Ok(years) if years >= 20 else Error("too young"), lambda adult: Valid_return_(Signup(name, adult)))))
+print(parseForm("ray", "50"))
+print((parseForm("a", "30"), parseForm("bob", "x")))
+--- stderr ---

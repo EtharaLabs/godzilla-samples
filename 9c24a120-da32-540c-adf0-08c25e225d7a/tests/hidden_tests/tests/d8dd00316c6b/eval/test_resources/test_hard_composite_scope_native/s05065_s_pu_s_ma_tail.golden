@@ -1,0 +1,175 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Shape2 = Square | Ci | Wedge
+panels: list[Panel] = [Panel(1, 6, "bolt"), Panel(4, 5, "bolt"), Panel(1, 2, "cog"), Panel(4, 4, "sq")]
+def stretch(b: Panel) -> Panel:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Panel(w + 1, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, panels)))
+def describe(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, panels)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def relabel(prefix: str, b: Panel) -> Panel:
+    label = b.label
+    _pf_t3 = b
+    return Panel(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "new "), panels)))
+def probe2(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t4 = _pf_last(xs)
+        if isinstance(_pf_t4, Some):
+            _x = _pf_t4._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t4, Some):
+            y = _pf_t4._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([8, 4]), probe2([8, 9]), probe2([])))
+def size(s: Shape2) -> int:
+    if isinstance(s, Square):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(size, [Square(6), Ci(7), Wedge(3, 5), Wedge(1, 9)]))
+def adjust(n: int) -> int:
+    _pf_t5 = n % 3
+    if _pf_t5 == 0:
+        _n = n // 3
+        return _n + 4
+    else:
+        k = _pf_t5
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(adjust, [16, 21, 9, 16]))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 2
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(1, []), score(1, [7]), score(1, [3, 2, 3])))
+def isEven(n: int) -> bool:
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n: int) -> bool:
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [20, 24, 30, 17, 29]))
+def powAcc(b: int, e: int, acc: int) -> int:
+    while True:
+        if e == 0:
+            return acc
+        else:
+            k = e
+            if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            k = e
+            b, e, acc = (b * b, k // 2, acc)
+            continue
+print(powAcc(7, 6, 1))
+def collatz(n: int, acc: int) -> int:
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [35, 39, 19]))
+--- stderr ---

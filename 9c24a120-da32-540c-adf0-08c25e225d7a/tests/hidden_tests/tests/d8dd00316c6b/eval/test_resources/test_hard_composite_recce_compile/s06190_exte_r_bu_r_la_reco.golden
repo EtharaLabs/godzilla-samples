@@ -1,0 +1,130 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Place:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x9", "23"]))
+print(_pf_str_rev(str.upper("ivy")))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 2], lambda k: Many_yield_(a * b + k))
+cells = Many_combine(Many_for_([(2, 3), (5, 5)], _pf_fn0), Many_delay(lambda _: Many_yield_(8)))
+print(cells)
+inputs2 = [26, 15, 3, -5, 9, 8, 11, 17]
+factor = 3
+shape2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, inputs2))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), inputs2))
+def _pf_fn2(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn2, _pf_indexed(inputs2))))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+orders = [Ticket(100, "ivy", 77, False, Place("Baku", 4)), Ticket(101, "dee", 208, True, Place("Riga", 3)), Ticket(102, "dee", 120, True, Place("Oslo", 2)), Ticket(103, "ivy", 9, False, Place("Kyiv", 1)), Ticket(104, "dee", 216, False, Place("Bern", 2)), Ticket(105, "ivy", 111, False, Place("Bern", 2))]
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by(lambda o: o.amount, orders))))
+cheap, dear = _pf_partition(lambda o: o.amount < 62, orders)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn3(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn3, _pf_group_by(lambda o: o.owner, orders))
+print(perOwner)
+def _pf_fn4(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn4, (0, 0), orders)
+print(f"{cnt} records, {sumAmt} total")
+--- stderr ---

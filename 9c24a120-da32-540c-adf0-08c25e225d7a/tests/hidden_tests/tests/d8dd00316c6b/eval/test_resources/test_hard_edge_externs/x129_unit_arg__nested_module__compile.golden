@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import sys
+def flushed(n):
+    sys.stdout.flush()
+    return n
+def Wrap_call(u):
+    return flushed(3)
+print(Wrap_call(None))
+--- stderr ---

@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_res_or_else(fallback, r):
+    return r if isinstance(r, Ok) else fallback
+def _pf_res_to_list(r):
+    return [r._0] if isinstance(r, Ok) else []
+xs = _pf_res_to_list(Ok(1))
+r = _pf_res_or_else(Ok(2), Ok(1))
+--- stderr ---

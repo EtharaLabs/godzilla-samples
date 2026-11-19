@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected bool, found int
+ --> 7:15
+  |
+7 |   let w = not 3
+  |               ^
+
+error: `calls2` is declared `pure` but performs `io`
+ --> 8:21
+  |
+8 | let pure calls2 u = List.map (fun k -> print k) [1]
+  |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: unknown measure `furlong`
+  --> 12:12
+   |
+12 |     return 3.0<furlong>
+   |            ^^^^^^^^^^^^
+
+3 errors

@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+let pure margin price qty = ((price * qty) - (4 * qty))
+let emit label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let overall = (([("cog", 22, 4), ("pin", 13, 1), ("rod", 23, 4)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print overall)
+let text = "hub;tap;bo;hal;tom"
+let words = ((String.split ";") text)
+let count = (List.len words)
+(print f"count={count} {{braces}} {(String.len text)}")
+(print (((String.tryIndexOf "bo") text), ((String.contains "bo") text)))
+(print ((List.map (fun w -> (w, (String.len w)))) words))
+let evens = seq {
+    for x in ((List.range 1) 6):
+        let y = (x * x)
+        yield y
+    yield 182
+}
+(print (((Seq.fold (+)) 0) evens))
+(((((Seq.initInfinite (fun i -> (i * 7))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 2)) |> Seq.toList) |> print)
+let mut ticks = 0
+let record x =
+    (ticks <- (ticks + 1))
+    (x * 3)
+let stats xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (stats [32, 27, (- 9), 18, 43, (- 6)]))
+let doubled = ([32, 27, (- 9), 18] |> (List.map record))
+(print f"{doubled} after {ticks} calls")
+--- stderr ---

@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True)\nclass Cell:\n    row: int\n    col: int\n    letter: str\n@dataclass(frozen=True, slots=True)\nclass Pair:\n    left: object\n    right: object\ndef describe(_pf_arg0):\n    letter = _pf_arg0.letter\n    row = _pf_arg0.row\n    return letter\ndef leftLetter(_pf_arg0):\n    _pf_arg0_0 = _pf_arg0.left\n    letter = _pf_arg0_0.letter\n    return letter\ndef both(_pf_arg0):\n    left = _pf_arg0.left\n    right = _pf_arg0.right\n    return (left.letter, right.letter)\na = Cell(1, 2, \"A\")\nb = Cell(3, 4, \"B\")\np = Pair(a, b)\none = describe(a)\ndeep = leftLetter(p)\npairOf = both(p)\n",
+ "stderr": ""
+}

@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+00000002ok00000293book : List Invoice
+surcharge : Invoice -> Invoice
+byOwner : List (string, int, int)
+line : Invoice -> string
+nums2 : List int
+factor : int
+makers2 : List (int -> int)
+tweak2 : int -> int
+isEven2 : int -> bool
+oddP : int -> bool
+tell : 'a -> (unit, List 'a)
+trace2 : int -> (int, List string)
+00003263from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+book = [Invoice(100, "quin", 114, True), Invoice(101, "kit", 178, False), Invoice(102, "fay", 223, True), Invoice(103, "kit", 240, True)]
+print(_pf_map(lambda o: o.id, _pf_take(3, _pf_sort_by(lambda o: o.amount, book))))
+print(_pf_max_by(lambda o: o.amount, book))
+def surcharge(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Invoice(_pf_t0.id, _pf_t0.owner, o.amount + 17, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, book)))
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, book))
+print(byOwner)
+def line(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(line, book)))
+nums2 = [23, -5, 2, -5, -2]
+factor = 4
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(2), makers2))
+tweak2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(nums2))))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def isEven2(n):
+    if n == 0:
+        return True
+    else:
+        return oddP(n - 1)
+def oddP(n):
+    if n == 0:
+        return False
+    else:
+        return isEven2(n - 1)
+print(_pf_partition(isEven2, [25, 26, 39, 20, 6]))
+def Logged_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Logged_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def trace2(x):
+    return Logged_bind(tell(f"start {x}"), lambda _: Logged_bind((x * 3, ["scaled"]), lambda y: (lambda z: Logged_bind(tell(f"z={z}"), lambda _: Logged_return_(z)))(y + 2)))
+print(_pf_map(trace2, [2, 9]))
+00000002ok00000019tweak2 : int -> int0000000000000002ok00000021isEven2 : int -> bool00000000--- stderr ---

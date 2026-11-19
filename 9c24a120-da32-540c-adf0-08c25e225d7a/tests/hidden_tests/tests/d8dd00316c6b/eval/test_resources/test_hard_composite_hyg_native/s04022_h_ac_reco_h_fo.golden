@@ -1,0 +1,211 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Instr = Put | Append | Noop
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 6:
+        return _Low()
+    elif scaled < 33:
+        return _Mid()
+    else:
+        return _High()
+def _ap_KeyVal(s):
+    _pf_t0 = _pf_str_split("=", s)
+    if len(_pf_t0) == 2:
+        k = _pf_t0[0]
+        v = _pf_t0[1]
+        _pf_t1 = _pf_str_to_int(v)
+        if isinstance(_pf_t1, Some):
+            n = _pf_t1._0
+            return Some((_pf_str_strip(k), n))
+        else:
+            return _None_
+    else:
+        return _None_
+def tier(n: int) -> str:
+    _pf_t2 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t2, _Low):
+        return "low"
+    elif isinstance(_pf_t2, _Mid):
+        return "mid"
+    elif isinstance(_pf_t2, _High):
+        return "high"
+    else:
+        raise RuntimeError("non-exhaustive match")
+def grade(s: str) -> str:
+    _pf_t3 = _ap_KeyVal(s)
+    if isinstance(_pf_t3, Some):
+        pair = _pf_t3._0
+        if _pf_snd(pair) < 0:
+            return f"{_pf_fst(pair)}: negative"
+    if isinstance(_pf_t3, Some):
+        pair = _pf_t3._0
+        return f"{_pf_fst(pair)}: {tier(_pf_snd(pair))}"
+    return "?"
+_pf_iter(print, _pf_map(grade, ["ray=x", "tom", "dee=1", "gus=x"]))
+parcels: list[Order] = [Order(100, "quin", 219, False), Order(101, "kit", 118, False), Order(102, "ivy", 275, False), Order(103, "quin", 240, True), Order(104, "quin", 55, True)]
+cheap, dear = _pf_partition(lambda o: o.amount < 78, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def priority(o: Order) -> str:
+    if isinstance(o, Order) and o.urgent is True:
+        amount = o.amount
+        if amount > 65:
+            return "rush-big"
+    if isinstance(o, Order) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 65:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(priority, parcels))
+print(_pf_count_by(priority, parcels))
+def tag(_pf_arg0: Order) -> str:
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(tag, parcels)))
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner: list[tuple[str, int, int]] = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, parcels))
+print(byOwner)
+def _pf_fn1(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn1, (0, 0), parcels)
+print(f"{nrec} records, {amt} total")
+def apply(acc: tuple[dict[str, int], list[int]], op: Instr) -> tuple[dict[str, int], list[int]]:
+    m = acc[0]
+    xs = acc[1]
+    if isinstance(op, Put):
+        k = op._0
+        v = op._1
+        return (_pf_map_add(k, v, m), xs)
+    elif isinstance(op, Append):
+        n = op._0
+        return (m, _pf_concat(xs, [n]))
+    else:
+        return acc
+def replay(script: list[Instr]) -> tuple[dict[str, int], list[int]]:
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+changes: list[Instr] = [_Noop, _Noop, Append(5), Put("bolt", 9), _Noop, Append(0), _Noop]
+final: tuple[dict[str, int], list[int]] = replay(changes)
+mm, items = final
+print((_pf_map_to_list(mm), items))
+acc: int = _pf_fold(lambda apply, x: apply + x * x, 0, [5, 6, 2, 9])
+print(acc)
+--- stderr ---

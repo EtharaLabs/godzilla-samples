@@ -1,0 +1,54 @@
+exit: 0
+--- stdout ---
+let samples = [29, 8, 29, 33, 26, 41, (- 3), 32, 14, 43]
+let addK k x = (x + k)
+let isBig n = ((n > 20) and ((n % 3) != 0))
+let result = ((List.forall (fun x -> (x >= 0))) ((List.filter (fun x -> ((x % 2) == 1))) ((List.map ((+) 5)) ((List.take 3) ((List.distinctBy (fun x -> (x % 3))) samples)))))
+(print result)
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 17) then (Some (n - 17)) else None)
+let (|Zero|_|) n = (n == 0)
+let bucketOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case Even: "even"
+        case _: "odd"
+(([33, 12, 7, 12, 14, 6, 11, 5] |> (List.map bucketOf)) |> (List.iter print))
+opaque type AccountNo = string
+opaque type Handle = string
+let rawOf x =
+    match x:
+        case (AccountNo s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let ids = ((mint "u") 4)
+(print ((ids |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head ids) == (Some (AccountNo "acc-1"))))
+let pure net price qty = ((price * qty) - (2 * qty))
+let emit label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("tap", 18, 5), ("nut", 15, 6), ("bolt", 41, 1), ("pin", 9, 1)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (net k))
+(print ((scaled 6) [1, 2, 3]))
+let mut hits = 0
+let record x =
+    (hits <- (hits + 1))
+    (x * 2)
+let profile xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (profile [(- 18), (- 4), 39, 22, 16]))
+let doubled = ([(- 18), (- 4), 39, 22] |> (List.map record))
+(print f"{doubled} after {hits} calls")
+let recordTwice = (record >> record)
+(print ((recordTwice 3), hits))
+--- stderr ---

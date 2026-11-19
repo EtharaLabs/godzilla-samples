@@ -1,0 +1,83 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_drop_while(f, xs):
+    return list(itertools.dropwhile(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_reduce(f, xs):
+    return Some(functools.reduce(f, xs)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+legs = [489.9, 193.9, 199.8, 50.1]
+durations = [13.8, 70.4, 80.9, 58.5]
+total = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = total / elapsed
+print(_pf_fmt_fixed(1, rate))
+speeds = _pf_map2(lambda d, t: d / t, legs, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+mass = 71.0
+accel = 2.5
+push = mass * accel
+limit = 208.0
+print("over" if push > limit else "under")
+edge = math.sqrt(16.0)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+samples = [25, 33, -5, 15, 40, 38]
+def addK(k, x):
+    return x + k
+def _pf_fn7(_pf_x):
+    def _pf_fn11(_pf_x):
+        def _pf_fn13(_pf_x):
+            def _pf_fn14(_pf_arg0):
+                a, b = _pf_arg0
+                return b - a
+            return _pf_map(_pf_fn14, _pf_pairwise(_pf_x))
+        return _pf_drop_while(lambda x: x < -3, _pf_fn13(_pf_x))
+    return _pf_map(lambda x: x // 3 + x % 3, _pf_fn11(_pf_x))
+pipeline = _pf_fn7
+outcome = _pf_reduce(lambda a, b: a + b, pipeline(samples))
+print(outcome)
+print(len(samples))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(1458, 0))
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(42032))
+--- stderr ---

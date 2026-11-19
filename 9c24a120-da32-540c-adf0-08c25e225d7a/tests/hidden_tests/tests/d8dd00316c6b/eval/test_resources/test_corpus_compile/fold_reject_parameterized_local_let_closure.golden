@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def step(acc, x):
+    def peek(u):
+        return len(acc)
+    return _pf_map_add(x, peek(0), acc)
+out = _pf_map_to_list(_pf_fold(step, dict(), [1, 2, 3]))
+--- stderr ---

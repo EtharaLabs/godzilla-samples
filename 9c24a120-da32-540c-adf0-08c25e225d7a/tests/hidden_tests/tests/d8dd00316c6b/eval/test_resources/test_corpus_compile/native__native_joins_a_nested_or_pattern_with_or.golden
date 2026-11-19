@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def f(o: Some | None_) -> str:
+    if isinstance(o, Some) and (o._0 == 1 or o._0 == 2):
+        return "low"
+    elif isinstance(o, Some) and (o._0 == 3 or o._0 == 4):
+        n = o._0
+        return f"mid {n}"
+    elif isinstance(o, Some):
+        return "high"
+    else:
+        return "none"
+print(f(Some(2)))
+print(f(Some(4)))
+print(f(Some(9)))
+print(f(_None_))
+--- stderr ---

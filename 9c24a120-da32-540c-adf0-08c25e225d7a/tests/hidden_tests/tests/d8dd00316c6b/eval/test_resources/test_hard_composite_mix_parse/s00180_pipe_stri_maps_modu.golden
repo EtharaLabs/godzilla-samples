@@ -1,0 +1,34 @@
+exit: 0
+--- stdout ---
+let readings = [50, (- 4), 27, 40, 40, 33, 39, 25]
+let addK k x = (x + k)
+let keep n = ((n > 3) and ((n % 2) != 0))
+let digest = ((((((readings |> List.distinct) |> (List.dropWhile (fun x -> (x < 3)))) |> (List.drop 1)) |> (List.pairwise >> (List.map (fun (a, b) -> (b - a))))) |> (List.collect (fun x -> [x, (x + 1)]))) |> (List.exists (fun x -> (x > 39))))
+(print digest)
+let raw = "gear,cap,cog,bo,rod,tom"
+let parts = ((String.split ",") raw)
+(print (((String.slice 1) 8) raw))
+let nums = (((String.split ",") "5a,,x,7,-3") |> (List.map String.toInt))
+(print nums)
+(print ((nums |> (List.choose id)) |> List.sum))
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+(print (((String.tryIndexOf "ge") raw), ((String.contains "ge") raw)))
+(print ((parts |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+let visits = ["bo", "ada", "bo", "cy", "cy", "cy", "eli"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let counts = (((List.fold bump) Map.empty) visits)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((Map.tryFind "dee") counts), ((Map.contains "dee") counts)))
+(print (((Map.fold (fun acc k v -> (acc + v))) 0) counts))
+module Stats =
+    let between lo hi x = (lo <= x <= hi)
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let square x = (x * x)
+let pts = [(- 6), 10, 4, 17, 26, 21]
+(print ((List.filter ((Stats.between (- 3)) 21)) pts))
+(print (pts |> (List.map ((Stats.clamp 0) 19))))
+(print ((List.map Stats.square) pts))
+--- stderr ---

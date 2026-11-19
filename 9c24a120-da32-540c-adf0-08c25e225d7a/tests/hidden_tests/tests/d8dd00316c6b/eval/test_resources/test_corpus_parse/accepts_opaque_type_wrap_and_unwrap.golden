@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+opaque type UserId = string
+let uid = (UserId "u-1")
+let name u =
+    match u:
+        case (UserId s): s
+let n = (name uid)
+--- stderr ---

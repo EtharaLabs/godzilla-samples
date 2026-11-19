@@ -1,0 +1,170 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: str
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Pop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Mark({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def describe(t):
+    match t:
+        case Jump(s0):
+            return f"jump({s0})"
+        case Pop(s0, n1):
+            return f"pop({s0},{n1})"
+        case Mark(s0, n1):
+            return f"mark({s0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Pop(_, x1):
+            return x1
+        case Jump(_):
+            return 2
+        case _:
+            return 3
+queue = [Pop("tom", 9), Mark("sue", 7), Pop("oz", 6), Mark("sue", 12), Pop("jo", 1), Jump("cy")]
+print(_pf_map(describe, queue))
+tally = _pf_sum_by(cost, queue)
+print(f"tally={tally}")
+print((_pf_head(queue), _pf_last(queue)))
+def cross(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn0(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn0, pairs))
+print(cross([(5, 7), (2, 3)]))
+def lift(n):
+    return n + 68
+def useBump(x):
+    return lift(x)
+def _pf_fn1():
+    lift = 4
+    return useBump(lift)
+sample = _pf_fn1()
+print((sample, useBump(4)))
+def grow(n):
+    return n * 2
+def _pf_fn2():
+    _pf_t0 = [5, 2]
+    if _pf_t0:
+        grow = _pf_t0[0]
+        return grow + 1
+    else:
+        return 0
+chosen = _pf_fn2()
+print((chosen, grow(6)))
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [51, 20, 27, 16, 23])
+def sumOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumOf(l) + v + sumOf(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumOf(tree))
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, tree), [51, 24, 45]))
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(tree))
+def depthOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthOf(l), depthOf(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthOf(tree))
+--- stderr ---

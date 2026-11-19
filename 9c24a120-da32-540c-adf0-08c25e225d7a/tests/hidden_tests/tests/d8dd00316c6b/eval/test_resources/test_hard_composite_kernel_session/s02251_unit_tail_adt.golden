@@ -1,0 +1,134 @@
+exit: 0
+--- stdout ---
+00000002ok00000377laps : List float<m>
+times : List float<s>
+dist : float<m>
+dur : float<s>
+speed : float<m/s>
+side : float<m>
+cube : float<m^3>
+mass : float<kg>
+accel : float<m/s^2>
+push : float<kg m/s^2>
+limit : float<kg m/s^2>
+steps : int -> int -> int
+euclid : int -> int -> int
+accumulate : int -> int -> int
+explain : Token -> string
+rank : Token -> int
+stream : List Token
+grandSum : int
+00002879from dataclasses import dataclass
+import functools
+import math
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    def __repr__(self):
+        return "Pop"
+_Pop = Pop()
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    def __repr__(self):
+        return "Jump"
+_Jump = Jump()
+laps = [50.5, 342.7, 439.5]
+times = [18.8, 75.7, 15.8]
+dist = _pf_fold(lambda a, b: a + b, 0.0, laps)
+dur = _pf_fold(lambda a, b: a + b, 0.0, times)
+speed = dist / dur
+print(_pf_fmt_fixed(3, speed))
+side = math.sqrt(25.0)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+mass = 21.0
+accel = 2.5
+push = mass * accel
+limit = 184.0
+print("over" if push > limit else "under")
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [55, 16, 2]))
+def euclid(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(euclid(378, 474))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(319, 0))
+def explain(t):
+    match t:
+        case Drop(1):
+            return "drop-1"
+        case Drop(n0):
+            return f"drop({n0})"
+        case Mark(n0):
+            return f"mark({n0})"
+        case Pop() | Jump():
+            return "pop/jump"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Pop():
+            return 7
+        case Jump():
+            return 3
+        case Drop(x0):
+            return x0
+        case _:
+            return 2
+stream = [Mark(11), _Pop, _Pop, _Jump]
+print(_pf_map(explain, stream))
+grandSum = _pf_sum_by(rank, stream)
+print(f"grandSum={grandSum}")
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+print((_pf_head(stream), _pf_last(stream)))
+00000002ok00000026euclid : int -> int -> int0000000000000002ok00000022push : float<kg m/s^2>00000000--- stderr ---

@@ -1,0 +1,164 @@
+exit: 0
+--- stdout ---
+00000002ok00000239value : (Map string int) -> Val -> int
+exec : (Map string int) -> Cmd2 -> Map string int
+cells : List int
+orders : List Invoice
+perOwner : List (string, int, int)
+urgentTotal : int
+inputs2 : List int
+gain : int
+makers2 : List (int -> int)
+00004590from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def value(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return value(env, a) + value(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(exec, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def exec(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, value(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", value(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(value(dict(), Block([Set("a", Lit(9)), Set("b", Plus(Ref("a"), Lit(3))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 2], lambda k: Many_yield_(a * b + k))
+cells = Many_combine(Many_for_([(3, 3), (5, 4)], _pf_fn0), Many_delay(lambda _: Many_yield_(1)))
+print(cells)
+orders = [Invoice(100, "ada", 168, True), Invoice(101, "ada", 247, True), Invoice(102, "jo", 198, True), Invoice(103, "ada", 29, True), Invoice(104, "jo", 234, False)]
+print(_pf_max_by(lambda o: o.amount, orders))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, orders))
+print(perOwner)
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(urgentTotal)
+inputs2 = [-8, 21, 15, 24, -1, 14, -7, 23]
+gain = 3
+def _pf_fn2(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn2, (0, 0), inputs2))
+def _pf_fn3(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn3, _pf_indexed(inputs2))))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(4), makers2))
+00000002ok00000016cells : List int0000000000000002ok00000018inputs2 : List int00000000--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let (|Blank|_|) s = ((String.strip s) == "")
+let f s =
+    match s:
+        case (Blank x): x
+        case _: "text"
+--- stderr ---

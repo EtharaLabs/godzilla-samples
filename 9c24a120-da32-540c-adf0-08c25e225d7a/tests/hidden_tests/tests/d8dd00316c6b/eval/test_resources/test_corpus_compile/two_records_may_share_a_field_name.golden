@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class A:
+    x: int
+@dataclass(frozen=True, slots=True)
+class B:
+    x: int
+a = A(1)
+b = B(2)
+--- stderr ---

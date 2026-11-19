@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+  --> 25:78
+   |
+25 | let people = [Member { name = "ned", age = 2 }, Member { name = "ivy", age = "1" }]
+   |                                                                              ^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 46:11
+   |
+46 | let vol = cbrt 8.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

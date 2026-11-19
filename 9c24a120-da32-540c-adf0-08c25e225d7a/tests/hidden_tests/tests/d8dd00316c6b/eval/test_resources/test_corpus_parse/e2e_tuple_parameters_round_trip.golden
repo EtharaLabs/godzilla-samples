@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+let tileScore (t, sq) = (t * sq)
+let swap (a, b) = (b, a)
+let nested ((a, b), c) = ((a + b) + c)
+let const42 _ = 42
+let pairs = ((List.zip [1, 2, 3]) [10, 20, 30])
+let scores = ((List.map tileScore) pairs)
+let total = (((List.fold (fun acc (a, b) -> (acc + (a * b)))) 0) pairs)
+let swapped = (swap (1, 2))
+let deep = (nested ((1, 2), 3))
+let ignored = (const42 "anything")
+--- stderr ---

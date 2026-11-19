@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+00000002ok00000033Seq.distinct : (Seq 'a) -> Seq 'a0000000000000002ok0000000000000154def _pf_seq_distinct(xs):
+    seen = set()
+    for x in xs:
+        if not x in seen:
+            seen.add(x)
+            yield x
+print(_pf_seq_distinct)
+--- stderr ---

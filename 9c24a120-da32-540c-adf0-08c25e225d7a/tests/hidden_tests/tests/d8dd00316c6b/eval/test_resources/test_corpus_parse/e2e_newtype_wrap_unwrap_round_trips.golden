@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+opaque type UserId = string
+let uid = (UserId "u-1001")
+let unwrapped =
+    match uid:
+        case (UserId s): s
+--- stderr ---

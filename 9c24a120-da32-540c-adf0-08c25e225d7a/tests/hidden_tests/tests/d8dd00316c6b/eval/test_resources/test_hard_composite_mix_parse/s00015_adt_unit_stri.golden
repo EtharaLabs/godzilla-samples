@@ -1,0 +1,44 @@
+exit: 0
+--- stdout ---
+type Instr = Turn string | Rest int | Skip string
+let describe t =
+    match t:
+        case (Turn s0): f"turn({s0})"
+        case (Rest 3): "rest-3"
+        case (Rest n0): f"rest({n0})"
+        case (Skip s0): f"skip({s0})"
+let rank t =
+    match t:
+        case (Skip _): 8
+        case _: 3
+let batch = [(Skip "ivy"), (Rest 6), (Rest 5), (Turn "lu"), (Skip "tom"), (Rest 2), (Rest 8)]
+((List.iter (fun t -> (print (describe t)))) batch)
+let tally = (batch |> (List.sumBy rank))
+(print f"tally={tally}")
+(print ((List.maxBy rank) batch))
+measure m
+measure s
+measure kg
+measure N = kg m/s^2
+let laps = [132.1<m>, 312.5<m>, 77.4<m>]
+let times = [80.0<s>, 74.8<s>, 73.9<s>]
+let dist = (laps |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let dur = (((List.fold (+)) 0.0<s>) times)
+let speed = (dist / dur)
+(print ((Format.fixed 1) speed))
+let best = (((List.zip laps) times) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let speeds = (((List.map2 (fun d t -> (d / t))) laps) times)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+let text = "nut,jo,kit,fay,quin,tap,tom"
+let parts = ((String.split ",") text)
+(print ((List.map (fun w -> (w, (String.len w)))) parts))
+let longest = ((parts |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((parts |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+let fieldsN = (((String.split ",") "40,12,7,-3,7") |> (List.map String.toInt))
+(print fieldsN)
+(print ((fieldsN |> (List.choose id)) |> List.sum))
+--- stderr ---

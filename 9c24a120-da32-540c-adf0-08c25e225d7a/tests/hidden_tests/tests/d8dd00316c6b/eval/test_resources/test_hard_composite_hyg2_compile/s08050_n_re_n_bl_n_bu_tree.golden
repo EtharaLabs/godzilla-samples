@@ -1,0 +1,110 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+@dataclass(frozen=True, slots=True, repr=False)
+class Num:
+    _0: int
+    def __repr__(self):
+        return f"Num({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Add:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Add({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mul:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Mul({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Neg:
+    _0: object
+    def __repr__(self):
+        return f"Neg({self._0!r})"
+def build(start):
+    base = start
+    def g0(y):
+        return base * y
+    base = g0(base)
+    def g1(y):
+        return base * y
+    base = base + 13
+    def g2(y):
+        return base * y
+    base = base + 3
+    def g3(y):
+        return base * y
+    base = g3(base)
+    return (g0(4), g1(1), g2(2), g3(4), base)
+print(build(3))
+def nudge(n):
+    return n + 37
+def useHelper(x):
+    return nudge(x)
+def _pf_fn0():
+    nudge = 7
+    tmp = useHelper(nudge)
+    return tmp * 2
+alpha = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [8]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+third = _pf_fn2()
+print((alpha, second, third, useHelper(0)))
+len_ = 9
+print((len([1, 2, 3]) + len_, len("abc")))
+list_ = [1, 0, 4]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+str_ = "oz"
+print((str(91), str_, _pf_str_concat(str_, str(1))))
+def evaluate(e):
+    match e:
+        case Num(n):
+            return n
+        case Add(a, b):
+            return evaluate(a) + evaluate(b)
+        case Mul(a, b):
+            return evaluate(a) * evaluate(b)
+        case Neg(a):
+            return -evaluate(a)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def show(e):
+    match e:
+        case Num(n) if n < 0:
+            return f"({n})"
+        case Num(n):
+            return f"{n}"
+        case Add(a, b):
+            return f"({show(a)} + {show(b)})"
+        case Mul(a, b):
+            return f"{show(a)} * {show(b)}"
+        case Neg(a):
+            return f"-{show(a)}"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+terms = [Num(7), Neg(Mul(Num(-2), Add(Num(8), Num(2)))), Add(Add(Num(1), Add(Num(0), Num(6))), Add(Num(3), Add(Num(1), Num(-2))))]
+_pf_iter(print, _pf_map(show, terms))
+print(_pf_map(evaluate, terms))
+--- stderr ---

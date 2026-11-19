@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+type Signal = Push int | Halt int string | Turn string | Rest string string | Emit int
+let describe t =
+    match t:
+        case (Push n0): f"push({n0})"
+        case (Halt n0 s1): f"halt({n0},{s1})"
+        case (Turn s0): f"turn({s0})"
+        case (Rest s0 s1): f"rest({s0},{s1})"
+        case (Emit n0): f"emit({n0})"
+let cost t =
+    match t:
+        case (Halt x0 _): x0
+        case (Emit x0): x0
+        case (Push x0): (x0 * 2)
+        case _: 2
+let prog = [(Emit 9), (Push (- 2)), (Turn "tom"), (Turn "cy"), (Turn "kit")]
+((prog |> (List.map describe)) |> print)
+let grandSum = (prog |> (List.sumBy cost))
+(print f"grandSum={grandSum}")
+(print (List.sort prog))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let kindOf n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([13, (- 4), 2, 22, 37, 18, 30, 28] |> (List.map kindOf)) |> (List.iter print))
+let mut hits = 0
+let record x =
+    (hits <- (hits + 1))
+    (x * 2)
+let profile xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (profile [(- 8), 27, 0, 52, 44, 28]))
+let doubled = ([(- 8), 27, 0, 52] |> (List.map record))
+(print f"{doubled} after {hits} calls")
+--- stderr ---

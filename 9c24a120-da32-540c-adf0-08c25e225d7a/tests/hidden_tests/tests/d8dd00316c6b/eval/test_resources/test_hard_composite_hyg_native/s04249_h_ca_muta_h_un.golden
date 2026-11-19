@@ -1,0 +1,58 @@
+exit: 0
+--- stdout ---
+import math
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def forEach(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def say(x):
+    return print(f"* {x}")
+forEach(say, [5, 9, 5])
+print(mapTwice(lambda x: x + 3, [1, 2, 3]))
+def maybeLog(verbose: bool, x: int) -> int:
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(maybeLog(True, 3) + maybeLog(False, 7))
+def quiet(x: int) -> int:
+    return x + 2
+print(mapTwice(quiet, [2]))
+ticks: int = 0
+def track(x: int) -> int:
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def profile(xs: list[int]) -> str:
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x: int):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([49, 38, -15, 57, 49, 14, 7, 19]))
+doubled: list[int] = _pf_map(track, [49, 38, -15, 57])
+print(f"{doubled} after {ticks} calls")
+reach: float = math.hypot(7.0 / 1.0, 5.0 / 1.0) * 1.0
+ratio: float = math.sqrt(2.0)
+side: float = math.sqrt(49.0)
+vol: float = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+def velocity(d: int, t: int) -> float:
+    return d / t
+print(_pf_fmt_fixed(2, velocity(reach, 3.0)))
+--- stderr ---

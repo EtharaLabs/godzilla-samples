@@ -1,0 +1,95 @@
+exit: 0
+--- stdout ---
+00000002ok00000172fromBin : string ->{io} int
+lcm : int -> int -> int
+orders : List Order
+bucket : Order -> string
+surcharge : int -> Order -> Order
+nums : List int
+classify : int -> string
+00002521from dataclasses import dataclass
+import functools
+import math
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("101") + int("42", base=8))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [3, 8, 5, 11]))
+orders = [Order(100, "ada", 279, False), Order(101, "ada", 137, False), Order(102, "ada", 203, True), Order(103, "ada", 82, True), Order(104, "jo", 159, False)]
+def bucket(o):
+    match o:
+        case Order(urgent=True, amount=amount) if amount > 171:
+            return "rush-big"
+        case Order(urgent=True):
+            return "rush"
+        case Order(amount=amount):
+            if amount > 171:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, orders))
+print(_pf_count_by(bucket, orders))
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Order(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 5), orders)))
+def Stats_between(lo, hi, x):
+    return lo <= x <= hi
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Stats_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Stats_square(x):
+    return x * x
+nums = [-10, 18, 1, 23, -11, 17]
+print(_pf_filter(functools.partial(Stats_between, 5, 25), nums))
+print(_pf_map(functools.partial(Stats_clamp, 0, 12), nums))
+print(Stats_norm1(nums))
+print(_pf_map(Stats_square, nums))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def classify(n):
+    _pf_t1 = _ap_Even_Odd(n)
+    if isinstance(_pf_t1, _Even):
+        return "even"
+    elif isinstance(_pf_t1, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+_pf_iter(print, _pf_map(classify, [-5, 14, 20, -1, 10, 17]))
+00000002ok00000023lcm : int -> int -> int0000000000000002ok00000015nums : List int00000000--- stderr ---

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+00000002ok00000054Seq.reduce : ('a -> 'a -> 'a) -> (Seq 'a) -> Option 'a0000000000000002ok0000000000000446from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_seq_reduce(f, xs):
+    items = list(xs)
+    return Some(functools.reduce(f, items)) if items else _None_
+print(_pf_seq_reduce)
+--- stderr ---

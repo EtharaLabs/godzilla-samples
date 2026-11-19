@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+extern type P
+extern writeText: P -> string -> string -> int = .write_text(encoding=...)
+let f p text enc = (((writeText p) text) enc)
+--- stderr ---

@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+let visits = ["ada", "bo", "cy", "ada", "eli", "dee"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let counts = (((List.fold bump) Map.empty) visits)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print ((counts |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+(print (((Map.tryFind "bo") counts), ((Map.contains "bo") counts)))
+let extra = (Map.ofList [("zed", 5), ("ada", 0)])
+(print ((((Map.union extra) counts) |> Map.toList) |> List.sort))
+(print (((counts |> (Map.map (fun k v -> (v * 10)))) |> Map.values) |> List.sort))
+let squares = seq {
+    for x in ((List.range 1) 8):
+        let y = (x * x)
+        yield y
+}
+((((squares |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 4))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 6)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 874)))) |> Seq.toList) |> print)
+type Ast = Num int | Add Ast Ast | Mul Ast Ast | Neg Ast | Var string
+let vars = (Map.ofList [("x", 5), ("y", 3)])
+let evalE e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evalE a) + (evalE b))
+        case (Mul a b): ((evalE a) * (evalE b))
+        case (Neg a): (- (evalE a))
+        case (Var v): (((Map.findOr v) 0) vars)
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+        case (Var v): v
+let shrink e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (shrink x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (shrink x)
+        case (Neg (Neg x)): (shrink x)
+        case (Add a b): ((Add (shrink a)) (shrink b))
+        case (Mul a b): ((Mul (shrink a)) (shrink b))
+        case _: e
+let terms = [((Add (Num 0)) (Var "x")), (Num 4)]
+(((terms |> (List.map shrink)) |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evalE) terms))
+--- stderr ---

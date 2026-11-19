@@ -1,0 +1,138 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Halt({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: str
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Rest({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (3, self._0, self._1)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (4, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def describe(t):
+    match t:
+        case Push(n0):
+            return f"push({n0})"
+        case Halt(n0, s1):
+            return f"halt({n0},{s1})"
+        case Turn(s0):
+            return f"turn({s0})"
+        case Rest(s0, s1):
+            return f"rest({s0},{s1})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Halt(x0, _):
+            return x0
+        case Emit(x0):
+            return x0
+        case Push(x0):
+            return x0 * 2
+        case _:
+            return 2
+prog = [Emit(9), Push(-2), Turn("tom"), Turn("cy"), Turn("kit")]
+print(_pf_map(describe, prog))
+grandSum = _pf_sum_by(cost, prog)
+print(f"grandSum={grandSum}")
+print(_pf_sort(prog))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def kindOf(n):
+    _pf_t0 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    elif isinstance(_pf_t0, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+_pf_iter(print, _pf_map(kindOf, [13, -4, 2, 22, 37, 18, 30, 28]))
+hits = 0
+def record(x):
+    global hits
+    hits = hits + 1
+    return x * 2
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([-8, 27, 0, 52, 44, 28]))
+doubled = _pf_map(record, [-8, 27, 0, 52])
+print(f"{doubled} after {hits} calls")
+--- stderr ---

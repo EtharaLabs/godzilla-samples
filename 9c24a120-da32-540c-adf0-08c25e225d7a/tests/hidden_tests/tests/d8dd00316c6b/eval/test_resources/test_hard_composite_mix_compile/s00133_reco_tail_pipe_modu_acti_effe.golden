@@ -1,0 +1,119 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_take_while(f, xs):
+    return list(itertools.takewhile(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+tickets = [Parcel(100, "lu", 45, True, Addr("Bern", 1)), Parcel(101, "lu", 246, False, Addr("Lima", 4)), Parcel(102, "lu", 39, True, Addr("Doha", 3)), Parcel(103, "max", 155, True, Addr("Oslo", 3)), Parcel(104, "max", 180, True, Addr("Doha", 4)), Parcel(105, "lu", 269, False, Addr("Rome", 3))]
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(urgentTotal)
+print(_pf_max_by(lambda o: o.amount, tickets))
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), tickets)
+print(f"{cnt} records, {amt} total")
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [44, 26, 52]))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(1324, 0))
+readings = [33, -1, 36, 18, -3, 40, -2, 5, -4]
+def shift(k, x):
+    return x + k
+outcome = _pf_fold(lambda acc, x: acc * 2 - x, 0, _pf_take(7, _pf_sort(_pf_filter(lambda x: x > 8, _pf_take_while(lambda x: x < 53, readings)))))
+print(outcome)
+print(len(readings))
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_square(x):
+    return x * x
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+obs = [0, -8, -8, 21, -14]
+print(_pf_filter(functools.partial(Text_between, -1, 10), obs))
+print(_pf_map(Text_square, obs))
+print(Text_scaleAll(4, obs))
+print(_pf_map(functools.partial(Text_clamp, 0, 20), obs))
+def _ap_Above(n):
+    if n > 16:
+        return Some(n - 16)
+    else:
+        return _None_
+def classify(n):
+    _pf_t0 = _ap_Above(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    m = n
+    if m < 0:
+        return "negative"
+    return "small"
+_pf_iter(print, _pf_map(classify, [18, 34, 36, 32, 15]))
+def net(price, qty):
+    return price * qty - 7 * qty
+def announce(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand = sum(_pf_map(_pf_fn1, [("pin", 13, 1), ("rod", 5, 4)]))
+print(grand)
+--- stderr ---

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Ticket` is missing field(s) `dest`
+  --> 26:16
+   |
+26 | let parcels = [Ticket { id = 100, owner = "ada", amount = 180, urgent = true }, Ticket { urgent = true, owner = "ada", amount = 257, id = 101, dest = Addr { city = "Rome", zone = 4 } }, Ticket { id = 102, owner = "ray", amount = 247, urgent = true, dest = Addr { city = "Bern", zone = 4 } }, Ticket { id = 103, owner = "ivy", amount = 41, urgent = true, dest = Addr { city = "Bern", zone = 2 } }, Ticket { id = 104, owner = "ray", amount = 142, urgent = false, dest = Addr { city = "Doha", zone = 1 } }, Ticket { id = 105, owner = "ivy", amount = 252, urgent = false, dest = Addr { city = "Kyiv", zone = 1 } }]
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int<'a>` — try: a, b — or: fromBin ?, List.sum ?, Seq.sum ?, String.len ?, and 17 more
+ --> 7:24
+  |
+7 | let lcm a b = a * b // ?
+  |                        ^
+
+1 error
+1 unfilled hole

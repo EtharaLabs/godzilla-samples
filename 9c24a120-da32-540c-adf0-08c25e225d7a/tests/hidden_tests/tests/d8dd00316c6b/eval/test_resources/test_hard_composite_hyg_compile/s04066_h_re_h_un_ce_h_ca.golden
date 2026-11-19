@@ -1,0 +1,135 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Member:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Club:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: object
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Member(_pf_t0.name, p.age + 1))
+        case Idle(t) if t.size > 6:
+            _pf_t1 = t
+            return Idle(Club(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+slots = _pf_map(promote, [_Gone, _Gone, Active(Member("max", 45)), Active(Member("max", 38))])
+print(slots)
+people = [Member("ada", 5), Member("max", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+span = math.hypot(9.0 / 1.0, 5.0 / 1.0) * 1.0
+ratio = math.sqrt(10.0)
+side = math.sqrt(81.0)
+vol = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(span / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(span, 2.0)))
+def decodeLine(line):
+    def _pf_fn0():
+        _pf_t3 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t3, Some):
+            v = _pf_t3._0
+            _pf_t2 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t2, Some):
+                n = _pf_t2._0
+                return Some(n * 3)
+            else:
+                return _pf_t2
+        else:
+            return _pf_t3
+    return _pf_fn0()
+inputs = ["lu=18", "dee=x", "oz=x", "fay=76", "max", "gus=0"]
+results = _pf_map(decodeLine, inputs)
+_pf_iter(print, results)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), results)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), results))))
+def visitAll(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def say(x):
+    return print(f"* {x}")
+visitAll(say, [2, 1, 4])
+print(mapTwice(lambda x: x + 5, [1, 2, 3]))
+def maybeLog(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(maybeLog(True, 4) + maybeLog(False, 7))
+def quiet(x):
+    return x + 4
+print(mapTwice(quiet, [2]))
+--- stderr ---

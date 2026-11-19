@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import codecs
+import urllib.parse
+import urllib.request
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def fetch(url):
+    try:
+        _pf_t0 = Ok(codecs.decode(urllib.request.urlopen(url).read(), "utf-8"))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    return _pf_t0
+def describe(r):
+    if isinstance(r, Ok):
+        body = r._0
+        return f"ok: {body}"
+    else:
+        e = r._0
+        return f"failed: {e.errorKind}"
+print(describe(fetch("data:text/plain,hello%20pyfun")))
+print(describe(fetch("://malformed")))
+u = urllib.parse.urlparse("https://example.com/data.json")
+print(f"{u.scheme} {u.path}")
+--- stderr ---

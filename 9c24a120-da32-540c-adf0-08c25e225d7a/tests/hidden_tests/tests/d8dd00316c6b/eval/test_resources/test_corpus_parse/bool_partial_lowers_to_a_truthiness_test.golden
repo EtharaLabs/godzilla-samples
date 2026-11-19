@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let (|Blank|_|) s = (s == "")
+let f s =
+    match s:
+        case Blank: 1
+        case _: 0
+--- stderr ---

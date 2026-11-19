@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: field `x` is set twice
+ --> 8:27
+  |
+8 |     yield Pt { x = 1, x = 2, y = 3 }
+  |                           ^
+
+note: hole `?gap` has type `'a`
+  --> 11:10
+   |
+11 | let v2 = ?gap
+   |          ^^^^
+
+1 error
+1 unfilled hole

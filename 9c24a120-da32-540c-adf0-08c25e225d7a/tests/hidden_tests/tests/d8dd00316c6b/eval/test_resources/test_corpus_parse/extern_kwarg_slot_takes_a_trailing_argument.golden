@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+extern openText: string -> string -> Seq string = builtins.open(mode="rt", encoding=...)
+let f path enc = ((openText path) enc)
+--- stderr ---

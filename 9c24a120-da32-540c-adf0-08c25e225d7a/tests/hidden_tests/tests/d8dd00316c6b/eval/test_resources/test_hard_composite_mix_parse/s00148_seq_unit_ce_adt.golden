@@ -1,0 +1,51 @@
+exit: 0
+--- stdout ---
+let squares = seq {
+    for x in ((List.range 1) 8):
+        let y = (x * x)
+        yield y
+    yield 130
+}
+(((squares |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 2))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+measure m
+measure s
+measure kg
+let legs = [294.6<m>, 264.9<m>, 112.2<m>]
+let splits = [12.0<s>, 43.6<s>, 41.7<s>]
+let dist = (legs |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let dur = (((List.fold (+)) 0.0<s>) splits)
+let speed = (dist / dur)
+(print ((Format.fixed 2) speed))
+let speeds = (((List.map2 (fun d t -> (d / t))) legs) splits)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+let best = (((List.zip legs) splits) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let side = (sqrt 49.0<m^2>)
+let cube = ((side * side) * side)
+(print f"{side} {(cbrt cube)}")
+let parseEntry line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 4) }
+let entries = ["oz", "ray=x", "lu=4=1", "pam"]
+let results = ((List.map parseEntry) entries)
+((List.iter print) results)
+(print ((results |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((results |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+type Cmd = Rest string | Mark string | Emit int int | Jump int
+let render t =
+    match t:
+        case (Rest s0): f"rest({s0})"
+        case (Mark s0): f"mark({s0})"
+        case (Emit n0 n1): f"emit({n0},{n1})"
+        case (Jump n0): f"jump({n0})"
+let score t =
+    match t:
+        case (Jump x0): x0
+        case (Rest _): 8
+        case (Emit x0 x1): (x0 + x1)
+        case _: 3
+let stream = [(Rest "hal"), (Mark "ned"), (Jump (- 2)), ((Emit 9) (- 2)), ((Emit 3) 6)]
+((List.iter (fun t -> (print (render t)))) stream)
+let total = (stream |> (List.sumBy score))
+(print f"total={total}")
+(print ((List.head stream), (List.last stream)))
+--- stderr ---

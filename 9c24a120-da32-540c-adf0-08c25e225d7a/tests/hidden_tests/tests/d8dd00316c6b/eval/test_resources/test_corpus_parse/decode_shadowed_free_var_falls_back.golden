@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let bump n = (n + 100)
+let dec = ((Decode.map (fun x -> (bump x))) Decode.int)
+let run u =
+    let bump = 0
+    let r = ((Decode.decodeString dec) "5")
+    (match r: case (Ok v): f"ok: {v} ({bump})" case (Error e): e.errorKind)
+let useIt = (run 0)
+--- stderr ---

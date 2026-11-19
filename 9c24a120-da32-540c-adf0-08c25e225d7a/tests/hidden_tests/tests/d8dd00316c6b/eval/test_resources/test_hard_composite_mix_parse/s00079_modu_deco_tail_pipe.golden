@@ -1,0 +1,31 @@
+exit: 0
+--- stdout ---
+module Calc =
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let square x = (x * x)
+let pts = [20, (- 3), (- 6), 3, 18, 20, (- 8)]
+(print (Calc.norm1 pts))
+(print (Calc.mean pts))
+(print (pts |> (List.map ((Calc.clamp 0) 5))))
+(print ((List.map Calc.square) pts))
+type Reading = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Reading { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let payload = "[{\"name\": \"quin\", \"points\": 44, \"active\": false}, {\"name\": \"gus\", \"points\": 59, \"active\": true}, {\"name\": \"ned\", \"points\": 56, \"active\": true}, {\"name\": \"eli\", \"points\": 44, \"active\": false}]"
+match ((Decode.decodeString (Decode.list dec)) payload):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [30, 30, 20, 8, 0]))
+let steps n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((steps (n // 2)) (acc + 1)) else ((steps ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((steps n) 0))) [42, 31, 57]))
+let readings = [13, 41, 28, 42, 18, 30]
+let shift k x = (x + k)
+let answer = ((List.forall (fun x -> (x >= 0))) ((List.map (fun x -> ((x // 3) + (x % 3)))) (((List.windowed 2) >> (List.map (fun w -> ((Option.withDefault 0) (List.max w))))) ((List.take 2) ((List.indexed >> (List.map (fun (i, x) -> (i * x)))) (List.sort readings))))))
+(print answer)
+(print <| (List.len readings))
+--- stderr ---

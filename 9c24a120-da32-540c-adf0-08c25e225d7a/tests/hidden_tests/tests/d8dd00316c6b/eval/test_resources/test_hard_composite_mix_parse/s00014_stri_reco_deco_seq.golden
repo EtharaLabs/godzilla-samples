@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+let text = "kit quin bolt eli gus pam max"
+let tokens = ((String.split " ") text)
+(print ((tokens |> (List.map String.upper)) |> (String.join "|")))
+(print (((String.replace "i") "I") text))
+let row2 (i, w) = ((String.concat (((Format.padRight 8) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((tokens |> List.indexed) |> (List.map row2)) |> (List.iter print))
+(print (((String.slice 2) 4) text))
+type Invoice = { id: int, owner: string, amount: int, urgent: bool }
+let book = [Invoice { id = 100, owner = "jo", amount = 14, urgent = true }, Invoice { id = 101, owner = "sue", amount = 22, urgent = false }, Invoice { id = 102, owner = "dee", urgent = true, amount = 201 }, Invoice { urgent = false, amount = 202, id = 103, owner = "dee" }, Invoice { id = 104, owner = "sue", amount = 231, urgent = true }, Invoice { id = 105, owner = "jo", amount = 269, urgent = false }]
+let priority o =
+    match o:
+        case Invoice { urgent = true, amount } if (amount > 80): "rush-big"
+        case Invoice { urgent = true }: "rush"
+        case Invoice { amount }: (if (amount > 80) then "big" else "normal")
+(print ((List.map priority) book))
+(print ((List.countBy priority) book))
+let adjust pct o =
+    let extra = ((o.amount * pct) // 100)
+    { o with amount = (o.amount + extra), urgent = false }
+(print ((book |> (List.map (adjust 4))) |> (List.map (fun o -> o.amount))))
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 76))) book)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+type Entry = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Entry { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let payload = "[{\"name\": \"tom\", \"points\": 43, \"active\": true}, {\"name\": \"max\", \"points\": 52, \"active\": false}]"
+match ((Decode.decodeString (Decode.list dec)) payload):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let evens = seq {
+    for x in ((List.range 1) 9):
+        let y = (x * x)
+        yield y
+}
+((((evens |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 4)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 7))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+--- stderr ---

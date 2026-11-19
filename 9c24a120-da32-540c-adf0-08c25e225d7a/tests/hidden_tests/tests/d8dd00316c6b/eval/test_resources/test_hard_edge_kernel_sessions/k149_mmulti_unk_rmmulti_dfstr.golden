@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+00000002ok00000008u : int
+00000050print("first")
+u = 2
+print("second")
+print(u * 5)
+00000005error00000018unknown op `reset`0000000000000002ok00000008u : int
+00000013print(u * 5)
+00000002ok00000025greet : string -> string
+00000100def _pf_str_upper(s):
+    return s.upper()
+def greet(name):
+    return f"hi {_pf_str_upper(name)}!"
+--- stderr ---

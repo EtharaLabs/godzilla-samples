@@ -1,0 +1,47 @@
+exit: 0
+--- stdout ---
+00000005error00000141error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 2:15
+  |
+2 | let bad = 1 + "x"
+  |               ^^^
+0000000000000002ok00000018squares : Seq int
+00000093def _pf_fn0():
+    for x in [1, 2, 3]:
+        yield x * x
+    yield 100
+squares = _pf_fn0()
+00000005error00000129(could not determine a type — is `let firstOr d xs =
+  match List.head xs:
+    case Some x: x
+    case None: d` an expression?)0000000000000002ok00000016job : Async int
+00000436class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_fn2():
+    async def _pf_fn1():
+        return 20
+    x = await _pf_fn1()
+    return x + 1
+job = _pf_Async(_pf_fn2)
+00000002ok00000006p : P
+00000123from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class P:
+    name: str
+    age: int
+p = P("Ada", 36)
+00000005error00000130error: `loud` is declared `pure` but performs `io`
+  --> 15:19
+   |
+15 | let pure loud x = print x
+   |                   ^^^^^^^
+0000000000000005error00000118(could not determine a type — is `let count k acc = if k == 0 then acc else count (k - 1) (acc + k)` an expression?)00000000--- stderr ---

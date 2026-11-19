@@ -1,0 +1,71 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_concat(a, b):
+    return a + b
+def bump2(n):
+    return n + 67
+def useHelper(x):
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 5
+    tmp = useHelper(bump2)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [6]
+    if _pf_t0:
+        bump2 = _pf_t0[0]
+        return bump2 + useHelper(1)
+    else:
+        return 0
+beta = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, beta, third, useHelper(0)))
+segments = [93.8, 284.0, 114.4]
+times = [43.8, 63.3, 67.1]
+dist = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+rate = dist / elapsed
+print(_pf_fmt_fixed(2, rate))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+side = math.sqrt(2.25)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+list_ = [5, 5, 2]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+len_ = 3
+print((len([1, 2, 3]) + len_, len("abc")))
+str_ = "ivy"
+print((str(11), str_, _pf_str_concat(str_, str(1))))
+def sum_(a, b):
+    return a - b
+print((sum_(8, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+def stack2(start):
+    x = start
+    g0 = lambda y: x + y
+    x = g0(x)
+    g1 = functools.partial(_pf_map, lambda y: y - x)
+    x = x + 6
+    def g2(y):
+        return x * y
+    x = g2(x)
+    return (g0(1), g1([1, 2]), g2(4), x)
+print(stack2(9))
+--- stderr ---

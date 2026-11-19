@@ -1,0 +1,51 @@
+exit: 0
+--- stdout ---
+let sentence = "pin,pam,tom,hub"
+let parts = ((String.split ",") sentence)
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+let n2 = (List.len parts)
+(print f"n2={n2} {{braces}} {(String.len sentence)}")
+(print (((String.tryIndexOf "pi") sentence), ((String.contains "pi") sentence)))
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print (((String.replace "i") "I") sentence))
+(print (((String.slice 0) 6) sentence))
+let evens = seq {
+    for x in ((List.range 1) 6):
+        let y = (x * x)
+        yield y
+    yield 199
+}
+((((evens |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 4)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 5))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+module Text =
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let square x = (x * x)
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+let pts = [15, (- 14), (- 5), (- 10), (- 15), 11, 19]
+(print (Text.mean pts))
+(print ((List.map Text.square) pts))
+(print (pts |> (List.map ((Text.clamp 0) 11))))
+(print (Text.norm1 pts))
+type Ast = Num int | Add Ast Ast | Mul Ast Ast | Neg Ast | Var string
+let env = (Map.ofList [("x", 8), ("y", 5)])
+let calc e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((calc a) + (calc b))
+        case ((Mul (Num 0) _) | (Mul _ (Num 0))): 0
+        case (Mul a b): ((calc a) * (calc b))
+        case (Neg a): (- (calc a))
+        case (Var v): (((Map.findOr v) 0) env)
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+        case (Var v): v
+let exprs = [((Add (Num 1)) ((Add (Num 1)) ((Add (Num 0)) (Num (- 2))))), ((Mul ((Mul (Neg (Num 0))) ((Mul (Num (- 1))) (Num 9)))) ((Add (Num 0)) (Num 8)))]
+((exprs |> (List.map pretty)) |> (List.iter print))
+(print ((List.map calc) exprs))
+--- stderr ---

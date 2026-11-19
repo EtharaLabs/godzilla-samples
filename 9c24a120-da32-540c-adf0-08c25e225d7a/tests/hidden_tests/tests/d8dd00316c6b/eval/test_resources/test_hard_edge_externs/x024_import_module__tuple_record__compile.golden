@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import math
+@dataclass(frozen=True, slots=True)
+class Box:
+    label: str
+    item: int
+t = ("first", math.sqrt(16.0))
+lbl, v = t
+print(lbl)
+print(v)
+--- stderr ---

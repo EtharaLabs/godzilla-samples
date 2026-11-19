@@ -1,0 +1,176 @@
+exit: 0
+--- stdout ---
+00000002ok00000244values : List int
+pipeline : (List int) -> List int
+answer : Option int
+nums : List int
+visits : List string
+hist : Map string int
+extra : Map string int
+rawOf : Sku -> string
+mint : 'a -> int -> List Sku
+keys : List Sku
+kindOf : int -> string
+00004595from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+values = [2, 25, 25, 47, -1, -6, 9]
+def _pf_fn15(_pf_x):
+    def _pf_fn23(_pf_x):
+        def _pf_fn27(_pf_x):
+            def _pf_fn29(_pf_x):
+                def _pf_fn30(_pf_arg0):
+                    i, x = _pf_arg0
+                    return i * x
+                return _pf_map(_pf_fn30, _pf_indexed(_pf_x))
+            return _pf_fn29((lambda _pf_x: _pf_choose(lambda x: (Some(x // 2) if x % 2 == 0 else _None_), (lambda _pf_x: (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(3, _pf_x)))(_pf_filter(lambda x: x > 2, _pf_x)))(_pf_x)))(_pf_x))
+        return _pf_take(2, _pf_fn27(_pf_x))
+    return _pf_collect(lambda x: [x, x + 1], _pf_fn23(_pf_x))
+pipeline = _pf_fn15
+answer = _pf_max(pipeline(values))
+print(answer)
+print(len(values))
+def Calc_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Calc_between(lo, hi, x):
+    return lo <= x <= hi
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+nums = [13, -7, 13, 24, -10, 1, 26]
+print(_pf_map(functools.partial(Calc_clamp, 0, 14), nums))
+print(_pf_filter(functools.partial(Calc_between, 3, 21), nums))
+print(Calc_mean(nums))
+visits = ["cy", "ada", "fay", "eli", "ada", "dee", "cy", "ada", "fay"]
+m = dict()
+for w in visits:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+hist = m
+def _pf_fn31(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn31, _pf_map_to_list(hist)))
+extra = dict([("zed", 5), ("cy", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, hist))))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, hist))))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("acc", 2)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def _ap_Above(n):
+    if n > 30:
+        return Some(n - 30)
+    else:
+        return _None_
+def kindOf(n):
+    _pf_t1 = _ap_Above(n)
+    _pf_t2 = _ap_Even_Odd(n)
+    if isinstance(_pf_t1, Some):
+        d = _pf_t1._0
+        return f"above by {d}"
+    elif isinstance(_pf_t2, _Even):
+        return "even"
+    else:
+        return "odd"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+_pf_iter(print, _pf_map(kindOf, [11, 1, -2, 27, 14]))
+00000002ok00000022kindOf : int -> string0000000000000002ok00000017values : List int00000000--- stderr ---

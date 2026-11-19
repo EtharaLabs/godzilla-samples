@@ -1,0 +1,98 @@
+exit: 0
+--- stdout ---
+00000002ok00000289powAcc : int -> int -> int<'a> -> int<'a>
+collatz : int -> int -> int
+sumDigits : int -> int
+hits : int
+track : int<'a> ->{io} int<'a>
+summarize : (List int) ->{io} string
+doubled : List int
+fem : int -> int
+mal : int -> int
+tell : 'a -> (unit, List 'a)
+trace2 : int -> (int, List string)
+00002190def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(3, 11, 1))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [17, 39, 16]))
+def sumDigits(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + sumDigits(n // 10)
+print(sumDigits(1777))
+hits = 0
+def track(x):
+    global hits
+    hits = hits + 1
+    return x * 4
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([35, 44, 20, 43, 51, -4, 13, 19]))
+doubled = _pf_map(track, [35, 44, 20, 43])
+print(f"{doubled} after {hits} calls")
+def fem(n):
+    if n == 0:
+        return 1
+    else:
+        return n - mal(fem(n - 1))
+def mal(n):
+    if n == 0:
+        return 0
+    else:
+        return n - fem(mal(n - 1))
+print((_pf_map(fem, _pf_range(0, 6)), _pf_map(mal, _pf_range(0, 7))))
+def Logged_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Logged_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def trace2(x):
+    return Logged_bind(tell(f"start {x}"), lambda _: Logged_bind((x * 2, ["scaled"]), lambda y: (lambda z: Logged_bind(tell(f"z={z}"), lambda _: Logged_return_(z)))(y + 6)))
+print(_pf_map(trace2, [7, 6]))
+00000002ok00000030track : int<'a> ->{io} int<'a>0000000000000002ok00000027collatz : int -> int -> int00000000--- stderr ---

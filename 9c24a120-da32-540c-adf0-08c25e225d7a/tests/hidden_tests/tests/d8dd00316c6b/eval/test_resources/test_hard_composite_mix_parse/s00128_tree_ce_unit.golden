@@ -1,0 +1,51 @@
+exit: 0
+--- stdout ---
+type Bst = Leaf | Node Bst int Bst
+let insert x t =
+    match t:
+        case Leaf: (((Node Leaf) x) Leaf)
+        case (Node l v rt) if (x < v): (((Node ((insert x) l)) v) rt)
+        case (Node l v rt) if (x > v): (((Node l) v) ((insert x) rt))
+        case (Node _ _ _): t
+let tree = ([3, 46, 35, 5, 22, 36, 27] |> ((List.fold (flip insert)) Leaf))
+let sumT t =
+    match t:
+        case Leaf: 0
+        case (Node l v rt): (((sumT l) + v) + (sumT rt))
+(print (sumT tree))
+let containsOf x t =
+    match t:
+        case Leaf: false
+        case (Node l v rt): (if (x == v) then true elif (x < v) then ((containsOf x) l) else ((containsOf x) rt))
+(print ((List.map (fun k -> ((containsOf k) tree))) [3, 28, 32]))
+let toListT t =
+    match t:
+        case Leaf: []
+        case (Node l v rt): ((List.concat (toListT l)) ((List.concat [v]) (toListT rt)))
+(print (toListT tree))
+let readPair line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let inputs = ["pam=60", "max=2=1", "ray = 7", "kit = 7", "gus", "hal"]
+let results = ((List.map readPair) inputs)
+((List.iter print) results)
+let goodOnes = (results |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let firstGood = ((((results |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine results) |> (Result.mapError String.upper)))
+measure m
+measure s
+measure kg
+let laps = [289.6<m>, 377.1<m>, 167.1<m>, 490.0<m>, 165.9<m>]
+let durations = [49.4<s>, 7.8<s>, 72.1<s>, 20.2<s>, 45.8<s>]
+let dist = (((List.fold (+)) 0.0<m>) laps)
+let dur = (((List.fold (+)) 0.0<s>) durations)
+let pace = (dist / dur)
+(print ((Format.fixed 1) pace))
+let best = (((List.zip laps) durations) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf dist) dur) * 1000.0)))
+--- stderr ---

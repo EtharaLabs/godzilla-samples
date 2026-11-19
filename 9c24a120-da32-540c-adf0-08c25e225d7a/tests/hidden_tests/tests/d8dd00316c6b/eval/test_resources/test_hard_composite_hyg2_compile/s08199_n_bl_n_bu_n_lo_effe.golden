@@ -1,0 +1,62 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def nudge(n):
+    return n + 34
+def useHelper(x):
+    return nudge(x)
+def _pf_fn0():
+    nudge = 2
+    tmp = useHelper(nudge)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [4]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+beta = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, beta, third, useHelper(0)))
+list_ = [3, 0, 1]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def sum_(a, b):
+    return a - b
+print((sum_(5, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+acc = []
+for k in [3, 1, 6]:
+    _pf_t1 = lambda y: y * k
+    acc.append(_pf_t1)
+steps = acc
+print(_pf_map(lambda h: h(1), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def offsets(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 5
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(9, [3, 4, 3]))
+def margin(price, qty):
+    return price * qty - 9 * qty
+def report(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn3(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn3, [("bolt", 41, 5), ("cog", 36, 2)]))
+print(overall)
+--- stderr ---

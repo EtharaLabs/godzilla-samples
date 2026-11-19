@@ -1,0 +1,198 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Bst"
+    _1: int
+    _2: "Bst"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Bst = Leaf | Node
+stock: list[tuple[str, int]] = [("cog", 1), ("nut", 5), ("tap", 20), ("wick", 4), ("gear", -2)]
+def _pf_fn0(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn0, _pf_indexed(stock))
+def validate(rows) -> Ok | Error:
+    def _pf_fn1():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t0 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t0, Ok):
+            total = _pf_t0._0
+            return Ok(total)
+        else:
+            return _pf_t0
+    return _pf_fn1()
+print((validate(stock), validate([("ok", 1)])))
+def lookupAll(keys, table) -> Some | None_:
+    def _pf_fn2():
+        for (k, expected) in keys:
+            _pf_t1 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t1, Some):
+                v = _pf_t1._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t1
+        return Some(len(keys))
+    return _pf_fn2()
+print((lookupAll(_pf_take(2, stock), dict(stock)), lookupAll([("zz", 0)], dict(stock))))
+visits: list[str] = ["fay", "bo", "eli", "eli", "bo", "fay"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t2 = n + 1
+            m[w] = _pf_t2
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts: dict[str, int] = m
+def _pf_fn3(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn3, _pf_map_to_list(counts)))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+print((_pf_map_try_find("ada", counts), "ada" in counts))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+sa: set[int] = set([3, 5, 8, 10, 13, 17])
+sb: set[int] = set([4, 9, 10, 11, 13, 17])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 5 in sb, _pf_set_is_subset(set([3]), sa)))
+def insert(x: int, t: Bst) -> Bst:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(insert(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, insert(x, rt))
+        return t
+root: Bst = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [3, 28, 40, 48, 17])
+def minT(t: Bst) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minT(root))
+def toListT(t: Bst) -> list[int]:
+    if isinstance(t, Leaf):
+        return []
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+print(toListT(root))
+def sumOf(t: Bst) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumOf(l) + v + sumOf(rt)
+print(sumOf(root))
+def depthOf(t: Bst) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        rt = t._2
+        return 1 + max(depthOf(l), depthOf(rt))
+print(depthOf(root))
+--- stderr ---

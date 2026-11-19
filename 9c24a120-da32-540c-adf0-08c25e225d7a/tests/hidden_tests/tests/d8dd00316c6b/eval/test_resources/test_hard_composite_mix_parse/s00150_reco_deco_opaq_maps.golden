@@ -1,0 +1,39 @@
+exit: 0
+--- stdout ---
+type Parcel = { id: int, owner: string, amount: int, urgent: bool }
+let parcels = [Parcel { id = 100, amount = 43, owner = "jo", urgent = false }, Parcel { id = 101, owner = "fay", amount = 22, urgent = false }, Parcel { id = 102, owner = "jo", amount = 92, urgent = true }, Parcel { id = 103, owner = "fay", amount = 253, urgent = true }, Parcel { id = 104, owner = "fay", amount = 286, urgent = true }]
+(print (((parcels |> (List.sortByDescending (fun o -> o.amount))) |> (List.take 4)) |> (List.map (fun o -> o.id))))
+(print ((List.maxBy (fun o -> o.amount)) parcels))
+let bump2 o = (if o.urgent then { o with amount = (o.amount + 4) } else o)
+(print ((parcels |> (List.map bump2)) |> (List.map (fun o -> o.amount))))
+type Player = { name: string, points: int, active: bool }
+let decoder = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"ned\", \"points\": 97, \"active\": true}, {\"name\": \"jo\", \"points\": 95, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list decoder)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+opaque type AccountNo = string
+opaque type Handle = string
+let rawOf x =
+    match x:
+        case (AccountNo s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let keys = ((mint "acc") 2)
+(print ((keys |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head keys) == (Some (AccountNo "u-1"))))
+let events = ["eli", "dee", "cy", "fay", "cy", "cy", "eli"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let hist = (((List.fold bump) Map.empty) events)
+(print ((hist |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let sa = (Set.ofList [1, 8, 10, 11, 16, 17])
+let sb = (Set.ofList [3, 8, 10, 16, 18, 19])
+(print ((((Set.difference sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 6) sb), ((Set.isSubset (Set.ofList [1])) sa)))
+(print ((hist |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+(print (((hist |> (Map.map (fun k v -> (v * 10)))) |> Map.values) |> List.sort))
+--- stderr ---

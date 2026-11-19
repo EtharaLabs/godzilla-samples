@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: cannot assign to `total`: it is immutable (declare it with `let mut`)
+  --> 12:5
+   |
+12 |     total <- total + x
+   |     ^^^^^^^^^^^^^^^^^^
+
+error: cannot assign to `seen`: it is immutable (declare it with `let mut`)
+  --> 42:5
+   |
+42 |     seen <- seen + 1
+   |     ^^^^^^^^^^^^^^^^
+
+2 errors

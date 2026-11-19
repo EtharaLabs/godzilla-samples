@@ -1,0 +1,223 @@
+exit: 0
+--- stdout ---
+00000002ok00000330log : List string
+freq : Map string int
+extra : Map string int
+book : List Invoice
+nrec : int
+sumAmt : int
+label : Invoice -> string
+moved : List Invoice
+decoder : Decoder Player
+payload : string
+hits : int
+track : int<'a> ->{io} int<'a>
+summarize : (List int) ->{io} string
+doubled : List int
+trackTwice : int<'a> ->{io} int<'a>
+00006738from dataclasses import dataclass
+import functools
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True)
+class Player:
+    name: str
+    points: int
+    active: bool
+log = ["eli", "dee", "eli", "fay", "ada", "cy", "eli", "eli", "fay"]
+m = dict()
+for w in log:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+extra = dict([("zed", 5), ("eli", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+print(len(_pf_map_filter(lambda k, v: v > 1, freq)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, freq))))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(freq))))
+book = [Invoice(100, "ivy", 283, False, Addr("Rome", 3)), Invoice(101, "quin", 242, False, Addr("Riga", 1)), Invoice(102, "ivy", 219, True, Addr("Lima", 1)), Invoice(103, "quin", 64, False, Addr("Lima", 1))]
+def _pf_fn1(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, sumAmt = _pf_fold(_pf_fn1, (0, 0), book)
+print(f"{nrec} records, {sumAmt} total")
+def label(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(label, book)))
+def _pf_fn2(o):
+    if o.dest.zone > 2:
+        _pf_t3 = o
+        return Invoice(_pf_t3.id, _pf_t3.owner, _pf_t3.amount, _pf_t3.urgent, Addr("Hub", 1))
+    else:
+        return o
+moved = _pf_map(_pf_fn2, book)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", moved))
+print(_pf_max_by(lambda o: o.amount, book))
+decoder = _pf_dec_map3(lambda n, p, a: Player(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+payload = "[{\"name\": \"tom\", \"points\": 4, \"active\": false}, {\"name\": \"eli\", \"points\": 19, \"active\": true}, {\"name\": \"pam\", \"points\": 39, \"active\": true}, {\"name\": \"cy\", \"points\": 3, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+_pf_t5 = lambda n, p, a: Player(n, p, a)
+try:
+    _pf_t6 = json.loads(payload)
+    if not isinstance(_pf_t6, list):
+        raise ValueError("expected a JSON array")
+    _pf_t7 = []
+    for _pf_t8 in _pf_t6:
+        if not isinstance(_pf_t8, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t9 = _pf_t8["name"]
+        if not isinstance(_pf_t9, str):
+            raise ValueError("expected a string, got " + type(_pf_t9).__name__)
+        if not isinstance(_pf_t8, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t10 = _pf_t8["points"]
+        if not (isinstance(_pf_t10, int) and not isinstance(_pf_t10, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t10).__name__)
+        if not isinstance(_pf_t8, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t11 = _pf_t8["active"]
+        if not isinstance(_pf_t11, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t11).__name__)
+        _pf_t7.append(_pf_t5(_pf_t9, _pf_t10, _pf_t11))
+    _pf_t12 = Ok(_pf_t7)
+except Exception as e:
+    _pf_t12 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t12, Ok):
+    ps = _pf_t12._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t4 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t12._0
+    _pf_t4 = print(f"decode failed: {e.errorKind}")
+_pf_t4
+hits = 0
+def track(x):
+    global hits
+    hits = hits + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([54, 13, -13, -14, 16]))
+doubled = _pf_map(track, [54, 13, -13, -14])
+print(f"{doubled} after {hits} calls")
+trackTwice = lambda _pf_x: track(track(_pf_x))
+print((trackTwice(3), hits))
+00000002ok00000036summarize : (List int) ->{io} string0000000000000002ok00000020moved : List Invoice00000000--- stderr ---

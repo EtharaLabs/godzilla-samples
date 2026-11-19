@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+import threading
+def _pf_fn0(_):
+    return print("hi")
+t = threading.Thread(daemon=True, target=lambda: _pf_fn0(None))
+--- stderr ---

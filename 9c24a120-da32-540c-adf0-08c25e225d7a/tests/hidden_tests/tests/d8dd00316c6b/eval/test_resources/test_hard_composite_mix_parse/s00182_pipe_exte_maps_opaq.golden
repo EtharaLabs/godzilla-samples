@@ -1,0 +1,30 @@
+exit: 0
+--- stdout ---
+let data = [41, 31, 8, 41, (- 4), 45]
+let outcome = (List.len ((List.indexed >> (List.map (fun (i, x) -> (i * x)))) ((List.take 3) (List.distinct ((List.pairwise >> (List.map (fun (a, b) -> (b - a)))) data)))))
+(print outcome)
+(print <| (List.len data))
+extern pure loud: string -> string = str.upper
+(print (("tom" |> loud) |> String.rev))
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "1000110") + ((parseIn "15") 8)))
+let visits = ["fay", "cy", "dee", "eli", "fay", "ada", "bo"]
+let hist = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) visits)
+(print ((hist |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let extra = (Map.ofList [("zed", 5), ("fay", 0)])
+(print ((((Map.union extra) hist) |> Map.toList) |> List.sort))
+let sa = (Set.ofList [1, 2, 3, 4, 14, 15])
+let sb = (Set.ofList [7, 8, 13, 14, 15, 18])
+(print ((((Set.difference sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 7) sb), ((Set.isSubset (Set.ofList [1])) sa)))
+opaque type Sku = string
+opaque type Email = string
+let rawOf x =
+    match x:
+        case (Sku s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (Sku f"{prefix}-{i}"))))
+let ids = ((makeIds "u") 2)
+(print ((ids |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head ids) == (Some (Sku "u-1"))))
+--- stderr ---

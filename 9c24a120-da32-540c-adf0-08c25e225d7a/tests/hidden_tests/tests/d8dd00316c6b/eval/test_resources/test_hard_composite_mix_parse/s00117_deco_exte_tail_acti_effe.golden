@@ -1,0 +1,41 @@
+exit: 0
+--- stdout ---
+type Entry = { name: string, points: int, active: bool }
+let playerDecoder = ((((Decode.map3 (fun n p a -> Entry { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"kit\", \"points\": 78, \"active\": true}, {\"name\": \"dee\", \"points\": 8, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list playerDecoder)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+extern parseHex: string -> int = int(base=16)
+(print ((["ff", "c0"] |> (List.map parseHex)) |> List.sum))
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x3", "48"] |> (List.map safe)) |> (List.iter print))
+extern pure intRoot: int -> int = math.isqrt
+(print ((List.map intRoot) [32, 323, 395, 180]))
+let accumulate n acc = (if (n == 0) then acc else ((accumulate (n - 1)) (acc + (n * n))))
+(print ((accumulate 557) 0))
+let collatz n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((collatz (n // 2)) (acc + 1)) else ((collatz ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((collatz n) 0))) [45, 40, 23]))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 10) then (Some (n - 10)) else None)
+let bucketOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Even: "even"
+        case _: "odd"
+(([32, (- 1), 30, 29, 20, 12] |> (List.map bucketOf)) |> (List.iter print))
+let pure discount price qty = ((price * qty) - (9 * qty))
+let report label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let overall = (([("tap", 50, 2), ("wick", 42, 4), ("gear", 20, 4), ("cap", 6, 4)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (discount k))
+(print ((scaled 12) [1, 2, 3]))
+--- stderr ---

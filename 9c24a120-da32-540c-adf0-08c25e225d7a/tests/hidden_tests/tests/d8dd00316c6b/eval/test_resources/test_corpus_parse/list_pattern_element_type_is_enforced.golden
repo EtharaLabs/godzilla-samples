@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let f xs =
+    match xs:
+        case [1, *r]: r
+        case _: xs
+let bad = (f [true, false])
+--- stderr ---

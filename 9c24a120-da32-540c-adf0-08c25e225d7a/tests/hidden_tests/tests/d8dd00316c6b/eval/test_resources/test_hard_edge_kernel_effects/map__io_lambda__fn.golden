@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+00000002ok00000149counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+each : ('a -> 'b) -> (List 'a) -> List 'b
+g : 'a ->{io} List unit
+00000265def _pf_map(f, xs):
+    return list(map(f, xs))
+counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def each(f, xs):
+    return _pf_map(f, xs)
+def g(u):
+    return each(lambda x: print(x), [5, 6])
+00000002ok00000041each : ('a -> 'b) -> (List 'a) -> List 'b0000000000000002ok00000023g : 'a ->{io} List unit00000000--- stderr ---

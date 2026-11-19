@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+00000002ok00000129counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+apply : ('a -> 'b) -> 'a -> 'b
+p : 'a -> unit
+00000190counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def apply(f, x):
+    return f(x)
+def p(u):
+    return apply(quiet, 1)
+00000002ok00000030apply : ('a -> 'b) -> 'a -> 'b0000000000000002ok00000014p : 'a -> unit00000000--- stderr ---

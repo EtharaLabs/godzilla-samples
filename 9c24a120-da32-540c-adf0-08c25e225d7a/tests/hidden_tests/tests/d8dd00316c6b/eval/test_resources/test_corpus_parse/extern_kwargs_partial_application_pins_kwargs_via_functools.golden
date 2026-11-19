@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+extern openText: string -> int -> Seq string = builtins.open(mode="rt")
+let bare = openText
+let partial = (openText "a.txt")
+--- stderr ---

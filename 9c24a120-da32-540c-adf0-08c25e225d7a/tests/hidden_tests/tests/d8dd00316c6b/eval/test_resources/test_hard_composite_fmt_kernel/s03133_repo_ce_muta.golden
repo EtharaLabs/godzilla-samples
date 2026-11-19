@@ -1,0 +1,173 @@
+exit: 0
+--- stdout ---
+00000002ok00000403rows : List Row
+showRow : Row -> string
+decodeLine : string -> Result (string, int) string
+entries : List string
+results : List (Result (string, int) string)
+goodOnes : List (string, int)
+firstGood : Option string
+sumAll : (List (Result ('a, int) 'b)) -> Result int 'b
+hits : int
+track : int<'a> ->{io} int<'a>
+summarize : (List int) ->{io} string
+doubled : List int
+trackTwice : int<'a> ->{io} int<'a>
+00004608from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_id(x):
+    return x
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+rows = [Row("gear", 12, 37.6), Row("cap", 15, 28.16), Row("wick", 8, 30.48), Row("tap", 28, 16.41)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(8, "-", x.name)}: {_pf_fmt_pad_left(4, " ", str(x.qty))}: {_pf_fmt_fixed(1, x.price)}: {"restock" if x.qty > 8 else "ok"}: {_pf_fmt_currency("$", 2, x.price * 6.0)}"
+_pf_iter(print, _pf_map(showRow, rows))
+print(f"{len(rows)} rows, {_pf_str_upper("total")}={_pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, rows))}")
+def decodeLine(line):
+    def _pf_fn0():
+        match _pf_str_split("=", line):
+            case [_k, _v]:
+                _pf_t0 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+            case _:
+                _pf_t0 = Error(f"malformed: {line}")
+        if isinstance(_pf_t0, Ok):
+            k, v = _pf_t0._0
+            _pf_t1 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t1, Ok):
+                n = _pf_t1._0
+                return Ok((k, n))
+            else:
+                return _pf_t1
+        else:
+            return _pf_t0
+    return _pf_fn0()
+entries = ["gus", "quin = 4", "max", "ned", "jo=x", "hal=79"]
+results = _pf_map(decodeLine, entries)
+_pf_iter(print, results)
+goodOnes = _pf_choose(_pf_result_to_option, results)
+print(sum(_pf_map(_pf_snd, goodOnes)))
+firstGood = _pf_option_map(_pf_fst, _pf_head(_pf_choose(_pf_id, _pf_map(_pf_result_to_option, results))))
+if isinstance(firstGood, Some):
+    name = firstGood._0
+    _pf_t2 = print(f"first: {name}")
+else:
+    _pf_t2 = print("none parsed")
+_pf_t2
+def sumAll(xs):
+    def _pf_fn2(acc, r):
+        def _pf_fn3():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn3()
+    return _pf_fold(_pf_fn2, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(results)))
+hits = 0
+def track(x):
+    global hits
+    hits = hits + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([22, 22, 48, 50, -8]))
+doubled = _pf_map(track, [22, 22, 48, 50])
+print(f"{doubled} after {hits} calls")
+trackTwice = lambda _pf_x: track(track(_pf_x))
+print((trackTwice(3), hits))
+00000002ok00000023showRow : Row -> string0000000000000002ok00000050decodeLine : string -> Result (string, int) string00000000--- stderr ---

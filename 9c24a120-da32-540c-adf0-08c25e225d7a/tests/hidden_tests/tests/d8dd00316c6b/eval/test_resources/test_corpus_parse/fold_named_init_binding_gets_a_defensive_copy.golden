@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let seed = Map.empty
+let grown = (((List.fold (fun m x -> (((Map.add x) x) m))) seed) [1, 2])
+let a = (Map.len seed)
+let b = (Map.len grown)
+--- stderr ---

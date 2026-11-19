@@ -1,0 +1,23 @@
+from dataclasses import dataclass
+import bravo
+@dataclass(frozen=True, slots=True, order=True)
+class RecE:
+    id: int
+    kind: object
+print("loading Echo")
+base = 8 + bravo.base
+def step(x):
+    return bravo.step(x) + 8
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))
+def make(n):
+    return RecE(n, bravo.pickB(n))
+def unwrap(r):
+    return describe(r.kind)

@@ -1,0 +1,73 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def layer(start: int) -> tuple[list[int], int, int, int, int]:
+    acc = start
+    g0 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 1
+    def g1(y: int) -> int:
+        return acc * y
+    acc = g1(acc)
+    g2 = lambda y: acc + y
+    acc = acc + 8
+    def g3(y: int) -> int:
+        return acc * y
+    acc = acc + 1
+    return (g0([1, 2]), g1(3), g2(4), g3(5), acc)
+print(layer(7))
+acc = []
+for k in [7, 1, 4]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(2), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def offsets(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 3
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(7, [4, 5, 0]))
+def makeCounter(start: int):
+    n = start
+    def next_(u) -> int:
+        nonlocal n
+        n = n + 2
+        return n
+    return next_
+tick = makeCounter(1)
+print((tick(None), tick(None), tick(None)))
+def running(xs: list[int]) -> tuple[int, int]:
+    peak = 0
+    def step(acc: int, x: int) -> int:
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([-7, 9, 0, -9]))
+def tally(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([3, 17, 9, 8, 5, 12]))
+--- stderr ---

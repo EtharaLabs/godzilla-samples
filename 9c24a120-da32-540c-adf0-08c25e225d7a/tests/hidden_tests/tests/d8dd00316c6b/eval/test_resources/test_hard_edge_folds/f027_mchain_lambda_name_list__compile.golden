@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_map_to_list(m):
+    return list(m.items())
+def compute(u):
+    a = dict()
+    for x in _pf_range(1, 6):
+        _pf_t0 = x * 3
+        _pf_t1 = x + 100
+        _pf_t2 = x * 3
+        a[x] = _pf_t0
+        a[_pf_t1] = _pf_t2
+    return a
+print(_pf_map_to_list(compute(None)))
+--- stderr ---

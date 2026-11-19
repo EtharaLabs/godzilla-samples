@@ -1,0 +1,47 @@
+exit: 0
+--- stdout ---
+let data = [24, 5, 17, 35, 33, (- 6), 20, 40, 48]
+let keep n = ((n > 2) and ((n % 3) != 0))
+let outcome = ((List.sumBy (fun x -> (x * x))) ((List.indexed >> (List.map (fun (i, x) -> (i * x)))) (((List.windowed 2) >> (List.map (fun w -> ((Option.withDefault 0) (List.max w))))) ((List.filter (fun x -> ((x % 3) == 0))) (((List.chunkBySize 5) >> (List.map List.sum)) data)))))
+(print outcome)
+let pure discount price qty = ((price * qty) - (4 * qty))
+let emit label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let overall = (([("pin", 50, 5), ("rod", 9, 4), ("bolt", 17, 2), ("pin", 9, 1)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print overall)
+type Booking = { id: int, owner: string, amount: int, urgent: bool }
+let tickets = [Booking { id = 100, owner = "sue", amount = 64, urgent = false }, Booking { id = 101, owner = "cy", amount = 283, urgent = false }, Booking { owner = "sue", id = 102, amount = 117, urgent = false }, Booking { urgent = false, id = 103, amount = 209, owner = "oz" }]
+let byOwner = ((tickets |> (List.groupBy (fun o -> o.owner))) |> (List.map (fun (k, os) -> (k, (List.len os), ((List.sumBy (fun o -> o.amount)) os)))))
+(print byOwner)
+let classify o =
+    match o:
+        case Booking { urgent = true, amount } if (amount > 96): "rush-big"
+        case Booking { urgent = true }: "rush"
+        case Booking { amount }: (if (amount > 96) then "big" else "normal")
+(print ((List.map classify) tickets))
+(print ((List.countBy classify) tickets))
+let tag o =
+    let Booking { id, amount } = o
+    f"#{id}:{(((Format.padLeft 5) " ") (String.fromInt amount))}"
+(print ((tickets |> (List.map tag)) |> (String.join ", ")))
+type Move = Rest int | Load | Mark | Drop int int | Emit string int
+let show t =
+    match t:
+        case (Rest n0): f"rest({n0})"
+        case Load: f"load"
+        case Mark: f"mark"
+        case (Drop n0 n1) if (0 <= n0 < 18): f"drop!({n0},{n1})"
+        case (Drop n0 n1): f"drop({n0},{n1})"
+        case (Emit s0 n1): f"emit({s0},{n1})"
+let cost t =
+    match t:
+        case Load: 1
+        case Mark: 1
+        case _: 1
+let queue = [((Emit "ray") (- 1)), ((Emit "max") 7), Mark, Mark, ((Emit "fay") (- 3)), ((Emit "jo") 11)]
+(print ((queue |> (List.map show)) |> (String.join "; ")))
+let grandSum = (queue |> (List.sumBy cost))
+(print f"grandSum={grandSum}")
+(print ((queue |> (List.filter (fun t -> ((cost t) > 5)))) |> List.len))
+--- stderr ---

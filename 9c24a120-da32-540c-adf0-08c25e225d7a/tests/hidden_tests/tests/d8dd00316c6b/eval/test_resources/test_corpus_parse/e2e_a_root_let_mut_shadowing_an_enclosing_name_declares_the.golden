@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+let f x =
+    let g o =
+        let before = x
+        let mut x = 0
+        let bump u = (x <- (x + u))
+        (bump 5)
+        (bump 6)
+        ((before + x) + o)
+    (g 1)
+let r = (f 100)
+--- stderr ---

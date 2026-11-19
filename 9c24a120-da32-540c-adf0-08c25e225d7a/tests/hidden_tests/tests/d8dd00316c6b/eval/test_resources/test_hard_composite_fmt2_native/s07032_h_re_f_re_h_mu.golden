@@ -1,0 +1,101 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Club:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: "Club"
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Slot = Active | Idle | Gone
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+def promote(s: Slot) -> Slot:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t0 = p
+        return Active(Person(_pf_t0.name, p.age + 1))
+    else:
+        if isinstance(s, Idle):
+            t = s._0
+            if t.size > 3:
+                _pf_t1 = t
+                return Idle(Club(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+roster: list[Slot] = _pf_map(promote, [Active(Person("kit", 26)), Idle(Club("pin", 3)), Active(Person("ada", 36)), Idle(Club("cap", 5)), _Gone])
+print(roster)
+members: list[Person] = [Person("ada", 6), Person("cy", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+scores: list[Result2] = [Result2("ivy", 92, 0.51), Result2("sue", 40, 0.66), Result2("fay", 0, 0.85), Result2("lu", 3, 0.61), Result2("quin", 81, 0.08)]
+def fmtRow(_pf_arg0: Result2) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{_pf_fmt_pad_left(5, " ", str(pts * 9))},{{{pts}}},{_pf_str_join("/", [who, str(pts)])},{_pf_str_upper(_pf_str_slice(0, 2, who))},{"pass" if pts >= 40 else "fail"}"
+_pf_iter(print, _pf_map(fmtRow, scores))
+total: int = _pf_sum_by(lambda s: s.pts, scores)
+print(f"total={total} avg {_pf_fmt_fixed(1, _pf_fold(lambda a, s: a + s.ratio, 0.0, scores))} {"{"}done{"}"}")
+def audit(xs: list[int]) -> str:
+    seen = 0
+    best = 0
+    def note(x: int):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    return f"seen={seen} best={best}"
+print(audit([36, 11, 30, 12]))
+events: list[str] = []
+def logEvent(msg: str) -> int:
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts: list[int] = _pf_map(logEvent, ["start", "hal", "stop"])
+print((events, counts))
+--- stderr ---

@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let step m x = ((Map.remove x) (((Map.add (x + 1)) x) m))
+let out = (Map.toList (((List.fold step) Map.empty) [1, 2, 3]))
+--- stderr ---

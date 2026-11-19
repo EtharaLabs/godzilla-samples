@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 56:14
+   |
+56 | let joined = text + "!"
+   |              ^^^^
+
+note: hole `?` has type `Cmd -> 'a` — try: cost, describe, print, id, ignore, Some, and 20 more — or: List.replicate ?, List.updateAt ?, List.insertAt ?, Seq.replicate ?, and 9 more
+  --> 28:32
+   |
+28 | let tally = prog |> List.sumBy ?
+   |                                ^
+
+1 error
+1 unfilled hole

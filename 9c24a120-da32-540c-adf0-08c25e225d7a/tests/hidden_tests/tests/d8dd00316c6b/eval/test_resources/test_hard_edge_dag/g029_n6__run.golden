@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Bravo` (bravo.pyfun) --
+error: imported type `Kind` (from `Golf`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Bravo.
+  | ^
+-- module `Echo` (echo.pyfun) --
+error: imported type `Kind` (from `Foxtrot`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Echo.
+  | ^
+error: imported type `Kind` (from `Golf`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Echo.
+  | ^
+
+3 errors

@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let dup acc x =
+    match acc:
+        case (m, n): ((((Map.add x) x) m), m)
+let out =
+    match (((List.fold dup) (Map.empty, Map.empty)) [1, 2]):
+        case (a, b): ((Map.toList a), (Map.toList b))
+--- stderr ---

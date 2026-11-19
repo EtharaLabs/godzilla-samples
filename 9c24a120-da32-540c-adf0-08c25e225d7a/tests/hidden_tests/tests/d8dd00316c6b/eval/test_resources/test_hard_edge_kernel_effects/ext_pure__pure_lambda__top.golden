@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000002ok00000092counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+r : unit
+00000156import m
+counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+r = m.each(lambda x: None)
+00000002ok00000032each : (int -> unit) ->{io} unit0000000000000002ok00000008r : unit00000000--- stderr ---

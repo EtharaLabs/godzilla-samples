@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def f(xs: list[int]) -> int:
+    if len(xs) == 0:
+        return 0
+    else:
+        x = xs[0]
+        rest = xs[1:len(xs)]
+        return x
+--- stderr ---

@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import textwrap as tw
+@dataclass(frozen=True, slots=True)
+class Box:
+    label: str
+    item: int
+t = ("first", tw.indent("a\nb", "> "))
+lbl, v = t
+print(lbl)
+print(v)
+--- stderr ---

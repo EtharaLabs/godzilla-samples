@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `High` is not matched
+ --> 7:3
+  |
+7 |   match n:
+  |   ^^^^^^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 21:11
+   |
+21 | let vol = cbrt 8.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

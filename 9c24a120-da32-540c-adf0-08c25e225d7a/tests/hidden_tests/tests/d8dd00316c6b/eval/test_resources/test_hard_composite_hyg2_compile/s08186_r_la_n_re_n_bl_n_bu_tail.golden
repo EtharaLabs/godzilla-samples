@@ -1,0 +1,93 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+inputs2 = [3, 29, 0, 29, 26, 1]
+factor = 2
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), inputs2))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(9), makers2))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn1, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+def stack2(start):
+    base = start
+    def g0(y):
+        return base * y
+    base = base * 4
+    g1 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 9
+    return (g0(2), g1([1, 2]), base)
+print(stack2(1))
+def bump2(n):
+    return n + 43
+def useHelper(x):
+    return bump2(x)
+def _pf_fn2():
+    bump2 = 9
+    tmp = useHelper(bump2)
+    return tmp * 2
+alpha = _pf_fn2()
+def _pf_fn3():
+    _pf_t0 = [2]
+    if _pf_t0:
+        bump2 = _pf_t0[0]
+        return bump2 + useHelper(1)
+    else:
+        return 0
+beta = _pf_fn3()
+def _pf_fn4():
+    if alpha > beta:
+        _alpha = beta
+        return _alpha + 1
+    else:
+        return alpha
+third = _pf_fn4()
+print((alpha, beta, third, useHelper(0)))
+reversed_ = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+list_ = [2, 0, 4]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([3, 1, 8, 9]), _pf_sort([3, 1, 2])))
+def euclid(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(euclid(371, 62))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [58, 27, 7]))
+--- stderr ---

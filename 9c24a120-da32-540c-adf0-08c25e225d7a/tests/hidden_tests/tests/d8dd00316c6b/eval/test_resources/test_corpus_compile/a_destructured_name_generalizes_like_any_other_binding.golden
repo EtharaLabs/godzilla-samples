@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+def _pf_map(f, xs):
+    return list(map(f, xs))
+f, g = (_pf_map, _pf_map)
+a = f(lambda x: x + 1, [1])
+b = g(lambda s: len(s), ["x"])
+--- stderr ---

@@ -1,0 +1,193 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_is_error(r):
+    return isinstance(r, Error)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Change = Put | Append | Skip
+reach: float = math.hypot(7.0 / 1.0, 7.0 / 1.0) * 1.0
+factor: float = math.sqrt(5.0)
+side: float = math.sqrt(49.0)
+vol: float = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, factor), side, vol))
+print(mth.floor(reach / 1.0))
+def velocity(d: int, t: int) -> float:
+    return d / t
+print(_pf_fmt_fixed(2, velocity(reach, 3.0)))
+def decodeLine(line: str) -> Ok | Error:
+    def _pf_fn0():
+        _pf_t1 = _pf_str_split("=", line)
+        if len(_pf_t1) == 2:
+            _k = _pf_t1[0]
+            _v = _pf_t1[1]
+            _pf_t0 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+        else:
+            _pf_t0 = Error(f"malformed: {line}")
+        if isinstance(_pf_t0, Ok):
+            k, v = _pf_t0._0
+            _pf_t2 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t2, Ok):
+                n = _pf_t2._0
+                return Ok((k, n))
+            else:
+                return _pf_t2
+        else:
+            return _pf_t0
+    return _pf_fn0()
+entries: list[str] = ["kit", "ivy = 0", "tom=x", "quin=78"]
+parsed: list[Ok | Error] = _pf_map(decodeLine, entries)
+_pf_iter(print, parsed)
+errs: int = len(_pf_filter(_pf_result_is_error, parsed))
+print(f"{errs} errors")
+firstGood: Some | None_ = _pf_option_map(_pf_fst, _pf_head(_pf_choose(_pf_id, _pf_map(_pf_result_to_option, parsed))))
+if isinstance(firstGood, Some):
+    name = firstGood._0
+    _pf_t3 = print(f"first: {name}")
+else:
+    _pf_t3 = print("none parsed")
+_pf_t3
+def sumAll(xs: list[Ok | Error]) -> Ok | Error:
+    def _pf_fn2(acc, r):
+        def _pf_fn3():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn3()
+    return _pf_fold(_pf_fn2, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(parsed)))
+def replay(script: list[Change]) -> tuple[dict[str, int], list[int]]:
+    def apply(acc: tuple[dict[str, int], list[int]], op: Change) -> tuple[dict[str, int], list[int]]:
+        m = acc[0]
+        xs = acc[1]
+        if isinstance(op, Put):
+            k = op._0
+            v = op._1
+            return (_pf_map_add(k, v, m), xs)
+        elif isinstance(op, Append):
+            n = op._0
+            return (m, _pf_concat(xs, [n]))
+        else:
+            return acc
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+changes: list[Change] = [Put("cog", 1), _Skip, Append(0), Put("bolt", 3), Append(8), Put("bolt", 8)]
+outcome: tuple[dict[str, int], list[int]] = replay(changes)
+mm, items = outcome
+print((_pf_map_to_list(mm), items))
+sumSq: int = _pf_fold(lambda apply, x: apply + x * x, 0, [8, 8, 6, 1])
+print(sumSq)
+--- stderr ---

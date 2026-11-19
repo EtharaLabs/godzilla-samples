@@ -1,0 +1,150 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+def evalEx(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return evalEx(env, a) + evalEx(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(runSt, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def runSt(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, evalEx(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", evalEx(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(evalEx(dict(), Block([Set("a", Lit(3)), Set("b", Plus(Ref("a"), Lit(3))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+inputs2 = [7, 4, 12, 25, 21]
+gain = 5
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(7), makers2))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+tweak2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(2, 13, 1))
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(63616))
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [29, 7, 37]))
+def Perhaps_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Perhaps_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Perhaps_bind(_pf_str_to_int(a), lambda x: Perhaps_bind(_pf_str_to_int(b), lambda y: Perhaps_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Perhaps_return_(shown))(q * 4))))
+print((safeDiv("95", "2"), safeDiv("4", "0"), safeDiv("x", "1")))
+--- stderr ---

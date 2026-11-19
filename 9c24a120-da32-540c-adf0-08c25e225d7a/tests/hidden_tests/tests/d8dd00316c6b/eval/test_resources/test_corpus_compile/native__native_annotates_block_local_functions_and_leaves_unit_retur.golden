@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: float
+    def __repr__(self):
+        return f"Square({self._0!r})"
+Shape = Circle | Square
+def total(shapes: list[Shape]) -> float:
+    def area(s: Shape) -> float:
+        if isinstance(s, Circle):
+            r = s._0
+            return 3.0 * r * r
+        else:
+            w = s._0
+            return w * w
+    def add(acc: float, s: Shape) -> float:
+        return acc + area(s)
+    return _pf_fold(add, 0.0, shapes)
+def report(n: float):
+    return print(n + 0.0)
+report(total([Circle(1.0), Square(2.0)]))
+--- stderr ---

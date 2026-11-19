@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Halt _` is not matched
+ --> 7:3
+  |
+7 |   match t:
+  |   ^^^^^^^^
+
+error: cannot assign to `seen`: it is immutable (declare it with `let mut`)
+  --> 27:5
+   |
+27 |     seen <- seen + 1
+   |     ^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 47:11
+   |
+47 | let vol = cbrt 8.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

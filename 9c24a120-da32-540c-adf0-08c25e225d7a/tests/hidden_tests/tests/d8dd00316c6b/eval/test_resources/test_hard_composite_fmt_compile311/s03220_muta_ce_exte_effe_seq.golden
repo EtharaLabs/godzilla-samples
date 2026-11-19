@@ -1,0 +1,130 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+ticks = 0
+def record(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([19, -8, -6, 28, 54]))
+doubled = _pf_map(record, [19, -8, -6, 28])
+print(f"{doubled} after {ticks} calls")
+def readPair(line):
+    def _pf_fn0():
+        _pf_t1 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t1, Some):
+            v = _pf_t1._0
+            _pf_t0 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some(n * 4)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+lines = ["max", "hal", "ada=1=1", "dee", "ned = 4"]
+results = _pf_map(readPair, lines)
+_pf_iter(print, results)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), results)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), results))))
+print(_pf_map(math.isqrt, [129, 389, 305, 245]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "c0"])))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [8, 12, 12, 3]))
+def margin(price, qty):
+    return price * qty - 6 * qty
+def announce(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn1, [("nut", 22, 5), ("gear", 17, 1), ("gear", 25, 1), ("gear", 31, 3)]))
+print(overall)
+def _pf_fn2():
+    for x in _pf_range(1, 8):
+        y = x * x
+        yield y
+series = _pf_fn2()
+print(list(_pf_seq_take(2, map(lambda n: n + 1, series))))
+print(list(_pf_seq_take(5, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 7)))))
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn3, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 585, fib)))
+--- stderr ---

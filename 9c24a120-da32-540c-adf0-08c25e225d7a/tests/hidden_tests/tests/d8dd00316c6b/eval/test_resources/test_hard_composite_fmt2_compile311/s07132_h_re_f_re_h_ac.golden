@@ -1,0 +1,149 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Pilot:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@dataclass(frozen=True, slots=True)
+class Score:
+    who: str
+    pts: int
+    ratio: float
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Pilot(_pf_t0.name, p.age + 1))
+        case Parked(t) if t.size > 5:
+            _pf_t1 = t
+            return Parked(Team(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [_Gone, _Gone, Parked(Team("rod", 8)), Parked(Team("pin", 5))])
+print(roster)
+people = [Pilot("tom", 7), Pilot("bo", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+marks = [Score("ada", 77, 0.62), Score("tom", 42, 0.0), Score("jo", 79, 0.39), Score("hal", 69, 0.95)]
+def line3(_pf_arg0):
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return "{} {} pts={} {}".format(f"<{pts}>", _pf_fmt_percent(1, ratio), pts, _pf_fmt_pad_left(5, " ", str(pts * 9)))
+_pf_iter(print, _pf_map(line3, marks))
+total = _pf_sum_by(lambda s: s.pts, marks)
+print("total={} avg {} {}done{}".format(total, _pf_fmt_fixed(1, _pf_fold(lambda a, s: a + s.ratio, 0.0, marks)), "{", "}"))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 1:
+        return _Low()
+    elif scaled < 28:
+        return _Mid()
+    else:
+        return _High()
+def _ap_KeyVal(s):
+    match _pf_str_split("=", s):
+        case [k, v]:
+            _pf_t2 = _pf_str_to_int(v)
+            if isinstance(_pf_t2, Some):
+                n = _pf_t2._0
+                return Some((_pf_str_strip(k), n))
+            else:
+                return _None_
+        case _:
+            return _None_
+def tier(n):
+    _pf_t3 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t3, _Low):
+        return "low"
+    elif isinstance(_pf_t3, _Mid):
+        return "mid"
+    elif isinstance(_pf_t3, _High):
+        return "high"
+    else:
+        raise RuntimeError("non-exhaustive match")
+def describe(s):
+    _pf_t4 = _ap_KeyVal(s)
+    if isinstance(_pf_t4, Some):
+        pair = _pf_t4._0
+        if _pf_snd(pair) < 0:
+            return f"{_pf_fst(pair)}: negative"
+    if isinstance(_pf_t4, Some):
+        pair = _pf_t4._0
+        return f"{_pf_fst(pair)}: {tier(_pf_snd(pair))}"
+    return "?"
+_pf_iter(print, _pf_map(describe, ["sue", "ivy=x", "tom=x", "dee=20"]))
+--- stderr ---

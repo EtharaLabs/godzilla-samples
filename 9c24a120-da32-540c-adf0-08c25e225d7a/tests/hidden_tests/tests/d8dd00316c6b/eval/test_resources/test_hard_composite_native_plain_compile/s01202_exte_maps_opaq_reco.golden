@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+print(_pf_map(math.isqrt, [25, 133, 253, 226]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [2, 9, 3, 11]))
+events = ["ada", "fay", "dee", "ada", "dee", "ada", "dee", "eli"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, hist))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+print((_pf_map_try_find("gus", hist), "gus" in hist))
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = makeIds("acc", 2)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("u-1"))
+orders = [Ticket(100, "bo", 119, False, Site("Rome", 1)), Ticket(101, "kit", 124, False, Site("Bern", 3)), Ticket(102, "max", 188, False, Site("Lima", 4)), Ticket(103, "bo", 88, True, Site("Baku", 2))]
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by(lambda o: o.amount, orders))))
+cheap, dear = _pf_partition(lambda o: o.amount < 107, orders)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn1(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn1, (0, 0), orders)
+print(f"{cnt} records, {sumAmt} total")
+def _pf_fn2(o):
+    if o.dest.zone > 2:
+        _pf_t3 = o
+        return Ticket(_pf_t3.id, _pf_t3.owner, _pf_t3.amount, _pf_t3.urgent, Site("Hub", 1))
+    else:
+        return o
+moved = _pf_map(_pf_fn2, orders)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", moved))
+--- stderr ---

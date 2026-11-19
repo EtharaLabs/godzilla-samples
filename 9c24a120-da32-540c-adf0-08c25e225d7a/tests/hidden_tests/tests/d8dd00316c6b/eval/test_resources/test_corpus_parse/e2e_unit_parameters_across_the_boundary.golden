@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+extern myAbs: unit -> int -> int = abs
+extern pick: int -> unit -> int -> int = max
+let a = ((myAbs ()) (- 5))
+let b = (((pick 3) ()) 5)
+let fromNeg = (myAbs ())
+let c = (fromNeg (- 7))
+let lifted = (pick 4)
+let d = ((lifted ()) 2)
+--- stderr ---

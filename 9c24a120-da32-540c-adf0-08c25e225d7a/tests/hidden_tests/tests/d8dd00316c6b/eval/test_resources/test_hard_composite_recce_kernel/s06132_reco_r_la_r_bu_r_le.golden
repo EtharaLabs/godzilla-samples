@@ -1,0 +1,142 @@
+exit: 0
+--- stdout ---
+00000002ok00000307orders : List Ticket
+surcharge : Ticket -> Ticket
+priority : Ticket -> string
+byOwner : List (string, int, int)
+cheap : List Ticket
+dear : List Ticket
+inputs2 : List int
+factor : int
+scalers : List (int -> int)
+combos : List int
+stepA : int -> int -> int
+stepB : int -> int -> int
+stepC : int -> int -> int
+00003634from dataclasses import dataclass
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+orders = [Ticket(100, "ray", 68, True), Ticket(101, "lu", 257, True), Ticket(102, "quin", 205, False), Ticket(103, "quin", 9, True), Ticket(104, "quin", 235, False), Ticket(105, "lu", 128, True)]
+def surcharge(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Ticket(_pf_t0.id, _pf_t0.owner, o.amount + 12, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, orders)))
+def priority(o):
+    match o:
+        case Ticket(urgent=True, amount=amount) if amount > 72:
+            return "rush-big"
+        case Ticket(urgent=True):
+            return "rush"
+        case Ticket(amount=amount):
+            if amount > 72:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(priority, orders))
+print(_pf_count_by(priority, orders))
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, orders))
+print(byOwner)
+cheap, dear = _pf_partition(lambda o: o.amount < 121, orders)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+inputs2 = [6, 25, 21, 5, 25, 14]
+factor = 3
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(inputs2), inputs2))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(6), scalers))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(inputs2))))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn2, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 3], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(1, 2), (1, 1)], _pf_fn3), Grid_delay(lambda _: Grid_yield_(2)))
+print(combos)
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [13, 12, 13, 15]))
+00000002ok00000027priority : Ticket -> string0000000000000002ok00000027scalers : List (int -> int)00000000--- stderr ---

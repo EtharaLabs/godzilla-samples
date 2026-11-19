@@ -1,0 +1,225 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: int
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Tri:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Tri({self._0!r}, {self._1!r})"
+Fig = Sq | Disc | Tri
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Panel"
+    bottom: "Panel"
+    slot: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Push({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: str
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Skip({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+Cmd = Mark | Push | Store | Skip | Load
+def extent(s: Fig) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Disc):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Tri):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Sq(5), Disc(3), Tri(1, 6), Tri(1, 9)]))
+def settle(n: int) -> int:
+    _pf_t0 = n % 3
+    if _pf_t0 == 0:
+        _n = n // 3
+        return _n + 8
+    else:
+        k = _pf_t0
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(settle, [26, 10, 23, 16]))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 4
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(8, []), score(1, [6]), score(1, [5, 2, 3])))
+def pick(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((7, 2)), 0), pick(Some((1, 5)), 0), pick(_None_, 2)))
+tiles: list[Panel] = [Panel(6, 5, "pin"), Panel(7, 4, "gear"), Panel(6, 3, "tap"), Panel(9, 3, "cog"), Panel(9, 9, "pin"), Panel(4, 4, "sq")]
+def surface(_pf_arg0: Panel) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+def stackOf(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Panel):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def caption(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, tiles)))
+def grow(b: Panel) -> Panel:
+    w = b.w
+    h = b.h
+    _pf_t2 = b
+    return Panel(w + 1, h * 2, _pf_t2.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def explain(t: Cmd) -> str:
+    if isinstance(t, Mark):
+        n0 = t._0
+        if 0 <= n0 < 6:
+            return f"mark!({n0})"
+    if isinstance(t, Mark):
+        n0 = t._0
+        return f"mark({n0})"
+    else:
+        if isinstance(t, Push):
+            n0 = t._0
+            s1 = t._1
+            if n0 > 1:
+                return f"push!({n0},{s1})"
+        if isinstance(t, Push):
+            n0 = t._0
+            s1 = t._1
+            return f"push({n0},{s1})"
+        elif isinstance(t, Store):
+            s0 = t._0
+            return f"store({s0})"
+        else:
+            if isinstance(t, Skip):
+                n0 = t._0
+                n1 = t._1
+                if n0 % 2 == 0:
+                    return f"skip!({n0},{n1})"
+            if isinstance(t, Skip):
+                n0 = t._0
+                n1 = t._1
+                return f"skip({n0},{n1})"
+            else:
+                s0 = t._0
+                return f"load({s0})"
+def cost(t: Cmd) -> int:
+    if isinstance(t, Push):
+        x0 = t._0
+        return x0 * 3
+    elif isinstance(t, Skip):
+        x0 = t._0
+        x1 = t._1
+        return x0 + x1
+    elif isinstance(t, Store):
+        return 7
+    else:
+        return 0
+batch: list[Cmd] = [Mark(11), Load("ada"), Store("cy"), Push(2, "dee"), Skip(10, -1)]
+print(_pf_map(explain, batch))
+total: int = _pf_sum_by(cost, batch)
+print(f"total={total}")
+print((_pf_head(batch), _pf_last(batch)))
+--- stderr ---

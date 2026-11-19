@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 6:18
+  |
+6 | let t1 = (0, 1 + "x", "z")
+  |                  ^^^
+
+error: type 'a -> 'a does not support comparison (`<`)
+ --> 8:15
+  |
+8 |   let inner = (fun a -> a) < (fun b -> b)
+  |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 10:21
+   |
+10 | let s3 = f"got {[1, "a"]}"
+   |                     ^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 12:11
+   |
+12 |   let w = 3.0<m> + 2.0<s>
+   |           ^^^^^^^^^^^^^^^
+
+4 errors

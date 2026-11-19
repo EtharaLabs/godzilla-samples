@@ -1,0 +1,105 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import asyncio
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def visitAll(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def say(x):
+    return print(f"* {x}")
+visitAll(say, [1, 5, 3])
+print(mapTwice(lambda x: x + 1, [1, 2, 3]))
+def maybeLog(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(maybeLog(True, 1) + maybeLog(False, 5))
+def quiet(x):
+    return x + 9
+print(mapTwice(quiet, [8]))
+def done(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def loop(n, acc):
+    async def _pf_fn2():
+        async def _pf_fn1():
+            return n * 2
+        k = await _pf_fn1()
+        if n <= 0:
+            return await done(acc)
+        else:
+            return await loop(n - 1, acc + k)
+    return _pf_Async(_pf_fn2)
+print(asyncio.run(_pf_run(loop(45, 0))))
+span = math.hypot(6.0 / 1.0, 9.0 / 1.0) * 1.0
+ratio = math.sqrt(2.0)
+side = math.sqrt(36.0)
+vol = math.cbrt(8.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(span / 1.0))
+def velocity(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, velocity(span, 5.0)))
+laps = [302.0, 438.0, 185.0, 246.3]
+splits = [84.0, 73.4, 17.0, 81.5]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, splits)
+rate = dist / elapsed
+print(_pf_fmt_fixed(3, rate))
+side2 = math.sqrt(49.0)
+cube = side2 * side2 * side2
+print(f"{side2} {math.cbrt(cube)}")
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+def _pf_fn3(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn3, _pf_zip(laps, splits))
+print(best)
+--- stderr ---
+note: `loop` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+type Shape = Circle float | Rect float float
+let a = ((Circle 1.0) < (Circle 2.0))
+let b = ((Circle 9.0) < ((Rect 0.0) 0.0))
+let c = (((Rect 1.0) 2.0) < ((Rect 1.0) 3.0))
+--- stderr ---

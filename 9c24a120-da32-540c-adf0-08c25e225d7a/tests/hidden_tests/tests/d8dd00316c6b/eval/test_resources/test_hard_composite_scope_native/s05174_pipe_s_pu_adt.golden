@@ -1,0 +1,138 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: "Tile"
+    bottom: "Tile"
+    slot: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: str
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    def __repr__(self):
+        return "Halt"
+_Halt: Halt = Halt()
+Move = Push | Skip | Halt
+readings: list[int] = [9, 42, 16, 6, 34, 24, 14]
+def accept(n: int) -> bool:
+    return n > 4 and n % 4 != 0
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn2, _pf_indexed(_pf_x))
+outcome: int = _pf_sum_by(lambda x: x * x, _pf_fn1(_pf_sort((lambda _pf_x: _pf_map(sum, _pf_chunk(2, _pf_x)))(_pf_collect(lambda x: [x, x + 1], readings)))))
+print(outcome)
+tiles: list[Tile] = [Tile(4, 7, "nut"), Tile(1, 4, "bolt"), Tile(9, 4, "wick"), Tile(7, 2, "bolt"), Tile(6, 2, "wick"), Tile(4, 4, "sq")]
+def _pf_fn3(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn4(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn3, _pf_filter(_pf_fn4, tiles)))
+def stackOf(s: Shelf) -> str:
+    if isinstance(s, Shelf) and isinstance(s.top, Tile):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Shelf(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def describe(b: Tile) -> str:
+    if isinstance(b, Tile):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Tile) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, tiles)))
+def describe2(t: Move) -> str:
+    if isinstance(t, Push):
+        s0 = t._0
+        return f"push({s0})"
+    elif isinstance(t, Skip):
+        return "skip/halt"
+    else:
+        return "skip/halt"
+def score(t: Move) -> int:
+    if isinstance(t, Push):
+        return 2
+    elif isinstance(t, Halt):
+        return 9
+    else:
+        return 0
+prog: list[Move] = [Push("max"), Push("ada"), _Skip, _Halt, _Skip, Push("kit"), Push("jo")]
+print(_pf_str_join(" ", _pf_map(describe2, prog)))
+total: int = _pf_sum_by(score, prog)
+print(f"total={total}")
+print(_pf_max_by(score, prog))
+--- stderr ---

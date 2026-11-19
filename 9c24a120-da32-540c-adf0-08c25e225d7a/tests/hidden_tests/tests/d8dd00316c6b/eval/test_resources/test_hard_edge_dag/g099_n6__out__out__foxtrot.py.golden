@@ -1,0 +1,42 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import bravo
+import delta
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaF:
+    _0: int
+    def __repr__(self):
+        return f"KaF({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbF:
+    def __repr__(self):
+        return "KbF"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbF = KbF()
+print("loading Foxtrot")
+def pickF(n):
+    if n > 2:
+        return KaF(n)
+    else:
+        return _KbF
+base = 6 + bravo.base + delta.base
+def step(x):
+    return delta.step(bravo.step(x)) + 6
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))

@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+00000002ok00000056List.countBy : ('a -> 'b) -> (List 'a) -> List ('b, int)0000000000000002ok0000000000000172def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+print(_pf_count_by)
+--- stderr ---

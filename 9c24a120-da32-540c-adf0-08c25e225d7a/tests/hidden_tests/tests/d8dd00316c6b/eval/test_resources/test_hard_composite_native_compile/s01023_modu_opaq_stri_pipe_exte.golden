@@ -1,0 +1,88 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_distinct(xs):
+    return list(dict.fromkeys(xs))
+def _pf_drop_while(f, xs):
+    return list(itertools.dropwhile(f, xs))
+def _pf_forall(f, xs):
+    return all(map(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Stats_square(x):
+    return x * x
+def Stats_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+nums: list[int] = [11, 24, 23, 26, -12, -11, 9]
+print(_pf_map(functools.partial(Stats_clamp, 0, 9), nums))
+print(_pf_map(Stats_square, nums))
+print(Stats_scaleAll(5, nums))
+def rawOf(x) -> str:
+    s = x
+    return s
+def mint(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("acc", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("u-1"))
+raw: str = "wick,gear,nut,ray"
+words: list[str] = _pf_str_split(",", raw)
+print(_pf_str_join("", _pf_map(lambda w: _pf_str_upper(_pf_str_slice(0, 1, w)), words)))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, words)))
+longest: Some | None_ = _pf_head(_pf_sort_by(lambda w: -len(w), words))
+print(_pf_option_with_default("?", longest))
+readings: list[int] = [12, 30, -10, 37, 10, 32]
+def shift(k: int, x: int) -> int:
+    return x + k
+def accept(n: int) -> bool:
+    return n > 11 and n % 5 != 0
+result: bool = _pf_forall(lambda x: x >= 0, _pf_map(lambda b: 2 * b, _pf_map(lambda x: x * x - 5, _pf_take(8, _pf_rev(_pf_distinct(_pf_drop_while(lambda x: x < -4, readings)))))))
+print(result)
+print(len(readings))
+print(_pf_map(math.isqrt, [267, 187, 241, 271]))
+def row(n: int) -> list[int]:
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(4))
+print(_pf_str_rev(str.upper("ray")))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+--- stderr ---

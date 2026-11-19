@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+def _pf_concat(xs, ys):
+    return xs + ys
+def Logger_bind(m, f):
+    v, log = m
+    v2, log2 = f(v)
+    return (v2, _pf_concat(log, log2))
+def Logger_return_(x):
+    return (x, [])
+def Logger_tell(msg):
+    return (None, [msg])
+def go(a, b):
+    return Logger_bind(Logger_return_(a), lambda x: Logger_bind(Logger_return_(b), lambda y: Logger_bind(Logger_tell("gt" if x > y else "le"), lambda _: Logger_return_((x, y)))))
+
+# ==== main.py ====
+import lib
+print(lib.go(5, 2))
+print(lib.go(1, 9))
+
+--- stderr ---

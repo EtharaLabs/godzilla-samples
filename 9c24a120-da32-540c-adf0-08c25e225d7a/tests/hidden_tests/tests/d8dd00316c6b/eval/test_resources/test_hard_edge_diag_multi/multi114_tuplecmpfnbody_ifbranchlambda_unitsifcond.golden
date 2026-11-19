@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 7:3
+  |
+7 |   (1, 2) == (1, "b")
+  |   ^^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+ --> 9:49
+  |
+9 | let l2 = List.map (fun q -> if true then 1 else "s") [1, 2]
+  |                                                 ^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 10:13
+   |
+10 | let i3 = if 3.0<m> + 2.0<s> then 1 else 2
+   |             ^^^^^^^^^^^^^^^
+
+3 errors

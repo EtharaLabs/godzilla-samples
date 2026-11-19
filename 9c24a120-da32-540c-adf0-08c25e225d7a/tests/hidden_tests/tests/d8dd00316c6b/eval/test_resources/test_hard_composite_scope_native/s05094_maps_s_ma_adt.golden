@@ -1,0 +1,158 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    def __repr__(self):
+        return "Pop"
+_Pop: Pop = Pop()
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+_Emit: Emit = Emit()
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+Move = Load | Pop | Turn | Emit | Jump
+events: list[str] = ["ada", "fay", "fay", "eli", "ada", "dee", "bo"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq: dict[str, int] = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+print((_pf_map_try_find("dee", freq), "dee" in freq))
+extra: dict[str, int] = dict([("zed", 5), ("ada", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+sa: set[int] = set([2, 6, 7, 11, 13, 17])
+sb: set[int] = set([3, 5, 7, 10, 11, 15])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 7 in sb, _pf_set_is_subset(set([2]), sa)))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 3
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(5, []), score(1, [4]), score(1, [2, 2, 3])))
+def settle(n: int) -> int:
+    _pf_t1 = n % 3
+    if _pf_t1 == 0:
+        _n = n // 3
+        return _n + 2
+    else:
+        k = _pf_t1
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(settle, [5, 7, 17, 12]))
+limit2: int = 28
+def bound(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _limit2 = o._0
+        if _limit2 > 0:
+            return _limit2
+    if isinstance(o, Some):
+        return 0
+    else:
+        return limit2
+print((bound(Some(4)), bound(Some(-3)), bound(_None_), limit2))
+def describe(t: Move) -> str:
+    if isinstance(t, Load):
+        n0 = t._0
+        if n0 > 6:
+            return f"load!({n0})"
+    if isinstance(t, Load):
+        n0 = t._0
+        return f"load({n0})"
+    elif isinstance(t, Turn):
+        n0 = t._0
+        return f"turn({n0})"
+    elif isinstance(t, Jump) and t._0 == 0:
+        return "jump-0"
+    elif isinstance(t, Jump):
+        n0 = t._0
+        return f"jump({n0})"
+    elif isinstance(t, Pop):
+        return "pop/emit"
+    else:
+        return "pop/emit"
+def weight(t: Move) -> int:
+    if isinstance(t, Jump):
+        x0 = t._0
+        return x0 * 3
+    elif isinstance(t, Pop):
+        return 6
+    elif isinstance(t, Turn):
+        x0 = t._0
+        return x0 * 2
+    elif isinstance(t, Load):
+        x0 = t._0
+        return x0
+    else:
+        return 3
+stream: list[Move] = [_Emit, _Pop, Jump(12), Load(-2)]
+print(_pf_str_join(" ", _pf_map(describe, stream)))
+tally: int = _pf_sum_by(weight, stream)
+print(f"tally={tally}")
+print(_pf_max_by(weight, stream))
+--- stderr ---

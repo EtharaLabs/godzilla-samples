@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+let pure net price qty = ((price * qty) - (6 * qty))
+let report label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("bolt", 30, 4), ("nut", 45, 1), ("hub", 45, 3), ("bolt", 48, 2)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print grand)
+type Reading = { name: string, points: int, active: bool }
+let playerDecoder = ((((Decode.map3 (fun n p a -> Reading { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let jsonText = "[{\"name\": \"lu\", \"points\": 40, \"active\": true}, {\"name\": \"hal\", \"points\": 26, \"active\": true}, {\"name\": \"eli\", \"points\": 10, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list playerDecoder)) jsonText):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+type Place = { city: string, zone: int }
+type Ticket = { id: int, owner: string, amount: int, urgent: bool, dest: Place }
+let tickets = [Ticket { id = 100, owner = "ned", amount = 9, urgent = true, dest = Place { city = "Doha", zone = 1 } }, Ticket { id = 101, owner = "ned", urgent = false, dest = Place { city = "Oslo", zone = 3 }, amount = 283 }, Ticket { id = 102, owner = "ned", amount = 170, urgent = false, dest = Place { city = "Oslo", zone = 4 } }, Ticket { owner = "ned", dest = Place { city = "Riga", zone = 2 }, urgent = false, amount = 110, id = 103 }]
+(print (((tickets |> (List.sortBy (fun o -> o.amount))) |> (List.take 2)) |> (List.map (fun o -> o.id))))
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 175))) tickets)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+let bump2 o = (if o.urgent then { o with amount = (o.amount + 7) } else o)
+(print ((tickets |> (List.map bump2)) |> (List.map (fun o -> o.amount))))
+let label (Ticket { id, owner }) = f"#{id} {(String.upper owner)}"
+(print ((tickets |> (List.map label)) |> (String.join ", ")))
+measure m
+measure s
+measure kg
+let laps = [86.1<m>, 93.4<m>, 346.2<m>]
+let durations = [18.1<s>, 57.9<s>, 79.4<s>]
+let dist = (((List.fold (+)) 0.0<m>) laps)
+let dur = (((List.fold (+)) 0.0<s>) durations)
+let pace = (dist / dur)
+(print ((Format.fixed 2) pace))
+let speeds = (((List.map2 (fun d t -> (d / t))) laps) durations)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+let km = (dist / 1000.0)
+(print ((Format.fixed 1) km))
+let side = (sqrt 4.0<m^2>)
+let cube = ((side * side) * side)
+(print f"{side} {(cbrt cube)}")
+--- stderr ---

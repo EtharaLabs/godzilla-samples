@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+00000002ok00000050Seq.takeWhile : ('a -> bool) -> (Seq 'a) -> Seq 'a0000000000000002ok0000000000000112import itertools
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+print(_pf_seq_take_while)
+--- stderr ---

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Echo` (echo.pyfun) --
+error: field `kind` is ambiguous here: nothing says what this value is, and `kind` is declared by records `RecE` and `RecG`. Name the record where the value arrives — in a parameter (`fun (RecE { kind }) -> …`) or in a pattern (`case RecE { kind }:`) — or give it a type some other way
+  --> 15:25
+   |
+15 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+-- module `Foxtrot` (foxtrot.pyfun) --
+error: field `kind` is ambiguous here: nothing says what this value is, and `kind` is declared by records `RecF` and `RecE` and `RecG`. Name the record where the value arrives — in a parameter (`fun (RecF { kind }) -> …`) or in a pattern (`case RecF { kind }:`) — or give it a type some other way
+  --> 17:25
+   |
+17 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+
+2 errors

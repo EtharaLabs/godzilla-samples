@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `quiet` is declared `pure` but performs `io`
+  --> 12:20
+   |
+12 | let pure quiet x = maybeLog true x
+   |                    ^^^^^^^^^^^^^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 23:12
+   |
+23 | let rate = total + elapsed
+   |            ^^^^^^^^^^^^^^^
+
+2 errors

@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "def _pf_map_add(k, v, m):\n    return dict(list(m.items()) + [[k, v]])\ndef _pf_map_remove(k, m):\n    r = dict(m)\n    r.pop(k, None)\n    return r\ndef _pf_map_to_list(m):\n    return list(m.items())\ndef step(m, x):\n    return _pf_map_remove(x, _pf_map_add(x + 1, x, m))\nm = dict()\nfor x in [1, 2, 3]:\n    _pf_t0 = x + 1\n    m[_pf_t0] = x\n    m.pop(x, None)\nout = _pf_map_to_list(m)\n",
+ "stderr": ""
+}

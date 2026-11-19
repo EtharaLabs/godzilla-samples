@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unbound name `missingName`
+ --> 7:11
+  |
+7 |   let w = missingName 3
+  |           ^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+ --> 9:3
+  |
+9 |   Option.withDefault 0 (Some "s")
+  |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

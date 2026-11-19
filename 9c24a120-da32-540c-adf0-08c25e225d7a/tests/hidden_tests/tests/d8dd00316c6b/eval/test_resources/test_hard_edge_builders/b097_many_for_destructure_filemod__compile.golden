@@ -1,0 +1,41 @@
+exit: 0
+--- stdout ---
+# ==== many.py ====
+def _pf_concat(xs, ys):
+    return xs + ys
+def yield_(x):
+    return [x]
+def yieldFrom(xs):
+    return xs
+def combine(a, d):
+    return _pf_concat(a, d(None))
+def delay(f):
+    return f
+def for_(xs, f):
+    acc = []
+    for x in xs:
+        _pf_t0 = f(x)
+        acc.extend(_pf_t0)
+    return acc
+zero = []
+def bind(xs, f):
+    acc = []
+    for x in xs:
+        _pf_t1 = f(x)
+        acc.extend(_pf_t1)
+    return acc
+def return_(x):
+    return [x]
+
+# ==== main.py ====
+import many
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def go(xs):
+    def _pf_fn0(_pf_arg0):
+        a, b = _pf_arg0
+        return many.yield_(a + b)
+    return many.for_(_pf_zip(xs, xs), _pf_fn0)
+print(go([1, 2]))
+
+--- stderr ---

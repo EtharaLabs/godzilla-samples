@@ -1,0 +1,192 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: "Addr"
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Fig = Sq | Ci | Wedge
+pairs: list[tuple[str, int]] = [("nut", 7), ("gear", 16), ("bolt", 1), ("cap", 9), ("pin", 5)]
+def audit2(rows) -> Ok | Error:
+    def _pf_fn0():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t0 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t0, Ok):
+            total = _pf_t0._0
+            return Ok(total)
+        else:
+            return _pf_t0
+    return _pf_fn0()
+print((audit2(pairs), audit2([("ok", 1)])))
+def allKnown(keys, table) -> Some | None_:
+    def _pf_fn1():
+        for (k, expected) in keys:
+            _pf_t1 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t1, Some):
+                v = _pf_t1._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t1
+        return Some(len(keys))
+    return _pf_fn1()
+print((allKnown(_pf_take(2, pairs), dict(pairs)), allKnown([("zz", 0)], dict(pairs))))
+widths: list[tuple[str, tuple[int, int]]] = [("hal", (3, 7)), ("pam", (3, 20)), ("bo", (4, 10))]
+def _pf_fn2():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn2()
+print(list(widthsOut))
+def _pf_fn3():
+    for (name, qty) in pairs:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn3()
+print(_pf_str_join(",", list(labels)))
+parcels: list[Order] = [Order(100, "oz", 275, True, Addr("Rome", 1)), Order(101, "oz", 167, False, Addr("Doha", 4)), Order(102, "eli", 179, False, Addr("Bern", 3)), Order(103, "tom", 132, True, Addr("Lima", 1)), Order(104, "eli", 59, True, Addr("Riga", 3)), Order(105, "eli", 289, False, Addr("Baku", 1))]
+def priority(o: Order) -> str:
+    if isinstance(o, Order) and o.urgent is True:
+        amount = o.amount
+        if amount > 103:
+            return "rush-big"
+    if isinstance(o, Order) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 103:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(priority, parcels))
+print(_pf_count_by(priority, parcels))
+rushSum: int = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(rushSum)
+cheap, dear = _pf_partition(lambda o: o.amount < 184, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def surcharge(o: Order) -> Order:
+    if o.urgent:
+        _pf_t2 = o
+        return Order(_pf_t2.id, _pf_t2.owner, o.amount + 4, _pf_t2.urgent, _pf_t2.dest)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, parcels)))
+def size(s: Fig) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(size, [Sq(1), Ci(1), Wedge(5, 5), Wedge(1, 9)]))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 4
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(3, []), weigh(1, [6]), weigh(1, [8, 2, 3])))
+cap: int = 24
+def clip(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((clip(Some(4)), clip(Some(-3)), clip(_None_), cap))
+--- stderr ---

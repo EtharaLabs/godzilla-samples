@@ -1,0 +1,149 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Stock:
+    name: str
+    qty: int
+    price: float
+def decodeLine(line):
+    def _pf_fn0():
+        match _pf_str_split("=", line):
+            case [_k, _v]:
+                _pf_t0 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+            case _:
+                _pf_t0 = Error(f"malformed: {line}")
+        if isinstance(_pf_t0, Ok):
+            k, v = _pf_t0._0
+            _pf_t1 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t1, Ok):
+                n = _pf_t1._0
+                return Ok((k, n))
+            else:
+                return _pf_t1
+        else:
+            return _pf_t0
+    return _pf_fn0()
+lines = ["ray=87", "ivy = 3", "dee=88", "max", "ned=37"]
+parsed = _pf_map(decodeLine, lines)
+_pf_iter(print, parsed)
+goodOnes = _pf_choose(_pf_result_to_option, parsed)
+print(sum(_pf_map(_pf_snd, goodOnes)))
+def sumAll(xs):
+    def _pf_fn2(acc, r):
+        def _pf_fn3():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn3()
+    return _pf_fold(_pf_fn2, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(parsed)))
+def margin(price, qty):
+    return price * qty - 6 * qty
+def emit(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn4(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+overall = sum(_pf_map(_pf_fn4, [("wick", 20, 3), ("tap", 49, 1)]))
+print(overall)
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = mint("u", 3)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+rows = [Stock("cap", 5, 13.07), Stock("tap", 1, 14.92), Stock("pin", 10, 33.84), Stock("nut", 9, 5.69)]
+def showRow(x):
+    return "{} {} {} {}".format(_pf_fmt_pad_right(8, ".", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(2, x.price), "restock" if x.qty > 12 else "ok")
+_pf_iter(print, _pf_map(showRow, rows))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 11, rows))
+print("low: {} ({})".format(_pf_str_join("", low), _pf_fmt_percent(1, 0.5 * 1.0)))
+--- stderr ---

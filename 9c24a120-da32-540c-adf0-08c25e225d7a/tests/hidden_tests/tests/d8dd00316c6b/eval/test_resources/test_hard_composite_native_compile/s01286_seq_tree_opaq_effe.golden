@@ -1,0 +1,135 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Tree"
+    _1: int
+    _2: "Tree"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Tree = Leaf | Node
+def _pf_fn0():
+    for x in _pf_range(1, 12):
+        y = x * x
+        yield y
+evens = _pf_fn0()
+print(_pf_fold(lambda a, b: a + b, 0, evens))
+print(list(_pf_seq_take(6, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 4)))))
+def insert(x: int, t: Tree) -> Tree:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(insert(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, insert(x, rt))
+        return t
+tree: Tree = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [57, 55, 34, 12, 13])
+def minOf(t: Tree) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minOf(tree))
+def sumOf(t: Tree) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumOf(l) + v + sumOf(rt)
+print(sumOf(tree))
+def depthOf(t: Tree) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        rt = t._2
+        return 1 + max(depthOf(l), depthOf(rt))
+print(depthOf(tree))
+def containsT(x: int, t: Tree) -> bool:
+    while True:
+        if isinstance(t, Leaf):
+            return False
+        else:
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x == v:
+                return True
+            elif x < v:
+                x, t = (x, l)
+                continue
+            else:
+                x, t = (x, rt)
+                continue
+print(_pf_map(lambda k: containsT(k, tree), [57, 14, 19]))
+def unwrap(x) -> str:
+    s = x
+    return s
+def mint(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("u", 3)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+def discount(price: int, qty: int) -> int:
+    return price * qty - 8 * qty
+def report(label, price: int, qty: int) -> int:
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall: int = sum(_pf_map(_pf_fn1, [("wick", 33, 6), ("nut", 39, 6)]))
+print(overall)
+--- stderr ---

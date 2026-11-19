@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+pairs: list[tuple[int, str]] = _pf_zip([1, 2], ["a", "b"])
+firsts: list[int] = _pf_map(_pf_fst, pairs)
+seconds: list[str] = _pf_map(_pf_snd, pairs)
+one: int = _pf_fst((1, "one"))
+--- stderr ---

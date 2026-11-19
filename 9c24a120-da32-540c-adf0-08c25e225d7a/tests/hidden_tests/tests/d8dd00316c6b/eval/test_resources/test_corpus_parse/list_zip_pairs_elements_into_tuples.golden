@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let firstOf p =
+    match p:
+        case (n, s): n
+let ps = ((List.zip [1, 2]) ["a", "b"])
+let firsts = ((List.map firstOf) ps)
+let total = (List.sum firsts)
+--- stderr ---

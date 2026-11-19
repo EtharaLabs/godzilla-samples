@@ -1,0 +1,41 @@
+exit: 0
+--- stdout ---
+type Token = Rest int | Load | Skip int | Store int int
+let show t =
+    match t:
+        case (Rest n0): f"rest({n0})"
+        case Load: f"load"
+        case (Skip n0): f"skip({n0})"
+        case (Store n0 n1) if (n0 > 2): f"store!({n0},{n1})"
+        case (Store n0 n1): f"store({n0},{n1})"
+let cost t =
+    match t:
+        case (Store x0 x1): (x0 + x1)
+        case (Skip x0): (x0 * 2)
+        case (Rest x0): (x0 * 5)
+        case _: 3
+let batch = [((Store (- 2)) 12), (Rest 7), (Rest 0), (Skip (- 1)), ((Store 12) (- 3))]
+((batch |> (List.map show)) |> print)
+let total = (batch |> (List.sumBy cost))
+(print f"total={total}")
+(print (List.sort batch))
+let text = "lu;cy;pam;kit"
+let parts = ((String.split ";") text)
+let count = (List.len parts)
+(print f"count={count} {{braces}} {(String.len text)}")
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+let longest = ((parts |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+let parseEntry line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 5) }
+let inputs = ["dee=1=1", "kit", "eli=1=1", "tom = 5", "ivy=91"]
+let results = ((List.map parseEntry) inputs)
+((List.iter print) results)
+(print ((results |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((results |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+let log = ["cy", "fay", "ada", "dee", "fay", "cy", "ada"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) log)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print ((counts |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+(print (((counts |> Map.keys) |> List.sort) |> (String.join ",")))
+--- stderr ---

@@ -1,0 +1,85 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+pairs: list[tuple[str, int]] = [("cap", 8), ("nut", 0), ("rod", 8)]
+def allKnown(keys, table) -> Some | None_:
+    def _pf_fn0():
+        for (k, expected) in keys:
+            _pf_t0 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t0, Some):
+                v = _pf_t0._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t0
+        return Some(len(keys))
+    return _pf_fn0()
+print((allKnown(_pf_take(2, pairs), dict(pairs)), allKnown([("zz", 0)], dict(pairs))))
+def _pf_fn1():
+    for (name, qty) in pairs:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn1()
+print(_pf_str_join(",", list(labels)))
+widths: list[tuple[str, tuple[int, int]]] = [("ray", (4, 20)), ("eli", (5, 8)), ("quin", (0, 8))]
+def _pf_fn2():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn2()
+print(list(widthsOut))
+def build(start: int) -> tuple[int, list[int], list[int], int]:
+    x = start
+    g0 = lambda y: x + y
+    x = g0(x)
+    g1 = functools.partial(_pf_map, lambda y: y - x)
+    x = x + 8
+    g2 = functools.partial(_pf_map, lambda y: y - x)
+    x = x + 3
+    return (g0(5), g1([1, 2]), g2([1, 2]), x)
+print(build(6))
+def _pf_fn3():
+    for (name, k) in [("a", 5), ("b", 3)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn3()
+print(_pf_map(lambda h: h(5), list(callbacks2)))
+acc = []
+for k in [5, 6, 2]:
+    _pf_t1 = lambda y: y * k
+    acc.append(_pf_t1)
+steps = acc
+print(_pf_map(lambda h: h(1), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def shifted(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 3
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(2, [1, 5, 3]))
+--- stderr ---

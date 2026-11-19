@@ -1,0 +1,165 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_desc(xs):
+    return sorted(xs, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: str
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def render(t):
+    match t:
+        case Rest(s0):
+            return f"rest({s0})"
+        case Store(n0) if n0 > 2:
+            return f"store!({n0})"
+        case Store(n0):
+            return f"store({n0})"
+        case Load(s0):
+            return f"load({s0})"
+        case Drop(n0, n1):
+            return f"drop({n0},{n1})"
+        case Skip(1):
+            return "skip-1"
+        case Skip(n0):
+            return f"skip({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Store(x0):
+            return x0
+        case Load(_):
+            return 1
+        case Rest(_):
+            return 5
+        case _:
+            return 3
+stream = [Drop(11, 4), Store(1), Load("pam"), Rest("fay")]
+print(_pf_map(render, stream))
+total = _pf_sum_by(rank, stream)
+print(f"total={total}")
+print(_pf_max_by(rank, stream))
+values = [22, 4, 14, 44, 50, -7]
+outcome = sum(_pf_drop(2, (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(2, _pf_x)))(_pf_sort_desc(_pf_filter(lambda x: x > 5, values)))))
+print(outcome)
+parcels = [Invoice(100, "oz", 199, False), Invoice(101, "eli", 287, True), Invoice(102, "oz", 93, False), Invoice(103, "oz", 52, True), Invoice(104, "oz", 87, False), Invoice(105, "kit", 74, False)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn0, (0, 0), parcels)
+print(f"{cnt} records, {sumAmt} total")
+cheap, dear = _pf_partition(lambda o: o.amount < 102, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def bucket(o):
+    match o:
+        case Invoice(urgent=True, amount=amount) if amount > 164:
+            return "rush-big"
+        case Invoice(urgent=True):
+            return "rush"
+        case Invoice(amount=amount):
+            if amount > 164:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, parcels))
+print(_pf_count_by(bucket, parcels))
+def label(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(label, parcels)))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, parcels))
+print(perOwner)
+--- stderr ---

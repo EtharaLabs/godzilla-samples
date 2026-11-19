@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+# ==== geometry.py ====
+def area(w, h):
+    return w * h
+
+# ==== main.py ====
+import functools
+import geometry
+scale = functools.partial(geometry.area, 2)
+
+--- stderr ---

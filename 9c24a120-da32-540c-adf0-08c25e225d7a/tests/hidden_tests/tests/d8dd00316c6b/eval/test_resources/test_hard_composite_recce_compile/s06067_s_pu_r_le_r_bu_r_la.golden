@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+boxes = [Tile(2, 6, "wick"), Tile(2, 6, "bolt"), Tile(7, 3, "bolt"), Tile(2, 6, "cap"), Tile(4, 4, "sq")]
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, boxes)))
+def grow(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Tile(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, boxes)))
+def describe(b):
+    match b:
+        case Tile(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Tile(label=label, w=1):
+            return f"{label} thin"
+        case Tile(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, boxes)))
+def female(n):
+    if n == 0:
+        return 1
+    else:
+        return n - male(female(n - 1))
+def male(n):
+    if n == 0:
+        return 0
+    else:
+        return n - female(male(n - 1))
+print((_pf_map(female, _pf_range(0, 7)), _pf_map(male, _pf_range(0, 10))))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def ratio2(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 4))))
+print((ratio2("71", "2"), ratio2("4", "0"), ratio2("x", "1")))
+inputs2 = [10, -4, -2, -9, 17, 1, 6]
+factor = 4
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(inputs2), inputs2))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(4), makers2))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(inputs2))))
+--- stderr ---

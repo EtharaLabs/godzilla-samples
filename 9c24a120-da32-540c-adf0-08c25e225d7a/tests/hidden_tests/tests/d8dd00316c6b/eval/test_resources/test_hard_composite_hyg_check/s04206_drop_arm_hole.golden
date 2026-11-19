@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Neg _` is not matched
+ --> 6:3
+  |
+6 |   match e:
+  |   ^^^^^^^^
+
+note: hole `?` has type `int` — or: calc ?, List.sum ?, Seq.sum ?, String.len ?, and 12 more
+ --> 8:28
+  |
+8 |     case Add a b: calc a + ?
+  |                            ^
+
+1 error
+1 unfilled hole

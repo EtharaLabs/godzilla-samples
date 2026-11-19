@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+00000005error00000076(could not determine a type — is `let (a, b) = (1, "two")` an expression?)0000000000000002ok00000019a : int
+b : string
+00000018a, b = (1, "two")
+00000002ok00000018squares : Seq int
+00000093def _pf_fn0():
+    for x in [1, 2, 3]:
+        yield x * x
+    yield 100
+squares = _pf_fn0()
+00000002ok00000026sq : int<'a> -> int<'a^2>
+00000028def sq(x):
+    return x * x
+00000005error00000067error: unbound name `nope`
+  --> 10:1
+   |
+10 | nope + 1
+   | ^^^^
+0000000000000002ok00000026count : int -> int -> int
+00000150def count(k, acc):
+    while True:
+        if k == 0:
+            return acc
+        else:
+            k, acc = (k - 1, acc + k)
+            continue
+00000002ok0000000000000000--- stderr ---

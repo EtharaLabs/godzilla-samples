@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Echo` (echo.pyfun) --
+error: field `kind` is ambiguous here: nothing says what this value is, and `kind` is declared by records `RecE` and `RecA`. Name the record where the value arrives — in a parameter (`fun (RecE { kind }) -> …`) or in a pattern (`case RecE { kind }:`) — or give it a type some other way
+  --> 17:25
+   |
+17 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+-- module `Delta` (delta.pyfun) --
+error: field `kind` is ambiguous here: nothing says what this value is, and `kind` is declared by records `RecD` and `RecE`. Name the record where the value arrives — in a parameter (`fun (RecD { kind }) -> …`) or in a pattern (`case RecD { kind }:`) — or give it a type some other way
+  --> 14:25
+   |
+14 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+
+2 errors

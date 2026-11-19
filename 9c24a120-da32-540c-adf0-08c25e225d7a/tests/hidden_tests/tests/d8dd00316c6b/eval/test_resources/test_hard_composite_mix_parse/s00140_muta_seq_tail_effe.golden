@@ -1,0 +1,49 @@
+exit: 0
+--- stdout ---
+let mut ticks = 0
+let record x =
+    (ticks <- (ticks + 1))
+    (x * 2)
+let profile xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (profile [17, 26, 43, 33, 51]))
+let doubled = ([17, 26, 43, 33] |> (List.map record))
+(print f"{doubled} after {ticks} calls")
+let recordTwice = (record >> record)
+(print ((recordTwice 3), ticks))
+let evens = seq {
+    for x in ((List.range 1) 10):
+        let y = (x * x)
+        yield y
+}
+(((evens |> (Seq.filter (fun n -> ((n % 4) == 0)))) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 6))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 1588)))) |> Seq.toList) |> print)
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [3, 1, 18, 24, 10]))
+let digitSum n =
+    match n:
+        case 0: 0
+        case _: ((n % 10) + (digitSum (n // 10)))
+(print (digitSum 81106))
+let gcdLoop a b = (if (b == 0) then a else ((gcdLoop b) (a % b)))
+(print ((gcdLoop 144) 180))
+let pure net price qty = ((price * qty) - (3 * qty))
+let emit label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("gear", 33, 1), ("hub", 42, 3), ("gear", 24, 2), ("tap", 39, 3)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (net k))
+(print ((scaled 6) [1, 2, 3]))
+--- stderr ---

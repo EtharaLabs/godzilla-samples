@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let f x =
+    let pair a b = (a + b)
+    let pair = (pair 1)
+    (pair x)
+let r = (f 2)
+--- stderr ---

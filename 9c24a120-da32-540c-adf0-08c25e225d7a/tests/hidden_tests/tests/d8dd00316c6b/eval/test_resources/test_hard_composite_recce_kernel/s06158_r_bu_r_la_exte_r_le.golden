@@ -1,0 +1,90 @@
+exit: 0
+--- stdout ---
+00000002ok00000223safeDiv : string -> string -> Option int
+inputs2 : List int
+gain : int
+scalers : List (int -> int)
+shape2 : int -> int
+fromBin : string ->{io} int
+ping : int -> int -> int
+pong : int -> int -> int
+stepC : int -> int -> int
+00002328from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def Perhaps_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Perhaps_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Perhaps_bind(_pf_str_to_int(a), lambda x: Perhaps_bind(_pf_str_to_int(b), lambda y: Perhaps_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Perhaps_return_(shown))(q * 3))))
+print((safeDiv("97", "6"), safeDiv("4", "0"), safeDiv("x", "1")))
+inputs2 = [23, 2, 25, -3, 16, 20, 11, 3]
+gain = 4
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(4), scalers))
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), inputs2))
+shape2 = lambda _pf_x: (lambda z: z - 6)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, inputs2))
+print(_pf_map(math.isqrt, [234, 127, 116, 237]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "c0"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("110010") + int("74", base=8))
+print(_pf_str_rev(str.upper("sue")))
+def ping(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pong(n - 1, acc + 1)
+def pong(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return ping(n - 3, acc - 1)
+print(_pf_map(lambda n: ping(n, 1), [10, 16, 18, 13]))
+00000002ok00000018inputs2 : List int0000000000000002ok00000027fromBin : string ->{io} int00000000--- stderr ---

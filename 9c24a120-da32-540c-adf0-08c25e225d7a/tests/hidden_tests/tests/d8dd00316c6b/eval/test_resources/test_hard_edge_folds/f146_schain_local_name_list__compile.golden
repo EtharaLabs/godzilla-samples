@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def _pf_set_add(x, s):
+    return s.union([x])
+def _pf_set_remove(x, s):
+    return s.difference([x])
+def compute(u):
+    def step(a, x):
+        return _pf_set_remove(x + 1, _pf_set_add(x, a))
+    a = set()
+    for x in [3, 1, 4, 1, 5]:
+        _pf_t0 = x + 1
+        a.add(x)
+        a.discard(_pf_t0)
+    return a
+result = compute(None)
+print(list(result))
+--- stderr ---

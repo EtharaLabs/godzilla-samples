@@ -1,0 +1,52 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: float
+    def __repr__(self):
+        return f"Square({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+answer = 42
+print(Some(42) == Some(answer))
+print(Some(1) != Some(1))
+print(Some(1) <= Some(2))
+print(Circle(1.0) == Circle(1.0))
+print(Circle(1.0) >= Square(0.0))
+print(len(set([Some(1), Some(1)])))
+--- stderr ---

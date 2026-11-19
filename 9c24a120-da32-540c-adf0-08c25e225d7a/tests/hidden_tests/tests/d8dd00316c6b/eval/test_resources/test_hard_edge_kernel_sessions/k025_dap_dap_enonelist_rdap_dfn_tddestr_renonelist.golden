@@ -1,0 +1,54 @@
+exit: 0
+--- stdout ---
+00000002ok00000023parity : int -> string
+00000560from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _ap_Even_Odd(k):
+    if k % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def parity(k):
+    _pf_t0 = _ap_Even_Odd(k)
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    elif isinstance(_pf_t0, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+00000005error00000175error: active-pattern case `Even` clashes with an existing constructor or active pattern
+ --> 7:7
+  |
+7 | let (|Even|Odd|) k = if k % 2 == 0 then Even else Odd
+  |       ^^^^
+0000000000000002ok0000000000000339@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+print(_pf_head([]))
+00000005error00000175error: active-pattern case `Even` clashes with an existing constructor or active pattern
+ --> 7:7
+  |
+7 | let (|Even|Odd|) k = if k % 2 == 0 then Even else Odd
+  |       ^^^^
+0000000000000002ok00000028double : int<'a> -> int<'a>
+00000032def double(x):
+    return x * 2
+00000005error00000076(could not determine a type — is `let (a, b) = (1, "two")` an expression?)0000000000000002ok0000000000000037_None_ = None_()
+print(_pf_head([]))
+--- stderr ---

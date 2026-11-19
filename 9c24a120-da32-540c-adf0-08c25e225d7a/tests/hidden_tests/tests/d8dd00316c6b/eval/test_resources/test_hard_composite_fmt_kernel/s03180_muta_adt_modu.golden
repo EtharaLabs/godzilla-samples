@@ -1,0 +1,126 @@
+exit: 0
+--- stdout ---
+00000002ok00000187ticks : int
+track : int<'a> ->{io} int<'a>
+profile : (List int) ->{io} string
+doubled : List int
+show : Move -> string
+rank : Move -> int
+queue : List Move
+grandSum : int
+nums : List int
+00003038from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+ticks = 0
+def track(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([44, 18, 14, 50]))
+doubled = _pf_map(track, [44, 18, 14, 50])
+print(f"{doubled} after {ticks} calls")
+def show(t):
+    match t:
+        case Store(3):
+            return "store-3"
+        case Store(n0):
+            return f"store({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Pop(3):
+            return "pop-3"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Mark(s0):
+            return f"mark({s0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Turn(x0):
+            return x0
+        case Store(x0):
+            return x0
+        case _:
+            return 2
+queue = [Pop(10), Mark("eli"), Store(9), Store(4), Store(2), Mark("tom"), Turn(7)]
+print(_pf_str_join(" ", _pf_map(show, queue)))
+grandSum = _pf_sum_by(rank, queue)
+print(f"grandSum={grandSum}")
+print((_pf_head(queue), _pf_last(queue)))
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+nums = [-7, 22, 17, 1, 15, 29]
+print(_pf_filter(functools.partial(Text_between, 3, 12), nums))
+print(Text_norm1(nums))
+print(_pf_map(functools.partial(Text_clamp, 0, 12), nums))
+00000002ok00000021show : Move -> string0000000000000002ok00000015nums : List int00000000--- stderr ---

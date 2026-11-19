@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+p = _pf_partition(lambda x: x > 1, [1, 2])
+--- stderr ---

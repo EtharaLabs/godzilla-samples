@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def build(sel, xs):
+    def step(acc, x):
+        return _pf_concat(acc, [x + 100])
+    if isinstance(sel, Some):
+        step = sel._0
+        return _pf_fold(step, [], xs)
+    else:
+        return []
+out = build(Some(lambda acc, x: _pf_concat(acc, [x * 2])), [1, 2, 3])
+--- stderr ---

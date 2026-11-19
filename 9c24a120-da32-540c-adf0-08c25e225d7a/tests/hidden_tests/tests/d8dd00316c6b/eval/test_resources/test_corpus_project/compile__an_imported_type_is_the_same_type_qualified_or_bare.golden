@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+# ==== shapes.py ====
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Placed:
+    row: int
+    col: int
+
+# ==== main.py ====
+import builtins
+widen = builtins.id
+def same(p):
+    return builtins.id(p)
+
+--- stderr ---

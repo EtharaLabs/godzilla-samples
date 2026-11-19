@@ -1,0 +1,68 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_result_is_error(r):
+    return isinstance(r, Error)
+def _pf_result_with_default(d, r):
+    if isinstance(r, Ok):
+        return r._0
+    return d
+try:
+    _pf_t0 = json.loads("42")
+    if not (isinstance(_pf_t0, int) and not isinstance(_pf_t0, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t0).__name__)
+    _pf_t1 = Ok(_pf_t0)
+except Exception as e:
+    _pf_t1 = Error(_Exception(type(e).__name__, str(e)))
+ok: int = _pf_result_with_default(0, _pf_t1)
+try:
+    _pf_t2 = json.loads("\"x\"")
+    if not (isinstance(_pf_t2, int) and not isinstance(_pf_t2, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t2).__name__)
+    _pf_t3 = Ok(_pf_t2)
+except Exception as e:
+    _pf_t3 = Error(_Exception(type(e).__name__, str(e)))
+wrongType: int = _pf_result_with_default(0 - 1, _pf_t3)
+try:
+    _pf_t4 = json.loads("true")
+    if not (isinstance(_pf_t4, int) and not isinstance(_pf_t4, bool)):
+        raise ValueError("expected an int, got " + type(_pf_t4).__name__)
+    _pf_t5 = Ok(_pf_t4)
+except Exception as e:
+    _pf_t5 = Error(_Exception(type(e).__name__, str(e)))
+boolNotInt: int = _pf_result_with_default(0 - 1, _pf_t5)
+try:
+    _pf_t6 = json.loads("3")
+    if not (isinstance(_pf_t6, (int, float)) and not isinstance(_pf_t6, bool)):
+        raise ValueError("expected a float, got " + type(_pf_t6).__name__)
+    _pf_t7 = Ok(float(_pf_t6))
+except Exception as e:
+    _pf_t7 = Error(_Exception(type(e).__name__, str(e)))
+intAsFloat: float = _pf_result_with_default(0.0, _pf_t7)
+try:
+    _pf_t8 = json.loads("not json")
+    if not isinstance(_pf_t8, bool):
+        raise ValueError("expected a bool, got " + type(_pf_t8).__name__)
+    _pf_t9 = Ok(_pf_t8)
+except Exception as e:
+    _pf_t9 = Error(_Exception(type(e).__name__, str(e)))
+malformed: bool = _pf_result_is_error(_pf_t9)
+--- stderr ---

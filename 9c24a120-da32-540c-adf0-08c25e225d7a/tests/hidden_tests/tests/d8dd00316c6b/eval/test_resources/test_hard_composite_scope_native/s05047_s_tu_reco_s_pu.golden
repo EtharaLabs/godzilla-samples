@@ -1,0 +1,130 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: "Addr"
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+stock: list[tuple[str, int]] = [("rod", 15), ("nut", -1), ("gear", 11)]
+def _pf_fn0(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+extremes: tuple[int, int] = _pf_fold(_pf_fn0, (1000, -1000), stock)
+print(extremes)
+acc = dict()
+for (k, v) in _pf_concat(stock, stock):
+    _pf_t0 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t0
+byName: dict[str, int] = acc
+print(_pf_map_to_list(byName))
+def _pf_fn1(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn1, _pf_indexed(stock))
+def _pf_fn2():
+    for (name, qty) in stock:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn2()
+print(_pf_str_join(",", list(lines2)))
+book: list[Ticket] = [Ticket(100, "lu", 128, True, Addr("Doha", 4)), Ticket(101, "lu", 146, False, Addr("Oslo", 1)), Ticket(102, "ivy", 211, False, Addr("Oslo", 4)), Ticket(103, "ada", 232, True, Addr("Rome", 4)), Ticket(104, "lu", 8, True, Addr("Riga", 1)), Ticket(105, "ivy", 163, False, Addr("Kyiv", 2))]
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, book))))
+def adjust(o: Ticket) -> Ticket:
+    if o.urgent:
+        _pf_t1 = o
+        return Ticket(_pf_t1.id, _pf_t1.owner, o.amount + 3, _pf_t1.urgent, _pf_t1.dest)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(adjust, book)))
+def _pf_fn3(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner: list[tuple[str, int, int]] = _pf_map(_pf_fn3, _pf_group_by(lambda o: o.owner, book))
+print(perOwner)
+panels: list[Tile] = [Tile(3, 8, "hub"), Tile(8, 9, "tap"), Tile(2, 6, "cap"), Tile(4, 4, "sq")]
+def rename(prefix: str, b: Tile) -> Tile:
+    label = b.label
+    _pf_t3 = b
+    return Tile(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "new "), panels)))
+def describe(b: Tile) -> str:
+    if isinstance(b, Tile):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Tile) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, panels)))
+def grow(b: Tile) -> Tile:
+    w = b.w
+    h = b.h
+    _pf_t5 = b
+    return Tile(w + 2, h * 2, _pf_t5.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+--- stderr ---

@@ -1,0 +1,36 @@
+exit: 0
+--- stdout ---
+let evens = seq {
+    for x in ((List.range 1) 12):
+        let y = (x * x)
+        yield y
+}
+(print (((Seq.fold (+)) 0) evens))
+(((((Seq.initInfinite (fun i -> (i * 3))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 4)) |> Seq.toList) |> print)
+let raw = "pam;cap;eli;fay;hal;quin;bo"
+let words = ((String.split ";") raw)
+let longest = ((words |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+(print ((words |> (List.map String.upper)) |> (String.join "|")))
+(print (((String.tryIndexOf "pa") raw), ((String.contains "pa") raw)))
+let log = ["cy", "ada", "fay", "dee", "fay", "cy"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let hist = (((List.fold bump) Map.empty) log)
+(print ((hist |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let extra = (Map.ofList [("zed", 5), ("cy", 0)])
+(print ((((Map.union extra) hist) |> Map.toList) |> List.sort))
+(print (((Map.tryFind "gus") hist), ((Map.contains "gus") hist)))
+(print ((hist |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+opaque type AccountNo = string
+opaque type Handle = string
+let unwrap x =
+    match x:
+        case (AccountNo s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let ids = ((makeIds "acc") 4)
+(print ((ids |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head ids) == (Some (AccountNo "acc-1"))))
+--- stderr ---

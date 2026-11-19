@@ -1,0 +1,138 @@
+exit: 0
+--- stdout ---
+00000002ok00000301evalE : Expr -> int
+pretty : Expr -> string
+exprs : List Expr
+tickets : List Order
+nrec : int
+amt : int
+cheap : List Order
+dear : List Order
+bump2 : Order -> Order
+margin : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+scaled : int -> (List int<'a>) -> List int<'a>
+00003738from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Num:
+    _0: int
+    def __repr__(self):
+        return f"Num({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Add:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Add({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mul:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Mul({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Neg:
+    _0: object
+    def __repr__(self):
+        return f"Neg({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def evalE(e):
+    match e:
+        case Num(n):
+            return n
+        case Add(a, b):
+            return evalE(a) + evalE(b)
+        case Mul(a, b):
+            return evalE(a) * evalE(b)
+        case Neg(a):
+            return -evalE(a)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def pretty(e):
+    match e:
+        case Num(n) if n < 0:
+            return f"({n})"
+        case Num(n):
+            return f"{n}"
+        case Add(a, b):
+            return f"({pretty(a)} + {pretty(b)})"
+        case Mul(a, b):
+            return f"{pretty(a)} * {pretty(b)}"
+        case Neg(a):
+            return f"-{pretty(a)}"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+exprs = [Add(Neg(Num(2)), Add(Num(0), Neg(Num(3)))), Neg(Add(Num(0), Add(Num(0), Num(8)))), Add(Add(Num(2), Add(Num(0), Num(7))), Num(-2))]
+_pf_iter(print, _pf_map(pretty, exprs))
+print(_pf_map(evalE, exprs))
+tickets = [Order(100, "ada", 240, False), Order(101, "eli", 5, True), Order(102, "kit", 118, False), Order(103, "eli", 164, False), Order(104, "eli", 124, False), Order(105, "ada", 68, False)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn0, (0, 0), tickets)
+print(f"{nrec} records, {amt} total")
+cheap, dear = _pf_partition(lambda o: o.amount < 195, tickets)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+print(_pf_max_by(lambda o: o.amount, tickets))
+def bump2(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Order(_pf_t0.id, _pf_t0.owner, o.amount + 18, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(bump2, tickets)))
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by_desc(lambda o: o.amount, tickets))))
+def margin(price, qty):
+    return price * qty - 9 * qty
+def emit(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn1, [("pin", 39, 4), ("wick", 41, 3), ("cap", 18, 1)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(margin, k))
+print(scaled(12)([1, 2, 3]))
+00000002ok00000020tickets : List Order0000000000000002ok00000046scaled : int -> (List int<'a>) -> List int<'a>00000000--- stderr ---

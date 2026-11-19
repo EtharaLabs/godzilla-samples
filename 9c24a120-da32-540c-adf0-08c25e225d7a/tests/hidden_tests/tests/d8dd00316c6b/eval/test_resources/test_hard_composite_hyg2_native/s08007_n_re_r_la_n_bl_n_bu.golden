@@ -1,0 +1,72 @@
+exit: 0
+--- stdout ---
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_fst(p):
+    return p[0]
+def stack2(start: int) -> tuple[int, int, int]:
+    x = start
+    def g0(y: int) -> int:
+        return x * y
+    x = g0(x)
+    g1 = lambda y: x + y
+    x = x * 3
+    return (g0(2), g1(1), x)
+print(stack2(6))
+nums2: list[int] = [16, 15, 20, 4, 10]
+gain: int = 5
+tweak2 = lambda _pf_x: (lambda z: z - 2)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(5), makers2))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(nums2))))
+def nudge(n: int) -> int:
+    return n + 81
+def callHelper(x: int) -> int:
+    return nudge(x)
+def _pf_fn1():
+    nudge = 2
+    tmp = callHelper(nudge)
+    return tmp * 2
+alpha: int = _pf_fn1()
+def _pf_fn2():
+    _pf_t0 = [7]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + callHelper(1)
+    else:
+        return 0
+beta: int = _pf_fn2()
+def _pf_fn3():
+    if alpha > beta:
+        _alpha = beta
+        return _alpha + 1
+    else:
+        return alpha
+gamma: int = _pf_fn3()
+print((alpha, beta, gamma, callHelper(0)))
+len_: int = 8
+print((len([1, 2, 3]) + len_, len("abc")))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(12, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+str_: str = "bo"
+print((str(24), str_, _pf_str_concat(str_, str(1))))
+--- stderr ---

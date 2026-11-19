@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+let describe xs =
+    match xs:
+        case []: 0
+        case [x]: 1
+        case [x, y]: 2
+        case [x, y, *rest]: 3
+let head xs =
+    match xs:
+        case [(Some x), *rest]: x
+        case _: 0
+let a = (describe [10, 20, 30])
+let b = (describe [7])
+let c = (describe [])
+let d = (head [(Some 42), None])
+--- stderr ---

@@ -1,0 +1,211 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_id(x):
+    return x
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Panel"
+    bottom: "Panel"
+    slot: int
+panels: list[Panel] = [Panel(8, 7, "cap"), Panel(2, 3, "pin"), Panel(2, 3, "bolt"), Panel(4, 8, "nut"), Panel(4, 4, "sq")]
+def stackOf(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Panel):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), panels, _pf_rev(panels)))
+def describe(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, panels)))
+def grow(b: Panel) -> Panel:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Panel(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def decodeLine(line: str) -> Ok | Error:
+    def _pf_fn2():
+        _pf_t3 = _pf_str_split("=", line)
+        if len(_pf_t3) == 2:
+            _k = _pf_t3[0]
+            _v = _pf_t3[1]
+            _pf_t2 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+        else:
+            _pf_t2 = Error(f"malformed: {line}")
+        if isinstance(_pf_t2, Ok):
+            k, v = _pf_t2._0
+            _pf_t5 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t5, Ok):
+                n = _pf_t5._0
+                _pf_t4 = Error("negative") if n < 0 else Ok(n)
+                if isinstance(_pf_t4, Ok):
+                    checked = _pf_t4._0
+                    return Ok((k, checked))
+                else:
+                    return _pf_t4
+            else:
+                return _pf_t5
+        else:
+            return _pf_t2
+    return _pf_fn2()
+lines: list[str] = ["cy = 8", "dee", "oz=-3", "gus=7=1", "hal", "ivy"]
+results: list[Ok | Error] = _pf_map(decodeLine, lines)
+_pf_iter(print, results)
+goodOnes: list[tuple[str, int]] = _pf_choose(_pf_result_to_option, results)
+print(sum(_pf_map(_pf_snd, goodOnes)))
+firstGood: Some | None_ = _pf_option_map(_pf_fst, _pf_head(_pf_choose(_pf_id, _pf_map(_pf_result_to_option, results))))
+if isinstance(firstGood, Some):
+    name = firstGood._0
+    _pf_t6 = print(f"first: {name}")
+else:
+    _pf_t6 = print("none parsed")
+_pf_t6
+def combine(xs: list[Ok | Error]) -> Ok | Error:
+    def _pf_fn4(acc, r):
+        def _pf_fn5():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn5()
+    return _pf_fold(_pf_fn4, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, combine(results)))
+hits: int = 0
+def note(x: int) -> int:
+    global hits
+    hits = hits + 1
+    return x * 4
+def summarize(xs: list[int]) -> str:
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x: int):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([3, 11, 52, 53, 4]))
+doubled: list[int] = _pf_map(note, [3, 11, 52, 53])
+print(f"{doubled} after {hits} calls")
+noteTwice = lambda _pf_x: note(note(_pf_x))
+print((noteTwice(3), hits))
+--- stderr ---

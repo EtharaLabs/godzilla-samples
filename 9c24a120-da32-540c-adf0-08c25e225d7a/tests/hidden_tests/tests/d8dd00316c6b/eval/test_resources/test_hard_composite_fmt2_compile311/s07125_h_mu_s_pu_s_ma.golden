@@ -1,0 +1,151 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+def inspect(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n, acc):
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(4, 0)
+print(inspect([7, 12, 26, 21]))
+events = []
+def push2(msg):
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts = _pf_map(push2, ["start", "ada", "stop"])
+print((events, counts))
+boxes = [Box(8, 6, "gear"), Box(2, 4, "pin"), Box(8, 4, "gear"), Box(4, 4, "sq")]
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, boxes)))
+def rename(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Box(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "new "), boxes)))
+def caption(b):
+    match b:
+        case Box(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Box(label=label, w=1):
+            return f"{label} thin"
+        case Box(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, boxes)))
+cap = 37
+def clip(o):
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((clip(Some(4)), clip(Some(-3)), clip(_None_), cap))
+def extent(s):
+    match s:
+        case Square(n) | Ci(n):
+            return n
+        case Wedge(n, m) if n > m:
+            return n
+        case Wedge(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(extent, [Square(6), Ci(5), Wedge(6, 1), Wedge(1, 9)]))
+def weigh(x, items):
+    match items:
+        case []:
+            return x
+        case [_x]:
+            return _x * 3
+        case [_x2, *rest]:
+            return _x2 + len(rest)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print((weigh(3, []), weigh(1, [4]), weigh(1, [6, 2, 3])))
+def probe2(xs):
+    if xs:
+        x = xs[0]
+        _pf_t2 = _pf_last(xs)
+        if isinstance(_pf_t2, Some):
+            _x = _pf_t2._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t2, Some):
+            y = _pf_t2._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([7, 1]), probe2([1, 9]), probe2([])))
+--- stderr ---

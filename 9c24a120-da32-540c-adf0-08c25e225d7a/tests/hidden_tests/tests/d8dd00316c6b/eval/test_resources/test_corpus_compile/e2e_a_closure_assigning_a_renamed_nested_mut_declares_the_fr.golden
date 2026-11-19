@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+def f(flag):
+    count = 1
+    if flag:
+        _count = 0
+        def bump(u):
+            nonlocal _count
+            _count = _count + u
+            return None
+        bump(4)
+        bump(5)
+        _pf_t0 = _count
+    else:
+        _pf_t0 = 0
+    y = _pf_t0
+    return count + y
+r = f(True)
+--- stderr ---

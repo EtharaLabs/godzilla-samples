@@ -1,0 +1,189 @@
+exit: 0
+--- stdout ---
+# ==== foxtrot.py ====
+base = 6
+def step(x):
+    return x + 6
+
+# ==== alpha.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import foxtrot
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaA:
+    _0: int
+    def __repr__(self):
+        return f"KaA({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbA:
+    def __repr__(self):
+        return "KbA"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbA = KbA()
+print("loading Alpha")
+def pickA(n):
+    if n > 2:
+        return KaA(n)
+    else:
+        return _KbA
+base = 4 + foxtrot.base
+def step(x):
+    return foxtrot.step(x) + 4
+
+# ==== golf.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+import foxtrot
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaG:
+    _0: int
+    def __repr__(self):
+        return f"KaG({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbG:
+    def __repr__(self):
+        return "KbG"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbG = KbG()
+def pickG(n):
+    if n > 2:
+        return KaG(n)
+    else:
+        return _KbG
+base = 9 + alpha.base + foxtrot.base
+def step(x):
+    return foxtrot.step(alpha.step(x)) + 9
+def describe(k):
+    match k:
+        case alpha.KaA(v):
+            return v * 10
+        case alpha.KbA():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(alpha.pickA(base))
+
+# ==== echo.py ====
+import foxtrot
+base = 3 + foxtrot.base
+def step(x):
+    return foxtrot.step(x) + 3
+
+# ==== delta.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+import echo
+import golf
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaD:
+    _0: int
+    def __repr__(self):
+        return f"KaD({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbD:
+    def __repr__(self):
+        return "KbD"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbD = KbD()
+def pickD(n):
+    if n > 2:
+        return KaD(n)
+    else:
+        return _KbD
+base = 9 + golf.base + echo.base + alpha.base
+def step(x):
+    return alpha.step(echo.step(golf.step(x))) + 9
+def describe(k):
+    match k:
+        case alpha.KaA(v):
+            return v * 10
+        case alpha.KbA():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(alpha.pickA(base))
+
+# ==== bravo.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+import delta
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaB:
+    _0: int
+    def __repr__(self):
+        return f"KaB({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbB:
+    def __repr__(self):
+        return "KbB"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbB = KbB()
+print("loading Bravo")
+def pickB(n):
+    if n > 2:
+        return KaB(n)
+    else:
+        return _KbB
+base = 2 + delta.base + alpha.base
+def step(x):
+    return alpha.step(delta.step(x)) + 2
+def describe(k):
+    match k:
+        case alpha.KaA(v):
+            return v * 10
+        case alpha.KbA():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(alpha.pickA(base))
+
+# ==== main.py ====
+import bravo
+import delta
+import golf
+print(bravo.base)
+print(bravo.step(1))
+print(bravo.probe)
+print(golf.probe)
+print(delta.probe)
+
+--- stderr ---

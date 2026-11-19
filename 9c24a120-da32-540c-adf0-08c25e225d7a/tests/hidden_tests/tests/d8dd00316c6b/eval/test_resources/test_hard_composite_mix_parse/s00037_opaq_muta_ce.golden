@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+opaque type Sku = string
+opaque type Label = string
+let unwrap x =
+    match x:
+        case (Sku s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (Sku f"{prefix}-{i}"))))
+let ids = ((makeIds "acc") 3)
+(print ((ids |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head ids) == (Some (Sku "acc-1"))))
+let mut hits = 0
+let record x =
+    (hits <- (hits + 1))
+    (x * 2)
+let summarize xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (summarize [20, (- 12), 15, 32, 35]))
+let doubled = ([20, (- 12), 15, 32] |> (List.map record))
+(print f"{doubled} after {hits} calls")
+let recordTwice = (record >> record)
+(print ((recordTwice 3), hits))
+let parseEntry line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let entries = ["ray = 2", "tom=9=1", "dee=94", "cy", "pam=-2", "hal"]
+let results = ((List.map parseEntry) entries)
+((List.iter print) results)
+let errs = ((results |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let firstGood = ((((results |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let sumAll xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((sumAll results) |> (Result.mapError String.upper)))
+--- stderr ---

@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def f(o):
+    def pair(a, b):
+        return a + b
+    outer = functools.partial(pair, 1)
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t0 = _pair(10)
+    else:
+        _pf_t0 = 0
+    inner = _pf_t0
+    return inner + outer(2)
+r = f(Some(lambda x: x + 1))
+--- stderr ---

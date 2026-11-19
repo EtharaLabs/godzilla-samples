@@ -1,0 +1,5 @@
+{
+ "exit": 1,
+ "stdout": "",
+ "stderr": "error: `send` is declared `->{async}` but returns `unit`, which cannot be awaited: an async Python function returns a coroutine, so declare the result as `Async unit` (`… -> Async unit`) and bind it with `let!` inside an `async { }` block\n --> 1:1\n  |\n1 | extern send: string -> string ->{io, async} unit = hub.send\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n1 error\n"
+}

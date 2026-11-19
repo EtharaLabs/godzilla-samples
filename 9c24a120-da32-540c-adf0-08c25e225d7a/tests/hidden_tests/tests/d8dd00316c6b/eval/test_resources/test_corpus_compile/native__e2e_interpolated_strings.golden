@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def _pf_str_upper(s):
+    return s.upper()
+name: str = "Ada"
+a: int = 3
+b: int = 4
+p: tuple[int, int] = (1, 2)
+greet: str = f"Hello, {name}!"
+math: str = f"{a} + {b} = {a + b}"
+up: str = f"upper: {_pf_str_upper(name)}"
+brace: str = f"{{literal}} {a}"
+point: str = f"point {p}"
+--- stderr ---

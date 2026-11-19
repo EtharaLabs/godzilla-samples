@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def compute(u):
+    a = []
+    for x in _pf_range(1, 6):
+        _pf_t0 = len(a) + x
+        a.append(_pf_t0)
+    return a
+result = compute(None)
+print(result)
+--- stderr ---

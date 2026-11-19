@@ -1,0 +1,49 @@
+exit: 0
+--- stdout ---
+type Term = Num int | Add Term Term | Mul Term Term | Neg Term | Var string
+let env = (Map.ofList [("x", 1), ("y", 4)])
+let calc e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((calc a) + (calc b))
+        case ((Mul (Num 0) _) | (Mul _ (Num 0))): 0
+        case (Mul a b): ((calc a) * (calc b))
+        case (Neg a): (- (calc a))
+        case (Var v): (((Map.findOr v) 0) env)
+let show e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(show a)} + {(show b)})"
+        case (Mul a b): f"{(show a)} * {(show b)}"
+        case (Neg a): f"-{(show a)}"
+        case (Var v): v
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let exprs = [((Mul (Var "x")) ((Add (Num 0)) (Neg (Var "y")))), (Num (- 2)), ((Add (Var "x")) ((Add (Num 0)) (Neg (Num 8))))]
+(((exprs |> (List.map simplify)) |> (List.map show)) |> (List.iter print))
+(print ((List.map calc) exprs))
+opaque type AccountNo = string
+opaque type Email = string
+let unwrap x =
+    match x:
+        case (AccountNo s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let ids = ((makeIds "sku") 4)
+(print ((ids |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head ids) == (Some (AccountNo "u-1"))))
+let powAcc b e acc =
+    match e:
+        case 0: acc
+        case k if ((k % 2) == 1): (((powAcc b) (k - 1)) (acc * b))
+        case k: (((powAcc (b * b)) (k // 2)) acc)
+(print (((powAcc 5) 13) 1))
+let gcdLoop a b = (if (b == 0) then a else ((gcdLoop b) (a % b)))
+(print ((gcdLoop 233) 422))
+--- stderr ---

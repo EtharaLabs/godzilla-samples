@@ -1,0 +1,119 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [14, 17, 19, 3, 21, 34, 47, 40, 54])
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(root))
+def sumOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumOf(l) + v + sumOf(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumOf(root))
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, root), [14, 55, 59]))
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [10, 0, 13, 0]))
+span = math.hypot(3.0 / 1.0, 4.0 / 1.0) * 1.0
+factor = math.sqrt(2.0)
+side = math.sqrt(9.0)
+vol = math.cbrt(64.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, factor), side, vol))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(span, 9.0)))
+nums2 = [-4, 23, 13, -4, 25]
+gain = 5
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), nums2))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(8), makers2))
+--- stderr ---

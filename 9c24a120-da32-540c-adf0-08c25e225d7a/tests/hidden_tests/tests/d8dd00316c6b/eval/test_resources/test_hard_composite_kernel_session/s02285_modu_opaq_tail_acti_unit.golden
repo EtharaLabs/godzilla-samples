@@ -1,0 +1,137 @@
+exit: 0
+--- stdout ---
+00000002ok00000378nums : List int
+unwrap : AccountNo -> string
+makeIds : 'a -> int -> List AccountNo
+keys : List AccountNo
+isEven : int -> bool
+isOdd : int -> bool
+countDown : int -> int -> int
+collatz : int -> int -> int
+classify : int -> string
+segments : List float<m>
+durations : List float<s>
+total : float<m>
+dur : float<s>
+rate : float<m/s>
+edge : float<m>
+cube : float<m^3>
+km : float<m>
+00002978from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Calc_square(x):
+    return x * x
+def Calc_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Calc_norm1(xs):
+    return sum(_pf_map(abs, xs))
+nums = [10, -4, 6, 26, -5]
+print(Calc_mean(nums))
+print(_pf_map(Calc_square, nums))
+print(_pf_map(functools.partial(Calc_clamp, 0, 11), nums))
+print(Calc_norm1(nums))
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("acc", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [5, 20, 1, 11, 3]))
+def countDown(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(812, 0))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [43, 14, 9]))
+def _ap_Above(n):
+    if n > 28:
+        return Some(n - 28)
+    else:
+        return _None_
+def _ap_Zero(n):
+    return n == 0
+def classify(n):
+    _pf_t0 = _ap_Above(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    _pf_t1 = _ap_Zero(n)
+    if _pf_t1:
+        return "zero"
+    m = n
+    if m < 0:
+        return "negative"
+    return "small"
+_pf_iter(print, _pf_map(classify, [-3, 21, 18, 12, 40, 0, 25, 8]))
+segments = [312.8, 395.4, 117.4, 106.9]
+durations = [8.8, 76.5, 48.9, 45.9]
+total = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, segments)
+dur = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = total / dur
+print(_pf_fmt_fixed(1, rate))
+edge = math.sqrt(49.0)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+km = total / 1000.0
+print(_pf_fmt_fixed(1, km))
+00000002ok00000016total : float<m>0000000000000002ok00000014dur : float<s>00000000--- stderr ---

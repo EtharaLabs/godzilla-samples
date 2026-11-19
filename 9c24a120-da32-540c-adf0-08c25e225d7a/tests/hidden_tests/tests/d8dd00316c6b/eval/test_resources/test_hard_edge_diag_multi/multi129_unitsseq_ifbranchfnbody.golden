@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+ --> 8:11
+  |
+8 |     yield 3.0<m> + 2.0<s>
+  |           ^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 11:23
+   |
+11 |   if true then 1 else "s"
+   |                       ^^^
+
+2 errors

@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def f(x):
+    def g(o):
+        def peek(u):
+            return x + u
+        before = peek(0)
+        _x = 100
+        return before + _x + o
+    return g(1)
+r = f(5)
+--- stderr ---

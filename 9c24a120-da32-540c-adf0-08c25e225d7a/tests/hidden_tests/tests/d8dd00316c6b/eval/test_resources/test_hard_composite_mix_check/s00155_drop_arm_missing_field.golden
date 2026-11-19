@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Odd` is not matched
+ --> 3:3
+  |
+3 |   match n:
+  |   ^^^^^^^^
+
+error: record `Parcel` is missing field(s) `urgent`
+  --> 18:16
+   |
+18 | let parcels = [Parcel { id = 100, owner = "fay", amount = 5 }, Parcel { id = 101, owner = "fay", amount = 65, urgent = false }, Parcel { id = 102, owner = "hal", amount = 57, urgent = true }, Parcel { id = 103, owner = "hal", amount = 121, urgent = true }, Parcel { id = 104, owner = "quin", amount = 240, urgent = true }]
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

@@ -1,0 +1,127 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+inputs2 = [-7, 27, 15, 11, 6]
+gain = 3
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(1), scalers))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(inputs2))))
+def _pf_fn2(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn2, (0, 0), inputs2))
+def stepA(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepA(n - 3, acc - 1)
+print(_pf_map(lambda n: stepA(n, 1), [14, 15, 8, 13]))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 4], lambda k: Grid_yield_(a * b + k))
+cells = Grid_combine(Grid_for_([(2, 1), (1, 2)], _pf_fn3), Grid_delay(lambda _: Grid_yield_(2)))
+print(cells)
+tiles = [Panel(6, 8, "cap"), Panel(4, 7, "nut"), Panel(2, 5, "hub"), Panel(4, 3, "cog"), Panel(4, 4, "sq")]
+def caption(b):
+    match b:
+        case Panel(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Panel(label=label, w=1):
+            return f"{label} thin"
+        case Panel(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, tiles)))
+def _pf_fn4(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn5(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn4, _pf_filter(_pf_fn5, tiles)))
+def rename(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Panel(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "x-"), tiles)))
+def area(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+--- stderr ---

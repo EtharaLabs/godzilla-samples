@@ -1,0 +1,141 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    def __repr__(self):
+        return "Jump"
+_Jump = Jump()
+print(_pf_str_rev(str.upper("ivy")))
+print(_pf_map(math.isqrt, [267, 276, 210, 347]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [4, 2, 12, 8]))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [30, 28, 28, 0, 19]))
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [13, 55, 58]))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(4, 14, 1))
+def net(price, qty):
+    return price * qty - 7 * qty
+def announce(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("pin", 43, 3), ("tap", 28, 4), ("bolt", 27, 2)]))
+print(grand)
+def show(t):
+    match t:
+        case Emit(n0) if n0 % 2 == 0:
+            return f"emit!({n0})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case Drop(n0) if n0 % 2 == 0:
+            return f"drop!({n0})"
+        case Drop(n0):
+            return f"drop({n0})"
+        case Jump():
+            return f"jump"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Emit(x0):
+            return x0 * 4
+        case Jump():
+            return 4
+        case _:
+            return 0
+stream = [_Jump, Emit(-3), Drop(11), Drop(10), _Jump, Drop(8), _Jump]
+print(_pf_map(show, stream))
+grandSum = _pf_sum_by(cost, stream)
+print(f"grandSum={grandSum}")
+print(_pf_max_by(cost, stream))
+sentence = "bo;ray;kit;nut;sue"
+parts = _pf_str_split(";", sentence)
+print(_pf_str_join("|", _pf_map(_pf_str_upper, parts)))
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), parts))
+print(_pf_option_with_default("?", longest))
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, parts))))
+--- stderr ---

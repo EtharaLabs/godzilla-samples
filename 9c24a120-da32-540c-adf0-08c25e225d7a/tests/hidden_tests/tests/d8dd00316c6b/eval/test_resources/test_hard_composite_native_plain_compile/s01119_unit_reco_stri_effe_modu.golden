@@ -1,0 +1,153 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+laps = [148.2, 490.4, 419.9]
+times = [17.9, 20.1, 36.7]
+total = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+rate = total / elapsed
+print(_pf_fmt_fixed(1, rate))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(total, elapsed) * 1000.0))
+speeds = _pf_map2(lambda d, t: d / t, laps, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+orders = [Invoice(100, "tom", 210, False), Invoice(101, "tom", 288, True), Invoice(102, "pam", 39, False), Invoice(103, "ivy", 180, False), Invoice(104, "ivy", 34, True)]
+def surcharge(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Invoice(_pf_t0.id, _pf_t0.owner, o.amount + 10, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, orders)))
+cheap, dear = _pf_partition(lambda o: o.amount < 60, orders)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, orders))
+print(byOwner)
+def bucket(o):
+    match o:
+        case Invoice(urgent=True, amount=amount) if amount > 192:
+            return "rush-big"
+        case Invoice(urgent=True):
+            return "rush"
+        case Invoice(amount=amount):
+            if amount > 192:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, orders))
+print(_pf_count_by(bucket, orders))
+text = "ray;eli;pam;nut;ivy;cog"
+tokens = _pf_str_split(";", text)
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), tokens))
+print(_pf_option_with_default("?", longest))
+nums = _pf_map(_pf_str_to_int, _pf_str_split(",", "40,12,12,40,12"))
+print(nums)
+print(sum(_pf_choose(_pf_id, nums)))
+print(_pf_map(lambda w: (w, len(w)), tokens))
+def margin(price, qty):
+    return price * qty - 2 * qty
+def announce(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn1, [("bolt", 29, 5), ("wick", 6, 5), ("cog", 21, 4)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(margin, k))
+print(scaled(14)([1, 2, 3]))
+def Geo_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Geo_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Geo_square(x):
+    return x * x
+nums2 = [21, -11, 7, 7, 12, -7]
+print(Geo_mean(nums2))
+print(Geo_norm1(nums2))
+print(_pf_map(Geo_square, nums2))
+--- stderr ---

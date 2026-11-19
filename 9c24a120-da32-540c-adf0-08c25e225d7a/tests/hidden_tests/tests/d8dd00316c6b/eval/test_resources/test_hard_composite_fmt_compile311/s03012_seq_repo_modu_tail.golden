@@ -1,0 +1,104 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Stock:
+    name: str
+    qty: int
+    price: float
+def _pf_fn0():
+    for x in _pf_range(1, 6):
+        y = x * x
+        yield y
+squares = _pf_fn0()
+print(list(_pf_seq_take(2, map(lambda n: n + 1, squares))))
+print(list(_pf_seq_take(3, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 3)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 1825, fib)))
+rows = [Stock("pin", 9, 26.12), Stock("gear", 30, 25.01), Stock("rod", 19, 38.41), Stock("hub", 6, 1.14)]
+def showRow(x):
+    return "{}|{}|{}|{}".format(_pf_fmt_pad_right(8, ".", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(1, x.price), "restock" if x.qty > 13 else "ok")
+_pf_iter(print, _pf_map(showRow, rows))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 11, rows))
+print("low: {} ({})".format(_pf_str_join("", low), _pf_fmt_percent(1, 0.5 * 1.0)))
+def Stats_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Stats_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Stats_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+nums = [2, 24, 8, 5, -5]
+print(Stats_norm1(nums))
+print(Stats_scaleAll(3, nums))
+print(Stats_mean(nums))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [59, 5, 50]))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(2976, 0))
+--- stderr ---

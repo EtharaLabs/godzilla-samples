@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+let (|Blank|_|) s = ((String.strip s) == "")
+let f s =
+    match s:
+        case Blank: "empty"
+        case _: "text"
+let a = (f "   ")
+let b = (f "hi")
+--- stderr ---

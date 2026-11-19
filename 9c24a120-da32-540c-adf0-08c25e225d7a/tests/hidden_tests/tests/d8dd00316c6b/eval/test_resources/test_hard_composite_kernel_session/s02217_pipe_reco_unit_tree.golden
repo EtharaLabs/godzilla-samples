@@ -1,0 +1,211 @@
+exit: 0
+--- stdout ---
+00000002ok00000520readings : List int
+addK : int<'a> -> int<'a> -> int<'a>
+result : bool
+orders : List Parcel
+byOwner : List (string, int, int)
+cheap : List Parcel
+dear : List Parcel
+rushSum : int
+laps : List float<m>
+splits : List float<s>
+dist : float<m>
+elapsed : float<s>
+speed : float<m/s>
+km : float<m>
+best : Option (float<m>, float<s>)
+speeds : List float<m/s>
+paceOf : int<'a> -> int<'b> -> float<'b/'a>
+add : int -> Tree -> Tree
+root : Tree
+containsT : int -> Tree -> bool
+minOf : Tree -> Option int
+toListOf : Tree -> List int
+00005604from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_forall(f, xs):
+    return all(map(f, xs))
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+readings = [14, 23, 34, 39, 41, 4, 25, -8, 34, 25, -6]
+def addK(k, x):
+    return x + k
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn2, _pf_indexed(_pf_x))
+result = _pf_forall(lambda x: x >= 0, (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(3, _pf_x)))(_pf_fn1(_pf_sort_by(lambda x: x % 3, _pf_drop(1, readings)))))
+print(result)
+print(len(readings))
+orders = [Parcel(100, "oz", 54, True, Addr("Kyiv", 3)), Parcel(101, "oz", 263, True, Addr("Bern", 2)), Parcel(102, "kit", 285, True, Addr("Bern", 4)), Parcel(103, "oz", 60, False, Addr("Riga", 1)), Parcel(104, "fay", 286, False, Addr("Riga", 4))]
+def _pf_fn3(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn3, _pf_group_by(lambda o: o.owner, orders))
+print(byOwner)
+cheap, dear = _pf_partition(lambda o: o.amount < 63, orders)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(rushSum)
+laps = [69.5, 275.7, 99.0, 282.0]
+splits = [65.4, 61.7, 46.6, 87.5]
+dist = _pf_fold(lambda a, b: a + b, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, splits)
+speed = dist / elapsed
+print(_pf_fmt_fixed(3, speed))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def _pf_fn4(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn4, _pf_zip(laps, splits))
+print(best)
+speeds = _pf_map2(lambda d, t: d / t, laps, splits)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [43, 29, 56, 36, 14, 57, 55, 45])
+def containsT(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsT(k, root), [43, 46, 33]))
+def minOf(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minOf(root))
+def toListOf(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListOf(root))
+00000002ok00000025add : int -> Tree -> Tree0000000000000002ok00000020laps : List float<m>00000000--- stderr ---

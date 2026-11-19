@@ -1,0 +1,172 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_set_difference(a, b):
+    return a.difference(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Fig = Square | Ci | Wedge
+stock: list[tuple[str, int]] = [("nut", 4), ("tap", 19), ("gear", -2)]
+def _pf_fn0(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+bounds: tuple[int, int] = _pf_fold(_pf_fn0, (1000, -1000), stock)
+print(bounds)
+acc = dict()
+for (k, v) in _pf_concat(stock, stock):
+    _pf_t0 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t0
+index: dict[str, int] = acc
+print(_pf_map_to_list(index))
+def _pf_fn1():
+    for (name, qty) in stock:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn1()
+print(_pf_str_join(",", list(labels)))
+def audit2(rows) -> Ok | Error:
+    def _pf_fn2():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t1 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t1, Ok):
+            total = _pf_t1._0
+            return Ok(total)
+        else:
+            return _pf_t1
+    return _pf_fn2()
+print((audit2(stock), audit2([("ok", 1)])))
+log: list[str] = ["fay", "dee", "cy", "bo", "fay", "fay", "fay", "bo"]
+m = dict()
+for w in log:
+    _pf_t2 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t2
+counts: dict[str, int] = m
+def _pf_fn3(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn3, _pf_map_to_list(counts)))
+sa: set[int] = set([1, 4, 6, 7, 9, 18])
+sb: set[int] = set([4, 5, 7, 10, 12, 16])
+print(_pf_sort(list(_pf_set_difference(sa, sb))))
+print((len(sa), 11 in sb, _pf_set_is_subset(set([1]), sa)))
+print((_pf_map_try_find("eli", counts), "eli" in counts))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+cap: int = 38
+def clip(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((clip(Some(9)), clip(Some(-3)), clip(_None_), cap))
+def settle(n: int) -> int:
+    _pf_t3 = n % 3
+    if _pf_t3 == 0:
+        _n = n // 3
+        return _n + 9
+    else:
+        k = _pf_t3
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(settle, [17, 16, 4, 25]))
+def extent(s: Fig) -> int:
+    if isinstance(s, Square):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Square(8), Ci(5), Wedge(3, 1), Wedge(1, 9)]))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 2
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(8, []), score(1, [4]), score(1, [4, 2, 3])))
+--- stderr ---

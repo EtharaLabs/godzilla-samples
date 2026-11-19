@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Mark:
+    who: str
+    pts: int
+    ratio: float
+scores: list[Mark] = [Mark("quin", 80, 0.7), Mark("sue", 25, 0.22), Mark("pam", 69, 0.45), Mark("ivy", 25, 0.87), Mark("jo", 67, 0.25)]
+def fmtRow(_pf_arg0: Mark) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{_pf_str_upper(_pf_str_slice(0, 2, who))}: {_pf_fmt_pad_left(5, " ", str(pts * 7))}: {f"<{pts}>"}: {_pf_fmt_percent(1, ratio)}: {_pf_str_join("/", [who, str(pts)])}"
+_pf_iter(print, _pf_map(fmtRow, scores))
+print(f"{len(scores)} rows; names={_pf_str_join(", ", _pf_map(lambda s: f"[{s.who}]", scores))}")
+def _ap_KeyVal(s):
+    _pf_t0 = _pf_str_split("=", s)
+    if len(_pf_t0) == 2:
+        k = _pf_t0[0]
+        v = _pf_t0[1]
+        _pf_t1 = _pf_str_to_int(v)
+        if isinstance(_pf_t1, Some):
+            n = _pf_t1._0
+            return Some((_pf_str_strip(k), n))
+        else:
+            return _None_
+    else:
+        return _None_
+def label(s: str) -> str:
+    _pf_t2 = _ap_KeyVal(s)
+    if isinstance(_pf_t2, Some):
+        pair = _pf_t2._0
+        if _pf_snd(pair) > 9:
+            return f"{_pf_fst(pair)} big"
+    if isinstance(_pf_t2, Some):
+        pair = _pf_t2._0
+        return f"{_pf_fst(pair)}={_pf_snd(pair)}"
+    return "?"
+_pf_iter(print, _pf_map(label, ["pam", "ray=0", "max=23", "hal=23"]))
+def scale(n: int) -> int:
+    return n * 5
+def _pf_fn0():
+    _pf_t3 = [2, 2]
+    if _pf_t3:
+        scale = _pf_t3[0]
+        return scale + 1
+    else:
+        return 0
+picked: int = _pf_fn0()
+print((picked, scale(6)))
+def combine(o: Some | None_) -> int:
+    def pair(a: int, b: int) -> int:
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t4 = _pair
+    else:
+        _pf_t4 = 5
+    r = _pf_t4
+    return pair(r, 1)
+print((combine(Some(7)), combine(_None_)))
+def inc(x: int) -> int:
+    return x + 1
+def step2(x: int) -> int:
+    return x * 2
+def pipeline2(x: int) -> int:
+    return (lambda _pf_x: (lambda _pf_x: step2(inc(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(pipeline2, [0, 8, 2]))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def ratio2(a: str, b: str) -> Some | None_:
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 2))))
+print((ratio2("96", "7"), ratio2("4", "0"), ratio2("x", "1")))
+--- stderr ---

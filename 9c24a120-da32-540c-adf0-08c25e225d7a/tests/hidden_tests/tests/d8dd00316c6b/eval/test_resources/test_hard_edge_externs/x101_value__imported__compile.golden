@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+# ==== ffi.py ====
+import math
+piV = math.pi
+def scaled(k):
+    return k * math.pi
+
+# ==== main.py ====
+import ffi
+def _pf_map(f, xs):
+    return list(map(f, xs))
+print(ffi.scaled(2.0))
+print(_pf_map(ffi.scaled, [2.0]))
+
+--- stderr ---

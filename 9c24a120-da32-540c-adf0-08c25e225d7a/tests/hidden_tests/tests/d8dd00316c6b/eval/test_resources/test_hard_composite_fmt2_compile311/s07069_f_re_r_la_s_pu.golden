@@ -1,0 +1,116 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: object
+    bottom: object
+    slot: int
+marks = [Result2("ivy", 78, 0.57), Result2("tom", 17, 0.06), Result2("kit", 29, 0.06)]
+def fmtRow(_pf_arg0):
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return "{}: {{{}}}: {}".format(_pf_fmt_pad_right(6, ".", who), pts, _pf_fmt_pad_left(5, " ", str(pts * 2)))
+_pf_iter(print, _pf_map(fmtRow, marks))
+print("best: {}".format(_pf_option_with_default("none", _pf_option_map(lambda s: s.who, _pf_max_by(lambda s: s.pts, marks)))))
+nums2 = [29, -9, 10, 27, 23, 4]
+gain = 2
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+tweak2 = lambda _pf_x: (lambda z: z - 6)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(nums2))))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+boxes = [Tile(4, 9, "gear"), Tile(2, 1, "cog"), Tile(6, 9, "wick"), Tile(7, 8, "cog"), Tile(3, 2, "pin"), Tile(4, 4, "sq")]
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, boxes)))
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Tile(w + 1, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, boxes)))
+def heavier(s):
+    match s:
+        case Shelf(top=Tile(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Shelf(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Shelf(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def _pf_fn2(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn3(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn2, _pf_filter(_pf_fn3, boxes)))
+--- stderr ---

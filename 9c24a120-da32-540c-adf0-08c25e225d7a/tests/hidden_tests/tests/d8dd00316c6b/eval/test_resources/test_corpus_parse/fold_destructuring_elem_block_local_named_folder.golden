@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let build steps =
+    let add m (p, l) = (((Map.add p) l) m)
+    (((List.fold add) Map.empty) steps)
+let out = (Map.toList (build [(1, "x"), (2, "y")]))
+--- stderr ---

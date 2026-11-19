@@ -1,0 +1,5 @@
+{
+ "exit": 1,
+ "stdout": "",
+ "stderr": "error: `handle` performs {io, async}, but `serve` takes this callback as `Writer -> Async unit`, which performs nothing; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `Writer ->{e} Async unit`\n --> 6:20\n  |\n6 | let listen = serve handle 7777\n  |                    ^^^^^^\n\n1 error\n"
+}

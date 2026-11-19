@@ -1,0 +1,126 @@
+exit: 0
+--- stdout ---
+00000002ok00000289inputs2 : List int
+gain : int
+scalers : List (int -> int)
+tweak2 : int -> int
+combos : List int
+value : (Map string int) -> Ex -> int
+exec : (Map string int) -> St -> Map string int
+reach : float<m>
+factor : float
+side : float<m>
+vol : float<m>
+rateOf : int<'a> -> int<'b> -> float<'a/'b>
+00003358from dataclasses import dataclass
+import functools
+import math
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+inputs2 = [28, -9, 29, 28, 15]
+gain = 5
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), inputs2))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(2), scalers))
+tweak2 = lambda _pf_x: (lambda z: z - 8)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 3], lambda k: Many_yield_(a * b + k))
+combos = Many_combine(Many_for_([(3, 2), (2, 5)], _pf_fn1), Many_delay(lambda _: Many_yield_(5)))
+print(combos)
+def value(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return value(env, a) + value(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(exec, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def exec(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, value(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", value(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(value(dict(), Block([Set("a", Lit(5)), Set("b", Plus(Ref("a"), Lit(2))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+reach = math.hypot(5.0 / 1.0, 4.0 / 1.0) * 1.0
+factor = math.sqrt(3.0)
+side = math.sqrt(25.0)
+vol = math.cbrt(64.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, factor), side, vol))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 9.0)))
+00000002ok00000016reach : float<m>0000000000000002ok00000027scalers : List (int -> int)00000000--- stderr ---

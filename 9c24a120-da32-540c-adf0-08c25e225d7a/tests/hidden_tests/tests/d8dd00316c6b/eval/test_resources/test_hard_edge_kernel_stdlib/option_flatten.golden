@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000002ok00000050Option.flatten : (Option (Option 'a)) -> Option 'a0000000000000002ok0000000000000392from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_opt_flatten(o):
+    return o._0 if isinstance(o, Some) else _None_
+print(_pf_opt_flatten)
+--- stderr ---

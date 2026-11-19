@@ -1,0 +1,200 @@
+exit: 0
+--- stdout ---
+00000002ok00000384decoder : Decoder Reading
+payload : string
+tickets : List Ticket
+urgentTotal : int
+byOwner : List (string, int, int)
+cheap : List Ticket
+dear : List Ticket
+label : Ticket -> string
+digitSum : int -> int
+collatz : int -> int -> int
+isEven : int -> bool
+isOdd : int -> bool
+margin : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+row : int -> List int
+00005907from dataclasses import dataclass
+import functools
+import json
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Reading:
+    name: str
+    points: int
+    active: bool
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+decoder = _pf_dec_map3(lambda n, p, a: Reading(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+payload = "[{\"name\": \"quin\", \"points\": 94, \"active\": false}, {\"name\": \"bo\", \"points\": 48, \"active\": true}]"
+_pf_t1 = lambda n, p, a: Reading(n, p, a)
+try:
+    _pf_t2 = json.loads(payload)
+    if not isinstance(_pf_t2, list):
+        raise ValueError("expected a JSON array")
+    _pf_t3 = []
+    for _pf_t4 in _pf_t2:
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t5 = _pf_t4["name"]
+        if not isinstance(_pf_t5, str):
+            raise ValueError("expected a string, got " + type(_pf_t5).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t6 = _pf_t4["points"]
+        if not (isinstance(_pf_t6, int) and not isinstance(_pf_t6, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t6).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t7 = _pf_t4["active"]
+        if not isinstance(_pf_t7, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t7).__name__)
+        _pf_t3.append(_pf_t1(_pf_t5, _pf_t6, _pf_t7))
+    _pf_t8 = Ok(_pf_t3)
+except Exception as e:
+    _pf_t8 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t8, Ok):
+    ps = _pf_t8._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t0 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t8._0
+    _pf_t0 = print(f"decode failed: {e.errorKind}")
+_pf_t0
+tickets = [Ticket(100, "pam", 62, False, Addr("Doha", 4)), Ticket(101, "pam", 119, False, Addr("Oslo", 4)), Ticket(102, "gus", 53, False, Addr("Bern", 1)), Ticket(103, "gus", 148, False, Addr("Bern", 3))]
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(urgentTotal)
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, tickets))
+print(byOwner)
+cheap, dear = _pf_partition(lambda o: o.amount < 86, tickets)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def label(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(label, tickets)))
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(27427))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [32, 17, 37]))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [24, 22, 15, 10, 30]))
+def margin(price, qty):
+    return price * qty - 7 * qty
+def emit(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn1, [("rod", 35, 5), ("gear", 10, 1), ("wick", 22, 4)]))
+print(grand)
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(4))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+print(_pf_str_rev(str.upper("jo")))
+00000002ok00000016payload : string0000000000000002ok00000020isEven : int -> bool00000000--- stderr ---

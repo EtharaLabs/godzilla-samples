@@ -1,0 +1,113 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def Perhaps_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Perhaps_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Perhaps_bind(_pf_str_to_int(a), lambda x: Perhaps_bind(_pf_str_to_int(b), lambda y: Perhaps_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Perhaps_return_(shown))(q * 4))))
+print((safeDiv("15", "1"), safeDiv("4", "0"), safeDiv("x", "1")))
+legs = [469.4, 375.0, 273.3, 94.2]
+durations = [20.2, 47.3, 64.7, 69.3]
+total = _pf_fold(lambda a, b: a + b, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate = total / elapsed
+print(_pf_fmt_fixed(3, rate))
+km = total / 1000.0
+print(_pf_fmt_fixed(1, km))
+speeds = _pf_map2(lambda d, t: d / t, legs, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("kit tom"), 0))
+inputs2 = [8, 28, 1, 19, 9, -5, 30]
+gain = 5
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(inputs2))))
+tweak2 = lambda _pf_x: (lambda z: z - 2)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def _pf_fn2(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn2, (0, 0), inputs2))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+--- stderr ---

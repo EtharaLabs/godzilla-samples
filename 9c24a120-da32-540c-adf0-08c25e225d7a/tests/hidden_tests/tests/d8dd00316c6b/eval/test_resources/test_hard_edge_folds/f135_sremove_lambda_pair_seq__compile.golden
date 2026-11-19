@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+a = set()
+for (k, v) in iter(_pf_zip([1, 2, 3, 5], [7, 8, 9, 6])):
+    a.discard(k)
+result = a
+print(list(result))
+--- stderr ---

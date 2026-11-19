@@ -1,0 +1,179 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+visits = ["dee", "eli", "bo", "bo", "fay", "cy", "ada", "ada", "cy"]
+m = dict()
+for w in visits:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+extra = dict([("zed", 5), ("dee", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+print((_pf_map_try_find("gus", counts), "gus" in counts))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+def evalEx(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return evalEx(env, a) + evalEx(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(exec, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def exec(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, evalEx(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", evalEx(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(evalEx(dict(), Block([Set("a", Lit(1)), Set("b", Plus(Ref("a"), Lit(7))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+def Perhaps_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Perhaps_return_(x):
+    return Some(x)
+def ratio2(a, b):
+    return Perhaps_bind(_pf_str_to_int(a), lambda x: Perhaps_bind(_pf_str_to_int(b), lambda y: Perhaps_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Perhaps_return_(shown))(q * 1))))
+print((ratio2("13", "8"), ratio2("4", "0"), ratio2("x", "1")))
+print(_pf_map(math.isqrt, [320, 69, 254, 335]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [5, 10, 5, 10]))
+def safe(s):
+    try:
+        _pf_t1 = Ok(int(s))
+    except Exception as _pf_t2:
+        _pf_t1 = Error(_Exception(type(_pf_t2).__name__, str(_pf_t2)))
+    if isinstance(_pf_t1, Ok):
+        n = _pf_t1._0
+        return f"ok {n}"
+    else:
+        e = _pf_t1._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x1", "-42"]))
+seriesA = [22, 11, 6, 3, -5]
+factor = 4
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(9), makers2))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn1, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+--- stderr ---

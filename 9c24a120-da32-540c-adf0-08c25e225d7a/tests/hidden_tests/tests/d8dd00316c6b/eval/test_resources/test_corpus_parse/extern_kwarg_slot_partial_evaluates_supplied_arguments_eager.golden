@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+extern type P
+extern toPath: string -> P = pathlib.Path
+extern writeText: P -> string -> string -> int = .write_text(encoding=...)
+let partial = ((writeText (toPath "a.txt")) "body")
+--- stderr ---

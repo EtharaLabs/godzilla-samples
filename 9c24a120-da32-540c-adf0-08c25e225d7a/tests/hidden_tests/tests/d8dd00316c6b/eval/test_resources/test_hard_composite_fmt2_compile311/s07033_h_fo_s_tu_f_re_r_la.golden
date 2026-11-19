@@ -1,0 +1,155 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+@dataclass(frozen=True, slots=True)
+class Score:
+    who: str
+    pts: int
+    ratio: float
+def apply(xs, op):
+    match op:
+        case Put(k, v):
+            return _pf_concat(xs, [v])
+        case Push(n) if n > 3:
+            return _pf_concat(xs, [n * 10])
+        case _:
+            return xs
+def execute(script):
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Push(n) if n > 3:
+                _pf_t0 = n * 10
+                xs.append(_pf_t0)
+            case _:
+                pass
+    return xs
+ops = [_Skip, Put("nut", 6), _Skip, _Skip, _Skip, Put("gear", 6)]
+state = execute(ops)
+print(state)
+pairs = [("pin", -1), ("nut", -1), ("cog", 9)]
+def audit2(rows):
+    def _pf_fn0():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t1 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t1, Ok):
+            total = _pf_t1._0
+            return Ok(total)
+        else:
+            return _pf_t1
+    return _pf_fn0()
+print((audit2(pairs), audit2([("ok", 1)])))
+def _pf_fn1(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn1, _pf_indexed(pairs))
+def lookupAll(keys, table):
+    def _pf_fn2():
+        for (k, expected) in keys:
+            _pf_t2 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t2, Some):
+                v = _pf_t2._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t2
+        return Some(len(keys))
+    return _pf_fn2()
+print((lookupAll(_pf_take(2, pairs), dict(pairs)), lookupAll([("zz", 0)], dict(pairs))))
+scores = [Score("jo", 5, 0.53), Score("ada", 35, 0.88), Score("ray", 75, 0.55)]
+def line3(_pf_arg0):
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return "{} | {} | {}".format(_pf_fmt_pad_right(6, ".", who), _pf_fmt_percent(1, ratio), _pf_str_join("/", [who, str(pts)]))
+_pf_iter(print, _pf_map(line3, scores))
+print("{} rows; names={}".format(len(scores), _pf_str_join(", ", _pf_map(lambda s: f"[{s.who}]", scores))))
+inputs2 = [-2, 17, -5, 11, 18, -4, 3]
+factor = 5
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn3, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(4), makers2))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(inputs2), inputs2))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+shape2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, inputs2))
+--- stderr ---

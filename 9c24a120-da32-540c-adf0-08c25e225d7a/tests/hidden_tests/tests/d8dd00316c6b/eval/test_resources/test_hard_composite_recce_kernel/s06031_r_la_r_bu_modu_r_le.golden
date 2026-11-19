@@ -1,0 +1,103 @@
+exit: 0
+--- stdout ---
+00000002ok00000213nums2 : List int
+gain : int
+scalers : List (int -> int)
+tell : 'a -> (unit, List 'a)
+compute : int -> (int, List string)
+pts : List int
+reading : (List string) -> int -> int
+skipping : (List string) -> int -> int
+00002735import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+nums2 = [6, 6, 15, 17, -2]
+gain = 3
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(1), scalers))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(nums2))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn2(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn2, (0, 0), nums2))
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def compute(x):
+    return Writer_bind(tell(f"start {x}"), lambda _: Writer_bind((x * 2, ["scaled"]), lambda y: (lambda z: Writer_bind(tell(f"z={z}"), lambda _: Writer_return_(z)))(y + 8)))
+print(_pf_map(compute, [4, 1]))
+def Geo_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Geo_square(x):
+    return x * x
+def Geo_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+pts = [19, -2, 23, 14, -5, -13, -1]
+print(Geo_mean(pts))
+print(_pf_map(Geo_square, pts))
+print(_pf_map(functools.partial(Geo_clamp, 0, 9), pts))
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("  ada max kit gus pam oz "), 0))
+00000002ok00000038skipping : (List string) -> int -> int0000000000000002ok00000014pts : List int00000000--- stderr ---

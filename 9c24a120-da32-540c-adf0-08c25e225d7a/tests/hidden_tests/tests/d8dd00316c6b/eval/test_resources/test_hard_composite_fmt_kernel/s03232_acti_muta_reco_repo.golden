@@ -1,0 +1,154 @@
+exit: 0
+--- stdout ---
+00000002ok00000307classify : int -> string
+hits : int
+record : int<'a> ->{io} int<'a>
+summarize : (List int) ->{io} string
+doubled : List int
+orders : List Booking
+cheap : List Booking
+dear : List Booking
+line : Booking -> string
+classify2 : Booking -> string
+entries : List Stock
+fmtLine : Stock -> string
+low : List string
+00003953from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True)
+class Stock:
+    name: str
+    qty: int
+    price: float
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def _ap_Above(n):
+    if n > 24:
+        return Some(n - 24)
+    else:
+        return _None_
+def _ap_Zero(n):
+    return n == 0
+def classify(n):
+    _pf_t0 = _ap_Above(n)
+    _pf_t1 = _ap_Zero(n)
+    _pf_t2 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    elif _pf_t1:
+        return "zero"
+    elif isinstance(_pf_t2, _Even):
+        return "even"
+    else:
+        return "odd"
+_pf_iter(print, _pf_map(classify, [32, 20, 23, 36, 19, 40, -5, 27]))
+hits = 0
+def record(x):
+    global hits
+    hits = hits + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([26, 5, -7, 10, -6, -16, 5, 19]))
+doubled = _pf_map(record, [26, 5, -7, 10])
+print(f"{doubled} after {hits} calls")
+orders = [Booking(100, "quin", 5, True), Booking(101, "kit", 244, True), Booking(102, "kit", 77, True), Booking(103, "quin", 288, True), Booking(104, "gus", 270, True), Booking(105, "kit", 103, True)]
+cheap, dear = _pf_partition(lambda o: o.amount < 127, orders)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def line(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(line, orders)))
+def classify2(o):
+    match o:
+        case Booking(urgent=True, amount=amount) if amount > 165:
+            return "rush-big"
+        case Booking(urgent=True):
+            return "rush"
+        case Booking(amount=amount):
+            if amount > 165:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(classify2, orders))
+print(_pf_count_by(classify2, orders))
+entries = [Stock("rod", 20, 29.61), Stock("bolt", 16, 2.35), Stock("wick", 7, 29.51)]
+def fmtLine(x):
+    return f"{_pf_fmt_pad_right(6, "-", x.name)}: {_pf_fmt_pad_left(4, " ", str(x.qty))}: {_pf_fmt_fixed(1, x.price)}: {"restock" if x.qty > 6 else "ok"}"
+_pf_iter(print, _pf_map(fmtLine, entries))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 13, entries))
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+00000002ok00000024classify : int -> string0000000000000002ok00000036summarize : (List int) ->{io} string00000000--- stderr ---

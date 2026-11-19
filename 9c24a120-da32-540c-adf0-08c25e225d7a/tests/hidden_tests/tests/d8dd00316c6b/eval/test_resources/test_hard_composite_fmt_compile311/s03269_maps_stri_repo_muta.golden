@@ -1,0 +1,140 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_set_difference(a, b):
+    return a.difference(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+visits = ["cy", "dee", "fay", "fay", "cy", "dee"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+freq = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+sa = set([4, 8, 10, 12, 16, 19])
+sb = set([1, 2, 4, 5, 12, 14])
+print(_pf_sort(list(_pf_set_difference(sa, sb))))
+print((len(sa), 9 in sb, _pf_set_is_subset(set([4]), sa)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, freq))
+raw = "hub,rod,ivy,pam,dee"
+words = _pf_str_split(",", raw)
+nums = _pf_map(_pf_str_to_int, _pf_str_split(",", "5a,7,x,5a,x"))
+print(nums)
+print(sum(_pf_choose(_pf_id, nums)))
+n2 = len(words)
+print(f"n2={n2} {{braces}} {len(raw)}")
+print(_pf_str_join("|", _pf_map(_pf_str_upper, words)))
+print(_pf_str_replace("e", "E", raw))
+print(_pf_str_slice(2, 7, raw))
+print(_pf_str_join("", _pf_map(lambda w: _pf_str_upper(_pf_str_slice(0, 1, w)), words)))
+entries = [Entry("cog", 5, 9.47), Entry("pin", 28, 33.43), Entry("gear", 19, 30.69), Entry("nut", 16, 9.48)]
+def renderRow(x):
+    return "{}: {}: {}: {}: {}".format(_pf_fmt_pad_right(10, "-", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(1, x.price), "restock" if x.qty > 6 else "ok", _pf_fmt_currency("$", 2, x.price * 3.0))
+_pf_iter(print, _pf_map(renderRow, entries))
+print("items: {}".format(_pf_str_join(", ", _pf_map(lambda x: x.name, entries))))
+hits = 0
+def note(x):
+    global hits
+    hits = hits + 1
+    return x * 4
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([6, 9, 51, -2]))
+doubled = _pf_map(note, [6, 9, 51, -2])
+print(f"{doubled} after {hits} calls")
+--- stderr ---

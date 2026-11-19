@@ -1,0 +1,39 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Dot:
+    def __repr__(self):
+        return "Dot"
+_Dot: Dot = Dot()
+Shape = Circle | Rect | Dot
+def describe(s: Shape) -> str:
+    if isinstance(s, Circle):
+        r = s._0
+        if r > 10.0:
+            return "big circle"
+    if isinstance(s, Circle):
+        r = s._0
+        return f"circle {r}"
+    elif isinstance(s, Rect):
+        w = s._0
+        h = s._1
+        return f"rect {w * h}"
+    else:
+        return "dot"
+print(describe(Circle(20.0)))
+print(describe(Circle(1.5)))
+print(describe(Rect(2.0, 3.0)))
+print(describe(_Dot))
+--- stderr ---

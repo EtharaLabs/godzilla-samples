@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let f xs =
+    match xs:
+        case []: 0
+        case [x]: x
+        case [x, y]: (x + y)
+        case [a, b, *rest]: (a + b)
+--- stderr ---

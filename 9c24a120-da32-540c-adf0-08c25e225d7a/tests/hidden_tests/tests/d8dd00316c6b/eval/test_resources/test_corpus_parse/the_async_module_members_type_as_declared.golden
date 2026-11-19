@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let slow n = async { do! (Async.sleep 0.01) return n }
+let main = async { let! xs = (Async.parallel [(slow 1), (slow 2)]) let! first = (Async.race [(slow 3), (slow 4)]) let! t = ((Async.timeout 0.5) (slow 5)) let! v = (Async.toThread (fun _ -> 41)) let! r = (Async.catch (slow 6)) let total = (match t: case (Some n): n case None: 0) let got = (match r: case (Ok n): n case (Error e): (String.len e.errorKind)) return (((((List.sum xs) + first) + total) + v) + got) }
+--- stderr ---

@@ -1,0 +1,30 @@
+exit: 0
+--- stdout ---
+00000005error00000118(could not determine a type — is `let count k acc = if k == 0 then acc else count (k - 1) (acc + k)` an expression?)0000000000000005error00000073(could not determine a type — is `let double x = x * 2` an expression?)0000000000000002ok00000008u : int
+00000050print("first")
+u = 2
+print("second")
+print(u * 5)
+00000002ok00000026sq : int<'a> -> int<'a^2>
+00000028def sq(x):
+    return x * x
+00000002ok00000040index : (List string) -> Map string int
+00000106def index(xs):
+    m = dict()
+    for x in xs:
+        _pf_t0 = len(x)
+        m[x] = _pf_t0
+    return m
+00000002ok00000019speed : float<m/s>
+00000021speed = 100.0 / 10.0
+00000005error00000168error: measure `m` is already defined
+  --> 11:1
+   |
+11 | measure m
+   | ^^^^^^^^^
+error: measure `s` is already defined
+  --> 12:1
+   |
+12 | measure s
+   | ^^^^^^^^^
+00000000--- stderr ---

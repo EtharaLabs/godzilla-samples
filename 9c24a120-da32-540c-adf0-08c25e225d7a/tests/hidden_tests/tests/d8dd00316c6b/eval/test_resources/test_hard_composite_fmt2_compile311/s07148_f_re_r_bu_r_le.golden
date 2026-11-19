@@ -1,0 +1,62 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Score:
+    who: str
+    pts: int
+    ratio: float
+board = [Score("dee", 70, 0.44), Score("ray", 87, 0.37), Score("tom", 33, 0.44), Score("eli", 75, 0.5)]
+def line3(_pf_arg0):
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return "{} | {} | pts={} | {} | {{{}}}".format(_pf_fmt_pad_right(6, ".", who), _pf_fmt_pad_left(5, " ", str(pts * 4)), pts, _pf_fmt_percent(1, ratio), pts)
+_pf_iter(print, _pf_map(line3, board))
+print("{} rows; names={}".format(len(board), _pf_str_join(", ", _pf_map(lambda s: f"[{s.who}]", board))))
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def compute(x):
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 2, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 8)))
+print(_pf_map(compute, [2, 0]))
+def ping(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepB(n - 1, acc + 1)
+def stepB(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pang(n - 2, acc * 2)
+def pang(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return ping(n - 3, acc - 1)
+print(_pf_map(lambda n: ping(n, 1), [17, 15, 15, 5]))
+--- stderr ---

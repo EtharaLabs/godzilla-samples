@@ -1,0 +1,57 @@
+exit: 0
+--- stdout ---
+00000005error00000072error: unbound name `counter`
+ --> 2:1
+  |
+2 | counter * 10
+  | ^^^^^^^
+0000000000000005error00000072error: unbound name `counter`
+ --> 2:1
+  |
+2 | counter * 10
+  | ^^^^^^^
+0000000000000002ok00000020flip : Coin -> Coin
+00000497from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Heads:
+    def __repr__(self):
+        return "Heads"
+_Heads = Heads()
+@dataclass(frozen=True, slots=True, repr=False)
+class Tails:
+    def __repr__(self):
+        return "Tails"
+_Tails = Tails()
+def flip(c):
+    match c:
+        case Heads():
+            return _Tails
+        case Tails():
+            return _Heads
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(flip(_Heads))
+00000002ok00000024List.head [] : Option 'a0000000000000005error00000349error: type `Coin` is already defined
+ --> 8:1
+  |
+8 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Heads` is already defined
+ --> 8:1
+  |
+8 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Tails` is already defined
+ --> 8:1
+  |
+8 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+0000000000000005error00000129(could not determine a type — is `let firstOr d xs =
+  match List.head xs:
+    case Some x: x
+    case None: d` an expression?)0000000000000005error00000067error: unbound name `count`
+ --> 8:1
+  |
+8 | count 100 0
+  | ^^^^^
+00000000--- stderr ---

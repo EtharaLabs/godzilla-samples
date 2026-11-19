@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def step(acc, _pf_arg1):
+    k, v = _pf_arg1
+    match acc:
+        case (m, ks):
+            return (_pf_map_add(k, v, m), _pf_concat(ks, [k]))
+m = dict()
+ks = []
+for (k, v) in [(1, "a"), (2, "b")]:
+    m[k] = v
+    ks.append(k)
+match (m, ks):
+    case (m, ks):
+        _pf_t0 = (_pf_map_to_list(m), ks)
+out = _pf_t0
+--- stderr ---

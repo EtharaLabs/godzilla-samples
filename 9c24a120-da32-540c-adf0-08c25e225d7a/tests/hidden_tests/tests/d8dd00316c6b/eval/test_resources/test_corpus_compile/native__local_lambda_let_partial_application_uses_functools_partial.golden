@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def addAll(ys: list[int]) -> list[int]:
+    pair = lambda a, b: a + b
+    return _pf_map(functools.partial(pair, 10), ys)
+r: list[int] = addAll([1, 2])
+--- stderr ---

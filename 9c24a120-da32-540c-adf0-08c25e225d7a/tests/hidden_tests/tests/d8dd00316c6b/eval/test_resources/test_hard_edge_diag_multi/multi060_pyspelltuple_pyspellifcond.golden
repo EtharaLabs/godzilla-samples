@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+ --> 6:14
+  |
+6 | let t1 = (0, len [1], "z")
+  |              ^^^
+
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+ --> 7:13
+  |
+7 | let i2 = if len [1] then 1 else 2
+  |             ^^^
+
+2 errors

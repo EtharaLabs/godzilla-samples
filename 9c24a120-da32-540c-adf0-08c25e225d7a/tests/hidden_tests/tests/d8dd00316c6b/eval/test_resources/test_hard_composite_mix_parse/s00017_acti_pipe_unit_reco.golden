@@ -1,0 +1,37 @@
+exit: 0
+--- stdout ---
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let bucketOf n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([(- 3), 16, 12, 18, 1, 16] |> (List.map bucketOf)) |> (List.iter print))
+let samples = [9, 17, 46, 46, 39, 47, 3, 15, 17]
+let stage = ((((((List.pairwise >> (List.map (fun (a, b) -> (b - a)))) >> (List.filter (fun x -> ((x % 3) == 2)))) >> (List.map ((-) 36))) >> List.rev) >> (List.choose (fun x -> (if ((x % 3) == 0) then (Some (x // 3)) else None)))) >> (List.takeWhile (fun x -> (x < 54))))
+let digest = ((samples |> stage) |> ((List.map String.fromInt) >> (String.join "-")))
+(print digest)
+measure m
+measure s
+measure kg
+let laps = [231.1<m>, 181.0<m>, 406.2<m>]
+let splits = [18.8<s>, 31.0<s>, 40.6<s>]
+let dist = (((List.fold (fun acc d -> (acc + d))) 0.0<m>) laps)
+let dur = (((List.fold (+)) 0.0<s>) splits)
+let rate = (dist / dur)
+(print ((Format.fixed 1) rate))
+let speeds = (((List.map2 (fun d t -> (d / t))) laps) splits)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+type Ticket = { id: int, owner: string, amount: int, urgent: bool }
+let book = [Ticket { id = 100, owner = "ada", amount = 134, urgent = true }, Ticket { id = 101, owner = "ada", amount = 209, urgent = false }, Ticket { id = 102, owner = "ada", amount = 21, urgent = true }, Ticket { id = 103, owner = "gus", amount = 126, urgent = true }, Ticket { amount = 77, id = 104, urgent = false, owner = "ada" }]
+let bucket o =
+    match o:
+        case Ticket { urgent = true, amount } if (amount > 84): "rush-big"
+        case Ticket { urgent = true }: "rush"
+        case Ticket { amount }: (if (amount > 84) then "big" else "normal")
+(print ((List.map bucket) book))
+(print ((List.countBy bucket) book))
+let (nrec, amt) = (((List.fold (fun (n, s) o -> ((n + 1), (s + o.amount)))) (0, 0)) book)
+(print f"{nrec} records, {amt} total")
+let rushSum = ((book |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print rushSum)
+--- stderr ---

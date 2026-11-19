@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+type Shape = Circle float | Rect float float | Dot
+let describe s =
+    match s:
+        case (Circle r) if (r > 10.0): "big circle"
+        case (Circle r): f"circle {r}"
+        case (Rect w h): f"rect {(w * h)}"
+        case Dot: "dot"
+(print (describe (Circle 20.0)))
+(print (describe (Circle 1.5)))
+(print (describe ((Rect 2.0) 3.0)))
+(print (describe Dot))
+--- stderr ---

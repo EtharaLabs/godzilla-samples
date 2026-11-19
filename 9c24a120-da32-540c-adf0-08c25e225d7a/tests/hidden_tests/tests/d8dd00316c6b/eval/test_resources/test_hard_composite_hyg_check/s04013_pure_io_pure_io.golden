@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `quiet` is declared `pure` but performs `io`
+  --> 12:20
+   |
+12 | let pure quiet x = maybeLog true x
+   |                    ^^^^^^^^^^^^^^^
+
+error: `emit` is declared `pure` but performs `io`
+  --> 41:3
+   |
+41 |   print f"{label}: {net price qty}"
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

@@ -1,0 +1,201 @@
+exit: 0
+--- stdout ---
+00000002ok00000498raw : string
+tokens : List string
+fieldsN : List (Option int)
+longest : Option string
+rows : List Line
+showRow : Line -> string
+sumDigits : int -> int
+gcdLoop : int -> int -> int
+net : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+values : List int
+addK : int<'a> -> int<'a> -> int<'a>
+isBig : int -> bool
+outcome : Option int
+visits : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+counts : Map string int
+sa : Set int
+sb : Set int
+extra : Map string int
+00005206from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_distinct(xs):
+    return list(dict.fromkeys(xs))
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_reduce(f, xs):
+    return Some(functools.reduce(f, xs)) if xs else _None_
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True)
+class Line:
+    name: str
+    qty: int
+    price: float
+raw = "ned,ray,dee,tom,wick,fay"
+tokens = _pf_str_split(",", raw)
+fieldsN = _pf_map(_pf_str_to_int, _pf_str_split(",", "40,12,5a,x,-3"))
+print(fieldsN)
+print(sum(_pf_choose(_pf_id, fieldsN)))
+print(_pf_str_slice(3, 8, raw))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, tokens)))
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), tokens))
+print(_pf_option_with_default("?", longest))
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, tokens))))
+print(_pf_map(lambda w: (w, len(w)), tokens))
+rows = [Line("nut", 3, 17.88), Line("pin", 4, 37.73), Line("cog", 27, 27.8), Line("cap", 16, 36.29)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(10, ".", x.name)}: {_pf_fmt_pad_left(4, " ", str(x.qty))}: {_pf_fmt_fixed(1, x.price)}: {"restock" if x.qty > 9 else "ok"}"
+_pf_iter(print, _pf_map(showRow, rows))
+print(f"{len(rows)} rows, {_pf_str_upper("total")}={_pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, rows))}")
+def sumDigits(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + sumDigits(n // 10)
+print(sumDigits(10372))
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(92, 357))
+def net(price, qty):
+    return price * qty - 9 * qty
+def emit(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("nut", 14, 3), ("bolt", 43, 3), ("wick", 27, 5), ("cog", 18, 3)]))
+print(overall)
+values = [3, 24, 32, 11, 36, -3]
+def addK(k, x):
+    return x + k
+def isBig(n):
+    return n > 19 and n % 3 != 0
+outcome = _pf_reduce(lambda a, b: a + b, _pf_collect(lambda x: [x, x + 1], _pf_distinct(_pf_map(functools.partial(addK, 9), _pf_sort((lambda _pf_x: _pf_map(sum, _pf_chunk(2, _pf_x)))(_pf_filter(lambda x: x % 5 == 0, values)))))))
+print(outcome)
+visits = ["cy", "bo", "cy", "dee", "bo", "eli", "fay", "ada"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts = m
+def _pf_fn1(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn1, _pf_map_to_list(counts)))
+sa = set([3, 4, 8, 10, 12, 18])
+sb = set([6, 7, 8, 11, 13, 17])
+print(_pf_sort(list(_pf_set_union(sa, sb))))
+print((len(sa), 14 in sb, _pf_set_is_subset(set([3]), sa)))
+extra = dict([("zed", 5), ("cy", 0)])
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+00000002ok00000024showRow : Line -> string0000000000000002ok00000039bump : (Map 'a int) -> 'a -> Map 'a int00000000--- stderr ---

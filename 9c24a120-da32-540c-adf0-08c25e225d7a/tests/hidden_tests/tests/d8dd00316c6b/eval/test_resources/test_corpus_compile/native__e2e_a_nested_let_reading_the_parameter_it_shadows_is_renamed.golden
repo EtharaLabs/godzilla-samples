@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def f(x: int, flag: bool) -> int:
+    if flag:
+        _x = x + 1
+        _pf_t0 = _x * 2
+    else:
+        _pf_t0 = 0
+    y = _pf_t0
+    return y
+r: int = f(5, True)
+--- stderr ---

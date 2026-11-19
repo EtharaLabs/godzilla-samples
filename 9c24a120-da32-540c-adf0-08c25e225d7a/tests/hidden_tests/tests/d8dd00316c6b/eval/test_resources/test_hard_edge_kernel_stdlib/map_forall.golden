@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+00000002ok00000054Map.forall : ('a -> 'b -> bool) -> (Map 'a 'b) -> bool0000000000000002ok0000000000000146def _pf_map_forall(f, m):
+    for kv in m.items():
+        if not f(kv[0], kv[1]):
+            return False
+    return True
+print(_pf_map_forall)
+--- stderr ---

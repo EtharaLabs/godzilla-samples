@@ -1,0 +1,129 @@
+exit: 0
+--- stdout ---
+00000002ok00000330evens : Seq int
+laps : List float<m>
+times : List float<s>
+dist : float<m>
+elapsed : float<s>
+speed : float<m/s>
+edge : float<m>
+cube : float<m^3>
+km : float<m>
+paceOf : int<'a> -> int<'b> -> float<'b/'a>
+row : int -> List int
+safe : string ->{io} string
+orders : List Parcel
+label : Parcel -> string
+surcharge : Parcel -> Parcel
+00003313from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def _pf_fn0():
+    for x in _pf_range(1, 9):
+        y = x * x
+        yield y
+    yield 119
+evens = _pf_fn0()
+print(list(filter(lambda n: n % 4 == 0, evens)))
+print(list(_pf_seq_take(2, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 2)))))
+laps = [236.4, 345.9, 406.1]
+times = [22.2, 73.8, 5.8]
+dist = _pf_fold(lambda a, b: a + b, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+speed = dist / elapsed
+print(_pf_fmt_fixed(3, speed))
+edge = math.sqrt(6.25)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(6))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x9", "6"]))
+print(_pf_map(math.isqrt, [178, 109, 109, 383]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+orders = [Parcel(100, "pam", 217, True), Parcel(101, "pam", 230, True), Parcel(102, "dee", 172, True), Parcel(103, "oz", 279, False)]
+def label(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(label, orders)))
+def surcharge(o):
+    if o.urgent:
+        _pf_t2 = o
+        return Parcel(_pf_t2.id, _pf_t2.owner, o.amount + 20, _pf_t2.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, orders)))
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+print(_pf_max_by(lambda o: o.amount, orders))
+00000002ok00000020orders : List Parcel0000000000000002ok00000015evens : Seq int00000000--- stderr ---

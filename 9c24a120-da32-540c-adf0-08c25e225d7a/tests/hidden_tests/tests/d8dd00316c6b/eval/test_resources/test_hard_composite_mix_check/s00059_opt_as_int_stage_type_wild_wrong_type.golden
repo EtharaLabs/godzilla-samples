@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+  --> 27:13
+   |
+27 |     case _: "zero"
+   |             ^^^^^^
+
+error: type mismatch: expected string, found int
+  --> 36:3
+   |
+36 |   readings
+   |   ^^^^^^^^
+
+error: expected int, found Option int
+  --> 52:18
+   |
+52 | let firstCount = Map.tryFind "cy" counts + 1
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

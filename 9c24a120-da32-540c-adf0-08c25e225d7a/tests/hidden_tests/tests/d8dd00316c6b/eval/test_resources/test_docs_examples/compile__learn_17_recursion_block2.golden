@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(isEven(10))
+print(isOdd(7))
+--- stderr ---

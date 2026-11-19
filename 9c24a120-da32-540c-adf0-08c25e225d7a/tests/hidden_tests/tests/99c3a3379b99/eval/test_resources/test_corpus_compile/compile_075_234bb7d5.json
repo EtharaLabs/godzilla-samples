@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\ndef _pf_map_try_find(k, m):\n    if k in m:\n        return Some(m.get(k))\n    return None_()\n_None_ = 1\nn = None_()\no = _pf_map_try_find(1, dict())\n",
+ "stderr": ""
+}

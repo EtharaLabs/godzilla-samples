@@ -1,0 +1,148 @@
+exit: 0
+--- stdout ---
+00000002ok00000271reading : (List string) -> int -> int
+inSpace : (List string) -> int -> int
+nums2 : List int
+gain : int
+shape2 : int -> int
+scalers : List (int -> int)
+render : Token -> string
+weight : Token -> int
+stream : List Token
+tally : int
+ratio2 : string -> string -> Option int
+00003950from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    def __repr__(self):
+        return "Rest"
+_Rest = Rest()
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    def __repr__(self):
+        return "Store"
+_Store = Store()
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: str
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("  ivy kit hal dee lu tom "), 0))
+nums2 = [22, 3, 7, 22, 3, 7, 10, 13]
+gain = 5
+shape2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, nums2))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(9), scalers))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+def render(t):
+    match t:
+        case Mark(s0):
+            return f"mark({s0})"
+        case Load(s0):
+            return f"load({s0})"
+        case Turn(s0):
+            return f"turn({s0})"
+        case Rest() | Store():
+            return "rest/store"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Store():
+            return 3
+        case _:
+            return 0
+stream = [Mark("ada"), _Rest, Load("ray"), _Store, _Store, Turn("kit"), Turn("ada")]
+print(_pf_str_join(" ", _pf_map(render, stream)))
+tally = _pf_sum_by(weight, stream)
+print(f"tally={tally}")
+print(_pf_max_by(weight, stream))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def ratio2(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 2))))
+print((ratio2("21", "8"), ratio2("4", "0"), ratio2("x", "1")))
+00000002ok00000039ratio2 : string -> string -> Option int0000000000000002ok00000019stream : List Token00000000--- stderr ---

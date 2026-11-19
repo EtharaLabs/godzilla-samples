@@ -1,0 +1,110 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+hits = 0
+def record(x):
+    global hits
+    hits = hits + 1
+    return x * 3
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([48, -13, -18, 58, 27, -13]))
+doubled = _pf_map(record, [48, -13, -18, 58])
+print(f"{doubled} after {hits} calls")
+recordTwice = lambda _pf_x: record(record(_pf_x))
+print((recordTwice(3), hits))
+orders = [Booking(100, "eli", 220, False), Booking(101, "jo", 57, True), Booking(102, "jo", 153, True), Booking(103, "jo", 56, False), Booking(104, "eli", 292, True), Booking(105, "tom", 166, False)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn0, (0, 0), orders)
+print(f"{nrec} records, {amt} total")
+def bump2(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Booking(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(bump2, 19), orders)))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(rushSum)
+def bucket(o):
+    match o:
+        case Booking(urgent=True, amount=amount) if amount > 171:
+            return "rush-big"
+        case Booking(urgent=True):
+            return "rush"
+        case Booking(amount=amount):
+            if amount > 171:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, orders))
+print(_pf_count_by(bucket, orders))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, orders))
+print(perOwner)
+entries = [Row("rod", 24, 22.09), Row("tap", 11, 28.19), Row("cog", 21, 16.39), Row("gear", 7, 11.77), Row("nut", 28, 31.41)]
+def fmtLine(x):
+    return "{}|{}|{}|{}".format(_pf_fmt_pad_right(7, "-", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(1, x.price), _pf_fmt_currency("$", 2, x.price * 7.0))
+_pf_iter(print, _pf_map(fmtLine, entries))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 5, entries))
+print("low: {} ({})".format(_pf_str_join("", low), _pf_fmt_percent(1, 0.5 * 1.0)))
+--- stderr ---

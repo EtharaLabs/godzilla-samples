@@ -1,0 +1,8 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: expected `=`, found `.`
+  --> 30:14
+   |
+30 | let freq List.fold (fun m w -> Map.add w (Map.findOr w 0 m + 1) m) Map.empty log
+   |              ^

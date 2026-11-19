@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+measure m
+measure s
+measure kg
+let segments = [453.2<m>, 173.4<m>, 35.4<m>]
+let splits = [15.2<s>, 79.7<s>, 28.5<s>]
+let total = (((List.fold (fun acc d -> (acc + d))) 0.0<m>) segments)
+let elapsed = (((List.fold (+)) 0.0<s>) splits)
+let speed = (total / elapsed)
+(print ((Format.fixed 3) speed))
+let edge = (sqrt 2.25<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf total) elapsed) * 1000.0)))
+let readPair line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 5) }
+let entries = ["bo=x", "gus", "tom = 4", "max=7=1", "pam=42"]
+let results = ((List.map readPair) entries)
+((List.iter print) results)
+(print ((results |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((results |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+type Order = { id: int, owner: string, amount: int, urgent: bool }
+let parcels = [Order { id = 100, owner = "dee", amount = 11, urgent = true }, Order { amount = 77, urgent = true, id = 101, owner = "gus" }, Order { id = 102, owner = "gus", amount = 258, urgent = true }, Order { id = 103, owner = "dee", amount = 55, urgent = false }, Order { id = 104, owner = "dee", amount = 52, urgent = false }]
+(print ((List.maxBy (fun o -> o.amount)) parcels))
+(print (((parcels |> (List.sortBy (fun o -> o.amount))) |> (List.take 4)) |> (List.map (fun o -> o.id))))
+let line (Order { id, owner }) = f"#{id} {(String.upper owner)}"
+(print ((parcels |> (List.map line)) |> (String.join ", ")))
+type Player = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let jsonText = "[{\"name\": \"tom\", \"points\": 94, \"active\": true}, {\"name\": \"bo\", \"points\": 11, \"active\": true}, {\"name\": \"lu\", \"points\": 48, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list dec)) jsonText):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let series = seq {
+    for x in ((List.range 1) 9):
+        let y = (x * x)
+        yield y
+    yield 155
+}
+(print (((Seq.fold (+)) 0) series))
+(((((Seq.initInfinite (fun i -> (i * 4))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 6)) |> Seq.toList) |> print)
+--- stderr ---

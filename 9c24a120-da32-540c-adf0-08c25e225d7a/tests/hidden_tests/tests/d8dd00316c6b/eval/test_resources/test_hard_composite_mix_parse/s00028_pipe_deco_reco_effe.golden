@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+let readings = [8, (- 2), 30, (- 2), 30, 21, 47, 6, (- 8)]
+let shift k x = (x + k)
+let isBig n = ((n > 12) and ((n % 4) != 0))
+let result = (((((((readings |> List.sort) |> (List.map (shift 2))) |> (List.take 7)) |> (List.indexed >> (List.map (fun (i, x) -> (i * x))))) |> (List.choose (fun x -> (if ((x % 3) == 0) then (Some (x // 3)) else None)))) |> (List.map (fun x -> ((x // 4) + (x % 4))))) |> (List.exists (fun x -> (x > 34))))
+(print result)
+type Entry = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Entry { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"ivy\", \"points\": 40, \"active\": true}, {\"name\": \"pam\", \"points\": 38, \"active\": false}]"
+match ((Decode.decodeString (Decode.list dec)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+type Invoice = { id: int, owner: string, amount: int, urgent: bool }
+let tickets = [Invoice { id = 100, urgent = false, amount = 251, owner = "bo" }, Invoice { id = 101, amount = 291, urgent = true, owner = "gus" }, Invoice { owner = "gus", amount = 296, urgent = true, id = 102 }, Invoice { id = 103, owner = "ray", amount = 254, urgent = false }]
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 74))) tickets)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+let (cnt, sumAmt) = (((List.fold (fun (n, s) o -> ((n + 1), (s + o.amount)))) (0, 0)) tickets)
+(print f"{cnt} records, {sumAmt} total")
+let tag o =
+    let Invoice { id, amount } = o
+    f"#{id}:{(((Format.padLeft 5) " ") (String.fromInt amount))}"
+(print ((tickets |> (List.map tag)) |> (String.join ", ")))
+let pure discount price qty = ((price * qty) - (8 * qty))
+let report label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let grand = (([("nut", 45, 2), ("nut", 8, 4), ("cog", 18, 1)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print grand)
+--- stderr ---

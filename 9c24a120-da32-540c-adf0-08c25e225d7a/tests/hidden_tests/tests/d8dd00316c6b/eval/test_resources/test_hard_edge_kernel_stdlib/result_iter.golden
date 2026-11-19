@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+00000002ok00000052Result.iter : ('a -> unit) -> (Result 'a 'b) -> unit0000000000000002ok0000000000000404from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_res_iter(f, r):
+    if isinstance(r, Ok):
+        f(r._0)
+    return None
+print(_pf_res_iter)
+--- stderr ---

@@ -1,0 +1,36 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+init_a = dict([(1, 5)])
+def step(a, x):
+    return _pf_map_add(x, _pf_option_with_default(0, _pf_map_try_find(x, a)) + 1, a)
+def compute(u):
+    a = dict(init_a)
+    for x in range(1, 6):
+        _pf_t0 = _pf_option_with_default(0, _pf_map_try_find(x, a)) + 1
+        a[x] = _pf_t0
+    return a
+print(_pf_map_to_list(compute(None)))
+--- stderr ---

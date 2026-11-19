@@ -1,0 +1,144 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Turn({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Emit({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0, self._1)
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+def explain(t):
+    match t:
+        case Push(n0) if n0 % 2 == 0:
+            return f"push!({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Turn(s0, n1):
+            return f"turn({s0},{n1})"
+        case Emit(n0, s1) if 0 <= n0 < 6:
+            return f"emit!({n0},{s1})"
+        case Emit(n0, s1):
+            return f"emit({n0},{s1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def score(t):
+    match t:
+        case Emit(x0, _):
+            return x0 * 5
+        case _:
+            return 2
+batch = [Turn("sue", 8), Turn("jo", 10), Turn("quin", 0), Emit(-1, "ada")]
+print(_pf_str_join(" ", _pf_map(explain, batch)))
+total = _pf_sum_by(score, batch)
+print(f"total={total}")
+print(_pf_sort(batch))
+panels = [Panel(5, 9, "tap"), Panel(8, 9, "hub"), Panel(1, 5, "cap"), Panel(3, 1, "pin"), Panel(3, 9, "nut"), Panel(4, 4, "sq")]
+def rename(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Panel(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "x-"), panels)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def grow(b):
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Panel(w + 3, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+def choose2(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((7, 6)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 7)))
+def settle(n):
+    match n % 3:
+        case 0:
+            _n = n // 3
+            return _n + 6
+        case k:
+            _n2 = n * k
+            _k = _n2 - 1
+            return _k
+print(_pf_map(settle, [4, 24, 13, 20]))
+cap = 35
+def bound(o):
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((bound(Some(3)), bound(Some(-3)), bound(_None_), cap))
+--- stderr ---

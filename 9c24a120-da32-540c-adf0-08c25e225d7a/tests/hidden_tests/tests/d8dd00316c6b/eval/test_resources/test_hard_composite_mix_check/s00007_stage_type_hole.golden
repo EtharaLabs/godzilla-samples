@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected string, found int
+ --> 4:60
+  |
+4 | let answer = (List.map String.fromInt >> String.join "-") (List.map String.upper (List.distinctBy (fun x -> x % 2) (List.sortBy (fun x -> x % 3) (List.dropWhile (fun x -> x < 5) (values)))))
+  |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `'a`
+  --> 39:18
+   |
+39 |   let square x = ?
+   |                  ^
+
+1 error
+1 unfilled hole

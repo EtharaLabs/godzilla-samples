@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` is missing field(s) `y`
+ --> 6:29
+  |
+6 | let l1 = List.map (fun q -> Pt { x = 1 }) [1, 2]
+  |                             ^^^^^^^^^^^^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 8:15
+  |
+8 |   let inner = { pt with z = 4 }
+  |               ^^^^^^^^^^^^^^^^^
+
+error: record `Pt` has no field `z`
+  --> 11:9
+   |
+11 |   match p:
+   |         ^
+
+3 errors

@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "import functools\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndef swap(a, b):\n    return (b, a)\ndef build(xs):\n    def _pf_fn0(acc, x):\n        match acc:\n            case (a, b):\n                return swap(a, b)\n    return _pf_fold(_pf_fn0, ([], []), xs)\n",
+ "stderr": ""
+}

@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+  --> 17:11
+   |
+17 | let vol = cbrt 27.0<m^3> + 1.0<s>
+   |           ^^^^^^^^^^^^^^^^^^^^^^^
+
+error: `median` is not a member of `Calc`
+  --> 47:8
+   |
+47 | print (Calc.median obs)
+   |        ^^^^^^^^^^^
+
+note: hole `?` has type `'a`
+  --> 41:18
+   |
+41 |   let square x = ?
+   |                  ^
+
+2 errors
+1 unfilled hole

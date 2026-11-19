@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\nfrom functools import total_ordering\n@total_ordering\n@dataclass(frozen=True, slots=True, repr=False)\nclass Red:\n    def __repr__(self):\n        return \"Red\"\n    def __lt__(self, other):\n        return self._pf_order_key() < other._pf_order_key()\n    def _pf_order_key(self):\n        return (0,)\n_Red = Red()\n@total_ordering\n@dataclass(frozen=True, slots=True, repr=False)\nclass Green:\n    def __repr__(self):\n        return \"Green\"\n    def __lt__(self, other):\n        return self._pf_order_key() < other._pf_order_key()\n    def _pf_order_key(self):\n        return (1,)\n_Green = Green()\n@total_ordering\n@dataclass(frozen=True, slots=True, repr=False)\nclass Blue:\n    def __repr__(self):\n        return \"Blue\"\n    def __lt__(self, other):\n        return self._pf_order_key() < other._pf_order_key()\n    def _pf_order_key(self):\n        return (2,)\n_Blue = Blue()\nr = [_Red, _Green] < [_Red, _Blue]\n",
+ "stderr": ""
+}

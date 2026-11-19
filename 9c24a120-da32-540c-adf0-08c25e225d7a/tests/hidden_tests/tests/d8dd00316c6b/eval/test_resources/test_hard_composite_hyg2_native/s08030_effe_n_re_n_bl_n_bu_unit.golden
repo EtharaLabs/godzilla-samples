@@ -1,0 +1,83 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def discount(price: int, qty: int) -> int:
+    return price * qty - 4 * qty
+def announce(label, price: int, qty: int) -> int:
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand: int = sum(_pf_map(_pf_fn0, [("rod", 42, 3), ("cog", 30, 3), ("rod", 33, 5)]))
+print(grand)
+def build(start: int) -> tuple[int, list[int], int]:
+    level = start
+    def g0(y: int) -> int:
+        return level * y
+    level = level + 8
+    g1 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 9
+    return (g0(2), g1([1, 2]), level)
+print(build(4))
+def lift(n: int) -> int:
+    return n + 29
+def callHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn1():
+    lift = 6
+    tmp = callHelper(lift)
+    return tmp * 2
+alpha: int = _pf_fn1()
+def _pf_fn2():
+    _pf_t0 = [4]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + callHelper(1)
+    else:
+        return 0
+beta: int = _pf_fn2()
+def _pf_fn3():
+    if alpha > beta:
+        _alpha = beta
+        return _alpha + 1
+    else:
+        return alpha
+gamma: int = _pf_fn3()
+print((alpha, beta, gamma, callHelper(0)))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(7, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+len_: int = 3
+print((len([1, 2, 3]) + len_, len("abc")))
+legs: list[float] = [374.4, 186.8, 338.8, 405.2]
+durations: list[float] = [52.6, 74.6, 64.7, 44.4]
+dist: float = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+dur: float = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate: float = dist / dur
+print(_pf_fmt_fixed(2, rate))
+def paceOf(d: int, t: int) -> float:
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, dur) * 1000.0))
+edge: float = math.sqrt(49.0)
+cube: float = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+speeds: list[float] = _pf_map2(lambda d, t: d / t, legs, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+--- stderr ---

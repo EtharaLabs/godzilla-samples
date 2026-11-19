@@ -1,0 +1,26 @@
+exit: 0
+--- stdout ---
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def step(a, _pf_arg1):
+    k, v = _pf_arg1
+    if k > 3:
+        return _pf_map_add(k, v, dict())
+    else:
+        return _pf_map_add(k, 0, a)
+def compute(u):
+    a = dict()
+    for (k, v) in _pf_zip([1, 2, 3, 5], [7, 8, 9, 6]):
+        if k > 3:
+            _pf_t0 = dict()
+            a = _pf_t0
+            a[k] = v
+        else:
+            a[k] = 0
+    return a
+print(_pf_map_to_list(compute(None)))
+--- stderr ---

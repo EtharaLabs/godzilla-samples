@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+# ==== delta.py ====
+print("loading Delta")
+base = 7
+def step(x):
+    return x + 7
+
+# ==== echo.py ====
+import delta
+base = 7 + delta.base
+def step(x):
+    return delta.step(x) + 7
+
+# ==== main.py ====
+import echo
+print(echo.base)
+print(echo.step(1))
+
+--- stderr ---

@@ -1,0 +1,6 @@
+exit: 0
+--- stdout ---
+let xs = (Option.toList (Some 1))
+let n = (List.len xs)
+let b = ((Option.exists (fun x -> (x > 0))) (Some 1))
+--- stderr ---

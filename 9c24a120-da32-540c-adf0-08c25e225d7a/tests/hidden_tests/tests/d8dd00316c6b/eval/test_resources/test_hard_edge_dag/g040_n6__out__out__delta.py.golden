@@ -1,0 +1,24 @@
+from dataclasses import dataclass
+import bravo
+import golf
+@dataclass(frozen=True, slots=True, order=True)
+class RecD:
+    id: int
+    kind: object
+print("loading Delta")
+base = 3 + bravo.base + golf.base
+def step(x):
+    return golf.step(bravo.step(x)) + 3
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))
+def make(n):
+    return RecD(n, bravo.pickB(n))
+def unwrap(r):
+    return describe(r.kind)

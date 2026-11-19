@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+  --> 49:78
+   |
+49 | let members = [Pilot { name = "ned", age = 1 }, Pilot { name = "quin", age = "1" }]
+   |                                                                              ^^^
+
+note: hole `?` has type `float<s> -> float<s> -> float<s>` — try: min, max, const — or: flip ?
+ --> 9:21
+  |
+9 | let dur = List.fold ? 0.0<s> splits
+  |                     ^
+
+1 error
+1 unfilled hole

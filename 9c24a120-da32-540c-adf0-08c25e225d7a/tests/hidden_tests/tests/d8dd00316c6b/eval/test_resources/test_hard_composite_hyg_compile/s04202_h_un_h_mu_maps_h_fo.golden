@@ -1,0 +1,159 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop = Noop()
+reach = math.hypot(5.0 / 1.0, 8.0 / 1.0) * 1.0
+ratio = math.sqrt(5.0)
+side = math.sqrt(25.0)
+vol = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 5.0)))
+def audit(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n, acc):
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(2, 0)
+print(audit([31, 39, 0, 23, 19, 10]))
+logged = []
+def logEvent(msg):
+    global logged
+    logged = _pf_concat(logged, [msg])
+    return len(logged)
+counts = _pf_map(logEvent, ["start", "ray", "stop"])
+print((logged, counts))
+events = ["bo", "fay", "ada", "fay", "fay", "ada", "ada", "fay"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+def execute(script):
+    def step(m, op):
+        match op:
+            case Put(k, v):
+                return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+            case Push(n):
+                return _pf_map_add("pushed", n, m)
+            case Noop():
+                return m
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t1 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t1
+            case Push(n):
+                m["pushed"] = n
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+script = [_Noop, Push(1), Push(1), Push(-1)]
+final = execute(script)
+print(_pf_map_to_list(final))
+sumSq = _pf_fold(lambda step, x: step + x * x, 0, [9, 3, 6, 9])
+print(sumSq)
+--- stderr ---

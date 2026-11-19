@@ -1,0 +1,152 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+obs = [-15, 29, -4, 14]
+print(_pf_map(functools.partial(Text_clamp, 0, 8), obs))
+print(_pf_filter(functools.partial(Text_between, -5, 17), obs))
+print(Text_mean(obs))
+def replay(script):
+    def apply(acc, op):
+        match acc:
+            case (m, xs):
+                match op:
+                    case Put(k, v):
+                        return (_pf_map_add(k, v, m), xs)
+                    case Push(n):
+                        return (m, _pf_concat(xs, [n]))
+                    case Skip():
+                        return acc
+                    case _:
+                        raise RuntimeError("non-exhaustive match")
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Push(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+ops = [_Skip, _Skip, _Skip, Put("gear", 3), Push(-2)]
+state = replay(ops)
+mm, items = state
+print((_pf_map_to_list(mm), items))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [33, 26, 21, 24, 25])
+def depthOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthOf(l), depthOf(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthOf(root))
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(root))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 3:
+        return _Low()
+    elif scaled < 25:
+        return _Mid()
+    else:
+        return _High()
+def grade(n):
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(grade, [0, -5, 14, 23, 10]))
+--- stderr ---

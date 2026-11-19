@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+00000005error00000076(could not determine a type — is `let (a, b) = (1, "two")` an expression?)0000000000000002ok00000006p : P
+00000123from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class P:
+    name: str
+    age: int
+p = P("Ada", 36)
+00000002ok00000026sq : int<'a> -> int<'a^2>
+00000028def sq(x):
+    return x * x
+--- stderr ---

@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def f(flag: bool) -> int:
+    total = 1
+    if flag:
+        _total = 0
+        _total = _total + 5
+        _total = _total + 5
+        _pf_t0 = _total
+    else:
+        _pf_t0 = 0
+    y = _pf_t0
+    return total + y
+r: int = f(True)
+--- stderr ---

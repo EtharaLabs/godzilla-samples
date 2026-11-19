@@ -1,0 +1,142 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def finished(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def spin(n: int, acc: int):
+    async def _pf_fn1(n, acc):
+        while True:
+            if n == 0:
+                return await finished(acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return _pf_Async(_pf_fn1, n, acc)
+print(asyncio.run(_pf_run(spin(2224, 0))))
+visits: list[str] = ["cy", "fay", "bo", "cy", "cy", "fay", "fay"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+freq: dict[str, int] = m
+def _pf_fn2(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn2, _pf_map_to_list(freq)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(freq))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, freq))
+sa: set[int] = set([3, 5, 6, 11, 13, 17])
+sb: set[int] = set([2, 3, 5, 8, 10, 15])
+print(_pf_sort(list(_pf_set_union(sa, sb))))
+print((len(sa), 8 in sb, _pf_set_is_subset(set([3]), sa)))
+print(len(_pf_map_filter(lambda k, v: v > 1, freq)))
+def step1(x: int) -> int:
+    return x + 1
+def dbl(x: int) -> int:
+    return x * 2
+def pipeline2(_pf_x: int) -> int:
+    return (lambda _pf_x0: (lambda x: x + _pf_x)((lambda _pf_x: dbl(step1(_pf_x)))(_pf_x0)))(_pf_x)
+print(_pf_map(pipeline2, [3, 1, 7]))
+def adjust(x: int, flag: bool) -> tuple[int, int]:
+    y = x * 2
+    if flag:
+        _y = x + 603
+        _pf_t1 = _y - 1
+    else:
+        _pf_t1 = y
+    z = _pf_t1
+    return (y, z)
+print((adjust(4, True), adjust(1, False)))
+def wrap(xs: list[int]) -> list[int]:
+    def twice(x: int) -> int:
+        return x * 2
+    def go(twice: int) -> int:
+        return twice + 1
+    return _pf_map(lambda x: go(twice(x)), xs)
+print(wrap([2, 5, 4]))
+def cross(pairs: list[tuple[int, int]]) -> list[int]:
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn3(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn3, pairs))
+print(cross([(5, 9), (5, 3)]))
+--- stderr ---

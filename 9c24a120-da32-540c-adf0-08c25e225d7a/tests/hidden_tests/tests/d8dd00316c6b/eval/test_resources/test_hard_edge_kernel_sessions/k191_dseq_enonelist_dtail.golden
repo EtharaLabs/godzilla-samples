@@ -1,0 +1,31 @@
+exit: 0
+--- stdout ---
+00000002ok00000018squares : Seq int
+00000093def _pf_fn0():
+    for x in [1, 2, 3]:
+        yield x * x
+    yield 100
+squares = _pf_fn0()
+00000002ok0000000000000373from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+print(_pf_head([]))
+00000002ok00000026count : int -> int -> int
+00000150def count(k, acc):
+    while True:
+        if k == 0:
+            return acc
+        else:
+            k, acc = (k - 1, acc + k)
+            continue
+--- stderr ---

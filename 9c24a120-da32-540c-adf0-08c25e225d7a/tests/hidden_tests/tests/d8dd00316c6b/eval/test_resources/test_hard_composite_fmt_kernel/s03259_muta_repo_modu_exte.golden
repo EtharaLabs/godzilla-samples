@@ -1,0 +1,116 @@
+exit: 0
+--- stdout ---
+00000002ok00000270calls : int
+record : int<'a> ->{io} int<'a>
+stats : (List int) ->{io} string
+doubled : List int
+recordTwice : int<'a> ->{io} int<'a>
+entries : List Entry
+fmtLine : Entry -> string
+low : List string
+nums : List int
+fromBin : string ->{io} int
+safe : string ->{io} string
+00003130from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+calls = 0
+def record(x):
+    global calls
+    calls = calls + 1
+    return x * 4
+def stats(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(stats([-7, -15, 19, 36, 29, 44]))
+doubled = _pf_map(record, [-7, -15, 19, 36])
+print(f"{doubled} after {calls} calls")
+recordTwice = lambda _pf_x: record(record(_pf_x))
+print((recordTwice(3), calls))
+entries = [Entry("wick", 9, 11.01), Entry("tap", 10, 37.54), Entry("bolt", 22, 21.69), Entry("cog", 15, 8.87), Entry("gear", 24, 1.22)]
+def fmtLine(x):
+    return f"{_pf_fmt_pad_right(10, ".", x.name)} {_pf_fmt_pad_left(4, " ", str(x.qty))} {_pf_fmt_fixed(1, x.price)} {"restock" if x.qty > 12 else "ok"} {_pf_fmt_currency("$", 2, x.price * 6.0)}"
+_pf_iter(print, _pf_map(fmtLine, entries))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 11, entries))
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+nums = [14, 0, -13, 29, 9, -7, 21]
+print(Text_norm1(nums))
+print(_pf_map(functools.partial(Text_clamp, 0, 5), nums))
+print(Text_mean(nums))
+print(Text_scaleAll(5, nums))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("1011101") + int("56", base=8))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x2", "-10"]))
+00000002ok00000017low : List string0000000000000002ok00000032stats : (List int) ->{io} string00000000--- stderr ---

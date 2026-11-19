@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `[]` is not matched
+  --> 21:7
+   |
+21 |       match String.split "=" line:
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 54:78
+   |
+54 | let people = [Member { name = "ivy", age = 9 }, Member { name = "kit", age = "1" }]
+   |                                                                              ^^^
+
+2 errors

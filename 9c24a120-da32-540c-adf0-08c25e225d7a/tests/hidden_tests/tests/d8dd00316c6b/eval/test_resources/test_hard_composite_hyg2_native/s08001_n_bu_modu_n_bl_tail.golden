@@ -1,0 +1,85 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+list_: list[int] = [2, 6, 2]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(17, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+dict_: dict[str, int] = dict([("k", 9)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([2, 0, 9, 3]), _pf_sort([3, 1, 2])))
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Text_square(x):
+    return x * x
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+pts: list[int] = [9, 8, -11, 16, 16, -2, 4]
+print(Text_scaleAll(4, pts))
+print(_pf_map(Text_square, pts))
+print(_pf_filter(functools.partial(Text_between, -2, 24), pts))
+print(Text_norm1(pts))
+def nudge(n: int) -> int:
+    return n + 38
+def useHelper(x: int) -> int:
+    return nudge(x)
+def _pf_fn0():
+    nudge = 0
+    tmp = useHelper(nudge)
+    return tmp * 2
+first: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [4]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+second: int = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+gamma: int = _pf_fn2()
+print((first, second, gamma, useHelper(0)))
+def sumDigits(n: int) -> int:
+    if n == 0:
+        return 0
+    else:
+        return n % 10 + sumDigits(n // 10)
+print(sumDigits(24457))
+def powAcc(b: int, e: int, acc: int) -> int:
+    while True:
+        if e == 0:
+            return acc
+        else:
+            k = e
+            if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            k = e
+            b, e, acc = (b * b, k // 2, acc)
+            continue
+print(powAcc(7, 18, 1))
+--- stderr ---

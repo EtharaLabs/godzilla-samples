@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def a(s: str) -> bool:
+    return "x" in s
+def b(s: str) -> bool:
+    return s.startswith("x")
+def c(s: str) -> bool:
+    return s.endswith("x")
+def d(xs: list[int]) -> bool:
+    return 3 in xs
+def e(s: set[int]) -> bool:
+    return 3 in s
+def g(m) -> bool:
+    return 3 in m
+def h(xs) -> bool:
+    return not xs
+--- stderr ---

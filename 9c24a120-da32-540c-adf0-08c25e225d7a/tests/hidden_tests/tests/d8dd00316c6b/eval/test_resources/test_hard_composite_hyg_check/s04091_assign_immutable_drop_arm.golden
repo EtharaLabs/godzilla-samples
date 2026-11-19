@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+ --> 9:3
+  |
+9 |   match s:
+  |   ^^^^^^^^
+
+error: cannot assign to `seen`: it is immutable (declare it with `let mut`)
+  --> 18:5
+   |
+18 |     seen <- seen + 1
+   |     ^^^^^^^^^^^^^^^^
+
+2 errors

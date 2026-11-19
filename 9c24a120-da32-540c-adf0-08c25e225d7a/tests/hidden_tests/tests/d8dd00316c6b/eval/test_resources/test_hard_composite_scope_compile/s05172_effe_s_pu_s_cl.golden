@@ -1,0 +1,107 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: object
+    bottom: object
+    slot: int
+def discount(price, qty):
+    return price * qty - 8 * qty
+def announce(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("rod", 34, 1), ("bolt", 17, 2), ("pin", 7, 6), ("hub", 7, 2)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(16)([1, 2, 3]))
+panels = [Tile(4, 1, "hub"), Tile(4, 2, "gear"), Tile(7, 2, "cog"), Tile(4, 4, "sq")]
+def _pf_fn1(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn2(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn1, _pf_filter(_pf_fn2, panels)))
+def stackOf(s):
+    match s:
+        case Shelf(top=Tile(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Shelf(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Shelf(a, b, a.w + b.h)), panels, _pf_rev(panels)))
+def grow(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Tile(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, panels)))
+def scanSum(xs):
+    peak = 0
+    def step(acc, x):
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(scanSum([-3, -1, -1, -1, -5]))
+def tally(xs):
+    evens = 0
+    odds = 0
+    def visit(x):
+        def bump(isEven):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([14, 0, 15]))
+def makeCounter(start):
+    n = start
+    def next_(u):
+        nonlocal n
+        n = n + 3
+        return n
+    return next_
+tick = makeCounter(0)
+print((tick(None), tick(None), tick(None)))
+--- stderr ---

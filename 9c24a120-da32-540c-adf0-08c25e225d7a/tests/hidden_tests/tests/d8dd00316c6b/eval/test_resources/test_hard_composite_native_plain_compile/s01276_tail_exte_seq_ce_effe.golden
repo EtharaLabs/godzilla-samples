@@ -1,0 +1,139 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(490, 243))
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [51, 51, 55]))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x3", "-11"]))
+print(_pf_map(math.isqrt, [20, 314, 298, 337]))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(7))
+def _pf_fn0():
+    for x in _pf_range(1, 6):
+        y = x * x
+        yield y
+squares = _pf_fn0()
+print(list(_pf_seq_take(5, map(lambda n: n + 1, squares))))
+print(list(_pf_seq_take(5, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 5)))))
+def parseEntry(line):
+    def _pf_fn1():
+        _pf_t3 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t3, Some):
+            v = _pf_t3._0
+            _pf_t2 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t2, Some):
+                n = _pf_t2._0
+                return Some(n * 3)
+            else:
+                return _pf_t2
+        else:
+            return _pf_t3
+    return _pf_fn1()
+inputs = ["bo=16", "dee=x", "kit = 0", "cy=5=1"]
+results = _pf_map(parseEntry, inputs)
+_pf_iter(print, results)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), results)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), results))))
+def discount(price, qty):
+    return price * qty - 7 * qty
+def report(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn2(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn2, [("pin", 28, 4), ("pin", 48, 2), ("nut", 21, 1), ("pin", 26, 5)]))
+print(overall)
+--- stderr ---

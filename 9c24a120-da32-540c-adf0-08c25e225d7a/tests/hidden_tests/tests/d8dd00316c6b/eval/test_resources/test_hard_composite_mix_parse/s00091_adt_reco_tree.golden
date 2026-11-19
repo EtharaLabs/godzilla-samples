@@ -1,0 +1,66 @@
+exit: 0
+--- stdout ---
+type Signal = Emit int | Rest int | Pop int | Store int string | Turn int
+let explain t =
+    match t:
+        case (Emit n0) if ((n0 % 2) == 0): f"emit!({n0})"
+        case (Emit n0): f"emit({n0})"
+        case (Rest n0) if ((n0 % 2) == 0): f"rest!({n0})"
+        case (Rest n0): f"rest({n0})"
+        case (Pop n0) if ((n0 % 2) == 0): f"pop!({n0})"
+        case (Pop n0): f"pop({n0})"
+        case (Store n0 s1) if ((n0 % 2) == 0): f"store!({n0},{s1})"
+        case (Store n0 s1): f"store({n0},{s1})"
+        case (Turn n0): f"turn({n0})"
+let weight t =
+    match t:
+        case (Emit x0): x0
+        case _: 1
+let queue = [(Emit 7), ((Store 3) "tom"), (Turn 6), (Pop 5)]
+(print ((queue |> (List.map explain)) |> (String.join "; ")))
+let grandSum = (queue |> (List.sumBy weight))
+(print f"grandSum={grandSum}")
+(print ((List.maxBy weight) queue))
+type Order = { id: int, owner: string, amount: int, urgent: bool }
+let parcels = [Order { id = 100, owner = "oz", amount = 254, urgent = true }, Order { id = 101, owner = "oz", amount = 95, urgent = true }, Order { id = 102, owner = "dee", amount = 259, urgent = true }, Order { id = 103, owner = "quin", amount = 215, urgent = true }, Order { id = 104, owner = "dee", amount = 197, urgent = true }]
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 188))) parcels)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+let classify o =
+    match o:
+        case Order { urgent = true, amount } if (amount > 138): "rush-big"
+        case Order { urgent = true }: "rush"
+        case Order { amount }: (if (amount > 138) then "big" else "normal")
+(print ((List.map classify) parcels))
+(print ((List.countBy classify) parcels))
+let line (Order { id, owner }) = f"#{id} {(String.upper owner)}"
+(print ((parcels |> (List.map line)) |> (String.join ", ")))
+(print ((List.maxBy (fun o -> o.amount)) parcels))
+type Expr = Num int | Add Expr Expr | Mul Expr Expr | Neg Expr | Var string
+let env = (Map.ofList [("x", 1), ("y", 4)])
+let evalE e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evalE a) + (evalE b))
+        case (Mul a b): ((evalE a) * (evalE b))
+        case (Neg a): (- (evalE a))
+        case (Var v): (((Map.findOr v) 0) env)
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+        case (Var v): v
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let terms = [((Add (Num 0)) (Num 1)), ((Add (Num 1)) (Num 5)), ((Add (Num 1)) ((Mul ((Add (Var "y")) (Var "y"))) ((Add (Num 1)) (Var "y"))))]
+(((terms |> (List.map simplify)) |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evalE) terms))
+--- stderr ---

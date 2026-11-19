@@ -1,0 +1,179 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Tri:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Tri({self._0!r}, {self._1!r})"
+Shape2 = Sq | Ci | Tri
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: "Tile"
+    bottom: "Tile"
+    slot: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: str
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    def __repr__(self):
+        return "Halt"
+_Halt: Halt = Halt()
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Instr = Turn | Emit | Mark | Halt | Skip
+def size(s: Shape2) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Tri):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(size, [Sq(7), Ci(1), Tri(5, 1), Tri(1, 9)]))
+def adjust(n: int) -> int:
+    _pf_t0 = n % 3
+    if _pf_t0 == 0:
+        _n = n // 3
+        return _n + 2
+    else:
+        k = _pf_t0
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(adjust, [17, 12, 21, 10]))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 3
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(8, []), weigh(1, [1]), weigh(1, [7, 2, 3])))
+tiles: list[Tile] = [Tile(7, 4, "hub"), Tile(7, 5, "rod"), Tile(1, 9, "gear"), Tile(3, 6, "cap"), Tile(3, 5, "rod"), Tile(4, 4, "sq")]
+def heavier(s: Shelf) -> str:
+    if isinstance(s, Shelf) and isinstance(s.top, Tile):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Shelf(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def grow(b: Tile) -> Tile:
+    w = b.w
+    h = b.h
+    _pf_t2 = b
+    return Tile(w + 2, h * 2, _pf_t2.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def show(t: Instr) -> str:
+    if isinstance(t, Turn):
+        s0 = t._0
+        return f"turn({s0})"
+    elif isinstance(t, Emit) and t._0 == 2:
+        return "emit-2"
+    elif isinstance(t, Emit):
+        n0 = t._0
+        return f"emit({n0})"
+    elif isinstance(t, Mark):
+        s0 = t._0
+        return f"mark({s0})"
+    elif isinstance(t, Halt):
+        return "halt/skip"
+    else:
+        return "halt/skip"
+def cost(t: Instr) -> int:
+    if isinstance(t, Halt):
+        return 8
+    elif isinstance(t, Mark):
+        return 2
+    elif isinstance(t, Turn):
+        return 7
+    else:
+        return 3
+queue: list[Instr] = [Emit(11), Mark("jo"), _Skip, _Skip]
+print(_pf_str_join(" ", _pf_map(show, queue)))
+tally: int = _pf_sum_by(cost, queue)
+print(f"tally={tally}")
+print(_pf_max_by(cost, queue))
+--- stderr ---

@@ -1,0 +1,18 @@
+-- module `Main` (main.pyfun) --
+error: `Config` is not a member of `Inner`
+ --> 2:11
+  |
+2 | let bad = Inner.Config { cSize = 1 }
+  |           ^^^^^^^^^^^^
+error: the record `Config` is declared in module `Inner`; import `Inner` to construct its values here
+ --> 3:12
+  |
+3 | let bad2 = Config { cSize = 1 }
+  |            ^^^^^^
+error: the record `Config` is declared in module `Inner`; import `Inner` to match its values here
+ --> 6:10
+  |
+6 |     case Config { cSize = n }: n
+  |          ^^^^^^
+
+3 errors

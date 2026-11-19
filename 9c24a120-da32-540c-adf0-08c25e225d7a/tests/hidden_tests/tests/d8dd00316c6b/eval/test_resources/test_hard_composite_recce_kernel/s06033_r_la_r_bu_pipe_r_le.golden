@@ -1,0 +1,136 @@
+exit: 0
+--- stdout ---
+00000002ok00000304inputs2 : List int
+factor : int
+tweak2 : int -> int
+scalers : List (int -> int)
+readForm : string -> string -> Result Form string
+readings : List int
+shift : int<'a> -> int<'a> -> int<'a>
+isBig : int -> bool
+result : Option int
+inWord : (List string) -> int -> int
+skipping : (List string) -> int -> int
+00003741from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+inputs2 = [26, 4, 1, 2, 20, 9, 19]
+factor = 2
+tweak2 = lambda _pf_x: (lambda z: z - 8)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(inputs2), inputs2))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(2), scalers))
+def Valid_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Valid_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Valid_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Valid_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Valid_bind(Ok(years) if years >= 20 else Error("too young"), lambda adult: Valid_return_(Form(name, adult)))))
+print(readForm("lu", "31"))
+print((readForm("a", "30"), readForm("bob", "x")))
+readings = [32, 48, 5, 24, 0, 36, -6, -9, 50]
+def shift(k, x):
+    return x + k
+def isBig(n):
+    return n > 4 and n % 5 != 0
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        a, b = _pf_arg0
+        return b - a
+    return _pf_map(_pf_fn2, _pf_pairwise(_pf_x))
+result = _pf_head((lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(3, _pf_x)))(_pf_fn1(_pf_rev(_pf_map(functools.partial(shift, 8), readings)))))
+print(result)
+def inWord(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return inWord(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("cy quin oz kit"), 0))
+00000002ok00000019tweak2 : int -> int0000000000000002ok00000019readings : List int00000000--- stderr ---

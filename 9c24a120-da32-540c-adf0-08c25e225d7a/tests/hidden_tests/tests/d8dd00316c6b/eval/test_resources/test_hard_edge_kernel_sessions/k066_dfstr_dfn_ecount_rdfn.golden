@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+00000002ok00000025greet : string -> string
+00000100def _pf_str_upper(s):
+    return s.upper()
+def greet(name):
+    return f"hi {_pf_str_upper(name)}!"
+00000002ok00000028double : int<'a> -> int<'a>
+00000032def double(x):
+    return x * 2
+00000005error00000067error: unbound name `count`
+ --> 4:1
+  |
+4 | count 100 0
+  | ^^^^^
+0000000000000002ok00000028double : int<'a> -> int<'a>
+00000000--- stderr ---

@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` is missing field(s) `y`
+ --> 6:13
+  |
+6 | let i1 = if Pt { x = 1 } then 1 else 2
+  |             ^^^^^^^^^^^^
+
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+ --> 7:17
+  |
+7 | let s2 = f"got {len [1]}"
+  |                 ^^^
+
+note: hole `?gap` has type `bool` — try: i1, s2 — or: String.isEmpty ?, List.isEmpty ?, Set.isEmpty ?, Option.isSome ?, and 28 more
+ --> 9:13
+  |
+9 | let i3 = if ?gap then 1 else 2
+  |             ^^^^
+
+2 errors
+1 unfilled hole

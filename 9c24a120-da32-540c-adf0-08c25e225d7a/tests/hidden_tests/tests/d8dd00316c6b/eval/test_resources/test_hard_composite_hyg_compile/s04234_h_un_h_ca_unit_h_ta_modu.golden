@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import asyncio
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+reach = math.hypot(2.0 / 1.0, 4.0 / 1.0) * 1.0
+ratio = math.sqrt(2.0)
+side = math.sqrt(4.0)
+vol = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 2.0)))
+def forEach(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def say(x):
+    return print(f"* {x}")
+forEach(say, [9, 6, 9])
+print(mapTwice(lambda x: x + 5, [1, 2, 3]))
+def chatty(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(chatty(True, 8) + chatty(False, 4))
+def quiet(x):
+    return x + 3
+print(mapTwice(quiet, [2]))
+legs = [106.6, 289.3, 168.6]
+times = [34.9, 50.8, 62.2]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+rate = dist / elapsed
+print(_pf_fmt_fixed(2, rate))
+speeds = _pf_map2(lambda d, t: d / t, legs, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(legs, times))
+print(best)
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def finished(acc):
+    async def _pf_fn1():
+        return acc
+    return _pf_Async(_pf_fn1)
+def countUp(n, acc):
+    async def _pf_fn3():
+        async def _pf_fn2():
+            return n * 2
+        k = await _pf_fn2()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await countUp(n - 1, acc + k)
+    return _pf_Async(_pf_fn3)
+print(asyncio.run(_pf_run(countUp(43, 0))))
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+obs = [29, 24, 0, 18]
+print(_pf_map(functools.partial(Text_clamp, 0, 12), obs))
+print(Text_norm1(obs))
+print(Text_scaleAll(3, obs))
+--- stderr ---
+note: `countUp` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

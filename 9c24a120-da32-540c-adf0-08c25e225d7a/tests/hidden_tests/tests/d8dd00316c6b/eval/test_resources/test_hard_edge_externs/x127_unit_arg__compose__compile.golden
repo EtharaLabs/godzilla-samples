@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+import sys
+def flushed(n):
+    sys.stdout.flush()
+    return n
+twice = lambda _pf_x: (lambda v: (v, v))(flushed(_pf_x))
+print(twice(3))
+--- stderr ---

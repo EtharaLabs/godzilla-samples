@@ -1,0 +1,97 @@
+exit: 0
+--- stdout ---
+00000002ok00000231tell : 'a -> (unit, List 'a)
+trace2 : int -> (int, List string)
+seriesA : List int
+factor : int
+tweak2 : int -> int
+scalers : List (int -> int)
+fem : int -> int
+male : int -> int
+lcm : int -> int -> int
+safe : string ->{io} string
+00002533from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def Logged_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Logged_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def trace2(x):
+    return Logged_bind(tell(f"start {x}"), lambda _: Logged_bind((x * 2, ["scaled"]), lambda y: (lambda z: Logged_bind(tell(f"z={z}"), lambda _: Logged_return_(z)))(y + 6)))
+print(_pf_map(trace2, [6, 3]))
+seriesA = [-7, -7, 9, 18, 21, 20, 26]
+factor = 3
+tweak2 = lambda _pf_x: (lambda z: z - 4)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, seriesA))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(1), scalers))
+def fem(n):
+    if n == 0:
+        return 1
+    else:
+        return n - male(fem(n - 1))
+def male(n):
+    if n == 0:
+        return 0
+    else:
+        return n - fem(male(n - 1))
+print((_pf_map(fem, _pf_range(0, 7)), _pf_map(male, _pf_range(0, 6))))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [8, 7, 9, 11]))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+_pf_iter(print, _pf_map(safe, ["12", "x3", "4"]))
+00000002ok00000018seriesA : List int0000000000000002ok00000017male : int -> int00000000--- stderr ---

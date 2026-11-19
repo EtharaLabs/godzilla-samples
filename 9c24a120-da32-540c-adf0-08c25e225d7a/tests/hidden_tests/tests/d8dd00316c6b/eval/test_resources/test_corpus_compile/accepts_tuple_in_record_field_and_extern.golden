@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Pair:
+    both: tuple
+p = Pair((1, "x"))
+--- stderr ---

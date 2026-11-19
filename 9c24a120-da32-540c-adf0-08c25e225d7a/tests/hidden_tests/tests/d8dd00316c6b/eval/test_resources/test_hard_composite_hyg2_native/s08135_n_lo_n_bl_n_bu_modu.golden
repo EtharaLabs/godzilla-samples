@@ -1,0 +1,76 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+def shifted(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 6
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(2, [0, 3, 9]))
+acc = []
+for k in [9, 4, 6]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(4), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def _pf_fn0():
+    for (name, k) in [("a", 3), ("b", 7)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(4), list(handlers)))
+def bump2(n: int) -> int:
+    return n + 41
+def useHelper(x: int) -> int:
+    return bump2(x)
+def _pf_fn1():
+    bump2 = 5
+    tmp = useHelper(bump2)
+    return tmp * 2
+first: int = _pf_fn1()
+def _pf_fn2():
+    _pf_t1 = [8]
+    if _pf_t1:
+        bump2 = _pf_t1[0]
+        return bump2 + useHelper(1)
+    else:
+        return 0
+beta: int = _pf_fn2()
+def _pf_fn3():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third: int = _pf_fn3()
+print((first, beta, third, useHelper(0)))
+len_: int = 9
+print((len([1, 2, 3]) + len_, len("abc")))
+str_: str = "ned"
+print((str(44), str_, _pf_str_concat(str_, str(1))))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(5, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_square(x):
+    return x * x
+pts: list[int] = [15, -15, 23, -7]
+print(Text_norm1(pts))
+print(Text_scaleAll(5, pts))
+print(_pf_filter(functools.partial(Text_between, -5, 18), pts))
+print(_pf_map(Text_square, pts))
+--- stderr ---

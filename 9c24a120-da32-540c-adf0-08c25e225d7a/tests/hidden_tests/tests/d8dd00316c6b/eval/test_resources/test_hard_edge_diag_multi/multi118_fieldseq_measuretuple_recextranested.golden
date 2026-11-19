@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 8:11
+  |
+8 |     yield pt.z
+  |           ^^^^
+
+error: unknown measure `furlong`
+  --> 11:14
+   |
+11 | let t2 = (0, 3.0<furlong>, "z")
+   |              ^^^^^^^^^^^^
+
+error: record `Pt` has no field `w`
+  --> 13:38
+   |
+13 |   let inner = Pt { x = 1, y = 2, w = 3 }
+   |                                      ^
+
+3 errors

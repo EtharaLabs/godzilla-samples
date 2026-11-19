@@ -1,0 +1,107 @@
+exit: 0
+--- stdout ---
+00000002ok00000382unwrap : UserId -> string
+mint : 'a -> int -> List UserId
+keys : List UserId
+entries : List Row
+fmtLine : Row -> string
+low : List string
+net : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+legs : List float<m>
+times : List float<s>
+total : float<m>
+elapsed : float<s>
+rate : float<m/s>
+best : Option (float<m>, float<s>)
+speeds : List float<m/s>
+00002802from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("sku", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+entries = [Row("wick", 5, 8.8), Row("pin", 27, 31.95), Row("cap", 21, 33.89), Row("cog", 15, 39.76), Row("bolt", 16, 37.55)]
+def fmtLine(x):
+    return f"{_pf_fmt_pad_right(10, " ", x.name)}: {_pf_fmt_pad_left(4, " ", str(x.qty))}: {_pf_fmt_fixed(1, x.price)}: {"restock" if x.qty > 4 else "ok"}"
+_pf_iter(print, _pf_map(fmtLine, entries))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 14, entries))
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+def net(price, qty):
+    return price * qty - 6 * qty
+def emit(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("wick", 21, 6), ("hub", 5, 5)]))
+print(grand)
+legs = [486.7, 138.0, 71.7, 86.5]
+times = [57.9, 30.2, 42.4, 57.1]
+total = _pf_fold(lambda a, b: a + b, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+rate = total / elapsed
+print(_pf_fmt_fixed(2, rate))
+def _pf_fn1(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn1, _pf_zip(legs, times))
+print(best)
+speeds = _pf_map2(lambda d, t: d / t, legs, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+00000002ok00000034best : Option (float<m>, float<s>)0000000000000002ok00000011grand : int00000000--- stderr ---

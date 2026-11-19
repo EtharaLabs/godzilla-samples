@@ -1,0 +1,152 @@
+exit: 0
+--- stdout ---
+00000002ok00000275parcels : List Ticket
+priority : Ticket -> string
+urgentTotal : int
+rerouted : List Ticket
+byOwner : List (string, int, int)
+fromBin : string ->{io} int
+text : string
+tokens : List string
+n2 : int
+add : int -> Tree -> Tree
+tree : Tree
+sumT : Tree -> int
+depthT : Tree -> int
+00004207from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+@dataclass(frozen=True, slots=True)
+class Place:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+parcels = [Ticket(100, "ray", 115, True, Place("Baku", 4)), Ticket(101, "max", 246, True, Place("Kyiv", 3)), Ticket(102, "eli", 136, True, Place("Lima", 2)), Ticket(103, "max", 123, True, Place("Rome", 1)), Ticket(104, "max", 100, False, Place("Riga", 1))]
+def priority(o):
+    match o:
+        case Ticket(urgent=True, amount=amount) if amount > 85:
+            return "rush-big"
+        case Ticket(urgent=True):
+            return "rush"
+        case Ticket(amount=amount):
+            if amount > 85:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(priority, parcels))
+print(_pf_count_by(priority, parcels))
+print(_pf_max_by(lambda o: o.amount, parcels))
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(urgentTotal)
+def _pf_fn0(o):
+    if o.dest.zone > 2:
+        _pf_t2 = o
+        return Ticket(_pf_t2.id, _pf_t2.owner, _pf_t2.amount, _pf_t2.urgent, Place("Hub", 1))
+    else:
+        return o
+rerouted = _pf_map(_pf_fn0, parcels)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", rerouted))
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, parcels))
+print(byOwner)
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "c0"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("1010111") + int("67", base=8))
+print(_pf_str_rev(str.upper("kit")))
+text = "tap;kit;bolt;gus"
+tokens = _pf_str_split(";", text)
+print(_pf_str_slice(1, 6, text))
+n2 = len(tokens)
+print(f"n2={n2} {{braces}} {len(text)}")
+print(_pf_str_replace("e", "E", text))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [37, 58, 47, 42, 44])
+def sumT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumT(l) + v + sumT(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumT(tree))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+00000002ok00000013text : string0000000000000002ok00000022rerouted : List Ticket00000000--- stderr ---

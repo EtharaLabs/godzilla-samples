@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+a, b = (1, 2)
+_pf_t0 = (3, (4, 5))
+c, _pf_t1_1 = _pf_t0
+d, e = _pf_t1_1
+_pf_t2 = Point(6, 7)
+x = _pf_t2.x
+y = _pf_t2.y
+total = a + b + c + d + e + x + y
+--- stderr ---

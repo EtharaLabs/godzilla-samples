@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+00000005error00000072error: unbound name `counter`
+ --> 2:1
+  |
+2 | counter * 10
+  | ^^^^^^^
+0000000000000005error00000072error: unbound name `counter`
+ --> 2:1
+  |
+2 | counter * 10
+  | ^^^^^^^
+0000000000000002ok00000014counter : int
+00000012counter = 0
+00000005error00000334error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 59 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 3:18
+  |
+3 | let h = List.map ?f [1]
+  |                  ^^0000000000000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+00000081import functools
+def add(a, b):
+    return a + b
+inc = functools.partial(add, 1)
+00000005error00000074error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^00000000--- stderr ---

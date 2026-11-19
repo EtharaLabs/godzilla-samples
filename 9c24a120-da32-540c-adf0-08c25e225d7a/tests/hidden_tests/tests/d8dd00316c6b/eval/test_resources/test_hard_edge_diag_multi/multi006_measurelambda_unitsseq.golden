@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unknown measure `furlong`
+ --> 6:29
+  |
+6 | let l1 = List.map (fun q -> 3.0<furlong>) [1, 2]
+  |                             ^^^^^^^^^^^^
+
+error: type mismatch: expected float<m>, found float<s>
+  --> 10:11
+   |
+10 |     yield 3.0<m> + 2.0<s>
+   |           ^^^^^^^^^^^^^^^
+
+2 errors

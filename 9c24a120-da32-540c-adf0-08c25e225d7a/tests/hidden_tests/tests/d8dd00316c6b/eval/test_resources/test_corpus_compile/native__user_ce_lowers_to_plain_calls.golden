@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+def M_bind(m, f):
+    return f(m)
+def M_return_(x):
+    return x
+r: int = M_bind(3, lambda x: M_return_(x))
+--- stderr ---

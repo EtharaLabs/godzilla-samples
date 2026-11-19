@@ -1,0 +1,56 @@
+exit: 0
+--- stdout ---
+let raw = "rod,hal,hub,max"
+let parts = ((String.split ",") raw)
+let count = (List.len parts)
+(print f"count={count} {{braces}} {(String.len raw)}")
+let longest = ((parts |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+let fieldsN = (((String.split ",") "-3,,7,7,7") |> (List.map String.toInt))
+(print fieldsN)
+(print ((fieldsN |> (List.choose id)) |> List.sum))
+(print ((List.map (fun w -> (w, (String.len w)))) parts))
+(print (((String.slice 0) 6) raw))
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+let (|Above|_|) n = (if (n > 20) then (Some (n - 20)) else None)
+let (|Zero|_|) n = (n == 0)
+let bucketOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case m if (m < 0): "negative"
+        case _: "small"
+(([16, 36, 32, 31, 3, 0] |> (List.map bucketOf)) |> (List.iter print))
+measure m
+measure s
+measure kg
+measure N = kg m/s^2
+let laps = [372.3<m>, 395.3<m>, 295.6<m>, 399.9<m>, 180.4<m>]
+let durations = [31.5<s>, 84.3<s>, 8.6<s>, 88.7<s>, 16.2<s>]
+let dist = (((List.fold (fun acc d -> (acc + d))) 0.0<m>) laps)
+let elapsed = (((List.fold (+)) 0.0<s>) durations)
+let speed = (dist / elapsed)
+(print ((Format.fixed 3) speed))
+let edge = (sqrt 2.25<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+let best = (((List.zip laps) durations) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let mut calls = 0
+let record x =
+    (calls <- (calls + 1))
+    (x * 2)
+let stats xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (stats [3, 11, 44, 46, 31]))
+let doubled = ([3, 11, 44, 46] |> (List.map record))
+(print f"{doubled} after {calls} calls")
+--- stderr ---

@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `strict` is declared `pure` but performs `io`
+  --> 14:21
+   |
+14 | let pure strict s = parseNum s + 1
+   |                     ^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 26:78
+   |
+26 | let members = [Member { name = "max", age = 1 }, Member { name = "lu", age = "1" }]
+   |                                                                              ^^^
+
+2 errors

@@ -1,0 +1,108 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_reduce(f, xs):
+    return Some(functools.reduce(f, xs)) if xs else _None_
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_fst(p):
+    return p[0]
+def lift(n):
+    return n + 22
+def callHelper(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 5
+    tmp = callHelper(lift)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [5]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + callHelper(1)
+    else:
+        return 0
+beta = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, beta, third, callHelper(0)))
+seriesA = [5, 2, -4, -5, 6]
+factor = 5
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn3, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(seriesA), seriesA))
+def _pf_fn4(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn4, _pf_indexed(seriesA))))
+samples = [7, -9, 24, 6, 27, 34, 8]
+def offset(k, x):
+    return x + k
+def isBig(n):
+    return n > 20 and n % 2 != 0
+def _pf_fn6(_pf_x):
+    def _pf_fn7(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn7, _pf_indexed(_pf_x))
+def _pf_fn9(_pf_x):
+    def _pf_fn10(_pf_arg0):
+        a, b = _pf_arg0
+        return b - a
+    return _pf_map(_pf_fn10, _pf_pairwise(_pf_x))
+answer = _pf_reduce(lambda a, b: a + b, _pf_fn6(_pf_fn9((lambda _pf_x: _pf_map(sum, _pf_chunk(2, _pf_x)))(_pf_sort(_pf_rev(samples))))))
+print(answer)
+print(len(samples))
+reversed_ = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+def set_(n):
+    return n * 5
+print((set_(3), len(set([5, 3, 5, 5]))))
+--- stderr ---

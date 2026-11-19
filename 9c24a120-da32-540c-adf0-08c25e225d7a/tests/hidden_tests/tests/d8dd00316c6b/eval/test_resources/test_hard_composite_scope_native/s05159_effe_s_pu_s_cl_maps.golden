@@ -1,0 +1,158 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+def net(price: int, qty: int) -> int:
+    return price * qty - 6 * qty
+def announce(label, price: int, qty: int) -> int:
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall: int = sum(_pf_map(_pf_fn0, [("pin", 14, 5), ("wick", 40, 4), ("bolt", 20, 6)]))
+print(overall)
+tiles: list[Panel] = [Panel(9, 1, "rod"), Panel(2, 9, "nut"), Panel(5, 7, "cog"), Panel(1, 2, "gear"), Panel(2, 3, "pin"), Panel(4, 4, "sq")]
+def caption(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(caption, tiles)))
+def stretch(b: Panel) -> Panel:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Panel(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, tiles)))
+def area(_pf_arg0: Panel) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+def _pf_fn1(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn2(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn1, _pf_filter(_pf_fn2, tiles)))
+def tally(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([4, 2, 15, 16, 11, 20]))
+def running(xs: list[int]) -> tuple[int, int]:
+    peak = 0
+    def step(acc: int, x: int) -> int:
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([3, 6, -7, 7]))
+visits: list[str] = ["eli", "bo", "fay", "bo", "dee", "bo"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t2 = n + 1
+            m[w] = _pf_t2
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts: dict[str, int] = m
+def _pf_fn3(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn3, _pf_map_to_list(counts)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, counts))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+print((_pf_map_try_find("cy", counts), "cy" in counts))
+extra: dict[str, int] = dict([("zed", 5), ("eli", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+--- stderr ---

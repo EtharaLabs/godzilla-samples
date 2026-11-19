@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+00000002ok00000065Decode.andThen : ('a -> Decoder 'b) -> (Decoder 'a) -> Decoder 'b0000000000000002ok0000000000000111def _pf_dec_and_then(f, dec):
+    def go(v):
+        return f(dec(v))(v)
+    return go
+print(_pf_dec_and_then)
+--- stderr ---

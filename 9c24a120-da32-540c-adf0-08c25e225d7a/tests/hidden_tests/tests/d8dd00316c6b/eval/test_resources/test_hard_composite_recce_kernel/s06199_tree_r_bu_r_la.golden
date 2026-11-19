@@ -1,0 +1,136 @@
+exit: 0
+--- stdout ---
+00000002ok00000293insert : int -> Tree -> Tree
+tree : Tree
+minT : Tree -> Option int
+containsT : int -> Tree -> bool
+depthT : Tree -> int
+toListOf : Tree -> List int
+note2 : 'a -> (unit, List 'a)
+trace2 : int -> (int, List string)
+inputs2 : List int
+factor : int
+scalers : List (int -> int)
+shape2 : int -> int
+00003758from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(lambda acc, x: insert(x, acc), _Leaf, [8, 3, 52, 17, 16, 5])
+def minT(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minT(tree))
+def containsT(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsT(k, tree), [8, 6, 29]))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+def toListOf(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListOf(tree))
+def Logged_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Logged_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def trace2(x):
+    return Logged_bind(note2(f"start {x}"), lambda _: Logged_bind((x * 4, ["scaled"]), lambda y: (lambda z: Logged_bind(note2(f"z={z}"), lambda _: Logged_return_(z)))(y + 3)))
+print(_pf_map(trace2, [7, 6]))
+inputs2 = [6, 18, 27, 8, 11]
+factor = 4
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(9), scalers))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+shape2 = lambda _pf_x: (lambda z: z - 0)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, inputs2))
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+00000002ok00000019shape2 : int -> int0000000000000002ok00000031containsT : int -> Tree -> bool00000000--- stderr ---

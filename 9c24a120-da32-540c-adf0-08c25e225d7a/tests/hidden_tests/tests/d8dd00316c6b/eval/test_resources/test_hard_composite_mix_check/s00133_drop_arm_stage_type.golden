@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected string, found int
+  --> 20:70
+   |
+20 | let outcome = (List.fold (fun acc x -> acc * 2 - x) 0) (List.take 7 (List.map String.upper (List.sort (List.filter (fun x -> x > 8) (List.takeWhile (fun x -> x < 53) (readings))))))
+   |                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: non-exhaustive match: add a wildcard `_` arm
+  --> 37:3
+   |
+37 |   match n:
+   |   ^^^^^^^^
+
+2 errors

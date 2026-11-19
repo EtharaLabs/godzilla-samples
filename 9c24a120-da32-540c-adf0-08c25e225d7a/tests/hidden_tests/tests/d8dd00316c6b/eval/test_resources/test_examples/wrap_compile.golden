@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import textwrap
+def fill(width, text):
+    return textwrap.fill(text, width=width)
+def shorten(width, text):
+    return textwrap.shorten(text, width=width)
+def indent(prefix, text):
+    return textwrap.indent(text, prefix)
+--- stderr ---

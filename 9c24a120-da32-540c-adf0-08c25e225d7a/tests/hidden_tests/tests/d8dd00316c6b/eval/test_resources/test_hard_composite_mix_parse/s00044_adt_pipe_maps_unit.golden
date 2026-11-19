@@ -1,0 +1,46 @@
+exit: 0
+--- stdout ---
+type Action = Emit int | Rest int | Mark int string
+let explain t =
+    match t:
+        case (Emit n0) if ((n0 % 2) == 0): f"emit!({n0})"
+        case (Emit n0): f"emit({n0})"
+        case (Rest n0): f"rest({n0})"
+        case (Mark n0 s1) if (0 <= n0 < 8): f"mark!({n0},{s1})"
+        case (Mark n0 s1): f"mark({n0},{s1})"
+let cost t =
+    match t:
+        case (Rest x0): (x0 * 5)
+        case (Emit x0): x0
+        case _: 0
+let batch = [(Emit (- 2)), (Emit 12), (Emit 7), ((Mark 8) "gus")]
+(print ((String.join " ") ((List.map explain) batch)))
+let tally = (batch |> (List.sumBy cost))
+(print f"tally={tally}")
+(print ((List.maxBy cost) batch))
+let values = [45, 48, 35, (- 4), 19, (- 9), (- 8), 49, 3]
+let offset k x = (x + k)
+let isBig n = ((n > 17) and ((n % 2) != 0))
+let process = (((((List.sort >> (List.filter (fun x -> ((x % 4) == 1)))) >> (List.map ((*) 2))) >> List.rev) >> (List.collect (fun x -> [x, (x + 1)]))) >> (List.distinctBy (fun x -> (x % 3))))
+let outcome = ((values |> process) |> List.max)
+(print outcome)
+(print <| (List.len values))
+let log = ["ada", "bo", "dee", "ada", "bo", "eli", "dee"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) log)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print ((counts |> (Map.filter (fun k v -> (v > 1)))) |> Map.len))
+(print (((counts |> Map.keys) |> List.sort) |> (String.join ",")))
+measure m
+measure s
+measure kg
+let legs = [192.2<m>, 426.8<m>, 147.3<m>]
+let durations = [36.8<s>, 46.7<s>, 36.2<s>]
+let total = (((List.fold (fun acc d -> (acc + d))) 0.0<m>) legs)
+let dur = (((List.fold (+)) 0.0<s>) durations)
+let pace = (total / dur)
+(print ((Format.fixed 2) pace))
+let km = (total / 1000.0)
+(print ((Format.fixed 1) km))
+let speeds = (((List.map2 (fun d t -> (d / t))) legs) durations)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+--- stderr ---

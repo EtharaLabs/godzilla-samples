@@ -1,0 +1,30 @@
+exit: 0
+--- stdout ---
+00000002ok00000016job : Async int
+00000436class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_fn1():
+    async def _pf_fn0():
+        return 20
+    x = await _pf_fn0()
+    return x + 1
+job = _pf_Async(_pf_fn1)
+00000002ok0000000000000091def _pf_map(f, xs):
+    return list(map(f, xs))
+print(_pf_map(lambda x: x * x, [1, 2, 3]))
+00000002ok00000014counter : int
+00000012counter = 0
+00000002ok00000019a : int
+b : string
+00000018a, b = (1, "two")
+00000002ok0000000000000021print("side effect")
+--- stderr ---

@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 6:14
+  |
+6 | let v1 = 1 + "x"
+  |              ^^^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 7:29
+  |
+7 | let l2 = List.map (fun q -> pt.z) [1, 2]
+  |                             ^^^^
+
+error: type mismatch: expected int, found string
+ --> 8:30
+  |
+8 | let v3 = if true then 1 else "s"
+  |                              ^^^
+
+3 errors

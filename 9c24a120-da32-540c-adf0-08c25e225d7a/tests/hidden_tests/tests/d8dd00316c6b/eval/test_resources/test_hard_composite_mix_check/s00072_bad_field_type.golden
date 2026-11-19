@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 9:120
+  |
+9 | let book = [Order { owner = "fay", urgent = false, amount = 135, id = 100 }, Order { id = 101, owner = "dee", amount = "190", urgent = false }, Order { amount = 92, id = 102, urgent = true, owner = "dee" }, Order { id = 103, owner = "fay", amount = 128, urgent = false }, Order { amount = 25, urgent = false, owner = "dee", id = 104 }]
+  |                                                                                                                        ^^^^^
+
+1 error

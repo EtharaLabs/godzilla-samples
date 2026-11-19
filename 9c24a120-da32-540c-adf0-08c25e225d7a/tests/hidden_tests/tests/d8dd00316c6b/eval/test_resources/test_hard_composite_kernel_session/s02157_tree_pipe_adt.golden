@@ -1,0 +1,194 @@
+exit: 0
+--- stdout ---
+00000002ok00000256insert : int -> Heap -> Heap
+root : Heap
+sumT : Heap -> int
+depthT : Heap -> int
+containsOf : int -> Heap -> bool
+toListT : Heap -> List int
+values : List int
+outcome : Option int
+describe : Move -> string
+rank : Move -> int
+stream : List Move
+total : int
+00005071from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: str
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [4, 58, 11, 20, 36])
+def sumT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumT(l) + v + sumT(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumT(root))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(root))
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, root), [4, 37, 15]))
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(root))
+values = [39, 8, 6, 45, 44, -3, 27, -6, 7]
+outcome = _pf_head(_pf_take(8, (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(3, _pf_x)))(_pf_choose(lambda x: (Some(x // 2) if x % 2 == 0 else _None_), (lambda _pf_x: _pf_map(sum, _pf_chunk(4, _pf_x)))(values)))))
+print(outcome)
+print(len(values))
+def describe(t):
+    match t:
+        case Store(s0):
+            return f"store({s0})"
+        case Load(s0):
+            return f"load({s0})"
+        case Turn(n0) if 0 <= n0 < 12:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Pop(1):
+            return "pop-1"
+        case Pop(n0):
+            return f"pop({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Load(_):
+            return 1
+        case Turn(x0):
+            return x0
+        case _:
+            return 1
+stream = [Load("tom"), Store("dee"), Turn(10), Turn(12)]
+print(_pf_str_join("; ", _pf_map(describe, stream)))
+total = _pf_sum_by(rank, stream)
+print(f"total={total}")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+print(_pf_max_by(rank, stream))
+00000002ok00000026toListT : Heap -> List int0000000000000002ok00000011root : Heap00000000--- stderr ---

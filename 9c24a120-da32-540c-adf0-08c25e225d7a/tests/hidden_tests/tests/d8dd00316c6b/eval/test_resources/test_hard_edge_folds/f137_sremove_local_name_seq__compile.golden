@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def _pf_set_remove(x, s):
+    return s.difference([x])
+nums = [2, 7, 1, 8, 2, 8]
+def compute(u):
+    def step(a, x):
+        return _pf_set_remove(x, a)
+    a = set()
+    for x in iter(nums):
+        a.discard(x)
+    return a
+result = compute(None)
+print(list(result))
+--- stderr ---

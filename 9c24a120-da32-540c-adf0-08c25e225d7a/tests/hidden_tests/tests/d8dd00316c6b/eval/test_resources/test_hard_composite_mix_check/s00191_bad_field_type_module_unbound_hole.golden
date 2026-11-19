@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `median` is not a member of `Stats` (did you mean `Stats.mean`?)
+  --> 13:8
+   |
+13 | print (Stats.median obs)
+   |        ^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 27:48
+   |
+27 |     Parcel { id = 101, owner = "max", amount = "171", urgent = true, dest = Site { city = "Doha", zone = 4 } },
+   |                                                ^^^^^
+
+note: hole `?` has type `int<'a>` — try: hi, lo, x — or: mean ?, List.sum ?, Seq.sum ?, String.len ?, and 15 more
+ --> 6:30
+  |
+6 |   let clamp lo hi x = max lo ?
+  |                              ^
+
+2 errors
+1 unfilled hole

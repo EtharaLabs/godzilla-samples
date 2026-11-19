@@ -1,0 +1,138 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Skip and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Load and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Store and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0)
+Move = Skip | Load | Store
+def show(t: Move) -> str:
+    if isinstance(t, Skip):
+        n0 = t._0
+        if n0 % 2 == 0:
+            return f"skip!({n0})"
+    if isinstance(t, Skip):
+        n0 = t._0
+        return f"skip({n0})"
+    elif isinstance(t, Load):
+        s0 = t._0
+        return f"load({s0})"
+    else:
+        if isinstance(t, Store):
+            n0 = t._0
+            if 0 <= n0 < 6:
+                return f"store!({n0})"
+        n0 = t._0
+        return f"store({n0})"
+def score(t: Move) -> int:
+    if isinstance(t, Load):
+        return 5
+    elif isinstance(t, Store):
+        x0 = t._0
+        return x0
+    else:
+        return 1
+stream: list[Move] = [Skip(10), Store(9), Store(2), Store(11), Store(7), Load("tom")]
+print(_pf_map(show, stream))
+tally: int = _pf_sum_by(score, stream)
+print(f"tally={tally}")
+print(_pf_sort(stream))
+def layer(start: int) -> tuple[int, int, int, int, int]:
+    x = start
+    def g0(y: int) -> int:
+        return x * y
+    x = x + 8
+    g1 = lambda y: x + y
+    x = g1(x)
+    g2 = lambda y: x + y
+    x = x + 5
+    g3 = lambda y: x + y
+    x = x * 5
+    return (g0(5), g1(3), g2(1), g3(3), x)
+print(layer(1))
+def lift(n: int) -> int:
+    return n + 60
+def useHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn0():
+    lift = 6
+    tmp = useHelper(lift)
+    return tmp * 2
+first: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [3]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + useHelper(1)
+    else:
+        return 0
+beta: int = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+gamma: int = _pf_fn2()
+print((first, beta, gamma, useHelper(0)))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(7, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+len_: int = 7
+print((len([1, 2, 3]) + len_, len("abc")))
+list_: list[int] = [2, 0, 2]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+--- stderr ---

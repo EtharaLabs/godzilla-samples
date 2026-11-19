@@ -1,0 +1,110 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+tallies = [("pin", 4), ("bolt", 6), ("cog", 1), ("cap", 8)]
+def _pf_fn0():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn0()
+print(_pf_str_join(",", list(lines2)))
+def _pf_fn1(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+bounds = _pf_fold(_pf_fn1, (1000, -1000), tallies)
+print(bounds)
+acc = dict()
+for (k, v) in _pf_concat(tallies, tallies):
+    _pf_t0 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t0
+byName = acc
+print(_pf_map_to_list(byName))
+def lookupAll(keys, table):
+    def _pf_fn2():
+        for (k, expected) in keys:
+            _pf_t1 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t1, Some):
+                v = _pf_t1._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t1
+        return Some(len(keys))
+    return _pf_fn2()
+print((lookupAll(_pf_take(2, tallies), dict(tallies)), lookupAll([("zz", 0)], dict(tallies))))
+tiles = [Tile(8, 8, "gear"), Tile(4, 6, "cog"), Tile(8, 4, "nut"), Tile(4, 4, "sq")]
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+def _pf_fn3(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn4(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn3, _pf_filter(_pf_fn4, tiles)))
+def grow(b):
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Tile(w + 3, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def running(xs):
+    peak = 0
+    def step(acc, x):
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([0, -3, -7, -5, 4]))
+def ticker(start):
+    n = start
+    def next_(u):
+        nonlocal n
+        n = n + 5
+        return n
+    return next_
+clock = ticker(3)
+print((clock(None), clock(None), clock(None)))
+--- stderr ---

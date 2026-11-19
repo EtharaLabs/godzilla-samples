@@ -1,0 +1,133 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: int
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Fig = Sq | Disc | Wedge
+def choose2(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((choose2(Some((0, 3)), 0), choose2(Some((1, 5)), 0), choose2(_None_, 1)))
+def size(s: Fig) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Disc):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(size, [Sq(1), Disc(5), Wedge(1, 8), Wedge(1, 9)]))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 5
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(7, []), score(1, [1]), score(1, [8, 2, 3])))
+tallies: list[tuple[str, int]] = [("wick", 1), ("cog", 5), ("pin", 16), ("hub", 3), ("cap", 16)]
+spans: list[tuple[str, tuple[int, int]]] = [("max", (1, 20)), ("dee", (0, 16)), ("fay", (3, 7))]
+def _pf_fn0():
+    for (name, (lo, hi)) in spans:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+spansOut = _pf_fn0()
+print(list(spansOut))
+def allKnown(keys, table) -> Some | None_:
+    def _pf_fn1():
+        for (k, expected) in keys:
+            _pf_t0 = _pf_map_try_find(k, table)
+            if isinstance(_pf_t0, Some):
+                v = _pf_t0._0
+                return Some(None) if v == expected else _None_
+            else:
+                return _pf_t0
+        return Some(len(keys))
+    return _pf_fn1()
+print((allKnown(_pf_take(2, tallies), dict(tallies)), allKnown([("zz", 0)], dict(tallies))))
+def _pf_fn2():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn2()
+print(_pf_str_join(",", list(lines2)))
+laps: list[float] = [269.5, 319.4, 413.2, 399.3]
+durations: list[float] = [14.8, 79.2, 18.0, 45.0]
+dist: float = _pf_fold(lambda acc, d: acc + d, 0.0, laps)
+dur: float = _pf_fold(lambda a, b: a + b, 0.0, durations)
+rate: float = dist / dur
+print(_pf_fmt_fixed(3, rate))
+km: float = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+edge: float = math.sqrt(6.25)
+cube: float = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+mass: float = 7.0
+accel: float = 5.5
+push: float = mass * accel
+limit: float = 113.0
+print("over" if push > limit else "under")
+--- stderr ---

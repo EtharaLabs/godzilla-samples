@@ -1,0 +1,204 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Shape2 = Square | Ci | Wedge
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Tree"
+    _1: int
+    _2: "Tree"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Tree = Leaf | Node
+def pick(o: Some | None_, fallback: int) -> int:
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((6, 9)), 0), pick(Some((1, 5)), 0), pick(_None_, 8)))
+def settle(n: int) -> int:
+    _pf_t0 = n % 3
+    if _pf_t0 == 0:
+        _n = n // 3
+        return _n + 6
+    else:
+        k = _pf_t0
+        _n2 = n * k
+        _k = _n2 - 1
+        return _k
+print(_pf_map(settle, [2, 27, 16, 14]))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 3
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(8, []), score(1, [5]), score(1, [9, 2, 3])))
+def size(s: Shape2) -> int:
+    if isinstance(s, Square):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(size, [Square(4), Ci(6), Wedge(6, 7), Wedge(1, 9)]))
+def add(x: int, t: Tree) -> Tree:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(add(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, add(x, rt))
+        return t
+tree: Tree = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [13, 18, 28, 7, 10, 40, 30, 20, 58])
+def toListOf(t: Tree) -> list[int]:
+    if isinstance(t, Leaf):
+        return []
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+print(toListOf(tree))
+def minT(t: Tree) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minT(tree))
+def sumT(t: Tree) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumT(l) + v + sumT(rt)
+print(sumT(tree))
+def depthOf(t: Tree) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        rt = t._2
+        return 1 + max(depthOf(l), depthOf(rt))
+print(depthOf(tree))
+pairs: list[tuple[str, int]] = [("hub", 3), ("wick", 5), ("nut", 5), ("tap", 19)]
+def _pf_fn0():
+    for (name, qty) in pairs:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn0()
+print(_pf_str_join(",", list(lines2)))
+def audit2(rows) -> Ok | Error:
+    def _pf_fn1():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t1 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t1, Ok):
+            total = _pf_t1._0
+            return Ok(total)
+        else:
+            return _pf_t1
+    return _pf_fn1()
+print((audit2(pairs), audit2([("ok", 1)])))
+def _pf_fn2(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn2, _pf_indexed(pairs))
+--- stderr ---

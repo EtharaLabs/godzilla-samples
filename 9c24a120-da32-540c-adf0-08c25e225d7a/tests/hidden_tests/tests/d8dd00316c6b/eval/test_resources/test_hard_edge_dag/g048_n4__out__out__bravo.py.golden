@@ -1,0 +1,22 @@
+from dataclasses import dataclass
+import alpha
+@dataclass(frozen=True, slots=True, order=True)
+class RecB:
+    id: int
+    kind: object
+base = 6 + alpha.base
+def step(x):
+    return alpha.step(x) + 6
+def describe(k):
+    match k:
+        case alpha.KaA(v):
+            return v * 10
+        case alpha.KbA():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(alpha.pickA(base))
+def make(n):
+    return RecB(n, alpha.pickA(n))
+def unwrap(r):
+    return describe(r.kind)

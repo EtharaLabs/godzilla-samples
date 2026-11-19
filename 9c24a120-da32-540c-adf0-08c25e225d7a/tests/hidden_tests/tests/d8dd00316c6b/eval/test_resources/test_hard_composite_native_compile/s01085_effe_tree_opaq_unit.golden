@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Heap"
+    _1: int
+    _2: "Heap"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Heap = Leaf | Node
+def net(price: int, qty: int) -> int:
+    return price * qty - 2 * qty
+def announce(label, price: int, qty: int) -> int:
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall: int = sum(_pf_map(_pf_fn0, [("hub", 31, 1), ("wick", 48, 6), ("bolt", 9, 2)]))
+print(overall)
+def scaled(k: int):
+    return functools.partial(_pf_map, functools.partial(net, k))
+print(scaled(7)([1, 2, 3]))
+def add(x: int, t: Heap) -> Heap:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(add(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, add(x, rt))
+        return t
+root: Heap = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [2, 17, 13, 46, 20, 56, 6, 28, 25])
+def minOf(t: Heap) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minOf(root))
+def toListT(t: Heap) -> list[int]:
+    if isinstance(t, Leaf):
+        return []
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+print(toListT(root))
+def unwrap(x) -> str:
+    s = x
+    return s
+def mint(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = mint("sku", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+laps: list[float] = [490.3, 337.9, 279.9, 412.8]
+times: list[float] = [22.7, 6.1, 19.9, 8.2]
+dist: float = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, laps)
+dur: float = _pf_fold(lambda a, b: a + b, 0.0, times)
+pace: float = dist / dur
+print(_pf_fmt_fixed(2, pace))
+speeds: list[float] = _pf_map2(lambda d, t: d / t, laps, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+side: float = math.sqrt(6.25)
+cube: float = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+km: float = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+--- stderr ---

@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+00000002ok0000000000000314from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+print(Some([1, 2]))
+00000002ok00000049[1, 2, 3] |> List.map (fun x -> x * x) : List int0000000000000002ok00000008u : int
+00000050print("first")
+u = 2
+print("second")
+print(u * 5)
+--- stderr ---

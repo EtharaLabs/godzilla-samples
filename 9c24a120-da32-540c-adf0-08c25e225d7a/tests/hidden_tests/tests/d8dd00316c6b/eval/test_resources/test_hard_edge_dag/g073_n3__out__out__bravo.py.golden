@@ -1,0 +1,14 @@
+import delta
+print("loading Bravo")
+base = 6 + delta.base
+def step(x):
+    return delta.step(x) + 6
+def describe(k):
+    match k:
+        case delta.KaD(v):
+            return v * 10
+        case delta.KbD():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(delta.pickD(base))

@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+00000002ok00000049List.updateAt : int -> 'a -> (List 'a) -> List 'a0000000000000002ok0000000000000129def _pf_update_at(i, v, xs):
+    out = list(xs)
+    if 0 <= i < len(out):
+        out[i] = v
+    return out
+print(_pf_update_at)
+--- stderr ---

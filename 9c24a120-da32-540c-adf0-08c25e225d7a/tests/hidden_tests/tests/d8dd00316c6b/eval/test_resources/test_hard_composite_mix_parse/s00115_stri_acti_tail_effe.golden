@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+let text = "tap,sue,bolt,wick"
+let tokens = ((String.split ",") text)
+let longest = ((tokens |> (List.sortBy (fun w -> (- (String.len w))))) |> List.head)
+(print ((Option.withDefault "?") longest))
+(print ((List.map (fun w -> (w, (String.len w)))) tokens))
+let fieldsN = (((String.split ",") "x,5a,40,-3,5a") |> (List.map String.toInt))
+(print fieldsN)
+(print ((fieldsN |> (List.choose id)) |> List.sum))
+(print ((tokens |> (List.map String.upper)) |> (String.join "|")))
+(print (((tokens |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((tokens |> (List.map (fun w -> ((((String.slice 0) 1) w) |> String.upper)))) |> (String.join "")))
+let (|Above|_|) n = (if (n > 28) then (Some (n - 28)) else None)
+let (|Zero|_|) n = (n == 0)
+let classify n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case m if (m < 0): "negative"
+        case _: "small"
+(([1, 28, 30, 28, 31, 27, 12] |> (List.map classify)) |> (List.iter print))
+let accumulate n acc = (if (n == 0) then acc else ((accumulate (n - 1)) (acc + (n * n))))
+(print ((accumulate 2131) 0))
+let collatz n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((collatz (n // 2)) (acc + 1)) else ((collatz ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((collatz n) 0))) [6, 46, 3]))
+let pure net price qty = ((price * qty) - (6 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("tap", 36, 5), ("cap", 5, 5)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (net k))
+(print ((scaled 16) [1, 2, 3]))
+--- stderr ---

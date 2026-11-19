@@ -1,0 +1,138 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Pilot:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Club:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Pilot(_pf_t0.name, p.age + 1))
+        case Parked(t) if t.size > 6:
+            _pf_t1 = t
+            return Parked(Club(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Parked(Club("tap", 4)), _Gone, Active(Pilot("oz", 24)), _Gone])
+print(roster)
+people = [Pilot("oz", 5), Pilot("fay", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+def size(s):
+    match s:
+        case Sq(n) | Ci(n):
+            return n
+        case Wedge(n, m) if n > m:
+            return n
+        case Wedge(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(size, [Sq(4), Ci(3), Wedge(7, 9), Wedge(1, 9)]))
+cap = 39
+def bound(o):
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((bound(Some(4)), bound(Some(-3)), bound(_None_), cap))
+def pick(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((1, 4)), 0), pick(Some((1, 5)), 0), pick(_None_, 1)))
+boxes = [Tile(4, 9, "cap"), Tile(3, 7, "pin"), Tile(6, 9, "cap"), Tile(4, 5, "cog"), Tile(4, 4, "sq")]
+def describe(b):
+    match b:
+        case Tile(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Tile(label=label, w=1):
+            return f"{label} thin"
+        case Tile(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, boxes)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, boxes)))
+def rename(prefix, b):
+    label = b.label
+    _pf_t3 = b
+    return Tile(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "new "), boxes)))
+--- stderr ---

@@ -1,0 +1,126 @@
+exit: 0
+--- stdout ---
+00000002ok00000284hits : int
+record : int<'a> ->{io} int<'a>
+summarize : (List int) ->{io} string
+doubled : List int
+recordTwice : int<'a> ->{io} int<'a>
+female : int -> int
+male : int -> int
+readForm : string -> string -> Result Form string
+inputs2 : List int
+factor : int
+makers2 : List (int -> int)
+00003113from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+hits = 0
+def record(x):
+    global hits
+    hits = hits + 1
+    return x * 4
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([21, 55, 57, 27, 36]))
+doubled = _pf_map(record, [21, 55, 57, 27])
+print(f"{doubled} after {hits} calls")
+recordTwice = lambda _pf_x: record(record(_pf_x))
+print((recordTwice(3), hits))
+def female(n):
+    if n == 0:
+        return 1
+    else:
+        return n - male(female(n - 1))
+def male(n):
+    if n == 0:
+        return 0
+    else:
+        return n - female(male(n - 1))
+print((_pf_map(female, _pf_range(0, 11)), _pf_map(male, _pf_range(0, 10))))
+def Valid_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Valid_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Valid_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Valid_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Valid_bind(Ok(years) if years >= 17 else Error("too young"), lambda adult: Valid_return_(Form(name, adult)))))
+print(readForm("tom", "39"))
+print((readForm("a", "30"), readForm("bob", "x")))
+inputs2 = [-5, 1, 29, 6, -6, 25, 28]
+factor = 5
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(inputs2), inputs2))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(8), makers2))
+00000002ok00000018doubled : List int0000000000000002ok00000012factor : int00000000--- stderr ---

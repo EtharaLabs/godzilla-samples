@@ -1,0 +1,145 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Fig = Square | Ci | Wedge
+def scanSum(xs: list[int]) -> tuple[int, int]:
+    peak = 0
+    def step(acc: int, x: int) -> int:
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(scanSum([-9, 8, -1, -1, -4, 2, -7]))
+def numbered(xs) -> tuple[list[str], int]:
+    i = 0
+    def tag(x) -> str:
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(numbered(["gus", "ray", "quin"]))
+def ticker(start: int):
+    n = start
+    def next_(u) -> int:
+        nonlocal n
+        n = n + 5
+        return n
+    return next_
+clock = ticker(4)
+print((clock(None), clock(None), clock(None)))
+events: list[str] = ["dee", "dee", "bo", "eli", "ada", "bo", "bo"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts: dict[str, int] = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+extra: dict[str, int] = dict([("zed", 5), ("dee", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+print((_pf_map_try_find("fay", counts), "fay" in counts))
+def size(s: Fig) -> int:
+    if isinstance(s, Square):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(size, [Square(2), Ci(6), Wedge(7, 8), Wedge(1, 9)]))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 3
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(9, []), weigh(1, [2]), weigh(1, [5, 2, 3])))
+limit2: int = 17
+def clip(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _limit2 = o._0
+        if _limit2 > 0:
+            return _limit2
+    if isinstance(o, Some):
+        return 0
+    else:
+        return limit2
+print((clip(Some(7)), clip(Some(-3)), clip(_None_), limit2))
+--- stderr ---

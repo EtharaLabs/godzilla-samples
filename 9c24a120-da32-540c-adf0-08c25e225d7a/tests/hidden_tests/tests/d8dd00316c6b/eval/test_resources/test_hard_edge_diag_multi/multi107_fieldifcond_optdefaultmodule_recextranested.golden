@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 6:13
+  |
+6 | let i1 = if pt.z then 1 else 2
+  |             ^^^^
+
+error: type mismatch: expected int, found string
+ --> 9:11
+  |
+9 |   let w = Option.withDefault 0 (Some "s")
+  |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: record `Pt` has no field `w`
+  --> 11:38
+   |
+11 |   let inner = Pt { x = 1, y = 2, w = 3 }
+   |                                      ^
+
+3 errors

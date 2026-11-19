@@ -1,0 +1,194 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_id(x):
+    return x
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def readPair(line):
+    def _pf_fn0():
+        match _pf_str_split("=", line):
+            case [_k, _v]:
+                _pf_t0 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+            case _:
+                _pf_t0 = Error(f"malformed: {line}")
+        if isinstance(_pf_t0, Ok):
+            k, v = _pf_t0._0
+            _pf_t2 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t2, Ok):
+                n = _pf_t2._0
+                _pf_t1 = Error("negative") if n < 0 else Ok(n)
+                if isinstance(_pf_t1, Ok):
+                    checked = _pf_t1._0
+                    return Ok((k, checked))
+                else:
+                    return _pf_t1
+            else:
+                return _pf_t2
+        else:
+            return _pf_t0
+    return _pf_fn0()
+entries = ["ada=4=1", "kit = 3", "ned=8", "lu=x"]
+results = _pf_map(readPair, entries)
+_pf_iter(print, results)
+goodOnes = _pf_choose(_pf_result_to_option, results)
+print(sum(_pf_map(_pf_snd, goodOnes)))
+firstGood = _pf_option_map(_pf_fst, _pf_head(_pf_choose(_pf_id, _pf_map(_pf_result_to_option, results))))
+if isinstance(firstGood, Some):
+    name = firstGood._0
+    _pf_t3 = print(f"first: {name}")
+else:
+    _pf_t3 = print("none parsed")
+_pf_t3
+def sumAll(xs):
+    def _pf_fn2(acc, r):
+        def _pf_fn3():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn3()
+    return _pf_fold(_pf_fn2, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(results)))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t4 = p
+            return Active(Person(_pf_t4.name, p.age + 1))
+        case Parked(t) if t.size > 2:
+            _pf_t5 = t
+            return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+slots = _pf_map(promote, [_Gone, Parked(Crew("cap", 9)), Active(Person("sue", 18)), Parked(Crew("bolt", 3))])
+print(slots)
+members = [Person("pam", 8), Person("quin", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+def scale(n):
+    return n * 4
+def _pf_fn4():
+    _pf_t6 = [1, 2]
+    if _pf_t6:
+        scale = _pf_t6[0]
+        return scale + 1
+    else:
+        return 0
+picked = _pf_fn4()
+print((picked, scale(8)))
+def cross(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn5(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn5, pairs))
+print(cross([(4, 9), (8, 3)]))
+def inc(x):
+    return x + 1
+def dbl(x):
+    return x * 2
+def pipeline2(_pf_x):
+    return (lambda _pf_x0: (lambda x: x + _pf_x)((lambda _pf_x: dbl(inc(_pf_x)))(_pf_x0)))(_pf_x)
+print(_pf_map(pipeline2, [6, 4, 7]))
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+00000002ok00000028Decode.float : Decoder float0000000000000002ok0000000000000197def _pf_dec_float(v):
+    if isinstance(v, (int, float)) and not isinstance(v, bool):
+        return float(v)
+    raise ValueError("expected a float, got " + type(v).__name__)
+print(_pf_dec_float)
+--- stderr ---

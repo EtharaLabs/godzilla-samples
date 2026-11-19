@@ -1,0 +1,113 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Load({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: str
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Cmd = Mark | Load | Emit | Store | Skip
+def lift(n: int) -> int:
+    return n + 35
+def useHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn0():
+    lift = 0
+    tmp = useHelper(lift)
+    return tmp * 2
+alpha: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [4]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + useHelper(1)
+    else:
+        return 0
+second: int = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+third: int = _pf_fn2()
+print((alpha, second, third, useHelper(0)))
+def render(t: Cmd) -> str:
+    if isinstance(t, Mark):
+        n0 = t._0
+        return f"mark({n0})"
+    elif isinstance(t, Load):
+        s0 = t._0
+        n1 = t._1
+        return f"load({s0},{n1})"
+    elif isinstance(t, Emit):
+        s0 = t._0
+        return f"emit({s0})"
+    elif isinstance(t, Store):
+        n0 = t._0
+        return f"store({n0})"
+    else:
+        return f"skip"
+def weight(t: Cmd) -> int:
+    if isinstance(t, Emit):
+        return 3
+    elif isinstance(t, Load):
+        x1 = t._1
+        return x1
+    elif isinstance(t, Skip):
+        return 3
+    else:
+        return 0
+batch: list[Cmd] = [Store(10), Store(5), _Skip, Store(2)]
+print(_pf_str_join("; ", _pf_map(render, batch)))
+tally: int = _pf_sum_by(weight, batch)
+print(f"tally={tally}")
+print(len(_pf_filter(lambda t: weight(t) > 1, batch)))
+def stack2(start: int) -> tuple[int, int, int]:
+    acc = start
+    g0 = lambda y: acc + y
+    acc = g0(acc)
+    def g1(y: int) -> int:
+        return acc * y
+    acc = acc + 5
+    return (g0(4), g1(2), acc)
+print(stack2(8))
+def set_(n: int) -> int:
+    return n * 5
+print((set_(3), len(set([4, 0, 5, 0]))))
+list_: list[int] = [1, 5, 6]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+str_: str = "bo"
+print((str(90), str_, _pf_str_concat(str_, str(1))))
+--- stderr ---

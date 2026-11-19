@@ -1,0 +1,42 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+import echo
+import golf
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaD:
+    _0: int
+    def __repr__(self):
+        return f"KaD({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbD:
+    def __repr__(self):
+        return "KbD"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbD = KbD()
+def pickD(n):
+    if n > 2:
+        return KaD(n)
+    else:
+        return _KbD
+base = 9 + golf.base + echo.base + alpha.base
+def step(x):
+    return alpha.step(echo.step(golf.step(x))) + 9
+def describe(k):
+    match k:
+        case alpha.KaA(v):
+            return v * 10
+        case alpha.KbA():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(alpha.pickA(base))

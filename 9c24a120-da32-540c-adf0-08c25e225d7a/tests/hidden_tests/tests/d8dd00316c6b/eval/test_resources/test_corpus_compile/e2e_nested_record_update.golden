@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Inner:
+    a: int
+    b: int
+@dataclass(frozen=True, slots=True)
+class Outer:
+    inner: object
+    tag: str
+o = Outer(Inner(1, 2), "x")
+_pf_t0 = o
+o2 = Outer(Inner(99, _pf_t0.inner.b), _pf_t0.tag)
+_pf_t1 = o
+both = Outer(Inner(10, _pf_t1.inner.b), "y")
+na = o2.inner.a
+nb = o2.inner.b
+nt = o2.tag
+ba = both.inner.a
+bt = both.tag
+--- stderr ---

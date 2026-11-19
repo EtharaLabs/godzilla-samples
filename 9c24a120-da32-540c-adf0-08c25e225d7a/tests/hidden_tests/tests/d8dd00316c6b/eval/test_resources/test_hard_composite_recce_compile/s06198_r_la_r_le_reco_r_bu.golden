@@ -1,0 +1,142 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+nums2 = [26, 15, -5, 16, 1, 24, -7]
+factor = 5
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn0, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(nums2), nums2))
+tweak2 = lambda _pf_x: (lambda z: z - 4)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+def value(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return value(env, a) + value(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(exec, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def exec(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, value(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", value(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(value(dict(), Block([Set("a", Lit(1)), Set("b", Plus(Ref("a"), Lit(8))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+orders = [Ticket(100, "pam", 242, False), Ticket(101, "dee", 205, True), Ticket(102, "bo", 18, True), Ticket(103, "pam", 33, True)]
+def bucket(o):
+    match o:
+        case Ticket(urgent=True, amount=amount) if amount > 166:
+            return "rush-big"
+        case Ticket(urgent=True):
+            return "rush"
+        case Ticket(amount=amount):
+            if amount > 166:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, orders))
+print(_pf_count_by(bucket, orders))
+def _pf_fn2(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, sumAmt = _pf_fold(_pf_fn2, (0, 0), orders)
+print(f"{nrec} records, {sumAmt} total")
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def trace2(x):
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 2, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 5)))
+print(_pf_map(trace2, [2, 2]))
+--- stderr ---

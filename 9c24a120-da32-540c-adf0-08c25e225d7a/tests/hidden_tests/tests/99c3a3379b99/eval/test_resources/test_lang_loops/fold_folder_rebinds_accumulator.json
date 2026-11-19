@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "import functools\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndef _pf_map_add(k, v, m):\n    return dict(list(m.items()) + [[k, v]])\ndef build(xs):\n    def step(acc, x):\n        acc = _pf_map_add(x, 1, acc)\n        return acc\n    return _pf_fold(step, dict(), xs)\n",
+ "stderr": ""
+}

@@ -1,0 +1,161 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+stock: list[tuple[str, int]] = [("rod", 1), ("cog", 10), ("nut", 1), ("tap", 17)]
+def audit2(rows) -> Ok | Error:
+    def _pf_fn0():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t0 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t0, Ok):
+            total = _pf_t0._0
+            return Ok(total)
+        else:
+            return _pf_t0
+    return _pf_fn0()
+print((audit2(stock), audit2([("ok", 1)])))
+def _pf_fn1():
+    for (name, qty) in stock:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+lines2 = _pf_fn1()
+print(_pf_str_join(",", list(lines2)))
+spans: list[tuple[str, tuple[int, int]]] = [("oz", (2, 18)), ("ray", (2, 15)), ("eli", (4, 8))]
+def _pf_fn2():
+    for (name, (lo, hi)) in spans:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+spansOut = _pf_fn2()
+print(list(spansOut))
+def _pf_fn3(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+extremes: tuple[int, int] = _pf_fold(_pf_fn3, (1000, -1000), stock)
+print(extremes)
+acc = dict()
+for (k, v) in _pf_concat(stock, stock):
+    _pf_t1 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t1
+index: dict[str, int] = acc
+print(_pf_map_to_list(index))
+tiles: list[Tile] = [Tile(5, 9, "cog"), Tile(4, 7, "cog"), Tile(6, 9, "gear"), Tile(6, 6, "tap"), Tile(1, 3, "bolt"), Tile(4, 4, "sq")]
+def _pf_fn4(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn5(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn4, _pf_filter(_pf_fn5, tiles)))
+def grow(b: Tile) -> Tile:
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Tile(w + 2, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def describe(b: Tile) -> str:
+    if isinstance(b, Tile):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Tile) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, tiles)))
+def surface(_pf_arg0: Tile) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+orders: list[Ticket] = [Ticket(100, "ivy", 72, False), Ticket(101, "lu", 54, False), Ticket(102, "ivy", 264, False), Ticket(103, "sue", 8, True), Ticket(104, "sue", 234, True)]
+def adjust(o: Ticket) -> Ticket:
+    if o.urgent:
+        _pf_t4 = o
+        return Ticket(_pf_t4.id, _pf_t4.owner, o.amount + 11, _pf_t4.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(adjust, orders)))
+def _pf_fn6(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner: list[tuple[str, int, int]] = _pf_map(_pf_fn6, _pf_group_by(lambda o: o.owner, orders))
+print(byOwner)
+def classify(o: Ticket) -> str:
+    if isinstance(o, Ticket) and o.urgent is True:
+        amount = o.amount
+        if amount > 93:
+            return "rush-big"
+    if isinstance(o, Ticket) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 93:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(classify, orders))
+print(_pf_count_by(classify, orders))
+--- stderr ---

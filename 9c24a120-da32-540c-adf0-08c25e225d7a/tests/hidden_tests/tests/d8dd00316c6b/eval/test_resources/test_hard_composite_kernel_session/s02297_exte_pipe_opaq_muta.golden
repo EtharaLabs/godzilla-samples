@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+00000002ok00000358safe : string ->{io} string
+lcm : int -> int -> int
+fromBin : string ->{io} int
+samples : List int
+offset : int<'a> -> int<'a> -> int<'a>
+digest : string
+rawOf : Sku -> string
+makeIds : 'a -> int -> List Sku
+ids : List Sku
+ticks : int
+record : int<'a> ->{io} int<'a>
+profile : (List int) ->{io} string
+doubled : List int
+recordTwice : int<'a> ->{io} int<'a>
+00003002from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_desc(xs):
+    return sorted(xs, reverse=True)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x1", "49"]))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [7, 11, 12, 3]))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("111010") + int("21", base=8))
+print(_pf_map(math.isqrt, [222, 256, 206, 5]))
+samples = [44, 12, 9, 15, 6, 33, 16]
+def offset(k, x):
+    return x + k
+digest = (lambda _pf_x: _pf_str_join("-", _pf_map(str, _pf_x)))(_pf_sort_desc(_pf_rev(_pf_take(6, _pf_filter(lambda x: x > -3, samples)))))
+print(digest)
+print(len(samples))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = makeIds("acc", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+ticks = 0
+def record(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 3
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([-16, 14, -15, 39, 51, 18, 45, 18]))
+doubled = _pf_map(record, [-16, 14, -15, 39])
+print(f"{doubled} after {ticks} calls")
+recordTwice = lambda _pf_x: record(record(_pf_x))
+print((recordTwice(3), ticks))
+00000002ok00000031record : int<'a> ->{io} int<'a>0000000000000002ok00000018doubled : List int00000000--- stderr ---

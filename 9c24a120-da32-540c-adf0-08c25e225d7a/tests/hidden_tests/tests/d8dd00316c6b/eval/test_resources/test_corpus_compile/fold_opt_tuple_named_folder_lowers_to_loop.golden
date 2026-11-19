@@ -1,0 +1,50 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+def step(acc, c):
+    match acc:
+        case (m, xs):
+            match c:
+                case Put(k, v):
+                    return (_pf_map_add(k, v, m), xs)
+                case Push(n):
+                    return (m, _pf_concat(xs, [n]))
+                case Skip():
+                    return acc
+                case _:
+                    raise RuntimeError("non-exhaustive match")
+def run(cmds):
+    m = dict()
+    xs = []
+    for c in cmds:
+        match c:
+            case Put(k, v):
+                m[k] = v
+            case Push(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+--- stderr ---

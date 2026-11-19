@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Ticket` is missing field(s) `urgent`
+  --> 45:16
+   |
+45 | let parcels = [Ticket { id = 100, owner = "lu", amount = 198 }, Ticket { id = 101, owner = "ray", amount = 70, urgent = false }, Ticket { id = 102, owner = "ray", amount = 222, urgent = true }, Ticket { id = 103, owner = "lu", amount = 232, urgent = false }]
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

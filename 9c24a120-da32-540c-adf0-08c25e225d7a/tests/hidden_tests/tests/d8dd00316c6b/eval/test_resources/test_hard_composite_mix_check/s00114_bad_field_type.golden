@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+  --> 16:125
+   |
+16 | let tickets = [Booking { id = 100, owner = "sue", amount = 64, urgent = false }, Booking { id = 101, owner = "cy", amount = "283", urgent = false }, Booking { owner = "sue", id = 102, amount = 117, urgent = false }, Booking { urgent = false, id = 103, amount = 209, owner = "oz" }]
+   |                                                                                                                             ^^^^^
+
+1 error

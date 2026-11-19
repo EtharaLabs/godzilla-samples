@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import sqlite3
+@dataclass(frozen=True, slots=True, repr=False)
+class CH:
+    def __repr__(self):
+        return "CH"
+_CH: CH = CH()
+C = CH
+def f(c: C) -> C:
+    return sqlite3.Connection.execute(c, "x")
+--- stderr ---

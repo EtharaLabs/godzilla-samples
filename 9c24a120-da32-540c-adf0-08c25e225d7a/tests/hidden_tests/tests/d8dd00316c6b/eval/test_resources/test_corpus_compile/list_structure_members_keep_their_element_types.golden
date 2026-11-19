@@ -1,0 +1,44 @@
+exit: 0
+--- stdout ---
+def _pf_flatten(xs):
+    out = []
+    for x in xs:
+        out.extend(x)
+    return out
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_init(n, f):
+    out = []
+    for i in range(max(n, 0)):
+        out.append(f(i))
+    return out
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_replicate(n, x):
+    return [x] * max(n, 0)
+def _pf_unzip(xs):
+    a = []
+    b = []
+    for p in xs:
+        a.append(p[0])
+        b.append(p[1])
+    return (a, b)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+p = _pf_partition(lambda x: x > 1, [1, 2])
+u = _pf_unzip(_pf_zip([1], ["a"]))
+f = _pf_flatten([[1], [2]])
+i = _pf_init(3, lambda n: n * n)
+r = _pf_replicate(2, "x")
+g = _pf_group_by(lambda x: x % 2, [1, 2])
+--- stderr ---

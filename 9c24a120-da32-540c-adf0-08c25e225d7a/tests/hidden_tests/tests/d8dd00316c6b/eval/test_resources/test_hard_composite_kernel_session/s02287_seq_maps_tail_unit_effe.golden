@@ -1,0 +1,153 @@
+exit: 0
+--- stdout ---
+00000002ok00000508squares : Seq int
+events : List string
+freq : Map string int
+steps : int -> int -> int
+isEven : int -> bool
+isOdd : int -> bool
+countDown : int -> int -> int
+laps : List float<m>
+splits : List float<s>
+total : float<m>
+elapsed : float<s>
+pace : float<m/s>
+best : Option (float<m>, float<s>)
+paceOf : int<'a> -> int<'b> -> float<'b/'a>
+edge : float<m>
+cube : float<m^3>
+discount : int -> int<'a> -> int<'a>
+emit : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+scaled : int -> (List int<'a>) -> List int<'a>
+00003677from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_fn0():
+    for x in _pf_range(1, 10):
+        y = x * x
+        yield y
+    yield 167
+squares = _pf_fn0()
+print(list(_pf_seq_take(3, map(lambda n: n + 1, squares))))
+print(list(_pf_seq_take(5, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 5)))))
+events = ["dee", "cy", "bo", "eli", "cy", "dee", "cy", "dee", "fay", "dee"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq = m
+def _pf_fn1(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn1, _pf_map_to_list(freq)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(freq))))
+print(len(_pf_map_filter(lambda k, v: v > 1, freq)))
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [35, 27, 6]))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [4, 13, 23, 27, 9]))
+def countDown(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(734, 0))
+laps = [193.2, 413.5, 489.2, 25.4, 363.5]
+splits = [73.9, 10.2, 29.2, 47.0, 44.9]
+total = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, splits)
+pace = total / elapsed
+print(_pf_fmt_fixed(2, pace))
+def _pf_fn2(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn2, _pf_zip(laps, splits))
+print(best)
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(total, elapsed) * 1000.0))
+edge = math.sqrt(2.25)
+cube = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+def discount(price, qty):
+    return price * qty - 8 * qty
+def emit(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn3(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn3, [("rod", 27, 4), ("rod", 32, 4), ("wick", 16, 1), ("wick", 47, 2)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(19)([1, 2, 3]))
+00000002ok00000046scaled : int -> (List int<'a>) -> List int<'a>0000000000000002ok00000034best : Option (float<m>, float<s>)00000000--- stderr ---

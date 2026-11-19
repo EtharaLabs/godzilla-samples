@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+00000002ok00000036Seq.drop : int -> (Seq 'a) -> Seq 'a0000000000000002ok0000000000000111import itertools
+def _pf_seq_drop(n, xs):
+    return itertools.islice(xs, max(n, 0), None)
+print(_pf_seq_drop)
+--- stderr ---

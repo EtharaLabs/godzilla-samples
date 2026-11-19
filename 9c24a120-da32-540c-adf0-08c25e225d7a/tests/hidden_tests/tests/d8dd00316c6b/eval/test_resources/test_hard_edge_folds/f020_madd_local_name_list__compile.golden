@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def compute(u):
+    def step(a, x):
+        return _pf_map_add(x, x * 3, a)
+    a = dict()
+    for x in [3, 1, 4, 1, 5]:
+        _pf_t0 = x * 3
+        a[x] = _pf_t0
+    return a
+result = compute(None)
+print(_pf_map_to_list(result))
+--- stderr ---

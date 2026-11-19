@@ -1,0 +1,79 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def lift(n):
+    return n + 50
+def callHelper(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 9
+    tmp = callHelper(lift)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [6]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + callHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, second, third, callHelper(0)))
+def offsets(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 4
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(1, [5, 0, 4]))
+def _pf_fn3():
+    for (name, k) in [("a", 6), ("b", 8)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn3()
+print(_pf_map(lambda h: h(3), list(callbacks2)))
+acc = []
+for k in [3, 8, 6]:
+    _pf_t1 = lambda y: y * k
+    acc.append(_pf_t1)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def Geo_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Geo_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Geo_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Geo_square(x):
+    return x * x
+pts = [17, -15, 9, 13, 18]
+print(Geo_scaleAll(2, pts))
+print(Geo_norm1(pts))
+print(Geo_mean(pts))
+print(_pf_map(Geo_square, pts))
+def stack2(start):
+    base = start
+    g0 = lambda y: base + y
+    base = g0(base)
+    g1 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 4
+    def g2(y):
+        return base * y
+    base = base + 20
+    g3 = functools.partial(_pf_map, lambda y: y - base)
+    base = base + 5
+    return (g0(4), g1([1, 2]), g2(3), g3([1, 2]), base)
+print(stack2(4))
+--- stderr ---

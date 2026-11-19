@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Node _ _ _` is not matched
+ --> 5:3
+  |
+5 |   match t:
+  |   ^^^^^^^^
+
+note: hole `?` has type `int` — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 14 more
+  --> 43:45
+   |
+43 | let hist = List.fold (fun m w -> Map.add w (? + 1) m) Map.empty visits
+   |                                             ^
+
+1 error
+1 unfilled hole

@@ -1,0 +1,122 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Pilot:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Pilot"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: "Crew"
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Seat = Active | Idle | Gone
+legs: list[float] = [151.9, 427.7, 199.4, 221.3]
+durations: list[float] = [85.6, 9.3, 65.2, 53.0]
+dist: float = _pf_fold(lambda acc, d: acc + d, 0.0, legs)
+dur: float = _pf_fold(lambda a, b: a + b, 0.0, durations)
+pace: float = dist / dur
+print(_pf_fmt_fixed(3, pace))
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best: Some | None_ = _pf_max_by(_pf_fn0, _pf_zip(legs, durations))
+print(best)
+side: float = math.sqrt(6.25)
+cube: float = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+speeds: list[float] = _pf_map2(lambda d, t: d / t, legs, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def bump2(n: int) -> int:
+    return n + 53
+def applyLift(x: int) -> int:
+    return bump2(x)
+def _pf_fn1():
+    bump2 = 7
+    return applyLift(bump2)
+probe: int = _pf_fn1()
+print((probe, applyLift(4)))
+def scale(n: int) -> int:
+    return n * 5
+def _pf_fn2():
+    _pf_t0 = [1, 2]
+    if _pf_t0:
+        scale = _pf_t0[0]
+        return scale + 1
+    else:
+        return 0
+picked: int = _pf_fn2()
+print((picked, scale(3)))
+def inc(x: int) -> int:
+    return x + 1
+def step2(x: int) -> int:
+    return x * 2
+def pipeline2(x: int) -> int:
+    return (lambda _pf_x: (lambda _pf_x: step2(inc(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(pipeline2, [9, 0, 4]))
+def promote(s: Seat) -> Seat:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t1 = p
+        return Active(Pilot(_pf_t1.name, p.age + 1))
+    else:
+        if isinstance(s, Idle):
+            t = s._0
+            if t.size > 6:
+                _pf_t2 = t
+                return Idle(Crew(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+roster: list[Seat] = _pf_map(promote, [Idle(Crew("wick", 5)), Idle(Crew("wick", 3)), Active(Pilot("cy", 40)), Active(Pilot("quin", 42))])
+print(roster)
+people: list[Pilot] = [Pilot("eli", 2), Pilot("eli", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+--- stderr ---

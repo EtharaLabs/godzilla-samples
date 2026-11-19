@@ -1,0 +1,156 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Fig = Sq | Ci | Wedge
+@dataclass(frozen=True, slots=True)
+class Pilot:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Club:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Pilot"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: "Club"
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Slot = Active | Parked | Gone
+def stamp(xs) -> tuple[list[str], int]:
+    i = 1
+    def tag(x) -> str:
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(stamp(["ada", "ivy", "pam"]))
+trail: list[str] = []
+def logged(tag, f, x):
+    global trail
+    y = f(x)
+    trail = _pf_concat(trail, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [8, 7]))
+print((out, trail))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 5
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(1, []), weigh(1, [2]), weigh(1, [4, 2, 3])))
+def probe2(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([3, 3]), probe2([9, 9]), probe2([])))
+def extent(s: Fig) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Sq(8), Ci(5), Wedge(8, 1), Wedge(1, 9)]))
+limit2: int = 25
+def bound(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _limit2 = o._0
+        if _limit2 > 0:
+            return _limit2
+    if isinstance(o, Some):
+        return 0
+    else:
+        return limit2
+print((bound(Some(4)), bound(Some(-3)), bound(_None_), limit2))
+def promote(s: Slot) -> Slot:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t1 = p
+        return Active(Pilot(_pf_t1.name, p.age + 1))
+    else:
+        if isinstance(s, Parked):
+            t = s._0
+            if t.size > 5:
+                _pf_t2 = t
+                return Parked(Club(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+slots: list[Slot] = _pf_map(promote, [_Gone, Active(Pilot("oz", 48)), _Gone])
+print(slots)
+people: list[Pilot] = [Pilot("ray", 5), Pilot("sue", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+--- stderr ---

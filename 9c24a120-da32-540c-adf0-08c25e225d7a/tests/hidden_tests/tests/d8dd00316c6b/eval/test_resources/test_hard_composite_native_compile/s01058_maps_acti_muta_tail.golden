@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_values(m):
+    return list(m.values())
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+events: list[str] = ["ada", "bo", "dee", "cy", "dee", "ada", "dee", "cy", "eli", "cy"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts: dict[str, int] = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, counts))))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def kindOf(n: int) -> str:
+    _pf_t1 = _ap_Even_Odd(n)
+    if isinstance(_pf_t1, _Even):
+        return "even"
+    elif isinstance(_pf_t1, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+_pf_iter(print, _pf_map(kindOf, [33, 3, 1, 36, 13, 40, 23, 31]))
+ticks: int = 0
+def track(x: int) -> int:
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def stats(xs: list[int]) -> str:
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x: int):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(stats([40, -10, 34, -20]))
+doubled: list[int] = _pf_map(track, [40, -10, 34, -20])
+print(f"{doubled} after {ticks} calls")
+def isEven(n: int) -> bool:
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n: int) -> bool:
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [6, 25, 1, 30, 25]))
+def euclid(a: int, b: int) -> int:
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(euclid(359, 276))
+--- stderr ---

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Push _ _` is not matched
+  --> 37:3
+   |
+37 |   match t:
+   |   ^^^^^^^^
+
+note: hole `?` has type `string` — try: describe, payload — or: input ?, String.trimStart ?, String.trimEnd ?, String.rev ?, and 14 more
+  --> 38:34
+   |
+38 |     case Drop n0 if n0 % 2 == 0: ?
+   |                                  ^
+
+1 error
+1 unfilled hole

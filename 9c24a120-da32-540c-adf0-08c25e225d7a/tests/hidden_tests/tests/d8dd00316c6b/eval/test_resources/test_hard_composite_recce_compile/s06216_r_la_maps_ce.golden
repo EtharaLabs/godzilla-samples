@@ -1,0 +1,179 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+inputs2 = [24, 21, 10, 19, 24, 12]
+gain = 3
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(inputs2), inputs2))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(9), makers2))
+tweak2 = lambda _pf_x: (lambda z: z - 9)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), inputs2))
+events = ["cy", "cy", "bo", "ada", "fay", "eli", "cy", "dee", "fay", "dee"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts = m
+def _pf_fn2(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn2, _pf_map_to_list(counts)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, counts))))
+print((_pf_map_try_find("eli", counts), "eli" in counts))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+extra = dict([("zed", 5), ("cy", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+def parseEntry(line):
+    def _pf_fn3():
+        match _pf_str_split("=", line):
+            case [_k, _v]:
+                _pf_t1 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+            case _:
+                _pf_t1 = Error(f"malformed: {line}")
+        if isinstance(_pf_t1, Ok):
+            k, v = _pf_t1._0
+            _pf_t3 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t3, Ok):
+                n = _pf_t3._0
+                _pf_t2 = Error("negative") if n < 0 else Ok(n)
+                if isinstance(_pf_t2, Ok):
+                    checked = _pf_t2._0
+                    return Ok((k, checked))
+                else:
+                    return _pf_t2
+            else:
+                return _pf_t3
+        else:
+            return _pf_t1
+    return _pf_fn3()
+inputs = ["gus", "ned=9=1", "bo = 2", "oz=4", "kit"]
+results = _pf_map(parseEntry, inputs)
+_pf_iter(print, results)
+goodOnes = _pf_choose(_pf_result_to_option, results)
+print(sum(_pf_map(_pf_snd, goodOnes)))
+def sumAll(xs):
+    def _pf_fn5(acc, r):
+        def _pf_fn6():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn6()
+    return _pf_fold(_pf_fn5, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(results)))
+--- stderr ---

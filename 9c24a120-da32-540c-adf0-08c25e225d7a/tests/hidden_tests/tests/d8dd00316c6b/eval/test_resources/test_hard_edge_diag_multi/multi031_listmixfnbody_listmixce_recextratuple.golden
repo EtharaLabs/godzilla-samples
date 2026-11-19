@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 7:7
+  |
+7 |   [1, "a"]
+  |       ^^^
+
+error: type mismatch: expected int, found string
+  --> 11:16
+   |
+11 |     return [1, "a"]
+   |                ^^^
+
+error: record `Pt` has no field `w`
+  --> 13:37
+   |
+13 | let t3 = (0, Pt { x = 1, y = 2, w = 3 }, "z")
+   |                                     ^
+
+3 errors

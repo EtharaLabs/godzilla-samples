@@ -1,0 +1,134 @@
+exit: 0
+--- stdout ---
+00000002ok00000331female : int -> int
+mal : int -> int
+span : float<m>
+ratio : float
+side : float<m>
+vol : float<m>
+velocity : int<'a> -> int<'b> -> float<'a/'b>
+safeDiv : string -> string -> Option int
+inputs2 : List int
+factor : int
+tweak2 : int -> int
+events : List string
+counts : Map string int
+sa : Set int
+sb : Set int
+extra : Map string int
+00003476from dataclasses import dataclass
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_set_union(a, b):
+    return a.union(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def female(n):
+    if n == 0:
+        return 1
+    else:
+        return n - mal(female(n - 1))
+def mal(n):
+    if n == 0:
+        return 0
+    else:
+        return n - female(mal(n - 1))
+print((_pf_map(female, _pf_range(0, 9)), _pf_map(mal, _pf_range(0, 4))))
+span = math.hypot(7.0 / 1.0, 6.0 / 1.0) * 1.0
+ratio = math.sqrt(3.0)
+side = math.sqrt(49.0)
+vol = math.cbrt(8.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side, vol))
+print(mth.floor(span / 1.0))
+def velocity(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, velocity(span, 3.0)))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 4))))
+print((safeDiv("93", "6"), safeDiv("4", "0"), safeDiv("x", "1")))
+inputs2 = [29, -5, 2, 5, 6, 5]
+factor = 4
+tweak2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn1, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+events = ["fay", "fay", "eli", "bo", "eli", "eli", "fay", "cy"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts = m
+def _pf_fn2(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn2, _pf_map_to_list(counts)))
+sa = set([2, 8, 11, 13, 17, 18])
+sb = set([1, 3, 11, 15, 17, 18])
+print(_pf_sort(list(_pf_set_union(sa, sb))))
+print((len(sa), 13 in sb, _pf_set_is_subset(set([2]), sa)))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(counts))))
+extra = dict([("zed", 5), ("fay", 0)])
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+00000002ok00000045velocity : int<'a> -> int<'b> -> float<'a/'b>0000000000000002ok00000023counts : Map string int00000000--- stderr ---

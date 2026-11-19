@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+ --> 7:11
+  |
+7 |   let w = 3.0<m> + 2.0<s>
+  |           ^^^^^^^^^^^^^^^
+
+error: unbound name `missingName`
+ --> 9:17
+  |
+9 | let s2 = f"got {missingName 3}"
+  |                 ^^^^^^^^^^^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+  --> 11:10
+   |
+11 | let v3 = pt.z
+   |          ^^^^
+
+3 errors

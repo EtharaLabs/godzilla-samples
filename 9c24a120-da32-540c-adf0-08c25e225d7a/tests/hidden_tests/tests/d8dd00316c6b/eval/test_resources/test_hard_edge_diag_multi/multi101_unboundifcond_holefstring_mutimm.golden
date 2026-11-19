@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: unbound name `missingName`
+ --> 6:13
+  |
+6 | let i1 = if missingName 3 then 1 else 2
+  |             ^^^^^^^^^^^
+
+error: cannot assign to `fixed3`: it is immutable (declare it with `let mut`)
+  --> 10:3
+   |
+10 |   fixed3 <- 2
+   |   ^^^^^^^^^^^
+
+note: hole `?gap` has type `'a`
+ --> 7:17
+  |
+7 | let s2 = f"got {?gap}"
+  |                 ^^^^
+
+2 errors
+1 unfilled hole

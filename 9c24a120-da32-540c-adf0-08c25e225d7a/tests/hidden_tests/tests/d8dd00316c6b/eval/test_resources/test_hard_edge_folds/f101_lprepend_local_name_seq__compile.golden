@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def compute(u):
+    def step(a, x):
+        return _pf_concat([x], a)
+    return _pf_fold(step, [], iter([3, 1, 4, 1, 5]))
+result = compute(None)
+print(result)
+--- stderr ---

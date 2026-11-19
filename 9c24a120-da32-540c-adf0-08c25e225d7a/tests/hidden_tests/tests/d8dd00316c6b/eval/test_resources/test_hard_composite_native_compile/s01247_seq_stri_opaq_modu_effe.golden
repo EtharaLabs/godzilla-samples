@@ -1,0 +1,126 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_index_of(sub, s):
+    i = s.find(sub)
+    return Some(i) if i >= 0 else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_fn0():
+    for x in _pf_range(1, 8):
+        y = x * x
+        yield y
+    yield 122
+evens = _pf_fn0()
+print(list(filter(lambda n: n % 3 == 0, evens)))
+print(list(_pf_seq_take(2, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 4)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 138, fib)))
+sentence: str = "tom;jo;eli;lu;gus;cog;ray"
+tokens: list[str] = _pf_str_split(";", sentence)
+print((_pf_str_index_of("gu", sentence), "gu" in sentence))
+print(_pf_str_replace("o", "O", sentence))
+longest: Some | None_ = _pf_head(_pf_sort_by(lambda w: -len(w), tokens))
+print(_pf_option_with_default("?", longest))
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, tokens))))
+def cell(_pf_arg0: tuple[int, str]) -> str:
+    i, w = _pf_arg0
+    return _pf_str_concat(_pf_fmt_pad_right(6, ".", w), _pf_fmt_pad_left(4, " ", str(i + 1)))
+_pf_iter(print, _pf_map(cell, _pf_indexed(tokens)))
+def rawOf(x) -> str:
+    s = x
+    return s
+def mint(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("sku", 2)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_square(x):
+    return x * x
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+nums: list[int] = [11, 23, -11, 21, -11, 6]
+print(Text_norm1(nums))
+print(_pf_map(Text_square, nums))
+print(Text_mean(nums))
+def discount(price: int, qty: int) -> int:
+    return price * qty - 2 * qty
+def emit(label, price: int, qty: int) -> int:
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn2(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+overall: int = sum(_pf_map(_pf_fn2, [("wick", 42, 4), ("tap", 42, 3)]))
+print(overall)
+def scaled(k: int):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(11)([1, 2, 3]))
+--- stderr ---

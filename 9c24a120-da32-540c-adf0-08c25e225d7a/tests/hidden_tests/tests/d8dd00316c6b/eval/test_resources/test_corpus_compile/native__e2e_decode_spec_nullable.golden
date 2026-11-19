@@ -1,0 +1,67 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def opt(r: Ok | Error) -> str:
+    if isinstance(r, Ok):
+        o = r._0
+        if isinstance(o, Some):
+            x = o._0
+            return f"some {x}"
+        else:
+            return "none"
+    else:
+        e = r._0
+        return e.errorKind
+try:
+    _pf_t0 = json.loads("null")
+    if _pf_t0 is None:
+        _pf_t1 = _None_
+    else:
+        if not (isinstance(_pf_t0, int) and not isinstance(_pf_t0, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t0).__name__)
+        _pf_t1 = Some(_pf_t0)
+    _pf_t2 = Ok(_pf_t1)
+except Exception as e:
+    _pf_t2 = Error(_Exception(type(e).__name__, str(e)))
+onNull: str = opt(_pf_t2)
+try:
+    _pf_t3 = json.loads("5")
+    if _pf_t3 is None:
+        _pf_t4 = _None_
+    else:
+        if not (isinstance(_pf_t3, int) and not isinstance(_pf_t3, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t3).__name__)
+        _pf_t4 = Some(_pf_t3)
+    _pf_t5 = Ok(_pf_t4)
+except Exception as e:
+    _pf_t5 = Error(_Exception(type(e).__name__, str(e)))
+onValue: str = opt(_pf_t5)
+--- stderr ---

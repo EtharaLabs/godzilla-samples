@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+def _pf_map(f, xs):
+    return list(map(f, xs))
+_pf_t0 = [3, -5, 1]
+print(_pf_map(lambda _pf_k0: sorted(_pf_t0, key=_pf_k0), [lambda k: k * k, lambda k: k * k]))
+--- stderr ---

@@ -1,0 +1,85 @@
+exit: 0
+--- stdout ---
+import functools
+import math
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_fst(p):
+    return p[0]
+ticks = 0
+def record(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([10, 8, -8, 2, 29, 12, -6, 49]))
+doubled = _pf_map(record, [10, 8, -8, 2])
+print(f"{doubled} after {ticks} calls")
+recordTwice = lambda _pf_x: record(record(_pf_x))
+print((recordTwice(3), ticks))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "7"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("101") + int("140", base=8))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [3, 12, 10, 11]))
+print(_pf_str_rev(str.upper("ivy")))
+seriesA = [19, -8, 5, 24, 29]
+factor = 4
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(9), makers2))
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(seriesA), seriesA))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(seriesA))))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+def Writer_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def compute(x):
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 3, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 3)))
+print(_pf_map(compute, [9, 0]))
+--- stderr ---

@@ -1,0 +1,82 @@
+exit: 0
+--- stdout ---
+# ==== maybe.py ====
+from _pyfun_rt import Some, None_, _None_
+def bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def return_(x):
+    return Some(x)
+
+# ==== lib.py ====
+import maybe
+from _pyfun_rt import Some, None_, _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def go(a, b):
+    return maybe.bind(_pf_option_map(lambda v: v + 1, a), lambda x: maybe.return_(x * 10))
+
+# ==== main.py ====
+import lib
+from _pyfun_rt import Some, None_, _None_
+print(lib.go(Some(1), _None_))
+print(lib.go(_None_, _None_))
+
+# ==== _pyfun_rt.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import contextvars
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+_pf_scope = contextvars.ContextVar("_pf_scope")
+
+--- stderr ---

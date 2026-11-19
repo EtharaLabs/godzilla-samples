@@ -1,0 +1,181 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import json
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class Reading:
+    name: str
+    points: int
+    active: bool
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def explain(t):
+    match t:
+        case Skip(n0) if n0 % 2 == 0:
+            return f"skip!({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Drop(1, _):
+            return "drop-1"
+        case Drop(n0, s1):
+            return f"drop({n0},{s1})"
+        case Jump(n0) if 0 <= n0 < 3:
+            return f"jump!({n0})"
+        case Jump(n0):
+            return f"jump({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def score(t):
+    match t:
+        case Skip(x0):
+            return x0 * 5
+        case _:
+            return 3
+stream = [Skip(4), Jump(3), Skip(-1), Jump(12), Drop(3, "ray"), Drop(6, "gus")]
+print(_pf_str_join("; ", _pf_map(explain, stream)))
+grandSum = _pf_sum_by(score, stream)
+print(f"grandSum={grandSum}")
+print((_pf_head(stream), _pf_last(stream)))
+dec = _pf_dec_map3(lambda n, p, a: Reading(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+jsonText = "[{\"name\": \"max\", \"points\": 0, \"active\": true}, {\"name\": \"quin\", \"points\": 90, \"active\": false}, {\"name\": \"dee\", \"points\": 6, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+_pf_t1 = lambda n, p, a: Reading(n, p, a)
+try:
+    _pf_t2 = json.loads(jsonText)
+    if not isinstance(_pf_t2, list):
+        raise ValueError("expected a JSON array")
+    _pf_t3 = []
+    for _pf_t4 in _pf_t2:
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t5 = _pf_t4["name"]
+        if not isinstance(_pf_t5, str):
+            raise ValueError("expected a string, got " + type(_pf_t5).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t6 = _pf_t4["points"]
+        if not (isinstance(_pf_t6, int) and not isinstance(_pf_t6, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t6).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t7 = _pf_t4["active"]
+        if not isinstance(_pf_t7, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t7).__name__)
+        _pf_t3.append(_pf_t1(_pf_t5, _pf_t6, _pf_t7))
+    _pf_t8 = Ok(_pf_t3)
+except Exception as e:
+    _pf_t8 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t8, Ok):
+    ps = _pf_t8._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t0 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t8._0
+    _pf_t0 = print(f"decode failed: {e.errorKind}")
+_pf_t0
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "7"])))
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [5, 7, 8, 3]))
+orders = [Invoice(100, "hal", 240, False), Invoice(101, "ned", 42, False), Invoice(102, "pam", 141, False), Invoice(103, "pam", 151, False), Invoice(104, "pam", 268, True), Invoice(105, "hal", 194, False)]
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, orders))
+print(byOwner)
+def adjust(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t9 = o
+    return Invoice(_pf_t9.id, _pf_t9.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(adjust, 11), orders)))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(rushSum)
+--- stderr ---

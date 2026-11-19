@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+00000002ok00000019speed : float<m/s>
+00000021speed = 100.0 / 10.0
+00000005error00000158error: measure `m` is already defined
+ --> 5:1
+  |
+5 | measure m
+  | ^^^^^^^^^
+error: measure `s` is already defined
+ --> 6:1
+  |
+6 | measure s
+  | ^^^^^^^^^
+0000000000000002ok00000018squares : Seq int
+00000093def _pf_fn0():
+    for x in [1, 2, 3]:
+        yield x * x
+    yield 100
+squares = _pf_fn0()
+00000002ok0000000000000013print(speed)
+--- stderr ---

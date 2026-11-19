@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import asyncio
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_upper(s):
+    return s.upper()
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True)
+class Member:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Club:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def forEach(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def shout(x):
+    return print(f"* {x}")
+forEach(shout, [6, 1, 1])
+print(mapTwice(lambda x: x + 1, [1, 2, 3]))
+def chatty(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(chatty(True, 9) + chatty(False, 5))
+def quiet(x):
+    return x + 2
+print(mapTwice(quiet, [1]))
+def done(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def countUp(n, acc):
+    async def _pf_fn1(n, acc):
+        while True:
+            if n == 0:
+                return await done(acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return _pf_Async(_pf_fn1, n, acc)
+print(asyncio.run(_pf_run(countUp(2772, 0))))
+data = [0, 41, -2, 29, 43, 23, 2, -10, -2]
+def offset(k, x):
+    return x + k
+def accept(n):
+    return n > 11 and n % 4 != 0
+def _pf_fn5(_pf_x):
+    def _pf_fn7(_pf_x):
+        def _pf_fn8(_pf_arg0):
+            a, b = _pf_arg0
+            return b - a
+        return _pf_map(_pf_fn8, _pf_pairwise(_pf_x))
+    return _pf_fn7((lambda _pf_x: _pf_drop(3, (lambda _pf_x: _pf_filter(accept, _pf_sort_by(lambda x: -x, _pf_x)))(_pf_x)))(_pf_x))
+stage = _pf_fn5
+digest = _pf_sum_by(lambda x: x * x, stage(data))
+print(digest)
+print(len(data))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Member(_pf_t0.name, p.age + 1))
+        case Parked(t) if t.size > 4:
+            _pf_t1 = t
+            return Parked(Club(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Parked(Club("pin", 8)), _Gone, Parked(Club("cog", 5))])
+print(roster)
+members = [Member("max", 5), Member("cy", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+--- stderr ---

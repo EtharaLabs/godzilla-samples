@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Box:
+    item: object
+def mk(v):
+    return Box(v)
+bi = mk(5).item
+bs = mk("hi").item
+--- stderr ---

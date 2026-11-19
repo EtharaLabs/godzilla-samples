@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+ --> 6:3
+  |
+6 |   match n:
+  |   ^^^^^^^^
+
+note: hole `?` has type `'a`
+  --> 33:79
+   |
+33 | let rushSum = book |> List.filter (fun o -> o.urgent) |> List.sumBy (fun o -> ?)
+   |                                                                               ^
+
+1 error
+1 unfilled hole

@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 8:17
+  |
+8 |     case 0: [1, "a"]
+  |                 ^^^
+
+error: type mismatch: expected int, found string
+  --> 11:3
+   |
+11 |   Option.withDefault 0 (Some "s")
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: unbound name `missingName`
+  --> 13:11
+   |
+13 |   let w = missingName 3
+   |           ^^^^^^^^^^^
+
+error: non-exhaustive match: `[_]` is not matched
+  --> 15:3
+   |
+15 |   match xs:
+   |   ^^^^^^^^^
+
+4 errors

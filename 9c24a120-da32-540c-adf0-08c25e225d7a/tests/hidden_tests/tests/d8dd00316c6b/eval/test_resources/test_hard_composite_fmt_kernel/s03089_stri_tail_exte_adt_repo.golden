@@ -1,0 +1,196 @@
+exit: 0
+--- stdout ---
+00000002ok00000316text : string
+tokens : List string
+fieldsN : List (Option int)
+isEven : int -> bool
+isOdd : int -> bool
+ipow : int -> int -> int<'a> -> int<'a>
+safe : string ->{io} string
+row : int -> List int
+describe : Move -> string
+cost : Move -> int
+queue : List Move
+total : int
+entries : List Entry
+showRow : Entry -> string
+00005209from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_index_of(sub, s):
+    i = s.find(sub)
+    return Some(i) if i >= 0 else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_id(x):
+    return x
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Push({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+text = "lu max ray quin"
+tokens = _pf_str_split(" ", text)
+print(_pf_str_slice(0, 8, text))
+print((_pf_str_index_of("ra", text), "ra" in text))
+fieldsN = _pf_map(_pf_str_to_int, _pf_str_split(",", "5a,12,40,x,7"))
+print(fieldsN)
+print(sum(_pf_choose(_pf_id, fieldsN)))
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, tokens))))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, tokens)))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [29, 7, 2, 27, 16]))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(5, 8, 1))
+print(_pf_map(math.isqrt, [366, 25, 104, 71]))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x2", "-23"]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "100"])))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(7))
+def describe(t):
+    match t:
+        case Rest(n0):
+            return f"rest({n0})"
+        case Push(n0, s1):
+            return f"push({n0},{s1})"
+        case Drop(n0, n1):
+            return f"drop({n0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Rest(x0):
+            return x0
+        case Drop(x0, x1):
+            return x0 + x1 * 5
+        case _:
+            return 2
+queue = [Drop(4, 5), Drop(9, -2), Rest(10), Drop(0, -2), Rest(0), Rest(10), Push(4, "max")]
+print(_pf_map(describe, queue))
+total = _pf_sum_by(cost, queue)
+print(f"total={total}")
+print(_pf_max_by(cost, queue))
+entries = [Entry("cog", 11, 19.72), Entry("pin", 19, 25.61), Entry("nut", 19, 23.67), Entry("tap", 27, 20.13)]
+def showRow(x):
+    return f"{_pf_fmt_pad_right(8, " ", x.name)} {_pf_fmt_pad_left(4, " ", str(x.qty))} {_pf_fmt_fixed(1, x.price)} {"restock" if x.qty > 10 else "ok"} {_pf_fmt_currency("$", 2, x.price * 4.0)}"
+_pf_iter(print, _pf_map(showRow, entries))
+print(f"items: {_pf_str_join(", ", _pf_map(lambda x: x.name, entries))}")
+00000002ok00000017queue : List Move0000000000000002ok00000018cost : Move -> int00000000--- stderr ---

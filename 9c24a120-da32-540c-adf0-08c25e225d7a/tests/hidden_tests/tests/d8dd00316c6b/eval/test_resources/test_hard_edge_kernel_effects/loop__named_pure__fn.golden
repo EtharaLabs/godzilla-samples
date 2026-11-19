@@ -1,0 +1,26 @@
+exit: 0
+--- stdout ---
+00000002ok00000134counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+loop : (int -> unit) -> int -> unit
+g : 'a -> unit
+00000313counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def loop(f, n):
+    while True:
+        if n == 0:
+            return None
+        else:
+            f(n)
+            f, n = (f, n - 1)
+            continue
+def g(u):
+    return loop(quiet, 2)
+00000002ok00000035loop : (int -> unit) -> int -> unit0000000000000002ok00000014g : 'a -> unit00000000--- stderr ---

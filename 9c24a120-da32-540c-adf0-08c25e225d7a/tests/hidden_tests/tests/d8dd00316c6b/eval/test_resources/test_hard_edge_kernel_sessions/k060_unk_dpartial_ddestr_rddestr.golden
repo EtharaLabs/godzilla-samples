@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+00000005error00000018unknown op `reset`0000000000000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+00000081import functools
+def add(a, b):
+    return a + b
+inc = functools.partial(add, 1)
+00000002ok00000019a : int
+b : string
+00000018a, b = (1, "two")
+00000002ok00000019a : int
+b : string
+00000000--- stderr ---

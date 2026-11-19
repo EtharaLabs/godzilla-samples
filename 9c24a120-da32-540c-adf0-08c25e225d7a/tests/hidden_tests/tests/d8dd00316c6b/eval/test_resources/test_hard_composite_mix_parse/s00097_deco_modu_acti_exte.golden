@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+type Player = { name: string, points: int, active: bool }
+let decoder = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"ada\", \"points\": 32, \"active\": true}, {\"name\": \"sue\", \"points\": 9, \"active\": false}, {\"name\": \"pam\", \"points\": 69, \"active\": false}, {\"name\": \"ivy\", \"points\": 97, \"active\": false}]"
+match ((Decode.decodeString (Decode.list decoder)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+module Calc =
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let between lo hi x = (lo <= x <= hi)
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+let pts = [24, 21, (- 8), 22, 7, 5]
+(print (Calc.norm1 pts))
+(print (pts |> (List.map ((Calc.clamp 0) 6))))
+(print ((List.filter ((Calc.between (- 5)) 19)) pts))
+(print ((Calc.scaleAll 3) pts))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let kindOf n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([8, 6, (- 3), 5, 32, (- 3), (- 4), (- 1)] |> (List.map kindOf)) |> (List.iter print))
+extern toNum: string -> int = int
+let safe s =
+    match (try (toNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x2", "34"] |> (List.map safe)) |> (List.iter print))
+extern pure loud: string -> string = str.upper
+(print (("tom" |> loud) |> String.rev))
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "111110") + ((parseIn "125") 8)))
+--- stderr ---

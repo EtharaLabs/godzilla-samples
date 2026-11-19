@@ -1,0 +1,37 @@
+exit: 0
+--- stdout ---
+00000002ok00000052safeDiv : int<'a> -> int -> Result float<'a> string
+00000400from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def safeDiv(a, b):
+    if b == 0:
+        return Error("div0")
+    else:
+        return Ok(a / b)
+00000002ok00000025greet : string -> string
+00000100def _pf_str_upper(s):
+    return s.upper()
+def greet(name):
+    return f"hi {_pf_str_upper(name)}!"
+00000002ok0000000000000058Geo_pi = 3.0
+def Geo_circ(r):
+    return 2.0 * Geo_pi * r
+00000005error00000074error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^0000000000000002ok00000008u : int
+00000050print("first")
+u = 2
+print("second")
+print(u * 5)
+--- stderr ---

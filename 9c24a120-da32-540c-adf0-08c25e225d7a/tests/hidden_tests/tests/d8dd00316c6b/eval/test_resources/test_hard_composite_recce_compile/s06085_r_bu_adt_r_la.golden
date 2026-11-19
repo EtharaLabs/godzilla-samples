@@ -1,0 +1,148 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    _0: int
+    def __repr__(self):
+        return f"Halt({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    def __repr__(self):
+        return "Push"
+_Push = Push()
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: str
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: str
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def parseForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 19 else Error("too young"), lambda adult: Check_return_(Form(name, adult)))))
+print(parseForm("ray", "16"))
+print((parseForm("a", "30"), parseForm("bob", "x")))
+def explain(t):
+    match t:
+        case Halt(n0) if n0 % 2 == 0:
+            return f"halt!({n0})"
+        case Halt(n0):
+            return f"halt({n0})"
+        case Push():
+            return f"push"
+        case Turn(n0) if 0 <= n0 < 12:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Emit(s0):
+            return f"emit({s0})"
+        case Jump(s0):
+            return f"jump({s0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Halt(x0):
+            return x0
+        case Push():
+            return 3
+        case _:
+            return 0
+batch = [Halt(10), Jump("dee"), Turn(1), Turn(7), _Push, Turn(0), Jump("oz")]
+_pf_iter(lambda t: print(explain(t)), batch)
+grandSum = _pf_sum_by(cost, batch)
+print(f"grandSum={grandSum}")
+print(len(_pf_filter(lambda t: cost(t) > 5, batch)))
+nums2 = [30, 8, 8, 7, 24, 28, 12]
+gain = 2
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(nums2), nums2))
+def _pf_fn0(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn0, (0, 0), nums2))
+shape2 = lambda _pf_x: (lambda z: z - 3)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, nums2))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(8), makers2))
+--- stderr ---

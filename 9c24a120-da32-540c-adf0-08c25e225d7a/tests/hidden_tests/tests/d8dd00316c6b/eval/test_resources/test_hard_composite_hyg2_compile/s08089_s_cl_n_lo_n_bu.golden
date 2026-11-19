@@ -1,0 +1,71 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def stamp(xs):
+    i = 1
+    def tag(x):
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(stamp(["ada", "gus", "pam"]))
+def ticker(start):
+    n = start
+    def next_(u):
+        nonlocal n
+        n = n + 3
+        return n
+    return next_
+clock = ticker(3)
+print((clock(None), clock(None), clock(None)))
+journal = []
+def traced(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out = _pf_map(functools.partial(traced, "inc", lambda x: x + 1), _pf_map(functools.partial(traced, "sq", lambda x: x * x), [6, 1]))
+print((out, journal))
+def _pf_fn0():
+    for (name, k) in [("a", 3), ("b", 6)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(3), list(handlers)))
+acc = []
+for k in [2, 2, 4]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def offsets(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 2
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(4, [2, 5, 4]))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([8, 6, 4, 2]), _pf_sort([3, 1, 2])))
+dict_ = dict([("k", 9)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+def sum_(a, b):
+    return a - b
+print((sum_(5, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+--- stderr ---

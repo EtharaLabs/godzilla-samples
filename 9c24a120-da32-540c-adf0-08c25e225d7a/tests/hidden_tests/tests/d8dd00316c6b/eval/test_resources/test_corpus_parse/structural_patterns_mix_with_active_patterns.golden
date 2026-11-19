@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let (|Empty|_|) xs = (List.isEmpty xs)
+let f xs =
+    match xs:
+        case Empty: 0
+        case [x]: x
+        case _: 1
+--- stderr ---

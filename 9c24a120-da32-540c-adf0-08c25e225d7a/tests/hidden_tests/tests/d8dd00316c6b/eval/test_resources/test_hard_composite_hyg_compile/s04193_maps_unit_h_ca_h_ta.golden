@@ -1,0 +1,129 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+log = ["ada", "cy", "ada", "cy", "fay", "bo"]
+m = dict()
+for w in log:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print((_pf_map_try_find("dee", hist), "dee" in hist))
+extra = dict([("zed", 5), ("ada", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, hist))))
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(hist))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+segments = [419.5, 200.4, 178.6]
+times = [69.3, 60.9, 12.9]
+dist = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, times)
+speed = dist / elapsed
+print(_pf_fmt_fixed(1, speed))
+def _pf_fn1(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn1, _pf_zip(segments, times))
+print(best)
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def visitAll(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def say(x):
+    return print(f"* {x}")
+visitAll(say, [0, 0, 9])
+print(mapTwice(lambda x: x + 1, [1, 2, 3]))
+def maybeLog(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(maybeLog(True, 4) + maybeLog(False, 6))
+def quiet(x):
+    return x + 4
+print(mapTwice(quiet, [6]))
+def done(acc):
+    async def _pf_fn2():
+        return acc
+    return _pf_Async(_pf_fn2)
+def countUp(n, acc):
+    async def _pf_fn4():
+        async def _pf_fn3():
+            return n * 2
+        k = await _pf_fn3()
+        if n <= 0:
+            return await done(acc)
+        else:
+            return await countUp(n - 1, acc + k)
+    return _pf_Async(_pf_fn4)
+print(asyncio.run(_pf_run(countUp(9, 0))))
+--- stderr ---
+note: `countUp` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

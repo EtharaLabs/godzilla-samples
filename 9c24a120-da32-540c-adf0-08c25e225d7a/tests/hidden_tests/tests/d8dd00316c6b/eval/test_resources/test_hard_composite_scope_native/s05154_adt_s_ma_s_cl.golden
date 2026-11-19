@@ -1,0 +1,162 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: str
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Rest({self._0!r}, {self._1!r})"
+Cmd = Load | Store | Rest
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Form = Sq | Ci | Wedge
+def show(t: Cmd) -> str:
+    if isinstance(t, Load):
+        n0 = t._0
+        if 0 <= n0 < 19:
+            return f"load!({n0})"
+    if isinstance(t, Load):
+        n0 = t._0
+        return f"load({n0})"
+    elif isinstance(t, Store):
+        s0 = t._0
+        return f"store({s0})"
+    else:
+        n0 = t._0
+        s1 = t._1
+        return f"rest({n0},{s1})"
+def rank(t: Cmd) -> int:
+    if isinstance(t, Load):
+        x0 = t._0
+        return x0
+    else:
+        return 0
+batch: list[Cmd] = [Store("pam"), Load(3), Load(-1), Store("cy")]
+print(_pf_map(show, batch))
+tally: int = _pf_sum_by(rank, batch)
+print(f"tally={tally}")
+print((_pf_head(batch), _pf_last(batch)))
+cap: int = 10
+def bound(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((bound(Some(3)), bound(Some(-3)), bound(_None_), cap))
+def extent(s: Form) -> int:
+    if isinstance(s, Sq):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Sq(5), Ci(9), Wedge(4, 1), Wedge(1, 9)]))
+def weigh(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 2
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((weigh(1, []), weigh(1, [7]), weigh(1, [1, 2, 3])))
+def census(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(census([2, 2, 17, 17, 15]))
+journal: list[str] = []
+def logged(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [2, 7]))
+print((out, journal))
+def numbered(xs) -> tuple[list[str], int]:
+    i = 1
+    def tag(x) -> str:
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(numbered(["dee", "gus", "max"]))
+--- stderr ---

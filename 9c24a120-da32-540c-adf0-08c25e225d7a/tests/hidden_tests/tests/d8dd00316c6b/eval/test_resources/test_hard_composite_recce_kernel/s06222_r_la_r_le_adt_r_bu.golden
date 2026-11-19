@@ -1,0 +1,166 @@
+exit: 0
+--- stdout ---
+00000002ok00000245inputs2 : List int
+gain : int
+scalers : List (int -> int)
+tweak2 : int -> int
+ping : int -> int -> int
+pong : int -> int -> int
+stepC : int -> int -> int
+render : Msg -> string
+score : Msg -> int
+prog : List Msg
+grandSum : int
+combos : List int
+00004292from dataclasses import dataclass
+from functools import total_ordering
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: str
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    def __repr__(self):
+        return "Jump"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2,)
+_Jump = Jump()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (3, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (4, self._0)
+inputs2 = [26, 26, -5, -8, -6, -2, 0]
+gain = 2
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(6), scalers))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+tweak2 = lambda _pf_x: (lambda z: z - 3)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+def ping(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return pong(n - 1, acc + 1)
+def pong(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return stepC(n - 2, acc * 2)
+def stepC(n, acc):
+    if n <= 0:
+        return acc
+    else:
+        return ping(n - 3, acc - 1)
+print(_pf_map(lambda n: ping(n, 1), [6, 6, 20, 12]))
+def render(t):
+    match t:
+        case Turn(n0) if n0 > 2:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Push(s0):
+            return f"push({s0})"
+        case Jump():
+            return f"jump"
+        case Skip(2):
+            return "skip-2"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Drop(n0):
+            return f"drop({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def score(t):
+    match t:
+        case Skip(x0):
+            return x0
+        case _:
+            return 1
+prog = [_Jump, Drop(10), Drop(11), Drop(8), Push("lu"), Drop(-2)]
+print(_pf_map(render, prog))
+grandSum = _pf_sum_by(score, prog)
+print(f"grandSum={grandSum}")
+print(_pf_sort(prog))
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 2], lambda k: Grid_yield_(a * b + k))
+combos = Grid_combine(Grid_for_([(4, 3), (1, 3)], _pf_fn2), Grid_delay(lambda _: Grid_yield_(4)))
+print(combos)
+00000002ok00000024pong : int -> int -> int0000000000000002ok00000024ping : int -> int -> int00000000--- stderr ---

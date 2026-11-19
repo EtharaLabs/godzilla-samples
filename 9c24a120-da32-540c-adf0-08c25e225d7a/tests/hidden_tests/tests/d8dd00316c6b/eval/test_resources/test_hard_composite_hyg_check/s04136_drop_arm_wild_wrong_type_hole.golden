@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+  --> 13:13
+   |
+13 |     case _: "zero"
+   |             ^^^^^^
+
+error: non-exhaustive match: `Node _ _ _` is not matched
+  --> 50:3
+   |
+50 |   match t:
+   |   ^^^^^^^^
+
+note: hole `?` has type `int` — try: tally, v, x, picked — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 16 more
+  --> 52:50
+   |
+52 |     case Node l v rt if x < v: Node (insert x l) ? rt
+   |                                                  ^
+
+2 errors
+1 unfilled hole

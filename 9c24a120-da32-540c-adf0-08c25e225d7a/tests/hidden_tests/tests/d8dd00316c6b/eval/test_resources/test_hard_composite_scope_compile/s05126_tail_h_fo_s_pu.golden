@@ -1,0 +1,140 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_concat(a, b):
+    return a + b
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop = Noop()
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+def steps(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [8, 11, 56]))
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(469, 202))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(2, 8, 1))
+def replay(script):
+    def step(acc, op):
+        match acc:
+            case (m, xs):
+                match op:
+                    case Put(k, v):
+                        return (_pf_map_add(k, v, m), xs)
+                    case Append(n):
+                        return (m, _pf_concat(xs, [n]))
+                    case Noop():
+                        return acc
+                    case _:
+                        raise RuntimeError("non-exhaustive match")
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+changes = [_Noop, _Noop, Put("bolt", 2), _Noop, Append(3), _Noop, _Noop]
+outcome = replay(changes)
+mm, items = outcome
+print((_pf_map_to_list(mm), items))
+acc = _pf_fold(lambda step, x: step + x * x, 0, [1, 8, 3, 8])
+print(acc)
+tiles = [Tile(2, 5, "rod"), Tile(3, 4, "bolt"), Tile(8, 3, "rod"), Tile(3, 4, "bolt"), Tile(4, 4, "sq")]
+def relabel(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Tile(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "old-"), tiles)))
+def grow(b):
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Tile(w + 3, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+--- stderr ---

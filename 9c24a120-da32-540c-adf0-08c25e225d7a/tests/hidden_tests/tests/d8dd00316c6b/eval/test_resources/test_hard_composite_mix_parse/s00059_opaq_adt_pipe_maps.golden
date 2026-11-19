@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+opaque type UserId = string
+opaque type Handle = string
+let unwrap x =
+    match x:
+        case (UserId s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (UserId f"{prefix}-{i}"))))
+let ids = ((mint "sku") 3)
+(print ((ids |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head ids) == (Some (UserId "u-1"))))
+type Move = Jump int | Rest string | Mark | Store int string
+let render t =
+    match t:
+        case (Jump n0) if (n0 > 0): f"jump!({n0})"
+        case (Jump n0): f"jump({n0})"
+        case (Rest s0): f"rest({s0})"
+        case Mark: f"mark"
+        case (Store 2 _): "store-2"
+        case (Store n0 s1): f"store({n0},{s1})"
+let weight t =
+    match t:
+        case (Store x0 _): x0
+        case _: 0
+let stream = [(Jump 9), ((Store 2) "lu"), (Rest "max"), (Rest "oz"), ((Store 3) "jo"), Mark, (Rest "ivy")]
+((List.iter (fun t -> (print (render t)))) stream)
+let grandSum = (stream |> (List.sumBy weight))
+(print f"grandSum={grandSum}")
+(print ((stream |> (List.filter (fun t -> ((weight t) > 5)))) |> List.len))
+let readings = [39, 13, 21, 36, 13, 4]
+let stage = ((((List.filter (fun x -> (x > 4))) >> List.rev) >> (List.take 7)) >> List.sort)
+let result = ((readings |> stage) |> List.head)
+(print result)
+let visits = ["ada", "fay", "cy", "cy", "bo", "eli", "eli"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) visits)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let sa = (Set.ofList [1, 2, 4, 15, 17, 19])
+let sb = (Set.ofList [2, 6, 11, 15, 18, 19])
+(print ((((Set.union sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 17) sb), ((Set.isSubset (Set.ofList [1])) sa)))
+let extra = (Map.ofList [("zed", 5), ("ada", 0)])
+(print ((((Map.union extra) counts) |> Map.toList) |> List.sort))
+--- stderr ---

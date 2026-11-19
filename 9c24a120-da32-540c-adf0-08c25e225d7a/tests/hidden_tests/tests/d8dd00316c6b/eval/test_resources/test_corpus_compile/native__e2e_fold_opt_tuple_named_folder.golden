@@ -1,0 +1,58 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Cmd = Put | Push | Skip
+def step(acc: tuple[dict[int, int], list[int]], c: Cmd) -> tuple[dict[int, int], list[int]]:
+    m = acc[0]
+    xs = acc[1]
+    if isinstance(c, Put):
+        k = c._0
+        v = c._1
+        return (_pf_map_add(k, v, m), xs)
+    elif isinstance(c, Push):
+        n = c._0
+        return (m, _pf_concat(xs, [n]))
+    else:
+        return acc
+def run(cmds: list[Cmd]) -> tuple[dict[int, int], list[int]]:
+    m = dict()
+    xs = []
+    for c in cmds:
+        match c:
+            case Put(k, v):
+                m[k] = v
+            case Push(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+_pf_t1 = run([Put(1, 10), Push(2), _Skip, Put(3, 30), Push(4)])
+m = _pf_t1[0]
+xs = _pf_t1[1]
+_pf_t0 = (_pf_map_to_list(m), xs)
+out: tuple[list[tuple[int, int]], list[int]] = _pf_t0
+--- stderr ---

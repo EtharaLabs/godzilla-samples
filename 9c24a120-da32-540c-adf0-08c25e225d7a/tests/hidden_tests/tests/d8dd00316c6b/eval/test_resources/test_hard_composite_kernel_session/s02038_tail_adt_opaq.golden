@@ -1,0 +1,128 @@
+exit: 0
+--- stdout ---
+00000002ok00000231digitSum : int -> int
+ipow : int -> int -> int<'a> -> int<'a>
+accumulate : int -> int -> int
+render : Msg -> string
+weight : Msg -> int
+queue : List Msg
+total : int
+rawOf : Sku -> string
+mint : 'a -> int -> List Sku
+ids : List Sku
+00003034from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: str
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: str
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: int
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+def digitSum(n):
+    match n:
+        case 0:
+            return 0
+        case _:
+            return n % 10 + digitSum(n // 10)
+print(digitSum(95195))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(2, 12, 1))
+def accumulate(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(1721, 0))
+def render(t):
+    match t:
+        case Jump(s0):
+            return f"jump({s0})"
+        case Pop(n0):
+            return f"pop({n0})"
+        case Load(n0) if 0 <= n0 < 14:
+            return f"load!({n0})"
+        case Load(n0):
+            return f"load({n0})"
+        case Drop(s0):
+            return f"drop({s0})"
+        case Rest(n0):
+            return f"rest({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Pop(x0):
+            return x0 * 5
+        case Rest(x0):
+            return x0
+        case Drop(_):
+            return 2
+        case _:
+            return 3
+queue = [Rest(-3), Pop(11), Drop("dee"), Load(4), Rest(-3)]
+print(_pf_map(render, queue))
+total = _pf_sum_by(weight, queue)
+print(f"total={total}")
+print((_pf_head(queue), _pf_last(queue)))
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = mint("sku", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+00000002ok00000021rawOf : Sku -> string0000000000000002ok00000030accumulate : int -> int -> int00000000--- stderr ---

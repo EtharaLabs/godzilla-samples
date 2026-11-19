@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+00000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+00000081import functools
+def add(a, b):
+    return a + b
+inc = functools.partial(add, 1)
+00000002ok000000000000000000000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+0000000000000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+0000000000000005error00000066error: unbound name `parity`
+ --> 9:1
+  |
+9 | parity 7
+  | ^^^^^^
+00000000--- stderr ---

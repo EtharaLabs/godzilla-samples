@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+p = Point(1)
+s = p.x
+--- stderr ---

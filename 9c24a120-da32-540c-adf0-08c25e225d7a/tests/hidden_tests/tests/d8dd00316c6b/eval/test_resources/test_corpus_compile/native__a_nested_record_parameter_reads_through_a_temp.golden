@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True)
+class Cell:
+    letter: str
+@dataclass(frozen=True, slots=True)
+class Pair:
+    left: "Cell"
+    right: "Cell"
+def leftLetter(_pf_arg0: Pair) -> str:
+    _pf_arg0_0 = _pf_arg0.left
+    letter = _pf_arg0_0.letter
+    return letter
+--- stderr ---

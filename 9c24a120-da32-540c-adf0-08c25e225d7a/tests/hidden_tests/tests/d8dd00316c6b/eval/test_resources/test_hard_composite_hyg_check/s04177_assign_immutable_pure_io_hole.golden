@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `report` is declared `pure` but performs `io`
+ --> 5:3
+  |
+5 |   print f"{label}: {margin price ?}"
+  |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: cannot assign to `seen`: it is immutable (declare it with `let mut`)
+  --> 38:5
+   |
+38 |     seen <- seen + 1
+   |     ^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int<'a>` — try: label, price, qty — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 14 more
+ --> 5:34
+  |
+5 |   print f"{label}: {margin price ?}"
+  |                                  ^
+
+2 errors
+1 unfilled hole

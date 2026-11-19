@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+let data = [4, 2, 10, 18, 5, 16, 24, 0, 21, 2]
+let result = ((((((data |> (List.choose (fun x -> (if ((x % 2) == 0) then (Some (x // 2)) else None)))) |> (List.dropWhile (fun x -> (x < 4)))) |> ((List.chunkBySize 5) >> (List.map List.sum))) |> List.rev) |> (List.take 8)) |> ((List.fold (fun acc x -> ((acc * 2) - x))) 0))
+(print result)
+let pure net price qty = ((price * qty) - (9 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let grand = (([("gear", 44, 6), ("wick", 40, 2), ("gear", 49, 4)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print grand)
+let squares = seq {
+    for x in ((List.range 1) 9):
+        let y = (x * x)
+        yield y
+    yield 149
+}
+((((squares |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 3))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+measure m
+measure s
+measure kg
+let segments = [384.2<m>, 388.2<m>, 282.7<m>, 142.5<m>]
+let times = [29.7<s>, 84.8<s>, 47.7<s>, 25.0<s>]
+let total = (segments |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let dur = (((List.fold (+)) 0.0<s>) times)
+let speed = (total / dur)
+(print ((Format.fixed 1) speed))
+let speeds = (((List.map2 (fun d t -> (d / t))) segments) times)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+let edge = (sqrt 2.25<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf total) dur) * 1000.0)))
+let km = (total / 1000.0)
+(print ((Format.fixed 1) km))
+--- stderr ---

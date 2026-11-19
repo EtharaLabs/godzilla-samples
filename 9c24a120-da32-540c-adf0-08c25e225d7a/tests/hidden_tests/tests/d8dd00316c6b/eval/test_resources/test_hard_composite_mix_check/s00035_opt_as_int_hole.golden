@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: expected int, found Option int
+  --> 21:18
+   |
+21 | let firstCount = Map.tryFind "eli" counts + 1
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int` — try: n, w — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 13 more
+  --> 13:28
+   |
+13 |     case Some n: Map.add w ? m
+   |                            ^
+
+1 error
+1 unfilled hole

@@ -1,0 +1,107 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Panel"
+    bottom: "Panel"
+    slot: int
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+tiles: list[Panel] = [Panel(5, 5, "cap"), Panel(6, 9, "bolt"), Panel(5, 3, "wick"), Panel(4, 4, "sq")]
+def relabel(prefix: str, b: Panel) -> Panel:
+    label = b.label
+    _pf_t1 = b
+    return Panel(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "new "), tiles)))
+def stackOf(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Panel):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Rack(a, b, a.w + b.h)), tiles, _pf_rev(tiles)))
+def surface(_pf_arg0: Panel) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+scores: list[Result2] = [Result2("sue", 82, 0.08), Result2("hal", 36, 0.86), Result2("oz", 62, 0.94)]
+def fmtRow(_pf_arg0: Result2) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{_pf_fmt_pad_right(6, ".", who)} pts={pts} {f"<{pts}>"} {_pf_str_join("/", [who, str(pts)])} {_pf_fmt_percent(1, ratio)}"
+_pf_iter(print, _pf_map(fmtRow, scores))
+print(f"{len(scores)} rows; names={_pf_str_join(", ", _pf_map(lambda s: f"[{s.who}]", scores))}")
+inputs2: list[int] = [20, 0, -7, 23, 20, 20]
+gain: int = 5
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(inputs2)))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), inputs2))
+--- stderr ---

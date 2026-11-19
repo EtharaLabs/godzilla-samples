@@ -1,0 +1,11 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Hotel` (hotel.pyfun) --
+error: field `kind` is ambiguous here: nothing says what this value is, and `kind` is declared by records `RecH` and `RecD`. Name the record where the value arrives — in a parameter (`fun (RecH { kind }) -> …`) or in a pattern (`case RecH { kind }:`) — or give it a type some other way
+  --> 13:25
+   |
+13 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+
+1 error

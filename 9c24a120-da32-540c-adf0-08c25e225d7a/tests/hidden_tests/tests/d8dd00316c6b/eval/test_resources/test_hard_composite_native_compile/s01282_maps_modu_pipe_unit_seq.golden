@@ -1,0 +1,142 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+log: list[str] = ["ada", "ada", "bo", "ada", "eli", "bo", "bo"]
+m = dict()
+for w in log:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+freq: dict[str, int] = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+print(len(_pf_map_filter(lambda k, v: v > 1, freq)))
+print((_pf_map_try_find("hal", freq), "hal" in freq))
+def Calc_between(lo, hi, x):
+    return lo <= x <= hi
+def Calc_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Calc_square(x):
+    return x * x
+pts: list[int] = [-5, 10, 15, 18, 0]
+print(_pf_filter(functools.partial(Calc_between, 0, 20), pts))
+print(Calc_scaleAll(2, pts))
+print(_pf_map(Calc_square, pts))
+data: list[int] = [-8, 18, 29, 23, 48, 44, 17, 39, -5]
+def shift(k: int, x: int) -> int:
+    return x + k
+def accept(n: int) -> bool:
+    return n > 19 and n % 3 != 0
+def _pf_fn16(_pf_x):
+    def _pf_fn24(_pf_x):
+        def _pf_fn28(_pf_x):
+            def _pf_fn30(_pf_x):
+                def _pf_fn31(_pf_arg0):
+                    a, b = _pf_arg0
+                    return b - a
+                return _pf_map(_pf_fn31, _pf_pairwise(_pf_x))
+            return _pf_fn30((lambda _pf_x: _pf_take(7, (lambda _pf_x: _pf_map(lambda x: x * x - 5, _pf_sort(_pf_x)))(_pf_x)))(_pf_x))
+        return _pf_filter(lambda x: x % 5 == 3, _pf_fn28(_pf_x))
+    return _pf_choose(lambda x: (Some(x // 4) if x % 4 == 0 else _None_), _pf_fn24(_pf_x))
+process = _pf_fn16
+digest: Some | None_ = _pf_head(process(data))
+print(digest)
+print(len(data))
+segments: list[float] = [238.3, 266.5, 128.1, 27.5]
+splits: list[float] = [85.4, 54.9, 26.9, 72.2]
+dist: float = _pf_fold(lambda acc, d: acc + d, 0.0, segments)
+dur: float = _pf_fold(lambda a, b: a + b, 0.0, splits)
+speed: float = dist / dur
+print(_pf_fmt_fixed(1, speed))
+def paceOf(d: int, t: int) -> float:
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, dur) * 1000.0))
+side: float = math.sqrt(9.0)
+cube: float = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+km: float = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def _pf_fn32():
+    for x in _pf_range(1, 9):
+        y = x * x
+        yield y
+    yield 193
+squares = _pf_fn32()
+print(_pf_fold(lambda a, b: a + b, 0, squares))
+print(list(_pf_seq_take(4, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 3)))))
+def _pf_fn33(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn33, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 360, fib)))
+--- stderr ---

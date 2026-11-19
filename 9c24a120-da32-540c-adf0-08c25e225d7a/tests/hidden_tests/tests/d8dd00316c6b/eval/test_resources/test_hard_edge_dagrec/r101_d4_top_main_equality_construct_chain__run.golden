@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: `Pos` is not a member of `Base`
+ --> 4:29
+  |
+4 | print (v.focus.placed.at == Base.Pos { x = 4, y = 0 })
+  |                             ^^^^^^^^
+error: `Item` is not a member of `Item`
+ --> 5:43
+  |
+5 | let c = Scene.Scene { items = [], focus = Item.Item { name = "new", placed = Place.Placed { at = Base.Pos { x = 7, y = 8 }, shape = Base.Circle 2 } } }
+  |                                           ^^^^^^^^^
+
+2 errors

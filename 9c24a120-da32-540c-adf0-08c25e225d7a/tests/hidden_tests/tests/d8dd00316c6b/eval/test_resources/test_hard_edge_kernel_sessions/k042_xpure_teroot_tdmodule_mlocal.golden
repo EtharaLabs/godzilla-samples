@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+00000005error00000125error: `loud` is declared `pure` but performs `io`
+ --> 2:19
+  |
+2 | let pure loud x = print x
+  |                   ^^^^^^^
+0000000000000005error00000062error: unbound name `root`
+ --> 2:1
+  |
+2 | root 2.0
+  | ^^^^
+0000000000000005error00000108(could not determine a type — is `module Geo =
+  let pi = 3.0
+  let circ r = 2.0 * pi * r` an expression?)0000000000000002ok00000008t : int
+00000019t = 3
+print(t * t)
+--- stderr ---

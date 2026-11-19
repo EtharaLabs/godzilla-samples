@@ -1,0 +1,149 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_str_concat(a, b):
+    return a + b
+@dataclass(frozen=True, slots=True)
+class Box:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: object
+    bottom: object
+    slot: int
+limit2 = 34
+def bound(o):
+    if isinstance(o, Some):
+        _limit2 = o._0
+        if _limit2 > 0:
+            return _limit2
+    if isinstance(o, Some):
+        return 0
+    else:
+        return limit2
+print((bound(Some(9)), bound(Some(-3)), bound(_None_), limit2))
+def pick(o, fallback):
+    if isinstance(o, Some):
+        _fallback, n = o._0
+        if _fallback > n:
+            return _fallback
+    if isinstance(o, Some):
+        a, _fallback2 = o._0
+        return a + _fallback2
+    else:
+        return fallback
+print((pick(Some((6, 6)), 0), pick(Some((1, 5)), 0), pick(_None_, 6)))
+def settle(n):
+    match n % 3:
+        case 0:
+            _n = n // 3
+            return _n + 4
+        case k:
+            _n2 = n * k
+            _k = _n2 - 1
+            return _k
+print(_pf_map(settle, [14, 7, 6, 28]))
+boxes = [Box(8, 7, "bolt"), Box(1, 3, "nut"), Box(1, 4, "hub"), Box(4, 4, "sq")]
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Box(w + 1, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, boxes)))
+def stackOf(s):
+    match s:
+        case Shelf(top=Box(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Shelf(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: stackOf(Shelf(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def area(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, boxes)))
+def relabel(prefix, b):
+    label = b.label
+    _pf_t3 = b
+    return Box(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "new "), boxes)))
+visits = ["cy", "dee", "ada", "fay", "dee", "dee", "fay"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t4 = n + 1
+            m[w] = _pf_t4
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, hist))))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+print((_pf_map_try_find("ada", hist), "ada" in hist))
+--- stderr ---

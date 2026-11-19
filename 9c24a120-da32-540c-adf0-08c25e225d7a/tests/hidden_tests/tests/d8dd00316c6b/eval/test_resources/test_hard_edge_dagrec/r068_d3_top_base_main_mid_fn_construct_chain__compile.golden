@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: `shift` is not a member of `Place`
+ --> 4:9
+  |
+4 | print ((Place.shift v.placed).at.x)
+  |         ^^^^^^^^^^^
+error: `Placed` is not a member of `Place`
+ --> 5:44
+  |
+5 | let c = Item.Item { name = "new", placed = Place.Placed { at = Base.Pos { x = 7, y = 8 }, shape = Base.Circle 2 } }
+  |                                            ^^^^^^^^^^^^
+
+2 errors

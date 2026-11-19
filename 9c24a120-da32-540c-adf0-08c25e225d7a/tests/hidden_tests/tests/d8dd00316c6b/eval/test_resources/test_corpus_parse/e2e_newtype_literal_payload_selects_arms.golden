@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+opaque type Cents = int
+let describe c =
+    match c:
+        case (Cents 0): "free"
+        case (Cents n): "costs"
+let a = (describe (Cents 0))
+let b = (describe (Cents 42))
+--- stderr ---

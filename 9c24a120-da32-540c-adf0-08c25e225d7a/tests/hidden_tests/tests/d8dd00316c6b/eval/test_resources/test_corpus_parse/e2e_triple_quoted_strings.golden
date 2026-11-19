@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let x = 7
+let doc = "first line\nsecond \"quoted\" line"
+let msg = f"x is {x}\nx + 1 is {(x + 1)}"
+let a = (print doc)
+let b = (print msg)
+let n = (print (String.len "a\\nb\nc"))
+--- stderr ---

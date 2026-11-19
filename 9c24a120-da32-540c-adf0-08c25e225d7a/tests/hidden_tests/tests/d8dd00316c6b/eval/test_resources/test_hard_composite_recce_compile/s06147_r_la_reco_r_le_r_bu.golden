@@ -1,0 +1,86 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+inputs2 = [18, 24, 16, 12, 25, 18]
+gain = 2
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn0, _pf_zip(inputs2, _pf_map(lambda x: x * x, inputs2)))))
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(6), scalers))
+def _pf_fn1(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn1, _pf_indexed(inputs2))))
+parcels = [Booking(100, "gus", 148, False), Booking(101, "ivy", 200, True), Booking(102, "gus", 129, True), Booking(103, "ivy", 33, False), Booking(104, "ivy", 173, True), Booking(105, "jo", 47, True)]
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by(lambda o: o.amount, parcels))))
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Booking(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 10), parcels)))
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("  sue ned jo "), 0))
+def Logged_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Logged_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def compute(x):
+    return Logged_bind(tell(f"start {x}"), lambda _: Logged_bind((x * 3, ["scaled"]), lambda y: (lambda z: Logged_bind(tell(f"z={z}"), lambda _: Logged_return_(z)))(y + 1)))
+print(_pf_map(compute, [8, 7]))
+--- stderr ---

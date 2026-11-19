@@ -1,0 +1,42 @@
+exit: 0
+--- stdout ---
+let readPair line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let lines = ["lu", "gus", "pam=x", "hal=11"]
+let parsed = ((List.map readPair) lines)
+((List.iter print) parsed)
+let errs = ((parsed |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let firstGood = ((((parsed |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let sumAll xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((sumAll parsed) |> (Result.mapError String.upper)))
+let pure discount price qty = ((price * qty) - (9 * qty))
+let emit label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let grand = (([("gear", 31, 2), ("tap", 21, 5), ("pin", 11, 4)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (discount k))
+(print ((scaled 13) [1, 2, 3]))
+opaque type Sku = string
+opaque type Handle = string
+let unwrap x =
+    match x:
+        case (Sku s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (Sku f"{prefix}-{i}"))))
+let keys = ((makeIds "u") 3)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (Sku "u-1"))))
+module Geo =
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let between lo hi x = (lo <= x <= hi)
+    let clamp lo hi x = ((max lo) ((min hi) x))
+let pts = [15, (- 1), (- 3), (- 3), 15, 2]
+(print ((Geo.scaleAll 4) pts))
+(print (Geo.mean pts))
+(print ((List.filter ((Geo.between (- 3)) 25)) pts))
+(print (pts |> (List.map ((Geo.clamp 0) 6))))
+--- stderr ---

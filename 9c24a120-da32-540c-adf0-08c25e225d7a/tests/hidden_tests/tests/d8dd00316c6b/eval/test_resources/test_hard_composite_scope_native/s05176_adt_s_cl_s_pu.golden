@@ -1,0 +1,196 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Store and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+    def __eq__(self, other):
+        return type(other) is Emit and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_Emit: Emit = Emit()
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    def __repr__(self):
+        return "Turn"
+    def __eq__(self, other):
+        return type(other) is Turn and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (2,)
+_Turn: Turn = Turn()
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    def __repr__(self):
+        return "Pop"
+    def __eq__(self, other):
+        return type(other) is Pop and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (3,)
+_Pop: Pop = Pop()
+Signal = Store | Emit | Turn | Pop
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: "Tile"
+    bottom: "Tile"
+    slot: int
+def show(t: Signal) -> str:
+    if isinstance(t, Store):
+        n0 = t._0
+        return f"store({n0})"
+    elif isinstance(t, Pop):
+        return f"pop"
+    elif isinstance(t, Emit):
+        return "emit/turn"
+    else:
+        return "emit/turn"
+def cost(t: Signal) -> int:
+    if isinstance(t, Emit):
+        return 9
+    elif isinstance(t, Store):
+        x0 = t._0
+        return x0 * 2
+    elif isinstance(t, Turn):
+        return 9
+    else:
+        return 2
+queue: list[Signal] = [Store(-1), _Emit, _Pop, _Pop, Store(-3), _Pop, Store(6)]
+print(_pf_map(show, queue))
+total: int = _pf_sum_by(cost, queue)
+print(f"total={total}")
+print(_pf_sort(queue))
+def tally(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([6, 18, 5, 9]))
+trail: list[str] = []
+def logged(tag, f, x):
+    global trail
+    y = f(x)
+    trail = _pf_concat(trail, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [5, 6]))
+print((out, trail))
+boxes: list[Tile] = [Tile(8, 1, "cap"), Tile(1, 8, "bolt"), Tile(1, 5, "cap"), Tile(4, 4, "sq")]
+def surface(_pf_arg0: Tile) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, boxes)))
+def heavier(s: Shelf) -> str:
+    if isinstance(s, Shelf) and isinstance(s.top, Tile):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Shelf(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def describe(b: Tile) -> str:
+    if isinstance(b, Tile):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Tile) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, boxes)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, boxes)))
+--- stderr ---

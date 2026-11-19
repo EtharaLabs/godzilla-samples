@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+00000002ok00000021let t = 3
+t * t : int0000000000000005error00000125(could not determine a type — is `type P = { name: string, age: int }
+let p = P { name = "Ada", age = 36 }` an expression?)0000000000000005error00000169(could not determine a type — is `let g k =
+  match k:
+    case x if (match x:
+        case 0: true
+        case _: false): "zero"
+    case _: "other"` an expression?)00000000--- stderr ---

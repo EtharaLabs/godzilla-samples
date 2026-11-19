@@ -1,0 +1,102 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def bump2(n):
+    return n + 20
+def useHelper(x):
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 2
+    tmp = useHelper(bump2)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [3]
+    if _pf_t0:
+        bump2 = _pf_t0[0]
+        return bump2 + useHelper(1)
+    else:
+        return 0
+beta = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, beta, third, useHelper(0)))
+visits = ["dee", "bo", "dee", "eli", "fay", "cy", "dee", "cy", "bo", "dee"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in visits:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t1 = n + 1
+            m[w] = _pf_t1
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn3(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn3, _pf_map_to_list(hist)))
+print((_pf_map_try_find("cy", hist), "cy" in hist))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, hist))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, hist))))
+len_ = 7
+print((len([1, 2, 3]) + len_, len("abc")))
+reversed_ = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+--- stderr ---

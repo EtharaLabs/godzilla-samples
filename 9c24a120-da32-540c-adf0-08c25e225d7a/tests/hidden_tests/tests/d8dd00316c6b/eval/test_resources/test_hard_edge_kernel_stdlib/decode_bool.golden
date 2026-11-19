@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+00000002ok00000026Decode.bool : Decoder bool0000000000000002ok0000000000000151def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+print(_pf_dec_bool)
+--- stderr ---

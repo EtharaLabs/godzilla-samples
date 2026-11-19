@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+00000002ok00000134counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+mk : ('a -> 'b) ->{io} 'a -> 'b
+g : 'a ->{io} unit
+00000220counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def mk(f):
+    print("mk")
+    return lambda x: f(x)
+def g(u):
+    return mk(lambda x: print(x))(9)
+00000002ok00000031mk : ('a -> 'b) ->{io} 'a -> 'b0000000000000002ok00000018g : 'a ->{io} unit00000000--- stderr ---

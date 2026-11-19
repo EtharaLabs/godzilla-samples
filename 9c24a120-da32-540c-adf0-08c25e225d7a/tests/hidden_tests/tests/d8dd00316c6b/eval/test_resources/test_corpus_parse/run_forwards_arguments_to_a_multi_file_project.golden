@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+import Geometry
+extern import sys
+extern getArgv: unit -> List string = sys.argv.copy
+(print ((Geometry.area 4) 5))
+(print (getArgv ()))
+--- stderr ---

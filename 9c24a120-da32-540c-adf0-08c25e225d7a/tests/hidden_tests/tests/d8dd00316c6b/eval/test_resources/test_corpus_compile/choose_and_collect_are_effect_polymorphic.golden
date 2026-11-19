@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def dup(xs):
+    return _pf_collect(lambda x: [x, x], xs)
+--- stderr ---

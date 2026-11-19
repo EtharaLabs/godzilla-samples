@@ -1,0 +1,99 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_reduce(f, xs):
+    return Some(functools.reduce(f, xs)) if xs else _None_
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd2(n - 1)
+def isOdd2(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [0, 28, 16, 35, 39]))
+data = [0, 8, 1, -2, 24, -5, 14, 25, 0, -4, 35]
+def addK(k, x):
+    return x + k
+result = _pf_reduce(lambda a, b: a + b, _pf_filter(lambda x: x > -4, _pf_take(3, _pf_map(functools.partial(addK, 2), data))))
+print(result)
+print(len(data))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 4], lambda k: Many_yield_(a * b + k))
+combos = Many_combine(Many_for_([(2, 5), (3, 4)], _pf_fn0), Many_delay(lambda _: Many_yield_(3)))
+print(combos)
+nums2 = [16, -5, 15, 4, -8]
+factor = 3
+tweak2 = lambda _pf_x: (lambda z: z - 6)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, nums2))
+makers2 = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(5), makers2))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+def Text_square(x):
+    return x * x
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+nums = [27, -10, 22, -12]
+print(_pf_map(Text_square, nums))
+print(_pf_filter(functools.partial(Text_between, 5, 11), nums))
+print(Text_mean(nums))
+--- stderr ---

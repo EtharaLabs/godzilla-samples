@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+00000002ok00000026count : int -> int -> int
+00000150def count(k, acc):
+    while True:
+        if k == 0:
+            return acc
+        else:
+            k, acc = (k - 1, acc + k)
+            continue
+00000002ok00000026count : int -> int -> int
+0000000000000002ok00000026count : int -> int -> int
+00000000--- stderr ---

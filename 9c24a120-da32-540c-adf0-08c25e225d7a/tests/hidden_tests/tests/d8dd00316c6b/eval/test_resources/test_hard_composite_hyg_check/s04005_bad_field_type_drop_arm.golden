@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+  --> 36:3
+   |
+36 |   match s:
+   |   ^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 51:77
+   |
+51 | let people = [Pilot { name = "kit", age = 9 }, Pilot { name = "quin", age = "1" }]
+   |                                                                             ^^^
+
+2 errors

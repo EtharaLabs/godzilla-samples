@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def safe(ok, v):
+    def _pf_fn0():
+        _pf_t0 = Ok(v) if ok else Error(9)
+        if isinstance(_pf_t0, Ok):
+            x = _pf_t0._0
+            return Ok(x + 1)
+        else:
+            return _pf_t0
+    return _pf_fn0()
+def unwrap(r):
+    if isinstance(r, Ok):
+        n = r._0
+        return n
+    else:
+        e = r._0
+        return e
+r1 = unwrap(safe(True, 10))
+r2 = unwrap(safe(False, 10))
+--- stderr ---

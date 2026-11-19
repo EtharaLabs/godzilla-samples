@@ -1,0 +1,144 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Member:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: object
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def inc(x):
+    return x + 1
+def step2(x):
+    return x * 2
+def both(x):
+    return (lambda _pf_x: (lambda _pf_x: step2(inc(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(both, [0, 4, 1]))
+def wrap(xs):
+    def twice(x):
+        return x * 2
+    def go(twice):
+        return twice + 1
+    return _pf_map(lambda x: go(twice(x)), xs)
+print(wrap([8, 9, 3]))
+def merge(o):
+    def pair(a, b):
+        return a + b
+    if isinstance(o, Some):
+        _pair = o._0
+        _pf_t0 = _pair
+    else:
+        _pf_t0 = 0
+    r = _pf_t0
+    return pair(r, 5)
+print((merge(Some(9)), merge(_None_)))
+def adjust(x, flag):
+    y = x * 2
+    if flag:
+        _y = x + 853
+        _pf_t1 = _y - 1
+    else:
+        _pf_t1 = y
+    z = _pf_t1
+    return (y, z)
+print((adjust(9, True), adjust(8, False)))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t2 = p
+            return Active(Member(_pf_t2.name, p.age + 1))
+        case Idle(t) if t.size > 2:
+            _pf_t3 = t
+            return Idle(Team(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Idle(Team("hub", 5)), _Gone, _Gone, Active(Member("eli", 34))])
+print(roster)
+members = [Member("max", 9), Member("ned", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+log = ["ada", "dee", "ada", "fay", "fay", "bo", "bo", "cy"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in log:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t4 = n + 1
+            m[w] = _pf_t4
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+extra = dict([("zed", 5), ("ada", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+--- stderr ---

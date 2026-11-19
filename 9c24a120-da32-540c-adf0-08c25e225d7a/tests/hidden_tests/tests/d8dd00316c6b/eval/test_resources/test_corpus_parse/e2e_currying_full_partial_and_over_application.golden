@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+let add a b = (a + b)
+let inc = (add 1)
+let twice f x = (f (f x))
+let r1 = ((add 1) 2)
+let r2 = (inc 41)
+let r3 = ((twice inc) 5)
+--- stderr ---

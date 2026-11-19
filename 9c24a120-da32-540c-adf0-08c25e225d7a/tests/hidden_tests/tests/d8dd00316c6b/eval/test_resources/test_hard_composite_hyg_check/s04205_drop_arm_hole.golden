@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+  --> 48:3
+   |
+48 |   match s:
+   |   ^^^^^^^^
+
+note: hole `?` has type `int` — try: hi, hits, lo, total, x — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 14 more
+  --> 21:18
+   |
+21 |     lo <- min lo ?
+   |                  ^
+
+1 error
+1 unfilled hole

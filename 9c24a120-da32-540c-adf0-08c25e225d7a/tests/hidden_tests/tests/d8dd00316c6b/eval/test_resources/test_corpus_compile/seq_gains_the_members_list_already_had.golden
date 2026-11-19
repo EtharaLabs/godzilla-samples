@@ -1,0 +1,53 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_seq_distinct_by(f, xs):
+    seen = set()
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            yield x
+def _pf_seq_get(i, xs):
+    return next(map(Some, itertools.islice(xs, max(i, 0), None)), _None_)
+def _pf_seq_last(xs):
+    out = _None_
+    for x in xs:
+        out = Some(x)
+    return out
+def _pf_seq_max(xs):
+    items = list(xs)
+    return Some(max(items)) if items else _None_
+def _pf_seq_min(xs):
+    items = list(xs)
+    return Some(min(items)) if items else _None_
+def _pf_seq_reduce(f, xs):
+    items = list(xs)
+    return Some(functools.reduce(f, items)) if items else _None_
+def _pf_seq_replicate(n, x):
+    return itertools.repeat(x, max(n, 0))
+def _pf_seq_sum_by(f, xs):
+    return sum(map(f, xs))
+s = iter([1, 2, 3])
+e = list(iter([]))
+d = list(_pf_seq_distinct_by(lambda x: x % 2, s))
+r = list(_pf_seq_replicate(2, "a"))
+g = _pf_seq_get(1, s)
+l = _pf_seq_last(s)
+t = _pf_seq_sum_by(lambda x: x * 2, s)
+m = _pf_seq_max(s)
+n = _pf_seq_min(s)
+f = _pf_seq_reduce(lambda a, b: a + b, s)
+--- stderr ---

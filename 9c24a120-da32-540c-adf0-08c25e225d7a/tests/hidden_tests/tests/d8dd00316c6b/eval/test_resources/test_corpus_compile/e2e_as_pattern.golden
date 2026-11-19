@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def _pf_fn0(n):
+    match n:
+        case 0:
+            return 0
+        case x as v:
+            return v
+describe = _pf_fn0
+def _pf_fn1(p):
+    match p:
+        case (a, b) as w:
+            return w
+both = _pf_fn1
+a = describe(7)
+b = both((3, 4))
+--- stderr ---

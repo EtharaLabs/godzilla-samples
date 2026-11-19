@@ -1,0 +1,171 @@
+exit: 0
+--- stdout ---
+00000002ok00000367events : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+hist : Map string int
+extra : Map string int
+sa : Set int
+sb : Set int
+add : int -> Tree -> Tree
+tree : Tree
+containsOf : int -> Tree -> bool
+sumT : Tree -> int
+toListOf : Tree -> List int
+depthT : Tree -> int
+margin : int -> int<'a> -> int<'a>
+announce : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+00004401from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+events = ["dee", "bo", "bo", "eli", "cy", "cy", "dee", "eli", "eli", "fay"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t0 = n + 1
+            m[w] = _pf_t0
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(hist)))
+print((_pf_map_try_find("fay", hist), "fay" in hist))
+extra = dict([("zed", 5), ("dee", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, hist))))
+sa = set([3, 11, 12, 13, 14, 19])
+sb = set([9, 11, 12, 13, 14, 17])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 6 in sb, _pf_set_is_subset(set([3]), sa)))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [8, 2, 21, 36, 44, 19, 38])
+def containsOf(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsOf(k, tree), [8, 39, 7]))
+def sumT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumT(l) + v + sumT(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumT(tree))
+def toListOf(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListOf(tree))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+def margin(price, qty):
+    return price * qty - 9 * qty
+def announce(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn1, [("cog", 42, 2), ("hub", 17, 6)]))
+print(overall)
+00000002ok00000034margin : int -> int<'a> -> int<'a>0000000000000002ok00000020events : List string00000000--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let go n =
+    let go k = (k + 1)
+    (if (n == 0) then 0 else (go (n - 1)))
+let count n acc = (if (n == 0) then acc else ((count (n - 1)) (acc + n)))
+(print f"{(go 5)} {((count 4) 0)}")
+--- stderr ---

@@ -1,0 +1,117 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Member:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Club:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: object
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("1010100") + int("70", base=8))
+print(_pf_map(math.isqrt, [214, 109, 199, 325]))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x0", "2"]))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t2 = p
+            return Active(Member(_pf_t2.name, p.age + 1))
+        case Idle(t) if t.size > 6:
+            _pf_t3 = t
+            return Idle(Club(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+slots = _pf_map(promote, [Active(Member("bo", 34)), Idle(Club("cog", 1)), Active(Member("ray", 69))])
+print(slots)
+members = [Member("max", 1), Member("lu", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 4:
+        return _Low()
+    elif scaled < 37:
+        return _Mid()
+    else:
+        return _High()
+def grade(n):
+    _pf_t4 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t4, _Low):
+        return "low"
+    if isinstance(_pf_t4, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t4, _Mid):
+        return "mid"
+    if isinstance(_pf_t4, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(grade, [12, 30, 24, 25, 30]))
+--- stderr ---

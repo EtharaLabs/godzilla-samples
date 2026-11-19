@@ -1,0 +1,102 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def build(start: int) -> tuple[list[int], list[int], list[int], int]:
+    acc = start
+    g0 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 8
+    g1 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 2
+    g2 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 9
+    return (g0([1, 2]), g1([1, 2]), g2([1, 2]), acc)
+print(build(4))
+def _pf_fn0():
+    for (name, k) in [("a", 5), ("b", 1)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn0()
+print(_pf_map(lambda h: h(4), list(callbacks2)))
+acc = []
+for k in [3, 8, 5]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def shifted(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 2
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(3, [6, 9, 1]))
+print(_pf_str_rev(str.upper("max")))
+print(_pf_map(math.isqrt, [52, 246, 315, 106]))
+def safe(s: str) -> str:
+    try:
+        _pf_t1 = Ok(int(s))
+    except Exception as _pf_t2:
+        _pf_t1 = Error(_Exception(type(_pf_t2).__name__, str(_pf_t2)))
+    if isinstance(_pf_t1, Ok):
+        n = _pf_t1._0
+        return f"ok {n}"
+    else:
+        e = _pf_t1._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x7", "35"]))
+def lcm(a: int, b: int) -> int:
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [6, 7, 4, 3]))
+def bump2(n: int) -> int:
+    return n + 44
+def useHelper(x: int) -> int:
+    return bump2(x)
+def _pf_fn1():
+    bump2 = 2
+    tmp = useHelper(bump2)
+    return tmp * 2
+first: int = _pf_fn1()
+def _pf_fn2():
+    _pf_t3 = [8]
+    if _pf_t3:
+        bump2 = _pf_t3[0]
+        return bump2 + useHelper(1)
+    else:
+        return 0
+second: int = _pf_fn2()
+def _pf_fn3():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+gamma: int = _pf_fn3()
+print((first, second, gamma, useHelper(0)))
+--- stderr ---

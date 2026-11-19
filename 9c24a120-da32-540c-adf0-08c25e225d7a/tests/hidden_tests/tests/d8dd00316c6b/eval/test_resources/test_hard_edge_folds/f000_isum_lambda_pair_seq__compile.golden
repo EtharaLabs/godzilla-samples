@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+init_a = 100
+pairs = [(5, 50), (6, 60), (5, 70)]
+def compute(u):
+    def _pf_fn0(a, _pf_arg1):
+        k, v = _pf_arg1
+        return a + k * 2
+    return _pf_fold(_pf_fn0, init_a, iter(pairs))
+print(compute(None))
+--- stderr ---

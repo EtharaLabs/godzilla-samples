@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def step(m: dict[int, int], x: int) -> dict[int, int]:
+    return _pf_map_add(x * 10, x, _pf_map_add(x, x, m))
+m = dict()
+for x in [1, 2]:
+    _pf_t0 = x * 10
+    m[x] = x
+    m[_pf_t0] = x
+out: list[tuple[int, int]] = _pf_map_to_list(m)
+--- stderr ---

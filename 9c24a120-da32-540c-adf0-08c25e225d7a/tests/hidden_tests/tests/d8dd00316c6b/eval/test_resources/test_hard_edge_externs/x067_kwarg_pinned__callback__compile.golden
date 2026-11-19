@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_map(f, xs):
+    return list(map(f, xs))
+print(_pf_map(functools.partial(int, base=16), ["ff", "10"]))
+--- stderr ---

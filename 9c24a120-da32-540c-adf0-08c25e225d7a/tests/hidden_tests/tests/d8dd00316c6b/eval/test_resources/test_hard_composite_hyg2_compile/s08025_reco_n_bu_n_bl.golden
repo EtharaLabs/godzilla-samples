@@ -1,0 +1,87 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+parcels = [Invoice(100, "ivy", 58, False), Invoice(101, "hal", 296, False), Invoice(102, "ivy", 221, True), Invoice(103, "ivy", 113, True), Invoice(104, "hal", 187, False), Invoice(105, "ivy", 90, False)]
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, parcels))
+print(byOwner)
+print(_pf_max_by(lambda o: o.amount, parcels))
+def classify(o):
+    match o:
+        case Invoice(urgent=True, amount=amount) if amount > 104:
+            return "rush-big"
+        case Invoice(urgent=True):
+            return "rush"
+        case Invoice(amount=amount):
+            if amount > 104:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(classify, parcels))
+print(_pf_count_by(classify, parcels))
+def sum_(a, b):
+    return a - b
+print((sum_(7, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+len_ = 5
+print((len([1, 2, 3]) + len_, len("abc")))
+def nudge(n):
+    return n + 95
+def callHelper(x):
+    return nudge(x)
+def _pf_fn1():
+    nudge = 7
+    tmp = callHelper(nudge)
+    return tmp * 2
+first = _pf_fn1()
+def _pf_fn2():
+    _pf_t0 = [8]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + callHelper(1)
+    else:
+        return 0
+beta = _pf_fn2()
+def _pf_fn3():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+gamma = _pf_fn3()
+print((first, beta, gamma, callHelper(0)))
+--- stderr ---

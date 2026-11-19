@@ -1,0 +1,102 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: str
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: str
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Emit({self._0!r}, {self._1!r})"
+str_ = "oz"
+print((str(59), str_, _pf_str_concat(str_, str(1))))
+reversed_ = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+def set_(n):
+    return n * 3
+print((set_(3), len(set([4, 5, 4, 2]))))
+def render(t):
+    match t:
+        case Mark(s0):
+            return f"mark({s0})"
+        case Turn(3):
+            return "turn-3"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Jump(s0):
+            return f"jump({s0})"
+        case Push(s0):
+            return f"push({s0})"
+        case Emit(n0, s1):
+            return f"emit({n0},{s1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Emit(x0, _):
+            return x0
+        case Jump(_):
+            return 8
+        case Push(_):
+            return 3
+        case _:
+            return 2
+queue = [Turn(-2), Jump("pam"), Turn(6), Push("oz")]
+print(_pf_str_join(" ", _pf_map(render, queue)))
+total = _pf_sum_by(weight, queue)
+print(f"total={total}")
+print(len(_pf_filter(lambda t: weight(t) > 5, queue)))
+def offsets(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 4
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(7, [2, 8, 7]))
+acc = []
+for k in [5, 4, 8]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def _pf_fn0():
+    for (name, k) in [("a", 1), ("b", 6)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn0()
+print(_pf_map(lambda h: h(3), list(callbacks2)))
+--- stderr ---

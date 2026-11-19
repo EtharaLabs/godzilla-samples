@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+def f(y, p, q):
+    match p:
+        case Point(x=0, y=_y):
+            _pf_t0 = _y
+        case Point(x=x):
+            _pf_t0 = x + y
+    a = _pf_t0
+    match q:
+        case (0, _y2) | (_y2, 0):
+            _pf_t1 = _y2
+        case (_, _):
+            _pf_t1 = y
+    b = _pf_t1
+    return a + b
+r = f(1000, Point(0, 2), (0, 3))
+s = f(1000, Point(4, 2), (7, 8))
+--- stderr ---

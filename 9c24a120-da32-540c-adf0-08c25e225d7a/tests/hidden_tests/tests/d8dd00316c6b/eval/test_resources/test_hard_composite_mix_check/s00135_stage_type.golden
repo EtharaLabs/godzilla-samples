@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected string, found int
+  --> 13:45
+   |
+13 | let digest = (List.len) (List.map (addK 9) (List.map String.upper ((List.chunkBySize 5 >> List.map List.sum) (List.sort (List.collect (fun x -> [x, x + 1]) (List.filter (fun x -> x > 8) ((List.pairwise >> List.map (fun (a, b) -> b - a)) (samples))))))))
+   |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

@@ -1,0 +1,88 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+parcels: list[Parcel] = [Parcel(100, "sue", 286, True), Parcel(101, "lu", 183, False), Parcel(102, "sue", 44, True), Parcel(103, "sue", 104, True), Parcel(104, "sue", 57, True)]
+rushSum: int = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(rushSum)
+def tag(_pf_arg0: Parcel) -> str:
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(tag, parcels)))
+def surcharge(o: Parcel) -> Parcel:
+    if o.urgent:
+        _pf_t0 = o
+        return Parcel(_pf_t0.id, _pf_t0.owner, o.amount + 3, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, parcels)))
+def priority(o: Parcel) -> str:
+    if isinstance(o, Parcel) and o.urgent is True:
+        amount = o.amount
+        if amount > 181:
+            return "rush-big"
+    if isinstance(o, Parcel) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 181:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(priority, parcels))
+print(_pf_count_by(priority, parcels))
+acc = []
+for k in [5, 9, 6]:
+    _pf_t1 = lambda y: y * k
+    acc.append(_pf_t1)
+steps = acc
+print(_pf_map(lambda h: h(1), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def offsets(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 8
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(2, [8, 3, 8]))
+def set_(n: int) -> int:
+    return n * 3
+print((set_(3), len(set([1, 3, 0, 5]))))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(5, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+def build(start: int) -> tuple[int, int, list[int], int]:
+    acc = start
+    g0 = lambda y: acc + y
+    acc = acc * 5
+    def g1(y: int) -> int:
+        return acc * y
+    acc = acc * 2
+    g2 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 6
+    return (g0(3), g1(2), g2([1, 2]), acc)
+print(build(2))
+--- stderr ---

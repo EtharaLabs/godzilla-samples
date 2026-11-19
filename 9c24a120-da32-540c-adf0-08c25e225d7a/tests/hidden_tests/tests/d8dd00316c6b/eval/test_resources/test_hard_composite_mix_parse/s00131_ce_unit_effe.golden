@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+let parseEntry line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let entries = ["ivy = 8", "fay=x", "ned=76", "pam = 2"]
+let parsed = ((List.map parseEntry) entries)
+((List.iter print) parsed)
+let goodOnes = (parsed |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine parsed) |> (Result.mapError String.upper)))
+measure m
+measure s
+measure kg
+let segments = [440.8<m>, 325.1<m>, 280.0<m>]
+let durations = [31.3<s>, 63.2<s>, 35.0<s>]
+let dist = (((List.fold (fun acc d -> (acc + d))) 0.0<m>) segments)
+let elapsed = (((List.fold (+)) 0.0<s>) durations)
+let speed = (dist / elapsed)
+(print ((Format.fixed 3) speed))
+let edge = (sqrt 2.25<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+let km = (dist / 1000.0)
+(print ((Format.fixed 1) km))
+let best = (((List.zip segments) durations) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let pure discount price qty = ((price * qty) - (4 * qty))
+let emit label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let overall = (([("wick", 49, 4), ("gear", 45, 6), ("pin", 33, 2)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (discount k))
+(print ((scaled 19) [1, 2, 3]))
+--- stderr ---

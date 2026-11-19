@@ -1,0 +1,31 @@
+from dataclasses import dataclass
+from functools import total_ordering
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaA:
+    _0: int
+    def __repr__(self):
+        return f"KaA({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbA:
+    def __repr__(self):
+        return "KbA"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbA = KbA()
+print("loading Alpha")
+def pickA(n):
+    if n > 2:
+        return KaA(n)
+    else:
+        return _KbA
+base = 4
+def step(x):
+    return x + 4

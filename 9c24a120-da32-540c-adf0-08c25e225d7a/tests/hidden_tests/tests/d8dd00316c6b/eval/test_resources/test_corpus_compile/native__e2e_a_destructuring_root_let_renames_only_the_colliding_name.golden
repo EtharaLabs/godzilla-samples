@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def f(a: int) -> int:
+    def g(o: int) -> int:
+        before = a
+        _a, b = (10, 20)
+        return before + _a + b + o
+    return g(1)
+r: int = f(100)
+--- stderr ---

@@ -1,0 +1,189 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from functools import total_ordering
+import functools
+import asyncio
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0, self._1)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (3,)
+_Emit = Emit()
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+def explain(t):
+    match t:
+        case Turn(n0) if 0 <= n0 < 11:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Load(s0):
+            return f"load({s0})"
+        case Drop(s0, s1):
+            return f"drop({s0},{s1})"
+        case Emit():
+            return f"emit"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Turn(x0):
+            return x0 * 2
+        case Drop(_, _):
+            return 7
+        case Emit():
+            return 2
+        case _:
+            return 3
+stream = [Drop("oz", "bo"), Drop("eli", "ada"), Load("ivy"), Load("fay"), Drop("max", "oz")]
+print(_pf_str_join("; ", _pf_map(explain, stream)))
+tally = _pf_sum_by(cost, stream)
+print(f"tally={tally}")
+print(_pf_sort(stream))
+def runAll(script):
+    def fold1(m, op):
+        match op:
+            case Put(k, v):
+                return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+            case Push(n):
+                return _pf_map_add("pushed", n, m)
+            case Skip():
+                return m
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t0 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t0
+            case Push(n):
+                m["pushed"] = n
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+ops = [Put("nut", 8), Push(6), Put("cog", 2), Push(7)]
+outcome = runAll(ops)
+print(_pf_map_to_list(outcome))
+sumSq = _pf_fold(lambda fold1, x: fold1 + x * x, 0, [6, 8, 8, 9])
+print(sumSq)
+def inspect(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    return f"seen={seen} best={best}"
+print(inspect([31, 15, 18, 12, 27, 17]))
+events = []
+def push2(msg):
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts = _pf_map(push2, ["start", "gus", "stop"])
+print((events, counts))
+def done(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def spin(n, acc):
+    async def _pf_fn1(n, acc):
+        while True:
+            if n == 0:
+                return await done(acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return _pf_Async(_pf_fn1, n, acc)
+print(asyncio.run(_pf_run(spin(535, 0))))
+--- stderr ---

@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+00000002ok00000038Seq.flatten : (Seq (Seq 'a)) -> Seq 'a0000000000000002ok0000000000000110import itertools
+def _pf_seq_flatten(xs):
+    return itertools.chain.from_iterable(xs)
+print(_pf_seq_flatten)
+--- stderr ---

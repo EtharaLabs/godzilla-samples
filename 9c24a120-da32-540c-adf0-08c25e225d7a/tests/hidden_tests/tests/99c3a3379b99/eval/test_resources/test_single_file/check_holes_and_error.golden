@@ -1,0 +1,20 @@
+error: expected int, found bool
+ --> 2:15
+  |
+2 | let bad = 1 + true
+  |               ^^^^
+
+note: hole `?x` has type `int` — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 13 more
+ --> 1:9
+  |
+1 | let h = ?x + 1
+  |         ^^
+
+note: hole `?` has type `int` — try: bad, h — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 13 more
+ --> 3:9
+  |
+3 | let g = ? + 2
+  |         ^
+
+1 error
+2 unfilled holes

@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+m = dict([(1, "a")])
+lengths = _pf_map_map(lambda k, v: len(v), m)
+n = _pf_map_find_or(1, 0, lengths)
+--- stderr ---

@@ -1,0 +1,48 @@
+exit: 0
+--- stdout ---
+opaque type UserId = string
+opaque type Label = string
+let unwrap x =
+    match x:
+        case (UserId s): s
+let mint prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (UserId f"{prefix}-{i}"))))
+let keys = ((mint "sku") 3)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (UserId "u-1"))))
+let log = ["fay", "bo", "eli", "cy", "cy", "cy", "fay", "cy", "dee", "eli"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let counts = (((List.fold bump) Map.empty) log)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let sa = (Set.ofList [3, 4, 6, 7, 11, 16])
+let sb = (Set.ofList [2, 3, 5, 6, 16, 17])
+(print ((((Set.intersect sa) sb) |> Set.toList) |> List.sort))
+(print ((Set.len sa), ((Set.contains 12) sb), ((Set.isSubset (Set.ofList [3])) sa)))
+(print (((counts |> (Map.map (fun k v -> (v * 10)))) |> Map.values) |> List.sort))
+let extra = (Map.ofList [("zed", 5), ("fay", 0)])
+(print ((((Map.union extra) counts) |> Map.toList) |> List.sort))
+(print (((counts |> Map.keys) |> List.sort) |> (String.join ",")))
+type Instr = Jump int | Turn string | Store string string
+let render t =
+    match t:
+        case (Jump n0) if (0 <= n0 < 11): f"jump!({n0})"
+        case (Jump n0): f"jump({n0})"
+        case (Turn s0): f"turn({s0})"
+        case (Store s0 s1): f"store({s0},{s1})"
+let rank t =
+    match t:
+        case (Turn _): 1
+        case _: 2
+let prog = [(Jump 6), (Jump 6), ((Store "bo") "ray"), ((Store "max") "oz"), ((Store "sue") "sue")]
+((prog |> (List.map render)) |> print)
+let total = (prog |> (List.sumBy rank))
+(print f"total={total}")
+(print ((List.head prog), (List.last prog)))
+extern parseHex: string -> int = int(base=16)
+(print ((["ff", "1a"] |> (List.map parseHex)) |> List.sum))
+extern pure comb: int -> int -> int = math.comb
+let row n = (((List.range 0) (n + 1)) |> (List.map (comb n)))
+(print (row 6))
+--- stderr ---

@@ -1,0 +1,30 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+m = dict(_pf_zip(["a", "b"], [1, 2]))
+a = _pf_option_with_default(0, _pf_map_try_find("a", m))
+n = len(m)
+pairs = _pf_map_to_list(m)
+--- stderr ---

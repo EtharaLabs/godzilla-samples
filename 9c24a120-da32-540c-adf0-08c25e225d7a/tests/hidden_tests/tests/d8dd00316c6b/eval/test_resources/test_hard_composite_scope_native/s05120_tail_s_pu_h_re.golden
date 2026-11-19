@@ -1,0 +1,150 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Panel"
+    bottom: "Panel"
+    slot: int
+@dataclass(frozen=True, slots=True)
+class Member:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Member"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: "Crew"
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Slot = Active | Parked | Gone
+def gcdLoop(a: int, b: int) -> int:
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(204, 210))
+def collatz(n: int, acc: int) -> int:
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [58, 28, 38]))
+def countDown(n: int, acc: int) -> int:
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(406, 0))
+boxes: list[Panel] = [Panel(2, 1, "pin"), Panel(8, 4, "nut"), Panel(5, 7, "hub"), Panel(8, 5, "tap"), Panel(2, 5, "pin"), Panel(4, 4, "sq")]
+def stretch(b: Panel) -> Panel:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Panel(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, boxes)))
+def heavier(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Panel):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Rack(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def describe(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, boxes)))
+def relabel(prefix: str, b: Panel) -> Panel:
+    label = b.label
+    _pf_t3 = b
+    return Panel(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "x-"), boxes)))
+def promote(s: Slot) -> Slot:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t4 = p
+        return Active(Member(_pf_t4.name, p.age + 1))
+    else:
+        if isinstance(s, Parked):
+            t = s._0
+            if t.size > 4:
+                _pf_t5 = t
+                return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+slots: list[Slot] = _pf_map(promote, [Parked(Crew("gear", 3)), Active(Member("pam", 32)), Parked(Crew("cap", 5)), Active(Member("cy", 47))])
+print(slots)
+people: list[Member] = [Member("ray", 6), Member("max", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+--- stderr ---

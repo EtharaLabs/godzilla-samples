@@ -1,0 +1,155 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: str
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    def __repr__(self):
+        return "Halt"
+_Halt = Halt()
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Jump({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True)
+class Line:
+    name: str
+    qty: int
+    price: float
+def gcdLoop(a, b):
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(90, 495))
+def ipow(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(ipow(2, 20, 1))
+def show(t):
+    match t:
+        case Drop(s0):
+            return f"drop({s0})"
+        case Turn(n0) if n0 > 3:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Halt():
+            return f"halt"
+        case Jump(n0, n1):
+            return f"jump({n0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Jump(x0, x1):
+            return x0 + x1 * 3
+        case Drop(_):
+            return 1
+        case _:
+            return 0
+stream = [Drop("pam"), Drop("max"), _Halt, Turn(1), Drop("sue")]
+_pf_iter(lambda t: print(show(t)), stream)
+total = _pf_sum_by(cost, stream)
+print(f"total={total}")
+print(_pf_max_by(cost, stream))
+def parseEntry(line):
+    def _pf_fn0():
+        _pf_t1 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t1, Some):
+            v = _pf_t1._0
+            _pf_t0 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some(n * 2)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+inputs = ["sue = 9", "bo=x", "ivy=98", "ned"]
+parsed = _pf_map(parseEntry, inputs)
+_pf_iter(print, parsed)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), parsed)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), parsed))))
+rows = [Line("hub", 23, 26.1), Line("tap", 17, 7.57), Line("pin", 18, 5.57), Line("rod", 11, 27.54), Line("nut", 30, 31.88)]
+def renderRow(x):
+    return "{}|{}|{}".format(_pf_fmt_pad_right(9, "-", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(2, x.price))
+_pf_iter(print, _pf_map(renderRow, rows))
+print("{} rows, {}={}".format(len(rows), _pf_str_upper("total"), _pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, rows))))
+--- stderr ---

@@ -1,0 +1,42 @@
+exit: 0
+--- stdout ---
+measure m
+measure s
+measure kg
+let segments = [416.5<m>, 220.7<m>, 421.2<m>, 480.2<m>]
+let splits = [30.4<s>, 64.7<s>, 52.9<s>, 32.3<s>]
+let total = (segments |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let elapsed = (((List.fold (+)) 0.0<s>) splits)
+let pace = (total / elapsed)
+(print ((Format.fixed 2) pace))
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf total) elapsed) * 1000.0)))
+let speeds = (((List.map2 (fun d t -> (d / t))) segments) splits)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+opaque type AccountNo = string
+opaque type Label = string
+let rawOf x =
+    match x:
+        case (AccountNo s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (AccountNo f"{prefix}-{i}"))))
+let keys = ((makeIds "acc") 2)
+(print ((keys |> (List.map rawOf)) |> (String.join " ")))
+(print ((List.head keys) == (Some (AccountNo "acc-1"))))
+let sumDigits n =
+    match n:
+        case 0: 0
+        case _: ((n % 10) + (sumDigits (n // 10)))
+(print (sumDigits 523))
+let accumulate n acc = (if (n == 0) then acc else ((accumulate (n - 1)) (acc + (n * n))))
+(print ((accumulate 239) 0))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 13) then (Some (n - 13)) else None)
+let (|Zero|_|) n = (n == 0)
+let kindOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case Even: "even"
+        case _: "odd"
+(([22, 24, 14, 5, 38] |> (List.map kindOf)) |> (List.iter print))
+--- stderr ---

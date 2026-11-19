@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+00000005error00000074error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^0000000000000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+00000081import functools
+def add(a, b):
+    return a + b
+inc = functools.partial(add, 1)
+00000002ok00000023parity : int -> string
+00000560from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _ap_Even_Odd(k):
+    if k % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def parity(k):
+    _pf_t0 = _ap_Even_Odd(k)
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    elif isinstance(_pf_t0, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+00000002ok00000014counter : int
+00000012counter = 0
+00000005error00000067error: unbound name `nope`
+  --> 10:1
+   |
+10 | nope + 1
+   | ^^^^
+0000000000000005error00000097(could not determine a type — is `type Shape = Circle float | Rect float float` an expression?)00000000--- stderr ---

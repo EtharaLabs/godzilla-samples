@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def describe(c) -> str:
+    if c == 0:
+        return "free"
+    else:
+        n = c
+        return "costs"
+a: str = describe(0)
+b: str = describe(42)
+--- stderr ---

@@ -1,0 +1,83 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+samples: list[int] = [31, 30, 3, 16, 29, 36, -7]
+def addK(k: int, x: int) -> int:
+    return x + k
+def accept(n: int) -> bool:
+    return n > 2 and n % 3 != 0
+def _pf_fn1(_pf_x):
+    def _pf_fn2(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn2, _pf_indexed(_pf_x))
+result: Some | None_ = _pf_max(_pf_map(lambda b: 3 * b, _pf_sort_by(lambda x: x % 5, _pf_fn1(samples))))
+print(result)
+print(len(samples))
+def unwrap(x) -> str:
+    s = x
+    return s
+def mint(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = mint("acc", 2)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("u-1"))
+def sumDigits(n: int) -> int:
+    if n == 0:
+        return 0
+    else:
+        return n % 10 + sumDigits(n // 10)
+print(sumDigits(98173))
+def accumulate(n: int, acc: int) -> int:
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(accumulate(483, 0))
+def Geo_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Geo_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Geo_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Geo_square(x):
+    return x * x
+obs: list[int] = [0, -4, -10, 11, -15]
+print(_pf_map(functools.partial(Geo_clamp, 0, 7), obs))
+print(Geo_norm1(obs))
+print(Geo_scaleAll(5, obs))
+print(_pf_map(Geo_square, obs))
+print(_pf_map(math.isqrt, [43, 350, 159, 397]))
+print(_pf_str_rev(str.upper("lu")))
+--- stderr ---

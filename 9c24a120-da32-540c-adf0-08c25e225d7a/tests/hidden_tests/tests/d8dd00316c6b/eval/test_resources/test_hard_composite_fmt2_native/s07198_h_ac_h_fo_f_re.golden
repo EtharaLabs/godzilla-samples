@@ -1,0 +1,140 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Noop:
+    def __repr__(self):
+        return "Noop"
+_Noop: Noop = Noop()
+Change = Put | Append | Noop
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+def _ap_KeyVal(s):
+    _pf_t0 = _pf_str_split("=", s)
+    if len(_pf_t0) == 2:
+        k = _pf_t0[0]
+        v = _pf_t0[1]
+        _pf_t1 = _pf_str_to_int(v)
+        if isinstance(_pf_t1, Some):
+            n = _pf_t1._0
+            return Some((_pf_str_strip(k), n))
+        else:
+            return _None_
+    else:
+        return _None_
+def describe(s: str) -> str:
+    _pf_t2 = _ap_KeyVal(s)
+    if isinstance(_pf_t2, Some):
+        pair = _pf_t2._0
+        if _pf_snd(pair) > 9:
+            return f"{_pf_fst(pair)} big"
+    if isinstance(_pf_t2, Some):
+        pair = _pf_t2._0
+        return f"{_pf_fst(pair)}={_pf_snd(pair)}"
+    return "?"
+_pf_iter(print, _pf_map(describe, ["dee", "eli=17", "lu", "ivy"]))
+def step(acc: tuple[dict[str, int], list[int]], op: Change) -> tuple[dict[str, int], list[int]]:
+    m = acc[0]
+    xs = acc[1]
+    if isinstance(op, Put):
+        k = op._0
+        v = op._1
+        return (_pf_map_add(k, v, m), xs)
+    elif isinstance(op, Append):
+        n = op._0
+        return (m, _pf_concat(xs, [n]))
+    else:
+        return acc
+def replay(script: list[Change]) -> tuple[dict[str, int], list[int]]:
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Noop():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+changes: list[Change] = [Append(9), Append(-2), _Noop, _Noop]
+outcome: tuple[dict[str, int], list[int]] = replay(changes)
+mm, items = outcome
+print((_pf_map_to_list(mm), items))
+scores: list[Result2] = [Result2("gus", 24, 0.7), Result2("bo", 60, 0.69), Result2("dee", 7, 0.47)]
+def line3(_pf_arg0: Result2) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"{f"<{pts}>"},{{{pts}}},{_pf_str_join("/", [who, str(pts)])},{_pf_str_upper(_pf_str_slice(0, 2, who))}"
+_pf_iter(print, _pf_map(line3, scores))
+print(f"best: {_pf_option_with_default("none", _pf_option_map(lambda s: s.who, _pf_max_by(lambda s: s.pts, scores)))}")
+--- stderr ---

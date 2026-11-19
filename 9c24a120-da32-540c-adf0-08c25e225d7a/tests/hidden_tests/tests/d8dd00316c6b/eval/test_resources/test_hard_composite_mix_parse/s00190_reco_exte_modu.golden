@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+type Invoice = { id: int, owner: string, amount: int, urgent: bool }
+let tickets = [Invoice { id = 100, owner = "cy", amount = 231, urgent = false }, Invoice { id = 101, owner = "ada", amount = 225, urgent = true }, Invoice { id = 102, owner = "hal", amount = 58, urgent = true }, Invoice { id = 103, owner = "hal", amount = 217, urgent = true }]
+let urgentTotal = ((tickets |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print urgentTotal)
+let classify o =
+    match o:
+        case Invoice { urgent = true, amount } if (amount > 149): "rush-big"
+        case Invoice { urgent = true }: "rush"
+        case Invoice { amount }: (if (amount > 149) then "big" else "normal")
+(print ((List.map classify) tickets))
+(print ((List.countBy classify) tickets))
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 71))) tickets)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+(print (((tickets |> (List.sortByDescending (fun o -> o.amount))) |> (List.take 4)) |> (List.map (fun o -> o.id))))
+let byOwner = ((tickets |> (List.groupBy (fun o -> o.owner))) |> (List.map (fun (k, os) -> (k, (List.len os), ((List.sumBy (fun o -> o.amount)) os)))))
+(print byOwner)
+extern pure isqrt: int -> int = math.isqrt
+(print ((List.map isqrt) [297, 96, 20, 91]))
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x9", "13"] |> (List.map safe)) |> (List.iter print))
+extern readBase: string -> int -> int = int(base=...)
+let fromBin s = ((readBase s) 2)
+(print ((fromBin "1001100") + ((readBase "126") 8)))
+module Stats =
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let scaleAll k xs = ((List.map ((*) k)) xs)
+    let square x = (x * x)
+    let between lo hi x = (lo <= x <= hi)
+let obs = [5, 7, 18, 30, 8]
+(print (Stats.mean obs))
+(print ((Stats.scaleAll 5) obs))
+(print ((List.map Stats.square) obs))
+(print ((List.filter ((Stats.between 3) 22)) obs))
+--- stderr ---

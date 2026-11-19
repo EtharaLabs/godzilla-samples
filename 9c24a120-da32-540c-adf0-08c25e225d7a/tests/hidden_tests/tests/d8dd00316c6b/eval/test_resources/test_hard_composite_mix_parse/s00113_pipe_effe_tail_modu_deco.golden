@@ -1,0 +1,37 @@
+exit: 0
+--- stdout ---
+let data = [(- 2), 18, 23, 14, 18, 48, (- 10)]
+let outcome = ((((data |> ((List.chunkBySize 5) >> (List.map List.sum))) |> (List.take 4)) |> (List.filter (fun x -> ((x % 5) == 0)))) |> (List.sumBy (fun x -> (x * x))))
+(print outcome)
+let pure margin price qty = ((price * qty) - (6 * qty))
+let report label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let overall = (([("cap", 29, 6), ("gear", 34, 4)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (margin k))
+(print ((scaled 6) [1, 2, 3]))
+let gcdLoop a b = (if (b == 0) then a else ((gcdLoop b) (a % b)))
+(print ((gcdLoop 346) 421))
+let isEven n = (if (n == 0) then true else (isOdd (n - 1)))
+let isOdd n = (if (n == 0) then false else (isEven (n - 1)))
+(print ((List.filter isEven) [26, 2, 10, 5, 4]))
+module Stats =
+    let square x = (x * x)
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+    let between lo hi x = (lo <= x <= hi)
+let obs = [22, 2, 1, 5, (- 8), 28]
+(print ((List.map Stats.square) obs))
+(print (obs |> (List.map ((Stats.clamp 0) 13))))
+(print (Stats.norm1 obs))
+(print ((List.filter ((Stats.between 5) 20)) obs))
+type Player = { name: string, points: int, active: bool }
+let playerDecoder = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"gus\", \"points\": 14, \"active\": false}, {\"name\": \"ray\", \"points\": 77, \"active\": true}, {\"name\": \"ned\", \"points\": 13, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list playerDecoder)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+--- stderr ---

@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+00000002ok00000053List.chunkBySize : int -> (List 'a) -> List (List 'a)0000000000000002ok0000000000000167def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+print(_pf_chunk)
+--- stderr ---

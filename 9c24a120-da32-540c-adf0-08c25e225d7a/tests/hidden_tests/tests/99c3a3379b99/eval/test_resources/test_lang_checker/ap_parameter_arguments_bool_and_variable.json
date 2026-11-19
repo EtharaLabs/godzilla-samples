@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _ap_When(flag, n):\n    if flag:\n        return Some(n)\n    else:\n        return _None_\ndef _ap_DivBy(d, n):\n    return n % d == 0\ndef f(k, n):\n    _pf_t0 = _ap_When(True, n)\n    _pf_t1 = _ap_DivBy(k, n)\n    if isinstance(_pf_t0, Some):\n        m = _pf_t0._0\n        return m\n    elif _pf_t1:\n        return 1\n    else:\n        return 2\n",
+ "stderr": ""
+}

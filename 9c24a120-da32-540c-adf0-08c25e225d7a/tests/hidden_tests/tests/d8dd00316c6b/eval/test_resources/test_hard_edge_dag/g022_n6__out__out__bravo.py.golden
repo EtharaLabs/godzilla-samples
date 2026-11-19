@@ -1,0 +1,15 @@
+import alpha
+import delta
+import foxtrot
+base = 1 + delta.base + foxtrot.base + alpha.base
+def step(x):
+    return alpha.step(foxtrot.step(delta.step(x))) + 1
+def describe(k):
+    match k:
+        case alpha.KaA(v):
+            return v * 10
+        case alpha.KbA():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(alpha.pickA(base))

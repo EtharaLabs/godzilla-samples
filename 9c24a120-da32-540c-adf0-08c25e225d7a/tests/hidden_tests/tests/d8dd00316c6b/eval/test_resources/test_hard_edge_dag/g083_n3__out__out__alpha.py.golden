@@ -1,0 +1,14 @@
+import bravo
+import delta
+base = 1 + bravo.base + delta.base
+def step(x):
+    return delta.step(bravo.step(x)) + 1
+def describe(k):
+    match k:
+        case bravo.KaB(v):
+            return v * 10
+        case bravo.KbB():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(bravo.pickB(base))

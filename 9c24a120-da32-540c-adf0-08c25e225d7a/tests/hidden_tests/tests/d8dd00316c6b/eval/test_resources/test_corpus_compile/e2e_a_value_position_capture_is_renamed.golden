@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def f(o):
+    def total(a, b):
+        return a + b
+    if isinstance(o, Some):
+        _total = o._0
+        _pf_t0 = _total
+    else:
+        _pf_t0 = 0
+    return 1 + _pf_t0 + total(1, 1)
+r = f(Some(5))
+--- stderr ---

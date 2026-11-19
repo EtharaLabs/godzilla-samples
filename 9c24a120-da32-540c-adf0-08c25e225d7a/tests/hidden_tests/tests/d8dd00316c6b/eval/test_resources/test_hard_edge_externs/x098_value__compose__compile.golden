@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+import math
+def scaled(k):
+    return k * math.pi
+twice = lambda _pf_x: (lambda v: (v, v))(scaled(_pf_x))
+print(twice(2.0))
+--- stderr ---

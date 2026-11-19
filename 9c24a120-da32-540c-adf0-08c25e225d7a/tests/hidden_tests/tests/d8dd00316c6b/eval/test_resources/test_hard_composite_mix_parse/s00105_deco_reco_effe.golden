@@ -1,0 +1,29 @@
+exit: 0
+--- stdout ---
+type Entry = { name: string, points: int, active: bool }
+let dec = ((((Decode.map3 (fun n p a -> Entry { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let jsonText = "[{\"name\": \"oz\", \"points\": 23, \"active\": true}, {\"name\": \"pam\", \"points\": 55, \"active\": true}, {\"name\": \"bo\", \"points\": 42, \"active\": false}, {\"name\": \"sue\", \"points\": 6, \"active\": false}]"
+match ((Decode.decodeString (Decode.list dec)) jsonText):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+type Booking = { id: int, owner: string, amount: int, urgent: bool }
+let orders = [Booking { id = 100, owner = "jo", amount = 71, urgent = true }, Booking { id = 101, owner = "jo", amount = 94, urgent = true }, Booking { id = 102, owner = "jo", amount = 105, urgent = true }, Booking { owner = "tom", amount = 45, urgent = false, id = 103 }, Booking { id = 104, owner = "hal", amount = 266, urgent = false }]
+(print ((List.maxBy (fun o -> o.amount)) orders))
+(print (((orders |> (List.sortByDescending (fun o -> o.amount))) |> (List.take 2)) |> (List.map (fun o -> o.id))))
+let (cnt, amt) = (((List.fold (fun (n, s) o -> ((n + 1), (s + o.amount)))) (0, 0)) orders)
+(print f"{cnt} records, {amt} total")
+let line o =
+    let Booking { id, amount } = o
+    f"#{id}:{(((Format.padLeft 5) " ") (String.fromInt amount))}"
+(print ((orders |> (List.map line)) |> (String.join ", ")))
+let rushSum = ((orders |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print rushSum)
+let pure net price qty = ((price * qty) - (7 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let overall = (([("tap", 13, 2), ("pin", 45, 1), ("wick", 12, 1), ("cog", 32, 3)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print overall)
+--- stderr ---

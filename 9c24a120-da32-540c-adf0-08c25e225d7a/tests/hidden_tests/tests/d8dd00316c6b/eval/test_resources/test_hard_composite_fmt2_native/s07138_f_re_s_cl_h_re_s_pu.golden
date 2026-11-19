@@ -1,0 +1,150 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Mark:
+    who: str
+    pts: int
+    ratio: float
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Team:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: "Person"
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: "Team"
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone: Gone = Gone()
+Seat = Active | Idle | Gone
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+marks: list[Mark] = [Mark("kit", 86, 0.22), Mark("ada", 50, 0.69), Mark("dee", 76, 0.48), Mark("tom", 19, 0.75), Mark("ivy", 36, 0.92)]
+def line3(_pf_arg0: Mark) -> str:
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return f"pts={pts} {_pf_fmt_percent(1, ratio)} {_pf_fmt_pad_right(6, ".", who)} {"pass" if pts >= 66 else "fail"}"
+_pf_iter(print, _pf_map(line3, marks))
+print(f"best: {_pf_option_with_default("none", _pf_option_map(lambda s: s.who, _pf_max_by(lambda s: s.pts, marks)))}")
+journal: list[str] = []
+def traced(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out: list[int] = _pf_map(functools.partial(traced, "inc", lambda x: x + 1), _pf_map(functools.partial(traced, "sq", lambda x: x * x), [9, 9]))
+print((out, journal))
+def census(xs: list[int]) -> tuple[int, int]:
+    evens = 0
+    odds = 0
+    def visit(x: int):
+        def bump(isEven: bool):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(census([19, 9, 2, 18]))
+def promote(s: Seat) -> Seat:
+    if isinstance(s, Active):
+        p = s._0
+        _pf_t0 = p
+        return Active(Person(_pf_t0.name, p.age + 1))
+    else:
+        if isinstance(s, Idle):
+            t = s._0
+            if t.size > 6:
+                _pf_t1 = t
+                return Idle(Team(_pf_str_upper(t.name), t.size - 1))
+        other = s
+        return other
+roster: list[Seat] = _pf_map(promote, [Active(Person("ivy", 18)), _Gone, Active(Person("quin", 64)), Active(Person("fay", 44)), _Gone])
+print(roster)
+members: list[Person] = [Person("max", 3), Person("hal", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+boxes: list[Tile] = [Tile(9, 7, "tap"), Tile(7, 5, "cap"), Tile(3, 5, "rod"), Tile(3, 9, "pin"), Tile(7, 8, "cog"), Tile(4, 4, "sq")]
+def rename(prefix: str, b: Tile) -> Tile:
+    label = b.label
+    _pf_t3 = b
+    return Tile(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "new "), boxes)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, boxes)))
+def surface(_pf_arg0: Tile) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, boxes)))
+--- stderr ---

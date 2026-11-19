@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "def _pf_concat(xs, ys):\n    return xs + ys\ndef _pf_map(f, xs):\n    return list(map(f, xs))\ndef collect(n, acc):\n    if n == 0:\n        return acc\n    else:\n        return collect(n - 1, _pf_concat(acc, [lambda k: n]))\nfns = collect(3, [])\nvalues = _pf_map(lambda f: f(0), fns)\n",
+ "stderr": "note: `collect` calls itself in tail position but keeps its recursive form: a closure in it captures `n`\n"
+}

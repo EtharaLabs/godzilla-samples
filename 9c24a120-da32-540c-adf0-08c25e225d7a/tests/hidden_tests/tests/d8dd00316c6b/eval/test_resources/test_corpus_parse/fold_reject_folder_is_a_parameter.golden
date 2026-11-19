@@ -1,0 +1,5 @@
+exit: 0
+--- stdout ---
+let foldWith f = (((List.fold f) Map.empty) [1, 2, 3])
+let out = (Map.len (foldWith (fun m x -> (((Map.add x) x) m))))
+--- stderr ---

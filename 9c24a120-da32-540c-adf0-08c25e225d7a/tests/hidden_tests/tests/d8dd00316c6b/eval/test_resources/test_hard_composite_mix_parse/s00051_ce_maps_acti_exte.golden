@@ -1,0 +1,37 @@
+exit: 0
+--- stdout ---
+let decodeLine line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let lines = ["pam = 7", "eli = 9", "lu=3=1", "max=9=1", "ivy = 4"]
+let results = ((List.map decodeLine) lines)
+((List.iter print) results)
+let goodOnes = (results |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let sumAll xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((sumAll results) |> (Result.mapError String.upper)))
+let events = ["ada", "fay", "eli", "ada", "bo", "dee", "dee", "bo", "fay"]
+let freq = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) events)
+(print ((freq |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((Map.fold (fun acc k v -> (acc + v))) 0) freq))
+(print (((freq |> (Map.map (fun k v -> (v * 10)))) |> Map.values) |> List.sort))
+let extra = (Map.ofList [("zed", 5), ("ada", 0)])
+(print ((((Map.union extra) freq) |> Map.toList) |> List.sort))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let bucketOf n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([(- 2), 8, 9, 8, 24, 2, (- 5), (- 6)] |> (List.map bucketOf)) |> (List.iter print))
+extern toNum: string -> int = int
+let safe s =
+    match (try (toNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x0", "8"] |> (List.map safe)) |> (List.iter print))
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "100101") + ((parseIn "104") 8)))
+extern pure intRoot: int -> int = math.isqrt
+(print ((List.map intRoot) [132, 222, 50, 167]))
+extern fromHex: string -> int = int(base=16)
+(print ((["ff", "100"] |> (List.map fromHex)) |> List.sum))
+--- stderr ---

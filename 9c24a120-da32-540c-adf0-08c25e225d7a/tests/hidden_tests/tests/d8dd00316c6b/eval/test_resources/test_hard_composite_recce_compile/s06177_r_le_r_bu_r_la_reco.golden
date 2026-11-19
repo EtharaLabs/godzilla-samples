@@ -1,0 +1,127 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+def inWord(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return skipping(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def skipping(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return inWord(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(skipping(list("ivy dee quin cy ned"), 0))
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Maybe_bind(_pf_str_to_int(a), lambda x: Maybe_bind(_pf_str_to_int(b), lambda y: Maybe_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Maybe_return_(shown))(q * 1))))
+print((safeDiv("65", "7"), safeDiv("4", "0"), safeDiv("x", "1")))
+inputs2 = [26, 7, 16, 26, 20, 13]
+gain = 4
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(inputs2))))
+tweak2 = lambda _pf_x: (lambda z: z - 8)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(tweak2, inputs2))
+makers2 = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(6), makers2))
+orders = [Parcel(100, "ivy", 190, True, Site("Oslo", 4)), Parcel(101, "kit", 292, True, Site("Riga", 1)), Parcel(102, "lu", 15, False, Site("Kyiv", 4)), Parcel(103, "ivy", 150, False, Site("Baku", 2)), Parcel(104, "ivy", 118, True, Site("Bern", 3)), Parcel(105, "lu", 178, False, Site("Rome", 4))]
+def surcharge(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Parcel(_pf_t0.id, _pf_t0.owner, o.amount + 7, _pf_t0.urgent, _pf_t0.dest)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, orders)))
+def _pf_fn1(o):
+    if o.dest.zone > 2:
+        _pf_t3 = o
+        return Parcel(_pf_t3.id, _pf_t3.owner, _pf_t3.amount, _pf_t3.urgent, Site("Hub", 1))
+    else:
+        return o
+moved = _pf_map(_pf_fn1, orders)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", moved))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(rushSum)
+def bucket(o):
+    match o:
+        case Parcel(urgent=True, amount=amount) if amount > 76:
+            return "rush-big"
+        case Parcel(urgent=True):
+            return "rush"
+        case Parcel(amount=amount):
+            if amount > 76:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, orders))
+print(_pf_count_by(bucket, orders))
+--- stderr ---

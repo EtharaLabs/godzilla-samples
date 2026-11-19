@@ -1,0 +1,163 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Pop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip2:
+    def __repr__(self):
+        return "Skip2"
+_Skip2 = Skip2()
+def explain(t):
+    match t:
+        case Skip(n0) if 0 <= n0 < 5:
+            return f"skip!({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Pop(n0, s1) if n0 % 2 == 0:
+            return f"pop!({n0},{s1})"
+        case Pop(n0, s1):
+            return f"pop({n0},{s1})"
+        case Drop(n0) if 0 <= n0 < 20:
+            return f"drop!({n0})"
+        case Drop(n0):
+            return f"drop({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Pop(x0, _):
+            return x0
+        case Drop(x0):
+            return x0 * 5
+        case _:
+            return 0
+batch = [Skip(5), Drop(1), Pop(10, "sue"), Drop(8)]
+print(_pf_map(explain, batch))
+tally = _pf_sum_by(weight, batch)
+print(f"tally={tally}")
+print(len(_pf_filter(lambda t: weight(t) > 6, batch)))
+def parseEntry(line):
+    def _pf_fn0():
+        _pf_t1 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t1, Some):
+            v = _pf_t1._0
+            _pf_t0 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some(n * 2)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+entries = ["ned=20", "gus=-3", "max=9=1", "tom=18", "bo = 1"]
+parsed = _pf_map(parseEntry, entries)
+_pf_iter(print, parsed)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), parsed)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), parsed))))
+def fold1(m, op):
+    match op:
+        case Put(k, v):
+            return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+        case Append(n):
+            return _pf_map_add("pushed", n, m)
+        case Skip2():
+            return m
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def runAll(script):
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t2 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t2
+            case Append(n):
+                m["pushed"] = n
+            case Skip2():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+ops = [_Skip2, Put("nut", 5), Append(1), Append(4), Put("nut", 7), _Skip2, Put("nut", 4)]
+final = runAll(ops)
+print(_pf_map_to_list(final))
+acc = _pf_fold(lambda fold1, x: fold1 + x * x, 0, [4, 6, 4, 2])
+print(acc)
+--- stderr ---

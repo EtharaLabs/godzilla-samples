@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+import sys
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def flushed(n):
+    sys.stdout.flush()
+    return n
+print(_pf_map(flushed, [3, 4]))
+--- stderr ---

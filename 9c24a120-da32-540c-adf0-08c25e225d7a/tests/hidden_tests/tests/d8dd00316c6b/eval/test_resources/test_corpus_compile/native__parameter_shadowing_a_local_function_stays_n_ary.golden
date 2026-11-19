@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def f(ys) -> int:
+    def pair(a: int, b: int) -> int:
+        return a + b
+    def g(pair):
+        return pair(10)
+    return g(lambda x: x + 1)
+r: int = f([])
+--- stderr ---

@@ -1,0 +1,202 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import json
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    points: int
+    active: bool
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: "Addr"
+playerDecoder = _pf_dec_map3(lambda n, p, a: Entry(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+jsonText: str = "[{\"name\": \"hal\", \"points\": 17, \"active\": false}, {\"name\": \"fay\", \"points\": 30, \"active\": true}]"
+_pf_t1 = lambda n, p, a: Entry(n, p, a)
+try:
+    _pf_t2 = json.loads(jsonText)
+    if not isinstance(_pf_t2, list):
+        raise ValueError("expected a JSON array")
+    _pf_t3 = []
+    for _pf_t4 in _pf_t2:
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t5 = _pf_t4["name"]
+        if not isinstance(_pf_t5, str):
+            raise ValueError("expected a string, got " + type(_pf_t5).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t6 = _pf_t4["points"]
+        if not (isinstance(_pf_t6, int) and not isinstance(_pf_t6, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t6).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t7 = _pf_t4["active"]
+        if not isinstance(_pf_t7, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t7).__name__)
+        _pf_t3.append(_pf_t1(_pf_t5, _pf_t6, _pf_t7))
+    _pf_t8 = Ok(_pf_t3)
+except Exception as e:
+    _pf_t8 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t8, Ok):
+    ps = _pf_t8._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t0 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t8._0
+    _pf_t0 = print(f"decode failed: {e.errorKind}")
+_pf_t0
+def rawOf(x) -> str:
+    s = x
+    return s
+def makeIds(prefix, n: int):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("sku", 2)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("u-1"))
+tickets: list[Booking] = [Booking(100, "lu", 195, True, Addr("Baku", 1)), Booking(101, "ada", 139, False, Addr("Doha", 2)), Booking(102, "ned", 67, True, Addr("Oslo", 4)), Booking(103, "ned", 174, True, Addr("Baku", 2)), Booking(104, "ned", 24, False, Addr("Rome", 3))]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, sumAmt = _pf_fold(_pf_fn0, (0, 0), tickets)
+print(f"{nrec} records, {sumAmt} total")
+print(_pf_max_by(lambda o: o.amount, tickets))
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by(lambda o: o.amount, tickets))))
+def tag(_pf_arg0: Booking) -> str:
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(tag, tickets)))
+log: list[str] = ["eli", "ada", "dee", "fay", "cy", "bo", "cy"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in log:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t9 = n + 1
+            m[w] = _pf_t9
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+freq: dict[str, int] = m
+def _pf_fn1(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn1, _pf_map_to_list(freq)))
+print((_pf_map_try_find("bo", freq), "bo" in freq))
+extra: dict[str, int] = dict([("zed", 5), ("eli", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, freq))))
+print(_pf_map(math.isqrt, [166, 277, 135, 199]))
+print(_pf_str_rev(str.upper("ada")))
+--- stderr ---

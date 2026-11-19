@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let id x = x
+let ping n = (if (n == 0) then (id 0) else (pong (n - 1)))
+let pong n = (if (n == 0) then (id 1) else (ping (n - 1)))
+let flag = (id true)
+--- stderr ---

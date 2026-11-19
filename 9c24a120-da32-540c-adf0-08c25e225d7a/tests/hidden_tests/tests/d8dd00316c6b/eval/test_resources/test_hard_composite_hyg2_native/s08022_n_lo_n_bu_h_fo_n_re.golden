@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Change = Put | Append | Skip
+def offsets(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 2
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(3, [9, 9, 2]))
+def _pf_fn0():
+    for (name, k) in [("a", 6), ("b", 8)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn0()
+print(_pf_map(lambda h: h(3), list(handlers)))
+chain = _pf_fold(lambda acc, k: _pf_concat(acc, [lambda y: y * k]), [], [8, 6, 2])
+print(_pf_map(lambda h: h(3), chain))
+print(_pf_fold(lambda v, h: h(v), 1, chain))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([9, 8, 9, 6]), _pf_sort([3, 1, 2])))
+def sum_(a: int, b: int) -> int:
+    return a - b
+print((sum_(16, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+def fold1(acc: tuple[dict[str, int], list[int]], op: Change) -> tuple[dict[str, int], list[int]]:
+    m = acc[0]
+    xs = acc[1]
+    if isinstance(op, Put):
+        k = op._0
+        v = op._1
+        return (_pf_map_add(k, v, m), xs)
+    elif isinstance(op, Append):
+        n = op._0
+        return (m, _pf_concat(xs, [n]))
+    else:
+        return acc
+def replay(script: list[Change]) -> tuple[dict[str, int], list[int]]:
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+script: list[Change] = [_Skip, Put("nut", 5), Append(3), Append(0)]
+outcome: tuple[dict[str, int], list[int]] = replay(script)
+mm, items = outcome
+print((_pf_map_to_list(mm), items))
+acc: int = _pf_fold(lambda fold1, x: fold1 + x * x, 0, [2, 6, 5, 9])
+print(acc)
+def build(start: int) -> tuple[int, int, int, int]:
+    x = start
+    g0 = lambda y: x + y
+    x = x * 2
+    g1 = lambda y: x + y
+    x = x + 4
+    def g2(y: int) -> int:
+        return x * y
+    x = g2(x)
+    return (g0(3), g1(2), g2(4), x)
+print(build(2))
+--- stderr ---

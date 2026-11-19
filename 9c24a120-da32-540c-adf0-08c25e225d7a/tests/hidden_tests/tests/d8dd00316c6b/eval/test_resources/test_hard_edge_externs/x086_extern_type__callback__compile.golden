@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+import pathlib
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def pathSuffix(s):
+    return pathlib.PurePosixPath(s).suffix
+print(_pf_map(pathSuffix, ["report.csv", "noext"]))
+--- stderr ---

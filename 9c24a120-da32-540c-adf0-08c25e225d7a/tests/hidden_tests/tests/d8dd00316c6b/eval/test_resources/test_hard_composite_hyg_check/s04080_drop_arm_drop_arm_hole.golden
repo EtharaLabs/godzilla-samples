@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+  --> 21:3
+   |
+21 |   match s:
+   |   ^^^^^^^^
+
+error: non-exhaustive match: `Skip` is not matched
+  --> 30:7
+   |
+30 |       match op:
+   |       ^^^^^^^^^
+
+note: hole `?` has type `'a`
+  --> 48:12
+   |
+48 |     return ?
+   |            ^
+
+2 errors
+1 unfilled hole

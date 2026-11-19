@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+extern type Conn
+extern use: Conn -> int = m.use
+let r = ((Decode.decodeString Decode.auto) "1")
+let n =
+    match r:
+        case (Ok c): (use c)
+        case (Error _): 0
+--- stderr ---

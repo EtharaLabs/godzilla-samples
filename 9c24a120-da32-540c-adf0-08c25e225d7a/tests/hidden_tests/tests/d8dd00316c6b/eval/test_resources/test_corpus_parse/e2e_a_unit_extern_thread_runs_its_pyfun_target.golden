@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+extern import threading
+extern type Thread
+extern newThread: unit -> (unit ->{io} unit) -> Thread = threading.Thread(daemon=true, target=...)
+extern start: Thread -> unit = .start()
+extern join: Thread -> unit = .join()
+let t = ((newThread ()) (fun _ -> (print "from the thread")))
+(start t)
+(join t)
+--- stderr ---

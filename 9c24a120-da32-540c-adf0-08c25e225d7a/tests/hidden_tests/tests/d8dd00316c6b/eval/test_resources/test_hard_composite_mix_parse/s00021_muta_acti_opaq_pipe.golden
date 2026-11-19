@@ -1,0 +1,41 @@
+exit: 0
+--- stdout ---
+let mut ticks = 0
+let track x =
+    (ticks <- (ticks + 1))
+    (x * 3)
+let stats xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (stats [55, 0, 43, 51, (- 19), 57, 41, (- 3)]))
+let doubled = ([55, 0, 43, 51] |> (List.map track))
+(print f"{doubled} after {ticks} calls")
+let trackTwice = (track >> track)
+(print ((trackTwice 3), ticks))
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let classify n =
+    match n:
+        case Even: "even"
+        case Odd: "odd"
+(([23, 7, 11, 5, 14, 4, 14] |> (List.map classify)) |> (List.iter print))
+opaque type UserId = string
+opaque type Label = string
+let unwrap x =
+    match x:
+        case (UserId s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (UserId f"{prefix}-{i}"))))
+let keys = ((makeIds "u") 2)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (UserId "acc-1"))))
+let values = [7, 26, 49, 8, 22, 5, 45]
+let process = ((((((List.collect (fun x -> [x, (x + 1)])) >> (List.distinctBy (fun x -> (x % 2)))) >> (List.sortBy (fun x -> (x % 5)))) >> (List.indexed >> (List.map (fun (i, x) -> (i * x))))) >> (List.dropWhile (fun x -> (x < 5)))) >> (List.map ((*) 5)))
+let digest = ((values |> process) |> ((List.map String.fromInt) >> (String.join "-")))
+(print digest)
+--- stderr ---

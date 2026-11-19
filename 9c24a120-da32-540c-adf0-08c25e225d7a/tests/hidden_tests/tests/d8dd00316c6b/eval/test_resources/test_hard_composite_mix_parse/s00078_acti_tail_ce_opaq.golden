@@ -1,0 +1,40 @@
+exit: 0
+--- stdout ---
+let (|Above|_|) n = (if (n > 24) then (Some (n - 24)) else None)
+let (|Zero|_|) n = (n == 0)
+let kindOf n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case m if (m < 0): "negative"
+        case _: "small"
+(([12, (- 6), 35, 22, 37] |> (List.map kindOf)) |> (List.iter print))
+let digitSum n =
+    match n:
+        case 0: 0
+        case _: ((n % 10) + (digitSum (n // 10)))
+(print (digitSum 65997))
+let euclid a b = (if (b == 0) then a else ((euclid b) (a % b)))
+(print ((euclid 409) 138))
+let decodeLine line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let lines = ["jo = 6", "quin", "gus", "ivy"]
+let parsed = ((List.map decodeLine) lines)
+((List.iter print) parsed)
+let goodOnes = (parsed |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let firstGood = ((((parsed |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let sumAll xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((sumAll parsed) |> (Result.mapError String.upper)))
+opaque type UserId = string
+opaque type Label = string
+let unwrap x =
+    match x:
+        case (UserId s): s
+let makeIds prefix n = (((List.range 1) (n + 1)) |> (List.map (fun i -> (UserId f"{prefix}-{i}"))))
+let keys = ((makeIds "acc") 4)
+(print ((keys |> (List.map unwrap)) |> (String.join " ")))
+(print ((List.head keys) == (Some (UserId "acc-1"))))
+--- stderr ---

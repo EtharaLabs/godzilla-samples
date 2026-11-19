@@ -1,0 +1,60 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def nudge(n):
+    return n + 62
+def useHelper(x):
+    return nudge(x)
+def _pf_fn0():
+    nudge = 6
+    tmp = useHelper(nudge)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [7]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, second, third, useHelper(0)))
+def _pf_fn3():
+    for (name, k) in [("a", 9), ("b", 5)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn3()
+print(_pf_map(lambda h: h(3), list(handlers)))
+acc = []
+for k in [3, 6, 7]:
+    _pf_t1 = lambda y: y * k
+    acc.append(_pf_t1)
+chain = acc
+print(_pf_map(lambda h: h(1), chain))
+print(_pf_fold(lambda v, h: h(v), 1, chain))
+def Text_square(x):
+    return x * x
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+pts = [10, 3, -8, -1, -9, -6, 26]
+print(_pf_map(Text_square, pts))
+print(_pf_filter(functools.partial(Text_between, 1, 16), pts))
+print(_pf_map(functools.partial(Text_clamp, 0, 17), pts))
+print(Text_norm1(pts))
+--- stderr ---

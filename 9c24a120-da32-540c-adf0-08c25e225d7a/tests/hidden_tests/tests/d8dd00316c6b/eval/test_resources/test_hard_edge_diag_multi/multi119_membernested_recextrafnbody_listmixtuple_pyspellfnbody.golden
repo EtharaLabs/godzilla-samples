@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `filtr` is not a member of `List` (did you mean `List.filter`?)
+ --> 7:15
+  |
+7 |   let inner = List.filtr (fun x -> true) [1]
+  |               ^^^^^^^^^^
+
+error: record `Pt` has no field `w`
+  --> 10:26
+   |
+10 |   Pt { x = 1, y = 2, w = 3 }
+   |                          ^
+
+error: type mismatch: expected int, found string
+  --> 11:18
+   |
+11 | let t3 = (0, [1, "a"], "z")
+   |                  ^^^
+
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+  --> 13:3
+   |
+13 |   len [1]
+   |   ^^^
+
+4 errors

@@ -1,0 +1,154 @@
+exit: 0
+--- stdout ---
+00000002ok00000257rawOf : AccountNo -> string
+mint : 'a -> int -> List AccountNo
+keys : List AccountNo
+kindOf : int -> string
+add : int -> Heap -> Heap
+tree : Heap
+containsT : int -> Heap -> bool
+depthT : Heap -> int
+rows : List Row
+fmtLine : Row -> string
+low : List string
+00004112from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("u", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("u-1"))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def _ap_Above(n):
+    if n > 23:
+        return Some(n - 23)
+    else:
+        return _None_
+def kindOf(n):
+    _pf_t0 = _ap_Above(n)
+    _pf_t1 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    elif isinstance(_pf_t1, _Even):
+        return "even"
+    else:
+        return "odd"
+_pf_iter(print, _pf_map(kindOf, [10, 40, 31, 27, 37, 30]))
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+tree = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [28, 24, 5, 9, 52, 25])
+def containsT(x, t):
+    while True:
+        match t:
+            case Leaf():
+                return False
+            case Node(l, v, rt):
+                if x == v:
+                    return True
+                elif x < v:
+                    x, t = (x, l)
+                    continue
+                else:
+                    x, t = (x, rt)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(_pf_map(lambda k: containsT(k, tree), [28, 26, 13]))
+def depthT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthT(l), depthT(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthT(tree))
+rows = [Row("hub", 1, 28.66), Row("cog", 27, 18.24), Row("wick", 23, 16.1)]
+def fmtLine(x):
+    return f"{_pf_fmt_pad_right(9, " ", x.name)}: {_pf_fmt_pad_left(4, " ", str(x.qty))}: {_pf_fmt_fixed(1, x.price)}: {"restock" if x.qty > 14 else "ok"}: {_pf_fmt_currency("$", 2, x.price * 2.0)}"
+_pf_iter(print, _pf_map(fmtLine, rows))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 5, rows))
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+00000002ok00000022kindOf : int -> string0000000000000002ok00000034mint : 'a -> int -> List AccountNo00000000--- stderr ---

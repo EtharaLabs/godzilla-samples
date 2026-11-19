@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+00000002ok00000154counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+choose : bool -> 'a -> 'a -> 'a
+h : ('a ->{io} unit) -> 'a ->{io} unit
+00000269import functools
+counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def choose(c, f, g):
+    if c:
+        return f
+    else:
+        return g
+h = functools.partial(choose, False, lambda x: print(x))
+00000002ok00000031choose : bool -> 'a -> 'a -> 'a0000000000000002ok00000038h : ('a ->{io} unit) -> 'a ->{io} unit00000000--- stderr ---

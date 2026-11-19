@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Booking` is missing field(s) `urgent`
+  --> 15:15
+   |
+15 | let orders = [Booking { id = 100, owner = "jo", amount = 71 }, Booking { id = 101, owner = "jo", amount = 94, urgent = true }, Booking { id = 102, owner = "jo", amount = 105, urgent = true }, Booking { owner = "tom", amount = 45, urgent = false, id = 103 }, Booking { id = 104, owner = "hal", amount = 266, urgent = false }]
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

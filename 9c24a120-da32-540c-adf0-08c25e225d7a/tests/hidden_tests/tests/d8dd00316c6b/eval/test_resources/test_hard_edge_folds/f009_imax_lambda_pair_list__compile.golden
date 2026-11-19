@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def compute(u):
+    def _pf_fn0(a, _pf_arg1):
+        k, v = _pf_arg1
+        if k > a:
+            return k
+        else:
+            return a
+    return _pf_fold(_pf_fn0, 0, _pf_zip([1, 2, 3, 5], [7, 8, 9, 6]))
+result = compute(None)
+print(result)
+--- stderr ---

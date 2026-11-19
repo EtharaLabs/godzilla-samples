@@ -1,0 +1,35 @@
+exit: 0
+--- stdout ---
+let readPair line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let entries = ["kit=3=1", "quin=9=1", "oz=2=1", "hal"]
+let results = ((List.map readPair) entries)
+((List.iter print) results)
+let errs = ((results |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let firstGood = ((((results |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine results) |> (Result.mapError String.upper)))
+type Invoice = { id: int, owner: string, amount: int, urgent: bool }
+let parcels = [Invoice { id = 100, owner = "kit", amount = 174, urgent = false }, Invoice { id = 101, owner = "kit", amount = 282, urgent = true }, Invoice { id = 102, owner = "kit", amount = 177, urgent = true }, Invoice { id = 103, owner = "kit", amount = 123, urgent = false }]
+let byOwner = ((parcels |> (List.groupBy (fun o -> o.owner))) |> (List.map (fun (k, os) -> (k, (List.len os), ((List.sumBy (fun o -> o.amount)) os)))))
+(print byOwner)
+let (nrec, amt) = (((List.fold (fun (n, s) o -> ((n + 1), (s + o.amount)))) (0, 0)) parcels)
+(print f"{nrec} records, {amt} total")
+measure m
+measure s
+measure kg
+let laps = [97.9<m>, 280.0<m>, 136.9<m>, 199.5<m>]
+let splits = [31.4<s>, 52.6<s>, 55.0<s>, 75.8<s>]
+let total = (laps |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let dur = (((List.fold (+)) 0.0<s>) splits)
+let rate = (total / dur)
+(print ((Format.fixed 2) rate))
+let km = (total / 1000.0)
+(print ((Format.fixed 1) km))
+let edge = (sqrt 9.0<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+--- stderr ---

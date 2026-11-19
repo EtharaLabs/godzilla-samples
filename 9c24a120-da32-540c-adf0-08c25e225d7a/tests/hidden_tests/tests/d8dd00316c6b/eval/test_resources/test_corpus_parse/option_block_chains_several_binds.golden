@@ -1,0 +1,4 @@
+exit: 0
+--- stdout ---
+let f xs s = option { let! a = ((List.get 0) xs) let! b = ((List.get 1) xs) let! n = (String.toInt s) return ((a + b) + n) }
+--- stderr ---

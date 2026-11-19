@@ -1,0 +1,181 @@
+exit: 0
+--- stdout ---
+00000002ok00000300parcels : List Ticket
+cnt : int
+amt : int
+cheap : List Ticket
+dear : List Ticket
+perOwner : List (string, int, int)
+surcharge : int -> Ticket -> Ticket
+visits : List string
+counts : Map string int
+extra : Map string int
+explain : Signal -> string
+rank : Signal -> int
+queue : List Signal
+tally : int
+00004742from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    def __repr__(self):
+        return f"Load({self._0!r})"
+parcels = [Ticket(100, "gus", 65, False), Ticket(101, "ray", 235, True), Ticket(102, "hal", 68, False), Ticket(103, "gus", 223, True)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), parcels)
+print(f"{cnt} records, {amt} total")
+cheap, dear = _pf_partition(lambda o: o.amount < 137, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, parcels))
+print(perOwner)
+print(_pf_max_by(lambda o: o.amount, parcels))
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Ticket(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 16), parcels)))
+visits = ["ada", "eli", "dee", "dee", "bo", "ada"]
+m = dict()
+for w in visits:
+    _pf_t1 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t1
+counts = m
+def _pf_fn2(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn2, _pf_map_to_list(counts)))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+print((_pf_map_try_find("bo", counts), "bo" in counts))
+extra = dict([("zed", 5), ("ada", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, counts))))
+def explain(t):
+    match t:
+        case Store(0):
+            return "store-0"
+        case Store(n0):
+            return f"store({n0})"
+        case Push(n0) if 0 <= n0 < 5:
+            return f"push!({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Emit(n0) if n0 % 2 == 0:
+            return f"emit!({n0})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Load(s0):
+            return f"load({s0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Emit(x0):
+            return x0 * 2
+        case Push(x0):
+            return x0
+        case Store(x0):
+            return x0
+        case _:
+            return 3
+queue = [Load("fay"), Emit(10), Load("cy"), Push(5)]
+print(_pf_map(explain, queue))
+tally = _pf_sum_by(rank, queue)
+print(f"tally={tally}")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+print((_pf_head(queue), _pf_last(queue)))
+00000002ok00000021parcels : List Ticket0000000000000002ok00000022extra : Map string int00000000--- stderr ---

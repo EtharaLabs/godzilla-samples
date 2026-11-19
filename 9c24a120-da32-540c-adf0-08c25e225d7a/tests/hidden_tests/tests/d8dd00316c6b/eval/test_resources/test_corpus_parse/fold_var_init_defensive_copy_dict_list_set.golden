@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+let step acc x =
+    match acc:
+        case (m, l, s): ((((Map.add x) x) m), ((List.concat l) [x]), ((Set.add x) s))
+let dseed = Map.empty
+let lseed = []
+let sseed = Set.empty
+let r = (((List.fold step) (dseed, lseed, sseed)) [1, 2])
+let out =
+    match r:
+        case (m, l, s): ((Map.toList m), l, (Set.toList s))
+let origs = ((Map.len dseed), (List.len lseed), (Set.len sseed))
+--- stderr ---

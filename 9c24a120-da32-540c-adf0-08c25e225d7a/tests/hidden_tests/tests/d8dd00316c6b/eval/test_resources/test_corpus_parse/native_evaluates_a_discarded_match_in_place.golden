@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let report o =
+    (match o: case (Some n): (print n) case None: (print "none"))
+    (print "done")
+(report (Some 1))
+--- stderr ---

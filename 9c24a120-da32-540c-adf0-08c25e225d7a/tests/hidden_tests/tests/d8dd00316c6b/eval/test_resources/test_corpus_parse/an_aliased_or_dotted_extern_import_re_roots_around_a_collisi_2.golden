@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+extern import os.path
+extern joinp: string -> string -> string = os.path.join
+let os = 1
+(print ((joinp "a") "b"))
+--- stderr ---

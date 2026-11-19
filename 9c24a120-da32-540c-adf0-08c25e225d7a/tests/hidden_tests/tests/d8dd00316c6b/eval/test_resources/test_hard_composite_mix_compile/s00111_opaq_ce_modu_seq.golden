@@ -1,0 +1,115 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = makeIds("acc", 3)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("acc-1"))
+def decodeLine(line):
+    def _pf_fn0():
+        _pf_t1 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t1, Some):
+            v = _pf_t1._0
+            _pf_t0 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some(n * 5)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn0()
+lines = ["hal = 9", "gus = 1", "max=49", "kit=9=1", "lu = 0"]
+results = _pf_map(decodeLine, lines)
+_pf_iter(print, results)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), results)))
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), results))))
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Text_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Text_square(x):
+    return x * x
+obs = [-6, 23, -8, 27, 24, 21]
+print(_pf_map(functools.partial(Text_clamp, 0, 12), obs))
+print(Text_norm1(obs))
+print(_pf_map(Text_square, obs))
+def _pf_fn1():
+    for x in _pf_range(1, 11):
+        y = x * x
+        yield y
+series = _pf_fn1()
+print(list(_pf_seq_take(5, map(lambda n: n + 1, series))))
+print(list(_pf_seq_take(6, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 6)))))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn2, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 1460, fib)))
+--- stderr ---

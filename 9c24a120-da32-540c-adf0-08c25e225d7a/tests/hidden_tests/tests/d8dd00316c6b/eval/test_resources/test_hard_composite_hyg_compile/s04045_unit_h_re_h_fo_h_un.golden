@@ -1,0 +1,141 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+laps = [285.3, 375.7, 346.9]
+durations = [30.6, 20.0, 86.1]
+total = _pf_fold(lambda a, b: a + b, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+pace = total / elapsed
+print(_pf_fmt_fixed(2, pace))
+km = total / 1000.0
+print(_pf_fmt_fixed(1, km))
+side = math.sqrt(4.0)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(total, elapsed) * 1000.0))
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(laps, durations))
+print(best)
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Person(_pf_t0.name, p.age + 1))
+        case Parked(t) if t.size > 6:
+            _pf_t1 = t
+            return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+slots = _pf_map(promote, [_Gone, _Gone, _Gone])
+print(slots)
+people = [Person("tom", 7), Person("bo", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+def runAll(script):
+    def fold1(acc, op):
+        return acc
+    def fold1(xs, op):
+        match op:
+            case Put(k, v):
+                return _pf_concat(xs, [v])
+            case Push(n) if n > 1:
+                return _pf_concat(xs, [n * 10])
+            case _:
+                return xs
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Push(n) if n > 1:
+                _pf_t2 = n * 10
+                xs.append(_pf_t2)
+            case _:
+                pass
+    return xs
+changes = [Push(4), Push(4), Push(4), _Skip, _Skip, Push(0), _Skip]
+state = runAll(changes)
+print(state)
+acc = _pf_fold(lambda fold1, x: fold1 + x * x, 0, [2, 4, 1, 1])
+print(acc)
+span = math.hypot(6.0 / 1.0, 3.0 / 1.0) * 1.0
+ratio = math.sqrt(10.0)
+side2 = math.sqrt(36.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, span), _pf_fmt_fixed(4, ratio), side2, vol))
+print(mth.floor(span / 1.0))
+def velocity(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, velocity(span, 3.0)))
+--- stderr ---

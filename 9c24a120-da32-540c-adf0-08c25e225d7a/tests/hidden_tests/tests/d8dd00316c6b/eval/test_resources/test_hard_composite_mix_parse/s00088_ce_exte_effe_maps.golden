@@ -1,0 +1,36 @@
+exit: 0
+--- stdout ---
+let decodeLine line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let lines = ["max=x", "eli=81", "oz=x", "sue=x"]
+let results = ((List.map decodeLine) lines)
+((List.iter print) results)
+let errs = ((results |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let firstGood = ((((results |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine results) |> (Result.mapError String.upper)))
+extern pure comb: int -> int -> int = math.comb
+let row n = (((List.range 0) (n + 1)) |> (List.map (comb n)))
+(print (row 3))
+extern pure loud: string -> string = str.upper
+(print (("gus" |> loud) |> String.rev))
+extern parseIn: string -> int -> int = int(base=...)
+let fromBin s = ((parseIn s) 2)
+(print ((fromBin "10010") + ((parseIn "14") 8)))
+let pure discount price qty = ((price * qty) - (2 * qty))
+let emit label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let grand = (([("rod", 30, 1), ("nut", 27, 4)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (discount k))
+(print ((scaled 14) [1, 2, 3]))
+let log = ["bo", "fay", "cy", "fay", "dee", "fay", "ada", "bo", "fay"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) log)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((Map.fold (fun acc k v -> (acc + v))) 0) counts))
+(print (((Map.tryFind "eli") counts), ((Map.contains "eli") counts)))
+--- stderr ---

@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+opaque type Tag a = List a
+let t = (Tag [1, 2])
+let unwrapTag tg =
+    match tg:
+        case (Tag xs): xs
+let xs = (unwrapTag t)
+--- stderr ---

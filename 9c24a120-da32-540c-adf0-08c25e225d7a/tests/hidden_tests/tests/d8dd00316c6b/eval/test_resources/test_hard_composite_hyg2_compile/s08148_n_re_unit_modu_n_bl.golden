@@ -1,0 +1,103 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def layer(start):
+    level = start
+    def g0(y):
+        return level * y
+    level = g0(level)
+    g1 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 5
+    g2 = lambda y: level + y
+    level = level * 5
+    g3 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 3
+    return (g0(4), g1([1, 2]), g2(1), g3([1, 2]), level)
+print(layer(6))
+laps = [403.3, 414.6, 247.0, 486.3]
+times = [44.6, 16.2, 47.8, 70.6]
+dist = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, laps)
+dur = _pf_fold(lambda a, b: a + b, 0.0, times)
+pace = dist / dur
+print(_pf_fmt_fixed(1, pace))
+speeds = _pf_map2(lambda d, t: d / t, laps, times)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+side = math.sqrt(2.25)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(laps, times))
+print(best)
+def Geo_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Geo_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Geo_square(x):
+    return x * x
+def Geo_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+nums = [-10, 2, 28, -14, -14, 18]
+print(_pf_map(functools.partial(Geo_clamp, 0, 10), nums))
+print(Geo_mean(nums))
+print(_pf_map(Geo_square, nums))
+print(Geo_scaleAll(3, nums))
+def nudge(n):
+    return n + 17
+def useHelper(x):
+    return nudge(x)
+def _pf_fn1():
+    nudge = 9
+    tmp = useHelper(nudge)
+    return tmp * 2
+alpha = _pf_fn1()
+def _pf_fn2():
+    _pf_t0 = [6]
+    if _pf_t0:
+        nudge = _pf_t0[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+second = _pf_fn2()
+def _pf_fn3():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+gamma = _pf_fn3()
+print((alpha, second, gamma, useHelper(0)))
+--- stderr ---

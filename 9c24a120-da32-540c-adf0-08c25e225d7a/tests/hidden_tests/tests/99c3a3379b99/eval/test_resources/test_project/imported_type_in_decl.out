@@ -1,0 +1,52 @@
+# ==== shapes.py ====
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Placed:
+    row: int
+    col: int
+def mk(r):
+    return Placed(r, r)
+def rowOf(p):
+    return p.row
+
+# ==== main.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import shapes
+@dataclass(frozen=True, slots=True, order=True)
+class Holder:
+    item: object
+    tag: str
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Empty:
+    def __repr__(self):
+        return "Empty"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_Empty = Empty()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Filled:
+    _0: object
+    def __repr__(self):
+        return f"Filled({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+def describe(s):
+    match s:
+        case Empty():
+            return 0
+        case Filled(p):
+            return shapes.rowOf(p)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+h = Holder(shapes.mk(3), "a")
+print(h.tag)
+print(describe(Filled(h.item)))
+print(describe(_Empty))
+

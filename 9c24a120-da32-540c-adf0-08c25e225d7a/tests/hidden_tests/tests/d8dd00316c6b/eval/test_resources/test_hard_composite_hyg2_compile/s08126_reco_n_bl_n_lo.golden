@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+parcels = [Parcel(100, "ivy", 83, False), Parcel(101, "ivy", 268, False), Parcel(102, "ivy", 8, True), Parcel(103, "ned", 101, True)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), parcels)
+print(f"{cnt} records, {amt} total")
+def classify(o):
+    match o:
+        case Parcel(urgent=True, amount=amount) if amount > 139:
+            return "rush-big"
+        case Parcel(urgent=True):
+            return "rush"
+        case Parcel(amount=amount):
+            if amount > 139:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(classify, parcels))
+print(_pf_count_by(classify, parcels))
+print(_pf_max_by(lambda o: o.amount, parcels))
+def adjust(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Parcel(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(adjust, 16), parcels)))
+def nudge(n):
+    return n + 60
+def useHelper(x):
+    return nudge(x)
+def _pf_fn1():
+    nudge = 1
+    tmp = useHelper(nudge)
+    return tmp * 2
+first = _pf_fn1()
+def _pf_fn2():
+    _pf_t1 = [5]
+    if _pf_t1:
+        nudge = _pf_t1[0]
+        return nudge + useHelper(1)
+    else:
+        return 0
+beta = _pf_fn2()
+def _pf_fn3():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third = _pf_fn3()
+print((first, beta, third, useHelper(0)))
+def _pf_fn4():
+    for (name, k) in [("a", 4), ("b", 1)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn4()
+print(_pf_map(lambda h: h(3), list(handlers)))
+acc = []
+for k in [4, 7, 8]:
+    _pf_t2 = lambda y: y * k
+    acc.append(_pf_t2)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+def offsets(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 9
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(8, [2, 8, 5]))
+--- stderr ---

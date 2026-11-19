@@ -1,0 +1,127 @@
+exit: 0
+--- stdout ---
+00000002ok00000363book : List Booking
+nrec : int
+sumAmt : int
+rushSum : int
+discount : int -> int<'a> -> int<'a>
+report : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+scaled : int -> (List int<'a>) -> List int<'a>
+unwrap : UserId -> string
+makeIds : 'a -> int -> List UserId
+keys : List UserId
+describe : Action -> string
+weight : Action -> int
+prog : List Action
+total : int
+00003316from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+book = [Booking(100, "quin", 246, False), Booking(101, "cy", 32, True), Booking(102, "quin", 19, True), Booking(103, "cy", 154, True), Booking(104, "cy", 239, False)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, sumAmt = _pf_fold(_pf_fn0, (0, 0), book)
+print(f"{nrec} records, {sumAmt} total")
+print(_pf_map(lambda o: o.id, _pf_take(3, _pf_sort_by_desc(lambda o: o.amount, book))))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, book))
+print(rushSum)
+def discount(price, qty):
+    return price * qty - 3 * qty
+def report(label, price, qty):
+    print(f"{label}: {discount(price, qty)}")
+    return discount(price, qty)
+def _pf_fn1(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn1, [("bolt", 21, 2), ("wick", 33, 1), ("cog", 33, 3)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(discount, k))
+print(scaled(9)([1, 2, 3]))
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("acc", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+def describe(t):
+    match t:
+        case Mark(s0):
+            return f"mark({s0})"
+        case Jump(n0) if n0 % 2 == 0:
+            return f"jump!({n0})"
+        case Jump(n0):
+            return f"jump({n0})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def weight(t):
+    match t:
+        case Emit(x0):
+            return x0 * 3
+        case _:
+            return 0
+prog = [Mark("lu"), Emit(12), Mark("eli"), Emit(12), Emit(10), Jump(5), Emit(4)]
+_pf_iter(lambda t: print(describe(t)), prog)
+total = _pf_sum_by(weight, prog)
+print(f"total={total}")
+print(len(_pf_filter(lambda t: weight(t) > 0, prog)))
+00000002ok00000018keys : List UserId0000000000000002ok00000025unwrap : UserId -> string00000000--- stderr ---

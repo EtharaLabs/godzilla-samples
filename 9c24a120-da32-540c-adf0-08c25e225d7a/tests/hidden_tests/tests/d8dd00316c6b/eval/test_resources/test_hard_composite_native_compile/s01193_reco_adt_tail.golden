@@ -1,0 +1,216 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: "Site"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Mark and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Halt:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Halt({self._0!r}, {self._1!r})"
+    def __eq__(self, other):
+        return type(other) is Halt and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    def __repr__(self):
+        return f"Store({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Store and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0)
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+    def __eq__(self, other):
+        return type(other) is Push and self._pf_order_key() == other._pf_order_key()
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def __le__(self, other):
+        return self._pf_order_key() <= other._pf_order_key()
+    def __gt__(self, other):
+        return self._pf_order_key() > other._pf_order_key()
+    def __ge__(self, other):
+        return self._pf_order_key() >= other._pf_order_key()
+    def _pf_order_key(self):
+        return (3, self._0)
+Move = Mark | Halt | Store | Push
+book: list[Ticket] = [Ticket(100, "jo", 297, True, Site("Oslo", 2)), Ticket(101, "fay", 21, True, Site("Oslo", 1)), Ticket(102, "jo", 139, True, Site("Kyiv", 4)), Ticket(103, "fay", 226, False, Site("Baku", 2))]
+def _pf_fn0(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner: list[tuple[str, int, int]] = _pf_map(_pf_fn0, _pf_group_by(lambda o: o.owner, book))
+print(byOwner)
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by_desc(lambda o: o.amount, book))))
+def adjust(pct: int, o: Ticket) -> Ticket:
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Ticket(_pf_t0.id, _pf_t0.owner, o.amount + extra, False, _pf_t0.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(adjust, 19), book)))
+def _pf_fn1(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn1, (0, 0), book)
+print(f"{nrec} records, {amt} total")
+def bucket(o: Ticket) -> str:
+    if isinstance(o, Ticket) and o.urgent is True:
+        amount = o.amount
+        if amount > 167:
+            return "rush-big"
+    if isinstance(o, Ticket) and o.urgent is True:
+        return "rush"
+    else:
+        amount = o.amount
+        if amount > 167:
+            return "big"
+        else:
+            return "normal"
+print(_pf_map(bucket, book))
+print(_pf_count_by(bucket, book))
+def describe(t: Move) -> str:
+    if isinstance(t, Mark) and t._0 == 2:
+        return "mark-2"
+    elif isinstance(t, Mark):
+        n0 = t._0
+        return f"mark({n0})"
+    elif isinstance(t, Halt):
+        s0 = t._0
+        s1 = t._1
+        return f"halt({s0},{s1})"
+    else:
+        if isinstance(t, Store):
+            n0 = t._0
+            if n0 > 8:
+                return f"store!({n0})"
+        if isinstance(t, Store):
+            n0 = t._0
+            return f"store({n0})"
+        else:
+            if isinstance(t, Push):
+                n0 = t._0
+                if n0 > 5:
+                    return f"push!({n0})"
+            n0 = t._0
+            return f"push({n0})"
+def cost(t: Move) -> int:
+    if isinstance(t, Mark):
+        x0 = t._0
+        return x0
+    elif isinstance(t, Halt):
+        return 3
+    elif isinstance(t, Store):
+        x0 = t._0
+        return x0 * 4
+    else:
+        return 2
+batch: list[Move] = [Push(4), Push(8), Store(1), Push(9), Push(0)]
+_pf_iter(lambda t: print(describe(t)), batch)
+total: int = _pf_sum_by(cost, batch)
+print(f"total={total}")
+print(_pf_sort(batch))
+def euclid(a: int, b: int) -> int:
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(euclid(169, 142))
+def countDown(n: int, acc: int) -> int:
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n * n)
+            continue
+print(countDown(1606, 0))
+def isEven(n: int) -> bool:
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n: int) -> bool:
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [17, 8, 16, 22, 6]))
+--- stderr ---

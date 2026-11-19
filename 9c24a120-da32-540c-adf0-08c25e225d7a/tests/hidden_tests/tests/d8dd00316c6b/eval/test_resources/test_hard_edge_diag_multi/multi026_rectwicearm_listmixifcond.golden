@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: field `x` is set twice
+ --> 8:29
+  |
+8 |     case 0: Pt { x = 1, x = 2, y = 3 }
+  |                             ^
+
+error: type mismatch: expected int, found string
+  --> 10:17
+   |
+10 | let i2 = if [1, "a"] then 1 else 2
+   |                 ^^^
+
+2 errors

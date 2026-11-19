@@ -1,0 +1,44 @@
+exit: 0
+--- stdout ---
+import asyncio
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def finished(count):
+    async def _pf_fn0():
+        return count
+    return _pf_Async(_pf_fn0)
+def countdown(n, acc):
+    async def _pf_fn1(n, acc):
+        while True:
+            if n == 0:
+                return await finished(acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return _pf_Async(_pf_fn1, n, acc)
+def tally(xs):
+    total = 0
+    def add(x):
+        nonlocal total
+        total = total + x
+        return None
+    _pf_iter(add, xs)
+    return total
+print(asyncio.run(_pf_run(countdown(4, 0))))
+print(tally([1, 2, 3]))
+--- stderr ---

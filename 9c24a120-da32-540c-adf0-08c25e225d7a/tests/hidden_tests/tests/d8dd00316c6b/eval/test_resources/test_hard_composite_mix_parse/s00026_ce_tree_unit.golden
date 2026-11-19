@@ -1,0 +1,60 @@
+exit: 0
+--- stdout ---
+let parseEntry line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let entries = ["ada", "ned", "kit=5=1", "fay=1=1", "tom = 4", "gus"]
+let results = ((List.map parseEntry) entries)
+((List.iter print) results)
+let goodOnes = (results |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let sumAll xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((sumAll results) |> (Result.mapError String.upper)))
+type Expr = Num int | Add Expr Expr | Mul Expr Expr | Neg Expr | Var string
+let vars = (Map.ofList [("x", 9), ("y", 2)])
+let evaluate e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evaluate a) + (evaluate b))
+        case (Mul a b): ((evaluate a) * (evaluate b))
+        case (Neg a): (- (evaluate a))
+        case (Var v): (((Map.findOr v) 0) vars)
+let show e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(show a)} + {(show b)})"
+        case (Mul a b): f"{(show a)} * {(show b)}"
+        case (Neg a): f"-{(show a)}"
+        case (Var v): v
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let terms = [((Mul ((Mul (Neg (Var "y"))) ((Mul (Num (- 1))) (Var "x")))) ((Mul ((Add (Var "y")) (Num 9))) ((Add (Num 1)) (Var "x")))), (Neg (Var "y"))]
+(((terms |> (List.map simplify)) |> (List.map show)) |> (List.iter print))
+(print ((List.map evaluate) terms))
+measure m
+measure s
+measure kg
+measure N = kg m/s^2
+let legs = [309.6<m>, 399.0<m>, 212.4<m>]
+let times = [5.9<s>, 60.3<s>, 32.1<s>]
+let dist = (legs |> ((List.fold (fun acc d -> (acc + (d * 1.0)))) 0.0<m>))
+let elapsed = (((List.fold (+)) 0.0<s>) times)
+let speed = (dist / elapsed)
+(print ((Format.fixed 2) speed))
+let best = (((List.zip legs) times) |> (List.maxBy (fun (d, t) -> (d / t))))
+(print best)
+let speeds = (((List.map2 (fun d t -> (d / t))) legs) times)
+(((speeds |> (List.map (Format.fixed 2))) |> (String.join " ")) |> print)
+let mass = 22.0<kg>
+let accel = 5.5<m/s^2>
+let push = (mass * accel)
+let limit = 140.0<N>
+(print (if (push > limit) then "over" else "under"))
+let paceOf d t = (t / d)
+(print ((Format.fixed 3) (((paceOf dist) elapsed) * 1000.0)))
+--- stderr ---

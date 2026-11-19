@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: unknown constructor `Base.Circle`
+ --> 4:9
+  |
+4 |   match v.shape:
+  |         ^^^^^^^
+error: `Pos` is not a member of `Base`
+ --> 9:16
+  |
+9 | print (v.at == Base.Pos { x = 4, y = 0 })
+  |                ^^^^^^^^
+
+2 errors

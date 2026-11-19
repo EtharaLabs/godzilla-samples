@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+# ==== ffi.py ====
+import posixpath
+base = posixpath.basename
+
+# ==== main.py ====
+import ffi
+def _pf_map(f, xs):
+    return list(map(f, xs))
+print(ffi.base("/x/y/z.txt"))
+print(_pf_map(ffi.base, ["/x/y/z.txt"]))
+
+--- stderr ---

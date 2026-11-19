@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+from typing import Any
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def w(acc, x):
+    m = acc[0]
+    return (_pf_map_add(x, x, m), dict())
+_pf_t1 = _pf_fold(w, (dict(), dict()), [1, 2])
+a = _pf_t1[0]
+b = _pf_t1[1]
+_pf_t0 = (_pf_map_to_list(a), _pf_map_to_list(b))
+out: tuple[list[tuple[int, int]], list[tuple[Any, Any]]] = _pf_t0
+--- stderr ---

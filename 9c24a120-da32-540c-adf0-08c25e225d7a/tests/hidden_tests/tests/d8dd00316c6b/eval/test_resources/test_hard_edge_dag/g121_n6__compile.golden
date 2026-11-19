@@ -1,0 +1,11 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Golf` (golf.pyfun) --
+error: field `kind` is ambiguous here: nothing says what this value is, and `kind` is declared by records `RecG` and `RecD`. Name the record where the value arrives — in a parameter (`fun (RecG { kind }) -> …`) or in a pattern (`case RecG { kind }:`) — or give it a type some other way
+  --> 16:25
+   |
+16 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+
+1 error

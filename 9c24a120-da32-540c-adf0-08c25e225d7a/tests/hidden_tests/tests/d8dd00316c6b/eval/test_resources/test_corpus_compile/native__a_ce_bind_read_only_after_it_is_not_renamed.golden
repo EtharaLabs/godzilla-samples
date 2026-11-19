@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+n: int = 5
+def f(u) -> Some | None_:
+    def _pf_fn0():
+        _pf_t0 = Some(2)
+        if isinstance(_pf_t0, Some):
+            n = _pf_t0._0
+            k = 1
+            return Some(n + k)
+        else:
+            return _pf_t0
+    return _pf_fn0()
+r: Some | None_ = f(0)
+--- stderr ---

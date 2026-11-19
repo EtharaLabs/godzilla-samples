@@ -1,0 +1,46 @@
+exit: 0
+--- stdout ---
+let squares = seq {
+    for x in ((List.range 1) 11):
+        let y = (x * x)
+        yield y
+}
+((((squares |> (Seq.map (fun n -> (n + 1)))) |> (Seq.take 5)) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 7))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 5)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 445)))) |> Seq.toList) |> print)
+let events = ["fay", "cy", "fay", "bo", "dee", "cy", "fay", "bo", "cy"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let hist = (((List.fold bump) Map.empty) events)
+(print ((hist |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((hist |> Map.keys) |> List.sort) |> (String.join ",")))
+(print (((Map.tryFind "hal") hist), ((Map.contains "hal") hist)))
+let mut calls = 0
+let note x =
+    (calls <- (calls + 1))
+    (x * 2)
+let summarize xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (summarize [8, 31, (- 15), 0, 39, 15, 54, 47]))
+let doubled = ([8, 31, (- 15), 0] |> (List.map note))
+(print f"{doubled} after {calls} calls")
+let noteTwice = (note >> note)
+(print ((noteTwice 3), calls))
+let pure discount price qty = ((price * qty) - (4 * qty))
+let emit label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let overall = (([("nut", 6, 1), ("gear", 14, 4), ("wick", 39, 4)] |> (List.map (fun (n, pr, q) -> (((emit n) pr) q)))) |> List.sum)
+(print overall)
+--- stderr ---

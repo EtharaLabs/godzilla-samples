@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+00000002ok00000147counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+comp : ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
+h : int ->{io} unit
+00000306import functools
+counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def comp(f, g, x):
+    return g(f(x))
+def _pf_fn0(x):
+    global counter
+    counter = counter + x
+    return None
+h = functools.partial(comp, lambda v: v + 1, _pf_fn0)
+00000002ok00000043comp : ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c0000000000000002ok00000019h : int ->{io} unit00000000--- stderr ---

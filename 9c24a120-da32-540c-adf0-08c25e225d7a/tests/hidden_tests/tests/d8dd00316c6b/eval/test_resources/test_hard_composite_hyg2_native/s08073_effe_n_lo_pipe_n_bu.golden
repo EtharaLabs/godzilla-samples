@@ -1,0 +1,92 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_distinct_by(f, xs):
+    seen = set()
+    out = []
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+def _pf_drop_while(f, xs):
+    return list(itertools.dropwhile(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_forall(f, xs):
+    return all(map(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_concat(a, b):
+    return a + b
+def net(price: int, qty: int) -> int:
+    return price * qty - 6 * qty
+def emit(label, price: int, qty: int) -> int:
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand: int = sum(_pf_map(_pf_fn0, [("rod", 24, 6), ("bolt", 11, 6), ("tap", 16, 6), ("rod", 25, 3)]))
+print(grand)
+def _pf_fn1():
+    for (name, k) in [("a", 7), ("b", 5)]:
+        yield lambda y: f"{name}:{k * y}"
+handlers = _pf_fn1()
+print(_pf_map(lambda h: h(2), list(handlers)))
+def offsets(n: int, xs: list[int]) -> list[int]:
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 2
+    return _pf_map(lambda g: g(n), fs)
+print(offsets(9, [5, 4, 6]))
+acc = []
+for k in [9, 1, 5]:
+    _pf_t0 = lambda y: y * k
+    acc.append(_pf_t0)
+steps = acc
+print(_pf_map(lambda h: h(5), steps))
+print(_pf_fold(lambda v, h: h(v), 1, steps))
+values: list[int] = [9, 41, -8, -10, 40, -5]
+answer: bool = _pf_forall(lambda x: x >= 0, _pf_map(lambda x: x // 3 + x % 3, _pf_distinct_by(lambda x: x % 5, _pf_drop_while(lambda x: x < -5, _pf_choose(lambda x: (Some(x // 2) if x % 2 == 0 else _None_), _pf_rev(values))))))
+print(answer)
+print(len(values))
+def set_(n: int) -> int:
+    return n * 2
+print((set_(3), len(set([4, 3, 0, 4]))))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([9, 7, 1, 4]), _pf_sort([3, 1, 2])))
+str_: str = "ned"
+print((str(75), str_, _pf_str_concat(str_, str(1))))
+dict_: dict[str, int] = dict([("k", 7)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+--- stderr ---

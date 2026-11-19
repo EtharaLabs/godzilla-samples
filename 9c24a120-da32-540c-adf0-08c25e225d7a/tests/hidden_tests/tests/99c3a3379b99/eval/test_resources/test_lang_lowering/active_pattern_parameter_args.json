@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "def _ap_Has(sub, s):\n    return sub in s\ndef _ap_Is(b, x):\n    return x == b\ndef classify(s, k):\n    _pf_t0 = _ap_Has(\"a\", s)\n    _pf_t1 = _ap_Has(k, s)\n    if _pf_t0:\n        return \"has a\"\n    elif _pf_t1:\n        return f\"has {k}\"\n    else:\n        return \"neither\"\ndef truthy(x):\n    _pf_t2 = _ap_Is(True, x)\n    if _pf_t2:\n        return \"yes\"\n    else:\n        return \"no\"\nprint(classify(\"cat\", \"z\"))\nprint(classify(\"dog\", \"o\"))\nprint(classify(\"xyz\", \"q\"))\nprint(truthy(True))\nprint(truthy(False))\n",
+ "stderr": ""
+}

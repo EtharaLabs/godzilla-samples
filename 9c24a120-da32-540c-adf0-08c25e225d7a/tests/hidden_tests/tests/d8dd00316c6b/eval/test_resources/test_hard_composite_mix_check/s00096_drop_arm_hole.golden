@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `[]` is not matched
+ --> 4:7
+  |
+4 |       match String.split "=" line:
+  |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `Decoder int` — try: Decode.int, Decode.auto — or: Decode.succeed ?, Decode.fail ?, Decode.oneOf ?, Decode.field ? ?, and 2 more
+  --> 44:28
+   |
+44 |     (Decode.field "points" ?)
+   |                            ^
+
+1 error
+1 unfilled hole

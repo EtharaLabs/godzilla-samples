@@ -1,0 +1,203 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Rack:
+    top: "Tile"
+    bottom: "Tile"
+    slot: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+Shape2 = Square | Ci | Wedge
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Op = Put | Append | Skip
+panels: list[Tile] = [Tile(6, 5, "nut"), Tile(9, 2, "cap"), Tile(1, 6, "bolt"), Tile(4, 8, "tap"), Tile(4, 4, "sq")]
+def heavier(s: Rack) -> str:
+    if isinstance(s, Rack) and isinstance(s.top, Tile):
+        w = s.top.w
+        bottom = s.bottom
+        slot = s.slot
+        if w > bottom.w:
+            return f"top {slot}"
+    slot = s.slot
+    return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Rack(a, b, a.w + b.h)), panels, _pf_rev(panels)))
+def describe(b: Tile) -> str:
+    if isinstance(b, Tile):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Tile) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, panels)))
+def rename(prefix: str, b: Tile) -> Tile:
+    label = b.label
+    _pf_t1 = b
+    return Tile(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(rename, "old-"), panels)))
+def grow(b: Tile) -> Tile:
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Tile(w + 2, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, panels)))
+def score(x: int, items: list[int]) -> int:
+    if len(items) == 0:
+        return x
+    elif len(items) == 1:
+        _x = items[0]
+        return _x * 4
+    else:
+        _x2 = items[0]
+        rest = items[1:len(items)]
+        return _x2 + len(rest)
+print((score(8, []), score(1, [5]), score(1, [2, 2, 3])))
+def extent(s: Shape2) -> int:
+    if isinstance(s, Square):
+        n = s._0
+        return n
+    elif isinstance(s, Ci):
+        n = s._0
+        return n
+    else:
+        if isinstance(s, Wedge):
+            n = s._0
+            m = s._1
+            if n > m:
+                return n
+        m = s._0
+        n = s._1
+        return n
+print(_pf_map(extent, [Square(5), Ci(3), Wedge(4, 3), Wedge(1, 9)]))
+def dig(xs: list[int]) -> int:
+    if xs:
+        x = xs[0]
+        _pf_t4 = _pf_last(xs)
+        if isinstance(_pf_t4, Some):
+            _x = _pf_t4._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t4, Some):
+            y = _pf_t4._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((dig([3, 8]), dig([2, 9]), dig([])))
+cap: int = 28
+def bound(o: Some | None_) -> int:
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((bound(Some(3)), bound(Some(-3)), bound(_None_), cap))
+def runAll(script: list[Op]) -> list[int]:
+    def apply(acc, op):
+        return acc
+    def apply(xs: list[int], op: Op) -> list[int]:
+        if isinstance(op, Put):
+            k = op._0
+            v = op._1
+            return _pf_concat(xs, [v])
+        else:
+            if isinstance(op, Append):
+                n = op._0
+                if n > 4:
+                    return _pf_concat(xs, [n * 10])
+            return xs
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                xs.append(v)
+            case Append(n) if n > 4:
+                _pf_t5 = n * 10
+                xs.append(_pf_t5)
+            case _:
+                pass
+    return xs
+script: list[Op] = [Put("bolt", 2), _Skip, _Skip, _Skip, Append(5), Append(7)]
+final: list[int] = runAll(script)
+print(final)
+sumSq: int = _pf_fold(lambda apply, x: apply + x * x, 0, [8, 4, 6, 5])
+print(sumSq)
+--- stderr ---

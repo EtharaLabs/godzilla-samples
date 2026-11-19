@@ -1,0 +1,158 @@
+exit: 0
+--- stdout ---
+00000002ok00000276series : Seq int
+fib : Seq int
+lines : List Entry
+renderRow : Entry -> string
+low : List string
+add : int -> Tree -> Tree
+root : Tree
+sumT : Tree -> int
+minT : Tree -> Option int
+hits : int
+record : int<'a> ->{io} int<'a>
+profile : (List int) ->{io} string
+doubled : List int
+00004217from dataclasses import dataclass
+import functools
+import itertools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_fmt_percent(n, x):
+    return format(x, f".{n}%")
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    qty: int
+    price: float
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+def _pf_fn0():
+    for x in _pf_range(1, 6):
+        y = x * x
+        yield y
+    yield 108
+series = _pf_fn0()
+print(_pf_fold(lambda a, b: a + b, 0, series))
+print(list(_pf_seq_take(6, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 7)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 650, fib)))
+lines = [Entry("hub", 30, 3.08), Entry("cog", 12, 34.42), Entry("cap", 26, 30.16), Entry("pin", 17, 38.75)]
+def renderRow(x):
+    return f"{_pf_fmt_pad_right(6, "-", x.name)}|{_pf_fmt_pad_left(4, " ", str(x.qty))}|{_pf_fmt_fixed(1, x.price)}|{"restock" if x.qty > 10 else "ok"}|{_pf_fmt_currency("$", 2, x.price * 6.0)}"
+_pf_iter(print, _pf_map(renderRow, lines))
+low = _pf_map(lambda x: f"<{x.name}>", _pf_filter(lambda x: x.qty < 6, lines))
+print(f"low: {_pf_str_join("", low)} ({_pf_fmt_percent(1, 0.5 * 1.0)})")
+def add(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(add(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, add(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(lambda acc, x: add(x, acc), _Leaf, [56, 36, 14, 42, 46, 22, 59])
+def sumT(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumT(l) + v + sumT(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumT(root))
+def minT(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minT(root))
+hits = 0
+def record(x):
+    global hits
+    hits = hits + 1
+    return x * 4
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([33, -17, -17, 38, -11, 7, -10]))
+doubled = _pf_map(record, [33, -17, -17, 38])
+print(f"{doubled} after {hits} calls")
+00000002ok00000016series : Seq int0000000000000002ok00000018sumT : Tree -> int00000000--- stderr ---

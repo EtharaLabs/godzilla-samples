@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string
+ --> 8:13
+  |
+8 |     case 0: Option.withDefault 0 (Some "s")
+  |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: unbound name `Triangle`
+  --> 13:13
+   |
+13 |     case 0: Triangle 1.0
+   |             ^^^^^^^^
+
+2 errors

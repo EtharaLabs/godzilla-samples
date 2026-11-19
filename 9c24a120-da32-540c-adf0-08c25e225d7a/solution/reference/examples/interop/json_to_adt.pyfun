@@ -1,0 +1,51 @@
+# Decode (built-in) — JSON into your own typed records, totally. THE showcase.
+#
+#   pyfun run examples/interop/json_to_adt.pyfun
+#
+# The lesson every language teaches on JSON is "parse, don't validate": turn untrusted,
+# dynamically-typed input into your *own* typed data at the edge, so the rest of the
+# program can't be fed a wrong shape. Pyfun ships an Elm-style `Decode` module — a
+# `Decoder a` is a pure, total recipe, and `Decode.decodeString` runs it over a JSON
+# string to yield `Result a Exception`. Bad input is a value you handle, never a crash.
+
+type User = { name: string, age: int, roles: List string }
+
+# A decoder is built compositionally: `Decode.field` pulls one object field and runs
+# a decoder on it; `Decode.map3` combines three field decoders into one that builds
+# the record. No hand-written field access, no per-field error handling — the module
+# threads the `Result` railway for you. `Decode.string`/`int` are strict: a JSON
+# number where a string is expected is an `Error`, not a silent coercion.
+let userDecoder =
+  Decode.map3 (fun name age roles -> User { name = name, age = age, roles = roles })
+    (Decode.field "name" Decode.string)
+    (Decode.field "age" Decode.int)
+    (Decode.field "roles" (Decode.list Decode.string))
+
+# Consuming the result is an exhaustive `match` — the compiler makes you handle both
+# outcomes. `Exception` exposes `errorKind` (the Python class name) and `errorMessage`.
+let describe r =
+  match r:
+    case Ok u: f"""{u.name} ({u.age}): {String.join ", " u.roles}"""
+    case Error e: f"decode failed ({e.errorKind}): {e.errorMessage}"
+
+# A well-formed object decodes to a typed `User`, array field and all.
+print (describe (Decode.decodeString userDecoder """{"name": "ada", "age": 36, "roles": ["admin", "dev"]}"""))
+# A missing field short-circuits — no crash, a value describing the failure.
+print (describe (Decode.decodeString userDecoder """{"name": "bob", "age": 40}"""))
+# A wrong type is caught the same way (age is a string, not a number).
+print (describe (Decode.decodeString userDecoder """{"name": "cy", "age": "old", "roles": []}"""))
+# So is malformed JSON.
+print (describe (Decode.decodeString userDecoder """not json at all"""))
+
+# Output:
+#   ada (36): admin, dev
+#   decode failed (KeyError): 'roles'
+#   decode failed (ValueError): expected an int, got str
+#   decode failed (JSONDecodeError): Expecting value: line 1 column 1 (char 0)
+#
+# The whole pipeline is PURE (no `io`) — a `let pure` over `Decode.decodeString` type-
+# checks, because the curated module knows JSON parsing has no side effects (the raw
+# `extern json.loads` boundary in json_decode.pyfun is conservatively `io`). More
+# combinators: `Decode.map`/`map2`/`map4`, `Decode.nullable` (JSON null → `Option`),
+# `Decode.oneOf` (first decoder that succeeds — decode a union), `Decode.andThen`
+# (a decoder chosen from an already-decoded value), `Decode.succeed`/`Decode.fail`.

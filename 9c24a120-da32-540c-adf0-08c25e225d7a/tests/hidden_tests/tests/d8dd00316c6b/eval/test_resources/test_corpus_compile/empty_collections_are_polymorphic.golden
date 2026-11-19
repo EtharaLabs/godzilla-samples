@@ -1,0 +1,10 @@
+exit: 0
+--- stdout ---
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_set_add(x, s):
+    return s.union([x])
+a = len(_pf_set_add(1, set()))
+b = len(_pf_set_add("x", set()))
+c = len(_pf_map_add(1, True, dict()))
+--- stderr ---

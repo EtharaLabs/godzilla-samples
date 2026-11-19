@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let fact n = (if (n == 0) then 1 else (n * (fact (n - 1))))
+let id x = x
+let a = (id 1)
+let b = (id true)
+let c = (fact 4)
+--- stderr ---

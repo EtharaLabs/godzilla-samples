@@ -1,0 +1,81 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return oddP(n - 1)
+def oddP(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [10, 37, 28, 15, 30]))
+def margin(price, qty):
+    return price * qty - 4 * qty
+def report(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("cap", 21, 4), ("cog", 6, 6), ("wick", 30, 3), ("wick", 12, 5)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(margin, k))
+print(scaled(6)([1, 2, 3]))
+seriesA = [2, 7, -4, 3, 3]
+factor = 2
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), seriesA))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn2, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(5), scalers))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn3(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 4], lambda k: Many_yield_(a * b + k))
+cells = Many_combine(Many_for_([(3, 2), (4, 1)], _pf_fn3), Many_delay(lambda _: Many_yield_(4)))
+print(cells)
+--- stderr ---

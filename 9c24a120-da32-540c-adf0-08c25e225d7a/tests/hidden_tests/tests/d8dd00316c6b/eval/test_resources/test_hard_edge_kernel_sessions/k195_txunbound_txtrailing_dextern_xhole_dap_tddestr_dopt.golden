@@ -1,0 +1,48 @@
+exit: 0
+--- stdout ---
+00000005error00000062error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^
+0000000000000005error00000075error: expected int, found bool
+ --> 3:7
+  |
+3 | ok2 + true
+  |       ^^^^
+0000000000000002ok0000000000000005pass
+00000005error00000322error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: root, List.range, Seq.range, String.get, String.repeat, String.fromInt, and 60 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 3:18
+  |
+3 | let h = List.map ?f [1]
+  |                  ^^0000000000000002ok00000023parity : int -> string
+00000560from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _ap_Even_Odd(k):
+    if k % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def parity(k):
+    _pf_t0 = _ap_Even_Odd(k)
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    elif isinstance(_pf_t0, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+00000005error00000076(could not determine a type — is `let (a, b) = (1, "two")` an expression?)0000000000000002ok00000032firstOr : 'a -> (List 'a) -> 'a
+00000093def firstOr(d, xs):
+    if xs:
+        x = xs[0]
+        return x
+    else:
+        return d
+--- stderr ---

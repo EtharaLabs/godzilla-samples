@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    def __repr__(self):
+        return f"Emit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: str
+    _1: str
+    def __repr__(self):
+        return f"Drop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    def __repr__(self):
+        return "Load"
+_Load = Load()
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Skip({self._0!r}, {self._1!r})"
+def sum_(a, b):
+    return a - b
+print((sum_(15, 3), sum([1, 2, 3]), _pf_sum_by(lambda x: x * 2, [1, 2])))
+dict_ = dict([("k", 5)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+list_ = [8, 6, 7]
+print((list(map(lambda x: x + 1, iter(list_))), list_))
+def bump2(n):
+    return n + 60
+def callHelper(x):
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 4
+    tmp = callHelper(bump2)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [8]
+    if _pf_t0:
+        bump2 = _pf_t0[0]
+        return bump2 + callHelper(1)
+    else:
+        return 0
+beta = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+gamma = _pf_fn2()
+print((first, beta, gamma, callHelper(0)))
+def render(t):
+    match t:
+        case Emit(n0) if n0 > 6:
+            return f"emit!({n0})"
+        case Emit(n0):
+            return f"emit({n0})"
+        case Drop(s0, s1):
+            return f"drop({s0},{s1})"
+        case Push(n0):
+            return f"push({n0})"
+        case Load():
+            return f"load"
+        case Skip(n0, n1):
+            return f"skip({n0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Emit(x0):
+            return x0
+        case Push(x0):
+            return x0 * 2
+        case Load():
+            return 5
+        case Drop(_, _):
+            return 9
+        case _:
+            return 1
+prog = [Emit(10), Push(6), Emit(-3), Push(3), Skip(8, 1)]
+print(_pf_map(render, prog))
+tally = _pf_sum_by(cost, prog)
+print(f"tally={tally}")
+print(len(_pf_filter(lambda t: cost(t) > 3, prog)))
+--- stderr ---

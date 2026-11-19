@@ -1,0 +1,57 @@
+exit: 0
+--- stdout ---
+let pure margin price qty = ((price * qty) - (5 * qty))
+let report label price qty =
+    (print f"{label}: {((margin price) qty)}")
+    ((margin price) qty)
+let grand = (([("rod", 28, 6), ("pin", 25, 3), ("tap", 48, 3), ("cog", 10, 3)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print grand)
+let pure scaled k = (List.map (margin k))
+(print ((scaled 20) [1, 2, 3]))
+type Expr = Num int | Add Expr Expr | Mul Expr Expr | Neg Expr | Var string
+let env = (Map.ofList [("x", 5), ("y", 4)])
+let evalE e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evalE a) + (evalE b))
+        case (Mul a b): ((evalE a) * (evalE b))
+        case (Neg a): (- (evalE a))
+        case (Var v): (((Map.findOr v) 0) env)
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+        case (Var v): v
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let exprs = [((Add ((Add (Neg (Num 8))) ((Add (Num 1)) (Var "y")))) (Neg (Var "x"))), (Var "y")]
+(((exprs |> (List.map simplify)) |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evalE) exprs))
+measure m
+measure s
+measure kg
+measure N = kg m/s^2
+let laps = [388.3<m>, 164.1<m>, 151.1<m>, 483.8<m>]
+let splits = [71.1<s>, 35.7<s>, 74.2<s>, 23.7<s>]
+let total = (((List.fold (+)) 0.0<m>) laps)
+let elapsed = (((List.fold (+)) 0.0<s>) splits)
+let rate = (total / elapsed)
+(print ((Format.fixed 2) rate))
+let edge = (sqrt 49.0<m^2>)
+let cube = ((edge * edge) * edge)
+(print f"{edge} {(cbrt cube)}")
+let mass = 65.0<kg>
+let accel = 6.5<m/s^2>
+let push = (mass * accel)
+let limit = 204.0<N>
+(print (if (push > limit) then "over" else "under"))
+--- stderr ---

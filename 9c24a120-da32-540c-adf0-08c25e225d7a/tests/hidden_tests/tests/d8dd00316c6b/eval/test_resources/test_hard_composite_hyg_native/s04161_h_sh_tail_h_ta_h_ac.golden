@@ -1,0 +1,152 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+def tweak(x: int, flag: bool) -> tuple[int, int]:
+    y = x * 2
+    if flag:
+        _y = x + 158
+        _pf_t0 = _y - 1
+    else:
+        _pf_t0 = y
+    z = _pf_t0
+    return (y, z)
+print((tweak(6, True), tweak(6, False)))
+makers = _pf_map(lambda k: lambda x: x * 10 + k, [8, 3, 8])
+print(_pf_map(lambda g: g(2), makers))
+def bump2(n: int) -> int:
+    return n + 29
+def useBump(x: int) -> int:
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 5
+    return useBump(bump2)
+probe: int = _pf_fn0()
+print((probe, useBump(5)))
+def scale(n: int) -> int:
+    return n * 2
+def _pf_fn1():
+    _pf_t1 = [9, 2]
+    if _pf_t1:
+        scale = _pf_t1[0]
+        return scale + 1
+    else:
+        return 0
+picked: int = _pf_fn1()
+print((picked, scale(2)))
+def isEven(n: int) -> bool:
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n: int) -> bool:
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [30, 8, 5, 6, 3]))
+def steps(n: int, acc: int) -> int:
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: steps(n, 0), [8, 15, 46]))
+def euclid(a: int, b: int) -> int:
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(euclid(294, 480))
+def finished(acc):
+    async def _pf_fn2():
+        return acc
+    return _pf_Async(_pf_fn2)
+def loop(n: int, acc: int):
+    async def _pf_fn4():
+        async def _pf_fn3():
+            return n * 2
+        k = await _pf_fn3()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await loop(n - 1, acc + k)
+    return _pf_Async(_pf_fn4)
+print(asyncio.run(_pf_run(loop(18, 0))))
+def _ap_KeyVal(s):
+    _pf_t2 = _pf_str_split("=", s)
+    if len(_pf_t2) == 2:
+        k = _pf_t2[0]
+        v = _pf_t2[1]
+        _pf_t3 = _pf_str_to_int(v)
+        if isinstance(_pf_t3, Some):
+            n = _pf_t3._0
+            return Some((_pf_str_strip(k), n))
+        else:
+            return _None_
+    else:
+        return _None_
+def label(s: str) -> str:
+    _pf_t4 = _ap_KeyVal(s)
+    if isinstance(_pf_t4, Some):
+        pair = _pf_t4._0
+        if _pf_snd(pair) > 9:
+            return f"{_pf_fst(pair)} big"
+    if isinstance(_pf_t4, Some):
+        pair = _pf_t4._0
+        return f"{_pf_fst(pair)}={_pf_snd(pair)}"
+    return "?"
+_pf_iter(print, _pf_map(label, ["kit", "jo=7", "quin", "ray"]))
+--- stderr ---
+note: `loop` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

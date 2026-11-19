@@ -1,0 +1,31 @@
+exit: 0
+--- stdout ---
+def _pf_concat(xs, ys):
+    return xs + ys
+def Many_yield_(x):
+    return [x]
+def Many_yieldFrom(xs):
+    return xs
+def Many_combine(a, d):
+    return _pf_concat(a, d(None))
+def Many_delay(f):
+    return f
+def Many_for_(xs, f):
+    acc = []
+    for x in xs:
+        _pf_t0 = f(x)
+        acc.extend(_pf_t0)
+    return acc
+Many_zero = []
+def Many_bind(xs, f):
+    acc = []
+    for x in xs:
+        _pf_t1 = f(x)
+        acc.extend(_pf_t1)
+    return acc
+def Many_return_(x):
+    return [x]
+def go(xs):
+    return Many_for_(xs, lambda x: Many_for_(xs, lambda y: Many_yield_(x * y)))
+print(go([1, 2, 3]))
+--- stderr ---

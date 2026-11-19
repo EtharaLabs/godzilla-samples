@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 6:11
+  |
+6 | let p1 = [pt.z] |> List.len
+  |           ^^^^
+
+error: unbound name `len` (Pyfun spells this `List.len` for a list, `String.len` for a string)
+ --> 8:29
+  |
+8 | let l2 = List.map (fun q -> len [1]) [1, 2]
+  |                             ^^^
+
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 11:15
+   |
+11 |     yield 1 + "x"
+   |               ^^^
+
+3 errors

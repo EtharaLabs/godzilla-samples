@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+00000002ok00000092counter : int
+quiet : 'a -> unit
+shout : 'a ->{io} unit
+log : 'a -> 'b ->{io} unit
+r : unit
+00000226import m
+counter = 0
+def quiet(x):
+    return None
+def shout(x):
+    return print(x)
+def log(t, x):
+    return print(f"{t}:{x}")
+def _pf_fn0(x):
+    global counter
+    counter = counter + x
+    return None
+r = m.each(_pf_fn0)
+00000002ok00000038eachIo : (int ->{io} unit) ->{io} unit0000000000000002ok00000008r : unit00000000--- stderr ---

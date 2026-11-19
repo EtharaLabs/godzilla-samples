@@ -1,0 +1,48 @@
+exit: 0
+--- stdout ---
+type Player = { name: string, points: int, active: bool }
+let decoder = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let payload = "[{\"name\": \"jo\", \"points\": 19, \"active\": false}, {\"name\": \"ray\", \"points\": 11, \"active\": true}, {\"name\": \"sue\", \"points\": 18, \"active\": false}, {\"name\": \"ray\", \"points\": 77, \"active\": false}]"
+match ((Decode.decodeString (Decode.list decoder)) payload):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+type Term = Num int | Add Term Term | Mul Term Term | Neg Term
+let evaluate e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evaluate a) + (evaluate b))
+        case ((Mul (Num 0) _) | (Mul _ (Num 0))): 0
+        case (Mul a b): ((evaluate a) * (evaluate b))
+        case (Neg a): (- (evaluate a))
+let pretty e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(pretty a)} + {(pretty b)})"
+        case (Mul a b): f"{(pretty a)} * {(pretty b)}"
+        case (Neg a): f"-{(pretty a)}"
+let terms = [(Num 8), (Neg ((Add (Num 0)) ((Add (Num 1)) (Num (- 2)))))]
+((terms |> (List.map pretty)) |> (List.iter print))
+(print ((List.map evaluate) terms))
+type Signal = Skip int | Load int int | Rest int int | Mark int
+let show t =
+    match t:
+        case (Skip n0) if (0 <= n0 < 20): f"skip!({n0})"
+        case (Skip n0): f"skip({n0})"
+        case (Load n0 n1): f"load({n0},{n1})"
+        case (Rest n0 n1): f"rest({n0},{n1})"
+        case (Mark n0) if ((n0 % 2) == 0): f"mark!({n0})"
+        case (Mark n0): f"mark({n0})"
+let score t =
+    match t:
+        case (Load x0 x1): (x0 + (x1 * 4))
+        case (Skip x0): x0
+        case _: 1
+let prog = [(Skip 11), (Mark 6), ((Rest 6) 10), ((Rest 1) 6)]
+((prog |> (List.map show)) |> print)
+let total = (prog |> (List.sumBy score))
+(print f"total={total}")
+(print ((List.maxBy score) prog))
+--- stderr ---

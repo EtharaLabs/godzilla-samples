@@ -1,0 +1,79 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def sorted_(xs):
+    return _pf_rev(_pf_sort(xs))
+print((sorted_([6, 7, 2, 4]), _pf_sort([3, 1, 2])))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+str_: str = "quin"
+print((str(95), str_, _pf_str_concat(str_, str(1))))
+def lift(n: int) -> int:
+    return n + 58
+def useHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn0():
+    lift = 6
+    tmp = useHelper(lift)
+    return tmp * 2
+alpha: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [1]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + useHelper(1)
+    else:
+        return 0
+second: int = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+gamma: int = _pf_fn2()
+print((alpha, second, gamma, useHelper(0)))
+laps: list[float] = [205.9, 147.5, 194.4]
+durations: list[float] = [9.5, 6.1, 29.4]
+dist: float = _pf_fold(lambda acc, d: acc + d * 1.0, 0.0, laps)
+elapsed: float = _pf_fold(lambda a, b: a + b, 0.0, durations)
+pace: float = dist / elapsed
+print(_pf_fmt_fixed(2, pace))
+edge: float = math.sqrt(4.0)
+cube: float = edge * edge * edge
+print(f"{edge} {math.cbrt(cube)}")
+def _pf_fn3(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best: Some | None_ = _pf_max_by(_pf_fn3, _pf_zip(laps, durations))
+print(best)
+--- stderr ---

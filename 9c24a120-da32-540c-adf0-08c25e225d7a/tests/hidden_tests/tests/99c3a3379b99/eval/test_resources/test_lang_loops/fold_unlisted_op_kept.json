@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "import functools\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndef _pf_rev(xs):\n    return list(reversed(xs))\ndef build(xs):\n    return _pf_fold(lambda acc, x: _pf_rev(acc), [], xs)\n",
+ "stderr": ""
+}

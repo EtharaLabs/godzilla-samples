@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+let (|DivisibleBy|_|) d n = ((n % d) == 0)
+let fizz n =
+    match n:
+        case (DivisibleBy 15): "fizzbuzz"
+        case (DivisibleBy 3): "fizz"
+        case (DivisibleBy 5): "buzz"
+        case _: (String.fromInt n)
+let a = (fizz 15)
+let b = (fizz 9)
+let c = (fizz 10)
+let d = (fizz 7)
+--- stderr ---

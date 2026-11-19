@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 8:11
+  |
+8 |     yield pt.z
+  |           ^^^^
+
+error: unbound name `missingName`
+  --> 10:13
+   |
+10 | let i2 = if missingName 3 then 1 else 2
+   |             ^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 11:34
+   |
+11 | let t3 = (0, if true then 1 else "s", "z")
+   |                                  ^^^
+
+3 errors

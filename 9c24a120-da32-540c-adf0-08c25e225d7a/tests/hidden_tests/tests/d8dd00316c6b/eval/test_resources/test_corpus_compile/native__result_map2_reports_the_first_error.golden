@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_res_map2(f, a, b):
+    if isinstance(a, Error):
+        return a
+    if isinstance(b, Error):
+        return b
+    return Ok(f(a._0, b._0))
+r: Ok | Error = _pf_res_map2(lambda a, b: a + b, Ok(1), Ok(2))
+--- stderr ---

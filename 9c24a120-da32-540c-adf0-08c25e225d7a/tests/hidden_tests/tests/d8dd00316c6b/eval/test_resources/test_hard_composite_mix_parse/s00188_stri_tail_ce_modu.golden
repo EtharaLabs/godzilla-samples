@@ -1,0 +1,37 @@
+exit: 0
+--- stdout ---
+let raw = "tap;nut;eli;gear"
+let parts = ((String.split ";") raw)
+(print (((parts |> (List.map String.rev)) |> List.rev) |> (String.join " ")))
+(print ((List.map (fun w -> (w, (String.len w)))) parts))
+(print ((parts |> (List.map String.upper)) |> (String.join "|")))
+let cell (i, w) = ((String.concat (((Format.padRight 7) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((parts |> List.indexed) |> (List.map cell)) |> (List.iter print))
+let count = (List.len parts)
+(print f"count={count} {{braces}} {(String.len raw)}")
+let fieldsN = (((String.split ",") "7,12,7,x,7") |> (List.map String.toInt))
+(print fieldsN)
+(print ((fieldsN |> (List.choose id)) |> List.sum))
+let steps n acc = (if (n == 1) then acc elif ((n % 2) == 0) then ((steps (n // 2)) (acc + 1)) else ((steps ((3 * n) + 1)) (acc + 1)))
+(print ((List.map (fun n -> ((steps n) 0))) [44, 54, 36]))
+let accumulate n acc = (if (n == 0) then acc else ((accumulate (n - 1)) (acc + (n * n))))
+(print ((accumulate 2177) 0))
+let euclid a b = (if (b == 0) then a else ((euclid b) (a % b)))
+(print ((euclid 72) 250))
+let parseEntry line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) return (k, n) }
+let lines = ["eli = 3", "jo=x", "max", "quin = 7", "ada"]
+let results = ((List.map parseEntry) lines)
+((List.iter print) results)
+let goodOnes = (results |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine results) |> (Result.mapError String.upper)))
+module Text =
+    let clamp lo hi x = ((max lo) ((min hi) x))
+    let mean xs = (if (List.isEmpty xs) then 0 else ((List.sum xs) // (List.len xs)))
+    let norm1 xs = ((xs |> (List.map abs)) |> List.sum)
+let obs = [(- 5), 7, 8, 11]
+(print (obs |> (List.map ((Text.clamp 0) 16))))
+(print (Text.mean obs))
+(print (Text.norm1 obs))
+--- stderr ---

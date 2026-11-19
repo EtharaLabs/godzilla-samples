@@ -1,0 +1,106 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Result2:
+    who: str
+    pts: int
+    ratio: float
+marks = [Result2("ada", 82, 0.02), Result2("jo", 7, 0.55), Result2("eli", 0, 0.54), Result2("ivy", 61, 0.71)]
+def line3(_pf_arg0):
+    who = _pf_arg0.who
+    pts = _pf_arg0.pts
+    ratio = _pf_arg0.ratio
+    return "{} | {} | {} | {{{}}}".format(_pf_fmt_pad_right(6, ".", who), _pf_str_upper(_pf_str_slice(0, 2, who)), "pass" if pts >= 42 else "fail", pts)
+_pf_iter(print, _pf_map(line3, marks))
+total = _pf_sum_by(lambda s: s.pts, marks)
+print("total={} avg {} {}done{}".format(total, _pf_fmt_fixed(1, _pf_fold(lambda a, s: a + s.ratio, 0.0, marks)), "{", "}"))
+def running(xs):
+    peak = 0
+    def step(acc, x):
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([7, 6, -4, -7, -4, 7, -3]))
+trail = []
+def logged(tag, f, x):
+    global trail
+    y = f(x)
+    trail = _pf_concat(trail, [f"{tag}({x})={y}"])
+    return y
+out = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [3, 4]))
+print((out, trail))
+def census(xs):
+    evens = 0
+    odds = 0
+    def visit(x):
+        def bump(isEven):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(census([16, 17, 6]))
+def inc(x):
+    return x + 1
+def step2(x):
+    return x * 2
+def pipeline2(x):
+    return (lambda _pf_x: (lambda _pf_x: step2(inc(_pf_x)))((lambda y: y - x)(_pf_x)))(x)
+print(_pf_map(pipeline2, [1, 7, 9]))
+def lift(n):
+    return n + 55
+def useBump(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 4
+    return useBump(lift)
+probe = _pf_fn0()
+print((probe, useBump(5)))
+def adjust(x, flag):
+    y = x * 2
+    if flag:
+        _y = x + 561
+        _pf_t0 = _y - 1
+    else:
+        _pf_t0 = y
+    z = _pf_t0
+    return (y, z)
+print((adjust(1, True), adjust(4, False)))
+def outer(xs):
+    def twice(x):
+        return x * 2
+    def go(twice):
+        return twice + 1
+    return _pf_map(lambda x: go(twice(x)), xs)
+print(outer([8, 9, 2]))
+--- stderr ---

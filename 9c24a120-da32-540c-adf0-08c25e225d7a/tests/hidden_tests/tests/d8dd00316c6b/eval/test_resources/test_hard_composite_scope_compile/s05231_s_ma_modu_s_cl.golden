@@ -1,0 +1,127 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Sq:
+    _0: int
+    def __repr__(self):
+        return f"Sq({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Tri:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Tri({self._0!r}, {self._1!r})"
+def size(s):
+    match s:
+        case Sq(n) | Ci(n):
+            return n
+        case Tri(n, m) if n > m:
+            return n
+        case Tri(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(size, [Sq(3), Ci(7), Tri(1, 1), Tri(1, 9)]))
+cap = 11
+def clip(o):
+    if isinstance(o, Some):
+        _cap = o._0
+        if _cap > 0:
+            return _cap
+    if isinstance(o, Some):
+        return 0
+    else:
+        return cap
+print((clip(Some(1)), clip(Some(-3)), clip(_None_), cap))
+def dig(xs):
+    if xs:
+        x = xs[0]
+        _pf_t0 = _pf_last(xs)
+        if isinstance(_pf_t0, Some):
+            _x = _pf_t0._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t0, Some):
+            y = _pf_t0._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((dig([7, 7]), dig([8, 9]), dig([])))
+def Geo_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Geo_between(lo, hi, x):
+    return lo <= x <= hi
+def Geo_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Geo_square(x):
+    return x * x
+nums = [9, -9, 1, 7, 8]
+print(_pf_map(functools.partial(Geo_clamp, 0, 14), nums))
+print(_pf_filter(functools.partial(Geo_between, -4, 13), nums))
+print(Geo_norm1(nums))
+print(_pf_map(Geo_square, nums))
+def numbered(xs):
+    i = 3
+    def tag(x):
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(numbered(["pam", "ivy", "ada"]))
+def tally(xs):
+    evens = 0
+    odds = 0
+    def visit(x):
+        def bump(isEven):
+            nonlocal evens, odds
+            if isEven:
+                evens = evens + x
+                return None
+            else:
+                odds = odds + 1
+                return None
+        return bump(x % 2 == 0)
+    _pf_iter(visit, xs)
+    return (evens, odds)
+print(tally([9, 13, 12]))
+journal = []
+def logged(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out = _pf_map(functools.partial(logged, "inc", lambda x: x + 1), _pf_map(functools.partial(logged, "sq", lambda x: x * x), [8, 8]))
+print((out, journal))
+--- stderr ---

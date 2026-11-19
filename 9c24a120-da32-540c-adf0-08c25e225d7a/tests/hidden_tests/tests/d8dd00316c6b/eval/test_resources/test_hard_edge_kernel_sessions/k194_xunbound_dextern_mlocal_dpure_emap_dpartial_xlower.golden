@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+00000005error00000062error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^
+0000000000000002ok0000000000000005pass
+00000002ok00000008t : int
+00000019t = 3
+print(t * t)
+00000002ok00000026sq : int<'a> -> int<'a^2>
+00000028def sq(x):
+    return x * x
+00000002ok0000000000000091def _pf_map(f, xs):
+    return list(map(f, xs))
+print(_pf_map(lambda x: x * x, [1, 2, 3]))
+00000002ok00000053add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+00000081import functools
+def add(a, b):
+    return a + b
+inc = functools.partial(add, 1)
+00000005error00000073error: a `case` guard must be a simple expression
+ --> 1:1
+  |
+1 | 
+  | ^00000000--- stderr ---

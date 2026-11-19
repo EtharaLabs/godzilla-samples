@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+name, score = ("ada", 10)
+_pf_t0 = (1, (2, 3))
+first, _pf_t1_1 = _pf_t0
+second, third = _pf_t1_1
+_pf_t2 = Point(3, 4)
+x = _pf_t2.x
+y = _pf_t2.y
+def swap(p):
+    a, b = p
+    return (b, a)
+print(f"{name} scored {score}")
+print(first + second + third)
+print(x * y)
+print(swap((1, 2)))
+--- stderr ---

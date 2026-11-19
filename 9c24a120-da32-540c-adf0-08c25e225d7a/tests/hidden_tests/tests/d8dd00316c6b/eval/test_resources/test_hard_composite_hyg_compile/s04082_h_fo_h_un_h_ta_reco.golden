@@ -1,0 +1,144 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import asyncio
+import math
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip = Skip()
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def execute(script):
+    def fold1(m, op):
+        match op:
+            case Put(k, v):
+                return _pf_map_add(k, _pf_map_find_or(k, 0, m) + v, m)
+            case Append(n):
+                return _pf_map_add("pushed", n, m)
+            case Skip():
+                return m
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    m = dict()
+    for op in script:
+        match op:
+            case Put(k, v):
+                _pf_t0 = _pf_map_find_or(k, 0, m) + v
+                m[k] = _pf_t0
+            case Append(n):
+                m["pushed"] = n
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return m
+ops = [Put("bolt", 2), _Skip, Append(2), Append(-1), _Skip, Put("nut", 3)]
+state = execute(ops)
+print(_pf_map_to_list(state))
+sumSq = _pf_fold(lambda fold1, x: fold1 + x * x, 0, [2, 7, 4, 5])
+print(sumSq)
+reach = math.hypot(6.0 / 1.0, 4.0 / 1.0) * 1.0
+ratio = math.sqrt(2.0)
+side = math.sqrt(36.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+def velocity(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, velocity(reach, 9.0)))
+def finished(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def spin(n, acc):
+    async def _pf_fn2():
+        async def _pf_fn1():
+            return n * 3
+        k = await _pf_fn1()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await spin(n - 1, acc + k)
+    return _pf_Async(_pf_fn2)
+print(asyncio.run(_pf_run(spin(13, 0))))
+def countDigits(n, acc):
+    while True:
+        if n < 10:
+            return acc + 1
+        else:
+            n, acc = (n // 10, acc + 1)
+            continue
+async def _pf_fn3():
+    a = await spin(9, 0)
+    return countDigits(a * 22464, 0)
+main = _pf_Async(_pf_fn3)
+print(asyncio.run(_pf_run(main)))
+orders = [Invoice(100, "pam", 77, True), Invoice(101, "oz", 13, False), Invoice(102, "pam", 48, False), Invoice(103, "pam", 183, True), Invoice(104, "pam", 146, True), Invoice(105, "oz", 105, True)]
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by(lambda o: o.amount, orders))))
+def _pf_fn4(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+byOwner = _pf_map(_pf_fn4, _pf_group_by(lambda o: o.owner, orders))
+print(byOwner)
+def adjust(o):
+    if o.urgent:
+        _pf_t1 = o
+        return Invoice(_pf_t1.id, _pf_t1.owner, o.amount + 7, _pf_t1.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(adjust, orders)))
+--- stderr ---
+note: `spin` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

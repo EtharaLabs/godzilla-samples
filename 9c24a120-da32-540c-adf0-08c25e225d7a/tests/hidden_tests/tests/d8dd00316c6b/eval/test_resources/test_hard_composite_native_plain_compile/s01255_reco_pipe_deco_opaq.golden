@@ -1,0 +1,176 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Addr:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    points: int
+    active: bool
+tickets = [Parcel(100, "dee", 36, False, Addr("Lima", 1)), Parcel(101, "cy", 28, False, Addr("Doha", 3)), Parcel(102, "cy", 53, True, Addr("Bern", 3)), Parcel(103, "cy", 201, False, Addr("Oslo", 4)), Parcel(104, "cy", 226, True, Addr("Riga", 3)), Parcel(105, "cy", 49, False, Addr("Lima", 2))]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), tickets)
+print(f"{cnt} records, {amt} total")
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(rushSum)
+def _pf_fn1(o):
+    if o.dest.zone > 2:
+        _pf_t2 = o
+        return Parcel(_pf_t2.id, _pf_t2.owner, _pf_t2.amount, _pf_t2.urgent, Addr("Hub", 1))
+    else:
+        return o
+rerouted = _pf_map(_pf_fn1, tickets)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", rerouted))
+def line(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(line, tickets)))
+values = [29, 45, 30, 37, 12, -10, 23, 4, -6, 18, -1]
+def offset(k, x):
+    return x + k
+def _pf_fn17(_pf_x):
+    def _pf_fn25(_pf_x):
+        def _pf_fn29(_pf_x):
+            def _pf_fn31(_pf_x):
+                def _pf_fn32(_pf_arg0):
+                    i, x = _pf_arg0
+                    return i * x
+                return _pf_map(_pf_fn32, _pf_indexed(_pf_x))
+            return _pf_drop(2, _pf_fn31(_pf_x))
+        return _pf_map(lambda b: 19 - b, _pf_fn29(_pf_x))
+    return _pf_map(functools.partial(offset, 8), _pf_fn25(_pf_x))
+pipeline = _pf_fn17
+answer = _pf_max(pipeline(values))
+print(answer)
+print(len(values))
+decoder = _pf_dec_map3(lambda n, p, a: Entry(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+jsonText = "[{\"name\": \"sue\", \"points\": 95, \"active\": false}, {\"name\": \"tom\", \"points\": 84, \"active\": true}, {\"name\": \"hal\", \"points\": 7, \"active\": true}, {\"name\": \"hal\", \"points\": 74, \"active\": false}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+_pf_t4 = lambda n, p, a: Entry(n, p, a)
+try:
+    _pf_t5 = json.loads(jsonText)
+    if not isinstance(_pf_t5, list):
+        raise ValueError("expected a JSON array")
+    _pf_t6 = []
+    for _pf_t7 in _pf_t5:
+        if not isinstance(_pf_t7, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t8 = _pf_t7["name"]
+        if not isinstance(_pf_t8, str):
+            raise ValueError("expected a string, got " + type(_pf_t8).__name__)
+        if not isinstance(_pf_t7, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t9 = _pf_t7["points"]
+        if not (isinstance(_pf_t9, int) and not isinstance(_pf_t9, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t9).__name__)
+        if not isinstance(_pf_t7, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t10 = _pf_t7["active"]
+        if not isinstance(_pf_t10, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t10).__name__)
+        _pf_t6.append(_pf_t4(_pf_t8, _pf_t9, _pf_t10))
+    _pf_t11 = Ok(_pf_t6)
+except Exception as e:
+    _pf_t11 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t11, Ok):
+    ps = _pf_t11._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t3 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t11._0
+    _pf_t3 = print(f"decode failed: {e.errorKind}")
+_pf_t3
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("acc", 2)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+--- stderr ---

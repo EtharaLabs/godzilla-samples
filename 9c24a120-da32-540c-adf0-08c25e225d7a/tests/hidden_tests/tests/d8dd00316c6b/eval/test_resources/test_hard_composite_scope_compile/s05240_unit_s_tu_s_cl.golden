@@ -1,0 +1,99 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+legs = [272.4, 415.9, 104.4]
+splits = [43.7, 56.9, 54.1]
+dist = _pf_fold(lambda a, b: a + b, 0.0, legs)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, splits)
+rate = dist / elapsed
+print(_pf_fmt_fixed(1, rate))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+def _pf_fn0(_pf_arg0):
+    d, t = _pf_arg0
+    return d / t
+best = _pf_max_by(_pf_fn0, _pf_zip(legs, splits))
+print(best)
+mass = 3.0
+accel = 4.5
+push = mass * accel
+limit = 117.0
+print("over" if push > limit else "under")
+stock = [("tap", 14), ("rod", 4), ("cog", 11)]
+widths = [("tom", (4, 19)), ("ray", (1, 15)), ("kit", (0, 18))]
+def _pf_fn1():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn1()
+print(list(widthsOut))
+def _pf_fn2():
+    for (name, qty) in stock:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn2()
+print(_pf_str_join(",", list(labels)))
+def _pf_fn3(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+extremes = _pf_fold(_pf_fn3, (1000, -1000), stock)
+print(extremes)
+acc = dict()
+for (k, v) in _pf_concat(stock, stock):
+    _pf_t0 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t0
+index = acc
+print(_pf_map_to_list(index))
+journal = []
+def traced(tag, f, x):
+    global journal
+    y = f(x)
+    journal = _pf_concat(journal, [f"{tag}({x})={y}"])
+    return y
+out = _pf_map(functools.partial(traced, "inc", lambda x: x + 1), _pf_map(functools.partial(traced, "sq", lambda x: x * x), [8, 5]))
+print((out, journal))
+def running(xs):
+    peak = 0
+    def step(acc, x):
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(running([5, 2, -6, -9, 7]))
+--- stderr ---

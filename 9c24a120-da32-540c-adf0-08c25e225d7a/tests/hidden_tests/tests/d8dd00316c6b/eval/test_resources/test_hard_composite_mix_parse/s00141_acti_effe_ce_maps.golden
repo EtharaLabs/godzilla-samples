@@ -1,0 +1,43 @@
+exit: 0
+--- stdout ---
+let (|Even|Odd|) n = (if ((n % 2) == 0) then Even else Odd)
+let (|Above|_|) n = (if (n > 21) then (Some (n - 21)) else None)
+let (|Zero|_|) n = (n == 0)
+let classify n =
+    match n:
+        case (Above d): f"above by {d}"
+        case Zero: "zero"
+        case Even: "even"
+        case _: "odd"
+(([18, 32, 36, 25, 12, 12, 25] |> (List.map classify)) |> (List.iter print))
+let pure discount price qty = ((price * qty) - (2 * qty))
+let report label price qty =
+    (print f"{label}: {((discount price) qty)}")
+    ((discount price) qty)
+let overall = (([("wick", 11, 3), ("cog", 23, 1), ("pin", 37, 6), ("gear", 20, 5)] |> (List.map (fun (n, pr, q) -> (((report n) pr) q)))) |> List.sum)
+(print overall)
+let pure scaled k = (List.map (discount k))
+(print ((scaled 7) [1, 2, 3]))
+let decodeLine line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let inputs = ["tom=10", "ivy = 4", "ned=70", "ada=x"]
+let parsed = ((List.map decodeLine) inputs)
+((List.iter print) parsed)
+let goodOnes = (parsed |> (List.choose Result.toOption))
+(print (((List.map snd) goodOnes) |> List.sum))
+let firstGood = ((((parsed |> (List.map Result.toOption)) |> (List.choose id)) |> List.head) |> (Option.map fst))
+match firstGood:
+    case (Some name): (print f"first: {name}")
+    case None: (print "none parsed")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine parsed) |> (Result.mapError String.upper)))
+let log = ["eli", "cy", "ada", "eli", "bo", "fay", "cy"]
+let bump m w =
+    match ((Map.tryFind w) m):
+        case (Some n): (((Map.add w) (n + 1)) m)
+        case None: (((Map.add w) 1) m)
+let hist = (((List.fold bump) Map.empty) log)
+(print ((hist |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+(print (((Map.fold (fun acc k v -> (acc + v))) 0) hist))
+(print (((Map.tryFind "gus") hist), ((Map.contains "gus") hist)))
+(print (((hist |> Map.keys) |> List.sort) |> (String.join ",")))
+--- stderr ---

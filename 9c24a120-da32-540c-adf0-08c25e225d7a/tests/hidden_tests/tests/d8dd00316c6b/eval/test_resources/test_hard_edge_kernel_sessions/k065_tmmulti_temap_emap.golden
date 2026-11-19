@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+00000002ok00000050print "first"
+let u = 2
+print "second"
+u * 5 : int0000000000000002ok00000049[1, 2, 3] |> List.map (fun x -> x * x) : List int0000000000000002ok0000000000000091def _pf_map(f, xs):
+    return list(map(f, xs))
+print(_pf_map(lambda x: x * x, [1, 2, 3]))
+--- stderr ---

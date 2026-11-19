@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+let id x = x
+let n = (id 1)
+let s = (id "hi")
+let d = (((((Decode.map4 (fun a b c e -> a)) Decode.int) Decode.int) Decode.int) Decode.int)
+--- stderr ---

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_remove(k, m):
+    r = dict(m)
+    r.pop(k, None)
+    return r
+def _pf_map_to_list(m):
+    return list(m.items())
+def step(m: dict[int, int], x: int) -> dict[int, int]:
+    return _pf_map_remove(x, _pf_map_add(x + 1, x, m))
+m = dict()
+for x in [1, 2, 3]:
+    _pf_t0 = x + 1
+    m[_pf_t0] = x
+    m.pop(x, None)
+out: list[tuple[int, int]] = _pf_map_to_list(m)
+--- stderr ---

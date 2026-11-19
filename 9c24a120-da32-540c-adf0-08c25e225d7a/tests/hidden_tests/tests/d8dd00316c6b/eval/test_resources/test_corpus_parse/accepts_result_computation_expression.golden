@@ -1,0 +1,4 @@
+exit: 0
+--- stdout ---
+let f ok v = result { let! x = (if ok then (Ok v) else (Error 0)) return (x + 1) }
+--- stderr ---

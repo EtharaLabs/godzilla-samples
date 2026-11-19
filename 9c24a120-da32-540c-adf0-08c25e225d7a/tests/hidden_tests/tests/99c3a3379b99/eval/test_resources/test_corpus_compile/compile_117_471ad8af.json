@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _pf_str_to_int(s):\n    try:\n        return Some(int(s))\n    except ValueError:\n        return _None_\ndef label(s):\n    _pf_t0 = _pf_str_to_int(s)\n    if isinstance(_pf_t0, Some):\n        n = _pf_t0._0\n        return f\"number: {n}\"\n    else:\n        return \"no number\"\nprint(label(\"7\"))\nprint(label(\"nope\"))\n",
+ "stderr": ""
+}

@@ -1,0 +1,193 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Bst"
+    _1: int
+    _2: "Bst"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Bst = Leaf | Node
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+tallies: list[tuple[str, int]] = [("cap", -2), ("rod", 8), ("hub", 5), ("nut", 14), ("bolt", 3)]
+def validate(rows) -> Ok | Error:
+    def _pf_fn0():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t0 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t0, Ok):
+            total = _pf_t0._0
+            return Ok(total)
+        else:
+            return _pf_t0
+    return _pf_fn0()
+print((validate(tallies), validate([("ok", 1)])))
+widths: list[tuple[str, tuple[int, int]]] = [("dee", (5, 15)), ("ray", (2, 6)), ("ada", (5, 13))]
+def _pf_fn1():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn1()
+print(list(widthsOut))
+def _pf_fn2(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+bounds: tuple[int, int] = _pf_fold(_pf_fn2, (1000, -1000), tallies)
+print(bounds)
+acc = dict()
+for (k, v) in _pf_concat(tallies, tallies):
+    _pf_t1 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t1
+index: dict[str, int] = acc
+print(_pf_map_to_list(index))
+def add(x: int, t: Bst) -> Bst:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(add(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, add(x, rt))
+        return t
+root: Bst = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [6, 3, 14, 18, 58])
+def containsOf(x: int, t: Bst) -> bool:
+    while True:
+        if isinstance(t, Leaf):
+            return False
+        else:
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x == v:
+                return True
+            elif x < v:
+                x, t = (x, l)
+                continue
+            else:
+                x, t = (x, rt)
+                continue
+print(_pf_map(lambda k: containsOf(k, root), [6, 59, 44]))
+def minT(t: Bst) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minT(root))
+def toListOf(t: Bst) -> list[int]:
+    if isinstance(t, Leaf):
+        return []
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return _pf_concat(toListOf(l), _pf_concat([v], toListOf(rt)))
+print(toListOf(root))
+def sumOf(t: Bst) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumOf(l) + v + sumOf(rt)
+print(sumOf(root))
+tiles: list[Panel] = [Panel(3, 4, "wick"), Panel(2, 4, "gear"), Panel(7, 6, "bolt"), Panel(9, 2, "cog"), Panel(3, 3, "rod"), Panel(4, 4, "sq")]
+def relabel(prefix: str, b: Panel) -> Panel:
+    label = b.label
+    _pf_t3 = b
+    return Panel(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "old-"), tiles)))
+def area(_pf_arg0: Panel) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+def describe(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, tiles)))
+--- stderr ---

@@ -1,0 +1,170 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Signup:
+    user: str
+    age: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Pop({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Skip({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Lit:
+    _0: int
+    def __repr__(self):
+        return f"Lit({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ref:
+    _0: str
+    def __repr__(self):
+        return f"Ref({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Plus:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Plus({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Block:
+    _0: list
+    _1: object
+    def __repr__(self):
+        return f"Block({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Set:
+    _0: str
+    _1: object
+    def __repr__(self):
+        return f"Set({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Show:
+    _0: object
+    def __repr__(self):
+        return f"Show({self._0!r})"
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def readForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 19 else Error("too young"), lambda adult: Check_return_(Signup(name, adult)))))
+print(readForm("bo", "25"))
+print((readForm("a", "30"), readForm("bob", "x")))
+def explain(t):
+    match t:
+        case Mark(n0) if 0 <= n0 < 19:
+            return f"mark!({n0})"
+        case Mark(n0):
+            return f"mark({n0})"
+        case Pop(n0, s1) if 0 <= n0 < 18:
+            return f"pop!({n0},{s1})"
+        case Pop(n0, s1):
+            return f"pop({n0},{s1})"
+        case Skip(s0, n1):
+            return f"skip({s0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Mark(x0):
+            return x0 * 3
+        case _:
+            return 0
+batch = [Pop(0, "eli"), Pop(12, "bo"), Skip("sue", 7), Pop(2, "ada"), Skip("oz", 1)]
+print(_pf_map(explain, batch))
+grandSum = _pf_sum_by(rank, batch)
+print(f"grandSum={grandSum}")
+print((_pf_head(batch), _pf_last(batch)))
+print(_pf_str_rev(str.upper("cy")))
+print(_pf_map(math.isqrt, [266, 158, 386, 75]))
+def evalEx(env, e):
+    while True:
+        match e:
+            case Lit(n):
+                return n
+            case Ref(v):
+                return _pf_map_find_or(v, 0, env)
+            case Plus(a, b):
+                return evalEx(env, a) + evalEx(env, b)
+            case Block(body, last):
+                env, e = (_pf_fold(runSt, env, body), last)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def runSt(env, s):
+    match s:
+        case Set(v, e):
+            return _pf_map_add(v, evalEx(env, e), env)
+        case Show(e):
+            return _pf_map_add("shown", evalEx(env, e), env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(evalEx(dict(), Block([Set("a", Lit(2)), Set("b", Plus(Ref("a"), Lit(1))), Show(Ref("b"))], Plus(Ref("a"), Ref("shown")))))
+--- stderr ---

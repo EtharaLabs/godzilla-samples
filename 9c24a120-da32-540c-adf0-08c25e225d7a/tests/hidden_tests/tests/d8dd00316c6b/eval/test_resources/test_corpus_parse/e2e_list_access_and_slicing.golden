@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+let xs = [3, 1, 4, 1, 5]
+let first = (List.head xs)
+let none = (List.head ((List.drop 9) [1]))
+let rest = (List.tail xs)
+let taken = ((List.take 2) xs)
+let dropped = ((List.drop 3) xs)
+let overTake = ((List.take 99) xs)
+let negTake = ((List.take (- 1)) xs)
+let split = ((List.splitAt 2) xs)
+--- stderr ---

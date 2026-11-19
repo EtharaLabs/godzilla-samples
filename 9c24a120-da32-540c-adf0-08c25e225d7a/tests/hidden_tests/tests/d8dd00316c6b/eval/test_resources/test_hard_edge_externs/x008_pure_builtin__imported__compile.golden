@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+# ==== ffi.py ====
+absv = abs
+
+# ==== main.py ====
+import ffi
+def _pf_map(f, xs):
+    return list(map(f, xs))
+print(ffi.absv(-4))
+print(_pf_map(ffi.absv, [-4]))
+
+--- stderr ---

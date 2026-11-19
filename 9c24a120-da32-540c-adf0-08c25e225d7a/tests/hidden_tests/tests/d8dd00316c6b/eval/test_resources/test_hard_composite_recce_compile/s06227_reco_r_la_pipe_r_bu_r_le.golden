@@ -1,0 +1,127 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_forall(f, xs):
+    return all(map(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_pairwise(xs):
+    return list(zip(xs, xs[1:len(xs)]))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+orders = [Booking(100, "fay", 267, True, Site("Rome", 3)), Booking(101, "eli", 299, False, Site("Kyiv", 4)), Booking(102, "eli", 150, True, Site("Riga", 2)), Booking(103, "pam", 274, True, Site("Rome", 3))]
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Booking(_pf_t0.id, _pf_t0.owner, o.amount + extra, False, _pf_t0.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 12), orders)))
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn0, (0, 0), orders)
+print(f"{cnt} records, {sumAmt} total")
+def tag(o):
+    id = o.id
+    amount = o.amount
+    return f"#{id}:{_pf_fmt_pad_left(5, " ", str(amount))}"
+print(_pf_str_join(", ", _pf_map(tag, orders)))
+nums2 = [-6, -9, 30, 10, -2, 4]
+gain = 4
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn1(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn1, (0, 0), nums2))
+print(_pf_map2(lambda a, b: a * gain - b, _pf_rev(nums2), nums2))
+data = [45, 5, 49, -4, 21, -5]
+def offset(k, x):
+    return x + k
+def _pf_fn3(_pf_x):
+    def _pf_fn4(_pf_arg0):
+        a, b = _pf_arg0
+        return b - a
+    return _pf_map(_pf_fn4, _pf_pairwise(_pf_x))
+def _pf_fn6(_pf_x):
+    def _pf_fn7(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn7, _pf_indexed(_pf_x))
+outcome = _pf_forall(lambda x: x >= 0, _pf_fn3(_pf_map(lambda x: x // 5 + x % 5, _pf_fn6(data))))
+print(outcome)
+def Perhaps_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Perhaps_return_(x):
+    return Some(x)
+def safeDiv(a, b):
+    return Perhaps_bind(_pf_str_to_int(a), lambda x: Perhaps_bind(_pf_str_to_int(b), lambda y: Perhaps_bind(_None_ if y == 0 else Some(x // y), lambda q: (lambda shown: Perhaps_return_(shown))(q * 3))))
+print((safeDiv("32", "8"), safeDiv("4", "0"), safeDiv("x", "1")))
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd2(n - 1)
+def isOdd2(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [18, 5, 18, 1, 31]))
+--- stderr ---

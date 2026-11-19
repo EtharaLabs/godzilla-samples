@@ -1,0 +1,33 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import alpha
+import hotel
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaG:
+    _0: int
+    def __repr__(self):
+        return f"KaG({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbG:
+    def __repr__(self):
+        return "KbG"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbG = KbG()
+print("loading Golf")
+def pickG(n):
+    if n > 2:
+        return KaG(n)
+    else:
+        return _KbG
+base = 3 + hotel.base + alpha.base
+def step(x):
+    return alpha.step(hotel.step(x)) + 3

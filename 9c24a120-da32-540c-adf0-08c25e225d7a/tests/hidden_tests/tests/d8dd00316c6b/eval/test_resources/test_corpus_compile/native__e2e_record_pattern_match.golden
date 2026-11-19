@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+def classify(p: Point) -> int:
+    if isinstance(p, Point) and p.x == 0 and p.y == 0:
+        return 1
+    elif isinstance(p, Point) and p.x == 0:
+        return 2
+    else:
+        x = p.x
+        y = p.y
+        return x + y
+a: int = classify(Point(0, 0))
+b: int = classify(Point(0, 9))
+c: int = classify(Point(3, 4))
+--- stderr ---

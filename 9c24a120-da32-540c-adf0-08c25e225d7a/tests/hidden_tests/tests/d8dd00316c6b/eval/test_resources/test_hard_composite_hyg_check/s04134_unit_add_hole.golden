@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+ --> 9:11
+  |
+9 | let vol = cbrt 8.0<m^3> + 1.0<s>
+  |           ^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int` — try: ratio, vol — or: floorF ?, push2 ?, List.sum ?, Seq.sum ?, and 17 more
+  --> 46:45
+   |
+46 | let hist = List.fold (fun m w -> Map.add w (? + 1) m) Map.empty events2
+   |                                             ^
+
+1 error
+1 unfilled hole

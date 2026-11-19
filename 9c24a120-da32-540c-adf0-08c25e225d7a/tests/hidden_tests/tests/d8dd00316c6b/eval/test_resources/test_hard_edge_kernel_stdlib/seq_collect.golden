@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+00000002ok00000050Seq.collect : ('a -> Seq 'b) -> (Seq 'a) -> Seq 'b0000000000000002ok0000000000000121import itertools
+def _pf_seq_collect(f, xs):
+    return itertools.chain.from_iterable(map(f, xs))
+print(_pf_seq_collect)
+--- stderr ---

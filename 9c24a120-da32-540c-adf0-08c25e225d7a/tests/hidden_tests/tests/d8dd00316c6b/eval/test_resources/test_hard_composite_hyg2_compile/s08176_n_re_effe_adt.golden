@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_max_by(f, xs):
+    return Some(max(xs, key=f)) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Rest:
+    _0: str
+    def __repr__(self):
+        return f"Rest({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+_Emit = Emit()
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+def stack2(start):
+    x = start
+    def g0(y):
+        return x * y
+    x = g0(x)
+    g1 = lambda y: x + y
+    x = g1(x)
+    g2 = lambda y: x + y
+    x = g2(x)
+    g3 = functools.partial(_pf_map, lambda y: y - x)
+    x = x + 2
+    return (g0(1), g1(2), g2(1), g3([1, 2]), x)
+print(stack2(7))
+def margin(price, qty):
+    return price * qty - 3 * qty
+def report(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("hub", 28, 4), ("wick", 49, 4)]))
+print(overall)
+def explain(t):
+    match t:
+        case Load(n0):
+            return f"load({n0})"
+        case Skip(2):
+            return "skip-2"
+        case Skip(n0):
+            return f"skip({n0})"
+        case Rest(s0):
+            return f"rest({s0})"
+        case Emit():
+            return f"emit"
+        case Turn(n0) if n0 % 2 == 0:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def cost(t):
+    match t:
+        case Turn(x0):
+            return x0 * 3
+        case _:
+            return 0
+prog = [Rest("tom"), _Emit, _Emit, _Emit]
+print(_pf_str_join("; ", _pf_map(explain, prog)))
+grandSum = _pf_sum_by(cost, prog)
+print(f"grandSum={grandSum}")
+print(_pf_max_by(cost, prog))
+--- stderr ---

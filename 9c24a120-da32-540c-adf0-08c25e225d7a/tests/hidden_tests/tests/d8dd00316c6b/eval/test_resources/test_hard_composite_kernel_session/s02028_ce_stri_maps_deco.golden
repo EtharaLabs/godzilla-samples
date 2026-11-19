@@ -1,0 +1,255 @@
+exit: 0
+--- stdout ---
+00000002ok00000385parseEntry : string -> Result (string, int) string
+inputs : List string
+parsed : List (Result (string, int) string)
+goodOnes : List (string, int)
+sumAll : (List (Result ('a, int) 'b)) -> Result int 'b
+text : string
+tokens : List string
+events : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+hist : Map string int
+extra : Map string int
+decoder : Decoder Reading
+rawJson : string
+00007639from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_result_to_option(r):
+    if isinstance(r, Ok):
+        return Some(r._0)
+    return _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_snd(p):
+    return p[1]
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Reading:
+    name: str
+    points: int
+    active: bool
+def parseEntry(line):
+    def _pf_fn0():
+        match _pf_str_split("=", line):
+            case [_k, _v]:
+                _pf_t0 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+            case _:
+                _pf_t0 = Error(f"malformed: {line}")
+        if isinstance(_pf_t0, Ok):
+            k, v = _pf_t0._0
+            _pf_t2 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t2, Ok):
+                n = _pf_t2._0
+                _pf_t1 = Error("negative") if n < 0 else Ok(n)
+                if isinstance(_pf_t1, Ok):
+                    checked = _pf_t1._0
+                    return Ok((k, checked))
+                else:
+                    return _pf_t1
+            else:
+                return _pf_t2
+        else:
+            return _pf_t0
+    return _pf_fn0()
+inputs = ["ivy=x", "kit=x", "oz=10", "hal=x"]
+parsed = _pf_map(parseEntry, inputs)
+_pf_iter(print, parsed)
+goodOnes = _pf_choose(_pf_result_to_option, parsed)
+print(sum(_pf_map(_pf_snd, goodOnes)))
+def sumAll(xs):
+    def _pf_fn2(acc, r):
+        def _pf_fn3():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn3()
+    return _pf_fold(_pf_fn2, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(parsed)))
+text = "eli;ray;lu;bolt;tap;rod;cog"
+tokens = _pf_str_split(";", text)
+print(_pf_str_replace("i", "I", text))
+print(_pf_str_slice(0, 4, text))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, tokens)))
+print(_pf_map(lambda w: (w, len(w)), tokens))
+events = ["ada", "fay", "eli", "cy", "cy", "fay", "ada"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t3 = n + 1
+            m[w] = _pf_t3
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+hist = m
+def _pf_fn4(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn4, _pf_map_to_list(hist)))
+print((_pf_map_try_find("cy", hist), "cy" in hist))
+print(len(_pf_map_filter(lambda k, v: v > 1, hist)))
+extra = dict([("zed", 5), ("ada", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, hist))))
+decoder = _pf_dec_map3(lambda n, p, a: Reading(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+rawJson = "[{\"name\": \"fay\", \"points\": 61, \"active\": true}, {\"name\": \"quin\", \"points\": 30, \"active\": false}, {\"name\": \"ada\", \"points\": 32, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+_pf_t5 = lambda n, p, a: Reading(n, p, a)
+try:
+    _pf_t6 = json.loads(rawJson)
+    if not isinstance(_pf_t6, list):
+        raise ValueError("expected a JSON array")
+    _pf_t7 = []
+    for _pf_t8 in _pf_t6:
+        if not isinstance(_pf_t8, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t9 = _pf_t8["name"]
+        if not isinstance(_pf_t9, str):
+            raise ValueError("expected a string, got " + type(_pf_t9).__name__)
+        if not isinstance(_pf_t8, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t10 = _pf_t8["points"]
+        if not (isinstance(_pf_t10, int) and not isinstance(_pf_t10, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t10).__name__)
+        if not isinstance(_pf_t8, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t11 = _pf_t8["active"]
+        if not isinstance(_pf_t11, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t11).__name__)
+        _pf_t7.append(_pf_t5(_pf_t9, _pf_t10, _pf_t11))
+    _pf_t12 = Ok(_pf_t7)
+except Exception as e:
+    _pf_t12 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t12, Ok):
+    ps = _pf_t12._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t4 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t12._0
+    _pf_t4 = print(f"decode failed: {e.errorKind}")
+_pf_t4
+00000002ok00000020events : List string0000000000000002ok00000050parseEntry : string -> Result (string, int) string00000000--- stderr ---

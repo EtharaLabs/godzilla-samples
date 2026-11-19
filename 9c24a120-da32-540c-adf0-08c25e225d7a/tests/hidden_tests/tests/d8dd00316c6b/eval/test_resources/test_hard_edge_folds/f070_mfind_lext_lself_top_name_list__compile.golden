@@ -1,0 +1,42 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+init_a = dict([(1, 5)])
+def step(_pf_arg0, x):
+    a, b, c = _pf_arg0
+    return (_pf_map_add(x, _pf_option_with_default(0, _pf_map_try_find(x, a)) + 1, a), _pf_concat(b, [x, x * 3]), _pf_concat(c, c))
+def compute(u):
+    return _pf_fold(step, (init_a, [], [1]), [3, 1, 4, 1, 5])
+result = compute(None)
+r_a, r_b, r_c = result
+print(_pf_map_to_list(r_a))
+print(r_b)
+print(len(r_c))
+--- stderr ---

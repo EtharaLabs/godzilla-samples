@@ -1,0 +1,5 @@
+{
+ "exit": 0,
+ "stdout": "import asyncio\nclass _pf_Async:\n    __slots__ = (\"fn\", \"args\")\n    def __init__(self, fn, *args):\n        self.fn = fn\n        self.args = args\n    def __await__(self):\n        return self.fn(*self.args).__await__()\n    async def __call__(self):\n        return await self\n    def __repr__(self):\n        return \"<Async>\"\ndef _pf_async_sleep(secs):\n    return _pf_Async(asyncio.sleep, secs)\nasync def _pf_run(a):\n    return await a\nnap = _pf_async_sleep\nasync def _pf_fn0():\n    await nap(0.0)\n    return \"woke\"\nmain = _pf_Async(_pf_fn0)\nprint(asyncio.run(_pf_run(main)))\n",
+ "stderr": ""
+}

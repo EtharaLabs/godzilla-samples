@@ -1,0 +1,44 @@
+exit: 0
+--- stdout ---
+let text = "ned,quin,ray,tap,eli,lu"
+let tokens = ((String.split ",") text)
+(print (((String.slice 3) 5) text))
+let cell (i, w) = ((String.concat (((Format.padRight 6) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((tokens |> List.indexed) |> (List.map cell)) |> (List.iter print))
+let n2 = (List.len tokens)
+(print f"n2={n2} {{braces}} {(String.len text)}")
+let pure net price qty = ((price * qty) - (9 * qty))
+let announce label price qty =
+    (print f"{label}: {((net price) qty)}")
+    ((net price) qty)
+let overall = (([("gear", 28, 5), ("nut", 8, 6), ("cap", 37, 3), ("pin", 40, 4)] |> (List.map (fun (n, pr, q) -> (((announce n) pr) q)))) |> List.sum)
+(print overall)
+type Player = { name: string, points: int, active: bool }
+let decoder = ((((Decode.map3 (fun n p a -> Player { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let payload = "[{\"name\": \"hal\", \"points\": 69, \"active\": true}, {\"name\": \"sue\", \"points\": 75, \"active\": true}, {\"name\": \"tom\", \"points\": 71, \"active\": false}, {\"name\": \"tom\", \"points\": 8, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+match ((Decode.decodeString (Decode.list decoder)) payload):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+type Term = Num int | Add Term Term | Mul Term Term | Neg Term | Var string
+let vars = (Map.ofList [("x", 6), ("y", 4)])
+let evaluate e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((evaluate a) + (evaluate b))
+        case (Mul a b): ((evaluate a) * (evaluate b))
+        case (Neg a): (- (evaluate a))
+        case (Var v): (((Map.findOr v) 0) vars)
+let render e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(render a)} + {(render b)})"
+        case (Mul a b): f"{(render a)} * {(render b)}"
+        case (Neg a): f"-{(render a)}"
+        case (Var v): v
+let exprs = [((Add (Num 0)) (Num 5)), (Neg (Var "y"))]
+((exprs |> (List.map render)) |> (List.iter print))
+(print ((List.map evaluate) exprs))
+--- stderr ---

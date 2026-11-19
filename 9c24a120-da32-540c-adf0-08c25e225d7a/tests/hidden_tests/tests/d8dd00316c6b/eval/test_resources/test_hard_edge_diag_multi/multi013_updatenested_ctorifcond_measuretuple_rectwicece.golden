@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `z` (did you mean `x`?)
+ --> 7:15
+  |
+7 |   let inner = { pt with z = 4 }
+  |               ^^^^^^^^^^^^^^^^^
+
+error: unbound name `Triangle`
+ --> 9:13
+  |
+9 | let i2 = if Triangle 1.0 then 1 else 2
+  |             ^^^^^^^^
+
+error: unknown measure `furlong`
+  --> 10:14
+   |
+10 | let t3 = (0, 3.0<furlong>, "z")
+   |              ^^^^^^^^^^^^
+
+error: field `x` is set twice
+  --> 15:28
+   |
+15 |     return Pt { x = 1, x = 2, y = 3 }
+   |                            ^
+
+4 errors

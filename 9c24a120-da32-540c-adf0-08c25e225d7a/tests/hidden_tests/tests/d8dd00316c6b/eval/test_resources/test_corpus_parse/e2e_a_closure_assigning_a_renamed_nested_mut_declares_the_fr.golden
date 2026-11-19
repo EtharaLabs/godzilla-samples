@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+let f flag =
+    let count = 1
+    let y =
+        if flag then
+            let mut count = 0
+            let bump u = (count <- (count + u))
+            (bump 4)
+            (bump 5)
+            count
+        else 0
+    (count + y)
+let r = (f true)
+--- stderr ---

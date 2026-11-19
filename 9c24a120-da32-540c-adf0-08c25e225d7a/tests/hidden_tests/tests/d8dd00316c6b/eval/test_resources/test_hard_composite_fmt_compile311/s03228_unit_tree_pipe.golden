@@ -1,0 +1,134 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_drop_while(f, xs):
+    return list(itertools.dropwhile(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_flip(f, x, y):
+    return f(y, x)
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: object
+    _1: int
+    _2: object
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+laps = [367.4, 324.5, 424.3, 315.0, 53.5]
+splits = [69.3, 61.7, 74.5, 35.5, 53.5]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, laps)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, splits)
+pace = dist / elapsed
+print(_pf_fmt_fixed(2, pace))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+speeds = _pf_map2(lambda d, t: d / t, laps, splits)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+def paceOf(d, t):
+    return t / d
+print(_pf_fmt_fixed(3, paceOf(dist, elapsed) * 1000.0))
+side = math.sqrt(9.0)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+def insert(x, t):
+    match t:
+        case Leaf():
+            return Node(_Leaf, x, _Leaf)
+        case Node(l, v, rt) if x < v:
+            return Node(insert(x, l), v, rt)
+        case Node(l, v, rt) if x > v:
+            return Node(l, v, insert(x, rt))
+        case Node(_, _, _):
+            return t
+        case _:
+            raise RuntimeError("non-exhaustive match")
+root = _pf_fold(functools.partial(_pf_flip, insert), _Leaf, [9, 6, 43, 54, 56, 30, 28, 21])
+def toListT(t):
+    match t:
+        case Leaf():
+            return []
+        case Node(l, v, rt):
+            return _pf_concat(toListT(l), _pf_concat([v], toListT(rt)))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(toListT(root))
+def depthOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, _, rt):
+            return 1 + max(depthOf(l), depthOf(rt))
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(depthOf(root))
+def sumOf(t):
+    match t:
+        case Leaf():
+            return 0
+        case Node(l, v, rt):
+            return sumOf(l) + v + sumOf(rt)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(sumOf(root))
+def minOf(t):
+    while True:
+        match t:
+            case Leaf():
+                return _None_
+            case Node(Leaf(), v, _):
+                return Some(v)
+            case Node(l, _, _):
+                t = l
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(minOf(root))
+data = [46, -10, 15, 24, 25, 11, 42, 23, 16, 25, 41]
+def offset(k, x):
+    return x + k
+result = sum(_pf_map(functools.partial(offset, 7), (lambda _pf_x: _pf_map(sum, _pf_chunk(5, _pf_x)))(_pf_drop(1, _pf_sort(_pf_drop_while(lambda x: x < 0, data))))))
+print(result)
+print(len(data))
+--- stderr ---

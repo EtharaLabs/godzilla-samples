@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map4(f, da, db, dc, dd):
+    def go(v):
+        return f(da(v), db(v), dc(v), dd(v))
+    return go
+def id(x):
+    return x
+n = id(1)
+s = id("hi")
+d = _pf_dec_map4(lambda a, b, c, e: a, _pf_dec_int, _pf_dec_int, _pf_dec_int, _pf_dec_int)
+--- stderr ---

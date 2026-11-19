@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+def _pf_seq_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+go = _pf_seq_iter(lambda x: print(x), iter([1]))
+--- stderr ---

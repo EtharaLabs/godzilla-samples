@@ -1,0 +1,102 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_id(x):
+    return x
+def _ap_Above(n):
+    if n > 14:
+        return Some(n - 14)
+    else:
+        return _None_
+def classify(n):
+    _pf_t0 = _ap_Above(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    m = n
+    if m < 0:
+        return "negative"
+    return "small"
+_pf_iter(print, _pf_map(classify, [24, 35, 36, -6, 32, -5, 19]))
+def safe(s):
+    try:
+        _pf_t1 = Ok(int(s))
+    except Exception as _pf_t2:
+        _pf_t1 = Error(_Exception(type(_pf_t2).__name__, str(_pf_t2)))
+    if isinstance(_pf_t1, Ok):
+        n = _pf_t1._0
+        return f"ok {n}"
+    else:
+        e = _pf_t1._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x5", "37"]))
+print(_pf_map(math.isqrt, [27, 337, 10, 133]))
+def net(price, qty):
+    return price * qty - 2 * qty
+def emit(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("gear", 37, 4), ("wick", 17, 1)]))
+print(overall)
+text = "lu hub cy dee pin"
+words = _pf_str_split(" ", text)
+print(_pf_str_slice(1, 7, text))
+print(_pf_str_replace("i", "I", text))
+fieldsN = _pf_map(_pf_str_to_int, _pf_str_split(",", "-3,12,40,-3,"))
+print(fieldsN)
+print(sum(_pf_choose(_pf_id, fieldsN)))
+--- stderr ---

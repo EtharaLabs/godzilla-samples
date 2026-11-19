@@ -1,0 +1,127 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_set_intersect(a, b):
+    return a.intersection(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+readings = [10, 39, 9, -6, 40, 10, 15, 32, 2]
+def shift(k, x):
+    return x + k
+def keep(n):
+    return n > 17 and n % 3 != 0
+answer = _pf_sum_by(lambda x: x * x, _pf_sort(_pf_map(lambda b: 5 + b, _pf_take(7, _pf_map(lambda x: (-x if x < 0 else x * 2), (lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(2, _pf_x)))(readings))))))
+print(answer)
+print(len(readings))
+parcels = [Order(100, "max", 243, True), Order(101, "max", 258, False), Order(102, "fay", 69, True), Order(103, "fay", 250, True)]
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(rushSum)
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by(lambda o: o.amount, parcels))))
+def bump2(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Order(_pf_t0.id, _pf_t0.owner, o.amount + 5, _pf_t0.urgent)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(bump2, parcels)))
+visits = ["cy", "bo", "bo", "ada", "eli", "fay", "bo", "eli", "dee"]
+m = dict()
+for w in visits:
+    _pf_t1 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t1
+freq = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(freq)))
+print(len(_pf_map_filter(lambda k, v: v > 1, freq)))
+print((_pf_map_try_find("ada", freq), "ada" in freq))
+sa = set([2, 3, 5, 10, 16, 18])
+sb = set([1, 2, 5, 10, 11, 13])
+print(_pf_sort(list(_pf_set_intersect(sa, sb))))
+print((len(sa), 15 in sb, _pf_set_is_subset(set([2]), sa)))
+def Stats_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Stats_between(lo, hi, x):
+    return lo <= x <= hi
+def Stats_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Stats_square(x):
+    return x * x
+pts = [-13, -6, 17, 28, -9]
+print(Stats_scaleAll(3, pts))
+print(_pf_filter(functools.partial(Stats_between, -3, 12), pts))
+print(_pf_map(functools.partial(Stats_clamp, 0, 10), pts))
+print(_pf_map(Stats_square, pts))
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def makeIds(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = makeIds("acc", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, keys)))
+print(_pf_head(keys) == Some("u-1"))
+--- stderr ---

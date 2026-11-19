@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+00000002ok00000036Seq.take : int -> (Seq 'a) -> Seq 'a0000000000000002ok0000000000000097import itertools
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+print(_pf_seq_take)
+--- stderr ---

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected float<m>, found float<s>
+  --> 24:13
+   |
+24 | let speed = total + dur
+   |             ^^^^^^^^^^^
+
+note: hole `?` has type `float<m>` — or: sqrt ?, cbrt ?, abs ?, min ? ?, and 1 more
+  --> 22:27
+   |
+22 | let total = List.fold (+) ? legs
+   |                           ^
+
+1 error
+1 unfilled hole

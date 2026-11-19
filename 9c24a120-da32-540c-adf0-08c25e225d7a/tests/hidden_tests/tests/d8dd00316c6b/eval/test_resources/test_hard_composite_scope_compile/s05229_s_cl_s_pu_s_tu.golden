@@ -1,0 +1,140 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Shelf:
+    top: object
+    bottom: object
+    slot: int
+def scanSum(xs):
+    peak = 0
+    def step(acc, x):
+        nonlocal peak
+        next_ = acc + x
+        peak = max(peak, next_)
+        return next_
+    final = _pf_fold(step, 0, xs)
+    return (final, peak)
+print(scanSum([-2, -3, 8, -9, -7]))
+def numbered(xs):
+    i = 0
+    def tag(x):
+        nonlocal i
+        i = i + 1
+        return f"{i}:{x}"
+    tagged = _pf_map(tag, xs)
+    return (tagged, i)
+print(numbered(["pam", "hal", "bo"]))
+def makeCounter(start):
+    n = start
+    def next_(u):
+        nonlocal n
+        n = n + 2
+        return n
+    return next_
+tick = makeCounter(2)
+print((tick(None), tick(None), tick(None)))
+boxes = [Tile(5, 1, "bolt"), Tile(4, 5, "gear"), Tile(2, 5, "bolt"), Tile(4, 4, "sq")]
+def heavier(s):
+    match s:
+        case Shelf(top=Tile(w=w), bottom=bottom, slot=slot) if w > bottom.w:
+            return f"top {slot}"
+        case Shelf(slot=slot):
+            return f"bottom {slot}"
+print(_pf_map2(lambda a, b: heavier(Shelf(a, b, a.w + b.h)), boxes, _pf_rev(boxes)))
+def relabel(prefix, b):
+    label = b.label
+    _pf_t1 = b
+    return Tile(_pf_t1.w, _pf_t1.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "x-"), boxes)))
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t3 = b
+    return Tile(w + 3, h * 2, _pf_t3.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, boxes)))
+tallies = [("cap", 6), ("bolt", 3), ("tap", 17), ("hub", 5)]
+def _pf_fn0(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+extremes = _pf_fold(_pf_fn0, (1000, -1000), tallies)
+print(extremes)
+acc = dict()
+for (k, v) in _pf_concat(tallies, tallies):
+    _pf_t4 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t4
+index = acc
+print(_pf_map_to_list(index))
+def _pf_fn1():
+    for (name, qty) in tallies:
+        doubled = qty * 2
+        yield f"{name}={doubled}"
+labels = _pf_fn1()
+print(_pf_str_join(",", list(labels)))
+def validate(rows):
+    def _pf_fn2():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t5 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t5, Ok):
+            total = _pf_t5._0
+            return Ok(total)
+        else:
+            return _pf_t5
+    return _pf_fn2()
+print((validate(tallies), validate([("ok", 1)])))
+--- stderr ---

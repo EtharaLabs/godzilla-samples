@@ -1,0 +1,105 @@
+exit: 0
+--- stdout ---
+00000002ok00000296reading : (List string) -> int -> int
+inSpace : (List string) -> int -> int
+net : int -> int<'a> -> int<'a>
+announce : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+scaled : int -> (List int<'a>) -> List int<'a>
+nums : List int
+combos : List int
+nums2 : List int
+gain : int
+shape2 : int -> int
+00002678import functools
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("ivy eli jo ray lu dee"), 0))
+def net(price, qty):
+    return price * qty - 6 * qty
+def announce(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("pin", 16, 4), ("hub", 41, 2)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(net, k))
+print(scaled(11)([1, 2, 3]))
+def Geo_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Geo_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Geo_square(x):
+    return x * x
+nums = [27, 6, -12, 13]
+print(Geo_norm1(nums))
+print(Geo_scaleAll(5, nums))
+print(_pf_map(Geo_square, nums))
+def Many_yield_(x):
+    return [x]
+def Many_combine(a, b):
+    return _pf_concat(a, b)
+def Many_delay(f):
+    return f(None)
+Many_zero = []
+def Many_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Many_for_([1, 4], lambda k: Many_yield_(a * b + k))
+combos = Many_combine(Many_for_([(5, 3), (1, 5)], _pf_fn1), Many_delay(lambda _: Many_yield_(9)))
+print(combos)
+nums2 = [-2, 11, 30, 13, -9, 0, 12, 5]
+gain = 3
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+shape2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * gain)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, nums2))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_fst(p):
+    return p[0]
+def _pf_fn2(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn2, _pf_indexed(nums2))))
+00000002ok00000037reading : (List string) -> int -> int0000000000000002ok00000046scaled : int -> (List int<'a>) -> List int<'a>00000000--- stderr ---

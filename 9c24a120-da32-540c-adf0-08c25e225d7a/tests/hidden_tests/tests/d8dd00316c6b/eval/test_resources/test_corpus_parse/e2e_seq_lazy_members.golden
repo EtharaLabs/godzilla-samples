@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+let dropped = (Seq.toList ((Seq.drop 2) (Seq.ofList [1, 2, 3, 4])))
+let taken = (Seq.toList ((Seq.takeWhile (fun x -> (x < 3))) (Seq.ofList [1, 2, 3, 1])))
+let skipped = (Seq.toList ((Seq.dropWhile (fun x -> (x < 3))) (Seq.ofList [1, 2, 3, 1])))
+let joined = (Seq.toList ((Seq.concat (Seq.ofList [1, 2])) (Seq.ofList [3])))
+let flat = (Seq.toList (Seq.flatten (Seq.ofList [(Seq.ofList [1, 2]), (Seq.ofList [3])])))
+let mapped = (Seq.toList ((Seq.collect (fun x -> (Seq.ofList [x, x]))) (Seq.ofList [1, 2])))
+let zipped = (Seq.toList ((Seq.zip (Seq.ofList [1, 2])) (Seq.ofList ["a", "b"])))
+let ix = (Seq.toList (Seq.indexed (Seq.ofList ["a", "b"])))
+let uniq = (Seq.toList (Seq.distinct (Seq.ofList [1, 1, 2, 1, 3])))
+let pairs = (Seq.toList (Seq.pairwise (Seq.ofList [1, 2, 3])))
+let built = (Seq.toList ((Seq.init 4) (fun i -> (i * i))))
+--- stderr ---

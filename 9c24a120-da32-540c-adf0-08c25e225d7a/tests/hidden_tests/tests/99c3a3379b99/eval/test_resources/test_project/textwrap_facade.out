@@ -1,0 +1,19 @@
+# ==== wrap.py ====
+import textwrap
+fillText = lambda _pf_k0, _pf_k1: textwrap.fill(_pf_k0, width=_pf_k1)
+shortenText = lambda _pf_k0, _pf_k1: textwrap.shorten(_pf_k0, width=_pf_k1)
+indentText = textwrap.indent
+def fill(width, text):
+    return textwrap.fill(text, width=width)
+def shorten(width, text):
+    return textwrap.shorten(text, width=width)
+def indent(prefix, text):
+    return textwrap.indent(text, prefix)
+
+# ==== main.py ====
+import wrap
+text = "the quick brown fox jumps over the lazy dog"
+print(wrap.fill(16, text))
+print(wrap.shorten(25, text))
+print(wrap.indent("> ", "a\nb"))
+

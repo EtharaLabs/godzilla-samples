@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+let data = [5, 42, 16, (- 6), 1, 4, 43, 8, (- 10), 44, 11]
+let addK k x = (x + k)
+let isBig n = ((n > 12) and ((n % 3) != 0))
+let result = (((((((data |> (List.map ((-) 31))) |> List.distinct) |> (List.take 8)) |> (List.collect (fun x -> [x, (x + 1)]))) |> (List.filter isBig)) |> (List.indexed >> (List.map (fun (i, x) -> (i * x))))) |> List.head)
+(print result)
+let visits = ["dee", "eli", "cy", "ada", "fay", "dee"]
+let counts = (((List.fold (fun m w -> (((Map.add w) ((((Map.findOr w) 0) m) + 1)) m))) Map.empty) visits)
+(print ((counts |> Map.toList) |> (List.sortBy (fun (k, v) -> ((- v), k)))))
+let extra = (Map.ofList [("zed", 5), ("dee", 0)])
+(print ((((Map.union extra) counts) |> Map.toList) |> List.sort))
+(print (((counts |> Map.keys) |> List.sort) |> (String.join ",")))
+type Token = Emit string | Mark | Halt int string | Store int int
+let render t =
+    match t:
+        case (Emit s0): f"emit({s0})"
+        case Mark: f"mark"
+        case (Halt n0 s1): f"halt({n0},{s1})"
+        case (Store n0 n1): f"store({n0},{n1})"
+let score t =
+    match t:
+        case Mark: 6
+        case (Emit _): 5
+        case _: 1
+let stream = [(Emit "sue"), ((Halt 3) "hal"), ((Store (- 2)) (- 2)), Mark]
+(print ((stream |> (List.map render)) |> (String.join "; ")))
+let tally = (stream |> (List.sumBy score))
+(print f"tally={tally}")
+(print ((List.maxBy score) stream))
+let evens = seq {
+    for x in ((List.range 1) 6):
+        let y = (x * x)
+        yield y
+}
+(print (((Seq.fold (+)) 0) evens))
+(((((Seq.initInfinite (fun i -> (i * 4))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 5)) |> Seq.toList) |> print)
+--- stderr ---

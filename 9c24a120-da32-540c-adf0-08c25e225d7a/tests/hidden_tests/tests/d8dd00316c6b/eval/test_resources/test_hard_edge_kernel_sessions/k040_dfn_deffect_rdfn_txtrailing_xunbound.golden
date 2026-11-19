@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+00000002ok00000028double : int<'a> -> int<'a>
+00000032def double(x):
+    return x * 2
+00000002ok00000012boot : unit
+00000024boot = print("booting")
+00000002ok00000028double : int<'a> -> int<'a>
+0000000000000005error00000075error: expected int, found bool
+ --> 6:7
+  |
+6 | ok2 + true
+  |       ^^^^
+0000000000000005error00000062error: unbound name `nope`
+ --> 5:1
+  |
+5 | nope + 1
+  | ^^^^
+00000000--- stderr ---

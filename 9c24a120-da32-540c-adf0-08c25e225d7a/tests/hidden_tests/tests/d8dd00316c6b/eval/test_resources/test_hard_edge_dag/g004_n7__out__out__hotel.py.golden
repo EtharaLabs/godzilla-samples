@@ -1,0 +1,15 @@
+import alpha
+import delta
+import echo
+base = 4 + echo.base + alpha.base + delta.base
+def step(x):
+    return delta.step(alpha.step(echo.step(x))) + 4
+def describe(k):
+    match k:
+        case delta.KaD(v):
+            return v * 10
+        case delta.KbD():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(delta.pickD(base))

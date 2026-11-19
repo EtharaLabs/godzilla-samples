@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+00000002ok00000050List.windowed : int -> (List 'a) -> List (List 'a)0000000000000002ok0000000000000175def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+print(_pf_windowed)
+--- stderr ---

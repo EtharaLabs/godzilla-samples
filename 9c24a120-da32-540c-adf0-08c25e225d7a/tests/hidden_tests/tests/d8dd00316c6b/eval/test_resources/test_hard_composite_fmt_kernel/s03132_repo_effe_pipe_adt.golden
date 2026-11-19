@@ -1,0 +1,163 @@
+exit: 0
+--- stdout ---
+00000002ok00000350lines : List Row
+fmtLine : Row -> string
+net : int -> int<'a> -> int<'a>
+announce : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+scaled : int -> (List int<'a>) -> List int<'a>
+data : List int
+shift : int<'a> -> int<'a> -> int<'a>
+keep : int -> bool
+outcome : int
+render : Action -> string
+rank : Action -> int
+queue : List Action
+grandSum : int
+00004421from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_chunk(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(0, len(xs), n):
+        out.append(xs[i:i + n])
+    return out
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_windowed(n, xs):
+    if n <= 0:
+        return []
+    out = []
+    for i in range(len(xs) - n + 1):
+        out.append(xs[i:i + n])
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_max(xs):
+    return Some(max(xs)) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Row:
+    name: str
+    qty: int
+    price: float
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    def __repr__(self):
+        return f"Push({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    _1: str
+    def __repr__(self):
+        return f"Jump({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Store:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Store({self._0!r}, {self._1!r})"
+lines = [Row("tap", 22, 21.7), Row("cog", 2, 19.78), Row("hub", 29, 32.99), Row("nut", 28, 30.9)]
+def fmtLine(x):
+    return f"{_pf_fmt_pad_right(7, ".", x.name)} {_pf_fmt_pad_left(4, " ", str(x.qty))} {_pf_fmt_fixed(1, x.price)} {"restock" if x.qty > 7 else "ok"}"
+_pf_iter(print, _pf_map(fmtLine, lines))
+print(f"{len(lines)} rows, {_pf_str_upper("total")}={_pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, lines))}")
+def net(price, qty):
+    return price * qty - 9 * qty
+def announce(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("rod", 29, 2), ("bolt", 23, 1)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(net, k))
+print(scaled(6)([1, 2, 3]))
+data = [21, -4, -6, 8, -9, -10, 31]
+def shift(k, x):
+    return x + k
+def keep(n):
+    return n > 0 and n % 3 != 0
+def _pf_fn2(_pf_x):
+    def _pf_fn3(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn3, _pf_indexed(_pf_x))
+outcome = _pf_sum_by(lambda x: x * x, (lambda _pf_x: _pf_map(sum, _pf_chunk(3, _pf_x)))(_pf_sort((lambda _pf_x: _pf_map(lambda w: _pf_option_with_default(0, _pf_max(w)), _pf_windowed(2, _pf_x)))(_pf_fn2(_pf_take(8, _pf_map(functools.partial(shift, 8), data)))))))
+print(outcome)
+def render(t):
+    match t:
+        case Load(n0):
+            return f"load({n0})"
+        case Push(n0):
+            return f"push({n0})"
+        case Jump(n0, s1) if n0 % 2 == 0:
+            return f"jump!({n0},{s1})"
+        case Jump(n0, s1):
+            return f"jump({n0},{s1})"
+        case Store(n0, n1) if n0 % 2 == 0:
+            return f"store!({n0},{n1})"
+        case Store(n0, n1):
+            return f"store({n0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Store(x0, x1):
+            return x0 + x1
+        case Push(x0):
+            return x0 * 4
+        case Jump(x0, _):
+            return x0
+        case _:
+            return 2
+queue = [Store(-1, 1), Push(-2), Jump(4, "ned"), Jump(10, "ray"), Load(5)]
+print(_pf_map(render, queue))
+grandSum = _pf_sum_by(rank, queue)
+print(f"grandSum={grandSum}")
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+print(len(_pf_filter(lambda t: rank(t) > 6, queue)))
+00000002ok00000031net : int -> int<'a> -> int<'a>0000000000000002ok00000018keep : int -> bool00000000--- stderr ---

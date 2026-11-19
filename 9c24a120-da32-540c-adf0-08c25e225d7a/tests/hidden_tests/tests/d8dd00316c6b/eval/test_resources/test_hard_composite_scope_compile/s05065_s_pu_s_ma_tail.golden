@@ -1,0 +1,159 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True, repr=False)
+class Square:
+    _0: int
+    def __repr__(self):
+        return f"Square({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Ci:
+    _0: int
+    def __repr__(self):
+        return f"Ci({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Wedge:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Wedge({self._0!r}, {self._1!r})"
+panels = [Panel(1, 6, "bolt"), Panel(4, 5, "bolt"), Panel(1, 2, "cog"), Panel(4, 4, "sq")]
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Panel(w + 1, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, panels)))
+def describe(b):
+    match b:
+        case Panel(w=w, h=h, label=label) if w == h:
+            return f"{label} square {w}"
+        case Panel(label=label, w=1):
+            return f"{label} thin"
+        case Panel(label=label, w=w):
+            return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, panels)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, panels)))
+def relabel(prefix, b):
+    label = b.label
+    _pf_t3 = b
+    return Panel(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "new "), panels)))
+def probe2(xs):
+    if xs:
+        x = xs[0]
+        _pf_t4 = _pf_last(xs)
+        if isinstance(_pf_t4, Some):
+            _x = _pf_t4._0
+            if _x > 5:
+                return _x * 10
+        if isinstance(_pf_t4, Some):
+            y = _pf_t4._0
+            return x + y
+        else:
+            return x
+    else:
+        return -1
+print((probe2([8, 4]), probe2([8, 9]), probe2([])))
+def size(s):
+    match s:
+        case Square(n) | Ci(n):
+            return n
+        case Wedge(n, m) if n > m:
+            return n
+        case Wedge(m, n):
+            return n
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(_pf_map(size, [Square(6), Ci(7), Wedge(3, 5), Wedge(1, 9)]))
+def adjust(n):
+    match n % 3:
+        case 0:
+            _n = n // 3
+            return _n + 4
+        case k:
+            _n2 = n * k
+            _k = _n2 - 1
+            return _k
+print(_pf_map(adjust, [16, 21, 9, 16]))
+def score(x, items):
+    match items:
+        case []:
+            return x
+        case [_x]:
+            return _x * 2
+        case [_x2, *rest]:
+            return _x2 + len(rest)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print((score(1, []), score(1, [7]), score(1, [3, 2, 3])))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [20, 24, 30, 17, 29]))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(7, 6, 1))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [35, 39, 19]))
+--- stderr ---

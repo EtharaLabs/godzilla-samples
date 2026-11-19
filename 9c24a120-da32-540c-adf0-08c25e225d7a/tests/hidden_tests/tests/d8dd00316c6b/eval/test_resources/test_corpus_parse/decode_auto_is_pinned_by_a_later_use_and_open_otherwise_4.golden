@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+type P = { x: int }
+let back = ((Decode.decodeString Decode.auto) "{}")
+match back:
+    case (Ok p): (print p.x)
+    case (Error _): (print 0)
+--- stderr ---

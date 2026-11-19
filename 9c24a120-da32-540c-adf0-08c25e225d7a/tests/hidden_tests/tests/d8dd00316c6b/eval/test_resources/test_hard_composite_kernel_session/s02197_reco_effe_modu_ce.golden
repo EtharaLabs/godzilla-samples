@@ -1,0 +1,125 @@
+exit: 0
+--- stdout ---
+00000002ok00000315tickets : List Invoice
+rushSum : int
+cheap : List Invoice
+dear : List Invoice
+net : int -> int<'a> -> int<'a>
+announce : 'a -> int -> int<'a> ->{io} int<'a>
+overall : int
+scaled : int -> (List int<'a>) -> List int<'a>
+nums : List int
+readPair : string -> Option int
+entries : List string
+parsed : List (Option int)
+00003396from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+tickets = [Invoice(100, "ada", 292, False), Invoice(101, "lu", 189, True), Invoice(102, "ned", 92, False), Invoice(103, "ada", 105, False)]
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(rushSum)
+print(_pf_map(lambda o: o.id, _pf_take(3, _pf_sort_by(lambda o: o.amount, tickets))))
+cheap, dear = _pf_partition(lambda o: o.amount < 157, tickets)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def net(price, qty):
+    return price * qty - 5 * qty
+def announce(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return announce(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("wick", 19, 6), ("pin", 49, 6), ("tap", 13, 1), ("pin", 11, 4)]))
+print(overall)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(net, k))
+print(scaled(13)([1, 2, 3]))
+def Text_clamp(lo, hi, x):
+    return max(lo, min(hi, x))
+def Text_between(lo, hi, x):
+    return lo <= x <= hi
+def Text_square(x):
+    return x * x
+nums = [18, -1, 6, 2, 5, 6, 6]
+print(_pf_map(functools.partial(Text_clamp, 0, 5), nums))
+print(_pf_filter(functools.partial(Text_between, 3, 25), nums))
+print(_pf_map(Text_square, nums))
+def readPair(line):
+    def _pf_fn1():
+        _pf_t1 = _pf_list_get(1, _pf_str_split("=", line))
+        if isinstance(_pf_t1, Some):
+            v = _pf_t1._0
+            _pf_t0 = _pf_str_to_int(_pf_str_strip(v))
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some(n * 5)
+            else:
+                return _pf_t0
+        else:
+            return _pf_t1
+    return _pf_fn1()
+entries = ["dee=69", "kit=27", "eli", "max=98"]
+parsed = _pf_map(readPair, entries)
+_pf_iter(print, parsed)
+print(sum(_pf_map(functools.partial(_pf_option_with_default, 0), parsed)))
+def _pf_option_is_some(o):
+    return isinstance(o, Some)
+def _pf_option_map(f, o):
+    if isinstance(o, Some):
+        return Some(f(o._0))
+    return _None_
+print(len(_pf_filter(_pf_option_is_some, _pf_map(functools.partial(_pf_option_map, lambda n: n + 1), parsed))))
+00000002ok00000031net : int -> int<'a> -> int<'a>0000000000000002ok00000021entries : List string00000000--- stderr ---

@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+pairs = _pf_zip([1, 2], [3, 4])
+def _pf_fn0(acc, _pf_arg1):
+    a, b = _pf_arg1
+    return acc + a * b
+total = _pf_fold(_pf_fn0, 0, pairs)
+--- stderr ---

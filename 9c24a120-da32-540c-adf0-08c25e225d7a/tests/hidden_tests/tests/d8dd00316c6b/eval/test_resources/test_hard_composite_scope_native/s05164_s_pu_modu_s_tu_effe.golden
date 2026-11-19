@@ -1,0 +1,142 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Panel:
+    w: int
+    h: int
+    label: str
+tiles: list[Panel] = [Panel(9, 8, "bolt"), Panel(4, 9, "rod"), Panel(3, 9, "pin"), Panel(7, 1, "cog"), Panel(6, 3, "pin"), Panel(4, 4, "sq")]
+def describe(b: Panel) -> str:
+    if isinstance(b, Panel):
+        w = b.w
+        h = b.h
+        label = b.label
+        if w == h:
+            return f"{label} square {w}"
+    if isinstance(b, Panel) and b.w == 1:
+        label = b.label
+        return f"{label} thin"
+    else:
+        label = b.label
+        w = b.w
+        return f"{label} wide {w}"
+print(_pf_str_join("; ", _pf_map(describe, tiles)))
+def area(_pf_arg0: Panel) -> int:
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(area, tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def grow(b: Panel) -> Panel:
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Panel(w + 1, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(grow, tiles)))
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Calc_norm1(xs):
+    return sum(_pf_map(abs, xs))
+def Calc_square(x):
+    return x * x
+obs: list[int] = [26, -4, -8, 24]
+print(Calc_mean(obs))
+print(Calc_norm1(obs))
+print(_pf_map(Calc_square, obs))
+pairs: list[tuple[str, int]] = [("bolt", 10), ("rod", 19), ("nut", 10)]
+def _pf_fn2(_pf_arg0, _pf_arg1):
+    lo, hi = _pf_arg0
+    _, q = _pf_arg1
+    return (min(lo, q), max(hi, q))
+bounds: tuple[int, int] = _pf_fold(_pf_fn2, (1000, -1000), pairs)
+print(bounds)
+acc = dict()
+for (k, v) in _pf_concat(pairs, pairs):
+    _pf_t2 = v + _pf_map_find_or(k, 0, acc)
+    acc[k] = _pf_t2
+byName: dict[str, int] = acc
+print(_pf_map_to_list(byName))
+def _pf_fn3(_pf_arg0):
+    i, _pf_arg0_1 = _pf_arg0
+    name, qty = _pf_arg0_1
+    return print(f"{i + 1}. {name} x{qty}")
+_pf_iter(_pf_fn3, _pf_indexed(pairs))
+def validate(rows) -> Ok | Error:
+    def _pf_fn4():
+        for (name, qty) in rows:
+            return Ok(None) if qty >= 0 else Error(f"negative {name}")
+        _pf_t3 = Ok(_pf_sum_by(_pf_snd, rows))
+        if isinstance(_pf_t3, Ok):
+            total = _pf_t3._0
+            return Ok(total)
+        else:
+            return _pf_t3
+    return _pf_fn4()
+print((validate(pairs), validate([("ok", 1)])))
+widths: list[tuple[str, tuple[int, int]]] = [("ada", (5, 11)), ("max", (5, 15)), ("dee", (1, 14))]
+def _pf_fn5():
+    for (name, (lo, hi)) in widths:
+        for (i, x) in _pf_indexed(_pf_range(lo, lo + 2)):
+            yield f"{name}{i}:{hi - x}"
+widthsOut = _pf_fn5()
+print(list(widthsOut))
+def net(price: int, qty: int) -> int:
+    return price * qty - 5 * qty
+def report(label, price: int, qty: int) -> int:
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn6(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall: int = sum(_pf_map(_pf_fn6, [("pin", 45, 6), ("pin", 18, 6), ("cap", 38, 6), ("pin", 26, 1)]))
+print(overall)
+--- stderr ---

@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+00000002ok00000064List.partition : ('a -> bool) -> (List 'a) -> (List 'a, List 'a)0000000000000002ok0000000000000192def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+print(_pf_partition)
+--- stderr ---

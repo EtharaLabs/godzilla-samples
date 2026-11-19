@@ -1,0 +1,92 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_list_find(f, xs):
+    return next(map(Some, filter(f, xs)), _None_)
+def lift(n):
+    return n + 23
+def useHelper(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 1
+    tmp = useHelper(lift)
+    return tmp * 2
+alpha = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [8]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + useHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if alpha > second:
+        _alpha = second
+        return _alpha + 1
+    else:
+        return alpha
+third = _pf_fn2()
+print((alpha, second, third, useHelper(0)))
+def build(start):
+    acc = start
+    def g0(y):
+        return acc * y
+    acc = g0(acc)
+    def g1(y):
+        return acc * y
+    acc = acc + 16
+    g2 = functools.partial(_pf_map, lambda y: y - acc)
+    acc = acc + 9
+    def g3(y):
+        return acc * y
+    acc = acc * 2
+    return (g0(3), g1(2), g2([1, 2]), g3(1), acc)
+print(build(4))
+def _pf_fn3():
+    for (name, k) in [("a", 5), ("b", 2)]:
+        yield lambda y: f"{name}:{k * y}"
+callbacks2 = _pf_fn3()
+print(_pf_map(lambda h: h(2), list(callbacks2)))
+def shifted(n, xs):
+    fs = _pf_map(lambda x: lambda y: x + y + n, xs)
+    n = n * 8
+    return _pf_map(lambda g: g(n), fs)
+print(shifted(8, [5, 7, 5]))
+data = [5, 29, 46, 14, 18, 32, 11, 14, 33, -2]
+def keep(n):
+    return n > 2 and n % 2 != 0
+def _pf_fn7(_pf_x):
+    def _pf_fn9(_pf_x):
+        def _pf_fn10(_pf_arg0):
+            i, x = _pf_arg0
+            return i * x
+        return _pf_map(_pf_fn10, _pf_indexed(_pf_x))
+    return _pf_fn9((lambda _pf_x: _pf_filter(lambda x: x % 4 == 0, (lambda _pf_x: _pf_rev((lambda _pf_x: _pf_take(4, (lambda _pf_x: _pf_sort(_pf_filter(keep, _pf_x)))(_pf_x)))(_pf_x)))(_pf_x)))(_pf_x))
+stage = _pf_fn7
+result = _pf_list_find(lambda x: x % 3 == 1, stage(data))
+print(result)
+--- stderr ---

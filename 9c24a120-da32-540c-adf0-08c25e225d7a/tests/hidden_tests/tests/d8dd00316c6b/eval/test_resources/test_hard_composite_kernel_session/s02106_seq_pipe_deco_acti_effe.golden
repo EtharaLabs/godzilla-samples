@@ -1,0 +1,194 @@
+exit: 0
+--- stdout ---
+00000002ok00000235evens : Seq int
+fib : Seq int
+values : List int
+keep : int -> bool
+answer : int
+decoder : Decoder Entry
+rawJson : string
+bucketOf : int -> string
+net : int -> int<'a> -> int<'a>
+report : 'a -> int -> int<'a> ->{io} int<'a>
+grand : int
+00005984from dataclasses import dataclass
+import itertools
+import json
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_distinct_by(f, xs):
+    seen = set()
+    out = []
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+def _pf_drop(n, xs):
+    return xs[max(n, 0):len(xs)]
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take_while(f, xs):
+    return list(itertools.takewhile(f, xs))
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_seq_take_while(f, xs):
+    return itertools.takewhile(f, xs)
+def _pf_seq_unfold(f, state):
+    while True:
+        step = f(state)
+        if not isinstance(step, Some):
+            return None
+        pair = step._0
+        yield pair[0]
+        state = pair[1]
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Entry:
+    name: str
+    points: int
+    active: bool
+def _pf_fn0():
+    for x in _pf_range(1, 10):
+        y = x * x
+        yield y
+evens = _pf_fn0()
+print(list(filter(lambda n: n % 4 == 0, evens)))
+print(list(_pf_seq_take(6, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 3)))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return Some((a, (b, a + b)))
+fib = _pf_seq_unfold(_pf_fn1, (0, 1))
+print(list(_pf_seq_take_while(lambda n: n < 1382, fib)))
+values = [47, 5, 13, 4, 44, -10, 49, 23, 10]
+def keep(n):
+    return n > 14 and n % 4 != 0
+def _pf_fn3(_pf_x):
+    def _pf_fn4(_pf_arg0):
+        i, x = _pf_arg0
+        return i * x
+    return _pf_map(_pf_fn4, _pf_indexed(_pf_x))
+answer = sum(_pf_take_while(lambda x: x < 52, _pf_filter(keep, _pf_distinct_by(lambda x: x % 2, _pf_map(lambda x: x * x - 3, _pf_fn3(_pf_drop(1, values)))))))
+print(answer)
+decoder = _pf_dec_map3(lambda n, p, a: Entry(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+rawJson = "[{\"name\": \"quin\", \"points\": 78, \"active\": true}, {\"name\": \"bo\", \"points\": 9, \"active\": true}, {\"name\": \"hal\", \"points\": 39, \"active\": false}, {\"name\": \"ray\", \"points\": 80, \"active\": true}, {\"name\": \"bad\", \"points\": \"lots\", \"active\": true}]"
+_pf_t1 = lambda n, p, a: Entry(n, p, a)
+try:
+    _pf_t2 = json.loads(rawJson)
+    if not isinstance(_pf_t2, list):
+        raise ValueError("expected a JSON array")
+    _pf_t3 = []
+    for _pf_t4 in _pf_t2:
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t5 = _pf_t4["name"]
+        if not isinstance(_pf_t5, str):
+            raise ValueError("expected a string, got " + type(_pf_t5).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t6 = _pf_t4["points"]
+        if not (isinstance(_pf_t6, int) and not isinstance(_pf_t6, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t6).__name__)
+        if not isinstance(_pf_t4, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t7 = _pf_t4["active"]
+        if not isinstance(_pf_t7, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t7).__name__)
+        _pf_t3.append(_pf_t1(_pf_t5, _pf_t6, _pf_t7))
+    _pf_t8 = Ok(_pf_t3)
+except Exception as e:
+    _pf_t8 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t8, Ok):
+    ps = _pf_t8._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t0 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t8._0
+    _pf_t0 = print(f"decode failed: {e.errorKind}")
+_pf_t0
+def _ap_Above(n):
+    if n > 23:
+        return Some(n - 23)
+    else:
+        return _None_
+def bucketOf(n):
+    _pf_t9 = _ap_Above(n)
+    if isinstance(_pf_t9, Some):
+        d = _pf_t9._0
+        return f"above by {d}"
+    m = n
+    if m < 0:
+        return "negative"
+    return "small"
+_pf_iter(print, _pf_map(bucketOf, [-5, 19, 6, 8, 35, 12, 13, 2]))
+def net(price, qty):
+    return price * qty - 9 * qty
+def report(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn5(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+grand = sum(_pf_map(_pf_fn5, [("rod", 28, 4), ("pin", 47, 1), ("cap", 41, 3)]))
+print(grand)
+00000002ok00000012answer : int0000000000000002ok00000024bucketOf : int -> string00000000--- stderr ---

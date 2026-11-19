@@ -1,0 +1,205 @@
+exit: 0
+--- stdout ---
+00000002ok00000384events : List string
+counts : Map string int
+sa : Set int
+sb : Set int
+dec : Decoder Player
+jsonText : string
+segments : List float<m>
+durations : List float<s>
+dist : float<m>
+elapsed : float<s>
+speed : float<m/s>
+km : float<m>
+speeds : List float<m/s>
+side : float<m>
+cube : float<m^3>
+calls : int
+note : int<'a> ->{io} int<'a>
+profile : (List int) ->{io} string
+doubled : List int
+00006029from dataclasses import dataclass
+import functools
+import json
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_map_filter(f, m):
+    out = dict()
+    for kv in m.items():
+        if f(kv[0], kv[1]):
+            out[kv[0]] = kv[1]
+    return out
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_fold(f, acc, m):
+    for kv in m.items():
+        acc = f(acc, kv[0], kv[1])
+    return acc
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_set_difference(a, b):
+    return a.difference(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_dec_bool(v):
+    if isinstance(v, bool):
+        return v
+    raise ValueError("expected a bool, got " + type(v).__name__)
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map3(f, da, db, dc):
+    def go(v):
+        return f(da(v), db(v), dc(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True)
+class Player:
+    name: str
+    points: int
+    active: bool
+events = ["fay", "dee", "dee", "fay", "cy", "ada", "ada", "bo", "eli"]
+m = dict()
+for w in events:
+    _pf_t0 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t0
+counts = m
+def _pf_fn0(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn0, _pf_map_to_list(counts)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, counts))))
+print(len(_pf_map_filter(lambda k, v: v > 1, counts)))
+sa = set([4, 9, 13, 14, 16, 17])
+sb = set([1, 2, 3, 12, 13, 19])
+print(_pf_sort(list(_pf_set_difference(sa, sb))))
+print((len(sa), 18 in sb, _pf_set_is_subset(set([4]), sa)))
+print(_pf_map_fold(lambda acc, k, v: acc + v, 0, counts))
+dec = _pf_dec_map3(lambda n, p, a: Player(n, p, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("points", _pf_dec_int), _pf_dec_field("active", _pf_dec_bool))
+jsonText = "[{\"name\": \"jo\", \"points\": 37, \"active\": false}, {\"name\": \"hal\", \"points\": 40, \"active\": false}, {\"name\": \"hal\", \"points\": 72, \"active\": false}, {\"name\": \"pam\", \"points\": 51, \"active\": true}]"
+_pf_t2 = lambda n, p, a: Player(n, p, a)
+try:
+    _pf_t3 = json.loads(jsonText)
+    if not isinstance(_pf_t3, list):
+        raise ValueError("expected a JSON array")
+    _pf_t4 = []
+    for _pf_t5 in _pf_t3:
+        if not isinstance(_pf_t5, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t6 = _pf_t5["name"]
+        if not isinstance(_pf_t6, str):
+            raise ValueError("expected a string, got " + type(_pf_t6).__name__)
+        if not isinstance(_pf_t5, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t7 = _pf_t5["points"]
+        if not (isinstance(_pf_t7, int) and not isinstance(_pf_t7, bool)):
+            raise ValueError("expected an int, got " + type(_pf_t7).__name__)
+        if not isinstance(_pf_t5, dict):
+            raise ValueError("expected a JSON object")
+        _pf_t8 = _pf_t5["active"]
+        if not isinstance(_pf_t8, bool):
+            raise ValueError("expected a bool, got " + type(_pf_t8).__name__)
+        _pf_t4.append(_pf_t2(_pf_t6, _pf_t7, _pf_t8))
+    _pf_t9 = Ok(_pf_t4)
+except Exception as e:
+    _pf_t9 = Error(_Exception(type(e).__name__, str(e)))
+if isinstance(_pf_t9, Ok):
+    ps = _pf_t9._0
+    live = _pf_filter(lambda p: p.active, ps)
+    _pf_t1 = print(f"{len(live)} active, {_pf_sum_by(lambda p: p.points, live)} points")
+else:
+    e = _pf_t9._0
+    _pf_t1 = print(f"decode failed: {e.errorKind}")
+_pf_t1
+segments = [350.8, 87.3, 58.3, 456.0]
+durations = [65.0, 37.6, 22.4, 12.4]
+dist = _pf_fold(lambda acc, d: acc + d, 0.0, segments)
+elapsed = _pf_fold(lambda a, b: a + b, 0.0, durations)
+speed = dist / elapsed
+print(_pf_fmt_fixed(1, speed))
+km = dist / 1000.0
+print(_pf_fmt_fixed(1, km))
+speeds = _pf_map2(lambda d, t: d / t, segments, durations)
+print(_pf_str_join(" ", _pf_map(functools.partial(_pf_fmt_fixed, 2), speeds)))
+side = math.sqrt(2.25)
+cube = side * side * side
+print(f"{side} {math.cbrt(cube)}")
+calls = 0
+def note(x):
+    global calls
+    calls = calls + 1
+    return x * 4
+def profile(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([-6, 23, 25, 36, 53, 37, 39]))
+doubled = _pf_map(note, [-6, 23, 25, 36])
+print(f"{doubled} after {calls} calls")
+00000002ok00000012sb : Set int0000000000000002ok00000018doubled : List int00000000--- stderr ---

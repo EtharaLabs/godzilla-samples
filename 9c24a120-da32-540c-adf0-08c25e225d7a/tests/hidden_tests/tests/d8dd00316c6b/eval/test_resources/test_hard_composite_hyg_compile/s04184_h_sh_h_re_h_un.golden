@@ -1,0 +1,114 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Member:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    _0: object
+    def __repr__(self):
+        return f"Idle({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+def tweak(x, flag):
+    y = x * 2
+    if flag:
+        _y = x + 324
+        _pf_t0 = _y - 1
+    else:
+        _pf_t0 = y
+    z = _pf_t0
+    return (y, z)
+print((tweak(1, True), tweak(1, False)))
+def lift(n):
+    return n + 88
+def useBump(x):
+    return lift(x)
+def _pf_fn0():
+    lift = 8
+    return useBump(lift)
+sample = _pf_fn0()
+print((sample, useBump(7)))
+def grow(n):
+    return n * 4
+def _pf_fn1():
+    _pf_t1 = [5, 2]
+    if _pf_t1:
+        grow = _pf_t1[0]
+        return grow + 1
+    else:
+        return 0
+picked = _pf_fn1()
+print((picked, grow(1)))
+def swapSum(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn2(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn2, pairs))
+print(swapSum([(2, 9), (3, 3)]))
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t2 = p
+            return Active(Member(_pf_t2.name, p.age + 1))
+        case Idle(t) if t.size > 5:
+            _pf_t3 = t
+            return Idle(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+slots = _pf_map(promote, [_Gone, Idle(Crew("tap", 3)), _Gone, Active(Member("cy", 67)), _Gone])
+print(slots)
+people = [Member("ivy", 4), Member("kit", 1)]
+print((_pf_map(lambda x: x.name, people), _pf_sum_by(lambda x: x.age, people)))
+reach = math.hypot(7.0 / 1.0, 7.0 / 1.0) * 1.0
+factor = math.sqrt(2.0)
+side = math.sqrt(49.0)
+vol = math.cbrt(125.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, factor), side, vol))
+print(mth.floor(reach / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 6.0)))
+--- stderr ---

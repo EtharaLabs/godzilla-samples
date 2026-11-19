@@ -1,0 +1,63 @@
+exit: 0
+--- stdout ---
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+reversed_: list[int] = _pf_rev([1, 2, 3])
+print((reversed_, _pf_str_rev("abc")))
+len_: int = 4
+print((len([1, 2, 3]) + len_, len("abc")))
+dict_: dict[str, int] = dict([("k", 3)])
+print((_pf_map_find_or("k", 0, dict_), len(_pf_map_add("z", 1, dict()))))
+def powAcc(b: int, e: int, acc: int) -> int:
+    while True:
+        if e == 0:
+            return acc
+        else:
+            k = e
+            if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            k = e
+            b, e, acc = (b * b, k // 2, acc)
+            continue
+print(powAcc(6, 20, 1))
+def gcdLoop(a: int, b: int) -> int:
+    while True:
+        if b == 0:
+            return a
+        else:
+            a, b = (b, a % b)
+            continue
+print(gcdLoop(93, 355))
+def lift(n: int) -> int:
+    return n + 77
+def callHelper(x: int) -> int:
+    return lift(x)
+def _pf_fn0():
+    lift = 1
+    tmp = callHelper(lift)
+    return tmp * 2
+first: int = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [3]
+    if _pf_t0:
+        lift = _pf_t0[0]
+        return lift + callHelper(1)
+    else:
+        return 0
+beta: int = _pf_fn1()
+def _pf_fn2():
+    if first > beta:
+        _first = beta
+        return _first + 1
+    else:
+        return first
+third: int = _pf_fn2()
+print((first, beta, third, callHelper(0)))
+--- stderr ---

@@ -1,0 +1,78 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def powAcc(b, e, acc):
+    while True:
+        match e:
+            case 0:
+                return acc
+            case k if k % 2 == 1:
+                b, e, acc = (b, k - 1, acc * b)
+                continue
+            case k:
+                b, e, acc = (b * b, k // 2, acc)
+                continue
+print(powAcc(7, 16, 1))
+def collatz(n, acc):
+    while True:
+        if n == 1:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n // 2, acc + 1)
+            continue
+        else:
+            n, acc = (3 * n + 1, acc + 1)
+            continue
+print(_pf_map(lambda n: collatz(n, 0), [32, 31, 49]))
+def isEven(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd(n - 1)
+def isOdd(n):
+    if n == 0:
+        return False
+    else:
+        return isEven(n - 1)
+print(_pf_filter(isEven, [23, 28, 14, 27, 15]))
+def bump2(n):
+    return n + 50
+def callHelper(x):
+    return bump2(x)
+def _pf_fn0():
+    bump2 = 4
+    tmp = callHelper(bump2)
+    return tmp * 2
+first = _pf_fn0()
+def _pf_fn1():
+    _pf_t0 = [7]
+    if _pf_t0:
+        bump2 = _pf_t0[0]
+        return bump2 + callHelper(1)
+    else:
+        return 0
+second = _pf_fn1()
+def _pf_fn2():
+    if first > second:
+        _first = second
+        return _first + 1
+    else:
+        return first
+third = _pf_fn2()
+print((first, second, third, callHelper(0)))
+def build(start):
+    level = start
+    def g0(y):
+        return level * y
+    level = level + 1
+    g1 = functools.partial(_pf_map, lambda y: y - level)
+    level = level + 2
+    g2 = lambda y: level + y
+    level = level + 15
+    return (g0(4), g1([1, 2]), g2(5), level)
+print(build(4))
+--- stderr ---

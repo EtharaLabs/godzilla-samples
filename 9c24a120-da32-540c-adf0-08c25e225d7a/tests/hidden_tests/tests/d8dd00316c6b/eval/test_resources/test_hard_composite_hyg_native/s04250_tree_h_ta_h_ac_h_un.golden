@@ -1,0 +1,148 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import asyncio
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_flip(f, x, y):
+    return f(y, x)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    def __repr__(self):
+        return "Leaf"
+_Leaf: Leaf = Leaf()
+@dataclass(frozen=True, slots=True, repr=False)
+class Node:
+    _0: "Heap"
+    _1: int
+    _2: "Heap"
+    def __repr__(self):
+        return f"Node({self._0!r}, {self._1!r}, {self._2!r})"
+Heap = Leaf | Node
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def add(x: int, t: Heap) -> Heap:
+    if isinstance(t, Leaf):
+        return Node(_Leaf, x, _Leaf)
+    else:
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x < v:
+                return Node(add(x, l), v, rt)
+        if isinstance(t, Node):
+            l = t._0
+            v = t._1
+            rt = t._2
+            if x > v:
+                return Node(l, v, add(x, rt))
+        return t
+root: Heap = _pf_fold(functools.partial(_pf_flip, add), _Leaf, [10, 59, 37, 1, 11, 42])
+def minOf(t: Heap) -> Some | None_:
+    while True:
+        if isinstance(t, Leaf):
+            return _None_
+        elif isinstance(t, Node) and isinstance(t._0, Leaf):
+            v = t._1
+            return Some(v)
+        else:
+            l = t._0
+            t = l
+            continue
+print(minOf(root))
+def sumT(t: Heap) -> int:
+    if isinstance(t, Leaf):
+        return 0
+    else:
+        l = t._0
+        v = t._1
+        rt = t._2
+        return sumT(l) + v + sumT(rt)
+print(sumT(root))
+def finished(acc):
+    async def _pf_fn0():
+        return acc
+    return _pf_Async(_pf_fn0)
+def spin(n: int, acc: int):
+    async def _pf_fn2():
+        async def _pf_fn1():
+            return n * 2
+        k = await _pf_fn1()
+        if n <= 0:
+            return await finished(acc)
+        else:
+            return await spin(n - 1, acc + k)
+    return _pf_Async(_pf_fn2)
+print(asyncio.run(_pf_run(spin(46, 0))))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 1:
+        return _Low()
+    elif scaled < 34:
+        return _Mid()
+    else:
+        return _High()
+def grade(n: int) -> str:
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(grade, [11, 3, 8, 10, 13]))
+reach: float = math.hypot(7.0 / 1.0, 6.0 / 1.0) * 1.0
+ratio: float = math.sqrt(5.0)
+side: float = math.sqrt(49.0)
+vol: float = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, ratio), side, vol))
+def rateOf(d: int, t: int) -> float:
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 9.0)))
+--- stderr ---
+note: `spin` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

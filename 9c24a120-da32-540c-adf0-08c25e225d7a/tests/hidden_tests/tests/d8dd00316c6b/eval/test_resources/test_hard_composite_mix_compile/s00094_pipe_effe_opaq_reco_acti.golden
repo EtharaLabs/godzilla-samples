@@ -1,0 +1,122 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by_desc(f, xs):
+    return sorted(xs, key=f, reverse=True)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+samples = [-8, 46, 0, 10, 40, 23]
+def shift(k, x):
+    return x + k
+result = (lambda _pf_x: _pf_str_join("-", _pf_map(str, _pf_x)))(_pf_filter(lambda x: x > -1, _pf_take(7, _pf_filter(lambda x: x % 5 == 4, samples))))
+print(result)
+print(len(samples))
+def margin(price, qty):
+    return price * qty - 3 * qty
+def emit(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+grand = sum(_pf_map(_pf_fn0, [("rod", 27, 1), ("bolt", 14, 5), ("cog", 20, 1)]))
+print(grand)
+def scaled(k):
+    return functools.partial(_pf_map, functools.partial(margin, k))
+print(scaled(9)([1, 2, 3]))
+def unwrap(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+ids = mint("sku", 4)
+print(_pf_str_join(" ", _pf_map(unwrap, ids)))
+print(_pf_head(ids) == Some("u-1"))
+tickets = [Invoice(100, "eli", 232, True), Invoice(101, "lu", 265, True), Invoice(102, "eli", 18, True), Invoice(103, "eli", 161, True), Invoice(104, "eli", 180, False), Invoice(105, "eli", 197, True)]
+def priority(o):
+    match o:
+        case Invoice(urgent=True, amount=amount) if amount > 194:
+            return "rush-big"
+        case Invoice(urgent=True):
+            return "rush"
+        case Invoice(amount=amount):
+            if amount > 194:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(priority, tickets))
+print(_pf_count_by(priority, tickets))
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(urgentTotal)
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, tickets))
+print(perOwner)
+print(_pf_map(lambda o: o.id, _pf_take(2, _pf_sort_by_desc(lambda o: o.amount, tickets))))
+def _ap_Above(n):
+    if n > 19:
+        return Some(n - 19)
+    else:
+        return _None_
+def _ap_Zero(n):
+    return n == 0
+def kindOf(n):
+    _pf_t0 = _ap_Above(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    _pf_t1 = _ap_Zero(n)
+    if _pf_t1:
+        return "zero"
+    m = n
+    if m < 0:
+        return "negative"
+    return "small"
+_pf_iter(print, _pf_map(kindOf, [39, 17, 2, 32, 19, -6, 38, 24]))
+--- stderr ---

@@ -1,0 +1,156 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_group_by(f, xs):
+    groups = dict()
+    for x in xs:
+        groups.setdefault(f(x), []).append(x)
+    return list(groups.items())
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Ticket:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+text = "sue,bolt,quin,lu"
+parts = _pf_str_split(",", text)
+print(_pf_str_join("", _pf_map(lambda w: _pf_str_upper(_pf_str_slice(0, 1, w)), parts)))
+print(_pf_str_slice(3, 7, text))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, parts)))
+n2 = len(parts)
+print(f"n2={n2} {{braces}} {len(text)}")
+longest = _pf_head(_pf_sort_by(lambda w: -len(w), parts))
+print(_pf_option_with_default("?", longest))
+def cell(_pf_arg0):
+    i, w = _pf_arg0
+    return _pf_str_concat(_pf_fmt_pad_right(9, ".", w), _pf_fmt_pad_left(4, " ", str(i + 1)))
+_pf_iter(print, _pf_map(cell, _pf_indexed(parts)))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("10111") + int("42", base=8))
+def safe(s):
+    try:
+        _pf_t0 = Ok(int(s))
+    except Exception as _pf_t1:
+        _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+    if isinstance(_pf_t0, Ok):
+        n = _pf_t0._0
+        return f"ok {n}"
+    else:
+        e = _pf_t0._0
+        return f"bad ({e.errorKind})"
+_pf_iter(print, _pf_map(safe, ["12", "x6", "8"]))
+def row(n):
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(6))
+def net(price, qty):
+    return price * qty - 9 * qty
+def emit(label, price, qty):
+    print(f"{label}: {net(price, qty)}")
+    return net(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return emit(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("cap", 27, 2), ("rod", 37, 6)]))
+print(overall)
+parcels = [Ticket(100, "max", 195, True, Site("Lima", 1)), Ticket(101, "hal", 119, False, Site("Baku", 4)), Ticket(102, "ada", 204, True, Site("Baku", 4)), Ticket(103, "hal", 110, True, Site("Doha", 3)), Ticket(104, "max", 112, True, Site("Riga", 1)), Ticket(105, "hal", 81, False, Site("Lima", 3))]
+def _pf_fn1(_pf_arg0):
+    k, os = _pf_arg0
+    return (k, len(os), _pf_sum_by(lambda o: o.amount, os))
+perOwner = _pf_map(_pf_fn1, _pf_group_by(lambda o: o.owner, parcels))
+print(perOwner)
+def bucket(o):
+    match o:
+        case Ticket(urgent=True, amount=amount) if amount > 149:
+            return "rush-big"
+        case Ticket(urgent=True):
+            return "rush"
+        case Ticket(amount=amount):
+            if amount > 149:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, parcels))
+print(_pf_count_by(bucket, parcels))
+def _pf_fn2(o):
+    if o.dest.zone > 2:
+        _pf_t4 = o
+        return Ticket(_pf_t4.id, _pf_t4.owner, _pf_t4.amount, _pf_t4.urgent, Site("Hub", 1))
+    else:
+        return o
+rerouted = _pf_map(_pf_fn2, parcels)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", rerouted))
+--- stderr ---

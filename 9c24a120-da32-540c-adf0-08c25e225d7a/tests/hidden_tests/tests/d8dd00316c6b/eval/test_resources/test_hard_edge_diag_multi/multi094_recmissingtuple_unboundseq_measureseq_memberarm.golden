@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` is missing field(s) `y`
+ --> 6:14
+  |
+6 | let t1 = (0, Pt { x = 1 }, "z")
+  |              ^^^^^^^^^^^^
+
+error: unbound name `missingName`
+ --> 9:11
+  |
+9 |     yield missingName 3
+  |           ^^^^^^^^^^^
+
+error: unknown measure `furlong`
+  --> 13:11
+   |
+13 |     yield 3.0<furlong>
+   |           ^^^^^^^^^^^^
+
+error: `filtr` is not a member of `List` (did you mean `List.filter`?)
+  --> 17:13
+   |
+17 |     case 0: List.filtr (fun x -> true) [1]
+   |             ^^^^^^^^^^
+
+4 errors

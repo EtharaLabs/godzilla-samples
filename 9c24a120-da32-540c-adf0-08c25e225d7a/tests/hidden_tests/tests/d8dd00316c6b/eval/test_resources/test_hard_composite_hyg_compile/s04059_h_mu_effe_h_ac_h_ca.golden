@@ -1,0 +1,98 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+def inspect(xs):
+    seen = 0
+    best = 0
+    def note(x):
+        nonlocal best, seen
+        seen = seen + 1
+        best = max(best, x)
+        return None
+    _pf_iter(note, xs)
+    def rec_count(n, acc):
+        while True:
+            if n == 0:
+                return acc + seen
+            else:
+                n, acc = (n - 1, acc + best)
+                continue
+    return rec_count(3, 0)
+print(inspect([7, 25, 12]))
+events = []
+def logEvent(msg):
+    global events
+    events = _pf_concat(events, [msg])
+    return len(events)
+counts = _pf_map(logEvent, ["start", "dee", "stop"])
+print((events, counts))
+def margin(price, qty):
+    return price * qty - 8 * qty
+def report(label, price, qty):
+    print(f"{label}: {margin(price, qty)}")
+    return margin(price, qty)
+def _pf_fn0(_pf_arg0):
+    n, pr, q = _pf_arg0
+    return report(n, pr, q)
+overall = sum(_pf_map(_pf_fn0, [("bolt", 12, 4), ("tap", 28, 6)]))
+print(overall)
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 5:
+        return _Low()
+    elif scaled < 32:
+        return _Mid()
+    else:
+        return _High()
+def label(n):
+    _pf_t0 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t0, _Low):
+        return "low"
+    if isinstance(_pf_t0, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t0, _Mid):
+        return "mid"
+    if isinstance(_pf_t0, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(label, [12, 30, 21, 25, 12]))
+def forEach(f, xs):
+    return _pf_iter(f, xs)
+def mapTwice(f, xs):
+    return _pf_map(lambda _pf_x: f(f(_pf_x)), xs)
+def say(x):
+    return print(f"* {x}")
+forEach(say, [2, 6, 2])
+print(mapTwice(lambda x: x + 2, [1, 2, 3]))
+def chatty(verbose, x):
+    if verbose:
+        print(f"value {x}")
+        return x
+    else:
+        return x * 2
+print(chatty(True, 9) + chatty(False, 5))
+def quiet(x):
+    return x + 2
+print(mapTwice(quiet, [4]))
+--- stderr ---

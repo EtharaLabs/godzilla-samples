@@ -1,0 +1,105 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Person:
+    name: str
+    age: int
+@dataclass(frozen=True, slots=True)
+class Crew:
+    name: str
+    size: int
+@dataclass(frozen=True, slots=True, repr=False)
+class Active:
+    _0: object
+    def __repr__(self):
+        return f"Active({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Parked:
+    _0: object
+    def __repr__(self):
+        return f"Parked({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Gone:
+    def __repr__(self):
+        return "Gone"
+_Gone = Gone()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Low:
+    def __repr__(self):
+        return "_Low"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Mid:
+    def __repr__(self):
+        return "_Mid"
+@dataclass(frozen=True, slots=True, repr=False)
+class _High:
+    def __repr__(self):
+        return "_High"
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def promote(s):
+    match s:
+        case Active(p):
+            _pf_t0 = p
+            return Active(Person(_pf_t0.name, p.age + 1))
+        case Parked(t) if t.size > 4:
+            _pf_t1 = t
+            return Parked(Crew(_pf_str_upper(t.name), t.size - 1))
+        case other:
+            return other
+roster = _pf_map(promote, [Active(Person("lu", 40)), Parked(Crew("gear", 1)), Active(Person("ray", 24))])
+print(roster)
+members = [Person("bo", 7), Person("bo", 1)]
+print((_pf_map(lambda x: x.name, members), _pf_sum_by(lambda x: x.age, members)))
+def _ap_Low_Mid_High(n):
+    scaled = n * 2
+    if scaled < 3:
+        return _Low()
+    elif scaled < 20:
+        return _Mid()
+    else:
+        return _High()
+def describe(n):
+    _pf_t2 = _ap_Low_Mid_High(n)
+    if isinstance(_pf_t2, _Low):
+        return "low"
+    if isinstance(_pf_t2, _Mid):
+        if n % 2 == 0:
+            return "mid-even"
+    if isinstance(_pf_t2, _Mid):
+        return "mid"
+    if isinstance(_pf_t2, _High):
+        return "high"
+    raise RuntimeError("non-exhaustive match")
+print(_pf_map(describe, [2, 25, 1, 14, 26]))
+parcels = [Parcel(100, "ned", 132, True), Parcel(101, "dee", 138, True), Parcel(102, "hal", 291, False), Parcel(103, "dee", 60, True), Parcel(104, "hal", 160, True)]
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn0, (0, 0), parcels)
+print(f"{nrec} records, {amt} total")
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by(lambda o: o.amount, parcels))))
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t3 = o
+    return Parcel(_pf_t3.id, _pf_t3.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 17), parcels)))
+--- stderr ---

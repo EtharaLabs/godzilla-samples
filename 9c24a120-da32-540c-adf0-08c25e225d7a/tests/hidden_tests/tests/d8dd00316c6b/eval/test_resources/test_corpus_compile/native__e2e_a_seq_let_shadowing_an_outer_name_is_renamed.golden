@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+n: int = 5
+def f(u):
+    def _pf_fn0():
+        m = n + 1
+        _n = 2
+        yield _n + m
+    return _pf_fn0()
+r: list[int] = list(f(0))
+--- stderr ---

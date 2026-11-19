@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected AccountNo, found Handle
+  --> 12:13
+   |
+12 | let wrong = rawOf (Handle "x@y")
+   |             ^^^^^^^^^^^^^^^^^^^^
+
+error: `report` is declared `pure` but performs `io`
+  --> 32:3
+   |
+32 |   print f"{label}: {discount price qty}"
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hole `?` has type `int<'a>` — try: hi, lo, wrong, x — or: List.sum ?, Seq.sum ?, String.len ?, round ?, and 13 more
+  --> 23:30
+   |
+23 |   let clamp lo hi x = max lo ?
+   |                              ^
+
+2 errors
+1 unfilled hole

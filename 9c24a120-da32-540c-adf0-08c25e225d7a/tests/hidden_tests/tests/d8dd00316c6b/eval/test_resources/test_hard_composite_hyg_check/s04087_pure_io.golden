@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `quiet` is declared `pure` but performs `io`
+  --> 42:20
+   |
+42 | let pure quiet x = maybeLog true x
+   |                    ^^^^^^^^^^^^^^^
+
+1 error

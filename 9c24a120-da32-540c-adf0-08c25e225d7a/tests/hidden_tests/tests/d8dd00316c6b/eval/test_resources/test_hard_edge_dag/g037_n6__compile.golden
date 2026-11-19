@@ -1,0 +1,198 @@
+exit: 0
+--- stdout ---
+# ==== delta.py ====
+print("loading Delta")
+base = 9
+def step(x):
+    return x + 9
+
+# ==== bravo.py ====
+import delta
+print("loading Bravo")
+base = 2 + delta.base
+def step(x):
+    return delta.step(x) + 2
+
+# ==== golf.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import bravo
+import delta
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaG:
+    _0: int
+    def __repr__(self):
+        return f"KaG({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbG:
+    def __repr__(self):
+        return "KbG"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbG = KbG()
+def pickG(n):
+    if n > 2:
+        return KaG(n)
+    else:
+        return _KbG
+base = 4 + delta.base + bravo.base
+def step(x):
+    return bravo.step(delta.step(x)) + 4
+
+# ==== foxtrot.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import bravo
+import golf
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaF:
+    _0: int
+    def __repr__(self):
+        return f"KaF({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbF:
+    def __repr__(self):
+        return "KbF"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbF = KbF()
+print("loading Foxtrot")
+def pickF(n):
+    if n > 2:
+        return KaF(n)
+    else:
+        return _KbF
+base = 4 + bravo.base + golf.base
+def step(x):
+    return golf.step(bravo.step(x)) + 4
+def describe(k):
+    match k:
+        case golf.KaG(v):
+            return v * 10
+        case golf.KbG():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(golf.pickG(base))
+
+# ==== echo.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import bravo
+import foxtrot
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaE:
+    _0: int
+    def __repr__(self):
+        return f"KaE({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbE:
+    def __repr__(self):
+        return "KbE"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbE = KbE()
+print("loading Echo")
+def pickE(n):
+    if n > 2:
+        return KaE(n)
+    else:
+        return _KbE
+base = 9 + foxtrot.base + bravo.base
+def step(x):
+    return bravo.step(foxtrot.step(x)) + 9
+def describe(k):
+    match k:
+        case foxtrot.KaF(v):
+            return v * 10
+        case foxtrot.KbF():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(foxtrot.pickF(base))
+
+# ==== alpha.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import bravo
+import delta
+import echo
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KaA:
+    _0: int
+    def __repr__(self):
+        return f"KaA({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class KbA:
+    def __repr__(self):
+        return "KbA"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1,)
+_KbA = KbA()
+@dataclass(frozen=True, slots=True, order=True)
+class RecA:
+    id: int
+    kind: object
+def pickA(n):
+    if n > 2:
+        return KaA(n)
+    else:
+        return _KbA
+base = 6 + bravo.base + echo.base + delta.base
+def step(x):
+    return delta.step(echo.step(bravo.step(x))) + 6
+def describe(k):
+    match k:
+        case echo.KaE(v):
+            return v * 10
+        case echo.KbE():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(echo.pickE(base))
+def make(n):
+    return RecA(n, echo.pickE(n))
+def unwrap(r):
+    return describe(r.kind)
+
+# ==== main.py ====
+import alpha
+print(alpha.base)
+print(alpha.step(1))
+print(alpha.probe)
+print(alpha.unwrap(alpha.make(5)))
+print(alpha.make(1).id)
+
+--- stderr ---

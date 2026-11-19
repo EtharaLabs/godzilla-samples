@@ -1,0 +1,51 @@
+exit: 0
+--- stdout ---
+type Expr = Num int | Add Expr Expr | Mul Expr Expr | Neg Expr
+let calc e =
+    match e:
+        case (Num n): n
+        case (Add a b): ((calc a) + (calc b))
+        case (Mul a b): ((calc a) * (calc b))
+        case (Neg a): (- (calc a))
+let show e =
+    match e:
+        case (Num n) if (n < 0): f"({n})"
+        case (Num n): f"{n}"
+        case (Add a b): f"({(show a)} + {(show b)})"
+        case (Mul a b): f"{(show a)} * {(show b)}"
+        case (Neg a): f"-{(show a)}"
+let simplify e =
+    match e:
+        case ((Add (Num 0) x) | (Add x (Num 0))): (simplify x)
+        case ((Mul (Num 1) x) | (Mul x (Num 1))): (simplify x)
+        case (Neg (Neg x)): (simplify x)
+        case (Add a b): ((Add (simplify a)) (simplify b))
+        case (Mul a b): ((Mul (simplify a)) (simplify b))
+        case _: e
+let terms = [(Num 7), ((Add (Num 0)) ((Add (Num 0)) ((Add (Num 1)) (Num 4)))), (Num (- 2))]
+(((terms |> (List.map simplify)) |> (List.map show)) |> (List.iter print))
+(print ((List.map calc) terms))
+let mut hits = 0
+let record x =
+    (hits <- (hits + 1))
+    (x * 3)
+let stats xs =
+    let mut lo = 1000
+    let mut hi = (- 1000)
+    let mut total = 0
+    let visit x =
+        (lo <- ((min lo) x))
+        (hi <- ((max hi) x))
+        (total <- (total + x))
+    ((List.iter visit) xs)
+    f"lo={lo} hi={hi} total={total}"
+(print (stats [46, 48, 35, 13, 28]))
+let doubled = ([46, 48, 35, 13] |> (List.map record))
+(print f"{doubled} after {hits} calls")
+let values = [44, (- 8), 37, 18, 41, (- 3), 24, 25]
+let shift k x = (x + k)
+let keep n = ((n > 8) and ((n % 5) != 0))
+let pipeline = (((((List.map (fun x -> (if (x < 0) then (- x) else (x * 5)))) >> (List.distinctBy (fun x -> (x % 2)))) >> (List.indexed >> (List.map (fun (i, x) -> (i * x))))) >> ((List.chunkBySize 5) >> (List.map List.sum))) >> (List.map (max 5)))
+let digest = ((values |> pipeline) |> (List.sumBy (fun x -> (x * x))))
+(print digest)
+--- stderr ---

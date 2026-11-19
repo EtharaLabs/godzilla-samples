@@ -1,0 +1,141 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Place:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True, repr=False)
+class Pop:
+    _0: int
+    def __repr__(self):
+        return f"Pop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Push:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Push({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Jump:
+    _0: int
+    def __repr__(self):
+        return f"Jump({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: int
+    def __repr__(self):
+        return f"Load({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: str
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("u", 2)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("u-1"))
+book = [Parcel(100, "jo", 40, True, Place("Baku", 4)), Parcel(101, "jo", 272, False, Place("Riga", 1)), Parcel(102, "jo", 199, False, Place("Baku", 2)), Parcel(103, "jo", 199, True, Place("Baku", 1)), Parcel(104, "jo", 113, False, Place("Oslo", 1)), Parcel(105, "eli", 160, True, Place("Baku", 2))]
+cheap, dear = _pf_partition(lambda o: o.amount < 161, book)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn0, (0, 0), book)
+print(f"{cnt} records, {amt} total")
+def label(_pf_arg0):
+    id = _pf_arg0.id
+    owner = _pf_arg0.owner
+    return f"#{id} {_pf_str_upper(owner)}"
+print(_pf_str_join(", ", _pf_map(label, book)))
+def surcharge(o):
+    if o.urgent:
+        _pf_t0 = o
+        return Parcel(_pf_t0.id, _pf_t0.owner, o.amount + 12, _pf_t0.urgent, _pf_t0.dest)
+    else:
+        return o
+print(_pf_map(lambda o: o.amount, _pf_map(surcharge, book)))
+def render(t):
+    match t:
+        case Pop(n0):
+            return f"pop({n0})"
+        case Push(n0, n1) if n0 % 2 == 0:
+            return f"push!({n0},{n1})"
+        case Push(n0, n1):
+            return f"push({n0},{n1})"
+        case Jump(n0):
+            return f"jump({n0})"
+        case Load(n0) if 0 <= n0 < 12:
+            return f"load!({n0})"
+        case Load(n0):
+            return f"load({n0})"
+        case Mark(s0):
+            return f"mark({s0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Pop(x0):
+            return x0
+        case Push(x0, x1):
+            return x0 + x1 * 3
+        case Jump(x0):
+            return x0
+        case Mark(_):
+            return 7
+        case _:
+            return 3
+batch = [Jump(0), Load(7), Load(8), Mark("ned"), Pop(6), Pop(5), Pop(2)]
+print(_pf_map(render, batch))
+total = _pf_sum_by(rank, batch)
+print(f"total={total}")
+print((_pf_head(batch), _pf_last(batch)))
+--- stderr ---

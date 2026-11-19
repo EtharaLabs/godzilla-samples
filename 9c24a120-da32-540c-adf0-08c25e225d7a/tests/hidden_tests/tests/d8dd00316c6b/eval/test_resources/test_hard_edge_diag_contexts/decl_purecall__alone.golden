@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: `calls1` is declared `pure` but performs `io`
+ --> 6:21
+  |
+6 | let pure calls1 u = List.map (fun k -> print k) [1]
+  |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1 error

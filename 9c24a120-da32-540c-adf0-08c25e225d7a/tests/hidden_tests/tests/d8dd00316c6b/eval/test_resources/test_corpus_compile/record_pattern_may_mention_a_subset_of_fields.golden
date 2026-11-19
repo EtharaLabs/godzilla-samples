@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: int
+    y: int
+def onlyx(p):
+    match p:
+        case Point(x=x):
+            return x
+--- stderr ---

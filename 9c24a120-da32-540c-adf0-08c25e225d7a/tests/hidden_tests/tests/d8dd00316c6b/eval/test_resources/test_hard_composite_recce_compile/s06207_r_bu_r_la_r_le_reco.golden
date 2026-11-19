@@ -1,0 +1,133 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_collect(f, xs):
+    out = []
+    for x in xs:
+        out.extend(f(x))
+    return out
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_count_by(f, xs):
+    counts = dict()
+    for x in xs:
+        k = f(x)
+        counts[k] = counts.get(k, 0) + 1
+    return list(counts.items())
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map2(f, xs, ys):
+    out = []
+    for p in zip(xs, ys):
+        out.append(f(p[0], p[1]))
+    return out
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+@dataclass(frozen=True, slots=True)
+class Invoice:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+def Grid_yield_(x):
+    return [x]
+def Grid_combine(a, b):
+    return _pf_concat(a, b)
+def Grid_delay(f):
+    return f(None)
+Grid_zero = []
+def Grid_for_(xs, f):
+    return _pf_collect(f, xs)
+def _pf_fn0(_pf_arg0):
+    a, b = _pf_arg0
+    return Grid_for_([1, 2], lambda k: Grid_yield_(a * b + k))
+cells = Grid_combine(Grid_for_([(3, 3), (1, 5)], _pf_fn0), Grid_delay(lambda _: Grid_yield_(5)))
+print(cells)
+nums2 = [-1, 21, 23, -8, 30, 10]
+factor = 4
+print(_pf_map2(lambda a, b: a * factor - b, _pf_rev(nums2), nums2))
+scalers = _pf_map(lambda s: lambda x: x * s + factor, [1, 2, 3])
+print(_pf_map(lambda g: g(1), scalers))
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+shape2 = lambda _pf_x: (lambda z: z - 6)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, nums2))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn1, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+def reading(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    return inSpace(rest, n)
+                else:
+                    cs, n = (rest, n)
+                    continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+def inSpace(cs, n):
+    while True:
+        match cs:
+            case []:
+                return n
+            case [c, *rest]:
+                if c == " ":
+                    cs, n = (rest, n)
+                    continue
+                else:
+                    return reading(rest, n + 1)
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(inSpace(list("  ned sue "), 0))
+parcels = [Invoice(100, "ada", 132, False), Invoice(101, "ada", 54, False), Invoice(102, "ada", 42, False), Invoice(103, "dee", 82, True), Invoice(104, "ada", 224, True), Invoice(105, "eli", 125, True)]
+urgentTotal = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, parcels))
+print(urgentTotal)
+cheap, dear = _pf_partition(lambda o: o.amount < 92, parcels)
+print(f"{len(cheap)} cheap, {len(dear)} dear")
+def bump2(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t0 = o
+    return Invoice(_pf_t0.id, _pf_t0.owner, o.amount + extra, False)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(bump2, 13), parcels)))
+def bucket(o):
+    match o:
+        case Invoice(urgent=True, amount=amount) if amount > 163:
+            return "rush-big"
+        case Invoice(urgent=True):
+            return "rush"
+        case Invoice(amount=amount):
+            if amount > 163:
+                return "big"
+            else:
+                return "normal"
+print(_pf_map(bucket, parcels))
+print(_pf_count_by(bucket, parcels))
+def _pf_fn2(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, amt = _pf_fold(_pf_fn2, (0, 0), parcels)
+print(f"{cnt} records, {amt} total")
+--- stderr ---

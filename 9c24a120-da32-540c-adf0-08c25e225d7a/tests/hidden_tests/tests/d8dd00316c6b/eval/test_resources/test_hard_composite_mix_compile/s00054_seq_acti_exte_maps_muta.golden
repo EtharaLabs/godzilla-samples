@@ -1,0 +1,116 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import itertools
+import math
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_map_map(f, m):
+    out = dict()
+    for kv in m.items():
+        out[kv[0]] = f(kv[0], kv[1])
+    return out
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_union(a, b):
+    out = dict(a)
+    out.update(b)
+    return out
+def _pf_map_values(m):
+    return list(m.values())
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+def _pf_set_difference(a, b):
+    return a.difference(b)
+def _pf_set_is_subset(a, b):
+    return a.issubset(b)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _pf_fn0():
+    for x in _pf_range(1, 6):
+        y = x * x
+        yield y
+series = _pf_fn0()
+print(list(filter(lambda n: n % 2 == 0, series)))
+print(list(_pf_seq_take(5, filter(lambda n: n % 2 == 0, _pf_seq_init_inf(lambda i: i * 2)))))
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def bucketOf(n):
+    _pf_t0 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, _Even):
+        return "even"
+    elif isinstance(_pf_t0, _Odd):
+        return "odd"
+    else:
+        raise RuntimeError("non-exhaustive match")
+_pf_iter(print, _pf_map(bucketOf, [-3, 31, 20, 5, 39, 27, 23, 16]))
+print(_pf_str_rev(str.upper("jo")))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "7"])))
+def fromBin(s):
+    return int(s, base=2)
+print(fromBin("1001011") + int("72", base=8))
+print(_pf_map(math.isqrt, [2, 342, 251, 221]))
+log = ["eli", "fay", "eli", "cy", "dee", "cy"]
+m = dict()
+for w in log:
+    _pf_t1 = _pf_map_find_or(w, 0, m) + 1
+    m[w] = _pf_t1
+freq = m
+def _pf_fn1(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn1, _pf_map_to_list(freq)))
+print(_pf_sort(_pf_map_values(_pf_map_map(lambda k, v: v * 10, freq))))
+sa = set([1, 2, 11, 15, 16, 17])
+sb = set([1, 2, 3, 9, 10, 12])
+print(_pf_sort(list(_pf_set_difference(sa, sb))))
+print((len(sa), 7 in sb, _pf_set_is_subset(set([1]), sa)))
+extra = dict([("zed", 5), ("eli", 0)])
+print(_pf_sort(_pf_map_to_list(_pf_map_union(extra, freq))))
+ticks = 0
+def record(x):
+    global ticks
+    ticks = ticks + 1
+    return x * 2
+def summarize(xs):
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(summarize([7, 8, 31, 30, 42, 1]))
+doubled = _pf_map(record, [7, 8, 31, 30])
+print(f"{doubled} after {ticks} calls")
+--- stderr ---

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+let nums = ((Result.withDefault []) ((Decode.decodeString (Decode.list Decode.int)) "[1, 2, 3]"))
+let flex = (Decode.oneOf [Decode.string, ((Decode.map String.fromInt) Decode.int)])
+let fromStr = ((Result.withDefault "?") ((Decode.decodeString flex) "\"hi\""))
+let fromInt = ((Result.withDefault "?") ((Decode.decodeString flex) "7"))
+let n = ((Result.withDefault (0 - 1)) ((Decode.decodeString (Decode.oneOf [])) "1"))
+--- stderr ---

@@ -1,0 +1,139 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import asyncio
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+@dataclass(frozen=True, slots=True, repr=False)
+class Drop:
+    _0: int
+    def __repr__(self):
+        return f"Drop({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    def __repr__(self):
+        return "Emit"
+_Emit = Emit()
+@dataclass(frozen=True, slots=True, repr=False)
+class Load:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Load({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    _0: int
+    def __repr__(self):
+        return f"Skip({self._0!r})"
+def step1(x):
+    return x + 1
+def dbl(x):
+    return x * 2
+def both(_pf_x):
+    return (lambda _pf_x0: (lambda x: x + _pf_x)((lambda _pf_x: dbl(step1(_pf_x)))(_pf_x0)))(_pf_x)
+print(_pf_map(both, [9, 7, 6]))
+def grow(n):
+    return n * 5
+def _pf_fn0():
+    _pf_t0 = [4, 2]
+    if _pf_t0:
+        grow = _pf_t0[0]
+        return grow + 1
+    else:
+        return 0
+chosen = _pf_fn0()
+print((chosen, grow(2)))
+def cross(pairs):
+    a, b = _pf_option_with_default((0, 0), _pf_head(pairs))
+    b, a = (a + 1, b + 1)
+    def _pf_fn1(_pf_arg0):
+        a, b = _pf_arg0
+        return a * b
+    return _pf_map(lambda x: x + a - b, _pf_map(_pf_fn1, pairs))
+print(cross([(4, 6), (5, 3)]))
+def bump2(n):
+    return n + 89
+def useBump(x):
+    return bump2(x)
+def _pf_fn2():
+    bump2 = 8
+    return useBump(bump2)
+sample = _pf_fn2()
+print((sample, useBump(9)))
+def render(t):
+    match t:
+        case Drop(n0) if n0 % 2 == 0:
+            return f"drop!({n0})"
+        case Drop(n0):
+            return f"drop({n0})"
+        case Emit():
+            return f"emit"
+        case Load(s0, n1):
+            return f"load({s0},{n1})"
+        case Skip(n0) if n0 % 2 == 0:
+            return f"skip!({n0})"
+        case Skip(n0):
+            return f"skip({n0})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def score(t):
+    match t:
+        case Drop(x0):
+            return x0 * 4
+        case _:
+            return 2
+stream = [Load("jo", 4), Load("tom", -3), Skip(8), _Emit, _Emit]
+print(_pf_str_join(" ", _pf_map(render, stream)))
+tally = _pf_sum_by(score, stream)
+print(f"tally={tally}")
+print((_pf_head(stream), _pf_last(stream)))
+def done(acc):
+    async def _pf_fn3():
+        return acc
+    return _pf_Async(_pf_fn3)
+def loop(n, acc):
+    async def _pf_fn4(n, acc):
+        while True:
+            if n == 0:
+                return await done(acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return _pf_Async(_pf_fn4, n, acc)
+print(asyncio.run(_pf_run(loop(2477, 0))))
+--- stderr ---

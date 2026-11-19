@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: type mismatch: expected int, found string -> 'a
+ --> 7:3
+  |
+7 |   String.len "a" "b"
+  |   ^^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string -> 'a
+ --> 9:13
+  |
+9 | let i2 = if String.len "a" "b" then 1 else 2
+  |             ^^^^^^^^^^^^^^^^^^
+
+error: field `x` is set twice
+  --> 14:28
+   |
+14 |     return Pt { x = 1, x = 2, y = 3 }
+   |                            ^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+  --> 16:29
+   |
+16 | let l4 = List.map (fun q -> { pt with z = 4 }) [1, 2]
+   |                             ^^^^^^^^^^^^^^^^^
+
+4 errors

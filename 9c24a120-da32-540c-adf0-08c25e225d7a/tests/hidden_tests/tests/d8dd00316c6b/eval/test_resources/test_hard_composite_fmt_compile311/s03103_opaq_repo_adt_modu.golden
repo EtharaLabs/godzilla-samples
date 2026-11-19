@@ -1,0 +1,121 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_currency(sym, n, x):
+    return sym + format(x, f",.{n}f")
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_last(xs):
+    return Some(xs[-1]) if xs else _None_
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Stock:
+    name: str
+    qty: int
+    price: float
+@dataclass(frozen=True, slots=True, repr=False)
+class Mark:
+    _0: int
+    def __repr__(self):
+        return f"Mark({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Turn:
+    _0: int
+    def __repr__(self):
+        return f"Turn({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Emit:
+    _0: int
+    _1: int
+    def __repr__(self):
+        return f"Emit({self._0!r}, {self._1!r})"
+def rawOf(x):
+    match x:
+        case s:
+            return s
+def mint(prefix, n):
+    return _pf_map(lambda i: f"{prefix}-{i}", _pf_range(1, n + 1))
+keys = mint("acc", 4)
+print(_pf_str_join(" ", _pf_map(rawOf, keys)))
+print(_pf_head(keys) == Some("acc-1"))
+rows = [Stock("hub", 14, 14.98), Stock("gear", 5, 24.07), Stock("nut", 15, 20.38)]
+def renderRow(x):
+    return "{}|{}|{}|{}".format(_pf_fmt_pad_right(6, " ", x.name), _pf_fmt_pad_left(4, " ", str(x.qty)), _pf_fmt_fixed(1, x.price), _pf_fmt_currency("$", 2, x.price * 5.0))
+_pf_iter(print, _pf_map(renderRow, rows))
+print("{} rows, {}={}".format(len(rows), _pf_str_upper("total"), _pf_fmt_fixed(2, _pf_fold(lambda a, x: a + x.price, 0.0, rows))))
+def describe(t):
+    match t:
+        case Mark(1):
+            return "mark-1"
+        case Mark(n0):
+            return f"mark({n0})"
+        case Turn(n0) if n0 % 2 == 0:
+            return f"turn!({n0})"
+        case Turn(n0):
+            return f"turn({n0})"
+        case Emit(n0, n1):
+            return f"emit({n0},{n1})"
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def rank(t):
+    match t:
+        case Mark(x0):
+            return x0 * 4
+        case _:
+            return 1
+queue = [Mark(1), Emit(0, 0), Turn(-3), Mark(0), Mark(-3)]
+print(_pf_map(describe, queue))
+total = _pf_sum_by(rank, queue)
+print(f"total={total}")
+print((_pf_head(queue), _pf_last(queue)))
+def Calc_scaleAll(k, xs):
+    return _pf_map(lambda b: k * b, xs)
+def Calc_mean(xs):
+    if not xs:
+        return 0
+    else:
+        return sum(xs) // len(xs)
+def Calc_square(x):
+    return x * x
+def Calc_between(lo, hi, x):
+    return lo <= x <= hi
+nums = [10, 9, 12, 26, -5]
+print(Calc_scaleAll(5, nums))
+print(Calc_mean(nums))
+print(_pf_map(Calc_square, nums))
+print(_pf_filter(functools.partial(Calc_between, 4, 16), nums))
+--- stderr ---

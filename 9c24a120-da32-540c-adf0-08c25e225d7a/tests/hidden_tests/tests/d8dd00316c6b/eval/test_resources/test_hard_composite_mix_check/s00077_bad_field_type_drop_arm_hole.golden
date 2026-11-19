@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Odd` is not matched
+ --> 3:3
+  |
+3 |   match n:
+  |   ^^^^^^^^
+
+error: type mismatch: expected int, found string
+ --> 8:116
+  |
+8 | let book = [Order { id = 100, owner = "lu", amount = 79, urgent = true }, Order { id = 101, owner = "lu", amount = "177", urgent = true }, Order { id = 102, owner = "cy", amount = 269, urgent = true }, Order { id = 103, urgent = true, owner = "lu", amount = 269 }, Order { id = 104, owner = "cy", amount = 111, urgent = false }, Order { id = 105, owner = "lu", amount = 51, urgent = false }]
+  |                                                                                                                    ^^^^^
+
+note: hole `?` has type `'a`
+  --> 19:18
+   |
+19 |   let square x = ?
+   |                  ^
+
+2 errors
+1 unfilled hole

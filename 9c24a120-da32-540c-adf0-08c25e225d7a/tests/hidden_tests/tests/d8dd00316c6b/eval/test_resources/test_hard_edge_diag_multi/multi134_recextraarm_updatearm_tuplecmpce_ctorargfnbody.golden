@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` has no field `w`
+ --> 8:36
+  |
+8 |     case 0: Pt { x = 1, y = 2, w = 3 }
+  |                                    ^
+
+error: record `Pt` has no field `z` (did you mean `x`?)
+  --> 12:13
+   |
+12 |     case 0: { pt with z = 4 }
+   |             ^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 18:12
+   |
+18 |     return (1, 2) == (1, "b")
+   |            ^^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected float, found string
+  --> 21:3
+   |
+21 |   Circle "big"
+   |   ^^^^^^^^^^^^
+
+4 errors

@@ -1,0 +1,8 @@
+exit: 0
+--- stdout ---
+00000002ok00000034Decode.fail : string -> Decoder 'a0000000000000002ok0000000000000102def _pf_dec_fail(msg):
+    def go(v):
+        raise ValueError(msg)
+    return go
+print(_pf_dec_fail)
+--- stderr ---

@@ -1,0 +1,79 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Echo` (echo.pyfun) --
+error: imported type `Kind` (from `Alpha`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Echo.
+  | ^
+error: unknown type `Alpha.Kind`
+  --> 14:1
+   |
+14 | type RecE = { id: int, kind: Alpha.Kind }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+error: unknown constructor `Alpha.KaA`
+  --> 10:9
+   |
+10 |   match k:
+   |         ^
+error: `RecE` is not a record type
+  --> 15:14
+   |
+15 | let make n = RecE { id = n, kind = Alpha.pickA n }
+   |              ^^^^
+error: unknown record field `kind`
+  --> 16:25
+   |
+16 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+-- module `Golf` (golf.pyfun) --
+error: imported type `Kind` (from `Alpha`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Golf.
+  | ^
+error: imported type `Kind` (from `Echo`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Golf.
+  | ^
+error: unknown constructor `Alpha.KaA`
+  --> 10:9
+   |
+10 |   match k:
+   |         ^
+-- module `Foxtrot` (foxtrot.pyfun) --
+error: imported type `Kind` (from `Golf`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Foxtrot.
+  | ^
+-- module `Delta` (delta.pyfun) --
+error: imported type `Kind` (from `Echo`) clashes with an existing type
+ --> 1:1
+  |
+1 | ## Module Delta.
+  | ^
+error: unknown type `Echo.Kind`
+  --> 13:1
+   |
+13 | type RecD = { id: int, kind: Echo.Kind }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+error: unknown constructor `Echo.KaE`
+ --> 9:9
+  |
+9 |   match k:
+  |         ^
+error: `RecD` is not a record type
+  --> 14:14
+   |
+14 | let make n = RecD { id = n, kind = Echo.pickE n }
+   |              ^^^^
+error: unknown record field `kind`
+  --> 15:25
+   |
+15 | let unwrap r = describe r.kind
+   |                         ^^^^^^
+
+14 errors

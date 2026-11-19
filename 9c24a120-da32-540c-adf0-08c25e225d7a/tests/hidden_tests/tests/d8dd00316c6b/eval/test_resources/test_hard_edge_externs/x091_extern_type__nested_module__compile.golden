@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+import pathlib
+def pathSuffix(s):
+    return pathlib.PurePosixPath(s).suffix
+def Wrap_call(u):
+    return pathSuffix("report.csv")
+print(Wrap_call(None))
+--- stderr ---

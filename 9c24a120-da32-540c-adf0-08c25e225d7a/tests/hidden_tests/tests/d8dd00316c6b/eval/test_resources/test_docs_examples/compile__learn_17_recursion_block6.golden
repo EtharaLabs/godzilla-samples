@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Leaf:
+    _0: int
+    def __repr__(self):
+        return f"Leaf({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Branch:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Branch({self._0!r}, {self._1!r})"
+def total(t):
+    match t:
+        case Leaf(n):
+            return n
+        case Branch(l, r):
+            return total(l) + total(r)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+sample = Branch(Leaf(1), Branch(Leaf(2), Leaf(3)))
+print(total(sample))
+--- stderr ---

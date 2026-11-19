@@ -1,0 +1,39 @@
+exit: 0
+--- stdout ---
+type Entry = { name: string, points: int, active: bool }
+let playerDecoder = ((((Decode.map3 (fun n p a -> Entry { name = n, points = p, active = a })) ((Decode.field "name") Decode.string)) ((Decode.field "points") Decode.int)) ((Decode.field "active") Decode.bool))
+let rawJson = "[{\"name\": \"cy\", \"points\": 31, \"active\": false}, {\"name\": \"ada\", \"points\": 31, \"active\": false}]"
+match ((Decode.decodeString (Decode.list playerDecoder)) rawJson):
+    case (Ok ps):
+        let live = (ps |> (List.filter (fun p -> p.active)))
+        (print f"{(List.len live)} active, {((List.sumBy (fun p -> p.points)) live)} points")
+    case (Error e): (print f"decode failed: {e.errorKind}")
+let series = seq {
+    for x in ((List.range 1) 9):
+        let y = (x * x)
+        yield y
+}
+(print (((Seq.fold (+)) 0) series))
+(((((Seq.initInfinite (fun i -> (i * 6))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 4)) |> Seq.toList) |> print)
+extern pure shout: string -> string = str.upper
+(print (("oz" |> shout) |> String.rev))
+extern pure choose: int -> int -> int = math.comb
+let row n = (((List.range 0) (n + 1)) |> (List.map (choose n)))
+(print (row 7))
+extern parseNum: string -> int = int
+let safe s =
+    match (try (parseNum s)):
+        case (Ok n): f"ok {n}"
+        case (Error e): f"bad ({e.errorKind})"
+((["12", "x2", "41"] |> (List.map safe)) |> (List.iter print))
+extern readBase: string -> int -> int = int(base=...)
+let fromBin s = ((readBase s) 2)
+(print ((fromBin "1010111") + ((readBase "115") 8)))
+type Invoice = { id: int, owner: string, amount: int, urgent: bool }
+let parcels = [Invoice { urgent = false, amount = 139, owner = "cy", id = 100 }, Invoice { id = 101, owner = "quin", amount = 89, urgent = true }, Invoice { id = 102, owner = "quin", amount = 200, urgent = false }, Invoice { id = 103, owner = "dee", urgent = false, amount = 54 }]
+let rushSum = ((parcels |> (List.filter (fun o -> o.urgent))) |> (List.sumBy (fun o -> o.amount)))
+(print rushSum)
+(print ((List.maxBy (fun o -> o.amount)) parcels))
+let (cheap, dear) = ((List.partition (fun o -> (o.amount < 168))) parcels)
+(print f"{(List.len cheap)} cheap, {(List.len dear)} dear")
+--- stderr ---

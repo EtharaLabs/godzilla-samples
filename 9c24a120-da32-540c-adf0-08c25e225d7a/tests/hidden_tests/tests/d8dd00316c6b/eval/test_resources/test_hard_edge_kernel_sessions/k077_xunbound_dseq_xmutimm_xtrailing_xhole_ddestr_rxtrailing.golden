@@ -1,0 +1,36 @@
+exit: 0
+--- stdout ---
+00000005error00000062error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^
+0000000000000002ok00000018squares : Seq int
+00000093def _pf_fn0():
+    for x in [1, 2, 3]:
+        yield x * x
+    yield 100
+squares = _pf_fn0()
+00000005error00000059error: unbound name `n`
+ --> 8:1
+  |
+8 | n <- 5
+  | ^^^^^^
+0000000000000005error00000080error: expected int, found bool
+  --> 10:7
+   |
+10 | ok2 + true
+   |       ^^^^
+0000000000000005error00000339error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 59 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+  --> 10:18
+   |
+10 | let h = List.map ?f [1]
+   |                  ^^0000000000000002ok00000019a : int
+b : string
+00000018a, b = (1, "two")
+00000005error00000080error: expected int, found bool
+  --> 13:7
+   |
+13 | ok2 + true
+   |       ^^^^
+00000000--- stderr ---

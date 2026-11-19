@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def compute(u):
+    def step(a, x):
+        if x > a:
+            return x
+        else:
+            return a
+    return _pf_fold(step, 0, iter([3, 1, 4, 1, 5]))
+result = compute(None)
+print(result)
+--- stderr ---

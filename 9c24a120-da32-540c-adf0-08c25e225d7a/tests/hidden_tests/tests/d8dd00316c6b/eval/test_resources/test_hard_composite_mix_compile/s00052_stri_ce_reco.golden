@@ -1,0 +1,158 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_rev(xs):
+    return list(reversed(xs))
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_fmt_pad_left(w, fill, s):
+    return s.rjust(w, fill)
+def _pf_fmt_pad_right(w, fill, s):
+    return s.ljust(w, fill)
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_result_is_error(r):
+    return isinstance(r, Error)
+def _pf_result_map_error(f, r):
+    if isinstance(r, Error):
+        return Error(f(r._0))
+    return r
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_replace(old, new, s):
+    return s.replace(old, new)
+def _pf_str_rev(s):
+    return "".join(reversed(s))
+def _pf_str_slice(start, end, s):
+    return s[start:end]
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Parcel:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+raw = "cog,ada,pam,bolt,tom"
+parts = _pf_str_split(",", raw)
+print(_pf_str_slice(1, 9, raw))
+print(_pf_str_replace("a", "A", raw))
+n2 = len(parts)
+print(f"n2={n2} {{braces}} {len(raw)}")
+def row2(_pf_arg0):
+    i, w = _pf_arg0
+    return _pf_str_concat(_pf_fmt_pad_right(8, ".", w), _pf_fmt_pad_left(4, " ", str(i + 1)))
+_pf_iter(print, _pf_map(row2, _pf_indexed(parts)))
+print(_pf_str_join(" ", _pf_rev(_pf_map(_pf_str_rev, parts))))
+print(_pf_str_join("|", _pf_map(_pf_str_upper, parts)))
+def decodeLine(line):
+    def _pf_fn0():
+        match _pf_str_split("=", line):
+            case [_k, _v]:
+                _pf_t0 = Ok((_pf_str_strip(_k), _pf_str_strip(_v)))
+            case _:
+                _pf_t0 = Error(f"malformed: {line}")
+        if isinstance(_pf_t0, Ok):
+            k, v = _pf_t0._0
+            _pf_t1 = _pf_option_to_result(f"not a number: {v}", _pf_str_to_int(v))
+            if isinstance(_pf_t1, Ok):
+                n = _pf_t1._0
+                return Ok((k, n))
+            else:
+                return _pf_t1
+        else:
+            return _pf_t0
+    return _pf_fn0()
+lines = ["hal=49", "max", "jo = 5", "ned=0=1"]
+results = _pf_map(decodeLine, lines)
+_pf_iter(print, results)
+errs = len(_pf_filter(_pf_result_is_error, results))
+print(f"{errs} errors")
+def sumAll(xs):
+    def _pf_fn2(acc, r):
+        def _pf_fn3():
+            if isinstance(acc, Ok):
+                total = acc._0
+                if isinstance(r, Ok):
+                    _, n = r._0
+                    return Ok(total + n)
+                else:
+                    return r
+            else:
+                return acc
+        return _pf_fn3()
+    return _pf_fold(_pf_fn2, Ok(0), xs)
+print(_pf_result_map_error(_pf_str_upper, sumAll(results)))
+orders = [Parcel(100, "lu", 261, True, Site("Oslo", 1)), Parcel(101, "hal", 149, True, Site("Lima", 2)), Parcel(102, "lu", 214, False, Site("Bern", 3)), Parcel(103, "sue", 148, False, Site("Rome", 4))]
+def surcharge(pct, o):
+    extra = o.amount * pct // 100
+    _pf_t2 = o
+    return Parcel(_pf_t2.id, _pf_t2.owner, o.amount + extra, False, _pf_t2.dest)
+print(_pf_map(lambda o: o.amount, _pf_map(functools.partial(surcharge, 4), orders)))
+def _pf_fn4(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+cnt, sumAmt = _pf_fold(_pf_fn4, (0, 0), orders)
+print(f"{cnt} records, {sumAmt} total")
+def _pf_fn5(o):
+    if o.dest.zone > 2:
+        _pf_t5 = o
+        return Parcel(_pf_t5.id, _pf_t5.owner, _pf_t5.amount, _pf_t5.urgent, Site("Hub", 1))
+    else:
+        return o
+rerouted = _pf_map(_pf_fn5, orders)
+print(_pf_map(lambda o: f"{o.dest.city}/{o.dest.zone}", rerouted))
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, orders))
+print(rushSum)
+--- stderr ---

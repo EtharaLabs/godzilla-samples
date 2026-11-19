@@ -1,0 +1,45 @@
+exit: 0
+--- stdout ---
+let readPair line = option { let! v = (((String.split "=") line) |> (List.get 1)) let! n = (String.toInt (String.strip v)) return (n * 5) }
+let entries = ["pam = 8", "dee=8=1", "ned=x", "quin", "oz=8=1", "jo = 2"]
+let parsed = ((List.map readPair) entries)
+((List.iter print) parsed)
+(print ((parsed |> (List.map (Option.withDefault 0))) |> List.sum))
+(print (((parsed |> (List.map (Option.map (fun n -> (n + 1))))) |> (List.filter Option.isSome)) |> List.len))
+let sentence = "ray,tap,jo,bolt,gus,ada,pam"
+let words = ((String.split ",") sentence)
+(print (((String.replace "i") "I") sentence))
+(print (((String.slice 1) 7) sentence))
+(print ((List.map (fun w -> (w, (String.len w)))) words))
+(print ((words |> (List.map String.upper)) |> (String.join "|")))
+let row2 (i, w) = ((String.concat (((Format.padRight 7) ".") w)) (((Format.padLeft 4) " ") (String.fromInt (i + 1))))
+(((words |> List.indexed) |> (List.map row2)) |> (List.iter print))
+type Cmd = Load int | Halt | Push int int | Mark int | Drop int
+let render t =
+    match t:
+        case (Load n0): f"load({n0})"
+        case Halt: f"halt"
+        case (Push n0 n1): f"push({n0},{n1})"
+        case (Mark n0) if (n0 > 0): f"mark!({n0})"
+        case (Mark n0): f"mark({n0})"
+        case (Drop n0): f"drop({n0})"
+let score t =
+    match t:
+        case (Drop x0): x0
+        case (Load x0): (x0 * 2)
+        case _: 2
+let queue = [Halt, ((Push 1) 6), (Drop 12), (Load 1), (Mark (- 1)), (Drop 3), (Mark 5)]
+(print ((queue |> (List.map render)) |> (String.join "; ")))
+let tally = (queue |> (List.sumBy score))
+(print f"tally={tally}")
+(print ((List.maxBy score) queue))
+let series = seq {
+    for x in ((List.range 1) 7):
+        let y = (x * x)
+        yield y
+}
+(((series |> (Seq.filter (fun n -> ((n % 4) == 0)))) |> Seq.toList) |> print)
+(((((Seq.initInfinite (fun i -> (i * 6))) |> (Seq.filter (fun n -> ((n % 2) == 0)))) |> (Seq.take 3)) |> Seq.toList) |> print)
+let fib = ((Seq.unfold (fun (a, b) -> (Some (a, (b, (a + b)))))) (0, 1))
+(((fib |> (Seq.takeWhile (fun n -> (n < 265)))) |> Seq.toList) |> print)
+--- stderr ---

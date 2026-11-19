@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_upper(s):
+    return s.upper()
+n = len("hi")
+up = _pf_str_upper("hi")
+parts = _pf_str_split(",", "a,b")
+joined = _pf_str_join("-", parts)
+has = "a" in "abc"
+s = str(7)
+chars = list("hi")
+--- stderr ---

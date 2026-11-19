@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: `Noop` is not matched
+ --> 3:3
+  |
+3 |   match op:
+  |   ^^^^^^^^^
+
+error: expected int, found Option int
+  --> 52:18
+   |
+52 | let firstCount = Map.tryFind "dee" freq + 1
+   |                  ^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

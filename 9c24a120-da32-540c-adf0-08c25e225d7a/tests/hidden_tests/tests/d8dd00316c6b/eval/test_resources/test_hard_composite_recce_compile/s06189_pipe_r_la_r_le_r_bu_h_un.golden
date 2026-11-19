@@ -1,0 +1,122 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+import math
+import math as mth
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_distinct_by(f, xs):
+    seen = set()
+    out = []
+    for x in xs:
+        k = f(x)
+        if not k in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_partition(f, xs):
+    yes = []
+    no = []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            no.append(x)
+    return (yes, no)
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_choose(f, xs):
+    out = []
+    for x in xs:
+        y = f(x)
+        if isinstance(y, Some):
+            out.append(y._0)
+    return out
+def _pf_fmt_fixed(n, x):
+    return format(x, f".{n}f")
+def _pf_fst(p):
+    return p[0]
+values = [1, 41, -6, 7, 2, 25, -2, 7, 46, 2, 32]
+def keep(n):
+    return n > 2 and n % 5 != 0
+stage = lambda _pf_x: _pf_filter(lambda x: x % 3 == 2, (lambda _pf_x: _pf_distinct_by(lambda x: x % 3, _pf_choose(lambda x: (Some(x // 3) if x % 3 == 0 else _None_), _pf_x)))(_pf_x))
+digest = _pf_fold(lambda acc, x: acc * 2 - x, 0, stage(values))
+print(digest)
+print(len(values))
+nums2 = [9, 7, -8, -9, 23, 13]
+gain = 4
+scalers = _pf_map(lambda s: lambda x: x * s + gain, [1, 2, 3])
+print(_pf_map(lambda g: g(6), scalers))
+def _pf_fn0(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % gain, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn0, _pf_indexed(nums2))))
+def _pf_fn1(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * gain
+print(len(_pf_filter(_pf_fn1, _pf_zip(nums2, _pf_map(lambda x: x * x, nums2)))))
+print(_pf_map(lambda y: y * gain, (lambda ys: _pf_take(len(ys) // 2, ys))(nums2)))
+def _pf_fn2(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn2, (0, 0), nums2))
+def evenP(n):
+    if n == 0:
+        return True
+    else:
+        return isOdd2(n - 1)
+def isOdd2(n):
+    if n == 0:
+        return False
+    else:
+        return evenP(n - 1)
+print(_pf_partition(evenP, [6, 1, 12, 6, 8]))
+def Logged_bind(m, f):
+    match m:
+        case (v, log):
+            match f(v):
+                case (w, log2):
+                    return (w, _pf_concat(log, log2))
+def Logged_return_(x):
+    return (x, [])
+def tell(msg):
+    return (None, [msg])
+def compute(x):
+    return Logged_bind(tell(f"start {x}"), lambda _: Logged_bind((x * 3, ["scaled"]), lambda y: (lambda z: Logged_bind(tell(f"z={z}"), lambda _: Logged_return_(z)))(y + 6)))
+print(_pf_map(compute, [3, 3]))
+reach = math.hypot(2.0 / 1.0, 5.0 / 1.0) * 1.0
+factor = math.sqrt(3.0)
+side = math.sqrt(4.0)
+vol = math.cbrt(27.0)
+print((_pf_fmt_fixed(3, reach), _pf_fmt_fixed(4, factor), side, vol))
+print(mth.floor(reach / 1.0))
+def rateOf(d, t):
+    return d / t
+print(_pf_fmt_fixed(2, rateOf(reach, 5.0)))
+--- stderr ---

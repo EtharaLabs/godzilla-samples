@@ -1,0 +1,36 @@
+exit: 0
+--- stdout ---
+let decodeLine line = result { let! (k, v) = (match ((String.split "=") line): case [k, v]: (Ok ((String.strip k), (String.strip v))) case _: (Error f"malformed: {line}")) let! n = ((Option.toResult f"not a number: {v}") (String.toInt v)) let! checked = (if (n < 0) then (Error "negative") else (Ok n)) return (k, checked) }
+let inputs = ["ned=6=1", "ivy=9", "sue=92", "max=x", "pam=32", "kit=97"]
+let parsed = ((List.map decodeLine) inputs)
+((List.iter print) parsed)
+let errs = ((parsed |> (List.filter Result.isError)) |> List.len)
+(print f"{errs} errors")
+let combine xs = (((List.fold (fun acc r -> result { let! total = acc let! (_, n) = r return (total + n) })) (Ok 0)) xs)
+(print ((combine parsed) |> (Result.mapError String.upper)))
+type Msg = Store int | Pop | Turn int
+let describe t =
+    match t:
+        case (Store n0) if (0 <= n0 < 9): f"store!({n0})"
+        case (Store n0): f"store({n0})"
+        case Pop: f"pop"
+        case (Turn 2): "turn-2"
+        case (Turn n0): f"turn({n0})"
+let weight t =
+    match t:
+        case (Store x0): x0
+        case Pop: 9
+        case _: 2
+let batch = [Pop, (Store (- 2)), Pop, (Turn 1), (Turn (- 2))]
+((List.iter (fun t -> (print (describe t)))) batch)
+let grandSum = (batch |> (List.sumBy weight))
+(print f"grandSum={grandSum}")
+(print ((List.head batch), (List.last batch)))
+extern pure gcd: int -> int -> int = math.gcd
+let lcm a b = ((a * b) // ((gcd a) b))
+(print (((List.fold lcm) 1) [2, 7, 3, 3]))
+extern pure shout: string -> string = str.upper
+(print (("jo" |> shout) |> String.rev))
+extern pure isqrt: int -> int = math.isqrt
+(print ((List.map isqrt) [372, 378, 182, 183]))
+--- stderr ---

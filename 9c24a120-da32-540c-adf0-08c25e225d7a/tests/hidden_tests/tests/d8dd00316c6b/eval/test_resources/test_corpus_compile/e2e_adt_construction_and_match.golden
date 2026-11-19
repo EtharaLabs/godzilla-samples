@@ -1,0 +1,48 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class Red:
+    def __repr__(self):
+        return "Red"
+_Red = Red()
+@dataclass(frozen=True, slots=True, repr=False)
+class Green:
+    def __repr__(self):
+        return "Green"
+_Green = Green()
+@dataclass(frozen=True, slots=True, repr=False)
+class Blue:
+    def __repr__(self):
+        return "Blue"
+_Blue = Blue()
+def unwrap(o):
+    if isinstance(o, Some):
+        v = o._0
+        return v
+    else:
+        return 0
+r1 = unwrap(Some(5))
+r2 = unwrap(_None_)
+def rank(c):
+    match c:
+        case Red():
+            return 1
+        case Green():
+            return 2
+        case Blue():
+            return 3
+        case _:
+            raise RuntimeError("non-exhaustive match")
+r3 = rank(_Green)
+--- stderr ---

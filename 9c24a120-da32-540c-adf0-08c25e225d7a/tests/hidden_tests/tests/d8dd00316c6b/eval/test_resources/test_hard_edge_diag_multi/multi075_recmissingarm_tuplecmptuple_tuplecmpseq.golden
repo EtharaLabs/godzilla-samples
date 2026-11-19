@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: record `Pt` is missing field(s) `y`
+ --> 8:13
+  |
+8 |     case 0: Pt { x = 1 }
+  |             ^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 10:14
+   |
+10 | let t2 = (0, (1, 2) == (1, "b"), "z")
+   |              ^^^^^^^^^^^^^^^^^^
+
+error: type mismatch: expected int, found string
+  --> 13:11
+   |
+13 |     yield (1, 2) == (1, "b")
+   |           ^^^^^^^^^^^^^^^^^^
+
+3 errors

@@ -1,0 +1,187 @@
+exit: 0
+--- stdout ---
+00000002ok00000320female : int -> int
+male : int -> int
+tiles : List Tile
+stretch : Tile -> Tile
+surface : Tile -> int
+relabel : string -> Tile -> Tile
+parseForm : string -> string -> Result Form string
+seriesA : List int
+factor : int
+shape2 : int -> int
+events : List string
+bump : (Map 'a int) -> 'a -> Map 'a int
+freq : Map string int
+00004947from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_indexed(xs):
+    return list(enumerate(xs))
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_zip(xs, ys):
+    return list(zip(xs, ys))
+def _pf_head(xs):
+    return Some(xs[0]) if xs else _None_
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+def _pf_map_try_find(k, m):
+    if k in m:
+        return Some(m.get(k))
+    return _None_
+def _pf_option_to_result(err, o):
+    if isinstance(o, Some):
+        return Ok(o._0)
+    return Error(err)
+def _pf_str_concat(a, b):
+    return a + b
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_str_upper(s):
+    return s.upper()
+def _pf_fst(p):
+    return p[0]
+@dataclass(frozen=True, slots=True)
+class Tile:
+    w: int
+    h: int
+    label: str
+@dataclass(frozen=True, slots=True)
+class Form:
+    user: str
+    age: int
+def female(n):
+    if n == 0:
+        return 1
+    else:
+        return n - male(female(n - 1))
+def male(n):
+    if n == 0:
+        return 0
+    else:
+        return n - female(male(n - 1))
+print((_pf_map(female, _pf_range(0, 8)), _pf_map(male, _pf_range(0, 4))))
+tiles = [Tile(1, 1, "cap"), Tile(2, 2, "wick"), Tile(7, 2, "cog"), Tile(8, 7, "cog"), Tile(2, 4, "rod"), Tile(4, 4, "sq")]
+def stretch(b):
+    w = b.w
+    h = b.h
+    _pf_t1 = b
+    return Tile(w + 2, h * 2, _pf_t1.label)
+print(_pf_map(lambda b: b.h, _pf_map(stretch, tiles)))
+def surface(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w * h
+print(sum(_pf_map(surface, tiles)))
+def relabel(prefix, b):
+    label = b.label
+    _pf_t3 = b
+    return Tile(_pf_t3.w, _pf_t3.h, _pf_str_concat(prefix, label))
+print(_pf_head(_pf_map(functools.partial(relabel, "old-"), tiles)))
+def _pf_fn0(_pf_arg0):
+    label = _pf_arg0.label
+    return label
+def _pf_fn1(_pf_arg0):
+    w = _pf_arg0.w
+    h = _pf_arg0.h
+    return w > h
+print(_pf_map(_pf_fn0, _pf_filter(_pf_fn1, tiles)))
+def Check_bind(r, f):
+    if isinstance(r, Ok):
+        x = r._0
+        return f(x)
+    else:
+        e = r._0
+        return Error(_pf_str_upper(e))
+def Check_return_(x):
+    return Ok(x)
+def parseForm(user, age):
+    return Check_bind(Ok(user) if len(user) > 1 else Error("short name"), lambda name: Check_bind(_pf_option_to_result("bad age", _pf_str_to_int(age)), lambda years: Check_bind(Ok(years) if years >= 17 else Error("too young"), lambda adult: Check_return_(Form(name, adult)))))
+print(parseForm("ada", "39"))
+print((parseForm("a", "30"), parseForm("bob", "x")))
+seriesA = [20, -2, 16, -9, 15, 26, 10, 5]
+factor = 5
+print(_pf_map(lambda y: y * factor, (lambda ys: _pf_take(len(ys) // 2, ys))(seriesA)))
+shape2 = lambda _pf_x: (lambda z: z - 5)((lambda _pf_x: (lambda y: y * factor)((lambda x: x + 1)(_pf_x)))(_pf_x))
+print(_pf_map(shape2, seriesA))
+def _pf_fn2(_pf_arg0):
+    a, b = _pf_arg0
+    return b > a * factor
+print(len(_pf_filter(_pf_fn2, _pf_zip(seriesA, _pf_map(lambda x: x * x, seriesA)))))
+def _pf_fn3(_pf_arg0, x):
+    s, n = _pf_arg0
+    if x > 0:
+        return (s + x, n + 1)
+    else:
+        return (s, n)
+print(_pf_fold(_pf_fn3, (0, 0), seriesA))
+def _pf_fn4(_pf_arg0):
+    i, x = _pf_arg0
+    return (x % factor, -i)
+print(_pf_map(_pf_fst, _pf_sort_by(_pf_fn4, _pf_indexed(seriesA))))
+events = ["eli", "eli", "eli", "bo", "ada", "eli", "cy", "ada"]
+def bump(m, w):
+    if w in m:
+        n = m[w]
+        return _pf_map_add(w, n + 1, m)
+    else:
+        return _pf_map_add(w, 1, m)
+m = dict()
+for w in events:
+    match _pf_map_try_find(w, m):
+        case Some(n):
+            _pf_t4 = n + 1
+            m[w] = _pf_t4
+        case None_():
+            m[w] = 1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+freq = m
+def _pf_fn5(_pf_arg0):
+    k, v = _pf_arg0
+    return (-v, k)
+print(_pf_sort_by(_pf_fn5, _pf_map_to_list(freq)))
+print((_pf_map_try_find("cy", freq), "cy" in freq))
+def _pf_sort(xs):
+    return sorted(xs)
+def _pf_map_keys(m):
+    return list(m.keys())
+def _pf_str_join(sep, xs):
+    return sep.join(xs)
+print(_pf_str_join(",", _pf_sort(_pf_map_keys(freq))))
+00000002ok00000018seriesA : List int0000000000000002ok00000021surface : Tile -> int00000000--- stderr ---

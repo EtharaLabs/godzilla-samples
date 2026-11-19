@@ -1,0 +1,15 @@
+import delta
+import echo
+import foxtrot
+base = 8 + delta.base + echo.base + foxtrot.base
+def step(x):
+    return foxtrot.step(echo.step(delta.step(x))) + 8
+def describe(k):
+    match k:
+        case foxtrot.KaF(v):
+            return v * 10
+        case foxtrot.KbF():
+            return -1
+        case _:
+            raise RuntimeError("non-exhaustive match")
+probe = describe(foxtrot.pickF(base))

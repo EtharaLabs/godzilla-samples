@@ -1,0 +1,149 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_filter(f, xs):
+    return list(filter(f, xs))
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_sort_by(f, xs):
+    return sorted(xs, key=f)
+def _pf_sum_by(f, xs):
+    return sum(map(f, xs))
+def _pf_take(n, xs):
+    return xs[0:max(n, 0)]
+def _pf_map_find_or(k, default, m):
+    return m.get(k, default)
+def _pf_str_split(sep, s):
+    return s.split(sep)
+def _pf_str_strip(s):
+    return s.strip()
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def _pf_fst(p):
+    return p[0]
+def _pf_snd(p):
+    return p[1]
+@dataclass(frozen=True, slots=True)
+class Site:
+    city: str
+    zone: int
+@dataclass(frozen=True, slots=True)
+class Order:
+    id: int
+    owner: str
+    amount: int
+    urgent: bool
+    dest: object
+@dataclass(frozen=True, slots=True, repr=False)
+class Num:
+    _0: int
+    def __repr__(self):
+        return f"Num({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Add:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Add({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Mul:
+    _0: object
+    _1: object
+    def __repr__(self):
+        return f"Mul({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Neg:
+    _0: object
+    def __repr__(self):
+        return f"Neg({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Var:
+    _0: str
+    def __repr__(self):
+        return f"Var({self._0!r})"
+tickets = [Order(100, "sue", 78, False, Site("Oslo", 3)), Order(101, "sue", 283, False, Site("Lima", 1)), Order(102, "sue", 285, True, Site("Rome", 4)), Order(103, "sue", 64, True, Site("Bern", 3))]
+rushSum = _pf_sum_by(lambda o: o.amount, _pf_filter(lambda o: o.urgent, tickets))
+print(rushSum)
+def _pf_fn0(_pf_arg0, o):
+    n, s = _pf_arg0
+    return (n + 1, s + o.amount)
+nrec, amt = _pf_fold(_pf_fn0, (0, 0), tickets)
+print(f"{nrec} records, {amt} total")
+print(_pf_map(lambda o: o.id, _pf_take(4, _pf_sort_by(lambda o: o.amount, tickets))))
+env = dict([("x", 7), ("y", 1)])
+def calc(e):
+    match e:
+        case Num(n):
+            return n
+        case Add(a, b):
+            return calc(a) + calc(b)
+        case Mul(a, b):
+            return calc(a) * calc(b)
+        case Neg(a):
+            return -calc(a)
+        case Var(v):
+            return _pf_map_find_or(v, 0, env)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def render(e):
+    match e:
+        case Num(n) if n < 0:
+            return f"({n})"
+        case Num(n):
+            return f"{n}"
+        case Add(a, b):
+            return f"({render(a)} + {render(b)})"
+        case Mul(a, b):
+            return f"{render(a)} * {render(b)}"
+        case Neg(a):
+            return f"-{render(a)}"
+        case Var(v):
+            return v
+        case _:
+            raise RuntimeError("non-exhaustive match")
+terms = [Neg(Add(Num(0), Add(Num(1), Num(3)))), Num(5)]
+_pf_iter(print, _pf_map(render, terms))
+print(_pf_map(calc, terms))
+def _ap_KeyVal(s):
+    match _pf_str_split("=", s):
+        case [k, v]:
+            _pf_t0 = _pf_str_to_int(v)
+            if isinstance(_pf_t0, Some):
+                n = _pf_t0._0
+                return Some((_pf_str_strip(k), n))
+            else:
+                return _None_
+        case _:
+            return _None_
+def describe(s):
+    _pf_t1 = _ap_KeyVal(s)
+    if isinstance(_pf_t1, Some):
+        pair = _pf_t1._0
+        if _pf_snd(pair) > 9:
+            return f"{_pf_fst(pair)} big"
+    if isinstance(_pf_t1, Some):
+        pair = _pf_t1._0
+        return f"{_pf_fst(pair)}={_pf_snd(pair)}"
+    return "?"
+_pf_iter(print, _pf_map(describe, ["bo", "eli=x", "ada", "sue=x"]))
+--- stderr ---

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: non-exhaustive match: add a wildcard `_` arm
+ --> 3:3
+  |
+3 |   match n:
+  |   ^^^^^^^^
+
+note: hole `?` has type `int` — try: overall — or: intRoot ?, parseNum ?, List.sum ?, Seq.sum ?, and 14 more
+  --> 26:23
+   |
+26 | print (String.slice 1 ? text)
+   |                       ^
+
+1 error
+1 unfilled hole

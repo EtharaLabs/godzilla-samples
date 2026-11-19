@@ -1,0 +1,110 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_map_add(k, v, m):
+    return dict(list(m.items()) + [[k, v]])
+def _pf_map_to_list(m):
+    return list(m.items())
+@dataclass(frozen=True, slots=True, repr=False)
+class Put:
+    _0: str
+    _1: int
+    def __repr__(self):
+        return f"Put({self._0!r}, {self._1!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Append:
+    _0: int
+    def __repr__(self):
+        return f"Append({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Skip:
+    def __repr__(self):
+        return "Skip"
+_Skip: Skip = Skip()
+Change = Put | Append | Skip
+def Writer_bind(m, f):
+    v = m[0]
+    log = m[1]
+    _pf_t0 = f(v)
+    w = _pf_t0[0]
+    log2 = _pf_t0[1]
+    return (w, _pf_concat(log, log2))
+def Writer_return_(x):
+    return (x, [])
+def note2(msg):
+    return (None, [msg])
+def trace2(x: int) -> tuple[int, list[str]]:
+    return Writer_bind(note2(f"start {x}"), lambda _: Writer_bind((x * 2, ["scaled"]), lambda y: (lambda z: Writer_bind(note2(f"z={z}"), lambda _: Writer_return_(z)))(y + 3)))
+print(_pf_map(trace2, [5, 6]))
+def execute(script: list[Change]) -> tuple[dict[str, int], list[int]]:
+    def step(acc, op):
+        return acc
+    def step(acc: tuple[dict[str, int], list[int]], op: Change) -> tuple[dict[str, int], list[int]]:
+        m = acc[0]
+        xs = acc[1]
+        if isinstance(op, Put):
+            k = op._0
+            v = op._1
+            return (_pf_map_add(k, v, m), xs)
+        elif isinstance(op, Append):
+            n = op._0
+            return (m, _pf_concat(xs, [n]))
+        else:
+            return acc
+    m = dict()
+    xs = []
+    for op in script:
+        match op:
+            case Put(k, v):
+                m[k] = v
+            case Append(n):
+                xs.append(n)
+            case Skip():
+                pass
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return (m, xs)
+script: list[Change] = [Append(6), Append(5), Put("cog", 2), _Skip, Put("nut", 9), Append(9)]
+final: tuple[dict[str, int], list[int]] = execute(script)
+mm, items = final
+print((_pf_map_to_list(mm), items))
+sumSq: int = _pf_fold(lambda step, x: step + x * x, 0, [9, 9, 3, 8])
+print(sumSq)
+def adjust(x: int, flag: bool) -> tuple[int, int]:
+    y = x * 2
+    if flag:
+        _y = x + 390
+        _pf_t1 = _y - 1
+    else:
+        _pf_t1 = y
+    z = _pf_t1
+    return (y, z)
+print((adjust(8, True), adjust(8, False)))
+def grow(n: int) -> int:
+    return n * 5
+def _pf_fn0():
+    _pf_t2 = [3, 2]
+    if _pf_t2:
+        grow = _pf_t2[0]
+        return grow + 1
+    else:
+        return 0
+picked: int = _pf_fn0()
+print((picked, grow(1)))
+makers = _pf_map(lambda k: lambda x: x * 10 + k, [8, 9, 4])
+print(_pf_map(lambda g: g(3), makers))
+def wrap(xs: list[int]) -> list[int]:
+    def twice(x: int) -> int:
+        return x * 2
+    def go(twice: int) -> int:
+        return twice + 1
+    return _pf_map(lambda x: go(twice(x)), xs)
+print(wrap([2, 6, 4]))
+--- stderr ---

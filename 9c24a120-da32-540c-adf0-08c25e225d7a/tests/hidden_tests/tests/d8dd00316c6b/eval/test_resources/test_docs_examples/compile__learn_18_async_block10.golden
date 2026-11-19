@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+import asyncio
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+async def _pf_fn2():
+    async def _pf_fn0():
+        return 10
+    a = await _pf_fn0()
+    async def _pf_fn1():
+        return 20
+    b = await _pf_fn1()
+    return a + b
+combined = _pf_Async(_pf_fn2)
+print(asyncio.run(_pf_run(combined)))
+--- stderr ---

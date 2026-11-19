@@ -1,0 +1,86 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+import functools
+import math
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_iter(f, xs):
+    for x in xs:
+        f(x)
+    return None
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_range(lo, hi):
+    return list(range(lo, hi))
+@dataclass(frozen=True, slots=True, repr=False)
+class _Even:
+    def __repr__(self):
+        return "_Even"
+@dataclass(frozen=True, slots=True, repr=False)
+class _Odd:
+    def __repr__(self):
+        return "_Odd"
+def _ap_Even_Odd(n):
+    if n % 2 == 0:
+        return _Even()
+    else:
+        return _Odd()
+def _ap_Above(n):
+    if n > 6:
+        return Some(n - 6)
+    else:
+        return _None_
+def bucketOf(n: int) -> str:
+    _pf_t0 = _ap_Above(n)
+    _pf_t1 = _ap_Even_Odd(n)
+    if isinstance(_pf_t0, Some):
+        d = _pf_t0._0
+        return f"above by {d}"
+    elif isinstance(_pf_t1, _Even):
+        return "even"
+    else:
+        return "odd"
+_pf_iter(print, _pf_map(bucketOf, [33, -2, 26, 9, 10, 0, 30, 20]))
+print(_pf_map(math.isqrt, [392, 145, 227, 332]))
+def lcm(a: int, b: int) -> int:
+    return a * b // math.gcd(a, b)
+print(_pf_fold(lcm, 1, [5, 12, 7, 9]))
+print(sum(_pf_map(functools.partial(int, base=16), ["ff", "1a"])))
+def row(n: int) -> list[int]:
+    return _pf_map(functools.partial(math.comb, n), _pf_range(0, n + 1))
+print(row(6))
+calls: int = 0
+def track(x: int) -> int:
+    global calls
+    calls = calls + 1
+    return x * 4
+def profile(xs: list[int]) -> str:
+    lo = 1000
+    hi = -1000
+    total = 0
+    def visit(x: int):
+        nonlocal hi, lo, total
+        lo = min(lo, x)
+        hi = max(hi, x)
+        total = total + x
+        return None
+    _pf_iter(visit, xs)
+    return f"lo={lo} hi={hi} total={total}"
+print(profile([-13, 33, -15, 3, 60, 43]))
+doubled: list[int] = _pf_map(track, [-13, 33, -15, 3])
+print(f"{doubled} after {calls} calls")
+trackTwice = lambda _pf_x: track(track(_pf_x))
+print((trackTwice(3), calls))
+--- stderr ---

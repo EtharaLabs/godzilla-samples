@@ -1,0 +1,33 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_find_eq(x, xs):
+    try:
+        return Some(xs[xs.index(x)])
+    except ValueError:
+        return _None_
+def _pf_index_of(x, xs):
+    try:
+        return Some(xs.index(x))
+    except ValueError:
+        return _None_
+a = _pf_index_of(3, [1, 2, 3, 3])
+b = _pf_index_of(9, [1, 2, 3])
+c = _pf_find_eq("b", ["a", "b"])
+d = _pf_find_eq("z", ["a", "b"])
+e = 2 in [1, 2]
+f = 5 in [1, 2]
+g = _pf_index_of((1, 2), [(0, 0), (1, 2)])
+h = _pf_index_of(0, [])
+i = _pf_find_eq(0.0, [-0.0])
+--- stderr ---

@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Empty:
+    def __repr__(self):
+        return "Empty"
+_Empty: Empty = Empty()
+@dataclass(frozen=True, slots=True, repr=False)
+class Has:
+    _0: Any
+    def __repr__(self):
+        return f"Has({self._0!r})"
+Opt = Empty | Has
+a: bool = Has(1) == Has(1)
+b: bool = Has(1) == Has(2)
+--- stderr ---
