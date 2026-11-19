@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let clash p =
-    let inner = (((List.fold (fun m (p, l) -> (((Map.add p) l) m))) Map.empty) [(1, 2)])
-    (p, (Map.toList inner))
-let out = (clash 9)
---- stderr ---

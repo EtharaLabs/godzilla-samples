@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-let add a b = (a + b)
-let inc = (add 1)
-let compose = (fun f g x -> (f (g x)))
-let r = ((4 |> inc) |> inc)
-let r2 = (((compose inc) inc) 10)
---- stderr ---

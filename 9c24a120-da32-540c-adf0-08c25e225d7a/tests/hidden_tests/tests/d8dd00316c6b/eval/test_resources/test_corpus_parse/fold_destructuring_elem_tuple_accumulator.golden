@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let step acc (k, v) =
-    match acc:
-        case (m, ks): ((((Map.add k) v) m), ((List.concat ks) [k]))
-let out =
-    match (((List.fold step) (Map.empty, [])) [(1, "a"), (2, "b")]):
-        case (m, ks): ((Map.toList m), ks)
---- stderr ---

@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Even:\n    def __repr__(self):\n        return \"_Even\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Odd:\n    def __repr__(self):\n        return \"_Odd\"\ndef _ap_Even_Odd(n):\n    if n % 2 == 0:\n        return _Even()\n    else:\n        return _Odd()\ndef describe(n):\n    _pf_t0 = _ap_Even_Odd(n)\n    if isinstance(_pf_t0, _Even):\n        if n > 100:\n            return \"big even\"\n    if isinstance(_pf_t0, _Even):\n        return \"even\"\n    if isinstance(_pf_t0, _Odd):\n        return \"odd\"\n    raise RuntimeError(\"non-exhaustive match\")\na = describe(200)\nb = describe(4)\nc = describe(7)\n",
- "stderr": ""
-}

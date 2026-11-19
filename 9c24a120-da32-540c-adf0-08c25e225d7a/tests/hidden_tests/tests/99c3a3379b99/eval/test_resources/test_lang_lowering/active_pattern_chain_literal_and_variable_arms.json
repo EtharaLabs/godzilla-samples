@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "def _pf_str_strip(s):\n    return s.strip()\ndef _ap_Small(n):\n    return n < 10\ndef size(n):\n    _pf_t0 = _ap_Small(n)\n    if _pf_t0:\n        return \"small\"\n    elif n == 42:\n        return \"answer\"\n    else:\n        other = n\n        return f\"big {other}\"\ndef _ap_Blank(s):\n    return _pf_str_strip(s) == \"\"\ndef kind(s):\n    _pf_t1 = _ap_Blank(s)\n    if _pf_t1:\n        return \"blank\"\n    elif s == \"x\":\n        return \"ex\"\n    else:\n        return \"other\"\ndef _ap_Yes(b):\n    return b == True\ndef flag(b):\n    _pf_t2 = _ap_Yes(b)\n    if _pf_t2:\n        return 1\n    elif b == True:\n        return 2\n    elif b == False:\n        return 0\n    else:\n        raise RuntimeError(\"non-exhaustive match\")\nprint(size(3))\nprint(size(42))\nprint(size(99))\nprint(kind(\"  \"))\nprint(kind(\"x\"))\nprint(kind(\"y\"))\nprint(flag(True))\nprint(flag(False))\n",
- "stderr": ""
-}

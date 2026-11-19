@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "import asyncio\nimport mylib\nclass _pf_Async:\n    __slots__ = (\"fn\", \"args\")\n    def __init__(self, fn, *args):\n        self.fn = fn\n        self.args = args\n    def __await__(self):\n        return self.fn(*self.args).__await__()\n    async def __call__(self):\n        return await self\n    def __repr__(self):\n        return \"<Async>\"\nasync def _pf_run(a):\n    return await a\nasync def _pf_fn3():\n    v = await asyncio.to_thread(lambda: (lambda u: 6 * 7)(None))\n    def _pf_fn1(_):\n        async def _pf_fn2():\n            return 1\n        return _pf_Async(_pf_fn2)\n    w = await mylib.retry(lambda: _pf_run(_pf_fn1(None)))\n    return v + w\nmain = _pf_Async(_pf_fn3)\nretrying = lambda _pf_p0: _pf_Async(mylib.retry, lambda: _pf_run(_pf_p0(None)))\n",
- "stderr": ""
-}

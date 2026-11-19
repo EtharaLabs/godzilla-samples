@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-opaque type UserId = string
-let firstLen ids =
-    match ids:
-        case [(UserId s), *_]: (String.len s)
-        case []: 0
-let n = (firstLen ((List.map UserId) ["ab", "c"]))
---- stderr ---

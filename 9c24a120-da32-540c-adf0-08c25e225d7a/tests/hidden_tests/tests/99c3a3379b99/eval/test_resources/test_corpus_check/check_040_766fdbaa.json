@@ -1,5 +1,0 @@
-{
- "exit": 1,
- "stdout": "",
- "stderr": "error: this starts a task outside any `Task.scope`, so nothing would own it: it performs `spawn`, which only a `Task.scope` body discharges (start the task inside `Task.scope (async { ... })`)\n --> 1:13\n  |\n1 | let stray = Task.start (Async.sleep 1.0)\n  |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n1 error\n"
-}

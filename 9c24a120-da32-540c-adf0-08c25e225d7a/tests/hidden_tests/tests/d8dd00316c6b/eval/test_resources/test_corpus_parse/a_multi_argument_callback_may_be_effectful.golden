@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-extern log: int -> int = builtins.print
-let step acc x =
-    let shown = (log x)
-    (acc + x)
-let total = (((List.fold step) 0) [1, 2])
---- stderr ---

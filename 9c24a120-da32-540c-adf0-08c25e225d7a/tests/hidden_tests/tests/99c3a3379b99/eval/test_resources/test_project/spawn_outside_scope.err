@@ -1,8 +1,0 @@
--- module `Main` (main.pyfun) --
-error: this starts a task outside any `Task.scope`, so nothing would own it: it performs `spawn`, which only a `Task.scope` body discharges (start the task inside `Task.scope (async { ... })`)
- --> 2:1
-  |
-2 | Jobs.launch "x"
-  | ^^^^^^^^^^^^^^^
-
-1 error

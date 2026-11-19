@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass A:\n    def __repr__(self):\n        return \"A\"\n_A: A = A()\n@dataclass(frozen=True, slots=True, repr=False)\nclass B:\n    def __repr__(self):\n        return \"B\"\n_B: B = B()\nT = A | B\ndef f(t: T, c: bool) -> int:\n    if isinstance(t, A):\n        return 1\n    elif isinstance(t, B):\n        return 2\n    else:\n        if isinstance(t, A):\n            if c:\n                return 3\n        raise RuntimeError(\"non-exhaustive match\")\n",
- "stderr": ""
-}

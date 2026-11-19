@@ -1,7 +1,0 @@
-package fixtestvariant
-
-var fooCount = 1
-
-var _ = fooCount
-
-var _ = size

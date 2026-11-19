@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "import functools\ndef _pf_filter(f, xs):\n    return list(filter(f, xs))\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndef _pf_map(f, xs):\n    return list(map(f, xs))\ndef _pf_range(lo, hi):\n    return list(range(lo, hi))\ndef _pf_rev(xs):\n    return list(reversed(xs))\nxs = [1, 2, 3, 4]\ndoubled = _pf_map(lambda x: x * 2, xs)\nsmall = _pf_filter(lambda x: x < 3, xs)\ntotal = _pf_fold(lambda a, b: a + b, 0, xs)\nn = len(xs)\ns = sum(xs)\nr = _pf_rev(xs)\nq = _pf_range(1, 4)\n",
- "stderr": ""
-}

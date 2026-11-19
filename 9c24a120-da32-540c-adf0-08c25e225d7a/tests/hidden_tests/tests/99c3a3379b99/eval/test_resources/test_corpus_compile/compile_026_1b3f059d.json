@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Ok:\n    _0: object\n    def __repr__(self):\n        return f\"Ok({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass Error:\n    _0: object\n    def __repr__(self):\n        return f\"Error({self._0!r})\"\ndef _pf_res_map2(f, a, b):\n    if isinstance(a, Error):\n        return a\n    if isinstance(b, Error):\n        return b\n    return Ok(f(a._0, b._0))\ndef _pf_res_or_else(fallback, r):\n    return r if isinstance(r, Ok) else fallback\ndef _pf_res_to_list(r):\n    return [r._0] if isinstance(r, Ok) else []\nok1 = Ok(1)\nok2 = Ok(2)\nbad = Error(\"boom\")\nboth = _pf_res_map2(lambda a, b: a + b, ok1, ok2)\nfailed = _pf_res_map2(lambda a, b: a + b, bad, ok2)\nkept = _pf_res_or_else(ok2, ok1)\nfellBack = _pf_res_or_else(ok2, bad)\nlisted = _pf_res_to_list(ok1)\nempty = _pf_res_to_list(bad)\n",
- "stderr": ""
-}

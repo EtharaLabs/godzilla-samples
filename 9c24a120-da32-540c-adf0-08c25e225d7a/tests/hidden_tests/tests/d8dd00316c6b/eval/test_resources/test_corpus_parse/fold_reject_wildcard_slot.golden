@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let w acc x =
-    match acc:
-        case (m, _): ((((Map.add x) x) m), Map.empty)
-let out =
-    match (((List.fold w) (Map.empty, Map.empty)) [1, 2]):
-        case (a, b): ((Map.toList a), (Map.toList b))
---- stderr ---

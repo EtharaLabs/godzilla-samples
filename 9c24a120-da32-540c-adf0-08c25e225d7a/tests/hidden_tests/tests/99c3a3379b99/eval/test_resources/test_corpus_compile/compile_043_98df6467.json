@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _pf_sort_by(f, xs):\n    return sorted(xs, key=f)\ndef _pf_max_by(f, xs):\n    return Some(max(xs, key=f)) if xs else _None_\n@dataclass(frozen=True, slots=True)\nclass P:\n    name: str\n    age: int\nps = [P(\"a\", 2)]\nbyAge = _pf_sort_by(lambda p: p.age, ps)\noldest = _pf_max_by(lambda p: p.age, ps)\n",
- "stderr": ""
-}

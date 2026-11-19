@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef f(o, p):\n    def _pf_fn0():\n        if isinstance(p, Some):\n            if isinstance(o, Some):\n                x = o._0\n                return Some(x * 2) if x > 0 else _None_\n            else:\n                return o\n        else:\n            return p\n    return _pf_fn0()\n_pf_t1 = f(Some(3), Some(None))\nif isinstance(_pf_t1, Some):\n    n = _pf_t1._0\n    _pf_t0 = n\nelse:\n    _pf_t0 = 0\na = _pf_t0\n_pf_t3 = f(Some(3), _None_)\nif isinstance(_pf_t3, Some):\n    n = _pf_t3._0\n    _pf_t2 = n\nelse:\n    _pf_t2 = 0\nb = _pf_t2\n_pf_t5 = f(Some(0), Some(None))\nif isinstance(_pf_t5, Some):\n    n = _pf_t5._0\n    _pf_t4 = n\nelse:\n    _pf_t4 = 0\nc = _pf_t4\n",
- "stderr": ""
-}

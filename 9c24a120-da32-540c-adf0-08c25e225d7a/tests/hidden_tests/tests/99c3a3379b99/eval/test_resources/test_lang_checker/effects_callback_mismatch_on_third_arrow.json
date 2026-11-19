@@ -1,5 +1,0 @@
-{
- "exit": 1,
- "stdout": "",
- "stderr": "error: `h` performs {io}, but `serve` takes this callback as `int -> unit`, which performs nothing; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `int -> int ->{io} int ->{e} unit`\n --> 6:15\n  |\n6 | let _ = serve h\n  |               ^\n\n1 error\n"
-}

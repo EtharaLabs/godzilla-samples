@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "extern import asyncio\nextern runAsync: (Async a) -> a = asyncio.run\nextern type Queue\nextern newQueue: unit -> Queue = asyncio.Queue\nextern post: Queue -> a -> unit = .put_nowait\nextern take: Queue -> Async a = .get()\ntype Msg = Said string | Tick | Quit\nlet heard count s =\n    (print f\"agent heard {s}\")\n    (count + 1)\nlet finished count = async { return count }\nlet agentLoop inbox count = async { let! msg = (take inbox) return! (match msg: case (Said s): ((agentLoop inbox) ((heard count) s)) case Tick: ((agentLoop inbox) count) case Quit: (finished count)) }\nlet producer inbox = async {\n    for s in [\"hello\", \"world\"]:\n        do! (Async.sleep 0.01)\n        let _ = ((post inbox) (Said s))\n    let _ = ((post inbox) Tick)\n    let _ = ((post inbox) Quit)\n}\nlet session = (Task.scope async { let inbox = (newQueue ()) let _ = (Task.start (producer inbox)) let! count = ((agentLoop inbox) 0) return count })\nlet count = (runAsync session)\n(print f\"agent handled {count} messages\")\n",
- "stderr": ""
-}

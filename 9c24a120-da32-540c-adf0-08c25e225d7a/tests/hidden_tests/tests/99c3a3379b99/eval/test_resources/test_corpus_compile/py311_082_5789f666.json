@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _ap_Answer(o):\n    return o == Some(42)\ndef f(o):\n    match o:\n        case Some(x) if x > 100:\n            return \"big\"\n    _pf_t0 = _ap_Answer(o)\n    if _pf_t0:\n        return \"answer\"\n    return \"other\"\n",
- "stderr": ""
-}

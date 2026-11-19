@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-type Opt a = Empty | Has a
-let unwrap o =
-    match o:
-        case (Has v): v
-        case Empty: 0
-let r = (unwrap (Has 7))
---- stderr ---

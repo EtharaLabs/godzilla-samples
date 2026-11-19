@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Small:\n    _0: object\n    def __repr__(self):\n        return f\"_Small({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Big:\n    _0: object\n    def __repr__(self):\n        return f\"_Big({self._0!r})\"\ndef _ap_Small_Big(n):\n    if n < 10:\n        return _Small(n)\n    else:\n        return _Big(n - 10)\ndef f(n):\n    _pf_t0 = _ap_Small_Big(n)\n    if isinstance(_pf_t0, _Small) or isinstance(_pf_t0, _Big):\n        return 1\n    else:\n        raise RuntimeError(\"non-exhaustive match\")\n",
- "stderr": ""
-}

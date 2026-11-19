@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-import functools
-def _pf_fold(f, acc, xs):
-    return functools.reduce(f, xs, acc)
-def e(xs: list[int]) -> int:
-    return _pf_fold(lambda a, b: a + b, 0, xs)
---- stderr ---

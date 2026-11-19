@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "def _pf_set_add(x, s):\n    return s.union([x])\ndef _pf_set_remove(x, s):\n    return s.difference([x])\ndef step(s, x):\n    return _pf_set_remove(x - 1, _pf_set_add(x, s))\ns = set()\nfor x in [1, 2, 3]:\n    _pf_t0 = x - 1\n    s.add(x)\n    s.discard(_pf_t0)\nout = list(s)\n",
- "stderr": ""
-}

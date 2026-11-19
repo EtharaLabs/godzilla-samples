@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let f n =
-    let go acc k = (if (k == 0) then [acc] else ((List.collect (go (acc + 1))) [(k - 1)]))
-    ((go 0) n)
-let r = (f 3)
---- stderr ---

@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "def _pf_concat(xs, ys):\n    return xs + ys\ndef step(acc, x):\n    match acc:\n        case (cur, groups):\n            if x == 0:\n                return ([], _pf_concat(groups, [cur]))\n            else:\n                return (_pf_concat(cur, [x]), groups)\ncur = []\ngroups = []\nfor x in [1, 2, 0, 3, 0]:\n    if x == 0:\n        _pf_t0 = []\n        _pf_t1 = cur\n        cur = _pf_t0\n        groups.append(_pf_t1)\n    else:\n        cur.append(x)\nmatch (cur, groups):\n    case (cur, groups):\n        _pf_t2 = (cur, groups)\nout = _pf_t2\n",
- "stderr": ""
-}

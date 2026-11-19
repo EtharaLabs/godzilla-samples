@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "import functools\ndef _pf_concat(xs, ys):\n    return xs + ys\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\nstart = ([], 0)\ndef _pf_fn0(acc, x):\n    match acc:\n        case (xs, n):\n            return (_pf_concat(xs, [x]), n + 1)\nout = _pf_fold(_pf_fn0, start, [1, 2])\n",
- "stderr": ""
-}

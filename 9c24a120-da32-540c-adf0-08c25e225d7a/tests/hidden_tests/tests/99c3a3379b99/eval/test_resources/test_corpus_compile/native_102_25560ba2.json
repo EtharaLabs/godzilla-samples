@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True)\nclass Point:\n    x: int\n    y: int\ndef f(y: int, p: Point, q: tuple[int, int]) -> int:\n    if isinstance(p, Point) and p.x == 0:\n        _y = p.y\n        _pf_t0 = _y\n    else:\n        x = p.x\n        _pf_t0 = x + y\n    a = _pf_t0\n    if q[0] == 0:\n        _y2 = q[1]\n        _pf_t1 = _y2\n    elif q[1] == 0:\n        _y3 = q[0]\n        _pf_t1 = _y3\n    else:\n        _pf_t1 = y\n    b = _pf_t1\n    return a + b\nr: int = f(1000, Point(0, 2), (0, 3))\ns: int = f(1000, Point(4, 2), (7, 8))\n",
- "stderr": ""
-}

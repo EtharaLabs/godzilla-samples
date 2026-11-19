@@ -1,9 +1,0 @@
-# The Store module — returns an `Option` that crosses the module boundary back
-# to Main. Because the nominal `Some`/`None` classes are hoisted into a shared
-# `_pyfun_rt.py` that every module imports, the `Some` built here is the *same*
-# type Main inspects with the `Option` module — so it works across files.
-let lookup key =
-  match key:
-    case 1: Some 100
-    case 2: Some 200
-    case _: None

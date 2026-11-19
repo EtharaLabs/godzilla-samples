@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let idDec = ((Decode.field "id") Decode.int)
-let show r =
-    match r:
-        case (Ok xs): f"sum: {(List.sum xs)}"
-        case (Error e): e.errorKind
-let total = (show ((Decode.decodeString (Decode.list idDec)) "[{\"id\": 1}, {\"id\": 2}]"))
---- stderr ---

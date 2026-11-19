@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let g acc x =
-    match acc:
-        case (names, log): ((((Map.add x) x) names), ((List.concat log) [names]))
-let out =
-    match (((List.fold g) (Map.empty, [])) [1, 2]):
-        case (m, log): ((Map.len m), ((List.map Map.len) log))
---- stderr ---

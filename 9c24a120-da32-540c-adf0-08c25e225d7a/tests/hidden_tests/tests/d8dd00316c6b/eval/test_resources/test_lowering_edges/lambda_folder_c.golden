@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-import functools
-def _pf_fold(f, acc, xs):
-    return functools.reduce(f, xs, acc)
-step = lambda acc, x: acc + x * 2
-total = _pf_fold(step, 0, [1, 2, 3])
-print(total)
---- stderr ---

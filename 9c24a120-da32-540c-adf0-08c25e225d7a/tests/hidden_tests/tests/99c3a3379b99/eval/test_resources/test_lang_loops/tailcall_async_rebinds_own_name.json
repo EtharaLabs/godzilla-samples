@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "class _pf_Async:\n    __slots__ = (\"fn\", \"args\")\n    def __init__(self, fn, *args):\n        self.fn = fn\n        self.args = args\n    def __await__(self):\n        return self.fn(*self.args).__await__()\n    async def __call__(self):\n        return await self\n    def __repr__(self):\n        return \"<Async>\"\ndef loop(n):\n    async def _pf_fn3():\n        def _pf_fn1(m):\n            async def _pf_fn2():\n                return m\n            return _pf_Async(_pf_fn2)\n        loop = _pf_fn1\n        return await loop(n - 1)\n    return _pf_Async(_pf_fn3)\n",
- "stderr": "note: `loop` calls itself in tail position but keeps its recursive form: the body rebinds `loop`\n"
-}

@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Ok:\n    _0: object\n    def __repr__(self):\n        return f\"Ok({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass Error:\n    _0: object\n    def __repr__(self):\n        return f\"Error({self._0!r})\"\ndef check(x):\n    if x > 0:\n        return Ok(None)\n    else:\n        return Error(\"neg\")\ndef _pf_fn0():\n    return check(1)\nv = _pf_fn0()\ndef _pf_fn1():\n    _pf_t0 = Ok(2)\n    if isinstance(_pf_t0, Ok):\n        a = _pf_t0._0\n        _ = print(a)\n        return check(0 - a)\n    else:\n        return _pf_t0\nw = _pf_fn1()\nprint(v)\nprint(w)\n",
- "stderr": ""
-}

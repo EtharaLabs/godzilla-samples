@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-type Msg = Go int | Stop
-let finished n = async { return n }
-let loop n = async { return! (match n: case (Go k): (loop Stop) case Stop: (finished 0)) }
---- stderr ---

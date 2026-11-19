@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\nimport functools\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: object\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_ = None_()\ndef _pf_exists(f, xs):\n    return any(map(f, xs))\ndef _pf_find_index(f, xs):\n    for p in enumerate(xs):\n        if f(p[1]):\n            return Some(p[0])\n    return _None_\ndef p(l):\n    return functools.partial(_pf_find_index, lambda b: l == b)\ndef q(l, rack):\n    return _pf_find_index(lambda y: y > l, rack)\ndef r(rack):\n    return _pf_find_index(lambda y: y == y, rack)\ndef s(l, rack):\n    return _pf_exists(lambda l: l == l, rack)\n",
- "stderr": ""
-}

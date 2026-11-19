@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-module M =
-    let bind m f = (f m)
-    let return_ x = x
-let r = M { let! x = 3 return x }
---- stderr ---

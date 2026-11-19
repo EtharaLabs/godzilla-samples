@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "let squares = seq {\n    for x in [1, 2, 3]:\n        let y = (x * x)\n        yield y\n    yield 100\n}\nlet pairs = seq { for (a, b) in [(1, 2)]: yield (a + b) }\nlet lazy = seq { for x in (Seq.ofList [1]): yield x }\nlet check x = (if (x > 0) then (Ok x) else (Error \"neg\"))\nlet all xs = result { for x in xs: let! _ = (check x) return true }\nlet main = async { for n in [1, 2]: do! (Async.sleep 0.001) return () }\nmodule B =\n    let yield_ x = [x]\n    let for_ xs f = ((List.collect f) xs)\n    let combine a b = ((List.concat a) b)\n    let delay f = (f ())\nlet built = B { for x in [1, 2]: yield x }\n",
- "stderr": ""
-}

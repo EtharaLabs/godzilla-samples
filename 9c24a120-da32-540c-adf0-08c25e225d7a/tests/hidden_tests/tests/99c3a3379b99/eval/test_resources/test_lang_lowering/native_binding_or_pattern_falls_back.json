@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\nfrom typing import Any\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: Any\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_: None_ = None_()\n@dataclass(frozen=True, slots=True, repr=False)\nclass A:\n    _0: int\n    def __repr__(self):\n        return f\"A({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass B:\n    _0: int\n    def __repr__(self):\n        return f\"B({self._0!r})\"\nT = A | B\ndef f(o: Some | None_) -> int:\n    match o:\n        case Some(A(x) | B(x)):\n            return x\n        case _:\n            return 0\n",
- "stderr": ""
-}

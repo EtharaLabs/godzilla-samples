@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let check x = (if (x > 0) then (Ok ()) else (Error "neg"))
-let v = result { do! (check 1) }
-let w = result { let! a = (Ok 2) do! (check a) }
-let o = option { do! (Some ()) }
---- stderr ---

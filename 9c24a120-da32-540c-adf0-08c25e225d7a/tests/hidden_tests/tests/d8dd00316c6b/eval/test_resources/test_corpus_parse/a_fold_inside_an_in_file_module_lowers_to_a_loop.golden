@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-module Stats =
-    let scale = 3
-    let tally xs = (((List.fold (fun acc x -> (((Map.add x) (x * scale)) acc))) Map.empty) xs)
-let out = (Map.toList (Stats.tally [1, 2]))
---- stderr ---

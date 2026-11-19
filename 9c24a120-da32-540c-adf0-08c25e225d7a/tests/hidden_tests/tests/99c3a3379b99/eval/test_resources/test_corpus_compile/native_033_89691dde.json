@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\nfrom typing import Any\n@dataclass(frozen=True, slots=True, repr=False)\nclass Some:\n    _0: Any\n    def __repr__(self):\n        return f\"Some({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass None_:\n    def __repr__(self):\n        return \"None_\"\n_None_: None_ = None_()\ndef _pf_map_try_find(k, m):\n    if k in m:\n        return Some(m.get(k))\n    return _None_\ndef a(k, m) -> str:\n    _pf_t0 = _pf_map_try_find(k, m)\n    if isinstance(_pf_t0, Some) and _pf_t0._0 == 0:\n        return \"zero\"\n    elif isinstance(_pf_t0, Some):\n        return \"other\"\n    else:\n        return \"none\"\ndef b(k, m) -> int:\n    _pf_t1 = _pf_map_try_find(k, m)\n    if isinstance(_pf_t1, Some):\n        v = _pf_t1._0\n        if v > 0:\n            return v\n    return 0\ndef c(f) -> int:\n    _pf_t2 = f(1)\n    if isinstance(_pf_t2, Some):\n        v = _pf_t2._0\n        return v\n    else:\n        return 0\n",
- "stderr": ""
-}

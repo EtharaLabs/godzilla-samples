@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-def _pf_map_add(k, v, m):
-    return dict(list(m.items()) + [[k, v]])
-def _pf_map_find_or(k, default, m):
-    return m.get(k, default)
-m: dict[str, int] = _pf_map_add("a", 1, dict())
-v: int = _pf_map_find_or("a", 0, m)
---- stderr ---

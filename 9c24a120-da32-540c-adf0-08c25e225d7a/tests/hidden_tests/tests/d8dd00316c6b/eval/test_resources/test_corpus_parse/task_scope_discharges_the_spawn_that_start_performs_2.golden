@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-extern runAsync: (Async a) -> a = asyncio.run
-let sneaky n = async { let _ = (Task.start (Async.sleep 1.0)) }
-let r = (runAsync (sneaky 0))
---- stderr ---

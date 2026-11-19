@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-extern readFile: string -> string = open
-let firstChar path =
-    match (try (readFile path)):
-        case (Ok contents): (String.upper contents)
-        case (Error e): e.errorMessage
---- stderr ---

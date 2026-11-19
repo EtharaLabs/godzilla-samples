@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "import functools\ndef _pf_concat(xs, ys):\n    return xs + ys\ndef _pf_fold(f, acc, xs):\n    return functools.reduce(f, xs, acc)\ndef build(combiner, xs):\n    def step(acc, x):\n        return _pf_concat(acc, [x + 100])\n    return (lambda step: _pf_fold(step, [], xs))(combiner)\nout = build(lambda acc, x: _pf_concat(acc, [x * 2]), [1, 2, 3])\n",
- "stderr": ""
-}

@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-import itertools
-def _pf_seq_init_inf(f):
-    return map(f, itertools.count())
-def _pf_seq_take(n, xs):
-    return itertools.islice(xs, n)
-s = list(_pf_seq_take(3, _pf_seq_init_inf(lambda i: i * 2)))
---- stderr ---

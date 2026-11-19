@@ -1,8 +1,0 @@
-# The verifier's reward: the hidden-test pass rate (tests_passed.py). test_output.py and judge.toml are scored after
-# the run, outside the verifier (tests/.dockerignore keeps them out of its image):
-#   reward = 0.90 * tests_passed + 0.05 * test_output + 0.05 * judge
-
-[[reward]]
-name = "reward"
-aggregation = "weighted-mean"
-weights = { tests_passed = 0.9 }

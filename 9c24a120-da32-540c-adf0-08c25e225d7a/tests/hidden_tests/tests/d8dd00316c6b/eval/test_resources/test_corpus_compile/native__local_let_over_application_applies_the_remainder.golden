@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-def f(x: int) -> int:
-    def k(a: int, b: int):
-        return lambda c: a + b + c
-    return k(1, 2)(x)
-r: int = f(3)
---- stderr ---

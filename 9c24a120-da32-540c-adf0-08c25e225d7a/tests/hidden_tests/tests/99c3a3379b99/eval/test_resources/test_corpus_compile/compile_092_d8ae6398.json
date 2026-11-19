@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\nimport json\n@dataclass(frozen=True, slots=True, repr=False)\nclass Ok:\n    _0: object\n    def __repr__(self):\n        return f\"Ok({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass Error:\n    _0: object\n    def __repr__(self):\n        return f\"Error({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass _Exception:\n    errorKind: str\n    errorMessage: str\n    def __repr__(self):\n        return f\"_Exception({self.errorKind!r}, {self.errorMessage!r})\"\ndef show(r):\n    if isinstance(r, Ok):\n        v = r._0\n        return f\"ok: {v}\"\n    else:\n        e = r._0\n        return f\"{e.errorKind}: {e.errorMessage}\"\ntry:\n    _pf_t0 = json.loads(\"0\")\n    _pf_t1 = Ok(42)\nexcept Exception as e:\n    _pf_t1 = Error(_Exception(type(e).__name__, str(e)))\ns = show(_pf_t1)\ntry:\n    _pf_t2 = json.loads(\"0\")\n    raise ValueError(\"boom\")\n    _pf_t3 = Ok(None)\nexcept Exception as e:\n    _pf_t3 = Error(_Exception(type(e).__name__, str(e)))\nfailed = show(_pf_t3)\n",
- "stderr": ""
-}

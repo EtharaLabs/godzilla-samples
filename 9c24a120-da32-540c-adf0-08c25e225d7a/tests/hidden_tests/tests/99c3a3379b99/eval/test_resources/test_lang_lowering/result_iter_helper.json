@@ -1,5 +1,0 @@
-{
- "exit": 0,
- "stdout": "from dataclasses import dataclass\n@dataclass(frozen=True, slots=True, repr=False)\nclass Ok:\n    _0: object\n    def __repr__(self):\n        return f\"Ok({self._0!r})\"\n@dataclass(frozen=True, slots=True, repr=False)\nclass Error:\n    _0: object\n    def __repr__(self):\n        return f\"Error({self._0!r})\"\ndef _pf_res_iter(f, r):\n    if isinstance(r, Ok):\n        f(r._0)\n    return None\nr = Ok(3)\n_pf_res_iter(lambda x: print(x), r)\ne = Error(\"bad\")\n_pf_res_iter(lambda x: print(x), e)\neach = _pf_res_iter\neach(lambda x: print(x + 1), Ok(41))\n",
- "stderr": ""
-}

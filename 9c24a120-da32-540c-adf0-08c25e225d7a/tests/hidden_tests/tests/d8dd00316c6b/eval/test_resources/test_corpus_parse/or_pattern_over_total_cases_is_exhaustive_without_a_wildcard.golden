@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let (|Small|Big|) n = (if (n < 10) then (Small n) else (Big (n - 10)))
-let f n =
-    match n:
-        case ((Small _) | (Big _)): 1
---- stderr ---
