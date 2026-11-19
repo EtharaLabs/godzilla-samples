@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def outer(u) -> int:
+    def go(n: int, acc: int) -> int:
+        _go = go
+        if n <= 0:
+            return acc
+        elif n % 2 == 0:
+            return _go(n - 1, acc * 2)
+        else:
+            return _go(n - 1, acc + 1)
+    return go(7, 1)
+print(outer(None))
+--- stderr ---

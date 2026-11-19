@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: non-exhaustive match: `BRect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+error: `bE2` is declared `pure` but performs `io`
+  --> 20:18
+   |
+20 | let pure bE2 u = bTick 1
+   |                  ^^^^^^^
+-- module `A` (a.pyfun) --
+error: unknown type `B.NoSuchType`
+  --> 19:1
+   |
+19 | type AWrap1 = { w: B.NoSuchType }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected float<acm>, found float
+  --> 19:11
+   |
+19 | let mE1 = A.aWidth + 1.0
+   |           ^^^^^^^^^^^^^^
+
+4 errors

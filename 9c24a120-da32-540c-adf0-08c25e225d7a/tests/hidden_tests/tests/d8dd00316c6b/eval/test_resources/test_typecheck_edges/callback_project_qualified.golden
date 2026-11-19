@@ -1,0 +1,11 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: this function performs {io}, but `Lib.each` takes this callback as `int -> unit`, which performs nothing; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `int ->{e} unit`
+ --> 2:19
+  |
+2 | let r = Lib.each (fun x -> print x)
+  |                   ^^^^^^^^^^^^^^^^
+
+1 error

@@ -1,0 +1,14 @@
+from dataclasses import dataclass
+import itertools
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+@dataclass(frozen=True, slots=True, order=True)
+class Inner:
+    a: int
+    b: int
+@dataclass(frozen=True, slots=True, order=True)
+class Outer:
+    name: str
+    inner: object
+naturals = _pf_seq_init_inf(lambda i: i * i)
+base = Outer("o", Inner(1, 2))

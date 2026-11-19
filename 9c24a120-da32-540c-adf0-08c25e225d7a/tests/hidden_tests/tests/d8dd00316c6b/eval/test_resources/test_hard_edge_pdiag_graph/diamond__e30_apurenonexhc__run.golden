@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: `aE1` is declared `pure` but performs `io`
+  --> 19:18
+   |
+19 | let pure aE1 u = aTick 1
+   |                  ^^^^^^^
+error: non-exhaustive match: `C.CRect _ _` is not matched
+  --> 21:3
+   |
+21 |   match s:
+   |   ^^^^^^^^
+
+2 errors

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 19:11
+   |
+19 | let bE1 = String.len (C.cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 23:11
+   |
+23 | let mE1 = Zed.thing
+   |           ^^^^^^^^^
+
+2 errors

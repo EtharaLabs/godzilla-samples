@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def go(n):
+    seen = 0
+    def bump(k):
+        nonlocal seen
+        seen = seen + k
+        return seen
+    if n % 7 == 0:
+        return n
+    else:
+        return go(n + 1)
+print(go(8))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `seen`

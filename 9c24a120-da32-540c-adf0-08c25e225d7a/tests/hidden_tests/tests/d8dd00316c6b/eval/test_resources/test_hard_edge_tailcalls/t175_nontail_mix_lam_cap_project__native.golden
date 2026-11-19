@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n: int, acc: int) -> int:
+    peek = lambda z: (n, z)
+    if n == 0:
+        return acc
+    elif n == 3:
+        return 1 + go(n - 1, acc)
+    else:
+        return go(n - 1, acc + n)
+
+# ==== main.py ====
+import loop
+print(loop.go(5, 0))
+
+--- stderr ---
+note: in `Loop`: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

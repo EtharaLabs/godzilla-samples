@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+import functools
+def outer(u):
+    def go(n, a, b):
+        while True:
+            go2 = go
+            again = functools.partial(go, n)
+            if n == 0:
+                return a
+            else:
+                n, a, b = (n - 1, b, a + b)
+                continue
+    return go(10, 0, 1)
+print(outer(None))
+--- stderr ---

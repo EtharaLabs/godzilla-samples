@@ -1,0 +1,9 @@
+exit: 0
+--- stdout ---
+t = 5
+def _pf_fn0():
+    t = 2
+    return (t, t + 1)
+a, b = _pf_fn0()
+print((a, b, t))
+--- stderr ---

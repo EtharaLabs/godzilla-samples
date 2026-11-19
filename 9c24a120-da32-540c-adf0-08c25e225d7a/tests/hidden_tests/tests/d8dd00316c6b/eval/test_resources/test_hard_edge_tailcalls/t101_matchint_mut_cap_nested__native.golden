@@ -1,0 +1,26 @@
+exit: 0
+--- stdout ---
+def outer(u) -> int:
+    def go(n: int, acc: int) -> int:
+        while True:
+            seen = 0
+            def bump(k: int) -> int:
+                nonlocal seen
+                seen = seen + k
+                return seen
+            if n == 0:
+                return acc
+            elif n == 1:
+                n, acc = (0, acc + 100)
+                continue
+            else:
+                k = n
+                if k > 5:
+                    n, acc = (k - 2, acc + k)
+                    continue
+                k = n
+                n, acc = (k - 1, acc - 1)
+                continue
+    return go(9, 0)
+print(outer(None))
+--- stderr ---

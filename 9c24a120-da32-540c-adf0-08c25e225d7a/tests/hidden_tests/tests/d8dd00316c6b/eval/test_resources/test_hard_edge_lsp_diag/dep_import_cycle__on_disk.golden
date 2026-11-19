@@ -1,0 +1,137 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/main.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 5,
+      "character": 8
+     },
+     "end": {
+      "line": 5,
+      "character": 19
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`Tagged` is not a member of `Util`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 10,
+      "character": 18
+     },
+     "end": {
+      "line": 10,
+      "character": 22
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unknown record field `at`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 11,
+      "character": 42
+     },
+     "end": {
+      "line": 11,
+      "character": 48
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unknown record field `name`"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": {
+  "uri": "{root}/geometry.pyfun",
+  "range": {
+   "start": {
+    "line": 10,
+    "character": 4
+   },
+   "end": {
+    "line": 10,
+    "character": 10
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/geometry.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/main.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 3,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nPoint -> int -> Point\n```"
+  },
+  "range": {
+   "start": {
+    "line": 4,
+    "character": 11
+   },
+   "end": {
+    "line": 4,
+    "character": 25
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

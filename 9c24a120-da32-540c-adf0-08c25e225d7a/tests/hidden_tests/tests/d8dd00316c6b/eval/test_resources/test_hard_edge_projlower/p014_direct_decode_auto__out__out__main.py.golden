@@ -1,0 +1,93 @@
+import json
+import lib
+from _pyfun_rt import Ok, Error
+from _pyfun_rt import Some, None_, _None_
+from _pyfun_rt import _Exception
+def _pf_dec_decode_string(dec, s):
+    try:
+        return Ok(dec(json.loads(s)))
+    except Exception as e:
+        return Error(_Exception(type(e).__name__, str(e)))
+def _pf_dec_auto(d):
+    return lambda v: _pf_dec_auto_value(d, v)
+def _pf_dec_auto_value(d, v):
+    k = d[0]
+    if k == "ref":
+        return _pf_dec_auto_value(_pf_codecs[d[1]], v)
+    if k == "int":
+        if isinstance(v, bool) or not isinstance(v, int):
+            raise ValueError("expected an int, got " + type(v).__name__)
+        return v
+    if k == "float":
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            raise ValueError("expected a float, got " + type(v).__name__)
+        return float(v)
+    if k == "bool":
+        if not isinstance(v, bool):
+            raise ValueError("expected a bool, got " + type(v).__name__)
+        return v
+    if k == "str":
+        if not isinstance(v, str):
+            raise ValueError("expected a string, got " + type(v).__name__)
+        return v
+    if k == "unit":
+        if not v is None:
+            raise ValueError("expected null, got " + type(v).__name__)
+        return None
+    if k == "option":
+        if v is None:
+            return _None_
+        return Some(_pf_dec_auto_value(d[1], v))
+    if k == "list" or k == "set":
+        if not isinstance(v, list):
+            raise ValueError("expected a list, got " + type(v).__name__)
+        out = []
+        for x in v:
+            out.append(_pf_dec_auto_value(d[1], x))
+        return out if k == "list" else set(out)
+    if k == "tuple":
+        if not isinstance(v, list) or len(v) != len(d[1]):
+            raise ValueError("expected a list of " + str(len(d[1])) + " items")
+        return tuple(map(_pf_dec_auto_value, d[1], v))
+    if k == "map":
+        out = {}
+        if d[1][0] == "str":
+            if not isinstance(v, dict):
+                raise ValueError("expected an object, got " + type(v).__name__)
+            for key in v:
+                out[key] = _pf_dec_auto_value(d[2], v[key])
+            return out
+        if not isinstance(v, list):
+            raise ValueError("expected a list of pairs, got " + type(v).__name__)
+        for pair in v:
+            out[_pf_dec_auto_value(d[1], pair[0])] = _pf_dec_auto_value(d[2], pair[1])
+        return out
+    if k == "record":
+        if not isinstance(v, dict):
+            raise ValueError("expected an object, got " + type(v).__name__)
+        args = []
+        for field in d[2]:
+            args.append(_pf_dec_auto_value(field[1], v[field[0]]))
+        return d[1](*args)
+    if k == "adt":
+        if not isinstance(v, dict):
+            raise ValueError("expected an object, got " + type(v).__name__)
+        tag = v["type"]
+        if not tag in d[1]:
+            raise ValueError("unknown case " + str(tag))
+        ctor, descs = d[1][tag]
+        fields = v.get("fields", [])
+        if len(fields) != len(descs):
+            raise ValueError("case " + tag + (" takes " + (str(len(descs)) + " fields")))
+        if not descs:
+            return ctor
+        return ctor(*map(_pf_dec_auto_value, descs, fields))
+    raise ValueError("unknown codec " + str(k))
+_pf_codecs = {"Point": ("record", lib.Point, [("x", ("int",)), ("y", ("int",))])}
+_pf_t1 = _pf_dec_decode_string(_pf_dec_auto(("ref", "Point")), "{\"x\": 3, \"y\": 4}")
+if isinstance(_pf_t1, Ok):
+    p = _pf_t1._0
+    _pf_t0 = lib.norm(p)
+else:
+    _pf_t0 = -1
+print(_pf_t0)

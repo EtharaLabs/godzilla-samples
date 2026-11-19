@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, acc):
+    def helper(z):
+        return (n, z)
+    if n <= 0:
+        return acc
+    elif n % 2 == 0:
+        return Loop_go(n - 1, acc * 2)
+    else:
+        return Loop_go(n - 1, acc + 1)
+print(Loop_go(7, 1))
+--- stderr ---
+note: `Loop_go` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

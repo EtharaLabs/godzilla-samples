@@ -1,0 +1,11 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: cannot derive a codec for `Pos` here: it is declared in `Geo`, which this module does not import directly (add `import Geo`)
+ --> 3:29
+  |
+3 |   match Decode.decodeString Decode.auto "{\"x\": 1, \"y\": 2}":
+  |                             ^^^^^^^^^^^
+
+1 error

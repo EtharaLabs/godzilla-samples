@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: unknown type `B.NoSuchType`
+  --> 19:1
+   |
+19 | type AWrap1 = { w: B.NoSuchType }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+error: type mismatch: expected BCode, found ACode
+  --> 20:25
+   |
+20 | let aE2 = [B.bCode "a", aCode "b"]
+   |                         ^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected string, found ACode
+  --> 19:11
+   |
+19 | let mE1 = String.len (A.aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

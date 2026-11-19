@@ -1,0 +1,33 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let cE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found BCode
+  --> 17:11
+   |
+17 | let bE1 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+error: `bE2` is declared `pure` but performs `io`
+  --> 18:18
+   |
+18 | let pure bE2 u = bTick 1
+   |                  ^^^^^^^
+-- module `Main` (main.pyfun) --
+error: unknown type `A.NoSuchType`
+  --> 23:1
+   |
+23 | type MWrap1 = { w: A.NoSuchType }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+error: type mismatch: expected int<'a>, found string
+  --> 24:11
+   |
+24 | let mE2 = A.aTwice "s"
+   |           ^^^^^^^^^^^^
+
+5 errors

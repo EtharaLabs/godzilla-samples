@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: non-exhaustive match: `ARect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+error: type mismatch: expected string, found ACode
+  --> 20:11
+   |
+20 | let aE2 = String.len (aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

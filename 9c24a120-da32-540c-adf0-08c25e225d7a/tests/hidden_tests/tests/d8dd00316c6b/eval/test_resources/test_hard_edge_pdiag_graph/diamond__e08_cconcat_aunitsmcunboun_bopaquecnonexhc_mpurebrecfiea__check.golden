@@ -1,0 +1,44 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 17:15
+   |
+17 | let cE1 = 1 + "x"
+   |               ^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected float<ccm>, found float<acm>
+  --> 19:11
+   |
+19 | let aE1 = C.cWidth + aWidth
+   |           ^^^^^^^^^^^^^^^^^
+error: unbound name `nowhereAtAll`
+  --> 20:11
+   |
+20 | let aE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 19:11
+   |
+19 | let bE1 = String.len (C.cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+error: non-exhaustive match: `C.CRect _ _` is not matched
+  --> 21:3
+   |
+21 |   match s:
+   |   ^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `mE1` is declared `pure` but performs `io`
+  --> 21:18
+   |
+21 | let pure mE1 u = B.bTick 1
+   |                  ^^^^^^^^^
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 22:11
+   |
+22 | let mE2 = A.aOrigin.axx
+   |           ^^^^^^^^^^^^^
+
+7 errors

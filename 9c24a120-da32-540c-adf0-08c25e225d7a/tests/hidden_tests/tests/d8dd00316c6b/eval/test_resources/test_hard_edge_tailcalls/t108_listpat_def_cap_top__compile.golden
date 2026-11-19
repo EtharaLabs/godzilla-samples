@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def go(xs, acc):
+    def helper(z):
+        return (xs, z)
+    match xs:
+        case []:
+            return acc
+        case [h, *t]:
+            return go(t, acc + h)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(go([4, 5, 6], 0))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `xs`

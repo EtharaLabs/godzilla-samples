@@ -1,0 +1,33 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: `aE1` is declared `pure` but performs `io`
+  --> 19:18
+   |
+19 | let pure aE1 u = aTick 1
+   |                  ^^^^^^^
+error: type mismatch: expected CCode, found ACode
+  --> 20:25
+   |
+20 | let aE2 = [C.cCode "a", aCode "b"]
+   |                         ^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected int<'a>, found string
+  --> 19:11
+   |
+19 | let bE1 = C.cTwice "s"
+   |           ^^^^^^^^^^^^
+error: type mismatch: expected string, found BCode
+  --> 20:11
+   |
+20 | let bE2 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 21:11
+   |
+21 | let mE1 = Zed.thing
+   |           ^^^^^^^^^
+
+5 errors

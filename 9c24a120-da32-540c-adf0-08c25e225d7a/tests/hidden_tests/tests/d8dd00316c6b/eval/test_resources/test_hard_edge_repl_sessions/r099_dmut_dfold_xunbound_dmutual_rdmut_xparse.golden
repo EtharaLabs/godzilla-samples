@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> counter : int
+pyfun> index : (List string) -> Map string int
+pyfun> pyfun> ...... ...... ...... isEven : int -> bool
+isOdd : int -> bool
+pyfun> counter : int
+pyfun> pyfun> --- stderr ---
+error: unbound name `nope`
+ --> 4:1
+  |
+4 | nope + 1
+  | ^^^^
+error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^

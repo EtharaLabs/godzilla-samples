@@ -1,0 +1,21 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: `bag` is not a member of `Carry`
+ --> 3:11
+  |
+3 | let n = { Carry.bag with best = Some Geo.Dot }
+  |           ^^^^^^^^^
+error: unknown record field `best`
+ --> 4:7
+  |
+4 | print n.best
+  |       ^^^^^^
+error: unknown record field `items`
+ --> 5:17
+  |
+5 | print (List.len n.items)
+  |                 ^^^^^^^
+
+3 errors

@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected float<bcm>, found float
+  --> 23:11
+   |
+23 | let mE1 = B.bWidth + 1.0
+   |           ^^^^^^^^^^^^^^
+error: unbound name `nowhereAtAll`
+  --> 24:11
+   |
+24 | let mE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+
+2 errors

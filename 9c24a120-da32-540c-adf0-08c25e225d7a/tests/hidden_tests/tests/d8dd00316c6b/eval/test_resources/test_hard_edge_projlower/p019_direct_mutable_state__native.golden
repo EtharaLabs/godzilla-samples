@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+hits: int = 0
+def hit(u) -> int:
+    global hits
+    hits = hits + 1
+    return hits
+
+# ==== main.py ====
+import lib
+print(lib.hit(None))
+print(lib.hit(None))
+
+--- stderr ---

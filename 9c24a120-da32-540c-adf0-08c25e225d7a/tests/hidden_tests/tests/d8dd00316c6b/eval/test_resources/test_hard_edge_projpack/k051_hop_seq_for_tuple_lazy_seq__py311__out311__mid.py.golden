@@ -1,0 +1,7 @@
+import itertools
+import lib
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+ready = True
+print(list(lib.sums([(1, 2), (3, 4)])))
+print(list(_pf_seq_take(4, lib.naturals)))

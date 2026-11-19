@@ -1,0 +1,14 @@
+exit: 0
+--- stdout ---
+def outer(u):
+    def go(n):
+        while True:
+            d = n
+            if n % 7 == 0:
+                return n
+            else:
+                n = n + 1
+                continue
+    return go(8)
+print(outer(None))
+--- stderr ---

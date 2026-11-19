@@ -1,0 +1,25 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Inner:
+    a: int
+    b: int
+@dataclass(frozen=True, slots=True, order=True)
+class Outer:
+    name: str
+    inner: object
+base = Outer("o", Inner(1, 2))
+force = 10.0
+mass = 2.0
+
+# ==== main.py ====
+import lib
+_pf_t0 = lib.base
+changed = lib.Outer(_pf_t0.name, lib.Inner(_pf_t0.inner.a, 20))
+print(changed.inner.b)
+print(lib.base.inner.b)
+print(lib.force / lib.mass)
+
+--- stderr ---

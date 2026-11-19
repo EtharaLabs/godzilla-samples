@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(a, b):
+    _go = go
+    if a > 50:
+        return (a, b)
+    else:
+        return _go(b, a + b)
+
+# ==== main.py ====
+import loop
+print(loop.go(1, 2))
+
+--- stderr ---

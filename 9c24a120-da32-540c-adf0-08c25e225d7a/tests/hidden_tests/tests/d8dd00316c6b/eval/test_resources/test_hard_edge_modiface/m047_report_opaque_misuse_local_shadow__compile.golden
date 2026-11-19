@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Report` (report.pyfun) --
+error: imported type `Shape` (from `Shapes`) clashes with an existing type
+ --> 1:1
+  |
+1 | import Scene
+  | ^
+error: type mismatch: expected Code, found string
+ --> 3:8
+  |
+3 | print (Shapes.unCode "raw")
+  |        ^^^^^^^^^^^^^^^^^^^
+
+2 errors

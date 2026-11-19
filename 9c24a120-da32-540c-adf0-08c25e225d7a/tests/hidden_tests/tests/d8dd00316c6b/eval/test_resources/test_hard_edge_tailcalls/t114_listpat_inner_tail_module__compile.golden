@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+def Loop_go(xs, acc):
+    while True:
+        def count(k, c):
+            while True:
+                if k == 0:
+                    return c
+                else:
+                    k, c = (k - 1, c + 1)
+                    continue
+        match xs:
+            case []:
+                return acc
+            case [h, *t]:
+                xs, acc = (t, acc + h)
+                continue
+            case _:
+                raise RuntimeError("non-exhaustive match")
+print(Loop_go([4, 5, 6], 0))
+--- stderr ---

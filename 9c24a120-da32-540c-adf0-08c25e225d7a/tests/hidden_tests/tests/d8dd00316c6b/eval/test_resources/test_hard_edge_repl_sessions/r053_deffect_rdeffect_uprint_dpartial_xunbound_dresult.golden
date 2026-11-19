@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> boot : unit
+booting
+pyfun> boot : unit
+pyfun> side effect
+pyfun> ...... ...... ...... add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+pyfun> pyfun> safeDiv : int<'a> -> int -> Result float<'a> string
+pyfun> --- stderr ---
+error: unbound name `nope`
+ --> 7:1
+  |
+7 | nope + 1
+  | ^^^^

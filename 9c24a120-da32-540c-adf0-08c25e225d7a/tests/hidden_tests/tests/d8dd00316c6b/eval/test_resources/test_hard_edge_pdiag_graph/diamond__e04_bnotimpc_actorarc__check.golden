@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: type mismatch: expected float, found string
+  --> 19:11
+   |
+19 | let aE1 = C.CCircle "big"
+   |           ^^^^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 19:11
+   |
+19 | let bE1 = Zed.thing
+   |           ^^^^^^^^^
+
+2 errors

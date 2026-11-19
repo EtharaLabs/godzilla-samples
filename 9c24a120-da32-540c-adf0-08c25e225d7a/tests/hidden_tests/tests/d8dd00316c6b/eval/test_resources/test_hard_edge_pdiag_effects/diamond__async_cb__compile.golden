@@ -1,0 +1,139 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+import asyncio
+import builtins
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+runAsync = lambda _pf_p0: asyncio.run(_pf_run(_pf_p0))
+say = print
+withIo = builtins.print
+def apply(f, x):
+    return f(x)
+def twice(f, x):
+    f(x)
+    return f(x)
+def compose(f, g, x):
+    return g(f(x))
+def mk(f):
+    print("mk")
+    return lambda x: f(x)
+def tick(k):
+    print(f"tick {k}")
+    return k + 1
+def scale(k, x):
+    return k * x
+counter = 0
+def bump(k):
+    global counter
+    counter = counter + k
+    return counter
+def current(u):
+    return counter
+dist = 100.0
+time = 4.0
+speed = dist / time
+force = 10.0
+area = 16.0
+vol = 27.0
+def rate(d):
+    return d / 1.0
+def fetch(k):
+    async def _pf_fn0():
+        return k * 2
+    return _pf_Async(_pf_fn0)
+def fetchTwice(k):
+    async def _pf_fn1():
+        a = await fetch(k)
+        b = await fetch(a)
+        return b
+    return _pf_Async(_pf_fn1)
+def loudFetch(k):
+    async def _pf_fn2():
+        _ = print(f"fetching {k}")
+        return k
+    return _pf_Async(_pf_fn2)
+def worker(name):
+    async def _pf_fn3():
+        _ = print(name)
+    return _pf_Async(_pf_fn3)
+def wrapSay(t):
+    return print(t)
+
+# ==== mid.py ====
+import lib
+def apply(f, x):
+    return lib.apply(f, x)
+def twice(f, x):
+    return lib.twice(f, x)
+def compose(f, g, x):
+    return lib.compose(f, g, x)
+def mk(f):
+    return lib.mk(f)
+def tick(k):
+    return lib.tick(k)
+def scale(k, x):
+    return lib.scale(k, x)
+def bump(k):
+    return lib.bump(k)
+def current(u):
+    return lib.current(u)
+dist = lib.dist
+time = lib.time
+speed = lib.speed
+force = lib.force
+area = lib.area
+vol = lib.vol
+def rate(d):
+    return lib.rate(d)
+def fetch(k):
+    return lib.fetch(k)
+def fetchTwice(k):
+    return lib.fetchTwice(k)
+def loudFetch(k):
+    return lib.loudFetch(k)
+def worker(name):
+    return lib.worker(name)
+def wrapSay(t):
+    return lib.wrapSay(t)
+def runAsync(a):
+    return lib.runAsync(a)
+def both(f, g, x):
+    lib.apply(f, x)
+    return lib.apply(g, x)
+def counted(f, x):
+    n = lib.bump(1)
+    return f(x + n)
+
+# ==== main.py ====
+import mid
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+def _pf_fn1(x):
+    async def _pf_fn2():
+        return x + 1
+    return _pf_Async(_pf_fn2)
+r = mid.apply(_pf_fn1, 3)
+print(mid.runAsync(r))
+
+--- stderr ---

@@ -1,0 +1,27 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: record `BPt` has no field `bxx` (did you mean `bx`?)
+  --> 17:11
+   |
+17 | let bE1 = bOrigin.bxx
+   |           ^^^^^^^^^^^
+error: non-exhaustive match: `BRect _ _` is not matched
+  --> 19:3
+   |
+19 |   match s:
+   |   ^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: record `MPt` has no field `mxx` (did you mean `mx`?)
+  --> 19:11
+   |
+19 | let mE1 = mOrigin.mxx
+   |           ^^^^^^^^^^^
+error: type mismatch: expected string, found ACode
+  --> 20:11
+   |
+20 | let mE2 = String.len (A.aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+
+4 errors

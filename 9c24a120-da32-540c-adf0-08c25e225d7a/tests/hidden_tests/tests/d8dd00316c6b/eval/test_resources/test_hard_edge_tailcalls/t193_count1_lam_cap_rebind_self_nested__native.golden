@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def outer(u) -> int:
+    def go(n: int) -> int:
+        peek = lambda z: (n, z)
+        _go = go
+        if n % 7 == 0:
+            return n
+        else:
+            return _go(n + 1)
+    return go(8)
+print(outer(None))
+--- stderr ---

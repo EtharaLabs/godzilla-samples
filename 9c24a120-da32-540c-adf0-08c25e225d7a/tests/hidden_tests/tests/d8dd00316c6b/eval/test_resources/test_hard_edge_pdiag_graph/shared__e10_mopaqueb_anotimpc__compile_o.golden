@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 19:11
+   |
+19 | let aE1 = Zed.thing
+   |           ^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected BCode, found MCode
+  --> 23:25
+   |
+23 | let mE1 = [B.bCode "a", mCode "b"]
+   |                         ^^^^^^^^^
+
+2 errors

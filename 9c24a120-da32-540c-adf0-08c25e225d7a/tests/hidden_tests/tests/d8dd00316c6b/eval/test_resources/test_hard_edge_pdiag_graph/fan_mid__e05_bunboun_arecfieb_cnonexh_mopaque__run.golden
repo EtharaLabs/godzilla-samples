@@ -1,0 +1,29 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: non-exhaustive match: `CRect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+-- module `B` (b.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let bE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: record `BPt` has no field `bxx` (did you mean `bx`?)
+  --> 21:11
+   |
+21 | let aE1 = B.bOrigin.bxx
+   |           ^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected string, found MCode
+  --> 19:11
+   |
+19 | let mE1 = String.len (mCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+4 errors

@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def go(n, acc):
+    def helper(z):
+        return (n, z)
+    _go = go
+    match n:
+        case 0:
+            return acc
+        case 1:
+            return _go(0, acc + 100)
+        case k if k > 5:
+            return _go(k - 2, acc + k)
+        case k:
+            return _go(k - 1, acc - 1)
+print(go(9, 0))
+--- stderr ---

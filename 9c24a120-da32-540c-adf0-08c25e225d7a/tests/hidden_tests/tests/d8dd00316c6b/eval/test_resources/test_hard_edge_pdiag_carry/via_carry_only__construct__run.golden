@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: `Box` is not a member of `Geo`
+ --> 2:44
+  |
+2 | let mine = Carry.Item { name = "m", kind = Geo.Box 1.0 2.0, at = Geo.origin }
+  |                                            ^^^^^^^
+error: `origin` is not a member of `Geo`
+ --> 4:19
+  |
+4 | print (mine.at == Geo.origin)
+  |                   ^^^^^^^^^^
+
+2 errors

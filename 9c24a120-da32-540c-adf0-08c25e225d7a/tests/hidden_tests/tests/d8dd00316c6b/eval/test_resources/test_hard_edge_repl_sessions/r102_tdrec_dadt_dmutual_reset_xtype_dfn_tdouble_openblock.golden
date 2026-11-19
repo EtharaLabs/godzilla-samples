@@ -1,0 +1,22 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> pyfun> ...... ...... ...... isEven : int -> bool
+isOdd : int -> bool
+pyfun> (session reset)
+pyfun> pyfun> double : int<'a> -> int<'a>
+pyfun> double : int<'a> -> int<'a>
+pyfun> ...... ...... ...... late : int
+42
+pyfun> 
+--- stderr ---
+error: `P` is not a record type
+ --> 2:9
+  |
+2 | let p = P { name = "Ada", age = 36 }
+  |         ^
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 2:15
+  |
+2 | let bad = 1 + "x"
+  |               ^^^

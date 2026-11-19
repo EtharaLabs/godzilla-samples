@@ -1,0 +1,34 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 17:15
+   |
+17 | let cE1 = 1 + "x"
+   |               ^^^
+error: `cE2` is declared `pure` but performs `io`
+  --> 18:18
+   |
+18 | let pure cE2 u = cTick 1
+   |                  ^^^^^^^
+-- module `A` (a.pyfun) --
+error: `aE1` is declared `pure` but performs `io`
+  --> 17:18
+   |
+17 | let pure aE1 u = aTick 1
+   |                  ^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found BCode
+  --> 17:11
+   |
+17 | let bE1 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected int, found int -> 'a
+  --> 23:11
+   |
+23 | let mE1 = A.aTwice 1 2
+   |           ^^^^^^^^^^^^
+
+5 errors

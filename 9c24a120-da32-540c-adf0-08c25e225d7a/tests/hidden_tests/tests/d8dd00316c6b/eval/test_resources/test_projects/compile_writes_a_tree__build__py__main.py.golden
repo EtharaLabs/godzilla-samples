@@ -1,0 +1,17 @@
+import geometry
+import store
+from _pyfun_rt import Some, None_, _None_
+def _pf_map(f, xs):
+    return list(map(f, xs))
+items = [store.Item("disc", geometry.Circle(1.0)), store.Item("tile", geometry.Rect(2.0, 3.0))]
+def report(name):
+    _pf_t0 = store.find(name, items)
+    if isinstance(_pf_t0, Some):
+        item = _pf_t0._0
+        return f"{item.name}: {geometry.area(item.shape)}"
+    else:
+        return f"{name}: missing"
+print(report("disc"))
+print(report("tile"))
+print(report("cone"))
+print(geometry.biggest(_pf_map(lambda i: i.shape, items)))

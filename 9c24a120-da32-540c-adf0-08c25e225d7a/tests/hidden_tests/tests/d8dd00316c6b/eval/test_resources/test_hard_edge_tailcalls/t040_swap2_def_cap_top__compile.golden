@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def go(a, b):
+    def helper(z):
+        return (a, z)
+    if a > 50:
+        return (a, b)
+    else:
+        return go(b, a + b)
+print(go(1, 2))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `a`

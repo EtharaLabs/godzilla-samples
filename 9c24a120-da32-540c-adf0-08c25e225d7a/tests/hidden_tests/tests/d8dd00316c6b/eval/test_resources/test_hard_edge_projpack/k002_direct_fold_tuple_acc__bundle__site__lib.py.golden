@@ -1,0 +1,15 @@
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_set_add(x, s):
+    return s.union([x])
+def split(xs):
+    def _pf_fn0(_pf_arg0, x):
+        evens, odds = _pf_arg0
+        if x % 2 == 0:
+            return (_pf_concat(evens, [x]), odds)
+        else:
+            return (evens, _pf_set_add(x, odds))
+    return _pf_fold(_pf_fn0, ([], set()), xs)

@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> n : int
+pyfun> pyfun> a : int
+b : string
+pyfun> [1, 4, 9]
+pyfun> h : List 'a
+pyfun> --- stderr ---
+error: `root` is already defined
+ --> 4:1
+  |
+4 | extern pure root : float -> float = math.sqrt
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: root, List.range, Seq.range, String.get, String.repeat, String.fromInt, and 60 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 5:18
+  |
+5 | let h = List.map ?f [1]
+  |                  ^^

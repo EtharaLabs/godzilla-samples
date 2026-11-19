@@ -1,0 +1,513 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "untitled:sink.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint\n```"
+  },
+  "range": {
+   "start": {
+    "line": 9,
+    "character": 6
+   },
+   "end": {
+    "line": 9,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 3,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nbool\n```"
+  },
+  "range": {
+   "start": {
+    "line": 10,
+    "character": 6
+   },
+   "end": {
+    "line": 10,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 4,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\n(int, List int)\n```"
+  },
+  "range": {
+   "start": {
+    "line": 11,
+    "character": 6
+   },
+   "end": {
+    "line": 11,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 5,
+ "result": null
+}
+{
+ "jsonrpc": "2.0",
+ "id": 6,
+ "result": null
+}
+{
+ "jsonrpc": "2.0",
+ "id": 7,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint -> int\n```"
+  },
+  "range": {
+   "start": {
+    "line": 14,
+    "character": 6
+   },
+   "end": {
+    "line": 14,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 8,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint -> int\n```"
+  },
+  "range": {
+   "start": {
+    "line": 15,
+    "character": 6
+   },
+   "end": {
+    "line": 15,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 9,
+ "result": null
+}
+{
+ "jsonrpc": "2.0",
+ "id": 10,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nfloat<m>\n```"
+  },
+  "range": {
+   "start": {
+    "line": 17,
+    "character": 6
+   },
+   "end": {
+    "line": 17,
+    "character": 10
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 11,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nCell -> Cell\n```"
+  },
+  "range": {
+   "start": {
+    "line": 19,
+    "character": 4
+   },
+   "end": {
+    "line": 19,
+    "character": 8
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 12,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nCell -> (int, int)\n```"
+  },
+  "range": {
+   "start": {
+    "line": 20,
+    "character": 4
+   },
+   "end": {
+    "line": 20,
+    "character": 9
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 13,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\n'a ->{io} unit\n```\n\n**Effect:** `io`"
+  },
+  "range": {
+   "start": {
+    "line": 21,
+    "character": 4
+   },
+   "end": {
+    "line": 21,
+    "character": 8
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 14,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nSeq int\n```"
+  },
+  "range": {
+   "start": {
+    "line": 44,
+    "character": 4
+   },
+   "end": {
+    "line": 44,
+    "character": 6
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 15,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nOption int\n```"
+  },
+  "range": {
+   "start": {
+    "line": 50,
+    "character": 4
+   },
+   "end": {
+    "line": 50,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 16,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nResult int 'a\n```"
+  },
+  "range": {
+   "start": {
+    "line": 55,
+    "character": 4
+   },
+   "end": {
+    "line": 55,
+    "character": 7
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 17,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nCell -> int\n```"
+  },
+  "range": {
+   "start": {
+    "line": 59,
+    "character": 4
+   },
+   "end": {
+    "line": 59,
+    "character": 9
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 18,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nunit\n```"
+  },
+  "range": {
+   "start": {
+    "line": 22,
+    "character": 2
+   },
+   "end": {
+    "line": 22,
+    "character": 24
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 19,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nList int\n```"
+  },
+  "range": {
+   "start": {
+    "line": 35,
+    "character": 11
+   },
+   "end": {
+    "line": 35,
+    "character": 15
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 20,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nCell\n```"
+  },
+  "range": {
+   "start": {
+    "line": 19,
+    "character": 16
+   },
+   "end": {
+    "line": 19,
+    "character": 55
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 21,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nstring\n```"
+  },
+  "range": {
+   "start": {
+    "line": 12,
+    "character": 10
+   },
+   "end": {
+    "line": 12,
+    "character": 21
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 22,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint\n```"
+  },
+  "range": {
+   "start": {
+    "line": 13,
+    "character": 10
+   },
+   "end": {
+    "line": 13,
+    "character": 31
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 23,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nResult (List int) Exception\n```"
+  },
+  "range": {
+   "start": {
+    "line": 16,
+    "character": 10
+   },
+   "end": {
+    "line": 16,
+    "character": 27
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 24,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint\n```"
+  },
+  "range": {
+   "start": {
+    "line": 15,
+    "character": 10
+   },
+   "end": {
+    "line": 15,
+    "character": 13
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 25,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint\n```"
+  },
+  "range": {
+   "start": {
+    "line": 14,
+    "character": 10
+   },
+   "end": {
+    "line": 14,
+    "character": 46
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 26,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint\n```"
+  },
+  "range": {
+   "start": {
+    "line": 9,
+    "character": 24
+   },
+   "end": {
+    "line": 9,
+    "character": 26
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 27,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nint\n```"
+  },
+  "range": {
+   "start": {
+    "line": 10,
+    "character": 10
+   },
+   "end": {
+    "line": 10,
+    "character": 11
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

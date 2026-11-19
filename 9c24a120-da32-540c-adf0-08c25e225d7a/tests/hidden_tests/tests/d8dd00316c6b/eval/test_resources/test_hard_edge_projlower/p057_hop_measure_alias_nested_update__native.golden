@@ -1,0 +1,31 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, order=True)
+class Inner:
+    a: int
+    b: int
+@dataclass(frozen=True, slots=True, order=True)
+class Outer:
+    name: str
+    inner: "Inner"
+force: float = 10.0
+mass: float = 2.0
+base: Outer = Outer("o", Inner(1, 2))
+
+# ==== mid.py ====
+import lib
+ready: bool = True
+print(lib.force / lib.mass)
+_pf_t0 = lib.base
+changed = lib.Outer(_pf_t0.name, lib.Inner(_pf_t0.inner.a, 20))
+print(changed.inner.b)
+print(lib.base.inner.b)
+
+# ==== main.py ====
+import mid
+print(mid.ready)
+
+--- stderr ---

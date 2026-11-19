@@ -1,0 +1,11 @@
+from dataclasses import dataclass
+import carry
+import geo
+@dataclass(frozen=True, slots=True, order=True)
+class Shelf:
+    top: object
+    count: int
+shelf = Shelf(carry.item, 2)
+print(carry.item == carry.item)
+print(carry.item.at == geo.Pos(1, 2))
+print(carry.item.kind == geo._Dot)

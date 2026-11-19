@@ -1,0 +1,81 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+@dataclass(frozen=True, slots=True, repr=False)
+class Inc:
+    _0: int
+    def __repr__(self):
+        return f"Inc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Dec:
+    _0: int
+    def __repr__(self):
+        return f"Dec({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Stop:
+    def __repr__(self):
+        return "Stop"
+_Stop: Stop = Stop()
+Cmd = Inc | Dec | Stop
+def go(cmds: list[Cmd], total: int) -> int:
+    while True:
+        try:
+            _pf_t0 = Ok(_pf_str_to_int("12"))
+        except Exception as _pf_t1:
+            _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+        r = _pf_t0
+        if len(cmds) == 0:
+            return total
+        else:
+            if len(cmds) >= 1 and isinstance(cmds[0], Inc):
+                k = cmds[0]._0
+                rest = cmds[1:len(cmds)]
+                if k > 9:
+                    cmds, total = (rest, total + 1)
+                    continue
+            if len(cmds) >= 1 and isinstance(cmds[0], Inc):
+                k = cmds[0]._0
+                rest = cmds[1:len(cmds)]
+                cmds, total = (rest, total + k)
+                continue
+            elif len(cmds) >= 1 and isinstance(cmds[0], Dec):
+                k = cmds[0]._0
+                rest = cmds[1:len(cmds)]
+                cmds, total = (rest, total - k)
+                continue
+            else:
+                return total
+print(go([Inc(3), Inc(20), Dec(1), _Stop, Inc(5)], 0))
+--- stderr ---

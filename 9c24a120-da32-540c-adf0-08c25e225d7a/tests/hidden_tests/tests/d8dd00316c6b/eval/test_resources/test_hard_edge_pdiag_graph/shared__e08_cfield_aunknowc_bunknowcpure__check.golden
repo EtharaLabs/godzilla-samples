@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: record `CPt` has no field `cxx` (did you mean `cx`?)
+  --> 17:11
+   |
+17 | let cE1 = cOrigin.cxx
+   |           ^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `CTriangle` is not a member of `C`
+  --> 19:11
+   |
+19 | let bE1 = C.CTriangle 3
+   |           ^^^^^^^^^^^
+error: `bE2` is declared `pure` but performs `io`
+  --> 20:18
+   |
+20 | let pure bE2 u = bTick 1
+   |                  ^^^^^^^
+-- module `A` (a.pyfun) --
+error: unknown type `C.NoSuchType`
+  --> 19:1
+   |
+19 | type AWrap1 = { w: C.NoSuchType }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+4 errors

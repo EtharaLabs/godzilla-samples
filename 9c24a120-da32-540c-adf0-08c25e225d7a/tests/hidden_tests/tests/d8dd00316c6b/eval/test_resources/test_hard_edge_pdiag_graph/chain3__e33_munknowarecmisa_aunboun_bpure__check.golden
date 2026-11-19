@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: `bE1` is declared `pure` but performs `io`
+  --> 17:18
+   |
+17 | let pure bE1 u = bTick 1
+   |                  ^^^^^^^
+-- module `A` (a.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 19:11
+   |
+19 | let aE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `ATriangle` is not a member of `A`
+  --> 19:11
+   |
+19 | let mE1 = A.ATriangle 3
+   |           ^^^^^^^^^^^
+error: record `APt` is missing field(s) `ay`
+  --> 20:11
+   |
+20 | let mE2 = A.APt { ax = 1 }
+   |           ^^^^^^^^^^^^^^^^
+
+4 errors

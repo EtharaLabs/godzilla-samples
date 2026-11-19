@@ -1,0 +1,39 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+error: type mismatch: expected string, found CCode
+  --> 18:11
+   |
+18 | let cE2 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 19:11
+   |
+19 | let bE1 = Zed.thing
+   |           ^^^^^^^^^
+error: type mismatch: expected BShape, found CShape
+  --> 20:11
+   |
+20 | let bE2 = bArea (C.CCircle 1.0)
+   |           ^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 19:15
+   |
+19 | let aE1 = 1 + "x"
+   |               ^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected ACode, found MCode
+  --> 19:25
+   |
+19 | let mE1 = [A.aCode "a", mCode "b"]
+   |                         ^^^^^^^^^
+
+6 errors

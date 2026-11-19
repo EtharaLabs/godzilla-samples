@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def go(a: int, b: int) -> tuple[int, int]:
+    while True:
+        def _pf_fn0():
+            yield 1
+            yield 2
+        ys = _pf_fn0()
+        if a > 50:
+            return (a, b)
+        else:
+            a, b = (b, a + b)
+            continue
+print(go(1, 2))
+--- stderr ---

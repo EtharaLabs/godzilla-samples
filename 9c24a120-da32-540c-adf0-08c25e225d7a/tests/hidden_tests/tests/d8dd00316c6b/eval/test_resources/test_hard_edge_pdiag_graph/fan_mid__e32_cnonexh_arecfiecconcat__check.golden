@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: non-exhaustive match: `CRect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+-- module `A` (a.pyfun) --
+error: record `CPt` has no field `cxx` (did you mean `cx`?)
+  --> 21:11
+   |
+21 | let aE1 = C.cOrigin.cxx
+   |           ^^^^^^^^^^^^^
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 22:15
+   |
+22 | let aE2 = 1 + "x"
+   |               ^^^
+
+3 errors

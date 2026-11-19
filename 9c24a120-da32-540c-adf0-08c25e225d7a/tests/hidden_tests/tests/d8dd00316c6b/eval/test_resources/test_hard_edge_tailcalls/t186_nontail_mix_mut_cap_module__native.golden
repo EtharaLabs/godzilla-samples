@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, acc):
+    while True:
+        seen = 0
+        def bump(k: int) -> int:
+            nonlocal seen
+            seen = seen + k
+            return seen
+        if n == 0:
+            return acc
+        elif n == 3:
+            return 1 + Loop_go(n - 1, acc)
+        else:
+            n, acc = (n - 1, acc + n)
+            continue
+print(Loop_go(5, 0))
+--- stderr ---

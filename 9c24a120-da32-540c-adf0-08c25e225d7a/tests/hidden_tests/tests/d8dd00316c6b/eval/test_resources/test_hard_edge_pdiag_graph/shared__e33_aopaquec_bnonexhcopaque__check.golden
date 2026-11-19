@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: non-exhaustive match: `C.CRect _ _` is not matched
+  --> 20:3
+   |
+20 |   match s:
+   |   ^^^^^^^^
+error: type mismatch: expected string, found BCode
+  --> 22:11
+   |
+22 | let bE2 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected CCode, found ACode
+  --> 19:25
+   |
+19 | let aE1 = [C.cCode "a", aCode "b"]
+   |                         ^^^^^^^^^
+
+3 errors

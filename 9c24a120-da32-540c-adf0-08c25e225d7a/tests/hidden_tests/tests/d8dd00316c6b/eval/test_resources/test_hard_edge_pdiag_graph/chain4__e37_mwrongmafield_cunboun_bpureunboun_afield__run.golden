@@ -1,0 +1,39 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let cE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `bE1` is declared `pure` but performs `io`
+  --> 19:18
+   |
+19 | let pure bE1 u = bTick 1
+   |                  ^^^^^^^
+error: unbound name `nowhereAtAll`
+  --> 20:11
+   |
+20 | let bE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 19:11
+   |
+19 | let aE1 = aOrigin.axx
+   |           ^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected MShape, found AShape
+  --> 19:11
+   |
+19 | let mE1 = mArea (A.ACircle 1.0)
+   |           ^^^^^^^^^^^^^^^^^^^^^
+error: record `MPt` has no field `mxx` (did you mean `mx`?)
+  --> 20:11
+   |
+20 | let mE2 = mOrigin.mxx
+   |           ^^^^^^^^^^^
+
+6 errors

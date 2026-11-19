@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: record `CPt` is missing field(s) `cy`
+  --> 19:11
+   |
+19 | let bE1 = C.CPt { cx = 1 }
+   |           ^^^^^^^^^^^^^^^^
+
+2 errors

@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: type mismatch: expected float, found string
+  --> 19:11
+   |
+19 | let aE1 = B.BCircle "big"
+   |           ^^^^^^^^^^^^^^^
+error: type mismatch: expected string, found ACode
+  --> 20:11
+   |
+20 | let aE2 = String.len (aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected string, found ACode
+  --> 19:11
+   |
+19 | let mE1 = String.len (A.aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

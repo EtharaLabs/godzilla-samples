@@ -1,0 +1,7 @@
+exit: 0
+--- stdout ---
+M_inc = lambda x: x + 1
+M_twice = lambda f, x: f(f(x))
+r = M_twice(M_inc, 5)
+print(r)
+--- stderr ---

@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: type mismatch: expected string, found ACode
+  --> 17:11
+   |
+17 | let aE1 = String.len (aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected string, found MCode
+  --> 19:11
+   |
+19 | let mE1 = String.len (mCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 19:11
+   |
+19 | let bE1 = String.len (C.cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 19:11
+   |
+19 | let aE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+error: non-exhaustive match: `ARect _ _` is not matched
+  --> 21:3
+   |
+21 |   match s:
+   |   ^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: record `CPt` has no field `cxx` (did you mean `cx`?)
+  --> 23:11
+   |
+23 | let mE1 = C.cOrigin.cxx
+   |           ^^^^^^^^^^^^^
+
+4 errors

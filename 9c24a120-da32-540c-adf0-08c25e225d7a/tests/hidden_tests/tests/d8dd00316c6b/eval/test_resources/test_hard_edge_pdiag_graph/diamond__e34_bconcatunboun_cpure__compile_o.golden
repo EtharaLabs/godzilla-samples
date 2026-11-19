@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: `cE1` is declared `pure` but performs `io`
+  --> 17:18
+   |
+17 | let pure cE1 u = cTick 1
+   |                  ^^^^^^^
+-- module `B` (b.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 19:15
+   |
+19 | let bE1 = 1 + "x"
+   |               ^^^
+error: unbound name `nowhereAtAll`
+  --> 20:11
+   |
+20 | let bE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+
+3 errors

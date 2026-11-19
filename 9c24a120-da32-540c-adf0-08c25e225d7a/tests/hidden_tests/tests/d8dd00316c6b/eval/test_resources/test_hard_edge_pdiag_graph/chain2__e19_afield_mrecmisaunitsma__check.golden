@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 17:11
+   |
+17 | let aE1 = aOrigin.axx
+   |           ^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: record `APt` is missing field(s) `ay`
+  --> 19:11
+   |
+19 | let mE1 = A.APt { ax = 1 }
+   |           ^^^^^^^^^^^^^^^^
+error: type mismatch: expected float<acm>, found float<mcm>
+  --> 20:11
+   |
+20 | let mE2 = A.aWidth + mWidth
+   |           ^^^^^^^^^^^^^^^^^
+
+3 errors

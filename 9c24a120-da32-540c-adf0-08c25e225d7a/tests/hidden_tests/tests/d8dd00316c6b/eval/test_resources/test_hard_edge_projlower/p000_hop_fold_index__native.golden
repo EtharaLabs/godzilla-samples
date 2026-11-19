@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+def index(pairs):
+    m = dict()
+    for (k, v) in pairs:
+        m[k] = v
+    return m
+
+# ==== mid.py ====
+import lib
+def _pf_map_to_list(m):
+    return list(m.items())
+ready: bool = True
+print(_pf_map_to_list(lib.index([(1, "a"), (2, "b"), (1, "c")])))
+
+# ==== main.py ====
+import mid
+print(mid.ready)
+
+--- stderr ---

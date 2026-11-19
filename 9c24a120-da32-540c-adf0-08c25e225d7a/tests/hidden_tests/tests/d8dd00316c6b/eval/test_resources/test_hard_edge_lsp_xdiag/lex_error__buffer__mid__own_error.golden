@@ -1,0 +1,325 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/mid.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 8,
+      "character": 14
+     },
+     "end": {
+      "line": 8,
+      "character": 18
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected int, found bool"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/dep.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 9,
+      "character": 8
+     },
+     "end": {
+      "line": 10,
+      "character": 0
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unterminated string literal"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 10,
+      "character": 0
+     },
+     "end": {
+      "line": 10,
+      "character": 0
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected an expression, found end of input"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/mid.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 1,
+      "character": 0
+     },
+     "end": {
+      "line": 1,
+      "character": 53
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unknown type `Dep.Basket`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 2,
+      "character": 14
+     },
+     "end": {
+      "line": 2,
+      "character": 19
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`Stall` is not a record type"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 3,
+      "character": 44
+     },
+     "end": {
+      "line": 3,
+      "character": 54
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "`weight` is not a member of `Dep`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 5,
+      "character": 8
+     },
+     "end": {
+      "line": 5,
+      "character": 15
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unknown record field `stock`"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 8,
+      "character": 14
+     },
+     "end": {
+      "line": 8,
+      "character": 18
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected int, found bool"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": null
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/dep.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/mid.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 8,
+      "character": 14
+     },
+     "end": {
+      "line": 8,
+      "character": 18
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected int, found bool"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 3,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nFruit -> int -> Basket\n```"
+  },
+  "range": {
+   "start": {
+    "line": 2,
+    "character": 41
+   },
+   "end": {
+    "line": 2,
+    "character": 49
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/dep.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 9,
+      "character": 8
+     },
+     "end": {
+      "line": 10,
+      "character": 0
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "unterminated string literal"
+   },
+   {
+    "range": {
+     "start": {
+      "line": 10,
+      "character": 0
+     },
+     "end": {
+      "line": 10,
+      "character": 0
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected an expression, found end of input"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/dep.pyfun",
+  "diagnostics": []
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/mid.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 8,
+      "character": 14
+     },
+     "end": {
+      "line": 8,
+      "character": 18
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "expected int, found bool"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 4,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nFruit -> int -> Basket\n```"
+  },
+  "range": {
+   "start": {
+    "line": 2,
+    "character": 41
+   },
+   "end": {
+    "line": 2,
+    "character": 49
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

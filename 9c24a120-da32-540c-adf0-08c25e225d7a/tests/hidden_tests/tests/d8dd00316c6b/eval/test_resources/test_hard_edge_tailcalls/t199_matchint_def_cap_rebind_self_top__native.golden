@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def go(n: int, acc: int) -> int:
+    def helper(z):
+        return (n, z)
+    _go = go
+    if n == 0:
+        return acc
+    elif n == 1:
+        return _go(0, acc + 100)
+    else:
+        k = n
+        if k > 5:
+            return _go(k - 2, acc + k)
+        k = n
+        return _go(k - 1, acc - 1)
+print(go(9, 0))
+--- stderr ---

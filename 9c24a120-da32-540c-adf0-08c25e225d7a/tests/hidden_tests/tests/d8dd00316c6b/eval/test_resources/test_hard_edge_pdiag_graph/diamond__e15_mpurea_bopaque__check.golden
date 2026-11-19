@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found BCode
+  --> 19:11
+   |
+19 | let bE1 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `mE1` is declared `pure` but performs `io`
+  --> 21:18
+   |
+21 | let pure mE1 u = A.aTick 1
+   |                  ^^^^^^^^^
+
+2 errors

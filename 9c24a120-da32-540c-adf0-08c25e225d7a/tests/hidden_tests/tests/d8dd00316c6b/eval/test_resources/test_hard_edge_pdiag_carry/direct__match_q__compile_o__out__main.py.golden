@@ -1,0 +1,15 @@
+import carry
+import geo
+def _pf_fn0():
+    match carry.item.kind:
+        case geo.Dot():
+            return 0.0
+        case geo.Disc(r):
+            return r
+        case geo.Box(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")
+r = _pf_fn0()
+print(r)
+print("main done")

@@ -1,0 +1,22 @@
+from dataclasses import dataclass
+from _pyfun_rt import Some, None_, _None_
+@dataclass(frozen=True, slots=True, order=True)
+class Cell:
+    row: int
+    col: int
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def addOpt(a, b):
+    return Maybe_bind(a, lambda x: Maybe_bind(b, lambda y: Maybe_return_(x + y)))
+def keys(cells):
+    def _pf_fn0():
+        for c in cells:
+            k = c.row * 10 + c.col
+            yield k
+    return _pf_fn0()

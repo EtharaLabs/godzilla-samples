@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def go(n: int) -> int:
+    while True:
+        def count(k: int, c: int) -> int:
+            while True:
+                if k == 0:
+                    return c
+                else:
+                    k, c = (k - 1, c + 1)
+                    continue
+        if n % 7 == 0:
+            return n
+        else:
+            n = n + 1
+            continue
+print(go(8))
+--- stderr ---

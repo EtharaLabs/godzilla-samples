@@ -1,0 +1,24 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> pyfun> pyfun> pyfun> --- stderr ---
+error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^
+error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^
+error: unbound name `firstOr`
+ --> 2:1
+  |
+2 | firstOr 0 [7, 8]
+  | ^^^^^^^
+error: unbound name `squares`
+ --> 2:12
+  |
+2 | Seq.toList squares
+  |            ^^^^^^^

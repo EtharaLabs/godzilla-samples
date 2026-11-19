@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+import functools
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+def _pf_list_get(i, xs):
+    return Some(xs[i]) if 0 <= i < len(xs) else _None_
+def _pf_option_with_default(d, o):
+    if isinstance(o, Some):
+        return o._0
+    return d
+def outer(u):
+    def go(i, xs):
+        def helper(z):
+            return (i, z)
+        again = functools.partial(go, i)
+        _pf_t0 = _pf_list_get(i, xs)
+        if isinstance(_pf_t0, Some):
+            v = _pf_t0._0
+            if v > 3:
+                return Some(i)
+        if isinstance(_pf_t0, Some):
+            return go(i + 1, xs)
+        else:
+            return _None_
+    return go(0, [1, 2, 9, 4])
+print(_pf_option_with_default(-1, outer(None)))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `i`

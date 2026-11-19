@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+def go(n: int, acc: int) -> int:
+    while True:
+        t = 0
+        t = t + 1
+        if n == 0:
+            return acc
+        elif n == 1:
+            n, acc = (0, acc + 100)
+            continue
+        else:
+            k = n
+            if k > 5:
+                n, acc = (k - 2, acc + k)
+                continue
+            k = n
+            n, acc = (k - 1, acc - 1)
+            continue
+print(go(9, 0))
+--- stderr ---

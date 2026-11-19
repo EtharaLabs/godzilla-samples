@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, acc):
+    peek = lambda z: (n, z)
+    match n:
+        case 0:
+            return acc
+        case 1:
+            return Loop_go(0, acc + 100)
+        case k if k > 5:
+            return Loop_go(k - 2, acc + k)
+        case k:
+            return Loop_go(k - 1, acc - 1)
+print(Loop_go(9, 0))
+--- stderr ---
+note: `Loop_go` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

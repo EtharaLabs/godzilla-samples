@@ -1,0 +1,30 @@
+from _pyfun_rt import Ok, Error
+from _pyfun_rt import _Exception
+parseInt = int
+def addText(a, b):
+    def _pf_fn0():
+        try:
+            _pf_t0 = Ok(int(a))
+        except Exception as _pf_t1:
+            _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+        if isinstance(_pf_t0, Ok):
+            x = _pf_t0._0
+            try:
+                _pf_t2 = Ok(int(b))
+            except Exception as _pf_t3:
+                _pf_t2 = Error(_Exception(type(_pf_t3).__name__, str(_pf_t3)))
+            if isinstance(_pf_t2, Ok):
+                y = _pf_t2._0
+                return Ok(x + y)
+            else:
+                return _pf_t2
+        else:
+            return _pf_t0
+    return _pf_fn0()
+def sumTo(n, acc):
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n)
+            continue

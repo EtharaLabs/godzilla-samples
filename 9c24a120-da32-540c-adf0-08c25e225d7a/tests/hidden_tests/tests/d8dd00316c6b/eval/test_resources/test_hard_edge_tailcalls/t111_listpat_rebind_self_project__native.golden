@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(xs: list[int], acc: int) -> int:
+    _go = go
+    if len(xs) == 0:
+        return acc
+    else:
+        h = xs[0]
+        t = xs[1:len(xs)]
+        return _go(t, acc + h)
+
+# ==== main.py ====
+import loop
+print(loop.go([4, 5, 6], 0))
+
+--- stderr ---

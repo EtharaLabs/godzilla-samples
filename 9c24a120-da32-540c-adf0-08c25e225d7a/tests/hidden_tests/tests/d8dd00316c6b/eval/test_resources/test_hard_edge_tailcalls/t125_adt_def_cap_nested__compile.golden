@@ -1,0 +1,39 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Inc:
+    _0: int
+    def __repr__(self):
+        return f"Inc({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Dec:
+    _0: int
+    def __repr__(self):
+        return f"Dec({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Stop:
+    def __repr__(self):
+        return "Stop"
+_Stop = Stop()
+def outer(u):
+    def go(cmds, total):
+        def helper(z):
+            return (cmds, z)
+        match cmds:
+            case []:
+                return total
+            case [Inc(k), *rest] if k > 9:
+                return go(rest, total + 1)
+            case [Inc(k), *rest]:
+                return go(rest, total + k)
+            case [Dec(k), *rest]:
+                return go(rest, total - k)
+            case [Stop(), *_]:
+                return total
+            case _:
+                raise RuntimeError("non-exhaustive match")
+    return go([Inc(3), Inc(20), Dec(1), _Stop, Inc(5)], 0)
+print(outer(None))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `cmds`

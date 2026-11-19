@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: non-exhaustive match: `ARect _ _` is not matched
+  --> 20:3
+   |
+20 |   match s:
+   |   ^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `mE1` is declared `pure` but performs `io`
+  --> 23:18
+   |
+23 | let pure mE1 u = mTick 1
+   |                  ^^^^^^^
+error: unbound name `nowhereAtAll`
+  --> 24:11
+   |
+24 | let mE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+
+3 errors

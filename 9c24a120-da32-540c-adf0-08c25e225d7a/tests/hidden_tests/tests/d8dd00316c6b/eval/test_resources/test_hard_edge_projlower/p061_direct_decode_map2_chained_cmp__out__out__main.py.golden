@@ -1,0 +1,20 @@
+import json
+import lib
+from _pyfun_rt import Ok, Error
+from _pyfun_rt import _Exception
+def _pf_map(f, xs):
+    return list(map(f, xs))
+def _pf_dec_decode_string(dec, s):
+    try:
+        return Ok(dec(json.loads(s)))
+    except Exception as e:
+        return Error(_Exception(type(e).__name__, str(e)))
+_pf_t1 = _pf_dec_decode_string(lib.user, "{\"name\": \"ada\", \"age\": 36}")
+if isinstance(_pf_t1, Ok):
+    u = _pf_t1._0
+    _pf_t0 = f"{u.name} {u.age}"
+else:
+    e = _pf_t1._0
+    _pf_t0 = "bad"
+print(_pf_t0)
+print(_pf_map(lambda v: lib.within(0, v, 3), [0, 3, -1]))

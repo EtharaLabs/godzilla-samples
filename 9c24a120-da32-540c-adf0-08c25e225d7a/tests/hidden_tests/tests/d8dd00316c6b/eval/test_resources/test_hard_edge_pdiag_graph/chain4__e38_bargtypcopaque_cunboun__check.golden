@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let cE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected int<'a>, found string
+  --> 19:11
+   |
+19 | let bE1 = C.cTwice "s"
+   |           ^^^^^^^^^^^^
+error: type mismatch: expected string, found BCode
+  --> 20:11
+   |
+20 | let bE2 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

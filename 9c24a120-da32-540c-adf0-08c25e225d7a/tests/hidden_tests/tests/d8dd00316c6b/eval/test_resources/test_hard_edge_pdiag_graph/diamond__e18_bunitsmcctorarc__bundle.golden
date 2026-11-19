@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: type mismatch: expected float<ccm>, found float<bcm>
+  --> 19:11
+   |
+19 | let bE1 = C.cWidth + bWidth
+   |           ^^^^^^^^^^^^^^^^^
+error: type mismatch: expected float, found string
+  --> 20:11
+   |
+20 | let bE2 = C.CCircle "big"
+   |           ^^^^^^^^^^^^^^^
+
+2 errors

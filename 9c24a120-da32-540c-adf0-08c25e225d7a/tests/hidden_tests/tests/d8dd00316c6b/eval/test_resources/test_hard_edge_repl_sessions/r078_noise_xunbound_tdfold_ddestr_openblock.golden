@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> pyfun> (could not determine a type — is `let index xs = List.fold (fun m x -> Map.add x (String.len x) m) Map.empty xs` an expression?)
+pyfun> a : int
+b : string
+pyfun> ...... ...... ...... late : int
+42
+pyfun> 
+--- stderr ---
+error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^

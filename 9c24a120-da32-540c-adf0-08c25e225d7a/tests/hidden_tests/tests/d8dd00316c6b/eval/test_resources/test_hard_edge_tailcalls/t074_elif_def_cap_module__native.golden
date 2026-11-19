@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, acc):
+    while True:
+        def helper(z):
+            return (n, z)
+        if n <= 0:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n - 1, acc * 2)
+            continue
+        else:
+            n, acc = (n - 1, acc + 1)
+            continue
+print(Loop_go(7, 1))
+--- stderr ---

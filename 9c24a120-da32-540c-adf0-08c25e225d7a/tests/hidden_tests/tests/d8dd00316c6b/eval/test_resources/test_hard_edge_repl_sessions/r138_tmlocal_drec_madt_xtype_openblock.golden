@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> ...... ...... ...... p : P
+pyfun> ...... ...... ...... ...... ...... ...... ...... flip : Coin -> Coin
+pyfun> pyfun> ...... ...... ...... late : int
+42
+pyfun> 
+--- stderr ---
+error: unbound name `t`
+ --> 2:1
+  |
+2 | t * t
+  | ^
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 12:15
+   |
+12 | let bad = 1 + "x"
+   |               ^^^

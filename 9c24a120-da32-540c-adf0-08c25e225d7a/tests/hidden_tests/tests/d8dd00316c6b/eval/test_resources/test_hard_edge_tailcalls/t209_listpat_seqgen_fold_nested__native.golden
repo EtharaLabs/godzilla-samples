@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+def outer(u) -> int:
+    def go(xs: list[int], acc: int) -> int:
+        while True:
+            def _pf_fn0():
+                yield 1
+                yield 2
+            ys = _pf_fn0()
+            a = []
+            for x in [1, 2]:
+                a.append(x)
+            folded = a
+            if len(xs) == 0:
+                return acc
+            else:
+                h = xs[0]
+                t = xs[1:len(xs)]
+                xs, acc = (t, acc + h)
+                continue
+    return go([4, 5, 6], 0)
+print(outer(None))
+--- stderr ---

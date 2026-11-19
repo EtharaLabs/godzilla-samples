@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def go(xs: list[int], acc: int) -> int:
+    while True:
+        inc = lambda z: z + 1
+        def _pf_fn0():
+            yield 1
+            yield 2
+        ys = _pf_fn0()
+        if len(xs) == 0:
+            return acc
+        else:
+            h = xs[0]
+            t = xs[1:len(xs)]
+            xs, acc = (t, acc + h)
+            continue
+print(go([4, 5, 6], 0))
+--- stderr ---

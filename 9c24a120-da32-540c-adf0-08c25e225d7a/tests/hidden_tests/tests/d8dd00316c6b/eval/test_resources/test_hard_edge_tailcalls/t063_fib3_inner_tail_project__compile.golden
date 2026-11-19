@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n, a, b):
+    while True:
+        def count(k, c):
+            while True:
+                if k == 0:
+                    return c
+                else:
+                    k, c = (k - 1, c + 1)
+                    continue
+        if n == 0:
+            return a
+        else:
+            n, a, b = (n - 1, b, a + b)
+            continue
+
+# ==== main.py ====
+import loop
+print(loop.go(10, 0, 1))
+
+--- stderr ---

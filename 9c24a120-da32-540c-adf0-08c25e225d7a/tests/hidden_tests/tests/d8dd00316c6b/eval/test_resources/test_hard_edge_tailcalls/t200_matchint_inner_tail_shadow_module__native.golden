@@ -1,0 +1,27 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, acc):
+    while True:
+        def count(k: int, c: int) -> int:
+            while True:
+                if k == 0:
+                    return c
+                else:
+                    k, c = (k - 1, c + 1)
+                    continue
+        n = n
+        if n == 0:
+            return acc
+        elif n == 1:
+            n, acc = (0, acc + 100)
+            continue
+        else:
+            k = n
+            if k > 5:
+                n, acc = (k - 2, acc + k)
+                continue
+            k = n
+            n, acc = (k - 1, acc - 1)
+            continue
+print(Loop_go(9, 0))
+--- stderr ---

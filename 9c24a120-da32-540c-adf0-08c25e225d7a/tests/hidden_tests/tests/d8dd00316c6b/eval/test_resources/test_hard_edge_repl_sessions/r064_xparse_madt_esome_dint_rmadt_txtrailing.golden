@@ -1,0 +1,32 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> ...... ...... ...... ...... ...... ...... ...... flip : Coin -> Coin
+pyfun> Some([1, 2])
+pyfun> n : int
+pyfun> ...... ...... ...... ...... ...... ...... ...... pyfun> pyfun> --- stderr ---
+error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^
+error: type `Coin` is already defined
+  --> 10:1
+   |
+10 | type Coin = Heads | Tails
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Heads` is already defined
+  --> 10:1
+   |
+10 | type Coin = Heads | Tails
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Tails` is already defined
+  --> 10:1
+   |
+10 | type Coin = Heads | Tails
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: unbound name `ok2`
+  --> 10:1
+   |
+10 | ok2 + true
+   | ^^^

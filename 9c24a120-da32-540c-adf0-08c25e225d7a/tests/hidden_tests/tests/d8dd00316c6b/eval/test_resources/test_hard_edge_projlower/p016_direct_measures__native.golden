@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+def speed(d: int, t: int) -> float:
+    return d / t
+lap: float = 400.0
+
+# ==== main.py ====
+import lib
+print(lib.speed(lib.lap, 50.0))
+
+--- stderr ---

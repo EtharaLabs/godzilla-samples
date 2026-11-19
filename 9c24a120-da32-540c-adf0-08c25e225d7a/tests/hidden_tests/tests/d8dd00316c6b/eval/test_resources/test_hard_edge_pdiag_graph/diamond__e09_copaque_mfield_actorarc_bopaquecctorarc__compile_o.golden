@@ -1,0 +1,34 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected float, found string
+  --> 19:11
+   |
+19 | let aE1 = C.CCircle "big"
+   |           ^^^^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 19:11
+   |
+19 | let bE1 = String.len (C.cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+error: type mismatch: expected float, found string
+  --> 20:11
+   |
+20 | let bE2 = C.CCircle "big"
+   |           ^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: record `MPt` has no field `mxx` (did you mean `mx`?)
+  --> 21:11
+   |
+21 | let mE1 = mOrigin.mxx
+   |           ^^^^^^^^^^^
+
+5 errors

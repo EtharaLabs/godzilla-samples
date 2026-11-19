@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: record `CPt` has no field `cxx` (did you mean `cx`?)
+  --> 19:11
+   |
+19 | let bE1 = C.cOrigin.cxx
+   |           ^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 19:11
+   |
+19 | let mE1 = A.aOrigin.axx
+   |           ^^^^^^^^^^^^^
+
+2 errors

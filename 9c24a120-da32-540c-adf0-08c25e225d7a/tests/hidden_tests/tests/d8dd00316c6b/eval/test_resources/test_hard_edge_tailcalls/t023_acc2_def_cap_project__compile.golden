@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n, acc):
+    def helper(z):
+        return (n, z)
+    if n == 0:
+        return acc
+    else:
+        return go(n - 1, acc + n)
+
+# ==== main.py ====
+import loop
+print(loop.go(6, 0))
+
+--- stderr ---
+note: in `Loop`: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

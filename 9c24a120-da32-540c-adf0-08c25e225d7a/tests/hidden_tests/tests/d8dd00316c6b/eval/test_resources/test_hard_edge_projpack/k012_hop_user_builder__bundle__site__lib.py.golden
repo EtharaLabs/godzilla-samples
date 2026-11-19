@@ -1,0 +1,11 @@
+from _pyfun_rt import Some, None_, _None_
+def Maybe_bind(m, f):
+    if isinstance(m, Some):
+        x = m._0
+        return f(x)
+    else:
+        return _None_
+def Maybe_return_(x):
+    return Some(x)
+def addOpt(a, b):
+    return Maybe_bind(a, lambda x: Maybe_bind(b, lambda y: Maybe_return_(x + y)))

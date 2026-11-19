@@ -1,0 +1,29 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: record `CPt` has no field `cxx` (did you mean `cx`?)
+  --> 17:11
+   |
+17 | let cE1 = cOrigin.cxx
+   |           ^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let aE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `bE1` is declared `pure` but performs `io`
+  --> 17:18
+   |
+17 | let pure bE1 u = bTick 1
+   |                  ^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `BTriangle` is not a member of `B`
+  --> 23:11
+   |
+23 | let mE1 = B.BTriangle 3
+   |           ^^^^^^^^^^^
+
+4 errors

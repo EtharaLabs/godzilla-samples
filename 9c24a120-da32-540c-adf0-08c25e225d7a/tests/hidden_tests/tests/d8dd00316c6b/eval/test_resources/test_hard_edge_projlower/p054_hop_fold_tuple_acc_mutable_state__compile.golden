@@ -1,0 +1,38 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def _pf_set_add(x, s):
+    return s.union([x])
+def split(xs):
+    def _pf_fn0(_pf_arg0, x):
+        evens, odds = _pf_arg0
+        if x % 2 == 0:
+            return (_pf_concat(evens, [x]), odds)
+        else:
+            return (evens, _pf_set_add(x, odds))
+    return _pf_fold(_pf_fn0, ([], set()), xs)
+hits = 0
+def hit(u):
+    global hits
+    hits = hits + 1
+    return hits
+
+# ==== mid.py ====
+import lib
+ready = True
+ev, od = lib.split([1, 2, 3, 4, 5])
+print(ev)
+print(list(od))
+print(lib.hit(None))
+print(lib.hit(None))
+
+# ==== main.py ====
+import mid
+print(mid.ready)
+
+--- stderr ---

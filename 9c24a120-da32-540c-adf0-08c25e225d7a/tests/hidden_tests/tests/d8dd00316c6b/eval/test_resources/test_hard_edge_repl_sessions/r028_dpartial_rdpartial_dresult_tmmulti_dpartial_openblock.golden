@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> ...... ...... ...... add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+pyfun> ...... ...... ...... add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+pyfun> safeDiv : int<'a> -> int -> Result float<'a> string
+pyfun> pyfun> ...... ...... ...... add : int<'a> -> int<'a> -> int<'a>
+inc : int -> int
+pyfun> ...... ...... ...... late : int
+42
+pyfun> 
+--- stderr ---
+error: unbound name `u`
+ --> 9:1
+  |
+9 | u * 5
+  | ^

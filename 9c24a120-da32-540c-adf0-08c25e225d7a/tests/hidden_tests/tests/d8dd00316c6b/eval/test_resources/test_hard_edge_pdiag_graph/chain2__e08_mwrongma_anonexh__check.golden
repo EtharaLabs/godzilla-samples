@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: non-exhaustive match: `ARect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected MShape, found AShape
+  --> 19:11
+   |
+19 | let mE1 = mArea (A.ACircle 1.0)
+   |           ^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

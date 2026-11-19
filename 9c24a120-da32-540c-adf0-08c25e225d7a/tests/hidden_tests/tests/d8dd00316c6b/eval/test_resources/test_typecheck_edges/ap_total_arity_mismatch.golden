@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: active-pattern case `A` is constructed with 1 argument(s) in one place and 0 in another
+ --> 1:1
+  |
+1 | let (|A|B|) n = if n > 0 then A n else A
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: unknown constructor `A`
+ --> 3:9
+  |
+3 |   match n:
+  |         ^
+
+2 errors

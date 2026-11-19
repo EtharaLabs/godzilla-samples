@@ -1,0 +1,46 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import c
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class BCircle:
+    _0: float
+    def __repr__(self):
+        return f"BCircle({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class BRect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"BRect({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+@dataclass(frozen=True, slots=True, order=True)
+class BPt:
+    bx: int
+    by: int
+bOrigin = BPt(1, 2)
+def bTwice(k):
+    return k * 2
+def bTick(k):
+    print(f"B tick {k}")
+    return k + 1
+def bArea(s):
+    match s:
+        case BCircle(r):
+            return 3.0 * r * r
+        case BRect(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def bCode(s):
+    return s
+bWidth = 3.0
+bFromC = c.cTwice(c.cOrigin.cx + c.cOrigin.cy)

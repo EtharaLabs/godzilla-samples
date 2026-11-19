@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: `Units` is not a member of `Shapes`
+ --> 3:8
+  |
+3 | print (Shapes.Units.double 21)
+  |        ^^^^^^^^^^^^
+error: record `Tag` is missing field(s) `n`
+ --> 8:13
+  |
+8 | let s2bad = Shapes.Tag { label = "x" }
+  |             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

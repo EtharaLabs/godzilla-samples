@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 17:11
+   |
+17 | let aE1 = aOrigin.axx
+   |           ^^^^^^^^^^^
+error: `aE2` is declared `pure` but performs `io`
+  --> 18:18
+   |
+18 | let pure aE2 u = aTick 1
+   |                  ^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `vanishedMember` is not a member of `A`
+  --> 19:11
+   |
+19 | let mE1 = A.vanishedMember
+   |           ^^^^^^^^^^^^^^^^
+
+3 errors

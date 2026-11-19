@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+def _pf_str_concat(a, b):
+    return a + b
+def go(s, n):
+    while True:
+        def count(k, c):
+            while True:
+                if k == 0:
+                    return c
+                else:
+                    k, c = (k - 1, c + 1)
+                    continue
+        if n == 0:
+            return s
+        else:
+            s, n = (_pf_str_concat(s, str(n)), n - 1)
+            continue
+print(go(">", 4))
+--- stderr ---

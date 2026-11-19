@@ -1,0 +1,10 @@
+from dataclasses import dataclass
+import carry
+@dataclass(frozen=True, slots=True, order=True)
+class Shelf:
+    top: object
+    count: int
+shelf = Shelf(carry.item, 2)
+print(carry.item.at.x)
+print(carry.item.at.y + 1)
+print(carry.item.name)

@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def outer(u):
+    def go(a, b):
+        while True:
+            def helper(z):
+                return z * 2
+            if a > 50:
+                return (a, b)
+            else:
+                a, b = (b, a + b)
+                continue
+    return go(1, 2)
+print(outer(None))
+--- stderr ---

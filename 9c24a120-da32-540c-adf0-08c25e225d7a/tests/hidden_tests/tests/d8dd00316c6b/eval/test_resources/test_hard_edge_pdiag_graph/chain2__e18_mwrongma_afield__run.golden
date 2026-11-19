@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 17:11
+   |
+17 | let aE1 = aOrigin.axx
+   |           ^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected MShape, found AShape
+  --> 19:11
+   |
+19 | let mE1 = mArea (A.ACircle 1.0)
+   |           ^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

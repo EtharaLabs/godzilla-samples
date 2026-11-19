@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n, a, b):
+    def _pf_fn0():
+        yield 1
+        yield 2
+    ys = _pf_fn0()
+    def helper(z):
+        return (n, z)
+    if n == 0:
+        return a
+    else:
+        return go(n - 1, b, a + b)
+
+# ==== main.py ====
+import loop
+print(loop.go(10, 0, 1))
+
+--- stderr ---
+note: in `Loop`: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

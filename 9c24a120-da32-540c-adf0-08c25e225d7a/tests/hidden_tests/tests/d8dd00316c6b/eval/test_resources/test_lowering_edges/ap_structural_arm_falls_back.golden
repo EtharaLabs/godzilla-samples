@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def _ap_Diag(p):
+    match p:
+        case (a, b):
+            return a == b
+def f(p):
+    _pf_t0 = _ap_Diag(p)
+    if _pf_t0:
+        return 1
+    match p:
+        case (a, b):
+            return a
+    raise RuntimeError("non-exhaustive match")
+--- stderr ---

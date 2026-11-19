@@ -1,0 +1,224 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "untitled:edit.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 9,
+      "character": 2
+     },
+     "end": {
+      "line": 9,
+      "character": 3
+     }
+    },
+    "severity": 1,
+    "source": "pyfun",
+    "message": "a block must end with an expression, found identifier `a`"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nfloat\n```"
+  },
+  "range": {
+   "start": {
+    "line": 5,
+    "character": 4
+   },
+   "end": {
+    "line": 5,
+    "character": 9
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 3,
+ "result": [
+  {
+   "name": "Shape",
+   "kind": 10,
+   "range": {
+    "start": {
+     "line": 0,
+     "character": 5
+    },
+    "end": {
+     "line": 0,
+     "character": 10
+    }
+   },
+   "selectionRange": {
+    "start": {
+     "line": 0,
+     "character": 5
+    },
+    "end": {
+     "line": 0,
+     "character": 10
+    }
+   }
+  },
+  {
+   "name": "Circle",
+   "kind": 22,
+   "range": {
+    "start": {
+     "line": 0,
+     "character": 13
+    },
+    "end": {
+     "line": 0,
+     "character": 19
+    }
+   },
+   "selectionRange": {
+    "start": {
+     "line": 0,
+     "character": 13
+    },
+    "end": {
+     "line": 0,
+     "character": 19
+    }
+   }
+  },
+  {
+   "name": "Rect",
+   "kind": 22,
+   "range": {
+    "start": {
+     "line": 0,
+     "character": 28
+    },
+    "end": {
+     "line": 0,
+     "character": 32
+    }
+   },
+   "selectionRange": {
+    "start": {
+     "line": 0,
+     "character": 28
+    },
+    "end": {
+     "line": 0,
+     "character": 32
+    }
+   }
+  },
+  {
+   "name": "area",
+   "kind": 12,
+   "range": {
+    "start": {
+     "line": 1,
+     "character": 4
+    },
+    "end": {
+     "line": 1,
+     "character": 8
+    }
+   },
+   "selectionRange": {
+    "start": {
+     "line": 1,
+     "character": 4
+    },
+    "end": {
+     "line": 1,
+     "character": 8
+    }
+   }
+  },
+  {
+   "name": "total",
+   "kind": 12,
+   "range": {
+    "start": {
+     "line": 5,
+     "character": 4
+    },
+    "end": {
+     "line": 5,
+     "character": 9
+    }
+   },
+   "selectionRange": {
+    "start": {
+     "line": 5,
+     "character": 4
+    },
+    "end": {
+     "line": 5,
+     "character": 9
+    }
+   }
+  },
+  {
+   "name": "label",
+   "kind": 12,
+   "range": {
+    "start": {
+     "line": 6,
+     "character": 4
+    },
+    "end": {
+     "line": 6,
+     "character": 9
+    }
+   },
+   "selectionRange": {
+    "start": {
+     "line": 6,
+     "character": 4
+    },
+    "end": {
+     "line": 6,
+     "character": 9
+    }
+   }
+  }
+ ]
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

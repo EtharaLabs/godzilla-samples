@@ -1,0 +1,34 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: non-exhaustive match: `CRect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 19:15
+   |
+19 | let bE1 = 1 + "x"
+   |               ^^^
+-- module `A` (a.pyfun) --
+error: non-exhaustive match: `ARect _ _` is not matched
+  --> 20:3
+   |
+20 |   match s:
+   |   ^^^^^^^^
+error: type mismatch: expected string, found ACode
+  --> 22:11
+   |
+22 | let aE2 = String.len (aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 23:15
+   |
+23 | let mE1 = 1 + "x"
+   |               ^^^
+
+5 errors

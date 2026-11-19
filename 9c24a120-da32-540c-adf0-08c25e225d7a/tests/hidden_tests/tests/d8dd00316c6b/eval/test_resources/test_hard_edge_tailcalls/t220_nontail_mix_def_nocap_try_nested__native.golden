@@ -1,0 +1,55 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+from typing import Any
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: Any
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: Any
+    def __repr__(self):
+        return f"Error({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: Any
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_: None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+def _pf_str_to_int(s):
+    try:
+        return Some(int(s))
+    except ValueError:
+        return _None_
+def outer(u) -> int:
+    def go(n: int, acc: int) -> int:
+        while True:
+            def helper(z: int) -> int:
+                return z * 2
+            try:
+                _pf_t0 = Ok(_pf_str_to_int("12"))
+            except Exception as _pf_t1:
+                _pf_t0 = Error(_Exception(type(_pf_t1).__name__, str(_pf_t1)))
+            r = _pf_t0
+            if n == 0:
+                return acc
+            elif n == 3:
+                return 1 + go(n - 1, acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return go(5, 0)
+print(outer(None))
+--- stderr ---

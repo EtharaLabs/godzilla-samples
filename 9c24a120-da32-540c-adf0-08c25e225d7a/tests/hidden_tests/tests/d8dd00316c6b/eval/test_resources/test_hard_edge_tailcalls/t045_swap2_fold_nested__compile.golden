@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def outer(u):
+    def go(a, b):
+        while True:
+            folded = _pf_fold(lambda a, x: _pf_concat(a, [x]), [], [1, 2])
+            if a > 50:
+                return (a, b)
+            else:
+                a, b = (b, a + b)
+                continue
+    return go(1, 2)
+print(outer(None))
+--- stderr ---

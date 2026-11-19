@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n: int, acc: int) -> int:
+    _go = go
+    if n == 0:
+        return acc
+    elif n == 3:
+        return 1 + _go(n - 1, acc)
+    else:
+        return _go(n - 1, acc + n)
+
+# ==== main.py ====
+import loop
+print(loop.go(5, 0))
+
+--- stderr ---

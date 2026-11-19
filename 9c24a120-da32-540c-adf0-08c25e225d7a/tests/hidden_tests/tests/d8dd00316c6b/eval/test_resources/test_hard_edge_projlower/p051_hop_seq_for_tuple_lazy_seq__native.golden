@@ -1,0 +1,28 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+import itertools
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def sums(pairs: list[tuple[int, int]]):
+    def _pf_fn0():
+        for (a, b) in pairs:
+            yield a + b
+        yield 0
+    return _pf_fn0()
+naturals = _pf_seq_init_inf(lambda i: i * i)
+
+# ==== mid.py ====
+import itertools
+import lib
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+ready: bool = True
+print(list(lib.sums([(1, 2), (3, 4)])))
+print(list(_pf_seq_take(4, lib.naturals)))
+
+# ==== main.py ====
+import mid
+print(mid.ready)
+
+--- stderr ---

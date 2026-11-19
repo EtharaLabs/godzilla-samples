@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+def outer(u) -> int:
+    def go(n: int, acc: int) -> int:
+        while True:
+            def count(k: int, c: int) -> int:
+                while True:
+                    if k == 0:
+                        return c
+                    else:
+                        k, c = (k - 1, c + 1)
+                        continue
+            if n == 0:
+                return acc
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return go(6, 0)
+print(outer(None))
+--- stderr ---

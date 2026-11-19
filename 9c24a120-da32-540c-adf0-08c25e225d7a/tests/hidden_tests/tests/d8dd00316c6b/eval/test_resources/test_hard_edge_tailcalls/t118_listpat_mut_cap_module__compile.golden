@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def Loop_go(xs, acc):
+    seen = 0
+    def bump(k):
+        nonlocal seen
+        seen = seen + k
+        return seen
+    match xs:
+        case []:
+            return acc
+        case [h, *t]:
+            return Loop_go(t, acc + h)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+print(Loop_go([4, 5, 6], 0))
+--- stderr ---
+note: `Loop_go` calls itself in tail position but keeps its recursive form: a closure in it captures `seen`

@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let bE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+error: type mismatch: expected string, found BCode
+  --> 18:11
+   |
+18 | let bE2 = String.len (bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 19:11
+   |
+19 | let aE1 = aOrigin.axx
+   |           ^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 19:15
+   |
+19 | let mE1 = 1 + "x"
+   |               ^^^
+
+4 errors

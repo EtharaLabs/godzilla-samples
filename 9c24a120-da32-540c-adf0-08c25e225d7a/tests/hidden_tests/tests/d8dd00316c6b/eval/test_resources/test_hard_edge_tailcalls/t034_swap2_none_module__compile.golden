@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def Loop_go(a, b):
+    while True:
+        if a > 50:
+            return (a, b)
+        else:
+            a, b = (b, a + b)
+            continue
+print(Loop_go(1, 2))
+--- stderr ---

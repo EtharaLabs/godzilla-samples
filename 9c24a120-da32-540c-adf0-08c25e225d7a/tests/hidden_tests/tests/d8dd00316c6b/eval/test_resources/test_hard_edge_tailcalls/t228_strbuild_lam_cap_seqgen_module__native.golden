@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def _pf_str_concat(a, b):
+    return a + b
+def Loop_go(s, n):
+    peek = lambda z: (s, z)
+    def _pf_fn0():
+        yield 1
+        yield 2
+    ys = _pf_fn0()
+    if n == 0:
+        return s
+    else:
+        return Loop_go(_pf_str_concat(s, str(n)), n - 1)
+print(Loop_go(">", 4))
+--- stderr ---
+note: `Loop_go` calls itself in tail position but keeps its recursive form: a closure in it captures `s`

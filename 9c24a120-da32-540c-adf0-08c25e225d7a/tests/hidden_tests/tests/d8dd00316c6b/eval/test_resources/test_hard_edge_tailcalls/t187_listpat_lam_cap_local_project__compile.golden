@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(xs, acc):
+    peek = lambda z: (xs, z)
+    d = xs
+    match xs:
+        case []:
+            return acc
+        case [h, *t]:
+            return go(t, acc + h)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+
+# ==== main.py ====
+import loop
+print(loop.go([4, 5, 6], 0))
+
+--- stderr ---
+note: in `Loop`: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `xs`

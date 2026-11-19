@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let cE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: record `APt` has no field `axx` (did you mean `ax`?)
+  --> 19:11
+   |
+19 | let aE1 = aOrigin.axx
+   |           ^^^^^^^^^^^
+
+2 errors

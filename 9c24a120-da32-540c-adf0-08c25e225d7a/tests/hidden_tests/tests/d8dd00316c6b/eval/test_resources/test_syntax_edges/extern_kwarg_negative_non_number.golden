@@ -1,0 +1,8 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: expected a numeric literal after `-`, found string literal
+ --> 1:57
+  |
+1 | extern rnd : float -> float = builtins.round(ndigits = -"x")
+  |                                                         ^^^

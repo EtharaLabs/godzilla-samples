@@ -1,0 +1,19 @@
+exit: 0
+--- stdout ---
+def outer(u):
+    def go(n, acc):
+        while True:
+            a = []
+            for x in [1, 2]:
+                a.append(x)
+            folded = a
+            if n == 0:
+                return acc
+            elif n == 3:
+                return 1 + go(n - 1, acc)
+            else:
+                n, acc = (n - 1, acc + n)
+                continue
+    return go(5, 0)
+print(outer(None))
+--- stderr ---

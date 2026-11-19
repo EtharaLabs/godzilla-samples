@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def outer(u):
+    def go(xs, acc):
+        while True:
+            def helper(z):
+                return z * 2
+            match xs:
+                case []:
+                    return acc
+                case [h, *t]:
+                    xs, acc = (t, acc + h)
+                    continue
+                case _:
+                    raise RuntimeError("non-exhaustive match")
+    return go([4, 5, 6], 0)
+print(outer(None))
+--- stderr ---

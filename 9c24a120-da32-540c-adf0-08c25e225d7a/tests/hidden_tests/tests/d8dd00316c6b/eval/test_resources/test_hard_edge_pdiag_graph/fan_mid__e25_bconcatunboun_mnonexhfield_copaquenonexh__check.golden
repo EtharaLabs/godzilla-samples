@@ -1,0 +1,38 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+error: non-exhaustive match: `CRect _ _` is not matched
+  --> 19:3
+   |
+19 |   match s:
+   |   ^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 17:15
+   |
+17 | let bE1 = 1 + "x"
+   |               ^^^
+error: unbound name `nowhereAtAll`
+  --> 18:11
+   |
+18 | let bE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: non-exhaustive match: `MRect _ _` is not matched
+  --> 20:3
+   |
+20 |   match s:
+   |   ^^^^^^^^
+error: record `MPt` has no field `mxx` (did you mean `mx`?)
+  --> 22:11
+   |
+22 | let mE2 = mOrigin.mxx
+   |           ^^^^^^^^^^^
+
+6 errors

@@ -1,0 +1,124 @@
+exit: 0
+--- stdout ---
+# ==== geometry.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import functools
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Circle:
+    _0: float
+    def __repr__(self):
+        return f"Circle({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Rect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Rect({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+def area(s):
+    match s:
+        case Circle(r):
+            return 3.0 * r * r
+        case Rect(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def biggest(shapes):
+    return _pf_fold(lambda acc, s: max(acc, area(s)), 0.0, shapes)
+
+# ==== store.py ====
+from dataclasses import dataclass
+from _pyfun_rt import Some, None_, _None_
+def _pf_list_find(f, xs):
+    return next(map(Some, filter(f, xs)), _None_)
+@dataclass(frozen=True, slots=True, order=True)
+class Item:
+    name: str
+    shape: object
+def find(name, items):
+    return _pf_list_find(lambda i: i.name == name, items)
+
+# ==== main.py ====
+import geometry
+import store
+from _pyfun_rt import Some, None_, _None_
+def _pf_map(f, xs):
+    return list(map(f, xs))
+items = [store.Item("disc", geometry.Circle(1.0)), store.Item("tile", geometry.Rect(2.0, 3.0))]
+def report(name):
+    _pf_t0 = store.find(name, items)
+    if isinstance(_pf_t0, Some):
+        item = _pf_t0._0
+        return f"{item.name}: {geometry.area(item.shape)}"
+    else:
+        return f"{name}: missing"
+print(report("disc"))
+print(report("tile"))
+print(report("cone"))
+print(geometry.biggest(_pf_map(lambda i: i.shape, items)))
+
+# ==== _pyfun_rt.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import contextvars
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+_pf_scope = contextvars.ContextVar("_pf_scope")
+
+--- stderr ---

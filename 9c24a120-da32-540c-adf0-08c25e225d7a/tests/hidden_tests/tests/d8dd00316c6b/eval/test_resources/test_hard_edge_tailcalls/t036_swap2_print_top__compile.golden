@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def go(a, b):
+    while True:
+        print(f"at {a}")
+        if a > 50:
+            return (a, b)
+        else:
+            a, b = (b, a + b)
+            continue
+print(go(1, 2))
+--- stderr ---

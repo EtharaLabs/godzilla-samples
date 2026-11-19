@@ -1,0 +1,16 @@
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Inner:
+    a: int
+    b: int
+@dataclass(frozen=True, slots=True, order=True)
+class Outer:
+    name: str
+    inner: object
+def sums(pairs):
+    def _pf_fn0():
+        for (a, b) in pairs:
+            yield a + b
+        yield 0
+    return _pf_fn0()
+base = Outer("o", Inner(1, 2))

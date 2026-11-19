@@ -1,0 +1,47 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import a
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class MCircle:
+    _0: float
+    def __repr__(self):
+        return f"MCircle({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class MRect:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"MRect({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0, self._1)
+@dataclass(frozen=True, slots=True, order=True)
+class MPt:
+    mx: int
+    my: int
+mOrigin = MPt(1, 2)
+def mTwice(k):
+    return k * 2
+def mTick(k):
+    print(f"main tick {k}")
+    return k + 1
+def mArea(s):
+    match s:
+        case MCircle(r):
+            return 3.0 * r * r
+        case MRect(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")
+def mCode(s):
+    return s
+mWidth = 3.0
+mFromA = a.aTwice(a.aOrigin.ax + a.aOrigin.ay)
+print(f"main {mFromA} {mArea(MRect(2.0, 3.0))}")

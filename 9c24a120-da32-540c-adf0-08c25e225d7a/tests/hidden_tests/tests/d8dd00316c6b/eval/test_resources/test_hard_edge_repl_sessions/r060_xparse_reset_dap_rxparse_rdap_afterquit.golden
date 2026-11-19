@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> (session reset)
+pyfun> ...... ...... ...... ...... ...... ...... parity : int -> string
+pyfun> pyfun> ...... ...... ...... ...... ...... ...... pyfun> --- stderr ---
+error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^
+error: expected binding name, found `=`
+ --> 1:5
+  |
+1 | let = 3
+  |     ^
+error: active-pattern case `Even` clashes with an existing constructor or active pattern
+ --> 8:7
+  |
+8 | let (|Even|Odd|) k = if k % 2 == 0 then Even else Odd
+  |       ^^^^

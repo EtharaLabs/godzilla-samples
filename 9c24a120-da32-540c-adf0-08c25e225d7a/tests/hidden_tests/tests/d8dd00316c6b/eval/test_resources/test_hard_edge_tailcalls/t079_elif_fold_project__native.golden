@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n: int, acc: int) -> int:
+    while True:
+        a = []
+        for x in [1, 2]:
+            a.append(x)
+        folded = a
+        if n <= 0:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n - 1, acc * 2)
+            continue
+        else:
+            n, acc = (n - 1, acc + 1)
+            continue
+
+# ==== main.py ====
+import loop
+print(loop.go(7, 1))
+
+--- stderr ---

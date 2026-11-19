@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 19:11
+   |
+19 | let bE1 = String.len (C.cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected AShape, found CShape
+  --> 19:11
+   |
+19 | let aE1 = aArea (C.CCircle 1.0)
+   |           ^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

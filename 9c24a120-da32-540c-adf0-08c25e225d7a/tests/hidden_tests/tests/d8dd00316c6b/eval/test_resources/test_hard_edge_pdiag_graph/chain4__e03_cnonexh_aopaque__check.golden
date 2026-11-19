@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: non-exhaustive match: `CRect _ _` is not matched
+  --> 18:3
+   |
+18 |   match s:
+   |   ^^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected string, found ACode
+  --> 19:11
+   |
+19 | let aE1 = String.len (aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

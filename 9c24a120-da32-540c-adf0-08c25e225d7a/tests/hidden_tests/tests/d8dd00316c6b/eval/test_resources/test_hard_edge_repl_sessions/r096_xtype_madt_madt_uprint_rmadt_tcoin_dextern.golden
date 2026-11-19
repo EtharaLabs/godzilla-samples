@@ -1,0 +1,46 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> ...... ...... ...... ...... ...... ...... ...... flip : Coin -> Coin
+pyfun> ...... ...... ...... ...... ...... ...... ...... pyfun> side effect
+pyfun> ...... ...... ...... ...... ...... ...... ...... pyfun> pyfun> pyfun> --- stderr ---
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+ --> 2:15
+  |
+2 | let bad = 1 + "x"
+  |               ^^^
+error: type `Coin` is already defined
+ --> 9:1
+  |
+9 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Heads` is already defined
+ --> 9:1
+  |
+9 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Tails` is already defined
+ --> 9:1
+  |
+9 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: type `Coin` is already defined
+ --> 9:1
+  |
+9 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Heads` is already defined
+ --> 9:1
+  |
+9 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: constructor `Tails` is already defined
+ --> 9:1
+  |
+9 | type Coin = Heads | Tails
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+error: unbound name `Coin`
+ --> 9:1
+  |
+9 | Coin
+  | ^^^^

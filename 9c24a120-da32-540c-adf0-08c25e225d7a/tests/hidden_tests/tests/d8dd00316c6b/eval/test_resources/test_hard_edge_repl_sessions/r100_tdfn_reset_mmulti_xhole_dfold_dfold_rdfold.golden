@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> (could not determine a type — is `let double x = x * 2` an expression?)
+pyfun> (session reset)
+pyfun> ...... ...... ...... ...... ...... u : int
+first
+second
+pyfun> h : List 'a
+pyfun> index : (List string) -> Map string int
+pyfun> index : (List string) -> Map string int
+pyfun> index : (List string) -> Map string int
+pyfun> --- stderr ---
+error: cannot compile: unfilled hole `?f` has type `int -> 'a` — try: List.range, Seq.range, String.get, String.repeat, String.fromInt, String.fromFloat, and 59 more — or: String.slice ?, List.replicate ?, List.updateAt ?, List.insertAt ?, and 16 more (fill it in)
+ --> 7:18
+  |
+7 | let h = List.map ?f [1]
+  |                  ^^

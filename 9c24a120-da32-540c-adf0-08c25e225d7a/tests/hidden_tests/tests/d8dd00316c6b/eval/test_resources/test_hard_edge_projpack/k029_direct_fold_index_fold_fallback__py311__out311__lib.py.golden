@@ -1,0 +1,13 @@
+import functools
+def _pf_concat(xs, ys):
+    return xs + ys
+def _pf_fold(f, acc, xs):
+    return functools.reduce(f, xs, acc)
+def index(pairs):
+    m = dict()
+    for (k, v) in pairs:
+        m[k] = v
+    return m
+x0 = 1
+def doubled(xs):
+    return _pf_fold(lambda acc, x: _pf_concat(acc, acc), [x0], xs)

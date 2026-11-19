@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> pyfun> ...... ...... ...... t : int
+pyfun> ...... ...... ...... pyfun> greet : string -> string
+pyfun> pyfun> pyfun> --- stderr ---
+error: unbound name `nope`
+ --> 2:1
+  |
+2 | nope + 1
+  | ^^^^
+error: unbound name `add`
+ --> 2:11
+  |
+2 | let inc = add 1
+  |           ^^^
+error: expected int, found bool
+ --> 6:7
+  |
+6 | ok2 + true
+  |       ^^^^

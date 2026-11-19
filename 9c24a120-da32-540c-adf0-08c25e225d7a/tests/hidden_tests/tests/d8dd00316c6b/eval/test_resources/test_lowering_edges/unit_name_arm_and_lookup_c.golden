@@ -1,0 +1,55 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class A:
+    def __repr__(self):
+        return "A"
+_A = A()
+@dataclass(frozen=True, slots=True, repr=False)
+class B:
+    _0: int
+    def __repr__(self):
+        return f"B({self._0!r})"
+@dataclass(frozen=True, slots=True)
+class P:
+    x: int
+m = dict([(1, "one")])
+def v(k):
+    if k in m:
+        _pf_t0 = 1
+    else:
+        _pf_t0 = 0
+    r = _pf_t0
+    return r * 10
+def w(o):
+    match o:
+        case Some(P(x=x)):
+            return x
+        case None_():
+            return 0
+        case _:
+            raise RuntimeError("non-exhaustive match")
+u = None
+def f(t, y):
+    match t:
+        case A():
+            _pf_t1 = u
+        case B(n):
+            _pf_t1 = print(n)
+        case _:
+            raise RuntimeError("non-exhaustive match")
+    _pf_t1
+    return y
+print((v(1), v(2), w(Some(P(3))), f(_A, 4)))
+--- stderr ---

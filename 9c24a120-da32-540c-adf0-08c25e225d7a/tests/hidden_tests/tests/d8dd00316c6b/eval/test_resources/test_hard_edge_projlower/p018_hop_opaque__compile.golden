@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+def mk(s):
+    return s
+def show(u):
+    match u:
+        case s:
+            return f"user:{s}"
+
+# ==== mid.py ====
+import lib
+ready = True
+print(lib.show(lib.mk("u1")))
+
+# ==== main.py ====
+import mid
+print(mid.ready)
+
+--- stderr ---

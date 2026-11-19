@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: record `BPt` is missing field(s) `by`
+  --> 19:11
+   |
+19 | let aE1 = B.BPt { bx = 1 }
+   |           ^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: unknown type `A.NoSuchType`
+  --> 19:1
+   |
+19 | type MWrap1 = { w: A.NoSuchType }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2 errors

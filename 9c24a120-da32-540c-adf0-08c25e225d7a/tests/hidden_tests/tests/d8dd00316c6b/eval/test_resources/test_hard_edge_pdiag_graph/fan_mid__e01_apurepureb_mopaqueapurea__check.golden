@@ -1,0 +1,27 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: `aE1` is declared `pure` but performs `io`
+  --> 21:18
+   |
+21 | let pure aE1 u = aTick 1
+   |                  ^^^^^^^
+error: `aE2` is declared `pure` but performs `io`
+  --> 22:18
+   |
+22 | let pure aE2 u = B.bTick 1
+   |                  ^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected ACode, found MCode
+  --> 19:25
+   |
+19 | let mE1 = [A.aCode "a", mCode "b"]
+   |                         ^^^^^^^^^
+error: `mE2` is declared `pure` but performs `io`
+  --> 20:18
+   |
+20 | let pure mE2 u = A.aTick 1
+   |                  ^^^^^^^^^
+
+4 errors

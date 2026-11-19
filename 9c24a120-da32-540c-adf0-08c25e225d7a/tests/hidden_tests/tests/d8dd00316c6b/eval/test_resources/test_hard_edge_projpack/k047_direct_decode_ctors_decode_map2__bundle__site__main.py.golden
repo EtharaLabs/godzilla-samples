@@ -1,0 +1,27 @@
+import json
+import lib
+from _pyfun_rt import Ok, Error
+from _pyfun_rt import _Exception
+def _pf_dec_decode_string(dec, s):
+    try:
+        return Ok(dec(json.loads(s)))
+    except Exception as e:
+        return Error(_Exception(type(e).__name__, str(e)))
+match _pf_dec_decode_string(lib.level, "7"):
+    case Ok(lib.High(n)):
+        _pf_t0 = n
+    case Ok(lib.Low()):
+        _pf_t0 = 0
+    case Error(_):
+        _pf_t0 = -1
+    case _:
+        raise RuntimeError("non-exhaustive match")
+print(_pf_t0)
+_pf_t2 = _pf_dec_decode_string(lib.user, "{\"name\": \"ada\", \"age\": 36}")
+if isinstance(_pf_t2, Ok):
+    u = _pf_t2._0
+    _pf_t1 = f"{u.name} {u.age}"
+else:
+    e = _pf_t2._0
+    _pf_t1 = "bad"
+print(_pf_t1)

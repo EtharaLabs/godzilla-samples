@@ -1,0 +1,21 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+def walk(n: int, acc: int) -> int:
+    peek = lambda z: z + n
+    if n == 0:
+        return acc
+    else:
+        return walk(n - 1, peek(acc))
+
+# ==== mid.py ====
+import lib
+ready: bool = True
+print(lib.walk(3, 0))
+
+# ==== main.py ====
+import mid
+print(mid.ready)
+
+--- stderr ---
+note: in `Lib`: `walk` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

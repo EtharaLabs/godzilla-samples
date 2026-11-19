@@ -1,0 +1,28 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 17:15
+   |
+17 | let bE1 = 1 + "x"
+   |               ^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected int, found int -> 'a
+  --> 19:11
+   |
+19 | let aE1 = B.bTwice 1 2
+   |           ^^^^^^^^^^^^
+error: `aE2` is declared `pure` but performs `io`
+  --> 20:18
+   |
+20 | let pure aE2 u = B.bTick 1
+   |                  ^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 19:11
+   |
+19 | let mE1 = Zed.thing
+   |           ^^^^^^^^^
+
+4 errors

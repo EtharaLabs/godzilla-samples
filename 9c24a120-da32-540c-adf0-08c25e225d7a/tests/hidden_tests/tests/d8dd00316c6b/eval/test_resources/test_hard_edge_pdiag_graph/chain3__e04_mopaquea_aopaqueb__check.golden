@@ -1,0 +1,17 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: type mismatch: expected BCode, found ACode
+  --> 19:25
+   |
+19 | let aE1 = [B.bCode "a", aCode "b"]
+   |                         ^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected ACode, found MCode
+  --> 19:25
+   |
+19 | let mE1 = [A.aCode "a", mCode "b"]
+   |                         ^^^^^^^^^
+
+2 errors

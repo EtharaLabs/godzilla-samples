@@ -1,0 +1,27 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: `cE1` is declared `pure` but performs `io`
+  --> 17:18
+   |
+17 | let pure cE1 u = cTick 1
+   |                  ^^^^^^^
+error: record `CPt` has no field `cxx` (did you mean `cx`?)
+  --> 18:11
+   |
+18 | let cE2 = cOrigin.cxx
+   |           ^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected float<bcm>, found float
+  --> 23:11
+   |
+23 | let mE1 = B.bWidth + 1.0
+   |           ^^^^^^^^^^^^^^
+error: type mismatch: expected string, found MCode
+  --> 24:11
+   |
+24 | let mE2 = String.len (mCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+
+4 errors

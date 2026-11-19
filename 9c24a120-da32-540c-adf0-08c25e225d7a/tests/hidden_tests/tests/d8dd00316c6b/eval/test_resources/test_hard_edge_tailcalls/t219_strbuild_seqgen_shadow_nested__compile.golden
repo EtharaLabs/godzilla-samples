@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+def _pf_str_concat(a, b):
+    return a + b
+def outer(u):
+    def go(s, n):
+        while True:
+            def _pf_fn0():
+                yield 1
+                yield 2
+            ys = _pf_fn0()
+            s = s
+            if n == 0:
+                return s
+            else:
+                s, n = (_pf_str_concat(s, str(n)), n - 1)
+                continue
+    return go(">", 4)
+print(outer(None))
+--- stderr ---

@@ -1,0 +1,48 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import geo
+from _pyfun_rt import Some, None_, _None_
+@dataclass(frozen=True, slots=True, order=True)
+class Item:
+    name: str
+    kind: object
+    at: object
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Moved:
+    _0: object
+    def __repr__(self):
+        return f"Moved({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Resized:
+    _0: object
+    def __repr__(self):
+        return f"Resized({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Idle:
+    def __repr__(self):
+        return "Idle"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2,)
+_Idle = Idle()
+@dataclass(frozen=True, slots=True, order=True)
+class Bag:
+    items: list
+    best: object
+    pair: tuple
+item = Item("i", geo.Disc(2.0), geo.Pos(1, 2))
+ev = Moved(geo.Pos(3, 4))
+_pf_t0 = item
+bag = Bag([item, Item("j", _pf_t0.kind, _pf_t0.at)], Some(geo.Box(1.0, 2.0)), (geo._Dot, geo.Pos(5, 6)))

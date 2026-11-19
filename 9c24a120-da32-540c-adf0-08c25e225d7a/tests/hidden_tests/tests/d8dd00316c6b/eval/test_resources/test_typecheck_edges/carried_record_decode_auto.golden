@@ -1,0 +1,11 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: cannot derive a codec for `Placed` here: it is declared in `A`, which this module does not import directly (add `import A`)
+ --> 3:29
+  |
+3 |   match Decode.decodeString Decode.auto s:
+  |                             ^^^^^^^^^^^
+
+1 error

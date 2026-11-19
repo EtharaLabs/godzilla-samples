@@ -1,0 +1,21 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Report` (report.pyfun) --
+error: imported type `Shape` (from `Shapes`) clashes with an existing type
+ --> 1:1
+  |
+1 | import Other
+  | ^
+error: unknown constructor `Shapes.Circle`
+ --> 5:9
+  |
+5 |   match s:
+  |         ^
+error: record `Tag` is missing field(s) `n`
+ --> 8:13
+  |
+8 | let s1bad = Shapes.Tag { label = "x" }
+  |             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

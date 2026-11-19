@@ -1,0 +1,48 @@
+from dataclasses import dataclass
+from functools import total_ordering
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Dot:
+    def __repr__(self):
+        return "Dot"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_Dot = Dot()
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Disc:
+    _0: float
+    def __repr__(self):
+        return f"Disc({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Box:
+    _0: float
+    _1: float
+    def __repr__(self):
+        return f"Box({self._0!r}, {self._1!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (2, self._0, self._1)
+@dataclass(frozen=True, slots=True, order=True)
+class Pos:
+    x: int
+    y: int
+origin = Pos(0, 0)
+def size(k):
+    match k:
+        case Dot():
+            return 0.0
+        case Disc(r):
+            return r
+        case Box(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")

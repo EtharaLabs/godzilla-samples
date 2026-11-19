@@ -1,0 +1,20 @@
+from dataclasses import dataclass
+import carry
+import geo
+@dataclass(frozen=True, slots=True, order=True)
+class Shelf:
+    top: object
+    count: int
+shelf = Shelf(carry.item, 2)
+def _pf_fn0():
+    match carry.item.kind:
+        case geo.Dot():
+            return 0.0
+        case geo.Disc(r):
+            return r
+        case geo.Box(w, h):
+            return w * h
+        case _:
+            raise RuntimeError("non-exhaustive match")
+r = _pf_fn0()
+print(r)

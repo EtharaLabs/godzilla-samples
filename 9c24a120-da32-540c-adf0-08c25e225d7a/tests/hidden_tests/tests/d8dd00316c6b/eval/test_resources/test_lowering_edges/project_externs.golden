@@ -1,0 +1,23 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+import functools
+import time
+pick = lambda _pf_a0, _pf_a1, _pf_a2: max(_pf_a0, _pf_a2)
+now = lambda *_pf_a: time.time()
+parseHex = functools.partial(int, base=16)
+parseInt = lambda _pf_k0, _pf_k1: int(_pf_k0, base=_pf_k1)
+ping = lambda _pf_recv, _pf_a1: _pf_recv.m()
+size = lambda _pf_recv: _pf_recv.size
+ws = lambda _pf_recv, _pf_a1: _pf_recv.write(_pf_a1, encoding="utf-8")
+
+# ==== main.py ====
+import functools
+import lib
+print(lib.pick(3, None, 5))
+print(lib.parseHex("ff"))
+print(lib.parseInt("11", 2))
+f = functools.partial(lib.parseInt, "7")
+print(f(10))
+
+--- stderr ---

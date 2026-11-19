@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, a, b):
+    while True:
+        def helper(z: int) -> int:
+            return z * 2
+        if n == 0:
+            return a
+        else:
+            n, a, b = (n - 1, b, a + b)
+            continue
+print(Loop_go(10, 0, 1))
+--- stderr ---

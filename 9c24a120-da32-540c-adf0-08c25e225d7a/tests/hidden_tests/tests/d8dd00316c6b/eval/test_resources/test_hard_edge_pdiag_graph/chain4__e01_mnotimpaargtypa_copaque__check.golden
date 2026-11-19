@@ -1,0 +1,22 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `thing` is not a member of `Zed`
+  --> 19:11
+   |
+19 | let mE1 = Zed.thing
+   |           ^^^^^^^^^
+error: type mismatch: expected int<'a>, found string
+  --> 20:11
+   |
+20 | let mE2 = A.aTwice "s"
+   |           ^^^^^^^^^^^^
+
+3 errors

@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def Loop_go(n, acc):
+    _go = Loop_go
+    if n == 0:
+        return acc
+    elif n == 1:
+        return _go(0, acc + 100)
+    else:
+        k = n
+        if k > 5:
+            return _go(k - 2, acc + k)
+        k = n
+        return _go(k - 1, acc - 1)
+print(Loop_go(9, 0))
+--- stderr ---

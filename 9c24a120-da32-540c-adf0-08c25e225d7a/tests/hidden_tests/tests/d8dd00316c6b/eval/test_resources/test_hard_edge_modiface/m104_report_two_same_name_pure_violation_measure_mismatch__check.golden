@@ -1,0 +1,21 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Report` (report.pyfun) --
+error: imported type `Shape` (from `Shapes`) clashes with an existing type
+ --> 1:1
+  |
+1 | import Other
+  | ^
+error: `s1t` is declared `pure` but performs `io`
+ --> 8:18
+  |
+8 | let pure s1t n = Shapes.tick n
+  |                  ^^^^^^^^^^^^^
+error: `Units` is not a member of `Shapes`
+  --> 10:11
+   |
+10 | let s2w = Shapes.Units.width + 1.0
+   |           ^^^^^^^^^^^^
+
+3 errors

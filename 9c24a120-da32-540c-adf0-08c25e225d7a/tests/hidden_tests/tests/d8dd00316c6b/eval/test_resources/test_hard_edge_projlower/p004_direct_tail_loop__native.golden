@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+def sumTo(n: int, acc: int) -> int:
+    while True:
+        if n == 0:
+            return acc
+        else:
+            n, acc = (n - 1, acc + n)
+            continue
+
+# ==== main.py ====
+import lib
+print(lib.sumTo(5000, 0))
+
+--- stderr ---

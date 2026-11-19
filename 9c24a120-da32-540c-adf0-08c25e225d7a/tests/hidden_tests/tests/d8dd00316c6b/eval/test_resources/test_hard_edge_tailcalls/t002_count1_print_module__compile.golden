@@ -1,0 +1,12 @@
+exit: 0
+--- stdout ---
+def Loop_go(n):
+    while True:
+        print(f"at {n}")
+        if n % 7 == 0:
+            return n
+        else:
+            n = n + 1
+            continue
+print(Loop_go(8))
+--- stderr ---

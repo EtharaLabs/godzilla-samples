@@ -1,0 +1,13 @@
+exit: 0
+--- stdout ---
+def Loop_go(xs, acc):
+    while True:
+        if len(xs) == 0:
+            return acc
+        else:
+            h = xs[0]
+            t = xs[1:len(xs)]
+            xs, acc = (t, acc + h)
+            continue
+print(Loop_go([4, 5, 6], 0))
+--- stderr ---

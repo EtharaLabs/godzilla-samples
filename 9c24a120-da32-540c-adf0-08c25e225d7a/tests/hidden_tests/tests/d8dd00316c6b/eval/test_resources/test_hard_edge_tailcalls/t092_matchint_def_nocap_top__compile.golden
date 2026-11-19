@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+def go(n, acc):
+    while True:
+        def helper(z):
+            return z * 2
+        match n:
+            case 0:
+                return acc
+            case 1:
+                n, acc = (0, acc + 100)
+                continue
+            case k if k > 5:
+                n, acc = (k - 2, acc + k)
+                continue
+            case k:
+                n, acc = (k - 1, acc - 1)
+                continue
+print(go(9, 0))
+--- stderr ---

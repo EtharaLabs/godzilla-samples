@@ -1,0 +1,13 @@
+from dataclasses import dataclass
+import carry
+import geo
+@dataclass(frozen=True, slots=True, order=True)
+class Shelf:
+    top: object
+    count: int
+shelf = Shelf(carry.item, 2)
+match carry.item.at:
+    case geo.Pos(x=x, y=y):
+        _pf_t0 = x * 10 + y
+r = _pf_t0
+print(r)

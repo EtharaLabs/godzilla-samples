@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+Pyfun REPL — :help for commands, :quit to exit.
+pyfun> pyfun> counter : int
+pyfun> sq : int<'a> -> int<'a^2>
+pyfun> pyfun> (session reset)
+pyfun> --- stderr ---
+error: expected binding name, found `=`
+ --> 2:5
+  |
+2 | let = 3
+  |     ^
+error: unbound name `nope`
+ --> 4:1
+  |
+4 | nope + 1
+  | ^^^^

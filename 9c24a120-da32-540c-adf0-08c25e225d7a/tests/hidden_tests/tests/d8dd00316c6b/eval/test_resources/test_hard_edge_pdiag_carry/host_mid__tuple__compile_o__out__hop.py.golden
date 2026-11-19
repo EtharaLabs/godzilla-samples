@@ -1,0 +1,11 @@
+from dataclasses import dataclass
+import carry
+import geo
+@dataclass(frozen=True, slots=True, order=True)
+class Shelf:
+    top: object
+    count: int
+shelf = Shelf(carry.item, 2)
+k, p = carry.bag.pair
+print(p.x)
+print(geo.size(k))

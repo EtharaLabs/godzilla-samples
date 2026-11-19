@@ -1,0 +1,23 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 17:15
+   |
+17 | let cE1 = 1 + "x"
+   |               ^^^
+-- module `B` (b.pyfun) --
+error: record `CPt` is missing field(s) `cy`
+  --> 19:11
+   |
+19 | let bE1 = C.CPt { cx = 1 }
+   |           ^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: unknown type `A.NoSuchType`
+  --> 21:1
+   |
+21 | type MWrap1 = { w: A.NoSuchType }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3 errors

@@ -1,0 +1,34 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: non-exhaustive match: `ARect _ _` is not matched
+  --> 20:3
+   |
+20 |   match s:
+   |   ^^^^^^^^
+-- module `B` (b.pyfun) --
+error: `bE1` is declared `pure` but performs `io`
+  --> 19:18
+   |
+19 | let pure bE1 u = bTick 1
+   |                  ^^^^^^^
+-- module `Main` (main.pyfun) --
+error: type mismatch: expected float<acm>, found float
+  --> 21:11
+   |
+21 | let mE1 = A.aWidth + 1.0
+   |           ^^^^^^^^^^^^^^
+error: type mismatch: expected BCode, found MCode
+  --> 22:25
+   |
+22 | let mE2 = [B.bCode "a", mCode "b"]
+   |                         ^^^^^^^^^
+
+5 errors

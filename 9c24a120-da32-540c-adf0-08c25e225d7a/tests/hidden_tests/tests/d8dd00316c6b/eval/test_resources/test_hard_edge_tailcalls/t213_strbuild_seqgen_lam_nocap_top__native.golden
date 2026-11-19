@@ -1,0 +1,18 @@
+exit: 0
+--- stdout ---
+def _pf_str_concat(a, b):
+    return a + b
+def go(s: str, n: int) -> str:
+    while True:
+        def _pf_fn0():
+            yield 1
+            yield 2
+        ys = _pf_fn0()
+        inc = lambda z: z + 1
+        if n == 0:
+            return s
+        else:
+            s, n = (_pf_str_concat(s, str(n)), n - 1)
+            continue
+print(go(">", 4))
+--- stderr ---

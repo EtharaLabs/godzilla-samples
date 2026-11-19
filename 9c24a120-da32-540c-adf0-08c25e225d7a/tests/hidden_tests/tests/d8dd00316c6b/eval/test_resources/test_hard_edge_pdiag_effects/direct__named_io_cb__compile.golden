@@ -1,0 +1,81 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+import asyncio
+import builtins
+class _pf_Async:
+    __slots__ = ("fn", "args")
+    def __init__(self, fn, *args):
+        self.fn = fn
+        self.args = args
+    def __await__(self):
+        return self.fn(*self.args).__await__()
+    async def __call__(self):
+        return await self
+    def __repr__(self):
+        return "<Async>"
+async def _pf_run(a):
+    return await a
+runAsync = lambda _pf_p0: asyncio.run(_pf_run(_pf_p0))
+say = print
+withIo = builtins.print
+def apply(f, x):
+    return f(x)
+def twice(f, x):
+    f(x)
+    return f(x)
+def compose(f, g, x):
+    return g(f(x))
+def mk(f):
+    print("mk")
+    return lambda x: f(x)
+def tick(k):
+    print(f"tick {k}")
+    return k + 1
+def scale(k, x):
+    return k * x
+counter = 0
+def bump(k):
+    global counter
+    counter = counter + k
+    return counter
+def current(u):
+    return counter
+dist = 100.0
+time = 4.0
+speed = dist / time
+force = 10.0
+area = 16.0
+vol = 27.0
+def rate(d):
+    return d / 1.0
+def fetch(k):
+    async def _pf_fn0():
+        return k * 2
+    return _pf_Async(_pf_fn0)
+def fetchTwice(k):
+    async def _pf_fn1():
+        a = await fetch(k)
+        b = await fetch(a)
+        return b
+    return _pf_Async(_pf_fn1)
+def loudFetch(k):
+    async def _pf_fn2():
+        _ = print(f"fetching {k}")
+        return k
+    return _pf_Async(_pf_fn2)
+def worker(name):
+    async def _pf_fn3():
+        _ = print(name)
+    return _pf_Async(_pf_fn3)
+def wrapSay(t):
+    return print(t)
+
+# ==== main.py ====
+import lib
+def shout(x):
+    return print(f"<{x}>")
+r = lib.apply(shout, 3)
+print(r)
+
+--- stderr ---

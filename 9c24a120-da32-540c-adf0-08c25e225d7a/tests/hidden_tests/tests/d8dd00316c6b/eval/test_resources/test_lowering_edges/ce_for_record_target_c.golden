@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True)
+class P:
+    x: int
+    y: int
+ps = [P(1, 2), P(3, 4)]
+def _pf_fn0():
+    for _pf_t0 in ps:
+        x = _pf_t0.x
+        y = _pf_t0.y
+        yield x * y
+s = _pf_fn0()
+print(list(s))
+--- stderr ---

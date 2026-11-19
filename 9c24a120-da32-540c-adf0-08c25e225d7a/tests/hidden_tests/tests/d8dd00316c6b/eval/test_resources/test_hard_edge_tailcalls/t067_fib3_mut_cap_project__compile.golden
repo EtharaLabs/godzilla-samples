@@ -1,0 +1,20 @@
+exit: 0
+--- stdout ---
+# ==== loop.py ====
+def go(n, a, b):
+    seen = 0
+    def bump(k):
+        nonlocal seen
+        seen = seen + k
+        return seen
+    if n == 0:
+        return a
+    else:
+        return go(n - 1, b, a + b)
+
+# ==== main.py ====
+import loop
+print(loop.go(10, 0, 1))
+
+--- stderr ---
+note: in `Loop`: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `seen`

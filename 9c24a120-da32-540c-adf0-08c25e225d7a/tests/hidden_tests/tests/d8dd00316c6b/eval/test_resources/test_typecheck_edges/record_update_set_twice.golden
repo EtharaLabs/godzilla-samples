@@ -1,0 +1,10 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+error: field `x` is updated both directly and through a sub-field
+ --> 3:29
+  |
+3 | let q = { p with x = 3, x = 4 }
+  |                             ^
+
+1 error

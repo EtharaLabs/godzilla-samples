@@ -1,0 +1,11 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `Main` (main.pyfun) --
+error: field `n` is ambiguous here: nothing says what this value is, and `n` is declared by records `Item` and `Tag`. Name the record where the value arrives — in a parameter (`fun (Item { n }) -> …`) or in a pattern (`case Item { n }:`) — or give it a type some other way
+ --> 3:15
+  |
+3 | let s0get r = r.n
+  |               ^^^
+
+1 error

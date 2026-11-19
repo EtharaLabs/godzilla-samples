@@ -1,0 +1,12 @@
+from dataclasses import dataclass
+@dataclass(frozen=True, slots=True, order=True)
+class Inner:
+    a: int
+    b: int
+@dataclass(frozen=True, slots=True, order=True)
+class Outer:
+    name: str
+    inner: object
+base = Outer("o", Inner(1, 2))
+force = 10.0
+mass = 2.0

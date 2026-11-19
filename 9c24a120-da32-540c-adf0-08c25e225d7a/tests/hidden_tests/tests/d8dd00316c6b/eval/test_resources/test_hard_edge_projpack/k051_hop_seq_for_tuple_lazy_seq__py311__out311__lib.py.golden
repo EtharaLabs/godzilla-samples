@@ -1,0 +1,10 @@
+import itertools
+def _pf_seq_init_inf(f):
+    return map(f, itertools.count())
+def sums(pairs):
+    def _pf_fn0():
+        for (a, b) in pairs:
+            yield a + b
+        yield 0
+    return _pf_fn0()
+naturals = _pf_seq_init_inf(lambda i: i * i)

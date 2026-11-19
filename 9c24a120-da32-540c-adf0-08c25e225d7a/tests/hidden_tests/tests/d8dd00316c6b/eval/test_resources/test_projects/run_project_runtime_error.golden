@@ -1,0 +1,12 @@
+exit: 1
+--- stdout ---
+computing
+--- stderr ---
+Traceback (most recent call last):
+  File "<staged>/main.py", line 3, in <module>
+    print(calc.ratio(1, 0))
+          ^^^^^^^^^^^^^^^^
+  File "<staged>/calc.py", line 2, in ratio
+    return a / b
+           ~~^~~
+ZeroDivisionError: division by zero

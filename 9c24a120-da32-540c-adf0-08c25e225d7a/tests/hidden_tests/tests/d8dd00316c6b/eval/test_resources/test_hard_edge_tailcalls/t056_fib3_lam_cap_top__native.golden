@@ -1,0 +1,11 @@
+exit: 0
+--- stdout ---
+def go(n: int, a: int, b: int) -> int:
+    peek = lambda z: (n, z)
+    if n == 0:
+        return a
+    else:
+        return go(n - 1, b, a + b)
+print(go(10, 0, 1))
+--- stderr ---
+note: `go` calls itself in tail position but keeps its recursive form: a closure in it captures `n`

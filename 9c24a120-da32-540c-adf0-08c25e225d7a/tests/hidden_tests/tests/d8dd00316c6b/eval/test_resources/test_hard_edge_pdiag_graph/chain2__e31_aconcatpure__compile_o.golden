@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 17:15
+   |
+17 | let aE1 = 1 + "x"
+   |               ^^^
+error: `aE2` is declared `pure` but performs `io`
+  --> 18:18
+   |
+18 | let pure aE2 u = aTick 1
+   |                  ^^^^^^^
+
+2 errors

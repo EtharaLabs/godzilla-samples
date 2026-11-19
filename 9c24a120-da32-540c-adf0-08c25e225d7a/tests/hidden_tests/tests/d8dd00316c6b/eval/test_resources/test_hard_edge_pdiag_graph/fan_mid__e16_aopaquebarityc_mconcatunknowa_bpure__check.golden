@@ -1,0 +1,33 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `B` (b.pyfun) --
+error: `bE1` is declared `pure` but performs `io`
+  --> 17:18
+   |
+17 | let pure bE1 u = bTick 1
+   |                  ^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected string, found BCode
+  --> 21:11
+   |
+21 | let aE1 = String.len (B.bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+error: type mismatch: expected int, found int -> 'a
+  --> 22:11
+   |
+22 | let aE2 = C.cTwice 1 2
+   |           ^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `+` is numeric and does not concatenate strings — use `String.concat a b`
+  --> 19:15
+   |
+19 | let mE1 = 1 + "x"
+   |               ^^^
+error: `ATriangle` is not a member of `A`
+  --> 20:11
+   |
+20 | let mE2 = A.ATriangle 3
+   |           ^^^^^^^^^^^
+
+5 errors

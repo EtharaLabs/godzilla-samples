@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def Loop_go(a, b):
+    seen = 0
+    def bump(k):
+        nonlocal seen
+        seen = seen + k
+        return seen
+    if a > 50:
+        return (a, b)
+    else:
+        return Loop_go(b, a + b)
+print(Loop_go(1, 2))
+--- stderr ---
+note: `Loop_go` calls itself in tail position but keeps its recursive form: a closure in it captures `seen`

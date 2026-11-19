@@ -1,0 +1,16 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `A` (a.pyfun) --
+error: type mismatch: expected string, found BCode
+  --> 19:11
+   |
+19 | let aE1 = String.len (B.bCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+error: `thing` is not a member of `Zed`
+  --> 20:11
+   |
+20 | let aE2 = Zed.thing
+   |           ^^^^^^^^^
+
+2 errors

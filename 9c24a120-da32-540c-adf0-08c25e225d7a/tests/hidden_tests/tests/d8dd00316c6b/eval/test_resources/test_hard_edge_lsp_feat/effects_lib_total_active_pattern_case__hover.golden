@@ -1,0 +1,74 @@
+exit: 0
+--- messages ---
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "capabilities": {
+   "textDocumentSync": 1,
+   "hoverProvider": true,
+   "definitionProvider": true,
+   "referencesProvider": true,
+   "renameProvider": {
+    "prepareProvider": true
+   },
+   "completionProvider": {},
+   "documentSymbolProvider": true,
+   "workspaceSymbolProvider": true
+  },
+  "serverInfo": {
+   "name": "pyfun-lsp",
+   "version": "0.10.0"
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "method": "textDocument/publishDiagnostics",
+ "params": {
+  "uri": "{root}/lib.pyfun",
+  "diagnostics": [
+   {
+    "range": {
+     "start": {
+      "line": 37,
+      "character": 17
+     },
+     "end": {
+      "line": 37,
+      "character": 21
+     }
+    },
+    "severity": 3,
+    "source": "pyfun",
+    "message": "hole `?gap` has type `int<'a>` — try: accel, counter, force, x — or: bump ?, metres ?, pos ?, todo ?, and 18 more"
+   }
+  ]
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": {
+  "contents": {
+   "kind": "markdown",
+   "value": "```pyfun\nstring\n```"
+  },
+  "range": {
+   "start": {
+    "line": 22,
+    "character": 2
+   },
+   "end": {
+    "line": 25,
+    "character": 0
+   }
+  }
+ }
+}
+{
+ "jsonrpc": "2.0",
+ "id": 99,
+ "result": null
+}
+--- stderr ---

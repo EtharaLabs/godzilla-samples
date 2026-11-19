@@ -1,0 +1,17 @@
+exit: 0
+--- stdout ---
+def outer(u) -> int:
+    def go(xs: list[int], acc: int) -> int:
+        while True:
+            t = 0
+            t = t + 1
+            if len(xs) == 0:
+                return acc
+            else:
+                h = xs[0]
+                _t = xs[1:len(xs)]
+                xs, acc = (_t, acc + h)
+                continue
+    return go([4, 5, 6], 0)
+print(outer(None))
+--- stderr ---

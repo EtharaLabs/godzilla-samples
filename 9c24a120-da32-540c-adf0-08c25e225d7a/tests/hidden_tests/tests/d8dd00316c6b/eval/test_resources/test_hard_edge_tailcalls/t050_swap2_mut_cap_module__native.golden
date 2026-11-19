@@ -1,0 +1,16 @@
+exit: 0
+--- stdout ---
+def Loop_go(a, b):
+    while True:
+        seen = 0
+        def bump(k: int) -> int:
+            nonlocal seen
+            seen = seen + k
+            return seen
+        if a > 50:
+            return (a, b)
+        else:
+            a, b = (b, a + b)
+            continue
+print(Loop_go(1, 2))
+--- stderr ---

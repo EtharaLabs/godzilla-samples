@@ -1,0 +1,100 @@
+exit: 0
+--- stdout ---
+# ==== lib.py ====
+from dataclasses import dataclass
+def _pf_dec_field(name, dec):
+    def go(v):
+        if not isinstance(v, dict):
+            raise ValueError("expected a JSON object")
+        return dec(v[name])
+    return go
+def _pf_dec_int(v):
+    if isinstance(v, int) and not isinstance(v, bool):
+        return v
+    raise ValueError("expected an int, got " + type(v).__name__)
+def _pf_dec_map2(f, da, db):
+    def go(v):
+        return f(da(v), db(v))
+    return go
+def _pf_dec_string(v):
+    if isinstance(v, str):
+        return v
+    raise ValueError("expected a string, got " + type(v).__name__)
+@dataclass(frozen=True, slots=True, order=True)
+class User:
+    name: str
+    age: int
+user = _pf_dec_map2(lambda n, a: User(n, a), _pf_dec_field("name", _pf_dec_string), _pf_dec_field("age", _pf_dec_int))
+
+# ==== main.py ====
+import json
+import lib
+from _pyfun_rt import Ok, Error
+from _pyfun_rt import _Exception
+def _pf_dec_decode_string(dec, s):
+    try:
+        return Ok(dec(json.loads(s)))
+    except Exception as e:
+        return Error(_Exception(type(e).__name__, str(e)))
+_pf_t1 = _pf_dec_decode_string(lib.user, "{\"name\": \"ada\", \"age\": 36}")
+if isinstance(_pf_t1, Ok):
+    u = _pf_t1._0
+    _pf_t0 = f"{u.name} {u.age}"
+else:
+    e = _pf_t1._0
+    _pf_t0 = "bad"
+print(_pf_t0)
+
+# ==== _pyfun_rt.py ====
+from dataclasses import dataclass
+from functools import total_ordering
+import contextvars
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Ok:
+    _0: object
+    def __repr__(self):
+        return f"Ok({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Error:
+    _0: object
+    def __repr__(self):
+        return f"Error({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class Some:
+    _0: object
+    def __repr__(self):
+        return f"Some({self._0!r})"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (1, self._0)
+@total_ordering
+@dataclass(frozen=True, slots=True, repr=False)
+class None_:
+    def __repr__(self):
+        return "None_"
+    def __lt__(self, other):
+        return self._pf_order_key() < other._pf_order_key()
+    def _pf_order_key(self):
+        return (0,)
+_None_ = None_()
+@dataclass(frozen=True, slots=True, repr=False)
+class _Exception:
+    errorKind: str
+    errorMessage: str
+    def __repr__(self):
+        return f"_Exception({self.errorKind!r}, {self.errorMessage!r})"
+_pf_scope = contextvars.ContextVar("_pf_scope")
+
+--- stderr ---

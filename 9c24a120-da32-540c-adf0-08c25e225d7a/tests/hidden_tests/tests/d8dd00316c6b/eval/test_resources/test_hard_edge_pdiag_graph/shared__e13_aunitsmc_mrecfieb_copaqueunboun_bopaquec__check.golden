@@ -1,0 +1,34 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: type mismatch: expected string, found CCode
+  --> 17:11
+   |
+17 | let cE1 = String.len (cCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+error: unbound name `nowhereAtAll`
+  --> 18:11
+   |
+18 | let cE2 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected CCode, found BCode
+  --> 19:25
+   |
+19 | let bE1 = [C.cCode "a", bCode "b"]
+   |                         ^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected float<ccm>, found float<acm>
+  --> 19:11
+   |
+19 | let aE1 = C.cWidth + aWidth
+   |           ^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: record `BPt` has no field `bxx` (did you mean `bx`?)
+  --> 23:11
+   |
+23 | let mE1 = B.bOrigin.bxx
+   |           ^^^^^^^^^^^^^
+
+5 errors

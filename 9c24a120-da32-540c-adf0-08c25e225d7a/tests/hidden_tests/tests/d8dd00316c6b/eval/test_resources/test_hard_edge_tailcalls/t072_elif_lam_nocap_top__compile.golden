@@ -1,0 +1,15 @@
+exit: 0
+--- stdout ---
+def go(n, acc):
+    while True:
+        inc = lambda z: z + 1
+        if n <= 0:
+            return acc
+        elif n % 2 == 0:
+            n, acc = (n - 1, acc * 2)
+            continue
+        else:
+            n, acc = (n - 1, acc + 1)
+            continue
+print(go(7, 1))
+--- stderr ---

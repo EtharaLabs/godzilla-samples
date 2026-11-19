@@ -1,0 +1,9 @@
+import itertools
+import lib
+def _pf_seq_take(n, xs):
+    return itertools.islice(xs, n)
+ready = True
+ev, od = lib.split([1, 2, 3, 4, 5])
+print(ev)
+print(list(od))
+print(list(_pf_seq_take(4, lib.naturals)))

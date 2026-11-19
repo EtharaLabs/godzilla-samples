@@ -1,0 +1,29 @@
+exit: 1
+--- stdout ---
+--- stderr ---
+-- module `C` (c.pyfun) --
+error: unbound name `nowhereAtAll`
+  --> 17:11
+   |
+17 | let cE1 = nowhereAtAll 1
+   |           ^^^^^^^^^^^^
+-- module `B` (b.pyfun) --
+error: type mismatch: expected float<ccm>, found float<bcm>
+  --> 19:11
+   |
+19 | let bE1 = C.cWidth + bWidth
+   |           ^^^^^^^^^^^^^^^^^
+-- module `A` (a.pyfun) --
+error: type mismatch: expected string, found ACode
+  --> 19:11
+   |
+19 | let aE1 = String.len (aCode "s")
+   |           ^^^^^^^^^^^^^^^^^^^^^^
+-- module `Main` (main.pyfun) --
+error: `mE1` is declared `pure` but performs `io`
+  --> 23:18
+   |
+23 | let pure mE1 u = mTick 1
+   |                  ^^^^^^^
+
+4 errors
