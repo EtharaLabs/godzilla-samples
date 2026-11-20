@@ -1,0 +1,20 @@
+tdz read via namespace: ReferenceError: cannot access 'later' before initialization
+tdz set via namespace: ReferenceError: cannot access 'later' before initialization
+set export: TypeError: Cannot assign to read only property 'value' of module namespace object
+set missing: TypeError: Cannot assign to read only property 'missing' of module namespace object
+Reflect.set: false
+Reflect.set receiver ns strict: false
+delete export: TypeError: cannot delete non-configurable property 'value'
+delete missing: true
+defineProperty same: TypeError: Cannot redefine property
+defineProperty different: TypeError: Cannot redefine property
+Reflect.defineProperty: false
+gOPD: {"writable":true,"enumerable":true,"configurable":false}
+gOPD tdz: ReferenceError: cannot access 'later' before initialization
+keys: later,value,Symbol(Symbol.toStringTag)
+toStringTag: [object Module] Module
+proto: null false false true
+setPrototypeOf: false true
+in: true false true
+self cycle: ReferenceError: cannot access '*default*' before initialization
+with object assign: false

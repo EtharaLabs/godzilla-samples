@@ -1,0 +1,36 @@
+
+Encoding & cloning
+  TextEncoder/Decoder        héllo 🌍
+  btoa/atob                  round-trip
+  structuredClone            [1,2] /x/g
+
+URL & URLPattern
+  URL parts                  ex.com /books/42 asc
+  URLPattern match           {"id":"42"}
+
+crypto
+  randomUUID                 <uuid-v4>
+  subtle.digest SHA-256      ba7816bf
+  instanceof Crypto          true
+
+Blob / File / FormData
+  Blob                       10 bytes, "hello blob"
+  FormData round-trip        value + file "note.txt"
+
+Streams
+  TransformStream            STREAM
+  Compression gzip           240 -> 34 -> 240 bytes, ok=true
+
+fetch + HTTP server
+  fetch JSON                 {"path":"/hello","ok":true}
+
+WebAssembly
+  validate                   true
+  instance.exports.mul(6,7)  42
+
+Platform
+  performance.now            monotonic clock ✓
+  setTimeout + Promise       microtask + macrotask ✓
+  self === globalThis        true
+
+All WinterTC Minimum Common API interfaces exercised.

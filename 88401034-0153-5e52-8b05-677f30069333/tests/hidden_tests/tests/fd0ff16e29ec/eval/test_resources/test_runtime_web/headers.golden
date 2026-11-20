@@ -1,0 +1,20 @@
+entries [["accept","*/*"],["content-type","text/html"],["set-cookie","a=1, b=2"],["x-a","1, 2"]]
+get 1, 2 true true null a=1, b=2
+keys ["accept","content-type","set-cookie"] ["*/*","text/html","a=1, b=2"]
+forEach accept=*/*:true:ctx content-type=text/html:true:ctx set-cookie=a=1, b=2:true:ctx
+pairs init [["a","1"],["b","2, 3"]] copy [["accept","*/*"],["content-type","text/html"],["set-cookie","a=1, b=2"]] empty 0 0
+coerce/trim 42 "padded"
+TypeError invalid header name ''
+TypeError invalid header name 'a b'
+TypeError invalid header name 'a:b'
+TypeError invalid header name 'é'
+TypeError invalid header name 'a"b'
+TypeError invalid header name 'a(b)'
+TypeError invalid header name 'a
+b'
+lookup TypeError invalid header name 'bad name'
+lookup TypeError invalid header name 'x y'
+lookup TypeError invalid header name '('
+TypeError Headers: init pair needs two items
+TypeError Headers: init pair needs two items
+iterator protocol function function

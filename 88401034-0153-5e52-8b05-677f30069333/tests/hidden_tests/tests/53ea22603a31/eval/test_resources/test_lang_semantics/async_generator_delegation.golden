@@ -1,0 +1,49 @@
+A.next(undefined)
+A.next(second)
+A.throw(E1)
+A.return(R1)
+{"value":"A0","done":false}
+{"value":"A1","done":false}
+{"value":"caught E1","done":false}
+{"value":"ret R1","done":true}
+{"done":true}
+--
+B.next(undefined)
+B.throw(E2)
+delegate result caught E2
+{"value":"outer done","done":true}
+--
+C.next(undefined)
+C.return(undefined)
+TypeError: the delegated iterator has no 'throw' method
+--
+D.next(undefined)
+{"value":"R2","done":true}
+--
+E.next(undefined)
+E.return(R3)
+{"value":"ret R3","done":false}
+--
+F.next(undefined)
+F.next(undefined)
+F.next(undefined)
+F.next(undefined)
+delegate result F3
+drained F0,F1,F2
+delegate result undefined
+{"value":"sync1","done":false}
+{"value":"sync2","done":false}
+{"value":"outer done","done":true}
+sync gen finally
+{"value":"R4","done":true}
+sync gen caught E4
+{"value":"after catch","done":false}
+TypeError: iterator result is not an object
+deleg TypeError: iterator result is not an object
+timer value
+x
+caught rejected return
+inside caught yielded rejection
+{"value":1,"done":false}
+TypeError: async gen threw
+{"done":true}

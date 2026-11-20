@@ -1,0 +1,27 @@
+aes-128 3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf 7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b2 874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff true true true
+aes-192 bd334f1d6e45f25ff712a214571fa5cc974104846d0ad3ad7734ecb3ecee4eef 4f021db243bc633d7178183a9fa071e8b4d9ada9ad7dedf4e5e738763f69145a 1abc932417521ca24f2b0459fe7e6e0b090339ec0aa6faefd5ccc2c6f4ce8e94 true true true
+aes-256 f3eed1bdb5d2a03c064b5a7e3db181f8591ccb10d410ed26dc5ba74a31362870 f58c4c04d6e5f1ba779eabfb5f7bfbd69cfc4e967edb808d679f777bc6702c7d 601ec313775789a5b7a7f504bbf3d228f443e3ca4d62b59aca84e990cacaf5c5 true true true
+pkcs7 16 t2nc5iqwwWRqvXl9SZlpUw== short message
+pkcs7 block 32 a254be88e037ddd9d79fb6411c3f9df8
+ctr wrap 8af2860142f786f409307c1a3f7eaaac7df76b0c1ab899b33e42f047b91b546f57127d4034b1bebf
+streamed 0,16,0,16 1ccd9df5fe383e0f9aaa789f9ac4648e2c8058362769a3f5b49e286eb743b55a
+ctr streamed 8deebc17fd061bd89bb87d1987f0ce9447590f4812
+dec encodings short message
+gcm 42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091 5bc94fbc3221a5db94fae95ae7121a47
+gcm dec true
+gcm empty 58e2fccefa7e3061367f1d57a4e7455a
+gcm 256 1c59f92dffa85934bf42163cd632bc588299ed49e8 c24f87d3f5d66583d98e5c80 12
+gcm 192 1a 394194d070959cad4185e2875a71341f
+gcm auth fail Error undefined Unsupported state or unable to authenticate data
+bad length Error ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH error:1C80006B:Provider routines::wrong final block length
+bad pad Error ERR_OSSL_BAD_DECRYPT error:1C800064:Provider routines::bad decrypt
+nopad len Error ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH error:1C80006B:Provider routines::wrong final block length
+bad key RangeError ERR_CRYPTO_INVALID_KEYLEN Invalid key length
+bad iv TypeError ERR_CRYPTO_INVALID_IV Invalid initialization vector
+bad cipher Error undefined node:crypto cipher 'des-ede3' is not supported in lumen (aes-{128,192,256}-{ecb,cbc,ctr,gcm} only)
+final twice Error ERR_CRYPTO_INVALID_STATE Invalid state
+tag early Error ERR_CRYPTO_INVALID_STATE Invalid state for operation getAuthTag
+aliases true 16
+ciphers aes-128-cbc,aes-128-ctr,aes-128-ecb,aes-128-gcm,aes-192-cbc,aes-192-ctr,aes-192-ecb,aes-192-gcm,aes-256-cbc,aes-256-ctr,aes-256-ecb,aes-256-gcm
+info {"mode":"gcm","name":"id-aes256-gcm","nid":901,"blockSize":1,"ivLength":12,"keyLength":32} {"mode":"cbc","name":"aes-128-cbc","nid":419,"blockSize":16,"ivLength":16,"keyLength":16} undefined {"mode":"ecb","name":"aes-128-ecb","nid":418,"blockSize":16,"keyLength":16}
+curves P-256,prime256v1,secp256r1 0

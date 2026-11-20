@@ -1,0 +1,32 @@
+gopd undefined allowed undefined
+gopd new on extensible {"value":1,"writable":false,"enumerable":false,"configurable":true}
+gopd nonconfig same {"value":5,"writable":false,"enumerable":true,"configurable":false}
+gopd nonconfig diff enum throws TypeError proxy can't report a different 'enumerable' for 'k' when the target property is not configurable
+gopd nonconfig diff value throws TypeError proxy must report the same value for the non-writable, non-configurable property 'k'
+gopd nonconfig writable throws TypeError proxy can't report a non-configurable, non-writable property 'k' as writable
+gopd nonconfig accessor shape throws TypeError proxy can't report a differently-shaped descriptor for the non-configurable property 'k'
+gopd report nonconfig missing throws TypeError gOPD trap reported a non-configurable descriptor the target lacks
+gopd report nonconfig on config throws TypeError gOPD trap reported non-configurable for a configurable target property
+gopd report nonwritable on writable throws TypeError gOPD trap reported non-writable for a writable target property
+gopd accessor setter mismatch throws TypeError proxy must report the same setter for the non-configurable property 's'
+gopd accessor get undefined "function"
+gopd trap non-object throws TypeError getOwnPropertyDescriptor trap must return an object or undefined
+gopd trap noncallable throws TypeError proxy 'getOwnPropertyDescriptor' trap is not callable
+keys gopd undefined ["b"]
+entries proxy [["a",1]]
+define trap throws throws EvalError dp
+define trap false [false]
+define nonconfig accessor ok true
+define nonconfig accessor bad throws TypeError proxy must define the same getter for the non-configurable property 'acc'
+define nonconfig enum mismatch throws TypeError proxy can't report a different 'enumerable' for 'p' when the target property is not configurable
+define report nonconfig missing throws TypeError proxy 'defineProperty' defined a non-configurable property the target lacks
+define nonextensible new throws TypeError proxy 'defineProperty' added a property to a non-extensible target
+define nonwritable report throws TypeError proxy 'defineProperty' reported a non-configurable writable property as non-writable
+filter species proxy throws throws URIError species dp
+setPrototypeOf through proxy chain true
+setPrototypeOf cycle false
+preventExtensions rab ta [false,false,true,true]
+preventExtensions rab ta throws throws TypeError could not prevent extensions
+seal rab ta throws TypeError Object.seal could not seal the object
+ta getters oob [0,0,0,0,0,0]
+ta values expandos [[1,2,"v"],[["0",1],["1",2],["vis","v"]],["0","1","vis"]]

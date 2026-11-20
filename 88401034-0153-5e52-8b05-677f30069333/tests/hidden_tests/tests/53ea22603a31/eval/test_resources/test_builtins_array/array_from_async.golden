@@ -1,0 +1,15 @@
+array of promises => [1, 2, 3]
+async mapFn => [10, 20]
+mapFn with index => ["a0", "b1"]
+async generator => ["a", "b"]
+array-like => ["x", "y"]
+sync iterable => [3, 4]
+string => ["h", "i"]
+returns promise => [true, 0]
+bad mapFn => "TypeError: Array.fromAsync: mapFn is not callable"
+null input => "TypeError: Array.fromAsync called on null or undefined"
+array-like too long => "RangeError: Invalid array length"
+rejected element => "Error: rej"
+mapFn throws => "RangeError: in map"
+this ctor => [true, 2, 1, true]
+settles asynchronously => ["microtask", "fromAsync done"]

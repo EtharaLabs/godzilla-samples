@@ -1,0 +1,10 @@
+open path=/
+readyState after close() 2
+close code=3001 clean=true readyState=3
+got text length=75003 head=abcabc tail=end
+got binary length=300 first=0 last=43
+got binary length=70000 first=9 last=9
+got binary length=3 first=2 last=4
+onclose 3001 "client done" clean=true
+close() after onclose -> undefined
+send() after onclose -> false

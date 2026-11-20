@@ -1,0 +1,24 @@
+deflateSync true true true 0 000102
+deflateRawSync true true true 0 000102
+gzipSync true true true 0 000102
+brotliCompressSync true true true 0 000102
+zstdCompressSync true true true 0 000102
+deflate bytes 789ccb48cdc9c90700062c0215 cb48cdc9c90700
+gzip hdr 1f8b0800 hello
+inflate known hello hello unz
+crc32 907060870 222957957 222957957 1438416925 0
+big true true true true true
+bad inflate Error undefined zlib: unsupported compression method
+bad gunzip Error undefined gzip: bad magic
+bad inflateRaw Error undefined inflate: reserved block type
+bad brotli no error
+bad zstd Error undefined zstd: bad magic number
+bad truncated Error undefined inflate: unexpected end of input
+constants 9 2 0 number undefined
+async deflate null true
+async inflate null async data
+async gzip null null g
+async error zlib: unsupported compression method undefined
+promisified brot
+stream gzip stream data
+stream pipeline null piped through deflate

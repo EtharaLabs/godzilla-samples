@@ -1,0 +1,30 @@
+"async function f() { aw\\u0061it 1; }" -> SyntaxError: 'await' keyword must not contain escape sequences
+"async function f() { await 2 ** 2; }" -> SyntaxError: an await expression cannot be the base of '**' (use parentheses)
+"return delete undefined" -> ok false
+"class B {} class C extends B { m() { return super.#x; } }" -> SyntaxError: cannot access a private member through 'super'
+"function f() { new.t\\u0061rget; }" -> SyntaxError: 'new.target' must not contain escape sequences
+"async function f() { new await 1; }" -> SyntaxError: 'await' expression cannot be the operand of 'new'
+"new import(\"x\")" -> SyntaxError: 'import(...)' cannot be used with 'new'
+"new a?.b()" -> SyntaxError: an optional chain cannot follow 'new' without arguments
+"({ async\n m() {} })" -> SyntaxError: line terminator not allowed after 'async' in a method
+"({ async x: 1 })" -> SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ *x: 1 })" -> SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ m() { super(); } })" -> SyntaxError: 'super' call unexpected here
+"(function* yield() {})" -> SyntaxError: 'yield' cannot name this function expression
+"(async function await() {})" -> SyntaxError: 'await' cannot name this function expression
+"class C { f = arguments; }" -> SyntaxError: 'arguments' is not allowed in a class field initializer
+"class C { static { arguments; } }" -> SyntaxError: 'arguments' is not allowed in a class static block
+"class C { static { super(); } }" -> SyntaxError: 'super' call unexpected here
+"class C { m() { this.#nope; } }" -> SyntaxError: Private name '#nope' is not declared in an enclosing class
+"({\"a\"} = {})" -> SyntaxError: expected ':' after property key
+"++(a, b)" -> SyntaxError: invalid increment/decrement operand
+"\"use strict\"; f()++" -> SyntaxError: invalid increment/decrement operand
+"a?.b`x`" -> SyntaxError: tagged template cannot appear in an optional chain
+"var x; (x) = function () {}; return JSON.stringify(x.name);" -> ok ""
+"var x; (x) = class {}; return x.name + \"|\" + (x = class {}).name;" -> ok |x
+"var x; (x) ??= function () {}; return JSON.stringify(x.name);" -> ok ""
+"class C { @if m() {} }" -> ReferenceError: if is not defined
+"class C { @1 m() {} }" -> SyntaxError: expected a decorator expression after '@'
+"function* g() { yi\\u0065ld; }" -> ok undefined
+"\"use strict\"; function f() { let package; }" -> SyntaxError: 'package' cannot be used as a binding in strict mode
+"class C { static { return; } }" -> SyntaxError: 'return' is not allowed directly in a class static block

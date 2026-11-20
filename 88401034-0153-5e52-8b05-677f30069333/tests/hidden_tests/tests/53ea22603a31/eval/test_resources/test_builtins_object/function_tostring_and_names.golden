@@ -1,0 +1,46 @@
+function   foo ( a ,b ) { return a+b }
+(a) => a * 2
+async (x)=>{ await x }
+class A extends Object { m() {} static #p = 1; }
+m(x) { return x; }
+async *ag() {}
+['comp' + 'uted']() {}
+get g() { return 1 }
+set s(v) { }
+function max() { [native code] }
+function () { [native code] }
+function () { [native code] }
+function anonymous(a,b
+) {
+return a + b
+}
+function anonymous(
+) {
+
+}
+"function anonymous(x, y\n) {\n/* c */ return x\n}"
+function* gen() { yield 1 }
+toString non fn !! TypeError: Function.prototype.toString requires that 'this' be a function
+toString proxy fn => "function () { [native code] }"
+Function ctor => [5, true, "anonymous"]
+Function ctor syntax !! SyntaxError: expected '}'
+Function ctor bad params !! SyntaxError: expected ')'
+Function ctor body injection !! SyntaxError: unexpected token Punct(",")
+Function ctor comment injection !! SyntaxError: unterminated block comment
+Function ctor params => [3, [5, [1, 2]], undefined]
+Function ctor super !! SyntaxError: 'super' keyword unexpected here
+Function subclass => [7, true, true]
+GeneratorFunction => ["anonymous", [3, 6], "function* anonymous(a\n) {\nyield a; yield a * 2\n}", "[object GeneratorFunction]", "GeneratorFunction", 1, false]
+AsyncFunction => ["anonymous", "async function anonymous(x\n) {\nreturn await x\n}", true, "AsyncFunction"]
+AsyncGeneratorFunction => ["anonymous", "async function* anonymous(\n) {\nyield 1\n}", "[object AsyncGenerator]", "AsyncGeneratorFunction"]
+eval direct vs indirect => ["string", "undefined", "G", 42, undefined, 1]
+indirect eval var => "number"
+eval let scope => "undefined"
+eval syntax error !! SyntaxError: unexpected token Eof
+names => ["a", "b", "c", "d", "e1", "[sy]", "", "f", "named"]
+accessor names => ["get x", "set x"]
+symbol method name => "[Symbol.iterator]"
+class static name method => ["function", "m"]
+default export-ish names => ["x", "y"]
+builtin names => ["at", "get size", "[Symbol.toPrimitive]", "[Symbol.hasInstance]", "all"]
+builtin lengths => [2, 1, 2, 2, 2, 3, 1]

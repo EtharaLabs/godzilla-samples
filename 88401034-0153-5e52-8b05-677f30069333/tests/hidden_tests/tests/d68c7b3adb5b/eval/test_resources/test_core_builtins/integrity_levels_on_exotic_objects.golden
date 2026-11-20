@@ -1,0 +1,45 @@
+primitives: 1,s,true,011,011,011,false
+empty object: 100 011
+object with props: 000 010 011 a=2
+accessor frozen: 011 {"enumerable":true,"configurable":false}
+non-writable but configurable: 000
+array freeze: 011 push:TypeError len=2
+array seal then set: 010 [9,2]
+array pop on frozen: TypeError: Cannot delete property '0'
+array shift on sealed: TypeError: Cannot delete property '1'
+array unshift on frozen: TypeError: Cannot assign to read only property '1'
+array reverse on frozen: TypeError: Cannot assign to read only property '0'
+typed array freeze: TypeError: Object.freeze could not freeze the object
+typed array empty freeze: 011
+typed array seal: TypeError: Object.seal could not seal the object
+typed array preventExtensions: 000
+string wrapper: 100 011
+string wrapper seal check: 011
+function freeze: 011 undefined false
+arguments freeze: 011 1 1
+proxy freeze traps: pe ok gopd:a dp:a:writable/configurable
+proxy seal traps: dp:a:configurable dp:b:configurable 010
+proxy freeze defineProperty false: TypeError: could not set the object's integrity level
+isFrozen proxy with configurable prop: false false
+isFrozen proxy with writable prop: false true
+isFrozen proxy lying gopd: true
+proxy preventExtensions false: TypeError: could not prevent extensions
+proxy preventExtensions lies: TypeError: proxy 'preventExtensions' reported success but the target is extensible
+proxy preventExtensions not callable: TypeError: proxy 'preventExtensions' trap is not callable
+Reflect.preventExtensions false: false
+proxy isExtensible not callable: TypeError: proxy 'isExtensible' trap is not callable
+proxy isExtensible mismatch: TypeError: proxy 'isExtensible' must match the target
+proxy isExtensible forward: false
+revoked: TypeError,TypeError,TypeError,TypeError,TypeError,TypeError,TypeError,TypeError
+isFrozen proxy: true true
+freeze nested: 2 false
+strict write frozen: TypeError: cannot assign to read-only property 'a'
+strict add non-extensible: TypeError: cannot add property, object is not extensible
+strict add index on frozen array: TypeError: cannot add property, object is not extensible
+strict delete sealed: TypeError: cannot delete non-configurable property 'a'
+sloppy delete sealed: false
+defineProperty on non-extensible: TypeError: Cannot redefine property
+Reflect.defineProperty on non-extensible: false
+frozen array length: 3
+freeze map still mutable: 1 011
+global object integrity: true false false

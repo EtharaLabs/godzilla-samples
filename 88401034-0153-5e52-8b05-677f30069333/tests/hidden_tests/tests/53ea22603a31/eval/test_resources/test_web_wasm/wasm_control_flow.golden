@@ -1,0 +1,10 @@
+sign -1,0,1
+br_table 100,200,300,400,400,400,400
+early 6 999
+select 1 2 1
+multi-value block -7 7
+br_if with value 5 6
+collatz steps 0,8,16,111
+unreachable RuntimeError wasm: unreachable executed true
+deep recursion RuntimeError wasm: call stack exhausted true
+still usable after trap -1

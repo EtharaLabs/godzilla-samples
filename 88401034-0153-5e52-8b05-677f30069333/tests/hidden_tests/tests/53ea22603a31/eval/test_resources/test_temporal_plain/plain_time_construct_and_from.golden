@@ -1,0 +1,37 @@
+ctor => 13:37:05.123456789
+ctor default => 00:00:00
+ctor hour 24 => threw RangeError: ISO time field is out of range
+ctor neg => threw RangeError: ISO time field is out of range
+ctor ms 1000 => threw RangeError: ISO time field is out of range
+getters => [1,2,3,4,5,6,"undefined"]
+"12:34" => 12:34:00
+"12:34:56.789" => 12:34:56.789
+"T12:34" => 12:34:00
+"t1234" => 12:34:00
+"123456" => 12:34:56
+"12:34:60" => 12:34:59
+"1234:56" => threw RangeError: invalid PlainTime string
+"12:34Z" => threw RangeError: UTC designator not valid for PlainTime
+"12:34+01:00" => 12:34:00
+"2024-01-01T12:34" => 12:34:00
+"2024-01-01" => threw RangeError: no time in PlainTime string
+"12-14" => threw RangeError: ambiguous time string requires a T designator
+"2021-12" => threw RangeError: ambiguous time string requires a T designator
+"1214" => threw RangeError: ambiguous time string requires a T designator
+"202112" => threw RangeError: ambiguous time string requires a T designator
+"T1214" => 12:14:00
+"12:34[u-ca=iso8601]" => 12:34:00
+"12:34[u-ca=hebrew]" => 12:34:00
+"12:34[!u-ca=hebrew]" => 12:34:00
+"24:00" => threw RangeError: invalid PlainTime string
+"12:34:56.1234567890" => threw RangeError: invalid PlainTime string
+"2024-01-01T12:00Z" => threw RangeError: UTC designator not valid for PlainTime
+"12:34:56,5" => 12:34:56.5
+bag constrain => 23:59:59.999000999
+bag reject => threw RangeError: hour out of range
+bag negative reject => threw RangeError: minute out of range
+bag empty => threw TypeError: object has no time fields
+bag unrelated => threw TypeError: object has no time fields
+from PlainDateTime => 05:06:07
+from ZonedDateTime => 05:06:07
+from number => threw TypeError: cannot convert to Temporal.PlainTime

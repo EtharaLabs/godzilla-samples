@@ -1,0 +1,20 @@
+fromCodePoint => [5, "", 3, "d800 dc00"]
+fromCodePoint 1.5 !! RangeError: Invalid code point
+fromCodePoint -1 !! RangeError: Invalid code point
+fromCodePoint 1114112 !! RangeError: Invalid code point
+fromCodePoint NaN !! RangeError: Invalid code point
+fromCodePoint x !! RangeError: Invalid code point
+fromCodePoint Infinity !! RangeError: Invalid code point
+fromCodePoint undefined !! RangeError: Invalid code point
+fromCharCode => ["41 42 ffff d83d de00", "", "Hi"]
+codePointAt => [128512, 56832, undefined, 55296, undefined, 98, 97, 56320]
+iterator => [{value: "a", done: false}, 2, "d800", {value: undefined, done: true}, "[object String Iterator]"]
+iterator bad receiver !! TypeError: String Iterator next called on an incompatible receiver
+iterator null this !! TypeError: String.prototype method called on null or undefined
+raw template => ["a\\nb1\\u", "\\${x}y", ""]
+raw object => ["x1y2z", "pMq", "", "", "only"]
+raw string raw !! TypeError: raw is not an object
+raw missing raw !! TypeError: raw is not an object
+raw no args !! TypeError: cannot read property 'raw' of undefined
+raw coerces subs => "aSbnullc"
+raw symbol sub !! TypeError: Cannot convert a Symbol value to a string

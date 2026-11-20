@@ -1,0 +1,21 @@
+unreachable -> true true RuntimeError: wasm: unreachable executed
+div_s 1/0 -> true true RuntimeError: wasm: integer divide by zero
+div_s min/-1 -> true true RuntimeError: wasm: integer overflow
+rem_u 5%0 -> true true RuntimeError: wasm: integer divide by zero
+rem_s ok -> -3
+div64 /0 -> true true RuntimeError: wasm: integer divide by zero
+div64 min/-1 -> true true RuntimeError: wasm: integer overflow
+rem64 min%-1 -> 0
+rem64 %0 -> true true RuntimeError: wasm: integer divide by zero
+load 65532 -> true true RuntimeError: wasm: out of bounds memory access
+load 65528 -> 0
+load -1 -> true true RuntimeError: wasm: out of bounds memory access
+store 65535 -> true true RuntimeError: wasm: out of bounds memory access
+store 65534 -> undefined
+dispatch 1 -> true true RuntimeError: wasm: indirect call type mismatch
+dispatch 2 -> true true RuntimeError: wasm: uninitialized table element
+dispatch 5 -> true true RuntimeError: wasm: undefined element (indirect call)
+dispatch 0 -> true true RuntimeError: wasm: unreachable executed
+dispatch3 1 -> 2
+dispatch3 0 -> true true RuntimeError: wasm: indirect call type mismatch
+recurse -> true true RuntimeError: wasm: call stack exhausted

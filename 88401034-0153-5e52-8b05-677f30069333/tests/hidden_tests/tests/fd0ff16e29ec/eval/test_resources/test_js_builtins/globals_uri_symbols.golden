@@ -1,0 +1,59 @@
+encodeURIComponent: "a%20b%26c%3Dd%2Fe%3Ff%23g%3Bh%2Ci%2Bj%3Ak%40l%24m!n'o(p)q*r~s_t-u.v" | "%C3%A9%F0%9F%98%80%00" | "123" | "undefined"
+encodeURI: "http://x.com/a%20b?c=d&e#f;g,h+i:j@k$l!m'n(o)p*q~r%5Bs%5D" | "%E2%82%AC%25"
+encodeURI-lone-high: THROW URIError: URI malformed
+encodeURIComponent-lone-low: THROW URIError: URI malformed
+encode-high-then-ascii: THROW URIError: URI malformed
+decodeURIComponent: "a b&c/?#" | "é😀" | "€" | "plain"
+decodeURI: "a b%26c%2F%3F%23%3B%2C%2B%3A%40%24%3D" | "é" | "%"
+decode "%" URIError: URI malformed
+decode "%2" URIError: URI malformed
+decode "%zz" URIError: URI malformed
+decode "%C3" URIError: URI malformed
+decode "%C3%28" URIError: URI malformed
+decode "%FF" URIError: URI malformed
+decode "%80" URIError: URI malformed
+decode "%ED%A0%80" URIError: URI malformed
+decode "%F4%90%80%80" URIError: URI malformed
+decode "%C0%AF" URIError: URI malformed
+decode "%E0%80%AF" URIError: URI malformed
+decode "%F0%80%80%80" URIError: URI malformed
+decode "%c3%a" URIError: URI malformed
+decode "ok%41" "okA"
+decodeURI-bad: THROW URIError: URI malformed
+escape: "a%20b+c/@*_-.%E9%u0100%uD83D%uDE00" | "AA%zz%u12%" | "é" | "ÿ￿"
+isNaN/isFinite: true | false | true | false | true | true
+isNaN-symbol: THROW TypeError: Cannot convert a Symbol value to a number
+isNaN-bigint: THROW TypeError: Cannot convert a BigInt value to a number
+gdesc undefined false,false,false,undefined
+gdesc NaN false,false,false,number
+gdesc Infinity false,false,false,number
+gdesc globalThis true,false,true,object
+gdesc Object true,false,true,function
+gdesc Array true,false,true,function
+gdesc JSON true,false,true,object
+gdesc Math true,false,true,object
+gdesc parseInt true,false,true,function
+gdesc Reflect true,false,true,object
+gdesc Symbol true,false,true,function
+gdesc eval true,false,true,function
+globalThis: "object" | true | true | true
+global-readonly-sloppy: undefined | NaN | Infinity
+global-readonly-strict: THROW TypeError: cannot assign to read-only property 'undefined'
+global-readonly-strict-NaN: THROW TypeError: cannot assign to read-only property 'NaN'
+fn-names: ["parseInt/2", "parseFloat/1", "isNaN/1", "isFinite/1", "encodeURI/1", "decodeURI/1", "encodeURIComponent/1", "decodeURIComponent/1", "escape/1", "unescape/1"]
+symbol: "Symbol(desc)" | "desc" | undefined | "" | "symbol" | true | true | "Symbol"
+symbol-for: true | "app" | undefined | "Symbol(undefined)" | undefined
+symbol-new: THROW TypeError: Symbol is not a constructor
+keyFor-nonsym: THROW TypeError: Symbol.keyFor: argument is not a Symbol
+symbol-tonum: THROW TypeError: Cannot convert a Symbol value to a number
+symbol-toString-bad: THROW TypeError: Symbol method called on incompatible receiver
+symbol-desc-bad: THROW TypeError: Symbol.prototype.description requires a symbol
+well-known: ["Symbol.asyncIterator", "Symbol.hasInstance", "Symbol.isConcatSpreadable", "Symbol.iterator", "Symbol.match", "Symbol.matchAll", "Symbol.replace", "Symbol.search", "Symbol.species", "Symbol.split", "Symbol.toPrimitive", "Symbol.toStringTag", "Symbol.unscopables", "Symbol.dispose", "Symbol.asyncDispose"]
+wk-desc: {value: Symbol(Symbol.iterator), writable: false, enumerable: false, configurable: false}
+toPrimitive: true | false
+toPrimitive-hints: 42 | "str" | "default" | 84 | "str" | "str" | true
+toPrimitive-returns-obj: THROW TypeError: Cannot convert object to a primitive value
+toPrimitive-noncallable: THROW TypeError: @@toPrimitive is not callable
+ordinary-toPrimitive-fail: THROW TypeError: cannot convert object to primitive value
+symbol-keys: [] | "{}" | ["Symbol(desc)", "Symbol(Symbol.iterator)"]
+unscopables: ["at", "copyWithin", "entries", "fill", "find", "findIndex", "findLast", "findLastIndex", "flat", "flatMap", "includes", "keys", "toReversed", "toSorted", "toSpliced", "values"] | null

@@ -1,0 +1,37 @@
+apply/construct traps: target:1! | target:2! | 3 | target:4! | 5 | apply this=undefined args=1 ; apply this=ctx args=2 ; construct nt=true ; apply this=R args=4 ; construct nt=false
+construct returns primitive: TypeError: proxy construct trap returned a non-object
+construct on non-ctor target: TypeError: object is not a constructor
+apply on non-callable target: TypeError: p is not a function
+apply trap not callable: TypeError: proxy 'apply' trap is not callable
+construct trap not callable: TypeError: proxy 'construct' trap is not callable
+forwarding without traps: 7,,1,F,true
+typeof: function,object,function,function,function
+Proxy without new: TypeError: Constructor Proxy requires 'new'
+Proxy bad args: TypeError: Cannot create proxy with a non-object as target or handler
+Proxy bad handler: TypeError: Cannot create proxy with a non-object as target or handler
+Proxy.revocable: 1 proxy,revoke function 0 true TypeError:cannot read property 'get' of null
+Proxy.revocable bad args: TypeError: Cannot create proxy with a non-object as target or handler
+revoked proxy call: TypeError: cannot read property 'apply' of null
+revoked proxy new: TypeError: cannot read property 'construct' of null
+revoked proxy ops: TypeError,TypeError,TypeError,TypeError,TypeError,TypeError,TypeError,object
+revoked as target: object
+Proxy props: 2 Proxy false length,name,revocable
+trap not callable: TypeError: proxy 'get' trap is not callable
+trap undefined/null forwards: fwd null
+handler getter called per operation: get,set,getOwnPropertyDescriptor,defineProperty,has,deleteProperty,ownKeys,getOwnPropertyDescriptor
+has trap via in and with: true has:v,has:v,has:v
+has trap invariants: TypeError,TypeError,true
+deleteProperty trap: TypeError: proxy 'deleteProperty' removed a non-configurable property
+deleteProperty false strict: TypeError: cannot delete property 'a'
+deleteProperty false sloppy: false
+deleteProperty non-extensible: TypeError: proxy 'deleteProperty' removed a non-extensible target's property
+deleteProperty not callable: TypeError: proxy 'deleteProperty' trap is not callable
+deleteProperty forward: true
+enumerate for-in: b
+for-in through proxy prototype: own,inherited
+get trap receiver for inherited: child receiver
+set trap invariants: TypeError,same ok,TypeError
+set trap false strict: TypeError: cannot assign to property 'x'
+get trap invariants: TypeError,1,TypeError
+proxy as prototype of class instance: missing
+proxy wrapping array length: [1,9] true 2

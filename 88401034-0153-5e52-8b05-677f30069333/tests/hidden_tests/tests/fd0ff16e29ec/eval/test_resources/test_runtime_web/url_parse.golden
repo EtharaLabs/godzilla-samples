@@ -1,0 +1,43 @@
+["http://User:Pw@example.com:8080/a/c?q=1&r=a+b#Frag","http:","User","Pw","example.com:8080","example.com","8080","/a/c","?q=1&r=a+b","#Frag","http://example.com:8080"]
+["https://x.com/","https:","","","x.com","x.com","","/","","","https://x.com"]
+["http://x.com/","http:","","","x.com","x.com","","/","","","http://x.com"]
+["http://x.com:8080/","http:","","","x.com:8080","x.com","8080","/","","","http://x.com:8080"]
+["ws://h/p","ws:","","","h","h","","/p","","","ws://h"]
+["wss://h/","wss:","","","h","h","","/","","","wss://h"]
+["ftp://h/","ftp:","","","h","h","","/","","","ftp://h"]
+["ftp://h:2121/f","ftp:","","","h:2121","h","2121","/f","","","ftp://h:2121"]
+["http://[::1]:9000/x","http:","","","[::1]:9000","[::1]","9000","/x","","","http://[::1]:9000"]
+["http://[2001:db8::1]/","http:","","","[2001:db8::1]","[2001:db8::1]","","/","","","http://[2001:db8::1]"]
+["custom://host:99/p","custom:","","","host:99","host","99","/p","","","custom://host:99"]
+["custom://host","custom:","","","host","host","","","","","custom://host"]
+["file:///etc/passwd","file:","","","","","","/etc/passwd","","","file://"]
+["file://server/share","file:","","","server","server","","/share","","","file://server"]
+["mailto:Joe@Example.com?subject=hi","mailto:","","","","","","Joe@Example.com","?subject=hi","","mailto://"]
+["data:text/plain,hello#x","data:","","","","","","text/plain,hello","","#x","data://"]
+["javascript:void(0)","javascript:","","","","","","void(0)","","","javascript://"]
+["urn:isbn:123","urn:","","","","","","isbn:123","","","urn://"]
+["http://user@h/","http:","user","","h","h","","/","","","http://h"]
+["http://:pass@h/","http:","","pass","h","h","","/","","","http://h"]
+["http://a@b@c/","http:","a@b","","c","c","","/","","","http://c"]
+["http://h/","http:","","","h","h","","/","","","http://h"]
+["http://h/a/%2e%2e/b","http:","","","h","h","","/a/%2e%2e/b","","","http://h"]
+["http://h/?#","http:","","","h","h","","/","?","#","http://h"]
+["http://h/p?a=1#f?g","http:","","","h","h","","/p","?a=1","#f?g","http://h"]
+["http://trim.me/path","http:","","","trim.me","trim.me","","/path","","","http://trim.me"]
+["http://h/a b","http:","","","h","h","","/a b","","","http://h"]
+["https://upper.case/Path","https:","","","upper.case","upper.case","","/Path","","","https://upper.case"]
+["a+b-c.d://x/y","a+b-c.d:","","","x","x","","/y","","","a+b-c.d://x"]
+"" TypeError URL: invalid URL '' (relative, and no base given)
+"nobase" TypeError URL: invalid URL 'nobase' (relative, and no base given)
+"http://" TypeError URL: invalid URL 'http://': missing host
+"http:x.com" TypeError URL: invalid URL 'http:x.com': special scheme without //
+"https:/x.com" TypeError URL: invalid URL 'https:/x.com': special scheme without //
+"http://bücher.de/" TypeError URL: non-ASCII host 'bücher.de' (IDNA is not implemented yet)
+"http://h:99999/" TypeError URL: invalid port '99999'
+"http://h:abc/" TypeError URL: invalid port 'abc'
+"http://[::1/" TypeError URL: invalid host '[::1'
+"//no-scheme" TypeError URL: invalid URL '//no-scheme' (relative, and no base given)
+"1http://x" TypeError URL: invalid URL '1http://x' (relative, and no base given)
+canParse true false true false
+parse null http://a/p http://obj/
+toString/toJSON http://s/x {"u":"http://j/y"} http://o/

@@ -1,0 +1,25 @@
+filename data.db
+header "SQLite format 3\u0000" 0
+readonly-read ok [{"k":"a","t":"integer"},{"k":"b","t":"text"},{"k":"c","t":"blob"},{"k":"d","t":"real"},{"k":"e","t":"null"}]
+readonly-write SQLiteError SQLiteError SQLITE_READONLY 8 | attempt to write a readonly database
+create-false SQLiteError SQLiteError SQLITE_MISUSE 21 | bad parameter or other API misuse
+readonly-missing SQLiteError SQLiteError SQLITE_CANTOPEN 14 | unable to open database file
+empty-options SQLiteError SQLiteError SQLITE_MISUSE 21 | bad parameter or other API misuse
+numeric-readonly ok {"n":5}
+numeric-readonly-write SQLiteError SQLiteError SQLITE_READONLY 8 | attempt to write a readonly database
+readwrite ok {"n":6}
+directory SQLiteError SQLiteError SQLITE_CANTOPEN 14 | unable to open database file
+missing-parent SQLiteError SQLiteError SQLITE_CANTOPEN 14 | unable to open database file
+static-open ok {"g":"a,b,c,d,e,f"}
+created false false false false
+memory-names :memory: :memory: :memory:
+serialize Buffer SQLite format 3 0
+copy [["a"],["b"],["c"],["d"],["e"],["f"]]
+independent {"n":6} {"n":7}
+ctor-bytes {"m":"f"} :memory:
+garbage-image SQLiteError SQLiteError SQLITE_NOTADB 26 | file is not a database
+busy-begin SQLiteError SQLiteError SQLITE_BUSY 5 | database is locked
+busy-write SQLiteError SQLiteError SQLITE_BUSY 5 | database is locked
+read-during-reserved ok {"n":6}
+busy-read-exclusive SQLiteError SQLiteError SQLITE_BUSY 5 | database is locked
+after-rollback ok {"n":6}

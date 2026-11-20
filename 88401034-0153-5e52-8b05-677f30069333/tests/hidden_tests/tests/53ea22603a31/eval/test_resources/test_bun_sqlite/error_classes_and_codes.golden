@@ -1,0 +1,36 @@
+unique SQLiteError SQLiteError SQLITE_CONSTRAINT_UNIQUE 2067 | UNIQUE constraint failed: p.name
+primary-key SQLiteError SQLiteError SQLITE_CONSTRAINT_PRIMARYKEY 1555 | UNIQUE constraint failed: p.id
+check SQLiteError SQLiteError SQLITE_CONSTRAINT_CHECK 275 | CHECK constraint failed: age >= 0
+not-null SQLiteError SQLiteError SQLITE_CONSTRAINT_NOTNULL 1299 | NOT NULL constraint failed: p.name
+foreign-key SQLiteError SQLiteError SQLITE_CONSTRAINT_FOREIGNKEY 787 | FOREIGN KEY constraint failed
+foreign-key-prepared SQLiteError SQLiteError SQLITE_CONSTRAINT_FOREIGNKEY 787 | FOREIGN KEY constraint failed
+unique-prepared SQLiteError SQLiteError SQLITE_CONSTRAINT_UNIQUE 2067 | UNIQUE constraint failed: p.name
+syntax-run SQLiteError SQLiteError undefined 1 | near "SELCT": syntax error
+syntax-prepare SQLiteError SQLiteError undefined 1 | near "SELEC": syntax error
+syntax-query SQLiteError SQLiteError undefined 1 | near "FORM": syntax error
+no-column SQLiteError SQLiteError undefined 1 | no such column: nope
+no-table SQLiteError SQLiteError undefined 1 | no such table: missing
+ambiguous SQLiteError SQLiteError undefined 1 | ambiguous column name: id
+empty-sql Error Error undefined undefined | no SQL statement to prepare
+comment-only Error Error undefined undefined | no SQL statement to prepare
+exec-partial SQLiteError SQLiteError SQLITE_CONSTRAINT_PRIMARYKEY 1555 | UNIQUE constraint failed: p.id
+after-partial ok [{"id":1,"name":"a"},{"id":10,"name":"x"}]
+raise SQLiteError SQLiteError SQLITE_CONSTRAINT_TRIGGER 1811 | too big
+strict-table SQLiteError SQLiteError SQLITE_CONSTRAINT_DATATYPE 3091 | cannot store TEXT value in INTEGER column s.x
+arity Error Error undefined undefined | SQLite query expected 2 values, received 1
+arity-array Error Error undefined undefined | SQLite query expected 2 values, received 3
+bind-object TypeError TypeError undefined undefined | Binding expected string, TypedArray, boolean, number, bigint or null
+bind-date TypeError TypeError undefined undefined | Binding expected string, TypedArray, boolean, number, bigint or null
+bind-nested-array TypeError TypeError undefined undefined | Binding expected string, TypedArray, boolean, number, bigint or null
+bind-function TypeError TypeError undefined undefined | Binding expected string, TypedArray, boolean, number, bigint or null
+bind-symbol TypeError TypeError undefined undefined | Binding expected string, TypedArray, boolean, number, bigint or null
+readonly SQLiteError SQLiteError SQLITE_READONLY 8 | attempt to write a readonly database
+rollback-without-tx SQLiteError SQLiteError undefined 1 | cannot rollback - no transaction is active
+commit-without-tx SQLiteError SQLiteError undefined 1 | cannot commit - no transaction is active
+malformed-json SQLiteError SQLiteError undefined 1 | malformed JSON
+divide-by-zero-is-null ok {"x":null,"y":null}
+too-big SQLiteError SQLiteError SQLITE_TOOBIG 18 | string or blob too big
+datatype-mismatch SQLiteError SQLiteError SQLITE_MISMATCH 20 | datatype mismatch
+construct Error Error undefined undefined | SQLiteError can only be constructed by bun:sqlite
+shape true true [object Error] SQLiteError: near "SELCT": syntax error ["name","code","errno"] true true
+constraint-shape SQLiteError: UNIQUE constraint failed: p.id ["name","code","errno"] SQLiteError: UNIQUE constraint failed: p.id

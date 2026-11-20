@@ -1,0 +1,27 @@
+static blocks: static block 1, instances=0 | static block 2 this===Counter true
+private fields: 1 2 total=2 computed=c order=key:computed
+private accessors: hidden:s new hidden:new
+brand check: true false false
+read foreign: TypeError: cannot read private member #secret from an object whose class did not declare it
+call method foreign: TypeError: cannot read private member #bumpless from an object whose class did not declare it
+write method: TypeError: private method #bumpless is not writable
+static private on subclass: TypeError: cannot read private member #instances from an object whose class did not declare it
+in on primitive: TypeError: the right-hand side of 'in' must be an object
+derived: Derived Derived-field base-greet+derived Base.Derived! true
+this before super: ReferenceError: cannot access 'this' before initialization
+super twice: ReferenceError: super() may only be called once
+derived returns primitive: TypeError: a derived constructor may only return an object or undefined
+derived no super: ReferenceError: derived constructor returned without calling super()
+derived returns object: {"custom":true}
+extends null: true
+extends non-constructor: TypeError: Class extends value does not have a valid prototype property
+extends arrow: TypeError: Class extends value is not a constructor or null
+call class: TypeError: Class constructor cannot be invoked without 'new'
+class name binding immutable: TypeError: assignment to constant 'Imm'
+accessor pairs: sget 5
+field arrow this: inst
+new.target in field: undefined
+anonymous class name: anon Inner undefined
+symbol method name: [desc]|
+getter/setter names: get g set g
+instance private on proxy: false

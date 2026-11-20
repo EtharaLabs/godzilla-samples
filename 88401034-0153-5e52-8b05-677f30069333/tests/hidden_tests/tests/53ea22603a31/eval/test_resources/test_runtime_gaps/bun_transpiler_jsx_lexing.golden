@@ -1,0 +1,20 @@
+"const s = '<notjsx>' + \"<b>\\\"</b>\"; const el = React.createElement(\"i\", null);"
+"const tpl = `a<b>${React.createElement(\"em\", null, x)}\\`</b>`; // <comment> stays\nconst y = React.createElement(\"hr\", null);"
+"// leading line comment <x>\nconst r = /<a\\/[<>]+/gi.test(s) ? React.createElement(\"yes\", null) : React.createElement(\"no\", null);"
+"React.createElement(Card, { header: React.createElement(Title, { text: \"hi\" }), footer: React.createElement(\"p\", null, \"f\") })"
+"React.createElement(\"div\", { a: \"1\", b: true }, \"x\")"
+"React.createElement(\"a\", { title: \"say \\\"hi\\\"\", path: \"C:\\\\dir\", tab: \"a\\tb\", nl: \"l1\\nl2\", cr: \"x\\ry\" })"
+"React.createElement(\"p\", null, \"first line second   line\", React.createElement(\"b\", null), \"tail\")"
+"React.createElement(\"p\", null, \"a\\tb c\")"
+"React.createElement(\"p\", null)"
+"React.createElement(\"pre\", null, \"a\\\\b \\\"q\\\"\")"
+"< >x</>"
+"x = a</b>/i;"
+"React.createElement(this.Comp, null)"
+"React.createElement(Foo.Bar.Baz, null)"
+"React.createElement(\"a-b\", { \"c:d\": \"e\" })"
+SyntaxError: expected a JSX element name after `<`
+SyntaxError: expected a JSX attribute name
+SyntaxError: expected a JSX attribute name
+SyntaxError: unterminated `{ … }` in JSX
+SyntaxError: unterminated JSX opening tag

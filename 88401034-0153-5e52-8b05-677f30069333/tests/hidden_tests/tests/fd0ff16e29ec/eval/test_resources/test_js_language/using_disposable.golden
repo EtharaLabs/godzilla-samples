@@ -1,0 +1,44 @@
+block body a b
+  dispose b
+  dispose a
+after block
+  dispose fn-res
+returned fn-res
+iter x
+  dispose loop-x
+iter y
+  dispose loop-y
+for-using body for-of-1
+  dispose for-of-1
+for-using body for-of-2
+  dispose for-of-2
+  dispose e2
+  dispose e1
+caught SuppressedError 
+  error: Error dispose-fail e1
+  suppressed: SuppressedError "" dispose-fail e2 body-error
+not disposable TypeError: value is not disposable
+non-callable dispose TypeError: value is not disposable
+  dispose c
+reassign using TypeError: assignment to constant 'c'
+adopt returns adopted-value disposed? false
+after move true false
+  adopt cleanup adopted-value
+  deferred fn
+  dispose stack-use
+moved disposed true
+use after dispose ReferenceError: DisposableStack already disposed
+  stack via using
+SuppressedError SuppressedError msg err sup true
+async block body
+  dispose sync-fallback-in-await-using
+  async dispose ar
+after async block
+  async adopt 5
+  async use
+  async deferred 1
+async stack disposed true
+async dispose error async dispose err
+for await using body
+  dispose for-await-using
+done

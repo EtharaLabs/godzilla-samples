@@ -1,0 +1,26 @@
+bad executor: TypeError: Promise resolver is not a function
+catch generic: ok undefined/function
+executor rejects twice: rejected "one"
+executor throws after resolve: fulfilled "first"
+executor throws: rejected TypeError: exec threw
+finally callable wraps: function,function,1,1
+finally non-callable passes: then-result 7,7
+finally on primitive: TypeError: Promise.prototype.finally on non-object
+finally rejection wins: rejected "finally-rejected"
+finally return value ignored: fulfilled "kept"
+finally then not callable: TypeError: then is not callable
+new.target bad proto: true
+new.target proto: F true
+no new: TypeError: Promise constructor requires 'new'
+reject via capability: rejected "custom-reject"
+resolve returns same promise: fulfilled "same 9"
+resolve thenable getter throws: rejected RangeError: getter
+resolve with self-thenable chain: fulfilled "nested"
+species misuse: TypeError: @@species is not a constructor
+statics on non-object: resolve:Promise.resolve called on a non-object | reject:Promise.reject called on a non-object | withResolvers:Promise.withResolvers called on a non-object | try:Promise.try called on a non-object | all:NewPromiseCapability: receiver is not a constructor | race:NewPromiseCapability: receiver is not a constructor | any:NewPromiseCapability: receiver is not a constructor | allSettled:NewPromiseCapability: receiver is not a constructor
+then on non-promise: TypeError: Promise.prototype.then called on a non-Promise
+then returns itself: rejected TypeError: Chaining cycle detected for promise
+try non-callable: rejected TypeError: number is not a function
+try returns rejected: rejected "inner"
+try with args: fulfilled "1+2+3"
+withResolvers subclass: true function promise,resolve,reject

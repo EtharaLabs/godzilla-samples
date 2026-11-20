@@ -1,0 +1,24 @@
+basic: body, dispose b, dispose a
+nested: SuppressedError |  | from x | SuppressedError | from y | body error
+nested order: dispose y, dispose x
+single failure: Error: from only false
+not disposable (number): TypeError: value is not disposable
+not disposable (object): TypeError: value is not disposable
+not disposable (object): TypeError: value is not disposable
+not disposable (string): TypeError: value is not disposable
+function return: ret returning, dispose fn
+loop: dispose loop1, dispose loop2
+for-using-of: iter, dispose of1, iter, dispose of2
+method read once at declaration: dispose getter, body, disposed
+await using: body, sync b via await using, async a
+await using primitive: TypeError: value is not disposable
+async dispose rejection: RangeError: async dispose failed
+awaited: body, dispose, after block
+generator dispose: generator finally | function
+async generator first value: 1
+async generator finally
+AsyncIterator.prototype[@@asyncDispose]: function [Symbol.asyncDispose] 0
+no return method: undefined | return result dropped: undefined args=0
+asyncDispose getter throws: promise=true rejected with Error: getter threw
+asyncDispose return throws: promise=true rejected with Error: return threw
+asyncDispose return rejects: promise=true rejected with Error: return rejected

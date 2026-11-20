@@ -1,0 +1,29 @@
+fill-detach TypeError: TypedArray is out of bounds
+fill-shrink TypeError: TypedArray is out of bounds Int16Array[1,2]
+includes-detach false true 0
+indexOf-detach -1 TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray
+indexOf-shrink -1
+copyWithin-shrink TypeError: TypedArray is out of bounds Int16Array[1,2,3]
+copyWithin-detach TypeError: TypedArray is out of bounds
+set-detach TypeError: TypedArray target is out of bounds
+set-src-oob TypeError: TypedArray source is out of bounds
+with-detach RangeError: invalid TypedArray index
+with-shrink RangeError: invalid TypedArray index
+at-shrink 2
+map-detach Int16Array[1,2,0,0] 4
+forEach-shrink 1|||
+find-detach 1 TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray
+reduce-shrink s:1:2:undefined:undefined
+join-detach ---
+slice-species-detach TypeError: TypedArray source is out of bounds
+slice-species-shrink TypeError: TypedArray source is out of bounds
+subarray-detach TypeError: ArrayBuffer is detached TypeError: ArrayBuffer is detached
+toLocale-shrink n1,,,
+dv-detach TypeError: DataView's buffer is detached or out of bounds TypeError: DataView's buffer is detached or out of bounds
+ta-ctor-detach TypeError: ArrayBuffer is detached TypeError: ArrayBuffer is detached
+atomics-detach TypeError: Atomics: buffer was detached or shrunk during value coercion TypeError: Atomics: buffer was detached or shrunk during value coercion TypeError: Atomics: buffer was detached or shrunk during value coercion
+ab-slice-species-detach TypeError: source ArrayBuffer was detached during slice Uint8Array[1,0,0] TypeError: slice species returned an immutable buffer
+ab-slice-species-errors TypeError: slice species returned the same ArrayBuffer TypeError: slice species did not create an ArrayBuffer TypeError: slice species returned a SharedArrayBuffer TypeError: slice species returned a detached ArrayBuffer TypeError: constructor is not an object
+ta-species-errors TypeError: TypedArray constructor property is not an object TypeError: TypedArray species is not a constructor TypeError: TypedArray destination is too small TypeError: TypedArray constructor did not return a TypedArray Float64Array[1,2] TypeError: Cannot convert a Number to a BigInt Int8Array[10,12] Int8Array[6,7]
+ta-species-ok RangeError: invalid typed array length
+ta-species-immutable TypeError: TypedArray destination is backed by an immutable buffer

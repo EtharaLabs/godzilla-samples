@@ -1,0 +1,31 @@
+normalize: true,2,fi,x,2,3,1,1
+normalize bad form: RangeError: The normalization form should be one of NFC, NFD, NFKC, NFKD
+isWellFormed/toWellFormed: false,true,%uFFFDx%uFFFD,true,z%uFFFD
+localeCompare: -1,1,0,-1,1,0,-1,0
+toUpperCase/toLowerCase: Ǆ,ǉ,ⅻ,10428,TRUE,FF,istanbul,Iİ,4,1,ας
+toUpperCase null: TypeError: String.prototype method called on null or undefined
+String.raw: a\nb1\u{zz} | x1y2z |  | pq | only | a1undefined2c | 
+String.raw no raw: TypeError: raw is not an object
+String.raw null: TypeError: cannot read property 'raw' of undefined
+fromCharCode: ,ABC,65535,62976,true,0
+fromCodePoint: ,ab,2,1,0
+fromCodePoint -1: RangeError: Invalid code point
+fromCodePoint NaN: RangeError: Invalid code point
+fromCodePoint Infinity: RangeError: Invalid code point
+fromCodePoint symbol: TypeError: Cannot convert a Symbol value to a number
+String() conversions:  null undefined Symbol(d) 0 1,2 [object Object] 1 1e+21 1e-7 123456789012345680000 0.000001 -1e-7 9007199254740992 1.7976931348623157e+308 5e-324 0.30000000000000004 -1.5e-10 0.3333333333333333 100 1e+100 1.23e-18
+String symbol implicit: TypeError: Cannot convert a Symbol value to a string
+String wrapper: object 2 a  0,1,extra {"value":"a","writable":false,"enumerable":true,"configurable":false} true false true false false true 0,1,length
+String wrapper index define: false true true q true false
+String wrapper set index: TypeError: cannot assign to read-only property '0'
+String wrapper for-in: 0,1,p
+String subclass: HEY! 3 true "hey" [object String]
+String new.target symbol: TypeError: Cannot convert a Symbol value to a string
+string iterator: 1,2,1,1 [object String Iterator] true 2
+string iterator bad this: TypeError: String Iterator next called on an incompatible receiver
+string iterator on wrapper and null: h-i TypeError
+toString/valueOf bad this: TypeError: not a String object
+valueOf bad this: TypeError: not a String object
+toString on wrapper: w v
+anchor etc: <blink>a</blink><tt>a</tt><i>a</i><small>a</small><strike>a</strike><sup>a</sup><font size="undefined">a</font><a name="undefined">a</a><a href="&quot;q&quot;">a</a>
+toLocaleString: abc 5

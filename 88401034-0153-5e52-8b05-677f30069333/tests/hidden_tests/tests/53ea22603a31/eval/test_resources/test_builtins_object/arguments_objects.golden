@@ -1,0 +1,19 @@
+mapped => ["changed via arguments", "changed via param", "changed via arguments", "defined", "changed via param", "defined"]
+extra args unmapped => [1, "x"]
+missing param unmapped => [undefined, 1]
+strict unmapped => 1
+default params unmapped => 1
+rest params unmapped => 1
+duplicate params => "second"
+props => ["[object Arguments]", 2, "function", ["0", "1"], ["0", "1", "length", "callee"], true]
+length descriptor => {value: 1, writable: true, enumerable: false, configurable: true}
+strict callee !! TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+strict callee descriptor => ["function", true, false, false]
+iteration => [[1, 2, 3], [2, 4, 6], [2, 3], "{\"0\":1,\"1\":2,\"2\":3}"]
+not an array => [false, "undefined"]
+modify length => [1]
+arrow inherits => "outer"
+Reflect.gOPD sees live value => "live"
+freeze unmaps => ["orig", true]
+accessor unmaps => ["getter", "param"]
+value define keeps mapping => "v2"

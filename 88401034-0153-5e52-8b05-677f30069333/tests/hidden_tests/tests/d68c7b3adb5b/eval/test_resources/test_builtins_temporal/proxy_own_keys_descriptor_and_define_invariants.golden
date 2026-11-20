@@ -1,0 +1,55 @@
+ownKeys-added TypeError: ownKeys trap added a key to a non-extensible target
+ownKeys-omitted TypeError: ownKeys trap omitted a key of a non-extensible target
+ownKeys-noncfg TypeError: ownKeys trap omitted a non-configurable target key
+ownKeys-dupe TypeError: ownKeys trap result has duplicate keys
+ownKeys-type TypeError: ownKeys trap result must contain only strings and symbols
+ownKeys-prim TypeError: ownKeys trap must return an array-like object
+ownKeys-neglen []
+ownKeys-nanlen []
+ownKeys-arraylike ["a","b"]
+ownKeys-notcallable TypeError: proxy 'ownKeys' trap is not callable
+ownKeys-forward-nested ["1","2","b","a"]
+ownKeys-forward 0,z,Symbol(s)
+gpo-mismatch TypeError: getPrototypeOf trap result differs from a non-extensible target's prototype
+gpo-ok true
+gpo-bad TypeError: getPrototypeOf trap must return an object or null
+gpo-forward-null null
+gpo-forward-nested true
+gopd-undef-nonext TypeError: gOPD trap reported undefined for a non-extensible target's property
+gopd-undef-noncfg TypeError: gOPD trap reported undefined for a non-configurable property
+gopd-missing-nonext TypeError: gOPD trap reported a property missing from a non-extensible target
+gopd-value TypeError: proxy must report the same value for the non-writable, non-configurable property 'k'
+gopd-getter TypeError: proxy must report the same getter for the non-configurable property 'g'
+gopd-setter TypeError: proxy must report the same setter for the non-configurable property 'g'
+gopd-same {"enumerable":false,"configurable":false}
+gopd-nonwritable TypeError: gOPD trap reported non-writable for a writable target property
+gopd-noncfg-missing TypeError: gOPD trap reported a non-configurable descriptor the target lacks
+gopd-noncfg-but-cfg TypeError: gOPD trap reported non-configurable for a configurable target property
+gopd-shape TypeError: proxy can't report a differently-shaped descriptor for the non-configurable property 'k'
+gopd-forward-nested {"value":3,"writable":true,"enumerable":true,"configurable":true}
+gopd-forward-missing undefined
+pie-nested true
+dp-nonext TypeError: proxy 'defineProperty' added a property to a non-extensible target
+dp-noncfg TypeError: proxy 'defineProperty' defined a non-configurable property the target lacks
+dp-noncfg-writable TypeError: proxy 'defineProperty' reported a non-configurable writable property as non-writable
+dp-incompatible TypeError: proxy 'defineProperty' changed a non-configurable non-writable value
+dp-forward-nested {"x":9}
+dp-false false
+dp-false-throw TypeError: proxy defineProperty returned a falsish value
+freeze proxy true
+  traps: preventExtensions | ownKeys | gopd a | define a {"writable":false,"configurable":false} | gopd b | define b {"writable":false,"configurable":false}
+isFrozen proxy true
+  traps: isExtensible | ownKeys | gopd a | gopd b
+seal proxy refusing TypeError: Object.seal could not seal the object
+freeze refusing define TypeError: could not set the object's integrity level
+freeze empty typed array true
+freeze typed array TypeError: Object.freeze could not freeze the object
+seal typed array TypeError: Object.seal could not seal the object
+preventExtensions typed array false sealed=false
+freeze resizable-backed TypeError: Object.freeze could not freeze the object
+preventExtensions length-tracking TypeError: could not prevent extensions
+isFrozen primitive true true false
+freeze primitive str
+keys via ownKeys order b,a
+for-in via proxy y,x
+assign from proxy {"q":2}

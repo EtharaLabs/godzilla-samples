@@ -1,0 +1,21 @@
+default strings => [-1, 1, 10, 100, 1e+21, 1e-7, 9, "B", "a", "b"]
+mixed types => [[], 1, 3, NaN, {}, "a", "b", null, true, undefined]
+undefined and holes => [[1, 2, 3, undefined, <hole>, <hole>], 6, false, true]
+stable => "bdace"
+stable large => true
+cmp returns string => [1, 2, 3]
+cmp returns boolean => [1, 2, 3]
+cmp NaN => [3, 1, 2]
+cmp throws => ["boom", [3, 2, 1]]
+cmp sees undefined? => false
+cmp mutates array => [1, 2, 3]
+-0 and 0 => [false, true, false, true]
+array-like => {0: "a", 1: "b", 2: "c", length: 3}
+array-like with holes => {0: "a", 1: "b", 5: "ignored", length: 4}
+null comparator !! TypeError: the comparator must be a function or undefined
+object comparator !! TypeError: the comparator must be a function or undefined
+valueOf called => true
+returns same array => true
+numeric compare => [-1, 0, 3.5, 25, 100]
+localeCompare => ["a", "á", "b", "C"]
+default order of astral vs BMP strings => ["5a", "7a", "e9", "ff61", "1f600"]

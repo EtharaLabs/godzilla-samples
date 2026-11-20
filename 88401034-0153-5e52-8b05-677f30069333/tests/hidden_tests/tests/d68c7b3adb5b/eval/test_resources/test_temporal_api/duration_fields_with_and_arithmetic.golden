@@ -1,0 +1,10 @@
+getters: 1,2,3,4,5,6,7,8,9,10,1,false,P1Y2M3W4DT5H6M7.00800901S,P1Y2M3W4DT5H6M7.00800901S,PT0S,0,true
+negative: -1 -P1DT2H P1DT2H P1DT2H PT0S -2
+with: P3W4DT5H6M7.00800901S P1Y2M3W4DT5H6M7.008009999S -PT1H true
+with errors: TypeError:with() requires at least one duration field | RangeError:value must be an integer | RangeError:mixed-sign duration | TypeError:with() argument must be an object
+from: true PT1H P1D 1 -1
+from errors: TypeError:cannot convert to Temporal.Duration | TypeError:cannot convert to Temporal.Duration | TypeError:cannot convert to Temporal.Duration | TypeError:cannot convert to Temporal.Duration | TypeError:cannot convert to Temporal.Duration
+fractional parse: 0/1/30/0/0/0/0 0/0/1/15/0/0/0 0/0/0/0/0/1/0 0/0/0/1/999/999/999 1/0/30/0/0/0/0 0/-2/-45/0/0/0/0 0/0/7/24/444/440/400
+add/subtract: PT135M P1DT1H -PT1H -PT1S PT1S PT2000000000H P2D PT60M
+add errors: RangeError:Duration arithmetic with years, months, or weeks requires a relativeTo | RangeError:Duration arithmetic with years, months, or weeks requires a relativeTo | RangeError:duration is outside the valid range
+round balance: PT27H46M40S P1DT3H46M40S PT16667H PT2057M36.789S PT3000S -P2DT1H PT123456.789S PT31H PT98H PT2M PT2M

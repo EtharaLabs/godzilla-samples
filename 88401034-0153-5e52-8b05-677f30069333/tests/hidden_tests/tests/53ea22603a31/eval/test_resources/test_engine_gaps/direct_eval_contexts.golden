@@ -1,0 +1,24 @@
+var over block let: SyntaxError: Identifier 'blk' has already been declared
+function over block const: SyntaxError: Identifier 'kk' has already been declared
+var over catch param is allowed: 5
+var inside with is allowed: 3
+var arguments in parameter scope: SyntaxError: Identifier 'arguments' has already been declared
+arguments in field initializer: SyntaxError: 'arguments' is not allowed in class field initializer code
+arguments in field arrow: SyntaxError: 'arguments' is not allowed in class field initializer code
+arguments shielded by function: 2
+super() in method: SyntaxError: 'super' keyword unexpected here
+super() in plain function: SyntaxError: 'super' call unexpected here
+super.x in plain function: SyntaxError: 'super' keyword unexpected here
+super.x in arrow in method: px
+super.x in field initializer: bx
+super() via arrow in constructor: 1
+new.target in arrow: true
+new.target at global: SyntaxError: new.target is only valid inside a function
+strict indirect eval var scope: undefined
+non-string arguments: 5,1,,symbol,object
+completion values: |3||4
+param default eval var: 7number
+private name via eval: priv
+undeclared private via eval: SyntaxError: Private name '#nope' is not declared in an enclosing class
+Annex B fn var re-created after delete: function bf true undefined
+Annex B global fn re-created after delete: function true

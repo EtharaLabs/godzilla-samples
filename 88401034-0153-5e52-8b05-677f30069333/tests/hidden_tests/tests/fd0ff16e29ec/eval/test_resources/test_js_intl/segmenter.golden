@@ -1,0 +1,24 @@
+grapheme => "é"@0|"a"@1|"👨‍👩‍👧"@2|"🇺🇸"@10|"🇩🇪"@14|"x"@18|"\r\n"@19|"क्"@21|"षि"@23|"한"@25|"국"@26|"어"@27|"é̈"@28|"👍🏽"@31|"🏳️‍🌈"@35|"각"@41|"a‍"@44|"b"@46
+grapheme keys => segment,index,input
+word => Hello*@0|,@5| @6|world*@7|!@12| @13|It's*@14| @18|3.14*@19| @23|o'clock—e*@24|-@33|mail*@34| @38|me*@39| @41|at*@42| @44|a*@45|@@46|b.co*@47|.@51| @52|你好世界*@53| @57|日本語です*@58
+word keys => segment,index,input,isWordLike
+word numbers => 1,000.5*| |$|20*| |ab12*| |x*|_|y*| |3rd*| |2024*|-|01*|-|05*| |1e10*| |€5*| |50*|%| |U.S.A*|.| |can't*| |"|quoted*|"| |(|paren*|)
+word scripts => Привет|мир|שלום|עולם|مرحبا|بالعالم|Γειά|σου|κόσμε|안녕하세요|세계
+word th => สวัสดีครับ
+word ja => 今日は良い天気ですね。カタカナ
+word emoji => hi👋🏽*| |there🇫🇷*|!
+sentence => "Mr. " "Smith went home. " "He said \"Hi!" "\" Then left? " "Yes." "." ". " "ok\nNew line. " "3." "5 is a number. " "End"
+sentence more => "Is it?" "! " "No. " "(Really." ") e." "g. " "this one. " "U." "S. " "ships." "." ". " "\"Quote." "\" Next Para. " "日本語です。次の文。Что? " "Да!"
+sentence keys => segment,index,input
+containing => {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true} {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true} {"segment":" ","index":3,"input":"foo bar baz","isWordLike":false} {"segment":"bar","index":4,"input":"foo bar baz","isWordLike":true} {"segment":"baz","index":8,"input":"foo bar baz","isWordLike":true}   {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true} {"segment":"bar","index":4,"input":"foo bar baz","isWordLike":true} {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true}
+containing grapheme => a@0 👨‍👩‍👧@1 👨‍👩‍👧@1 👨‍👩‍👧@1 b@9
+resolved => {"locale":"fr","granularity":"word"} {"locale":"en","granularity":"grapheme"} {"locale":"ja-JP","granularity":"sentence"}
+bad granularity => THROW RangeError: invalid granularity: line
+bad options => THROW TypeError: options must be an object or undefined
+no new => THROW TypeError: Intl.Segmenter requires 'new'
+iterator => function [object Array Iterator] [object Object] {"value":{"segment":"a","index":0,"input":"ab"},"done":false} {"value":{"segment":"b","index":1,"input":"ab"},"done":false} {"done":true}
+segments reusable => 3,3
+empty => 0 undefined
+coercion => 1|2 9
+lone surrogates => 1@0|1@1|1@2|1@3
+long text => 200 50 1050

@@ -1,0 +1,19 @@
+enc 6 AAEC+vv8 AAEC-vv8 AAEC+vv8 AAEC-vv8 000102fafbfc
+enc 7 AAEC+vv8/Q== AAEC-vv8_Q== AAEC+vv8/Q AAEC-vv8_Q 000102fafbfcfd
+enc 8 AAEC+vv8/f4= AAEC-vv8_f4= AAEC+vv8/f4 AAEC-vv8_f4 000102fafbfcfdfe
+enc 9 AAEC+vv8/f7/ AAEC-vv8_f7_ AAEC+vv8/f7/ AAEC-vv8_f7_ 000102fafbfcfdfeff
+enc 10 AAEC+vv8/f7/Pg== AAEC-vv8_f7_Pg== AAEC+vv8/f7/Pg AAEC-vv8_f7_Pg 000102fafbfcfdfeff3e
+enc 11 AAEC+vv8/f7/Pj8= AAEC-vv8_f7_Pj8= AAEC+vv8/f7/Pj8 AAEC-vv8_f7_Pj8 000102fafbfcfdfeff3e3f
+enc-empty "" ""
+enc-errors TypeError: alphabet must be 'base64' or 'base64url' TypeError: options must be an object TypeError: options must be an object TypeError: requires a Uint8Array TypeError: not a Uint8Array TypeError: method requires a Uint8Array
+dec [0,1,2,250,251,252,253,254,255,62,63] [0,1,2,250,251,252,253,254,255,62,63] SyntaxError: invalid base64 string [65,66,67,68] [65,66,67] [65,66] [65,66] [65] SyntaxError: invalid base64 string [65] SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string
+handling loose [65,66,67,68] [65,66,67,68] [65,66,67,68] SyntaxError: invalid base64 string SyntaxError: invalid base64 string [65,66,67,69,70] [65,66,67,69,70] []
+handling strict SyntaxError: invalid base64 string [65,66,67,68] SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string []
+handling stop-before-partial [65,66,67] [65,66,67,68] [65,66,67,68] [65,66,67] [65,66,67] [65,66,67] [65,66,67,69,70] []
+dec-errors TypeError: fromBase64 requires a string SyntaxError: invalid base64 string TypeError: lastChunkHandling must be 'loose', 'strict', or 'stop-before-partial' TypeError: alphabet must be 'base64' or 'base64url' TypeError: options must be an object SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string
+hex [0,255,127,160,188] [] SyntaxError: invalid hex string SyntaxError: invalid hex string SyntaxError: invalid hex string SyntaxError: invalid hex string TypeError: fromHex requires a string [222,173,190,239]
+setFromHex {"read":4,"written":2} [1,2,0,0,0,0] {"read":12,"written":6} [170,187,204,221,238,255] SyntaxError: invalid hex string [17,34,204,221,238,255] SyntaxError: invalid hex string TypeError: setFromHex requires a string {"read":4,"written":2} [17,34,204,221,153,153]
+setFromBase64 {"read":8,"written":6} [65,66,67,68,69,70,0] {"read":8,"written":6} [65,66,67,68,69,70,0] {"read":8,"written":4} SyntaxError: invalid base64 string [65,66,67,0,0,0,0] {"read":4,"written":3} [65,66,67,0,0,0,0] {"read":12,"written":7} [65,66,67,68,69,70,71] {"read":0,"written":0} {"read":0,"written":0} {"read":0,"written":0} {"read":4,"written":3} [251,255,191,68,69,70,71]
+set-errors TypeError: setFromBase64 requires a string TypeError: requires a Uint8Array TypeError: not a Uint8Array
+roundtrip 400 ACVKb5S53gMoTXKXvOEGK1B1mr/kCS5TeJ3C5wwx true 300 true
+lengths 1 1 0 1 undefined function

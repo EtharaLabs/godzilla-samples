@@ -1,0 +1,51 @@
+/.*?\d/                            "ab12"           ["ab1"]@0
+/.*?\b/                            "ab cd"          [""]@0
+/x.*?\b/                           "xab cd"         ["xab"]@0
+/x.*?\B/                           "xab"            ["x"]@0
+/.*?(?=c)/                         "abc"            ["ab"]@0
+/.*?(?!a)/                         "aab"            ["aa"]@0
+/.+?\1(x)/                         "abx"            ["abx","x"]@0
+/(['"]).*?\1/                      "say \"hi\" now" ["\"hi\"","\""]@4
+/(['"])[^]*?\1/                    "a 'b\nc' d"     ["'b\nc'","'"]@2
+/\w+?\s/                           "hello world"    ["hello "]@0
+/[^,]*?,/                          "aa,b,"          ["aa,"]@0
+/a.*?$/m                           "ab\ncd"         ["ab"]@0
+/a.*?^c/m                          "ab\ncd"         null
+/a[^]*?^c/m                        "ab\ncd"         ["ab\nc"]@0
+/a.*?^/                            "ab"             null
+/.*?c|b/                           "abc"            ["abc"]@0
+/\s*?x/                            "   x"           ["   x"]@0
+/(?<q>['"]).*?\k<q>/               "x 'y' z"        ["'y'","'"]@2 groups={"q":"'"}
+/(?:(?<q>')|(?<q>")).*?\k<q>/      "a \"b'c\" d"    ["\"b'c\"",null,"\""]@2 groups={"q":"\""}
+/(?:(?<q>')|(?<q>"))?.*?\k<q>z/    "abz"            ["abz",null,null]@0 groups={"q":"<undef>"}
+/\w*?(?:,|$)/                      "ab"             ["ab"]@0
+/a*?(?:b|c)/                       "aac"            ["aac"]@0
+/a*?(?:b|c|)/                      "aa"             [""]@0
+/x.*?(?:(y)|z)/                    "x--z"           ["x--z",null]@0
+/.*?(?:(a)b)*c/                    "zabc"           ["zabc","a"]@0
+/q.*?(?:ab)+/                      "q-abab"         ["q-abab"]@0
+/.*?(?:x{0,2}y)/                   "axxy"           ["axxy"]@0
+/a.*?.b/                           "acxb"           ["acxb"]@0
+/a.*?\sb/                          "a c b"          ["a c b"]@0
+/a.*?[bc]/                         "axc"            ["axc"]@0
+/a.*?\d+x/                         "a12x"           ["a12x"]@0
+/(a).*?\1/                         "abca"           ["abca","a"]@0
+/(a)?.*?\1b/                       "xb"             ["xb",null]@0
+/a.*?(?:)b/                        "axb"            ["axb"]@0
+/a.*?(?=b)b/                       "axb"            ["axb"]@0
+/a.*?(?<=x)b/                      "axb"            ["axb"]@0
+/a.*?(?i:B)/                       "axb"            ["axb"]@0
+/a\s*?$/                           "a  "            ["a  "]@0
+/^.*?$/                            ""               [""]@0
+/a.*?(?:(?<n>)|(?<n>b))\k<n>c/     "axc"            ["axc","",null]@0 groups={"n":""}
+/x.*?(?:|a)b/                      "xab"            ["xab"]@0
+/x.*?(?:(?=a)|(?=b))./             "x-b"            ["x-b"]@0
+/a.*?()\1b/                        "axb"            ["axb",""]@0
+/a.*?(){17}b/                      "axb"            ["axb",""]@0
+/(?:ab)*?c/                        "ababc"          ["ababc"]@0
+/a.*?(b)*c/                        "abbc"           ["abbc","b"]@0
+/(?:a|b)*?(?:\2|c)(.)?/            "abc"            ["abc",null]@0
+/<.*?>$/                           "<a><b>"         ["<a><b>"]@0
+/a.{0,3}?$/                        "abcd"           ["abcd"]@0
+128 groups 2 axbbc b 130
+128 groups 2 axbbc b 130

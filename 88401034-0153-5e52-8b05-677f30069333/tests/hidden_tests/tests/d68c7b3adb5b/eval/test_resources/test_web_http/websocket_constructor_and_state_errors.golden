@@ -1,0 +1,16 @@
+no url: TypeError: WebSocket constructor requires a url
+relative: SyntaxError: invalid WebSocket URL: /socket [DOMException]
+ftp scheme: SyntaxError: WebSocket URL scheme must be ws or wss, got 'ftp:' [DOMException]
+fragment: SyntaxError: WebSocket URL must not contain a fragment [DOMException]
+bad protocol: SyntaxError: invalid or duplicate WebSocket subprotocol [DOMException]
+empty protocol: SyntaxError: invalid or duplicate WebSocket subprotocol [DOMException]
+duplicate protocol: SyntaxError: invalid or duplicate WebSocket subprotocol [DOMException]
+constants 0 1 2 3 true
+instance true 0 0 1 2 3 null null
+send while connecting: InvalidStateError: WebSocket is still CONNECTING [DOMException]
+close(1001): InvalidAccessError: close code must be 1000 or in 3000-4999 [DOMException]
+close(2999): InvalidAccessError: close code must be 1000 or in 3000-4999 [DOMException]
+long reason: SyntaxError: close reason too long (>123 bytes) [DOMException]
+binaryType arraybuffer
+onerror error readyState=3 | error listener | onclose 1006 "" wasClean=false true
+after close: send is silently dropped: no error close again: no error

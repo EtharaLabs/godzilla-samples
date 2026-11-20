@@ -1,0 +1,54 @@
+Object.keys => ["a", "b"]
+   traps: ownKeys getOwnPropertyDescriptor:a getOwnPropertyDescriptor:b
+Object.assign source => {a: 1, Symbol(s): 2}
+   traps: ownKeys getOwnPropertyDescriptor:a get:a getOwnPropertyDescriptor:Symbol(s) get:Symbol(s)
+Object.assign target => 1
+   traps: set:x getOwnPropertyDescriptor:x defineProperty:x
+spread => {a: 1}
+   traps: ownKeys getOwnPropertyDescriptor:a get:a
+JSON.stringify => "{\"a\":1,\"b\":[2]}"
+   traps: get:toJSON ownKeys getOwnPropertyDescriptor:a getOwnPropertyDescriptor:b get:a get:b
+push => 2
+   traps: get:push get:length set:1 getOwnPropertyDescriptor:1 defineProperty:1 set:length getOwnPropertyDescriptor:length defineProperty:length get:length
+pop => 2
+   traps: get:pop get:length get:1 deleteProperty:1 set:length getOwnPropertyDescriptor:length defineProperty:length
+concat => [0, 1, 2]
+   traps: get:Symbol(Symbol.isConcatSpreadable) get:length has:0 get:0 has:1 get:1
+in => false
+   traps: has:a
+delete => true
+   traps: deleteProperty:a
+for-in => ["x", "y"]
+   traps: ownKeys getOwnPropertyDescriptor:x getOwnPropertyDescriptor:y getPrototypeOf has:x has:y
+freeze => 1
+   traps: preventExtensions ownKeys getOwnPropertyDescriptor:a defineProperty:a
+isFrozen => false
+   traps: isExtensible
+Array.from array-like => ["a", "b"]
+   traps: get:Symbol(Symbol.iterator) get:length get:0 get:1
+instanceof => true
+   traps: getPrototypeOf
+toString tag => "[object Array]"
+   traps: get:Symbol(Symbol.toStringTag)
+call => 42
+   traps: apply
+new => 1
+   traps: construct get:prototype
+reverse => 1
+   traps: get:reverse get:length has:0 get:0 has:2 get:2 set:0 getOwnPropertyDescriptor:0 defineProperty:0 set:2 getOwnPropertyDescriptor:2 defineProperty:2
+includes => true
+   traps: get:includes get:length get:0 get:1
+Array.isArray => true
+   traps: 
+rest destructuring => {b: 2}
+   traps: get:a ownKeys getOwnPropertyDescriptor:b get:b
+hasOwnProperty => true
+   traps: getOwnPropertyDescriptor:k
+getPrototypeOf => true
+   traps: getPrototypeOf
+defineProperty => 1
+   traps: defineProperty:x
+fill => 1
+   traps: get:fill get:length set:0 getOwnPropertyDescriptor:0 defineProperty:0 set:1 getOwnPropertyDescriptor:1 defineProperty:1
+with stmt => 5
+   traps: has:v get:Symbol(Symbol.unscopables) has:v get:v

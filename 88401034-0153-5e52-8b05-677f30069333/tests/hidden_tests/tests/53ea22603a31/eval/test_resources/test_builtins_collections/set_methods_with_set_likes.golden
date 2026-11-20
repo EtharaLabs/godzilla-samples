@@ -1,0 +1,45 @@
+union => Set{1, 2, 3, 4, 7}
+   calls: size keys next next next
+intersection, this smaller => Set{7}
+   calls: size has(1) has(7)
+intersection, this larger => Set{2}
+   calls: size keys next next next
+difference, this smaller => Set{1}
+   calls: size has(1) has(2)
+difference, this larger => Set{1, 3, 4}
+   calls: size keys next next
+symmetricDifference => Set{2, 3, 4, 9}
+   calls: size keys next next next next
+isSubsetOf => true
+   calls: size has(1) has(2)
+isSubsetOf, this larger => false
+   calls: size
+isSupersetOf => false
+   calls: size keys next next
+isSupersetOf, other larger => false
+   calls: size
+isDisjointFrom, this smaller => true
+   calls: size has(1)
+isDisjointFrom, this larger => false
+   calls: size keys next next
+size is read before has/keys => Set{1, 2, 3, 4}
+   calls: size get has get keys
+isSupersetOf early exit closes keys => false
+   calls: next next return
+isDisjointFrom early exit closes keys => false
+   calls: next next return
+isDisjointFrom no early exit => true
+   calls: next next next
+keys next returns primitive !! TypeError: iterator result is not an object
+keys next returns primitive (superset) !! TypeError: iterator result is not an object
+size NaN !! TypeError: set-like size is NaN
+size missing !! TypeError: set-like size is NaN
+size negative !! RangeError: set-like size is negative
+has not callable !! TypeError: set-like has is not callable
+keys not callable !! TypeError: set-like keys is not callable
+keys returns primitive !! TypeError: set-like keys iterator has no next method
+array argument !! TypeError: set-like size is NaN
+primitive argument !! TypeError: argument is not an object
+infinite size => [true, Set{3, 4}]
+this mutated during has => Set{1, 3}
+keys values are not deduplicated by caller => Set{1, 2, 3, 4, 7}

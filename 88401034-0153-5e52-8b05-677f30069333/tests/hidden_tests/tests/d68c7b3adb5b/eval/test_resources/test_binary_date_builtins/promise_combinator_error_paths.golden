@@ -1,0 +1,57 @@
+all closes getter,call
+all order: fulfilled ["slow","fast","mid"]
+all/bad executor: TypeError: promise capability functions are not callable
+all/custom then call: rejected EvalError: all then call
+all/custom then getter: rejected SyntaxError: all then getter
+all/empty: fulfilled []
+all/iter: rejected TypeError: no iterator
+all/next: rejected RangeError: next threw
+all/non-ctor this: TypeError: NewPromiseCapability: receiver is not a constructor
+all/non-iterable: rejected TypeError: value is not iterable
+all/resolve-not-callable: rejected TypeError: Promise combinator: this.resolve is not callable
+all/resolve-throws: rejected URIError: resolve threw
+all/then: rejected SyntaxError: then getter
+all/thencall: rejected EvalError: then call
+allSettled closes getter,call
+allSettled mix: fulfilled [{"status":"fulfilled","value":1},{"status":"rejected","reason":2},{"status":"fulfilled","value":3}]
+allSettled/bad executor: TypeError: promise capability functions are not callable
+allSettled/custom then call: rejected EvalError: allSettled then call
+allSettled/custom then getter: rejected SyntaxError: allSettled then getter
+allSettled/empty: fulfilled []
+allSettled/iter: rejected TypeError: no iterator
+allSettled/next: rejected RangeError: next threw
+allSettled/non-ctor this: TypeError: NewPromiseCapability: receiver is not a constructor
+allSettled/non-iterable: rejected TypeError: value is not iterable
+allSettled/resolve-not-callable: rejected TypeError: Promise combinator: this.resolve is not callable
+allSettled/resolve-throws: rejected URIError: resolve threw
+allSettled/then: fulfilled [{"status":"rejected","reason":{}}]
+allSettled/thencall: fulfilled [{"status":"rejected","reason":{}}]
+any closes getter,call
+any errors order: rejected AggregateError:  errors=["slow","fast"]
+any mixed: fulfilled 3
+any/bad executor: TypeError: promise capability functions are not callable
+any/custom then call: rejected EvalError: any then call
+any/custom then getter: rejected SyntaxError: any then getter
+any/empty: rejected AggregateError:  errors=[]
+any/iter: rejected TypeError: no iterator
+any/next: rejected RangeError: next threw
+any/non-ctor this: TypeError: NewPromiseCapability: receiver is not a constructor
+any/non-iterable: rejected TypeError: value is not iterable
+any/resolve-not-callable: rejected TypeError: Promise combinator: this.resolve is not callable
+any/resolve-throws: rejected URIError: resolve threw
+any/then: rejected AggregateError:  errors=["SyntaxError: then getter"]
+any/thencall: rejected AggregateError:  errors=["EvalError: then call"]
+generic closed: 
+race closes getter,call
+race thenable vs resolved: fulfilled "later"
+race/bad executor: TypeError: promise capability functions are not callable
+race/custom then call: rejected EvalError: race then call
+race/custom then getter: rejected SyntaxError: race then getter
+race/iter: rejected TypeError: no iterator
+race/next: rejected RangeError: next threw
+race/non-ctor this: TypeError: NewPromiseCapability: receiver is not a constructor
+race/non-iterable: rejected TypeError: value is not iterable
+race/resolve-not-callable: rejected TypeError: Promise combinator: this.resolve is not callable
+race/resolve-throws: rejected URIError: resolve threw
+race/then: rejected SyntaxError: then getter
+race/thencall: rejected EvalError: then call

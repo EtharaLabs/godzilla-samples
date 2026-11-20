@@ -1,0 +1,24 @@
+/chunked 200 "OK" [["content-type","text/plain"],["transfer-encoding","chunked"]] "Hello, world!123456789"
+/eof 200 "OK" [["content-type","text/plain"]] "read until the server closes"
+/noreason 299 "" [["content-length","2"]] "ok"
+/badstatus THREW TypeError fetch 'http://127.0.0.1:PORT/badstatus': malformed status line "HTTP/1.1 abc Weird\r\n"
+/garbage THREW TypeError fetch 'http://127.0.0.1:PORT/garbage': malformed status line "not http at all\r\n"
+/headers 200 "Fine Thanks" [["content-length","3"],["x-dup","1, 2"],["x-spaces","padded value"]] "abc"
+/204 204 "No Content" [["content-length","5"]] ""
+/304 304 "Not Modified" [] ""
+/badchunk THREW TypeError fetch 'http://127.0.0.1:PORT/badchunk': body: bad chunk size "zz\r\n"
+/short THREW TypeError fetch 'http://127.0.0.1:PORT/short': body: failed to fill whole buffer
+/http10 200 "OK" [["content-length","4"]] "old!"
+HEAD 200 ""
+GET /chunked HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /eof HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /noreason HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /badstatus HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /garbage HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /headers HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /204 HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | x-mine: m | User-Agent: lumen/V
+GET /304 HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /badchunk HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /short HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+GET /http10 HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V
+HEAD /eof HTTP/1.1 | Host: 127.0.0.1:PORT | Connection: close | User-Agent: lumen/V

@@ -1,0 +1,16 @@
+initial 0 blob true "" 0
+open open 1 chat ""
+message 1 "echo:hello" true
+message 2 Blob(3) true
+message 3 "echo:xxxxx...(205)" true
+message 4 "echo:yyyyy...(70005)" true
+message 5 ArrayBuffer[98,108,111,98] true
+close true 4000 "done" true 3
+request line: GET /chat?room=1 HTTP/1.1
+upgrade=websocket connection=Upgrade version=13 protocol=chat, superchat key bytes=16
+frame opcode=1 masked=true len=5 text=hello
+frame opcode=2 masked=true len=3 bytes=1,2,3
+frame opcode=1 masked=true len=200 text=xxxxxxxxxxxx
+frame opcode=1 masked=true len=70000 text=yyyyyyyyyyyy
+frame opcode=2 masked=true len=4 bytes=98,108,111,98
+frame opcode=8 masked=true len=6 code=4000 reason=done

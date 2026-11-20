@@ -1,0 +1,29 @@
+min datetime: -271821-04-19T00:00:00.000000001
+round min down: RangeError: date-time is outside the representable range
+round min up: -271821-04-19T01:00:00
+subtract 1ns: RangeError: date-time is outside the representable range
+max datetime round day: RangeError: date is outside the supported range
+max datetime round second: +275760-09-13T23:59:59
+relativeTo string before range: RangeError: relativeTo is outside the supported range
+relativeTo zoned string before range: RangeError: relativeTo is outside the supported range
+relativeTo bag before range: RangeError: date is outside the supported range
+relativeTo bag first day: P1D
+relativeTo bag negative hour: RangeError: time field out of range
+relativeTo bag hour 25: PT24H
+total from min datetime: RangeError: date-time is outside the supported range
+total from min date: RangeError: date-time is outside the supported range
+zoned bag offset ignore at min: RangeError: date-time is outside the representable range
+zoned string offset ignore at min: RangeError: date-time is outside the representable range
+zoned string offset ignore next day: -271821-04-20T00:00:00+00:00[UTC]
+zoned min in -01:00: -271821-04-19T23:00:00-01:00[-01:00]
+withPlainTime midnight: RangeError: date-time is outside the representable range
+withPlainTime 23:30: -271821-04-19T23:30:00-01:00[-01:00]
+zoned max in +01:00: +275760-09-13T01:00:00+01:00[+01:00]
+round max to day: RangeError: instant is outside the representable range
+round max to hour: +275760-09-13T01:00:00+01:00[+01:00]
+round min to day: RangeError: instant is outside the representable range
+startOfDay of min: RangeError: instant is outside the representable range
+hoursInDay of min: RangeError: instant is outside the representable range
+zoned min in -00:30: -271821-04-19T23:30:00-00:30[-00:30]
+round -00:30 min to hour floor: RangeError: date-time is outside the representable range
+round -00:30 min to hour halfExpand: -271821-04-20T00:00:00-00:30[-00:30]

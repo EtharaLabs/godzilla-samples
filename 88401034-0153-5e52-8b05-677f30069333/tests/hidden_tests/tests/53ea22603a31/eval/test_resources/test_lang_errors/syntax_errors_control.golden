@@ -1,0 +1,66 @@
+## control
+"break" SyntaxError: illegal 'break' statement true
+"continue" SyntaxError: illegal 'continue' statement true
+"x: x: 1" SyntaxError: label 'x' has already been declared true
+"while(1) { continue nope }" SyntaxError: undefined continue label true
+"for (const x of y) { break foo }" SyntaxError: undefined break label true
+"x: { continue x; }" SyntaxError: continue label does not target an iteration statement true
+"x: if (1) { continue x; }" SyntaxError: continue label does not target an iteration statement true
+"switch (1) { default: default: }" SyntaxError: more than one default clause in switch statement true
+"switch (1) { case 1: continue; }" SyntaxError: illegal 'continue' statement true
+"try {}" SyntaxError: missing catch or finally after try true
+"try {} catch {} catch {}" SyntaxError: unexpected token Keyword("catch") true
+"throw\n1" SyntaxError: illegal newline after throw true
+"return" ok
+"function f() { return } return 1" ok
+"for (let x of [], []) {}" SyntaxError: expected ')' true
+"for (let [a] = 1 of []) {}" SyntaxError: expected ';' true
+"for (var x = 1 of []) {}" SyntaxError: expected ';' true
+"for (var x = 1 in {}) {}" ok
+"for (const x in {}) {} else {}" SyntaxError: unexpected token Keyword("else") true
+"do x while(1)" SyntaxError: expected ';' true
+"if (1) else {}" SyntaxError: unexpected token Keyword("else") true
+"for (async of []) ;" SyntaxError: 'async' as a for-of left side must be parenthesized true
+"for ((async) of []) ;" ok
+"for (let let of []) ;" SyntaxError: 'let' is disallowed as a lexically bound name true
+"for (x => x in y;;) ;" SyntaxError: expected ')' true
+"for await (const x of y) {}" SyntaxError: 'for await' is only valid in an async context true
+"async function f() { for await (const x in y) {} }" SyntaxError: 'for await' is only valid with a for-of head true
+"yield: { yield }" ok
+"function* g() { yield: 1 }" SyntaxError: 'yield' cannot be used as a label here true
+"async function f() { await: 1 }" SyntaxError: 'await' cannot be used as a label here true
+"new.target" ok
+"function f() { new.foo }" SyntaxError: expected 'target' after 'new.' true
+"x: while (1) { (() => { break x; })(); }" SyntaxError: undefined break label true
+"x: while (1) { function f() { continue x; } }" SyntaxError: undefined continue label true
+"a: { b: { break a; } }" ok
+"a: b: while (1) continue a;" ok
+"if (1) let x = 1;" SyntaxError: expected ';' true
+"while (1) const y = 2;" SyntaxError: lexical declaration cannot appear in a single-statement context true
+"if (1) class C {}" SyntaxError: lexical declaration cannot appear in a single-statement context true
+"label: let\nx" ok
+"do function f() {} while (0)" SyntaxError: function declaration cannot appear in a single-statement context true
+"with ({}) function f() {}" SyntaxError: function declaration cannot appear in a single-statement context true
+"for (;;) async function f() {}" SyntaxError: function declaration cannot appear in a single-statement context true
+"if (1) async function f() {}" SyntaxError: function declaration cannot appear in a single-statement context true
+"switch (1) { case 1: let a; case 2: let a; }" SyntaxError: Identifier 'a' has already been declared true
+"try {} finally {} catch {}" SyntaxError: unexpected token Keyword("catch") true
+## generatorsAndAsync
+"function* g() { var yield; }" SyntaxError: 'yield' cannot be used as a binding here true
+"async function f() { var await; }" SyntaxError: 'await' cannot be used as a binding here true
+"function* g() { function yield() {} }" SyntaxError: 'yield' cannot be used as a function name here true
+"async function f() { function await() {} }" SyntaxError: 'await' cannot be used as a function name here true
+"function* g(x = yield) {}" SyntaxError: yield expression is not allowed in formal parameters true
+"async function f(x = await 1) {}" SyntaxError: await expression is not allowed in formal parameters true
+"async (x = await 1) => x" SyntaxError: await expression is not allowed in formal parameters true
+"async function f() { (await) => 1 }" SyntaxError: 'await' cannot be used as a binding here true
+"function* g() { (yield) => 1 }" SyntaxError: 'yield' cannot be used as a binding here true
+"function* g() { yield\n1 }" ok
+"async function f() { await\n1 }" ok
+"function* g() { yield yield 1 }" ok
+"function* g() { const x = yield* ; }" ok
+"async function* ag() { yield* await x; for await (const y of z) ; }" ok
+"async () => { for await (x of y) ; }" ok
+"function f() { await x }" SyntaxError: expected ';' true
+"function f() { var await; }" ok
+"async function f() { class await {} }" SyntaxError: 'await' cannot be used as a class name here true

@@ -1,0 +1,21 @@
+split => [["a", "b", "", "c"], ["a", "b", "c"], ["a", "b"], [], ["a,b"], [""], [], ["", "", ""], ["a", "b", ""]]
+split limits => [["a", "b", "c"], ["a"], ["a", "b"], ["a", "b"], [], ["a", "b", "c"]]
+split undefined sep limit 0 => []
+split surrogates => ["d83d", "de00", "78"]
+split multi-char sep => [["a", "b", "-c"], ["", "", ""]]
+split object sep => ["a", "b"]
+split coercion order => ["this", "limit", "sep"]
+indexOf => [2, 3, 2, -1, 0, -1]
+lastIndexOf => [0, 1, -1, 5, 3, 1]
+includes/startsWith/endsWith => [true, true, false, true, true, false, true, true]
+startsWith regex !! TypeError: argument must not be a regular expression
+endsWith regex !! TypeError: argument must not be a regular expression
+includes regex !! TypeError: argument must not be a regular expression
+regex with Symbol.match=false => [true, true, true]
+object with Symbol.match !! TypeError: argument must not be a regular expression
+search string => [0, 0, 0, 1, -1]
+match string => [1, null, "a", 1]
+matchAll string => [0, 1, 2, 3, 4]
+localeCompare => [-1, 1, 0, -1, -1, -1, 1, -1, -1, 1, 0, 1]
+localeCompare options => [0, -1, -1, -1]
+localeCompare coercion => [0, 0, 0]

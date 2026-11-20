@@ -1,0 +1,13 @@
+symbol methods on non-objects: match:[Symbol.match] called on a non-object / replace:[Symbol.replace] called on a non-object / search:[Symbol.search] called on a non-object / split:[Symbol.split] called on a non-object / matchAll:[Symbol.matchAll] called on a non-object
+generic match on plain object: {"0":"HEY","index":0}
+generic global match on plain object: ["m1","m2"] li=0
+generic replace on plain object: h__ lastIndex=0
+generic search on plain object: 4 true
+generic split species: ["a","c"]
+string methods dispatch: match!,replace!,search!,split!,matchAll!,replace! match(abc) replace(abc,r) search(abc) split(abc,2) matchAll(abc) replace(abc,z)
+null/undefined Symbol.replace falls back: aXc a|c
+non-callable Symbol.match: TypeError: @@match is not callable
+replaceAll/matchAll flag checks: replaceAll must be called with a global RegExp | String.prototype.matchAll called with a non-global RegExp | TypeError
+replaceAll with global regexp: a[1]b[3]c bbb
+startsWith rejects regexp: startsWith:TypeError endsWith:TypeError includes:TypeError
+match on subclass with exec: ["A","B"] <A>1 true

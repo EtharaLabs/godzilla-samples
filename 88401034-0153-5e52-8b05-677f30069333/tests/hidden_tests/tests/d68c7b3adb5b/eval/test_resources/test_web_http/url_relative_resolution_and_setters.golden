@@ -1,0 +1,27 @@
+"d"                        http://example.com/a/b/d
+"./d"                      http://example.com/a/b/d
+"../d"                     http://example.com/a/d
+"../../d"                  http://example.com/d
+"../../../../d"            http://example.com/d
+"/root"                    http://example.com/root
+"//other.host/p"           http://other.host/p
+"?new=2"                   http://example.com/a/b/c?new=2
+"#newfrag"                 http://example.com/a/b/c?old=1#newfrag
+""                         http://example.com/a/b/c?old=1
+"d?x#y"                    http://example.com/a/b/d?x#y
+"."                        http://example.com/a/b/
+".."                       http://example.com/a/
+"d/"                       http://example.com/a/b/d/
+"https://abs.example/z"    https://abs.example/z
+base as URL object: https://h.test/dir/x
+hostname= https://user:pw@store.example:8443/cart/items?id=5&sort=asc#top
+port=443 https://user:pw@store.example/cart/items?id=5&sort=asc#top ""
+port=9000 https://user:pw@store.example:9000/cart/items?id=5&sort=asc#top store.example:9000
+pathname= https://user:pw@store.example:9000/checkout/done?id=5&sort=asc#top /checkout/done
+search= https://user:pw@store.example:9000/checkout/done?a=1&b=2#top 2
+search='' https://user:pw@store.example:9000/checkout/done#top
+hash= https://user:pw@store.example:9000/checkout/done#section-2
+hash='' https://user:pw@store.example:9000/checkout/done
+href= http://reset.example/new?k=v v http:
+toString/toJSON http://reset.example/new?k=v {"u":"http://reset.example/new?k=v"}
+canParse true false true parse /x null

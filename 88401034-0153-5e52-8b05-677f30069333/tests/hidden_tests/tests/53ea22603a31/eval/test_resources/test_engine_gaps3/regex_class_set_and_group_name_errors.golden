@@ -1,0 +1,30 @@
+"[ab--c]" v -> SyntaxError: cannot mix '--' with a union in a class set
+"[a-z--[aeiou]]" v -> SyntaxError: cannot mix '--' with a union in a class set
+"[[a-z]--[aeiou]]" v -> ok /[[a-z]--[aeiou]]/v
+"[z-a]" v -> SyntaxError: range out of order in character class
+"[a&&" v -> SyntaxError: unterminated character class
+"[&&a]" v -> SyntaxError: reserved doubled punctuator '&&' in class set
+"[a!!b]" v -> SyntaxError: reserved doubled punctuator '!!' in class set
+"[a##]" v -> SyntaxError: reserved doubled punctuator '##' in class set
+"[\\p]" v -> SyntaxError: invalid property escape: expected '{'
+"[\\p{L!}]" v -> SyntaxError: invalid character in property escape
+"[\\p{L" v -> SyntaxError: unterminated property escape
+"[\\P{Lu}]" v -> ok /[\P{Lu}]/v
+"[^\\P{Lu}]" v -> ok /[^\P{Lu}]/v
+"[\\p{Nope}]" v -> SyntaxError: invalid unicode property Nope
+"[\\P{Nope}]" v -> SyntaxError: invalid unicode property Nope
+"[]" v -> ok /[]/v
+"[^]" v -> ok /[^]/v
+"[a" u -> SyntaxError: unterminated character class
+"[\\" - -> SyntaxError: bad escape in class
+"(?<a>(?<a>x)|y)" - -> SyntaxError: duplicate group name a
+"(?<a>x)(?<a>y)" - -> SyntaxError: duplicate group name a
+"(?:(?<a>x)|(?<a>y))\\k<a>" - -> ok /(?:(?<a>x)|(?<a>y))\k<a>/
+"(?<\\uD835\\uDC9C>.)" - -> ok /(?<\uD835\uDC9C>.)/
+"(?<\\u{1D49C}>.)" u -> ok /(?<\u{1D49C}>.)/u
+"(?<\\uD835x>.)" - -> SyntaxError: invalid capture group name <<U+FFFD>x>
+"(?<\\uD835\\u0041>.)" - -> SyntaxError: invalid capture group name <<U+FFFD>A>
+"(?<a\ud800>.)" - -> SyntaxError: invalid capture group name
+"(?<a\ud800>.)" u -> SyntaxError: invalid capture group name
+"[a-" - -> SyntaxError: unterminated character class
+"[a-" u -> SyntaxError: unterminated character class

@@ -1,0 +1,39 @@
+"1 +"                  | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"foo("                 | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"var [a] = "           | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"a ? b :"              | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"{"                    | eval: SyntaxError: expected '}' | Function: SyntaxError: expected '}'
+"}"                    | eval: SyntaxError: unexpected token Punct("}") | Function: SyntaxError: unexpected token Punct("}")
+"("                    | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"if ("                 | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"function"             | eval: SyntaxError: expected '(' | Function: SyntaxError: expected '('
+"class"                | eval: SyntaxError: expected '{' | Function: SyntaxError: expected '{'
+"let"                  | eval: ReferenceError: let is not defined | Function: ok
+"x =>"                 | eval: SyntaxError: unexpected token Eof | Function: SyntaxError: unexpected token Punct("}")
+"\"use strict\"; 010"  | eval: SyntaxError: legacy octal literals are not allowed in strict mode | Function: SyntaxError: legacy octal literals are not allowed in strict mode
+"return 1"             | eval: SyntaxError: 'return' outside of a function | Function: ok
+"break"                | eval: SyntaxError: illegal 'break' statement | Function: SyntaxError: illegal 'break' statement
+"new.target"           | eval: ok | Function: ok
+"super.x"              | eval: SyntaxError: 'super' keyword unexpected here | Function: SyntaxError: 'super' keyword unexpected here
+"yield 1"              | eval: SyntaxError: expected ';' | Function: SyntaxError: expected ';'
+"await 1"              | eval: SyntaxError: expected ';' | Function: SyntaxError: expected ';'
+"arguments"            | eval: ok | Function: ok
+"/*"                   | eval: SyntaxError: unterminated block comment | Function: SyntaxError: unterminated block comment
+"//"                   | eval: ok | Function: ok
+"`"                    | eval: SyntaxError: unterminated template literal | Function: SyntaxError: unterminated template literal
+"\""                   | eval: SyntaxError: unterminated string literal | Function: SyntaxError: unterminated string literal
+"'"                    | eval: SyntaxError: unterminated string literal | Function: SyntaxError: unterminated string literal
+"\\"                   | eval: SyntaxError: unexpected character '\\' | Function: SyntaxError: unexpected character '\\'
+"@"                    | eval: SyntaxError: expected a decorator expression after '@' | Function: SyntaxError: expected a decorator expression after '@'
+["a)","{","return 1"] SyntaxError: expected '{'
+["/*","*/){"] SyntaxError: unterminated block comment
+["a = 1",""] ok length=0
+["a, a",""] ok length=2
+["...a, b",""] SyntaxError: expected ')'
+["{a}, [b]","return a + b"] ok length=2
+["a\n",""] ok length=1
+["//","return 1"] ok length=0
+["a /* c */","return a"] ok length=1
+["x = () => {","}"] SyntaxError: unexpected token Punct(")")
+no partial execution: 0 true true
+SyntaxError: unexpected token Punct(";") undefined

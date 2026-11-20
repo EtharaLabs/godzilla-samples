@@ -1,0 +1,11 @@
+map delete/add during for-of => [[1, 3, 4], [1, 3, 4]]
+set clear during iteration => [1, 9]
+set re-add during iteration => [1, 2, 1, 2, 1, 2]
+delete current entry => [["a", "b", "c"], 0]
+forEach sees additions => [1, 2, 3, 4]
+manual iterator => [{value: [1, "x"], done: false}, {value: undefined, done: true}, {value: undefined, done: true}]
+iterator created before additions => [{value: "late", done: false}, {value: undefined, done: true}]
+iterator after delete of all then add => [{value: 3, done: false}, {value: undefined, done: true}]
+iterator objects => ["[object Map Iterator]", "[object Set Iterator]", true, "function", true]
+iterator next wrong receiver => {value: undefined, done: true}
+spread after mutation => [1, 2]

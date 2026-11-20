@@ -1,0 +1,53 @@
+## classes
+"class A { constructor(){} constructor(){} }" SyntaxError: a class may only have one constructor true
+"class A { #x; #x }" SyntaxError: duplicate private name '#x' true
+"class A { get #x() {} get #x() {} }" SyntaxError: duplicate private name '#x' true
+"class A { get #x() {} set #x(v) {} }" ok
+"class A { static #x; #x }" SyntaxError: duplicate private name '#x' true
+"class A { static get #x() {} set #x(v) {} }" SyntaxError: duplicate private name '#x' true
+"this.#y" SyntaxError: Private name '#y' is not declared in an enclosing class true
+"class A { m() { this.#z } }" SyntaxError: Private name '#z' is not declared in an enclosing class true
+"class A { static prototype(){} }" SyntaxError: classes may not have a static method named 'prototype' true
+"class A { static prototype = 1 }" SyntaxError: classes may not have a static field named 'prototype' true
+"class A { constructor = 1 }" SyntaxError: classes may not have a field named 'constructor' true
+"class A { #constructor }" SyntaxError: '#constructor' is a reserved private name true
+"class A { get constructor() {} }" SyntaxError: class constructor can't be a generator, async, or accessor true
+"class A { *constructor() {} }" SyntaxError: class constructor can't be a generator, async, or accessor true
+"class A { async constructor() {} }" SyntaxError: class constructor can't be a generator, async, or accessor true
+"class A { get x(a){} }" SyntaxError: getter functions must have no arguments true
+"class A { set x(){} }" SyntaxError: setter functions must have exactly one argument true
+"class A { set x(a, b){} }" SyntaxError: setter functions must have exactly one argument true
+"class A { set x(...a){} }" SyntaxError: setter functions must have exactly one argument true
+"class A extends B { m() { super(); } }" SyntaxError: 'super' call unexpected here true
+"class A { constructor() { super(); } }" SyntaxError: 'super' call unexpected here true
+"class A { #x; m() { delete this.#x } }" SyntaxError: private fields cannot be deleted true
+"class A { #x; m() { return #x } }" SyntaxError: private name '#x' may only be used in a member access or 'in' expression true
+"class A { #x; m() { return #x in #x in this } }" SyntaxError: a private name may only appear to the left of 'in' true
+"class A { foo() {} static { super(); } }" SyntaxError: 'super' call unexpected here true
+"class A { x = super(); }" SyntaxError: 'super' call unexpected here true
+"class A extends B { x = super(); }" SyntaxError: 'super' call unexpected here true
+"class extends A {}" ok
+"class A extends B, C {}" SyntaxError: expected '{' true
+"class A { static async *#gen() {} static m() { A.#gen = 1; } }" ok
+"class A { #x; static m(o) { return o?.#x } }" ok
+"class A { #x; static m() { super.#x } }" SyntaxError: cannot access a private member through 'super' true
+"class A { accessor #a; accessor #a; }" SyntaxError: duplicate private name '#a' true
+"class A { m() { class B { [this.#q] = 1 } } }" SyntaxError: Private name '#q' is not declared in an enclosing class true
+"new class { #p; m() { obj.#p } }" ok
+"class A { static { await 1 } }" SyntaxError: 'await' is not a valid identifier here true
+"class A { static { return; } }" SyntaxError: 'return' is not allowed directly in a class static block true
+"class A { static { arguments; } }" SyntaxError: 'arguments' is not allowed in a class static block true
+"class A { constructor() {} \"constructor\"() {} }" SyntaxError: a class may only have one constructor true
+"class A { [\"constructor\"]() {} constructor() {} }" ok
+"class A { static constructor() {} constructor() {} }" ok
+"class A { #a; m() { #a; } }" SyntaxError: private name '#a' may only be used in a member access or 'in' expression true
+"class A { #a; m(o) { return #a in o; } }" ok
+"class A { m() { return (#a in this); } #a; }" ok
+"class A { x = () => super(); }" SyntaxError: 'super' call unexpected here true
+"class A { #x = 1; static m() { class B { y = this.#x; } } }" ok
+"class A { m() { let x = new.target; } }" ok
+"class A { x = new.target; }" ok
+"class A { get [x]() {} set [x](v) {} }" ok
+"class A { static async *[Symbol.iterator]() {} }" ok
+"class A { \"use strict\"() {} }" ok
+"class A { 1() {} 1() {} }" ok

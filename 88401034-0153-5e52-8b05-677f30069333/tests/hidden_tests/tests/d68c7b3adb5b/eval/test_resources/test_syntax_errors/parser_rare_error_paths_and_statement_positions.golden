@@ -1,0 +1,70 @@
+# rare parser paths
+"{ using x = null, [y] = []; }" => SyntaxError: using declaration requires identifier bindings
+"{ using x = null, { y } = {}; }" => SyntaxError: using declaration requires identifier bindings
+"class A { #a; m() { var #a; } }" => SyntaxError: private names cannot be used as binding identifiers
+"class A { #a; m(#a) {} }" => SyntaxError: private names cannot be used as binding identifiers
+"class A { m() { function #f() {} } }" => SyntaxError: private names cannot be used as binding identifiers
+"for (let [let] of []) ;" => SyntaxError: 'let' is disallowed as a lexically bound name
+"for (const { let } of []) ;" => SyntaxError: 'let' is disallowed as a lexically bound name
+"class A { #x; m() { #x: 1; } }" => SyntaxError: private names cannot be used as labels
+"var a; (a) = function () {}; a.name" => ok ""
+"var b; (b) = class {}; b.name" => ok ""
+"var c2; c2 = function () {}; c2.name" => ok "c2"
+"[{ a = 1 }.b] = [];" => SyntaxError: invalid shorthand property initializer outside a pattern position
+"({ a = 1 }).x" => SyntaxError: invalid shorthand property initializer
+"async function f() { class C { static { await 1; } } }" => SyntaxError: 'await' is not a valid identifier here
+"delete undefined" => ok false
+"class A { #p; m() { super.#p(); } }" => SyntaxError: cannot access a private member through 'super'
+"function f() { return 1; } f()`x`" => TypeError: tag is not a function
+"var tagf = function () { return function (s) { return s[0]; }; }; tagf()`inner`" => ok "inner"
+"x = n\\u0065w Object()" => SyntaxError: unexpected token Keyword("new")
+"async function f() { new await x; }" => SyntaxError: 'await' expression cannot be the operand of 'new'
+"new a?.b.c" => SyntaxError: an optional chain cannot follow 'new' without arguments
+"x = typ\\u0065of 1" => ok "number"
+"x = super" => SyntaxError: 'super' keyword unexpected here
+"x = i\\u006dport(\"a\")" => SyntaxError: 'import' must not contain escape sequences
+"({ a b })" => SyntaxError: expected '}'
+"function* g() { function yield() {} }" => SyntaxError: 'yield' cannot be used as a function name here
+"function* g() { try {} catch (yield) {} }" => SyntaxError: 'yield' cannot be used as a binding here
+"function* g() { (yield) => 1; }" => SyntaxError: 'yield' cannot be used as a binding here
+"class A { m(a, a) {} }" => SyntaxError: duplicate parameter name 'a'
+"class A { static s(a, a) {} }" => SyntaxError: duplicate parameter name 'a'
+"({ m(a, a) {} })" => SyntaxError: duplicate parameter name 'a'
+"(interface) => { \"use strict\"; }" => SyntaxError: 'interface' cannot be used as a binding in strict mode
+"(a, implements) => { \"use strict\"; }" => SyntaxError: 'implements' cannot be used as a binding in strict mode
+"class A extends Object { m() { super(); } }" => SyntaxError: 'super' call unexpected here
+"class A extends Object { get g() { super(); } }" => SyntaxError: 'super' call unexpected here
+"function f() { class A { [arguments] = 1 } }" => SyntaxError: 'arguments' is not allowed in a class field initializer
+"class A { x = () => arguments; }" => SyntaxError: 'arguments' is not allowed in a class field initializer
+"class A { static { var x = () => arguments; } }" => SyntaxError: 'arguments' is not allowed in a class static block
+"class A { static { class B { [arguments] = 1 } } }" => SyntaxError: 'arguments' is not allowed in a class static block
+"L: L: ;" => SyntaxError: label 'L' has already been declared
+"yield: yield: 1" => SyntaxError: label 'yield' has already been declared
+"function f() { \"use strict\"; L: { implements: 1; } }" => SyntaxError: 'implements' cannot be used as a label in strict mode
+"x = { get a() {}, get a() {} }; 1" => ok 1
+"x = { a, }; 2" => ok 2
+"x = { ...a, }; 3" => ok 3
+"x = { async, get, set, static }" => ReferenceError: async is not defined
+"x = { async *[Symbol.iterator]() {} }; 4" => ok 4
+"({ async get x() {} })" => SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ get *x() {} })" => SyntaxError: expected property key
+"({ *get x() {} })" => SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ async *get() {} }); 5" => ok 5
+"class A { static async *#m() {} } 6" => ok 6
+"class A { get #a() {} static set #a(v) {} }" => SyntaxError: duplicate private name '#a'
+"class A { #a; static #a; }" => SyntaxError: duplicate private name '#a'
+"class A { constructor() {} [\"constructor\"]() {} } 7" => ok 7
+"class A { static [\"prototype\"]() {} }" => TypeError: classes may not have a static property named 'prototype'
+"class A { \"prototype\"() {} } 8" => ok 8
+"new.target" => SyntaxError: new.target is only valid inside a function
+"function f() { return new.target === undefined; } f()" => ok true
+"x = { m() { return new.target; } }; x.m()" => ok
+"x = () => { \"use strict\"; return this; }; typeof x()" => ok "object"
+"a\n++\nb" => ok NaN
+"if (a) function f() {} else function g() {}" => ok
+"\"use strict\"; if (a) function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"while (false) function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"for (;false;) function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"do function f() {} while (false)" => SyntaxError: function declaration cannot appear in a single-statement context
+"with ({}) function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"L: L2: function f() {} 9" => ok 9

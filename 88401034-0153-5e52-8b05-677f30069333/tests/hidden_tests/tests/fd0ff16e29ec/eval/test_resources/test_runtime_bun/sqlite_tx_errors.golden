@@ -1,0 +1,31 @@
+transaction 2 5
+tx rollback abort tx 0
+nested outer ok [{"name":"outer"}]
+tx variants function function function 1 1 0
+tx arg TypeError Expected a function
+err syntax SQLiteError undefined 1 true true near "SELEC": syntax error
+err no table SQLiteError undefined 1 true true no such table: nope
+err constraint SQLiteError SQLITE_CONSTRAINT_PRIMARYKEY 1555 true true UNIQUE constraint failed: t.id
+err notnull SQLiteError SQLITE_CONSTRAINT_NOTNULL 1299 true true NOT NULL constraint failed: t.name
+err incomplete SQLiteError undefined 1 true true incomplete input
+prepare err SQLiteError undefined no such table: nope
+bind notnull SQLITE_CONSTRAINT_NOTNULL NOT NULL constraint failed: t.name
+ctor SQLiteError can only be constructed by bun:sqlite
+stmt ctor TypeError Statement cannot be constructed directly (use Database.prototype.query)
+serialize true SQLite format 3 0
+deserialize 8 :memory:
+independent 9 8
+ctor from bytes 8
+finalized Statement has finalized
+finalized toString SELECT 1 AS one
+file db persisted file.db
+readonly SQLITE_READONLY attempt to write a readonly database
+readwrite 2
+open missing SQLiteError SQLITE_CANTOPEN unable to open database file
+open nocreate SQLiteError SQLITE_MISUSE bad parameter or other API misuse
+open empty opts SQLITE_MISUSE
+closed RangeError Cannot use a closed database
+closed run Error Database has closed
+closed serialize Database has closed
+loadExtension Database has closed
+default import true false

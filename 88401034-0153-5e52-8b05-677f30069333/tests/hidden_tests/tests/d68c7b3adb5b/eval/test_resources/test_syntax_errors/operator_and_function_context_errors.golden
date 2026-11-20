@@ -1,0 +1,111 @@
+# functions and operators
+"a ?? b || c" => SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"a || b ?? c" => SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"a ?? b && c" => SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"a && b ?? c" => SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"(a || b) ?? c; 1" => ReferenceError: a is not defined
+"a ?? (b || c); 2" => ReferenceError: a is not defined
+"-x ** 2" => SyntaxError: a unary expression cannot be the base of '**' (use parentheses)
+"!x ** 2" => SyntaxError: a unary expression cannot be the base of '**' (use parentheses)
+"typeof x ** 2" => SyntaxError: a unary expression cannot be the base of '**' (use parentheses)
+"delete x.y ** 2" => SyntaxError: a unary expression cannot be the base of '**' (use parentheses)
+"async function f() { await x ** 2; }" => SyntaxError: an await expression cannot be the base of '**' (use parentheses)
+"async function f() { (await x) ** 2; } 3" => ok 3
+"(-2) ** 2" => ok 4
+"2 ** -2" => ok 0.25
+"new import(\"x\")" => SyntaxError: 'import(...)' cannot be used with 'new'
+"(function () { return new (import(\"x\")); }); 2" => ok 2
+"new a?.b()" => SyntaxError: an optional chain cannot follow 'new' without arguments
+"new a?.()" => SyntaxError: an optional chain cannot follow 'new' without arguments
+"new C?.()" => SyntaxError: an optional chain cannot follow 'new' without arguments
+"new o?.C()" => SyntaxError: an optional chain cannot follow 'new' without arguments
+"a?.b`tpl`" => SyntaxError: tagged template cannot appear in an optional chain
+"a?.`tpl`" => SyntaxError: expected property name
+"new.target" => SyntaxError: new.target is only valid inside a function
+"function f() { new.target; } 4" => ok 4
+"() => new.target" => SyntaxError: new.target is only valid inside a function
+"function f() { return () => new.target; } 5" => ok 5
+"super.x" => SyntaxError: 'super' keyword unexpected here
+"super()" => SyntaxError: 'super' call unexpected here
+"function* g(x = yield) {}" => SyntaxError: yield expression is not allowed in formal parameters
+"function* g() { function* h(x = yield) {} }" => SyntaxError: yield expression is not allowed in formal parameters
+"async function f(x = await 1) {}" => SyntaxError: await expression is not allowed in formal parameters
+"async (x = await 1) => 1" => SyntaxError: await expression is not allowed in formal parameters
+"function* g() { var yield; }" => SyntaxError: 'yield' cannot be used as a binding here
+"function* g() { yield: 1; }" => SyntaxError: 'yield' cannot be used as a label here
+"async function f() { var await; }" => SyntaxError: 'await' cannot be used as a binding here
+"async function f() { await: 1; }" => SyntaxError: 'await' cannot be used as a label here
+"function* g() { yield\n* 2; }" => SyntaxError: unexpected token Punct("*")
+"function* g() { yield * 2; } 6" => ok 6
+"function* g() { (yield) => 1; }" => SyntaxError: 'yield' cannot be used as a binding here
+"async function f() { (await 1) => 1; }" => SyntaxError: 'await' cannot be used as a binding here
+"async (a, a) => 1" => SyntaxError: duplicate parameter name 'a'
+"(a, b, a) => 1" => SyntaxError: duplicate parameter name 'a'
+"({ a, a }) => 1" => SyntaxError: duplicate parameter name 'a'
+"([a, a]) => 1" => SyntaxError: duplicate parameter name 'a'
+"(...a, b) => 1" => SyntaxError: expected ')'
+"(a, ...b,) => 1" => SyntaxError: expected ')'
+"((a)) => 1" => SyntaxError: expected binding identifier
+"(a,) => 1; 7" => ok 7
+"(a\n) => 1; 8" => ok 8
+"(a)\n=> 1" => SyntaxError: unexpected token Punct("=>")
+"async a\n=> 1" => SyntaxError: expected ';'
+"async\na => 1" => ReferenceError: async is not defined
+"({ async\nm() {} })" => SyntaxError: line terminator not allowed after 'async' in a method
+"({ async *m() {}, *g() {}, async a() {} }); 9" => ok 9
+"({ async m })" => SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ *m })" => SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ get })" => ReferenceError: get is not defined
+"({ get: 1, set: 2, async: 3, static: 4, await: 5 }).await" => ok 5
+"({ get get() { return \"gg\"; } }).get" => ok "gg"
+"({ set set(v) {} }); 10" => ok 10
+"({ if: 1, class: 2, new: 3, typeof: 4 }).typeof" => ok 4
+"({ a: 1, b })" => ReferenceError: b is not defined
+"x = { a, b, c }" => ReferenceError: a is not defined
+"x = { \"a\": 1, 1: 2, 1n: 3, [1 + 1]: 4, 0x10: 5 }; Object.keys(x).join()" => ok "1,2,16,a"
+"x = { if }" => SyntaxError: 'if' is a reserved word and cannot be a shorthand property
+"x = { true }" => SyntaxError: 'true' is a reserved word and cannot be a shorthand property
+"x = { this }" => SyntaxError: 'this' is a reserved word and cannot be a shorthand property
+"function f() { \"use strict\"; return { yield }; }" => SyntaxError: 'yield' cannot be used as a shorthand property in strict mode
+"function* g() { return { yield }; }" => SyntaxError: 'yield' cannot be used as a shorthand property here
+"async function f() { return { await }; }" => SyntaxError: 'await' cannot be used as a shorthand property here
+"function f() { return { arguments }; } 11" => ok 11
+"x = { __proto__: 1, __proto__: 2 }" => SyntaxError: duplicate __proto__ property in object literal
+"x = { __proto__: 1, \"__proto__\": 2 }" => SyntaxError: duplicate __proto__ property in object literal
+"x = { __proto__: 1, [\"__proto__\"]: 2 }; 12" => ok 12
+"x = { __proto__: 1, __proto__ }; 13" => ok 13
+"x = { __proto__: 1, __proto__() {} }; 14" => ok 14
+"({ __proto__: a, __proto__: b } = {}); 15" => ok 15
+"[{ __proto__: a, __proto__: b }] = [{}]; 16" => ok 16
+"({ __proto__: a, __proto__: b }) => 1; 17" => ok 17
+"a = 1, b = 2; a, b" => ok 2
+"void 0, typeof undefinedVar" => ok "undefined"
+"x = a => b => c => 42; x()()()" => ok 42
+"(function () {}) ()" => ok
+"function f() {}()" => SyntaxError: unexpected token Punct(")")
+"x = function* () { yield* [1, 2]; }; [...x()].join()" => ok "1,2"
+"x = async function* () {}; typeof x" => ok "function"
+"(async () => 1); 18" => ok 18
+"async () => await 1; 19" => ok 19
+"async function f() { return await import.meta; }" => SyntaxError: 'import.meta' is only valid in a module
+"function f() { \"use strict\"; return this; } f()" => ok
+"function f() { return typeof this; } f()" => ok "object"
+"0 ? 1 : 2 ? 3 : 4" => ok 3
+"a = 1; a ? b : c => d" => ok 2
+"1 in {}" => ok false
+"for (var i = (1 in {}) ? 0 : 1; i < 1; i++); i" => ok 1
+"for (var x = \"a\" in {}; false;); x" => SyntaxError: expected ')'
+"for (let x = (\"a\" in {}); false;); 20" => ok 20
+"typeof typeof 1" => ok "string"
+"!!!0" => ok true
+"- - 1" => ok 1
+"+ + 1" => ok 1
+"1 - -1" => ok 2
+"1 + +1" => ok 2
+"x = 1; x+++x" => ok 3
+"x = 1; x---x" => ok 1
+"x = 1; x+ ++x" => ok 3
+"1/2/3" => ok 0.16666666666666666
+"x = 6; x /2/ 3" => ok 1
+"a = 4; g = 2; a /g/ 1" => ok 2
+"\"use strict\"; ({ get arguments() { return 1; } }).arguments" => ok 1

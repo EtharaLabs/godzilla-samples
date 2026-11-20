@@ -1,0 +1,24 @@
+joined-equal true true true 2 dbff dfff dbfe dc00
+fromCharCode true true true
+iterate 2 2 dbff,dfff,dbfe,dc00,78 1,1 1
+codePointAt 10ffff dfff 10f800 10ffff
+charCodeAt dbff dfff dc00
+slice dbff dfff dbfe dc00 true dfff dfff dfff dbff
+rejoin-halves true 10f800 2
+indexOf 4 3 2 1 true true true -1
+split ["dbff dfff","dbfe dc00"] ["dbff","dfff"] ["a","b"]
+replace 61 2d 62 61 2b 62 78 d83d de00 d83d de00
+json "􏯿􏿿" "􏯾􏰀" "\udbff" "􏯿􏿿" "\udbffx" false false true
+uri %F4%8F%BF%BF %F4%8F%A0%80 true true
+uri-lone URIError URI malformed
+wellformed true true false fffd fffd true
+pad-repeat dbff dfff 61 dbfe dc00 dbfe dc00 4 78 dbfe
+case true true dbff 41 10400 d801 dc28
+trim dbff dfff dfff
+compare true true true true 7a,ffff,1f600,10f800,10ffff
+array-ops true 2 dbff/dfff 0,1 dc00
+string-object 2 dc00 0=dbfe;1=dc00
+raw-template 2 4 dbff dfff
+normalize true true dbff e9
+normalize-bad RangeError The normalization form should be one of NFC, NFD, NFKC, NFKD
+slow-paths 6 llo éll 3 1 é ber ü na+ve ete ··été

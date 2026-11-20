@@ -1,0 +1,58 @@
+# declarations
+"let a; let a;" => SyntaxError: Identifier 'a' has already been declared
+"let a; var a;" => SyntaxError: Identifier 'a' has already been declared
+"var a; let a;" => SyntaxError: Identifier 'a' has already been declared
+"const a;" => SyntaxError: missing initializer in const declaration
+"const a = 1; a = 2" => TypeError: assignment to constant 'a'
+"let let = 1" => SyntaxError: 'let' is disallowed as a lexically bound name
+"let [let] = []" => SyntaxError: 'let' is disallowed as a lexically bound name
+"for (let let = 0;;) {}" => SyntaxError: 'let' is disallowed as a lexically bound name
+"for (const x;;) {}" => SyntaxError: missing initializer in for-loop declaration
+"for (let [a];;) {}" => SyntaxError: missing initializer in for-loop declaration
+"for (const x in {}) {} ok = 1" => ok 1
+"if (1) let x = 1" => SyntaxError: expected ';'
+"if (1) const x = 1" => SyntaxError: lexical declaration cannot appear in a single-statement context
+"while (0) class C {}" => SyntaxError: lexical declaration cannot appear in a single-statement context
+"if (1) function* g() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"if (1) async function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"L: let x = 1" => SyntaxError: expected ';'
+"L: function* g() {}" => SyntaxError: a labelled function declaration must be a plain function
+"L: async function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"L: class C {}" => SyntaxError: lexical declaration cannot appear in a single-statement context
+"while (0) L: function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"if (0) L: function f() {}" => SyntaxError: function declaration cannot appear in a single-statement context
+"try {} catch ([a, a]) {}" => SyntaxError: duplicate binding 'a' in catch parameter
+"try {} catch (e) { let e; }" => SyntaxError: Identifier 'e' has already been declared
+"try {} catch (e) { var e; }" => ok
+"try {} catch ([e]) { var e; }" => ok
+"function f(a) { let a; }" => SyntaxError: Identifier 'a' has already been declared
+"function f(a) { var a; } 1" => ok 1
+"(a) => { let a; }" => SyntaxError: Identifier 'a' has already been declared
+"({ m(a) { let a; } })" => SyntaxError: Identifier 'a' has already been declared
+"function f() { let x; { var x; } }" => SyntaxError: Identifier 'x' has already been declared
+"{ function f() {} function f() {} } 1" => ok 1
+"\"use strict\"; { function f() {} function f() {} }" => SyntaxError: Identifier 'f' has already been declared
+"{ function f() {} let f; }" => SyntaxError: Identifier 'f' has already been declared
+"{ async function f() {} function f() {} }" => SyntaxError: Identifier 'f' has already been declared
+"switch (0) { case 1: let a; case 2: let a; }" => SyntaxError: Identifier 'a' has already been declared
+"switch (0) { case 1: function f() {} case 2: function f() {} } 1" => ok 1
+"let x; { var x; }" => SyntaxError: Identifier 'x' has already been declared
+"class A {} class A {}" => SyntaxError: Identifier 'A' has already been declared
+"let undefined" => ok
+"var undefined; 1" => ok 1
+"const [a, a] = [];" => SyntaxError: Identifier 'a' has already been declared
+"let {a, b: a} = {};" => SyntaxError: Identifier 'a' has already been declared
+"for (let [x, x] of []) {}" => SyntaxError: Identifier 'x' has already been declared
+"label: label: ;" => SyntaxError: label 'label' has already been declared
+"a: { a: ; }" => SyntaxError: label 'a' has already been declared
+"a: { b: ; } a: ;" => ok
+"export var x = 1" => SyntaxError: 'export' declaration may only appear at the top level of a module
+"import x from \"y\"" => SyntaxError: expected '('
+"import.meta" => SyntaxError: 'import.meta' is only valid in a module
+"new.target" => SyntaxError: new.target is only valid inside a function
+"function f() { return new.target; } 1" => ok 1
+"new.tar" => SyntaxError: expected 'target' after 'new.'
+"import.foo" => SyntaxError: expected 'meta', 'source', or 'defer' after 'import.'
+"(function () { return import(\"x\", ); }); 1" => ok 1
+"import()" => SyntaxError: unexpected token Punct(")")
+"import(\"a\", \"b\", \"c\")" => SyntaxError: expected ')'

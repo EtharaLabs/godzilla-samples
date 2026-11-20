@@ -1,0 +1,12 @@
+syntax true true SQLiteError undefined 1 near "SELEC": syntax error
+prepare syntax true true SQLiteError undefined 1 near "FROM": syntax error
+no table true true SQLiteError undefined 1 no such table: nope
+no column true true SQLiteError undefined 1 no such column: missing
+unique true true SQLiteError "SQLITE_CONSTRAINT_UNIQUE" 2067 UNIQUE constraint failed: t.name
+not null true true SQLiteError "SQLITE_CONSTRAINT_NOTNULL" 1299 NOT NULL constraint failed: t.name
+check true true SQLiteError "SQLITE_CONSTRAINT_CHECK" 275 CHECK constraint failed: n >= 0
+primary key true true SQLiteError "SQLITE_CONSTRAINT_PRIMARYKEY" 1555 UNIQUE constraint failed: t.id
+foreign key true true SQLiteError "SQLITE_CONSTRAINT_FOREIGNKEY" 787 FOREIGN KEY constraint failed
+exec multi true true SQLiteError "SQLITE_CONSTRAINT_UNIQUE" 2067 UNIQUE constraint failed: t.name
+after OK {"n":2}
+construct false true Error undefined undefined SQLiteError can only be constructed by bun:sqlite

@@ -1,0 +1,55 @@
+pad: "   abc" | "12121abc" | "abcxyxy" | "abc" | "abc" | "  a"
+at: "c" | undefined | "a" | 1
+charAt: "b" | "" | "" | "a"
+charCodeAt: 98 | NaN | 56832
+codePointAt: 128512 | 56832 | 120 | undefined
+trim: "x y" | "x " | " x" | 3
+trim-alias: true | "trimEnd"
+repeat: "ababab" | "" | ""
+repeat-neg: THROW RangeError: invalid count value
+repeat-inf: THROW RangeError: invalid count value
+repeat-huge: THROW RangeError: Invalid string length
+startsWith: true | true | true | true | false
+startsWith-regexp: THROW TypeError: argument must not be a regular expression
+includes-regexp: THROW TypeError: argument must not be a regular expression
+endsWith-regexp: THROW TypeError: argument must not be a regular expression
+startsWith-unmarked-re: true
+indexOf: 2 | 5 | 0 | 3 | 3 | 0 | 1 | 0
+slice: "ell" | "llo" | "" | "hello"
+substring: "el" | "he" | "h" | ""
+substr: "ell" | "ll" | "llo" | "" | "he"
+split: ["a", "b", "", "c"] | ["a", "b", "c"] | ["a", "b"] | ["abc"] | [] | [""] | [] | ["a", "b", ""] | ["\ud83d", "\ude00", "a"]
+split-limit: ["a", "b"] | ["a"] | []
+concat: "a1null2,3" | "12"
+case: "STRASSE" | 9 | "σας" | "ǆ" | "FI" | "ʼN"
+localeCase: "ı" | "İ" | "i" | "ii"
+localeCompare: -1 | 1 | 0 | ["a", "b", "c", "C"]
+html: "<a name=\"a&quot;b\">x</a>" | "<big>x</big>" | "<blink>x</blink>" | "<b>x</b>" | "<tt>x</tt>" | "<font color=\"red\">x</font>" | "<font size=\"7\">x</font>" | "<i>x</i>" | "<a href=\"u\">x</a>" | "<small>x</small>" | "<strike>x</strike>" | "<sub>x</sub>" | "<sup>x</sup>"
+html-null: THROW TypeError: String.prototype method called on null or undefined
+fromCharCode: "HiA￿" | "" | "😀"
+fromCodePoint: "😀a" | ""
+fromCodePoint-big: THROW RangeError: Invalid code point
+fromCodePoint-frac: THROW RangeError: Invalid code point
+fromCodePoint-neg: THROW RangeError: Invalid code point
+fromCodePoint-nan: THROW RangeError: Invalid code point
+raw: "a\\n2\\u{41}" | "x1yz" | "" | "only"
+raw-string-raw: THROW TypeError: raw is not an object
+raw-bad: THROW TypeError: raw is not an object
+raw-undefined: THROW TypeError: cannot read property 'raw' of undefined
+wellFormed: true | false | false | true
+toWellFormed: ["61", "fffd", "62", "fffd"] | true
+iter: [1, 2, 1, 1]
+iter-proto: "[object String Iterator]" | {value: "x", done: false} | {value: "y", done: false} | {value: undefined, done: true} | {value: undefined, done: true}
+iter-next-bad: THROW TypeError: String Iterator next called on an incompatible receiver
+length: 3 | 0 | 1
+String(): "" | "null" | "Symbol(d)" | "1,2" | "[object Object]" | "0" | 2 | "object"
+String+symbol: THROW TypeError: Cannot convert a Symbol value to a string
+template+symbol: THROW TypeError: Cannot convert a Symbol value to a string
+String-obj: ["0", "1"] | true | "b" | ["0", "1", "length"]
+valueOf: "v" | "p" | "q"
+valueOf-bad: THROW TypeError: not a String object
+toString-bad: THROW TypeError: not a String object
+search-str: 2 | 0 | 1 | 1
+matchAll-nonglobal: THROW TypeError: String.prototype.matchAll called with a non-global RegExp
+normalize-basic: true
+coercions: 1 | "--aaa" | "4"

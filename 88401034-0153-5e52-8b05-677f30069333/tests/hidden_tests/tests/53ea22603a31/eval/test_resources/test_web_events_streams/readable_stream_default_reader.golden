@@ -1,0 +1,21 @@
+start desiredSize 1
+after close 0
+false
+true true
+second getReader THREW TypeError: stream is already locked to a reader
+read "a" false true
+read "b" false true
+read undefined true true
+read undefined true true
+closed -> undefined
+released false
+read after release THREW TypeError: reader has been released
+pulled 10,20,30 pull calls 4
+errored desiredSize null
+errored read THREW TypeError: src fail
+errored closed THREW TypeError: src fail
+enqueue after close THREW TypeError: stream is not in a readable state
+pending reads {"value":"late1","done":false} {"value":"late2","done":false}
+release with pending read THREW TypeError: cannot release a reader with pending reads
+closed while pending {"done":true}
+not a stream THREW TypeError: not a ReadableStream

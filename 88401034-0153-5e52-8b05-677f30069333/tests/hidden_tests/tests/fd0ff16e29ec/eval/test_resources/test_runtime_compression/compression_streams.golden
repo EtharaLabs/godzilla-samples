@@ -1,0 +1,19 @@
+gzip 1 [object Uint8Array] 1f8b08000000000000ffcb48cdc9c9574026cbf38b7252741492f3730b8a528b8b33f3f3148a4b8a5213738b15011fad8e3d2d000000 "hello hello hello world, compression streams!"
+deflate 1 [object Uint8Array] 789ccb48cdc9c9574026cbf38b7252741492f3730b8a528b8b33f3f3148a4b8a5213738b150186791103 "hello hello hello world, compression streams!"
+deflate-raw 1 [object Uint8Array] cb48cdc9c9574026cbf38b7252741492f3730b8a528b8b33f3f3148a4b8a5213738b1501 "hello hello hello world, compression streams!"
+empty gzip 1 1f8b08000000000000ff03000000000000000000
+empty inflate 0 0
+pipeThrough blob data blob data blob data blob data blob data 
+CompressionStream brotli TypeError Unsupported CompressionStream format: 'brotli'
+DecompressionStream brotli TypeError Unsupported DecompressionStream format: 'brotli'
+CompressionStream GZIP TypeError Unsupported CompressionStream format: 'GZIP'
+DecompressionStream GZIP TypeError Unsupported DecompressionStream format: 'GZIP'
+CompressionStream  TypeError Unsupported CompressionStream format: ''
+DecompressionStream  TypeError Unsupported DecompressionStream format: ''
+CompressionStream undefined TypeError Unsupported CompressionStream format: 'undefined'
+DecompressionStream undefined TypeError Unsupported DecompressionStream format: 'undefined'
+corrupt gzip close rejected TypeError gzip: bad magic
+corrupt deflate close rejected TypeError inflate: reserved block type
+string chunk rejected TypeError CompressionStream expects BufferSource chunks
+close after bad chunk TypeError CompressionStream expects BufferSource chunks
+done

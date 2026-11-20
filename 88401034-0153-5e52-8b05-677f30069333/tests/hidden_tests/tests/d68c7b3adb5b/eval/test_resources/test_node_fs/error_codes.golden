@@ -1,0 +1,21 @@
+readFile missing -> Error ENOENT undefined undefined | cannot read 'missing.txt': No such file or directory (os error 2)
+stat missing -> Error ENOENT stat missing.txt | ENOENT: No such file or directory (os error 2), stat 'missing.txt'
+lstat under missing -> Error ENOENT lstat nope/x | ENOENT: No such file or directory (os error 2), lstat 'nope/x'
+mkdir existing -> Error EEXIST mkdir d | EEXIST: File exists (os error 17), mkdir 'd'
+mkdir missing parent -> Error ENOENT mkdir x/y | ENOENT: No such file or directory (os error 2), mkdir 'x/y'
+mkdir under file -> Error ENOTDIR mkdir f.txt/sub | ENOTDIR: Not a directory (os error 20), mkdir 'f.txt/sub'
+rmdir non-empty -> ENOTEMPTY
+rm missing -> Error ENOENT rm missing | ENOENT: No such file or directory (os error 2), rm 'missing'
+rm missing force -> ok
+rename missing -> Error ENOENT rename missing | ENOENT: No such file or directory (os error 2), rename 'missing'
+copyFile missing -> Error ENOENT copyfile missing | ENOENT: No such file or directory (os error 2), copyfile 'missing'
+symlink over existing -> Error EEXIST symlink f.txt | EEXIST: File exists (os error 17), symlink 'f.txt'
+link over existing -> Error EEXIST link f.txt | EEXIST: File exists (os error 17), link 'f.txt'
+access missing -> Error ENOENT access missing | ENOENT: No such file or directory (os error 2), access 'missing'
+chmod missing -> Error ENOENT chmod missing | ENOENT: No such file or directory (os error 2), chmod 'missing'
+utimes missing -> Error ENOENT utime missing | ENOENT: No such file or directory (os error 2), utime 'missing'
+statfs missing -> Error ENOENT statfs missing | ENOENT: No such file or directory (os error 2), statfs 'missing'
+readdir types missing -> Error ENOENT scandir missing | ENOENT: No such file or directory (os error 2), scandir 'missing'
+lchmod -> Error undefined undefined undefined | ENOSYS: lchmod is not supported on this platform, lchmod 'f.txt'
+cp dir without recursive -> Error EISDIR cp d | EISDIR: recursive option not set for a directory, cp 'd'
+exists -> true

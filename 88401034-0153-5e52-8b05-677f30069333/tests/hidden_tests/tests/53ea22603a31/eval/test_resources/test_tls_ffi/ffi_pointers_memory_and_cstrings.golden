@@ -1,0 +1,29 @@
+strchr -> CString -> ["world", true, true, 5, "number", 6, 0, undefined]
+strchr miss -> CString -> ["", 0, 0]
+strchr as ptr -> 4
+strchr miss as ptr -> null
+memset returns its first argument -> true
+memset wrote into the Buffer -> "AAA....."
+memcpy -> [120, 121, 122, 122, 121, 0]
+memcpy into subarray -> [0, 0, 0, 0, 81, 81, 0, 0, 0, 0]
+memset through ptr(view, 2) -> [0, 65535, 65535, 0]
+ptr offsets -> [3, 5, 2, 9]
+ptr(ArrayBuffer) THREW TypeError: bun:ffi ptr expects a TypedArray (ArrayBuffer views are not supported in lumen)
+ptr(DataView) THREW TypeError: bun:ffi ptr expects a TypedArray (ArrayBuffer views are not supported in lumen)
+ptr(number) THREW TypeError: bun:ffi ptr expects a TypedArray (ArrayBuffer views are not supported in lumen)
+read u8/i8/u16/i16 -> [1, -128, 65408, -128, 255, -1]
+read u32/i32 -> [2147450881, 2147450881, 8388480, 8388480]
+read f32/f64 -> [1.5, -1]
+read u64/i64 -> [4593671622065356801n, -4616189618054758400n, 13830554455654793216n]
+read ptr/intptr agree -> [true, "number"]
+read with string pointer THREW TypeError: To convert a string to a pointer, encode it as a buffer
+CString NUL-terminated -> ["hié", 3, 16, undefined, true]
+CString explicit length -> ["hi", [104, 105], 2]
+CString.arrayBuffer without length THREW TypeError: bun:ffi CString.arrayBuffer needs an explicit byteLength
+CString(null) -> ["", null, 0, undefined]
+CString string methods -> "hié!Zié"
+toArrayBuffer -> [true, 4, [104, 105, 195, 169]]
+toArrayBuffer is a copy -> [1, 9]
+toArrayBuffer empty cases -> [0, 0]
+toBuffer -> [true, "hié", 4]
+toBuffer empty -> 0

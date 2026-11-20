@@ -1,0 +1,67 @@
+exact sig string ["123,000,000,000,000,000,000,000,000,000","0,000,042.000","980,000,000,000,000,000,000"]
+exact incr "1.25"
+exact morePrecision "1.23"
+exact sig frac "1.235"
+exact minint ["000,012","000,012.5","000"]
+zero minsig ["0.000","0","-0.00"]
+round discard throws RangeError maximumFractionDigits must equal minimumFractionDigits with roundingIncrement
+round modes ["-2/3","-3/2","-3/3","-2/2","-2/3","-3/2","-3/3","-2/2","-2/2"]
+sig defaults {"locale":"en","numberingSystem":"latn","style":"decimal","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":1,"minimumSignificantDigits":1,"maximumSignificantDigits":21,"useGrouping":"auto","notation":"standard","signDisplay":"auto","roundingIncrement":1,"roundingMode":"halfExpand","roundingPriority":"lessPrecision","trailingZeroDisplay":"auto"}
+sig defaults2 "1,234.56789"
+fd only min "4,0,1"
+sci exp ["10E2","1000E3","10E-7","1000E-6"]
+sci parts "minusSign:-|integer:1|decimal:.|fraction:235|exponentSeparator:E|exponentInteger:4"
+compact parts ["minusSign:-|integer:1|decimal:.|fraction:2|compact:M","integer:2|decimal:.|fraction:5|literal: |compact:billion"]
+accounting parts ["literal:(|currency:$|integer:12|decimal:.|fraction:50|literal:)","literal:(|currency:$|integer:1|decimal:.|fraction:3|currency:M|literal:)","minusSign:-|integer:12|decimal:,|fraction:50|literal: |currency:€"]
+currency code parts ["minusSign:-|currency:USD |integer:3|decimal:.|fraction:00","currency:$|integer:2|decimal:.|fraction:00","minusSign:-|integer:1|group:.|integer:234|decimal:,|fraction:50|literal: |currency:CHF "]
+unit parts ["ja=integer:5|literal: |unit:km/h","zh=integer:5|literal: |unit:km/h","ko=integer:5|unit:km/h","en=integer:5|literal: |unit:km/h","de=integer:5|literal: |unit:km/h","fr=integer:5|unit: km/h","ar=integer:٥|literal: |unit:كم/س","tr=integer:5|literal: |unit:km/h","hu=integer:5|literal: |unit:km/h"]
+unit narrow parts ["integer:5|unit:% -3 degrees Celsius","integer:5|unit:% 摂氏 -3 度","integer:5|literal: |unit:% -3 degrés Celsius"]
+format bound ["1,234.5","01;22;333"]
+supportedValues ["calendar:16:buddhist/chinese/coptic","collation:15:big5han/compat/dict","currency:5:CNY/EUR/GBP","numberingSystem:79:adlm/ahom/arab","timeZone:340:Africa/Abidjan/Africa/Addis_Ababa/Africa/Algiers","unit:45:acre/bit/byte"]
+supportedValues numbering "adlm,ahom,arab,arabext,bali,beng,bhks,brah,cakm,cham,chis,deva,diak,fullwide,gara,gong,gonm,gujr,gukh,guru,hanidec,hmng,hmnp,java,kali,kawi,khmr,knda,krai,lana,lanatham,laoo,latn,lepc,limb,mathbold,mathdbl,mathmono,mathsanb,mathsans,mlym,modi,mong,mroo,mtei,mymr,mymrepka,mymrpao,mymrshan,mymrtlng,nagm,newa,nkoo,olck,onao,orya,osma,outlined,rohg,saur,segment,shrd,sind,sinh,sora,sund,sunu,takr,talu,tamldec,telu,thai,tibt,tirh,tnsa,tols,vaii,wara,wcho"
+supportedValues bad throws RangeError invalid key: bogus
+getCanonicalLocales throws RangeError Incorrect locale information provided: ZH-YUE-hk
+canon en- throws RangeError Incorrect locale information provided: en-
+canon en--US throws RangeError Incorrect locale information provided: en--US
+canon abcdefghi throws RangeError Incorrect locale information provided: abcdefghi
+canon en-u-ca ["en-u-ca"]
+canon en-a throws RangeError Incorrect locale information provided: en-a
+canon en-t-1 throws RangeError Incorrect locale information provided: en-t-1
+canon x throws RangeError Incorrect locale information provided: x
+canon en-US-u-ca-gregory-ca-buddhist ["en-US-u-ca-gregory"]
+canon de-1901-1901 throws RangeError Incorrect locale information provided: de-1901-1901
+canon 123 throws RangeError Incorrect locale information provided: 123
+canon en-x-123456789 throws RangeError Incorrect locale information provided: en-x-123456789
+canon en-u-c throws RangeError Incorrect locale information provided: en-u-c
+canon en-u-cal-x throws RangeError Incorrect locale information provided: en-u-cal-x
+canon en-t-zz-m0 throws RangeError Incorrect locale information provided: en-t-zz-m0
+canon en-t-en-m0-123456789 throws RangeError Incorrect locale information provided: en-t-en-m0-123456789
+canon zh-cmn-Hans-CN throws RangeError Incorrect locale information provided: zh-cmn-Hans-CN
+canon en-gb-oed throws RangeError Incorrect locale information provided: en-gb-oed
+canon und-x-priv ["und-x-priv"]
+locale obj list ["en-US","fr","de-AT"]
+locale list arraylike ["en","fr"]
+locale list bad throws TypeError locale must be a string or object
+locale maximize ["zh-Hant-TW>zh-TW","en-Latn-US>en","ru-Cyrl-RU>ru","sr-Latn-RS>sr-Latn","es-Latn-419>es-419","en-Latn-US>en","zh-Hant-TW>zh-TW","en-Latn-150>en-150"]
+locale info [{"firstDay":1,"weekend":[6,7]},{"direction":"ltr"},["h23"],["gregory"],["latn"],["UTC"],["default"]]
+locale info he ["hebrew","h11","hebr",{"firstDay":1,"weekend":[6,7]},["h11"],["hebrew"],["hebr"],["UTC"]]
+locale info und [null,{"firstDay":1,"weekend":[6,7]}]
+df frac always "0:00:00.001"
+df frac follow throws RangeError microseconds style conflicts with a preceding numeric unit
+df big throws RangeError calendar unit out of range
+df digital ["1:02:03.004005006","0:00:03","0:00:07","0:00:00.001"]
+df parts "integer:1@day|literal: @day|unit:day@day|literal:, |integer:05@minute|literal::|integer:09@second|decimal:.@second|fraction:12@second"
+df numeric ms ["1 min, 2.003","2.03 sec","2.03 ms"]
+rtf pl ["1 rok temu","za 2 lata","za 5 lat","za 22 lata","za 1,5 roku"]
+rtf parts "integer:1|group:,|integer:234|decimal:.|fraction:5|literal: days ago"
+dtf hc ["0 AM/0:05 AM","12 AM/12:05 AM","00/00:05","24/24:05"]
+dtf hour12 ["12 AM/12 AM","00/00"]
+dtf range kinds throws TypeError formatRange endpoints must be the same type
+dtf range ym md throws RangeError calendar mismatch: iso8601 vs gregory
+dtf range instant zdt throws TypeError formatRange endpoints must be the same type
+dtf format zdt throws TypeError Intl.DateTimeFormat does not support Temporal.ZonedDateTime; use zonedDateTime.toLocaleString()
+dtf range diff ["Jan 1, 2020, 12:05 AM – 1:05 AM","Jan 1 – Feb 10, 2020, 12:05 AM","Jan 1, 2020, 12:05 AM – Feb 4, 2021, 12:05 AM"]
+dtf range weekday ["Wednesday, 12 AM – Thursday, 1 AM","Wednesday, 12 AM – 1 AM"]
+dtf tz offset ["5 AM GMT+5:30","4 PM GMT-8","1 AM GMT+1","RangeError","RangeError"]
+dtf narrow era "2020 A/101 BC"
+dtf dayPeriod narrow ["1 in the afternoon","1 in the afternoon","1 in the afternoon"]

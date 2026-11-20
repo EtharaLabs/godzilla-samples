@@ -1,0 +1,10 @@
+until: auto=P1515DT22H30M15.5S years=P4Y1M23DT22H30M15.5S months=P49M23DT22H30M15.5S weeks=P216W3DT22H30M15.5S days=P1515DT22H30M15.5S hours=PT36382H30M15.5S minutes=PT2182950M15.5S seconds=PT130977015.5S milliseconds=PT130977015.5S nanoseconds=PT130977015.5S
+since: auto=-P1515DT22H30M15.5S years=-P4Y1M23DT22H30M15.5S months=-P49M23DT22H30M15.5S weeks=-P216W3DT22H30M15.5S days=-P1515DT22H30M15.5S hours=-PT36382H30M15.5S
+until rounding: P1515DT22H P4Y1M24D P49M3W P1515DT23H P4Y2M -P4Y1M23DT22H30M16S P6Y P1514D -PT36384H
+time-only differences: PT2H30M PT2H30M PT0S -P1D
+until errors: RangeError:roundingIncrement out of range | RangeError:cannot compare dates in different calendars | RangeError:smallestUnit is larger than largestUnit | RangeError:invalid smallestUnit
+non-iso until: P4Y2M11DT22H30M15.5S P51M P4Y1M24DT22H
+round: 2024-03-01T00:00:00 2024-02-29T12:00:00 2024-02-29T13:45:00 2025-01-01T00:00:00 2024-02-29T00:00:00 2024-02-29T13:45:30.1235 2024-02-29T13:45:30.123457 2024-02-29T13:45:30.5
+round errors: RangeError:invalid smallestUnit | RangeError:roundingIncrement out of range | RangeError:date is outside the supported range | TypeError:options must be an object or a string | RangeError:invalid smallestUnit
+toString: 2024-02-29T13:45[u-ca=iso8601] 2024-02-29T13:45:30 2024-02-29T13:45:30.13 2025-01-01T00:00:00 2024-02-29T13:45:30.123456789
+toString errors: RangeError:smallestUnit must be a time unit | RangeError:date-time is outside the representable range | 2024-02-29T13:45:30.123456789

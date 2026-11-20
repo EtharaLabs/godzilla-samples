@@ -1,0 +1,82 @@
+"x = tru\\u0065"                                                   -> SyntaxError: 'true' must not contain escape sequences
+"({ m() { super; } })"                                             -> SyntaxError: 'super' keyword unexpected here
+"im\\u0070ort(\"x\")"                                              -> SyntaxError: keywords must not contain escape sequences
+"`${ 1 + \"\\u{zz}\" }`"                                           -> SyntaxError: bad \u escape
+"String.raw`${ \"\\x\" }`"                                         -> SyntaxError: bad \x escape
+"({ #x: 1 })"                                                      -> SyntaxError: private names are only allowed in class bodies
+"({ #m() {} })"                                                    -> SyntaxError: private names are only allowed in class bodies
+"({ async *x })"                                                   -> SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ *g })"                                                         -> SyntaxError: expected a method after 'async'/'*' in an object literal
+"({ m() { super(); } })"                                           -> SyntaxError: 'super' call unexpected here
+"({ a b })"                                                        -> SyntaxError: expected '}'
+"({ 1n: \"big\" })[1]"                                             -> ok "big"
+"({ % })"                                                          -> SyntaxError: expected property key
+"function #f() {}"                                                 -> SyntaxError: private names cannot be used as binding identifiers
+"async function f() { async function await() {} }"                 -> SyntaxError: 'await' cannot be used as a function name here
+"function* g() { function* yield() {} }"                           -> SyntaxError: 'yield' cannot be used as a function name here
+"\"use strict\"; function yield() {}"                              -> SyntaxError: 'yield' cannot be used as a function name here
+"function f(implements) { \"use strict\"; }"                       -> SyntaxError: 'implements' can't be a parameter name in strict mode
+"function f(eval) { \"use strict\"; }"                             -> SyntaxError: 'eval' can't be a parameter name in strict mode
+"function f(a = super()) {}"                                       -> SyntaxError: 'super' call unexpected here
+"function f() { return super.x; }"                                 -> SyntaxError: 'super' keyword unexpected here
+"async function f() { class await {} }"                            -> SyntaxError: 'await' cannot be used as a class name here
+"class A extends ( {}"                                             -> SyntaxError: expected ')'
+"class A { ; ; m() { return \"m\"; } ; } new A().m()"              -> ok "m"
+"class A { m(a, a) {} }"                                           -> SyntaxError: duplicate parameter name 'a'
+"({ m(a, a) {} })"                                                 -> SyntaxError: duplicate parameter name 'a'
+"({ m(a) { let a; } })"                                            -> SyntaxError: Identifier 'a' has already been declared
+"\"use strict\"; (implements) => 1"                                -> SyntaxError: 'implements' cannot be used as a binding in strict mode
+"async (await) => 1"                                               -> SyntaxError: 'await' cannot be used as a binding here
+"async await => 1"                                                 -> SyntaxError: 'await' cannot be used as a binding here
+"function* g() { (yield) => 1; }"                                  -> SyntaxError: 'yield' cannot be used as a binding here
+"(a) => { let a; }"                                                -> SyntaxError: Identifier 'a' has already been declared
+"\"use strict\"; (interface) => 1"                                 -> SyntaxError: 'interface' cannot be used as a binding in strict mode
+"for ([a, ...b] of [[1, 2, 3]]) {} [a, b.join()].join(\"|\")"      -> ok "1|2,3"
+"for ([...c, d] of []) {}"                                         -> SyntaxError: invalid for-in/of target
+"for ({ ...o.p } of [{ k: 1 }]) {}"                                -> (runtime) ReferenceError: o is not defined
+"for ({ ...{ a } } of []) {}"                                      -> SyntaxError: invalid for-in/of target
+"for ([a = 1, [b] = [2]] of [[]]) {} a + b"                        -> ok 3
+"for ({ a = 5 } of [{}]) {} a"                                     -> ok 5
+"\"use strict\"; for ([eval] of []) {}"                            -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; for ({ x: arguments } of []) {}"                  -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"for ({ __proto__: p } of [{ __proto__: null }]) {} String(p)"     -> ok "undefined"
+"[{ a = 0 }.x] = []"                                               -> SyntaxError: invalid shorthand property initializer outside a pattern position
+"({ a = 0 });"                                                     -> SyntaxError: invalid shorthand property initializer
+"({ a = 0 } = {}); a"                                              -> ok 0
+"[{ b = 1 }] = [{}]; b"                                            -> ok 1
+"({ c: { d = 1 } = {} } = {}); d"                                  -> ok 1
+"x = { e = 1 }"                                                    -> SyntaxError: invalid shorthand property initializer
+"[a.b = 1] = []; \"member default ok\""                            -> ok "member default ok"
+"[...a.b] = [1, 2]; a.b.join()"                                    -> (runtime) TypeError: cannot read property 'join' of undefined
+"[...[e, f]] = [3, 4]; e + f"                                      -> ok 7
+"({ ...rest } = { a: 1, b: 2 }); JSON.stringify(rest)"             -> ok "{\"a\":1,\"b\":2}"
+"({ ...rest.inner } = { q: 1 })"                                   -> ok [object Object]
+"\"use strict\"; [arguments] = [];"                                -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ eval = 1 } = {});"                             -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ a: eval } = {});"                              -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; [...eval] = [];"                                  -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"(a, b) => { \"use strict\"; }; \"simple params ok\""              -> ok "simple params ok"
+"({ a, ...b }) => { \"use strict\"; }"                             -> SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"class A { static async *#m() {} static get #g() { return 1; } static s() { return A.#g; } } A.s()" -> ok 1
+"class A { static #x; static { this.#x = 7; } static g() { return A.#x; } } A.g()" -> ok 7
+"class A { accessor #p = 3; get p() { return this.#p; } } new A().p" -> ok 3
+"class A { accessor = 1; } new A().accessor"                       -> ok 1
+"class A { static accessor; } \"static field named accessor ok\""  -> ok "static field named accessor ok"
+"class A { accessor\n x = 1; } \"accessor newline makes two fields\"" -> ok "accessor newline makes two fields"
+"class A { get\n x() { return 1; } } new A().x"                    -> ok 1
+"class A { static\n m() { return \"static via newline\"; } } A.m()" -> ok "static via newline"
+"class A { async\n m() {} }"                                       -> ok undefined
+"class A { \"constructor\"() { this.q = 1; } } new A().q"          -> ok 1
+"class A { get [\"constructor\"]() { return 1; } } \"computed accessor named constructor ok\"" -> ok "computed accessor named constructor ok"
+"class A { static prototype = 1; }"                                -> SyntaxError: classes may not have a static field named 'prototype'
+"class A { static [\"prototype\"] = 1; }"                          -> (runtime) TypeError: classes may not have a static property named 'prototype'
+"class A { constructor = 1; }"                                     -> SyntaxError: classes may not have a field named 'constructor'
+"class A { #constructor() {} }"                                    -> SyntaxError: '#constructor' is a reserved private name
+"class A { static #a() {} #a; }"                                   -> SyntaxError: duplicate private name '#a'
+"class A { set #s(v) {} static get #s() {} }"                      -> SyntaxError: duplicate private name '#s'
+"class A { m() { return #missing in this; } }"                     -> SyntaxError: Private name '#missing' is not declared in an enclosing class
+"\"use strict\"; with ({}) {}"                                     -> SyntaxError: 'with' statements are not allowed in strict mode
+"function f() { \"use strict\"; 08; }"                             -> SyntaxError: legacy octal literals are not allowed in strict mode
+"function f() { \"\\07\"; \"use strict\"; }"                       -> SyntaxError: legacy octal literals are not allowed in strict mode
+"function f() { \"use strict\"; \"\\07\"; }"                       -> SyntaxError: legacy octal literals are not allowed in strict mode
+"function f() { \"a\"; \"\\07\"; \"use strict\"; }"                -> SyntaxError: legacy octal literals are not allowed in strict mode

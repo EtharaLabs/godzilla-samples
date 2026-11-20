@@ -1,0 +1,7 @@
+ops on every int kind: Int8Array:-5,-5,39,38,38,38,37,7,-1,-1 Uint8Array:-5,251,39,38,38,38,37,7,255,255 Int16Array:-5,-5,295,294,38,294,293,7,-1,-1 Uint16Array:-5,65531,295,294,38,294,293,7,65535,65535 Int32Array:-5,-5,295,294,38,294,293,7,-1,-1 Uint32Array:-5,4294967291,295,294,38,294,293,7,4294967295,4294967295
+bigint kinds non-shared: -1,18446744073709551615,1,0,-1,6,7,4,4,9,-9,1
+store returns coerced: 3,0,true,300,44,1180591620717411303424
+index coercion: 5,5,0
+errors: TypeError:Atomics requires an integer TypedArray | TypeError:Atomics requires an integer TypedArray | RangeError:Atomics: index out of range | RangeError:Atomics: index out of range | TypeError:Cannot convert a Number to a BigInt | TypeError:Cannot convert a BigInt value to a number | TypeError:Atomics: not an integer TypedArray | TypeError:Atomics: not an integer TypedArray | TypeError:Atomics: detached TypedArray | TypeError:Atomics: buffer was detached or shrunk during value coercion | TypeError:Atomics: buffer was detached or shrunk during value coercion | TypeError:Atomics requires an integer TypedArray
+isLockFree/pause: true,true,false,true,true,false undefined undefined undefined [object Atomics]
+pause bad: TypeError:Atomics.pause iterationNumber must be an integer | TypeError:Atomics.pause iterationNumber must be an integer | TypeError:Atomics.pause iterationNumber must be an integer | TypeError:Atomics.pause iterationNumber must be an integer

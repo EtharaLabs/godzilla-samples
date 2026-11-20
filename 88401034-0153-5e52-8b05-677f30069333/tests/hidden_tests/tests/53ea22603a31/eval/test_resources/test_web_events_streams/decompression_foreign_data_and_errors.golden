@@ -1,0 +1,11 @@
+gzip "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. "
+deflate "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. "
+deflate-raw "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. "
+zlib data as gzip THREW TypeError: gzip: bad magic
+gzip data as deflate THREW TypeError: zlib: unsupported compression method
+gzip data as raw THREW TypeError: inflate: reserved block type
+truncated gzip THREW TypeError: inflate: unexpected end of input
+short zlib THREW TypeError: zlib: input too short
+bad gzip crc 137
+bad gzip isize 137
+bad zlib adler 137

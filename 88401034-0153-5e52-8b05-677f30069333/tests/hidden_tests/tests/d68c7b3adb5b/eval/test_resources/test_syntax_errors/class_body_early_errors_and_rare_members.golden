@@ -1,0 +1,75 @@
+# classes
+"class A { constructor() {} constructor() {} }" => SyntaxError: a class may only have one constructor
+"class A { *constructor() {} }" => SyntaxError: class constructor can't be a generator, async, or accessor
+"class A { async constructor() {} }" => SyntaxError: class constructor can't be a generator, async, or accessor
+"class A { get constructor() {} }" => SyntaxError: class constructor can't be a generator, async, or accessor
+"class A { set constructor(v) {} }" => SyntaxError: class constructor can't be a generator, async, or accessor
+"class A { static prototype() {} }" => SyntaxError: classes may not have a static method named 'prototype'
+"class A { static get prototype() {} }" => SyntaxError: classes may not have a static method named 'prototype'
+"class A { static prototype = 1 }" => SyntaxError: classes may not have a static field named 'prototype'
+"class A { constructor = 1 }" => SyntaxError: classes may not have a field named 'constructor'
+"class A { \"constructor\" = 1 }" => SyntaxError: classes may not have a field named 'constructor'
+"class A { static constructor() {} } 1" => ok 1
+"class A { static \"prototype\" = 1 }" => SyntaxError: classes may not have a static field named 'prototype'
+"class A { #constructor }" => SyntaxError: '#constructor' is a reserved private name
+"class A { #a; #a; }" => SyntaxError: duplicate private name '#a'
+"class A { get #a() {} set #a(v) {} } 2" => ok 2
+"class A { get #a() {} get #a() {} }" => SyntaxError: duplicate private name '#a'
+"class A { static get #a() {} set #a(v) {} }" => SyntaxError: duplicate private name '#a'
+"class A { #a; m() { #a; } }" => SyntaxError: private name '#a' may only be used in a member access or 'in' expression
+"class A { m() { this.#b; } }" => SyntaxError: Private name '#b' is not declared in an enclosing class
+"class A { m() { return #b in this; } }" => SyntaxError: Private name '#b' is not declared in an enclosing class
+"this.#x" => SyntaxError: Private name '#x' is not declared in an enclosing class
+"class A { #a; m() { delete this.#a; } }" => SyntaxError: private fields cannot be deleted
+"class A { #a; m() { delete this?.#a; } }" => SyntaxError: private fields cannot be deleted
+"class A { #a; m() { super.#a; } }" => SyntaxError: cannot access a private member through 'super'
+"class A { #a; static m(o) { return #a in #a in o; } }" => SyntaxError: a private name may only appear to the left of 'in'
+"class A { #a; m() { return 1 + #a; } }" => SyntaxError: private name '#a' may only be used in a member access or 'in' expression
+"class A { #a; m(o) { return #a in o; } } 3" => ok 3
+"class A { #a; m() { class B { n() { return this.#a; } } } } 4" => ok 4
+"class A { m() { class B { #z; } return this.#z; } }" => SyntaxError: Private name '#z' is not declared in an enclosing class
+"({ #a: 1 })" => SyntaxError: private names are only allowed in class bodies
+"class A { get g(x) {} }" => SyntaxError: getter functions must have no arguments
+"class A { set s() {} }" => SyntaxError: setter functions must have exactly one argument
+"class A { set s(a, b) {} }" => SyntaxError: setter functions must have exactly one argument
+"class A { set s(...a) {} }" => SyntaxError: setter functions must have exactly one argument
+"({ get g(x) {} })" => SyntaxError: getter functions must have no arguments
+"({ set s() {} })" => SyntaxError: setter functions must have exactly one argument
+"class let {}" => SyntaxError: 'let' cannot be used as a class name
+"class yield {}" => SyntaxError: 'yield' cannot be used as a class name
+"class await {} 5" => ok 5
+"class static {}" => SyntaxError: 'static' cannot be used as a class name
+"async function f() { class await {} }" => SyntaxError: 'await' cannot be used as a class name here
+"function* g() { class yield {} }" => SyntaxError: 'yield' cannot be used as a class name
+"class A { x = arguments; }" => SyntaxError: 'arguments' is not allowed in a class field initializer
+"class A { static { arguments; } }" => SyntaxError: 'arguments' is not allowed in a class static block
+"class A { static { await 1; } }" => SyntaxError: 'await' is not a valid identifier here
+"class A { static { var await; } }" => SyntaxError: 'await' cannot be used as a binding here
+"class A { static { return; } }" => SyntaxError: 'return' is not allowed directly in a class static block
+"class A { static { super(); } }" => SyntaxError: 'super' call unexpected here
+"class A { static { super.x; } } 6" => ok 6
+"class A { x = super(); }" => SyntaxError: 'super' call unexpected here
+"class A { m() { super(); } }" => SyntaxError: 'super' call unexpected here
+"class A extends Object { constructor() { super(); } } 7" => ok 7
+"class A { constructor() { super(); } }" => SyntaxError: 'super' call unexpected here
+"({ m() { super(); } })" => SyntaxError: 'super' call unexpected here
+"({ m() { return super.x; } }).m()" => ok
+"function f() { super.x; }" => SyntaxError: 'super' keyword unexpected here
+"class A extends B, C {}" => SyntaxError: expected '{'
+"class A extends {}" => SyntaxError: expected '{'
+"class A extends 1 {} " => TypeError: Class extends value is not a constructor or null
+"class A { static async *m() {} static #p = 1; static { this.q = A.#p; } } A.q" => ok 1
+"class A { accessor x = 1; static accessor #y = 2; } new A().x" => ok 1
+"class A { accessor\nx = 1 } new A().accessor" => ok
+"class A { get\nx() { return 1; } } new A().x" => ok 1
+"class A { static\nm() { return 2; } } A.m()" => ok 2
+"class A { async\nm() {} }" => ok
+"class A { \"a b\"() { return 1; } 42() { return 2; } [Symbol.iterator]() {} get [1 + 1]() { return 3; } static 0x10 = 4 } new A()[\"a b\"]() + new A()[42]() + new A()[2] + A[16]" => ok 10
+"class A { x; y = 1; z } Object.keys(new A()).join()" => ok "x,y,z"
+"class A { static x = this; } A.x === A" => ok true
+"class A { #m() { return 1; } static has(o) { return #m in o; } } A.has(new A()) + \"\" + A.has({})" => ok "truefalse"
+"class A { get #g() { return \"g\"; } t() { return this.#g; } } new A().t()" => ok "g"
+"class A { static #s() { return \"s\"; } static t() { return A.#s(); } } A.t()" => ok "s"
+"class A { ; ; m() {} ; } 8" => ok 8
+"new class { constructor(x) { this.x = x; } }(9).x" => ok 9
+"(class Named { static n = Named.name }).n" => ok "Named"

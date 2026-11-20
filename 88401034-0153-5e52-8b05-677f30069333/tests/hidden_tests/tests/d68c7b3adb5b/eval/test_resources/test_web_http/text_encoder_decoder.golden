@@ -1,0 +1,18 @@
+encoding utf-8 empty 0 0
+"A" 41
+"é" c3 a9
+"€" e2 82 ac
+"𝄞" f0 9d 84 9e
+"héllo 🌍" 68 c3 a9 6c 6c 6f 20 f0 9f 8c 8d
+"\u0000߿ࠀ￿" 00 7f c2 80 df bf e0 a0 80 ef bf bf
+is Uint8Array true coerces 31 32 33 6e 75 6c 6c
+decoder utf-8 false false
+roundtrip héllo 🌍 €
+ArrayBuffer hi Int8Array AB subarray bc
+undefined "" empty ""
+replacement "a�b�" "�"
+BOM stripped "hi" kept with ignoreBOM 4
+fatal true TypeError: TextDecoder: invalid utf-8 (fatal) ok é
+labels utf-8,utf-8,utf-8
+unsupported RangeError: TextDecoder: unsupported encoding 'klingon' (utf-8 only for now)
+not a buffer TypeError: TextDecoder.decode expects a BufferSource

@@ -1,0 +1,18 @@
+first rowid OK {"changes":1,"lastInsertRowid":7}
+duplicate rowid SQLiteError true "SQLITE_CONSTRAINT_ROWID" 2579 UNIQUE constraint failed: plain.rowid
+duplicate rowid (prepared) SQLiteError true "SQLITE_CONSTRAINT_ROWID" 2579 UNIQUE constraint failed: plain.rowid
+strict text into integer SQLiteError true "SQLITE_CONSTRAINT_DATATYPE" 3091 cannot store TEXT value in INTEGER column typed.i
+strict blob into real SQLiteError true "SQLITE_CONSTRAINT_DATATYPE" 3091 cannot store BLOB value in REAL column typed.r
+strict coercible values OK {"changes":1,"lastInsertRowid":1}
+strict rows OK [{"i":12,"ti":"integer","r":3,"tr":"real","t":"4.5","tt":"text","b":"00FF","x":"any"}]
+fileControl null OK undefined
+fileControl undefined OK undefined
+fileControl unknown opcode SQLiteError true undefined 0 not an error
+file fileControl unknown opcode SQLiteError true undefined 0 not an error
+file fileControl reset cache OK undefined
+file still usable OK {"n":0}
+deserialize DataView TypeError false undefined undefined Database.deserialize expects a TypedArray or Buffer
+deserialize Float64Array of zeros OK {"v":42}
+finalize after close OK undefined
+finalize twice after close OK undefined
+toString after close OK "SELECT 1 AS one"

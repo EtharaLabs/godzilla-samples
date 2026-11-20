@@ -1,0 +1,56 @@
+basic: {"a":[1,"two",null,true,null,null,null],"d":null,"e":0,"f":null,"g":"1970-01-01T00:00:00.000Z","h":"toJSON:h"}
+top-level:  |  |  | null | "s" | 0 | 1e+21
+boxed: [3,"str",false,{}]
+escapes: "q\"b\\n\n\r\t\b\f\u0001\u001f  " | "\ud800 \udc00 😀"
+keys: {"1":"a","2":"b","z":1,"y":2}
+indent-num: {
+  "a": [
+    1,
+    {
+      "b": 2
+    }
+  ],
+  "c": [],
+  "d": {}
+}
+indent-str: [
+--1,
+--[
+----2
+--]
+]
+indent-long: {
+0123456789"a": 1
+}
+indent-clamp: true | [1] | [1] | [
+   1
+]
+indent-boxed: [
+ 1
+] | [
+>1
+]
+replacer-fn: {"a":10,"b":"x","c":{"d":20}}
+replacer-trace: ""@object:root=true "a"@object "b"@object "0"@arr "1"@arr "c"@object
+replacer-undefined-drop: {"b":2} | [null,2]
+replacer-root: {"wrapped":5} | [1,"r"] | 
+replacer-array: {"a":1,"c":{"a":3},"1":"one","b":2}
+replacer-array-on-array: [{"b":2}]
+replacer-nonfunc: {"a":1} | {"a":1}
+toJSON-precedence: {"x":{"y":"replaced"}}
+toJSON-noncallable: {"toJSON":5,"k":1}
+date-toJSON: "2020-01-02T03:04:05.006Z" | null
+bigint: TypeError: Do not know how to serialize a BigInt
+bigint-toJSON: {"v":"10n"}
+cycle-obj: TypeError: Converting circular structure to JSON
+cycle-arr: TypeError: Converting circular structure to JSON
+shared-not-cycle: {"a":{"s":1},"b":{"s":1},"c":[{"s":1},{"s":1}]}
+proxy: {"a":1,"b":[1]} | [1,2]
+getter: {"g":"gotten"}
+nonenum: {"v":1}
+array-holes: [null,1,null,null]
+nested-deep: 13
+map/set: {} | {} | {} | {}
+typed: {}
+toJSON-throws: RangeError: from toJSON
+len: 3 | 2 | [object JSON] | 0

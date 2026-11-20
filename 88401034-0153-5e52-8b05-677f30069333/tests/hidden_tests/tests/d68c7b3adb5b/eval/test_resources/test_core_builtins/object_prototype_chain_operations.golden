@@ -1,0 +1,31 @@
+getPrototypeOf primitives: true,true,true,true,true,
+getPrototypeOf undefined: TypeError: called on null or undefined
+setPrototypeOf: 1,true,
+setPrototypeOf cycle: TypeError: could not set prototype
+setPrototypeOf self: false
+setPrototypeOf bad proto: TypeError: Object prototype may only be an Object or null
+setPrototypeOf undefined target: TypeError: Object.setPrototypeOf called on null or undefined
+setPrototypeOf non-extensible: TypeError: could not set prototype
+setPrototypeOf non-extensible same: true
+setPrototypeOf Object.prototype: TypeError: could not set prototype
+setPrototypeOf Object.prototype null ok: true
+__proto__ accessor: function,function,false,true,true,true,true,,__proto__
+__proto__ setter on primitive: undefined
+__proto__ setter on undefined: TypeError: __proto__ set on null or undefined
+__proto__ getter on undefined: TypeError: get __proto__ called on null or undefined
+__proto__ setter cycle: TypeError: cyclic __proto__ value
+__proto__ setter non-extensible: TypeError
+__proto__ in literals: P,P,true,__proto__,true,__proto__,true
+proxy setPrototypeOf trap false: false
+proxy setPrototypeOf trap false Object: TypeError: could not set prototype
+proxy setPrototypeOf not callable: TypeError: proxy 'setPrototypeOf' trap is not callable
+proxy setPrototypeOf forward: false true
+proxy setPrototypeOf nonext ok: true
+proxy setPrototypeOf nonext lie: TypeError: proxy 'setPrototypeOf' changed a non-extensible target's prototype
+proxy in proto chain stops cycle check: true
+proxy getPrototypeOf not callable: TypeError: proxy 'getPrototypeOf' trap is not callable
+proxy getPrototypeOf forward to proxy: true
+revoked setPrototypeOf: TypeError: proxy is revoked
+revoked getPrototypeOf: TypeError: cannot read property 'getPrototypeOf' of null
+isPrototypeOf through proxy: true true
+instanceof through proxy prototype: true

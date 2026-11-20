@@ -1,0 +1,24 @@
+ 0 2001:db8::1    {"all":true} ok [[{"address":"2001:db8::1","family":6}]]
+ 1 10.1.2.3       4            ok ["10.1.2.3",4]
+ 2 10.2.4.6       {"family":6} ERR Error code=ENOTFOUND message="queryA/AAAA 10.2.4.6: no matching records"
+ 3 2001:db8::4    {}           ok ["2001:db8::4",6]
+ 4 10.4.8.12      {"all":true} ok [[{"address":"10.4.8.12","family":4}]]
+ 5 10.5.10.15     4            ok ["10.5.10.15",4]
+ 6 2001:db8::7    {"family":6} ok ["2001:db8::7",6]
+ 7 10.7.14.21     {}           ok ["10.7.14.21",4]
+ 8 10.8.16.24     {"all":true} ok [[{"address":"10.8.16.24","family":4}]]
+ 9 2001:db8::a    4            ERR Error code=ENOTFOUND message="queryA/AAAA 2001:db8::a: no matching records"
+10 10.10.20.30    {"family":6} ERR Error code=ENOTFOUND message="queryA/AAAA 10.10.20.30: no matching records"
+11 10.11.22.33    {}           ok ["10.11.22.33",4]
+12 2001:db8::d    {"all":true} ok [[{"address":"2001:db8::d","family":6}]]
+13 10.13.26.39    4            ok ["10.13.26.39",4]
+14 10.14.28.42    {"family":6} ERR Error code=ENOTFOUND message="queryA/AAAA 10.14.28.42: no matching records"
+15 2001:db8::10   {}           ok ["2001:db8::10",6]
+16 10.16.32.48    {"all":true} ok [[{"address":"10.16.32.48","family":4}]]
+17 10.17.34.51    4            ok ["10.17.34.51",4]
+18 2001:db8::13   {"family":6} ok ["2001:db8::13",6]
+19 10.19.38.57    {}           ok ["10.19.38.57",4]
+20 10.20.40.60    {"all":true} ok [[{"address":"10.20.40.60","family":4}]]
+21 2001:db8::16   4            ERR Error code=ENOTFOUND message="queryA/AAAA 2001:db8::16: no matching records"
+22 10.22.44.66    {"family":6} ERR Error code=ENOTFOUND message="queryA/AAAA 10.22.44.66: no matching records"
+23 10.23.46.69    {}           ok ["10.23.46.69",4]

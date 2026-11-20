@@ -1,0 +1,61 @@
+let-as-ident 5
+yield-as-ident 6
+await-as-ident 7
+static-implements 10
+async-as-ident 9
+of-get-set-as-ident 10
+let-asi !SyntaxError: expected binding identifier
+let-member 11
+eval-arguments-names "number"
+sloppy-frozen-write 1
+strict-frozen-write !TypeError: cannot assign to read-only property 'a'
+sloppy-delete-nonconfig false
+sloppy-delete-var true
+sloppy-delete-eval-var "true,undefined"
+sloppy-primitive-prop undefined
+strict-primitive-prop !TypeError: Cannot create property 'prop' on string value
+sloppy-getter-only 1
+sloppy-nonextensible undefined
+sloppy-readonly-length 2
+strict-readonly-length !TypeError: cannot assign to read-only property 'length'
+sloppy-implicit-global "made:true"
+this-boxing "object,string,true,"
+this-in-getter-on-primitive "object,number"
+fn-caller-strict !TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+fn-arguments-prop-strict !TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+fn-caller-sloppy-type "function"
+restricted-props-on-proto "function,true,false,false"
+annexb-before-block "undefined,function"
+annexb-if "if-fn"
+annexb-no-hoist-over-let "string"
+annexb-for-in-init "init"
+annexb-html-comment 2
+annexb-escape "a%20b+%E9,AA"
+annexb-legacy-regexp "a,true,true,true,true"
+annexb-defineGetter "dg-val,function,"
+annexb-string-html "<a name=\"a&quot;b\">x</a>,<b>y</b>,z"
+annexb-date-getYear 99
+strict-function-in-sloppy "undefined"
+class-body-strict "undefined"
+directive-after-statement false
+directive-escaped false
+directive-not-first-string true
+eval-in-strict-fn "undefined"
+strict-arguments-assign 1
+sloppy-octal-escape "2:56"
+labels "b1,c1,c2,b3"
+object-spread "{\"0\":9,\"1\":\"i\",\"a\":1,\"g\":\"g\",\"b\":2} calls=1"
+object-dup-keys "{\"a\":3,\"b\":2,\"c\":\"data\"}"
+object-numeric-keys "[\"0\",\"16\",\"1000\",\"1.5\",\"01\"]"
+spread-holes "[1,null,3] true false 7"
+new-spread "a,b,1"
+delete-optional-null "true,true,true,true,{\"a\":{}},true"
+delete-string-props "false,false,true,true,false,true"
+delete-string-strict !TypeError: cannot delete non-configurable property '0'
+delete-array-length "false,2"
+delete-with-binding "true,false,false,true"
+delete-with-inherited "true,true"
+delete-global-property "true,undefined"
+delete-function-name-length "true,true,,0,false"
+delete-returns-true-for-nonref "true,true,true,true"
+delete-super-strict !ReferenceError: cannot delete a super property

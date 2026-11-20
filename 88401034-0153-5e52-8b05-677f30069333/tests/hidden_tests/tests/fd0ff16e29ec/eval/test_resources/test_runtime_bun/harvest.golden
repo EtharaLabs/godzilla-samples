@@ -1,0 +1,20 @@
+util/types true false true false false true
+jsc stats true true true
+jsc estimate 10 true
+jsc hooks true 42
+jsc profile string true
+jsc gc true true
+heap snapshots 1 true true object
+gc/shrink true true
+transpiler ts false true 42
+transpiler jsx true true
+transpiler scan result import-statement:pkg,dynamic-import:later
+transpiler loaders "export default {\"a\":1};" "export default \"raw text\";"
+transpiler bad loader TypeError Unsupported loader 'css'
+mmap true 4 2
+mmap sees write 8
+mmap shared write 42
+wal {"journal_mode":"wal"}
+fileControl true
+fileControl bad TypeError
+transform async true

@@ -1,0 +1,35 @@
+raw:empty Error: inflate: unexpected end of input
+raw:reserved-btype Error: inflate: reserved block type
+raw:stored-truncated Error: inflate: truncated stored block
+raw:stored-len-only Error: inflate: truncated stored block
+raw:stored-overrun Error: inflate: stored block overruns input
+raw:stored-then-fixed OK 8 "OKHi!Hi!"
+raw:fixed-bad-symbol Error: inflate: invalid literal/length symbol
+raw:fixed-far-distance Error: inflate: distance too far back
+raw:dyn-repeat-first Error: inflate: repeat with no previous length
+raw:dyn-distance-30 Error: inflate: invalid distance symbol
+raw:fixed-no-eob Error: inflate: unexpected end of input
+zlib:truncated Error: inflate: unexpected end of input
+zlib:mut@138=39 Error: inflate: distance too far back
+zlib:mut@8=175 Error: inflate: repeat with no previous length
+zlib:mut@42=192 Error: inflate: code-length overrun
+zlib:mut@56=216 Error: inflate: invalid Huffman code
+zlib:mut@2=159 Error: inflate: reserved block type
+zlib:mut@2=57 Error: inflate: stored block overruns input
+zlib:mut@297=54 OK 408 "Was window literal if. W"
+zlib:mut@0=185 Error: zlib: unsupported compression method
+zlib:short Error: zlib: input too short
+zlib:method Error: zlib: unsupported compression method
+zlib:bad-adler-ignored OK 1 "a"
+zlib:trailing-garbage OK 2 "ok"
+gzip:ok OK 12 "gzip payload"
+gzip:short Error: gzip: bad magic
+gzip:magic Error: gzip: bad magic
+gzip:method Error: gzip: unsupported compression method
+gzip:extra-truncated Error: gzip: truncated
+gzip:name-runs-off Error: gzip: truncated
+gzip:comment+hcrc OK 12 "gzip payload"
+gzip:bad-crc-ignored OK 12 "gzip payload"
+unzip:gzip OK 12 "gzip payload"
+inflate-of-gzip Error: zlib: unsupported compression method
+gunzip-of-zlib Error: gzip: bad magic

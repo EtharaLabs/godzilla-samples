@@ -1,0 +1,54 @@
+"2020-01-02": 2020-01-02 ; RangeError ; 2020-01-02T00:00:00 ; 2020-01 ; 01-02 ; RangeError ; RangeError
+"2020-01-02T03:04": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; RangeError ; RangeError
+"2020-01-02T03:04:05.678Z": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; 2020-01-02T03:04:05.678Z ; RangeError
+"2020-01-02T03:04+01:00": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; 2020-01-02T02:04:00Z ; RangeError
+"2020-01-02T03:04[Europe/Rome]": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; RangeError ; 2020-01-02T03:04:00+01:00[Europe/Rome]
+"2020-01-02T03:04+01:00[Europe/Rome]": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; 2020-01-02T02:04:00Z ; 2020-01-02T03:04:00+01:00[Europe/Rome]
+"2020-01-02T03:04Z[Europe/Rome]": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; 2020-01-02T03:04:00Z ; 2020-01-02T04:04:00+01:00[Europe/Rome]
+"2020-01-02T03:04+01:00[+01:00]": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; 2020-01-02T02:04:00Z ; 2020-01-02T03:04:00+01:00[+01:00]
+"2020-01-02T03:04[u-ca=gregory]": 2020-01-02[u-ca=gregory] ; 03:04:00 ; 2020-01-02T03:04:00[u-ca=gregory] ; 2020-01-01[u-ca=gregory] ; 1972-01-02[u-ca=gregory] ; RangeError ; RangeError
+"2020-01": RangeError ; RangeError ; RangeError ; 2020-01 ; RangeError ; RangeError ; RangeError
+"01-02": RangeError ; RangeError ; RangeError ; RangeError ; 01-02 ; RangeError ; RangeError
+"--01-02": RangeError ; RangeError ; RangeError ; RangeError ; 01-02 ; RangeError ; RangeError
+"03:04": RangeError ; 03:04:00 ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"T03:04": RangeError ; 03:04:00 ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"030405": RangeError ; RangeError ; RangeError ; 0304-05 ; RangeError ; RangeError ; RangeError
+"2020-01-02T24:00": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04:05,5": 2020-01-02 ; 03:04:05.5 ; 2020-01-02T03:04:05.5 ; 2020-01 ; 01-02 ; RangeError ; RangeError
+"2020-01-02T03:04:05.": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03": 2020-01-02 ; 03:00:00 ; 2020-01-02T03:00:00 ; 2020-01 ; 01-02 ; RangeError ; RangeError
+"2020-01-02T0304": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; RangeError ; RangeError
+"2020-01-02T03:0405": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04:05+0100": 2020-01-02 ; 03:04:05 ; 2020-01-02T03:04:05 ; 2020-01 ; 01-02 ; 2020-01-02T02:04:05Z ; RangeError
+"2020-01-02T03:04:05+01:00:00.5": 2020-01-02 ; 03:04:05 ; 2020-01-02T03:04:05 ; 2020-01 ; 01-02 ; 2020-01-02T02:04:04.5Z ; RangeError
+"2020-01-02T03:04:05.123456789+23:59": 2020-01-02 ; 03:04:05.123456789 ; 2020-01-02T03:04:05.123456789 ; 2020-01 ; 01-02 ; 2020-01-01T03:05:05.123456789Z ; RangeError
+"2020-01-02T03:04:05+24:00": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02[Europe/Rome][u-ca=japanese]": 2020-01-02[u-ca=japanese] ; RangeError ; 2020-01-02T00:00:00[u-ca=japanese] ; 2020-01-01[u-ca=japanese] ; 1972-01-02[u-ca=japanese] ; RangeError ; 2020-01-02T00:00:00+01:00[Europe/Rome][u-ca=japanese]
+"2020-01-02[_foo=bar]": 2020-01-02 ; RangeError ; 2020-01-02T00:00:00 ; 2020-01 ; 01-02 ; RangeError ; RangeError
+"2020-01-02[foo=bar][u-ca=gregory]": 2020-01-02[u-ca=gregory] ; RangeError ; 2020-01-02T00:00:00[u-ca=gregory] ; 2020-01-01[u-ca=gregory] ; 1972-01-02[u-ca=gregory] ; RangeError ; RangeError
+"2020-01-02[!u-ca=gregory][u-ca=gregory]": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02[u-ca=gregory][!u-ca=japanese]": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+" 2020-01-02": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02 ": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"+2020-01-02": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"-002020-01-02": -002020-01-02 ; RangeError ; -002020-01-02T00:00:00 ; -002020-01 ; 01-02 ; RangeError ; RangeError
+"+0020200-01-02": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-W01-1": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-002": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-1-02": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"20200102T030405Z": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; 2020-01-02T03:04:05Z ; RangeError
+"2020-01-02T03:04:05-00:00": 2020-01-02 ; 03:04:05 ; 2020-01-02T03:04:05 ; 2020-01 ; 01-02 ; 2020-01-02T03:04:05Z ; RangeError
+"2020-01-02T03:04:05−01:00": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04[ Europe/Rome]": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04[Europe/Rome": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04[]": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04[-08]": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; RangeError ; 2020-01-02T03:04:00-08:00[-08:00]
+"2020-01-02T03:04[+0530]": 2020-01-02 ; 03:04:00 ; 2020-01-02T03:04:00 ; 2020-01 ; 01-02 ; RangeError ; 2020-01-02T03:04:00+05:30[+05:30]
+"1976-11-18T15:23:30.1234567891Z": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01-02T03:04:60Z": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; 2020-01-02T03:04:59Z ; RangeError
+"2020-02-30T00:00Z": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"T24:00": RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError ; RangeError
+"2020-01": RangeError ; RangeError ; RangeError ; 2020-01 ; RangeError ; RangeError ; RangeError
+bad type: TypeError:cannot convert to Temporal.PlainDate ; TypeError:cannot convert to Temporal.PlainTime ; TypeError:cannot convert to Temporal.PlainDateTime ; TypeError:cannot convert to Temporal.PlainYearMonth ; TypeError:cannot convert to Temporal.PlainMonthDay ; TypeError:cannot convert to Temporal.Instant ; TypeError:cannot convert to Temporal.ZonedDateTime
+symbol: TypeError ; TypeError ; TypeError ; TypeError ; TypeError ; TypeError ; TypeError

@@ -1,0 +1,29 @@
+bool set "bool:object:1"
+sym set "bool:object:1,sym:object:2"
+big set "bool:object:1,sym:object:2,big:object:3"
+num getter-only sloppy "ro-get"
+num getter-only strict !TypeError: cannot set getter-only property 'ro'
+bool plain sloppy undefined
+bool plain strict !TypeError: Cannot create property 'plain' on boolean value
+sym plain strict !TypeError: Cannot create property 'plain' on symbol value
+big plain strict !TypeError: Cannot create property 'plain' on bigint value
+bool proxy set "set viaProxySet=7 recv:boolean"
+bool proxy get "proxied:boolean"
+bigint getter "42"
+ta proto set idx "[0,[\"1\"],true]"
+ta proto set oob "[false,4]"
+ta proto set -0 "[false]"
+ta proto set 1.5 "[[\"1\"]]"
+ta proto set named "[[\"1\",\"foo\"]]"
+Reflect.set ta recv self "[true,4464,true]"
+Reflect.set nonwritable recv "false,1"
+Reflect.set accessor recv "false,1"
+Reflect.set proxy recv false false
+strict assign via proxy recv false "no"
+Reflect.set prim recv false
+length nonwritable sloppy 3
+length nonwritable strict !TypeError: cannot assign to read-only property 'length'
+push past ro length strict !TypeError: cannot add an element past a read-only array length
+push past ro length sloppy "1:undefined"
+assign ro length via frozen !TypeError: cannot assign to read-only property 'length'
+seen "bool:object:1 | sym:object:2 | big:object:3"

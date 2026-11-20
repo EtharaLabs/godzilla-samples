@@ -1,0 +1,12 @@
+raw greeting! plain true
+resolve virtual:greet require/node/default
+load greet.src undefined
+resolve ./plain require/node/default
+load plain.js undefined
+resolve fs require/node/default
+resolve node:fs require/node/default
+after deregister: MODULE_NOT_FOUND Cannot find module 'virtual:greet'
+TypeError ERR_INVALID_ARG_TYPE The "hooks.resolve" property must be of type function. Received type number
+TypeError undefined Cannot destructure property 'resolve' of 'hooks' as it is null.
+TypeError ERR_INVALID_RETURN_PROPERTY_VALUE Expected true to be returned for the "shortCircuit" from the "resolve" hook but got undefined.
+TypeError ERR_INVALID_RETURN_VALUE The "resolve" hook must return an object

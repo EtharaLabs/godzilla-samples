@@ -1,0 +1,14 @@
+connect port 65536 -> RangeError: "port" option should be >= 0 and < 65536. Received 65536.
+connect port -1 -> RangeError: "port" option should be >= 0 and < 65536. Received -1.
+connect port 1.5 -> RangeError: "port" option should be >= 0 and < 65536. Received 1.5.
+connect port abc -> RangeError: "port" option should be >= 0 and < 65536. Received abc.
+connect port NaN -> RangeError: "port" option should be >= 0 and < 65536. Received NaN.
+connect port 99999 -> RangeError: "port" option should be >= 0 and < 65536. Received 99999.
+new Socket({fd}) -> Error: node:net new Socket({ fd }) is not supported in lumen (arbitrary OS fd wrapping is unavailable)
+_createServerHandle -> Error: node:net raw server handles are not supported in lumen (use net.createServer)
+_setSimultaneousAccepts -> returned undefined
+Stream is Socket: true createConnection is connect: true
+normalize port+host+cb: {"port":8080,"host":"example.test"} function true
+normalize path: {"path":"some.sock"} null
+normalize numeric string: {"port":"4000"}
+normalize empty: {} null true

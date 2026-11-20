@@ -1,0 +1,17 @@
+set: 1,2,255,0,7,8 undefined
+set errors: RangeError:source is too large for the target at offset | RangeError:source is too large for the target at offset | RangeError:TypedArray.prototype.set offset is negative | TypeError:TypedArray content types (BigInt vs Number) differ | TypeError:Cannot convert a BigInt value to a number | RangeError:source is too large for the target at offset | TypeError:TypedArray content types (BigInt vs Number) differ | TypeError:set on non-TypedArray
+set same buffer different type: 1,0,2,0,3,0,4,0
+set same buffer same type overlap: 1,2,1,2,3,4 3,4,5,6,5,6
+set offset coercion: 7,6,5,8
+set string source: 1,2,0
+set from float/bigint arrays: 1,-1,44 18446744073709551615,5
+slice: 2,3 | 4,5 | 0 | 1,2,3,4,5 | 2,3,4,5 | 1,2 | 5
+slice keeps NaN payload type: true,true
+subarray: 99,3,4 | 2 | 1,99,3,4,5 | 4,5 | 0 | 4 | 5 | 5
+species slice different type: 1,254,44 1,254,44 1,254,44
+species too short: TypeError:TypedArray destination is too small | TypeError:TypedArray destination is too small | TypeError:TypedArray destination is too small
+species errors: TypeError:TypedArray constructor property is not an object | TypeError:TypedArray species is not a constructor | TypeError:TypedArray constructor did not return a TypedArray | TypeError:Cannot convert a Number to a BigInt | TypeError:TypedArray destination is detached or out of bounds
+species fallbacks: 4 4 true true
+species subarray args: 2,3 true,1,2
+species detaches source: TypeError:TypedArray source is out of bounds
+species shrinks source: 1,2,0,0

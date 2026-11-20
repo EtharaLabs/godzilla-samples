@@ -1,0 +1,20 @@
+true ENOTFOUND ENOTIMP EBADNAME 1024 2048 256 undefined ECANCELLED verbatim
+ipv4first
+sync section done
+srv ENOTIMP querySrv _sip._tcp.example.com querySrv ENOTIMP _sip._tcp.example.com
+naptr ENOTIMP queryNaptr queryNaptr ENOTIMP example.com
+svc ENOTIMP getnameinfo 127.0.0.1 getnameinfo ENOTIMP 127.0.0.1
+lookup null 127.0.0.1 4
+lookup6 null ::1 6
+all null [{"address":"10.1.2.3","family":4}]
+numeric family null 192.168.0.1
+family mismatch Error ENOTFOUND queryA/AAAA 127.0.0.1: no matching records
+plookup {"address":"127.0.0.1","family":4} [{"address":"::1","family":6}]
+caa ENOTIMP queryCaa queryCaa ENOTIMP example.com
+p svc ENOTIMP getnameinfo ENOTIMP ::1
+["1.1.1.1","8.8.8.8"]
+independent true true
+TypeError: The "servers" argument must be an instance of Array
+["9.9.9.9"] function function function
+tlsa ENOTIMP queryTlsa ENOTIMP example.com
+p soa ENOTIMP querySoa ENOTIMP example.com

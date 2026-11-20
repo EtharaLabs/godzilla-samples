@@ -1,0 +1,12 @@
+server order wins
+  client: secure authorized=true authorizationError=null servername=localhost alpn=http/1.1 | data "hi server order wins" | close hadError=false
+  server: secureConnection alpn=http/1.1 | closed
+no overlap
+  client: secure authorized=true authorizationError=null servername=localhost alpn=false | data "hi no overlap" | close hadError=false
+  server: secureConnection alpn=false | closed
+client offers none
+  client: secure authorized=true authorizationError=null servername=localhost alpn=false | data "hi client offers none" | close hadError=false
+  server: secureConnection alpn=false | closed
+255-byte name
+  client: secure authorized=true authorizationError=null servername=localhost alpn=p*255 | data "hi 255-byte name" | close hadError=false
+  server: secureConnection alpn=p*255 | closed

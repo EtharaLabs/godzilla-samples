@@ -1,0 +1,20 @@
+after replace: ["ab39","","","ab39",""]
+after match: ["cd39","","","cd39",""] 80
+test non-regexp: TypeError: exec called on a non-RegExp object
+test exec returns: true
+readonly lastIndex test: true aBc
+readonly global replace: TypeError lastIndex=0
+sticky lastIndex -1: false -> 0
+sticky lastIndex 1.5: false -> 0
+sticky lastIndex "1": false -> 0
+sticky lastIndex {}: true -> 3
+lastIndex past end: null 0
+plain: 30 lastIndex=0 lastMatch=bb
+global: 30 lastIndex=0 lastMatch=c
+readonly: 30 lastIndex=0 lastMatch=d
+negative: 30 lastIndex=-1 lastMatch=e
+fraction: 30 lastIndex=1.5 lastMatch=f
+string: 30 lastIndex=0 lastMatch=g
+patched exec calls: 40
+realm statics: main oth
+realm statics 2: again oth other

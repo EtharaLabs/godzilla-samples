@@ -1,0 +1,21 @@
+# decorators
+"@dec class A {}" => ReferenceError: dec is not defined
+"var dec = function () {}; @dec class A {} 1" => ok 1
+"var d = { e: { f: function () { return function () {}; } } }; @d.e.f() class A {} 2" => ok 2
+"@(function () {}) class A {} 3" => ok 3
+"class A { @(x => x) m() {} } 4" => ok 4
+"@1 class A {}" => SyntaxError: expected a decorator expression after '@'
+"@dec\nclass A {}" => ok
+"class A { @dec static #m() {} }" => ok
+"class A { @dec constructor() {} }" => ok
+"export @dec class A {}" => SyntaxError: 'export' declaration may only appear at the top level of a module
+"@dec function f() {}" => SyntaxError: expected '{'
+"x = @dec class {}" => ok fn
+"x = class { @dec accessor a = 1 }; 5" => ok 5
+"var dec = (v, c) => c.kind; class A { @dec @dec m() {} } 6" => TypeError: decorator must return a function or undefined
+"x = { @dec m() {} }" => SyntaxError: expected property key
+"class A { @new X m() {} }" => SyntaxError: expected ';'
+"class A { @(a, b) m() {} } 7" => ReferenceError: a is not defined
+"class A { @a?.b m() {} }" => SyntaxError: expected property key
+"class A { @a[0] m() {} }" => SyntaxError: expected ';'
+"class A { @a() () m() {} }" => SyntaxError: expected property key

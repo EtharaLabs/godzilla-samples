@@ -1,0 +1,17 @@
+parts full: weekday="Wednesday" literal=", " month="December" literal=" " day="25" literal=", " year="2024" literal=", " hour="3" literal=":" minute="04" literal=":" second="05" literal=" " dayPeriod="PM" literal=" " timeZoneName="UTC"
+parts arab: day="٢٥" literal="/" month="١٢" literal="/" year="٢٠٢٤" literal=", " hour="١٥" literal=":" minute="٠٤" literal=":" second="٠٥" literal="٫" fractionalSecond="٦٧"
+parts dayPeriod: hour="3" literal=" " dayPeriod="in the afternoon"
+parts era: month="January" literal=" " day="1" literal=", " year="101" literal=" " era="BC"
+parts default: month="1" literal="/" day="1" literal="/" year="1970" / day="1" literal="." month="1" literal="." year="1970"
+range same day: Dec 25, 2024, 9:00 AM – 3:04 PM | Dec 25, 2024, 3:04 PM
+range named month: December 25 – 28, 2024 | January 10 – March 5, 2024 | December 30, 2023 – January 2, 2024
+range date and time differ: Dec 25, 2024, 3:04 PM – Dec 28, 2024, 4:04 PM
+rangeToParts date and time differ: month="Dec"@startRange literal=" "@startRange day="25"@startRange literal=", "@startRange year="2024"@startRange literal=", "@startRange hour="3"@startRange literal=":"@startRange minute="04"@startRange literal=" "@startRange dayPeriod="PM"@startRange literal=" – "@shared month="Dec"@endRange literal=" "@endRange day="28"@endRange literal=", "@endRange year="2024"@endRange literal=", "@endRange hour="4"@endRange literal=":"@endRange minute="04"@endRange literal=" "@endRange dayPeriod="PM"@endRange
+rangeToParts shared suffix: month="December"@shared literal=" "@shared day="25"@startRange literal=" – "@shared day="28"@endRange literal=", "@shared year="2024"@shared
+range numeric: 12/25/2024 – 12/28/2024
+range time: 9:00 AM – 5:00 PM | 11:59 AM – 12:01 PM
+range Date objects: Dec 25 – Jan 3
+rangeToParts days: month="Dec"@shared literal=" "@shared day="25"@startRange literal=" – "@shared day="27"@endRange
+rangeToParts equal: month="Dec"@shared literal=" "@shared day="25"@shared
+rangeToParts time: month="12"@shared literal="/"@shared day="25"@shared literal="/"@shared year="24"@shared literal=", "@shared hour="9"@startRange literal=":"@startRange minute="00"@startRange literal=" "@startRange dayPeriod="AM"@startRange literal=" – "@shared hour="3"@endRange literal=":"@endRange minute="04"@endRange literal=" "@endRange dayPeriod="PM"@endRange
+range errors: TypeError: formatRange requires two dates | RangeError: Invalid time value | TypeError: formatRange requires two dates | TypeError: formatRange endpoints must be the same type | RangeError: formatRange endpoints have different calendars | RangeError: Invalid time value | TypeError: formatRange requires two dates | TypeError: method called on an incompatible receiver

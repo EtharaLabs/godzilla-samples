@@ -1,0 +1,29 @@
+gap disambiguation: compatible=2024-03-10T03:30:00-04:00[America/New_York] earlier=2024-03-10T01:30:00-05:00[America/New_York] later=2024-03-10T03:30:00-04:00[America/New_York]
+gap reject: RangeError: no such local time (skipped by a DST gap)
+overlap disambiguation: compatible=-04:00 earlier=-04:00 later=-05:00
+overlap reject: RangeError: ambiguous local time (DST overlap)
+bad disambiguation: RangeError: invalid disambiguation: nearest
+offset option on overlap: use=-04:00 ignore=-04:00 prefer=-04:00 reject=-04:00
+wrong offset use: 2024-07-01T07:00:00-04:00[America/New_York]
+wrong offset ignore: 2024-07-01T12:00:00-04:00[America/New_York]
+wrong offset prefer: 2024-07-01T12:00:00-04:00[America/New_York]
+wrong offset reject: RangeError: offset does not match the time zone
+bag with offset: 2024-11-03T01:30:00-05:00[America/New_York] 2024-11-03T01:30:00-04:00[America/New_York]
+bad offset string: RangeError: invalid UTC offset: +5
+sub-minute offset: -00:44:30 -2670000000000 1970-01-01T00:00:00-00:45[Africa/Monrovia] 1970-01-01T00:00:00[Africa/Monrovia]
+sub-minute offset match: 1970-01-01T00:00:00-00:45[Africa/Monrovia]
+hoursInDay: 23,25,24 lordhowe=24.5
+startOfDay skipped midnight: 2024-09-08T01:00:00-03:00[America/Santiago] 2024-09-08T01:00:00-03:00[America/Santiago]
+skipped day: 2011-12-31T00:00:00+14:00[Pacific/Apia] 2011-12-31T23:00:00+14:00[Pacific/Apia] 2011-12-31T00:00:00+14:00[Pacific/Apia]
+transitions: 2024-10-27T01:00:00+00:00[Europe/London] 2024-03-31T02:00:00+01:00[Europe/London] +00:00 null
+transition bad direction: RangeError: direction must be 'next' or 'previous'
+transition missing direction: TypeError: direction is required
+add across DST: 2024-03-10T12:00:00-04:00[America/New_York] 2024-03-10T13:00:00-04:00[America/New_York] PT23H
+until days vs hours: P7M25D P239D PT5736H P7M4W
+until different zones: RangeError: cannot compute a calendar-unit difference between time zones
+round to day across DST: 2024-03-11T00:00:00-04:00[America/New_York] 2024-03-10T00:00:00-05:00[America/New_York] 2024-11-03T12:00:00-05:00[America/New_York]
+with on overlap: 2024-11-03T01:45:00-04:00[America/New_York] 2024-11-03T01:45:00-05:00[America/New_York] 2024-11-03T01:15:00-04:00[America/New_York]
+withTimeZone/equals: 2024-05-01T12:15:00+05:45[Asia/Kathmandu] false true Asia/Calcutta
+time zone ids: UTC Etc/GMT+5 America/New_York +05:30 -08:00 Asia/Calcutta US/Pacific
+invalid zones: RangeError:invalid time zone identifier | RangeError:invalid time zone identifier | RangeError:invalid time zone identifier
+far zone offsets: 1969-12-31T13:20:00-10:40[Pacific/Kiritimati] 2023-11-15T11:58:20+13:45[Pacific/Chatham]

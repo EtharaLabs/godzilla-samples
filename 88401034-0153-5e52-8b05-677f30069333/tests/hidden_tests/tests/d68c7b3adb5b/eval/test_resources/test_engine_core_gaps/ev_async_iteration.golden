@@ -1,0 +1,47 @@
+return called
+then called
+thenable return: ok "after"
+plain return
+plain object return: ok "plain"
+null return: ok 6
+non-callable return: TypeError: iterator 'return' is not callable
+throw in body swallows close error: RangeError: body 0
+got p
+sync return
+sync iterable close: ok "sync done"
+asyncIterator non-object: TypeError: @@asyncIterator did not return an object
+next non-object: TypeError: iterator result is not an object
+sync closed on reject
+rejected sync value: TypeError: bad value
+poisoned constructor: SyntaxError: ctor getter
+yield* first: ok {"value":"n1:undefined","done":false}
+outer caught TypeError
+yield* throw, no throw/return: TypeError: the delegated iterator has no 'throw' method
+yield* first2: ok {"value":"n1:undefined","done":false}
+inner return called
+outer caught TypeError
+yield* throw, return only: TypeError: the delegated iterator has no 'throw' method
+yield* first3: ok {"value":"n1:undefined","done":false}
+yield* throw delegated: ok {"value":"inner caught E","done":false}
+yield* next after throw: ok {"value":"n2:z","done":false}
+yield* first4: ok {"value":"n1:undefined","done":false}
+yield* return(rejected): ok {"value":"inner caught rejected rej","done":false}
+plain first: ok {"value":1,"done":false}
+plain caught boom
+plain return(rejected): ok {"value":"recovered","done":false}
+plain after: ok {"done":true}
+using block body
+fn dispose a
+fn dispose f
+cfor iter 0 cfor
+cfor iter 1 cfor
+adispose cfor
+for-await iter of1
+adispose of1
+for-await iter null
+for-await iter of2
+adispose of2
+await using null
+using non-disposable: TypeError: value is not disposable
+subclass deferred reject: URIError: deferred
+subclass identity true

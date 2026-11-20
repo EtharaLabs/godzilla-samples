@@ -1,0 +1,29 @@
+temporal arg => threw TypeError: with() argument must be a plain object
+month 0 => threw RangeError: month must be positive
+day 0 => threw RangeError: day must be positive
+monthCode => 2024-02-29T10:00:00+01:00[Europe/Paris]
+monthCode reject => threw RangeError: day out of range
+monthCode number => threw TypeError: monthCode must be a string
+monthCode bad => threw RangeError: invalid monthCode: m02
+monthCode disagree => threw RangeError: month and monthCode disagree
+time fields => 2024-05-31T23:59:59.999999999+02:00[Europe/Paris]
+time constrain => 2024-05-31T23:59:00+02:00[Europe/Paris]
+time reject => threw RangeError: hour out of range
+offset number => threw TypeError: offset must be a string
+offset bad string => threw RangeError: invalid UTC offset: +2
+offset object => 2024-05-31T11:00:00+02:00[Europe/Paris]
+bad disambiguation => threw RangeError: invalid disambiguation: x
+bad offset option => threw RangeError: invalid offset: x
+gregory era+eraYear => 0000-05-31T10:00:00+00:09[Europe/Paris][u-ca=gregory]
+gregory eraYear only => threw TypeError: era and eraYear must both be provided
+gregory era+eraYear+year => threw TypeError: eraYear and year are mutually exclusive
+gregory era getters => ce 2024 undefined undefined
+japanese era getters => reiwa 6 2024
+japanese with era => 1975-05-31T10:00:00+01:00[Europe/Paris][u-ca=japanese]
+japanese weekOfYear => undefined undefined
+hebrew getters => 5784 9 M08 23 29 13 true undefined
+calendarId brand => threw TypeError: calendarId called on a non-Temporal receiver
+withCalendar Temporal => 2024-05-31T10:00:00+02:00[Europe/Paris][u-ca=coptic]
+withCalendar number => threw TypeError: calendar must be a string
+withCalendar plain object => threw TypeError: calendar must be a string
+withCalendar bad => threw RangeError: invalid calendar identifier

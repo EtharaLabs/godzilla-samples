@@ -1,0 +1,20 @@
+"const a = React.createElement(\"div\", null);"
+"const b = React.createElement(\"div\", { className: \"x\", id: \"y\", hidden: true, \"data-n\": 1 + 2 }, \"hello\");"
+"const c = React.createElement(Foo.Bar, { ...props, key: \"k\", \"on:click\": h, \"aria-label\": \"l\" }, items.map(i => React.createElement(\"li\", { key: i }, i)));"
+"const d = React.createElement(React.Fragment, null, React.createElement(\"span\", null, \"one\"), \"two   words\", /* comment */, three);"
+"const e = React.createElement(\"p\", null, \"multi line   text\");"
+"const f = React.createElement(\"a\", { href: \"x\" }, \"it's &amp; \\\"quoted\\\"\");"
+"const g = x < y && y > z ? React.createElement(\"b\", null, \"yes\") : React.createElement(\"i\", null, \"no\");"
+"const h = \"<div>\" + '<span>' + `<p>${React.createElement(\"em\", null, \"t\")}</p>`; const re = /<div>/g; // <div> in comment"
+ERR SyntaxError expected a JSX attribute name
+"const i = React.createElement(svg:rect, { \"xlink:href\": \"#a\" });"
+"const j = [1,2].map((n) => (React.createElement(Item, { n: n })));"
+"/* <x> */ const k = a /b/ c; const l = React.createElement(\"div\", null, /* only comment */);"
+"const m = React.createElement(\"div\", null, \" \", value, ' ');"
+"const n = React.createElement(\"div\", { a: \"1\", b: 2 });"
+bad ERR SyntaxError unterminated JSX element
+bad "const y = React.createElement(\"div\", null);"
+bad ERR SyntaxError expected a JSX attribute value
+bad ERR SyntaxError unterminated `{ … }` in JSX
+rendered {"t":"section","p":{"title":"hi Ann"},"c":[{"t":"h1","p":null,"c":["Hello ","Ann","!"]},{"t":"Fragment","p":null,"c":[[{"t":"b","p":{"key":1},"c":[1]},{"t":"b","p":{"key":2},"c":[2]}]]}]}
+tsx "const t         = 1; const el = React.createElement(\"div\", { n: t }, \"ts\");"

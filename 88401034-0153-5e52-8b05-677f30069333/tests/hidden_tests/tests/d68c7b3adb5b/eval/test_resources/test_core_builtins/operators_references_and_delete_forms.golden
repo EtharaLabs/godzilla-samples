@@ -1,0 +1,51 @@
+arithmetic on non-numbers: 4 12 4 3 8 2 7 5 8 -4 15 5 36 -1 10 -1 NaN 2 7 NaN NaN -0 0 NaN
+exponent edge cases: NaN NaN -Infinity NaN Infinity NaN 1 1 NaN
+toPrimitive protocol: str1 42 str true true str 42 str | default,number,string,default,number,string,number,string
+toPrimitive returns object: TypeError: Cannot convert object to a primitive value
+toPrimitive not callable: TypeError: @@toPrimitive is not callable
+valueOf/toString fallback order: S! T 3 | valueOf,toString,t2,v2
+no primitive value: TypeError: cannot convert object to primitive value
+Date default hint: string number -1
+loose equality matrix: 11110001110000 11110001110000 11100001100000 11010001010000 00001100000000 00001100000000 00000000000000 11110001110000 11100001100000 11010001010000 00000000001000 00000000000111 00000000000111 00000000000111
+strict equality and SameValueZero: false,true,true,-1,1,false
+relational comparisons: true,false,true,false,true,true,false,false,true,false,true,true,false,true
+comparison coercion order: true,false,true,false abababab
+in operator: true,true,false,true,false,true,true
+in with primitive: TypeError: 'in' requires an object on the right
+typeof all kinds: number,string,boolean,undefined,object,object,object,function,symbol,bigint,function,function,undefined
+void and comma: ,,2,3
+logical assignment short-circuit: get a, get a, set a 6, get a, get n, set n 8, get n, get n, set n 10 | init,or,and
+logical assignment on const: 1
+logical assignment on const that assigns: TypeError: assignment to constant 'c'
+logical assignment names functions: f g
+compound assignment evaluation order: obj,key,get,rhs,set 3
+assignment to undeclared in strict via compound: ReferenceError: undeclaredCompound is not defined
+increment coercions: 6 1 NaN 0 10 10 0.5 number
+increment on symbol: TypeError: Cannot convert a Symbol value to a number
+delete forms: true,false,true,true,true,false,2,true,true,true,true,true,true,true,false
+delete string own props sloppy: false,false,true,true,false
+delete string own props strict: TypeError: cannot delete non-configurable property '1'
+delete string length strict: TypeError: cannot delete non-configurable property 'length'
+delete super property: ReferenceError: cannot delete a super property
+delete super computed property: ReferenceError: cannot delete a super property key evaluated
+delete through nested proxies: true,false,false
+delete global and var bindings: true,undefined
+delete in with scope: true false
+super property assignment computed: valuef true
+super property assignment to setter: A setter 1 this ok=true, A setter 2 this ok=true
+destructuring assignment nested defaults: 1 2 3 {"x":9,"y":8} g h
+destructuring assignment order: get a, set x 1, get b, set y 2
+destructuring null: TypeError: cannot destructure null or undefined
+array destructuring closes iterator: closed 1 2,3
+array destructuring default throws closes: default threw closed
+assignment to call expression: ReferenceError called
+chained assignment and this: true true
+optional call this binding: true,true,true,,,
+optional call on non-function: TypeError: (intermediate value).m is not a function
+parenthesized optional chain call: TypeError: callee is not a function
+optional chain with private: private undefined
+spread holes and iterables: 1|undefined|3 a|b|7 2 5
+spread non-iterable: TypeError: value is not iterable
+template literal coercions: T|1,2|null|undefined|1|0
+template symbol: TypeError: Cannot convert a Symbol value to a string
+string concatenation with surrogates: 2 true 1

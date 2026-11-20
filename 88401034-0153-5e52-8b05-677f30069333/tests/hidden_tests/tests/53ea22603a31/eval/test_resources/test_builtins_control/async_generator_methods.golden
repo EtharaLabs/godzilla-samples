@@ -1,0 +1,23 @@
+queued next calls => [{value: 1, done: false}, {value: 2, done: false}, {value: 3, done: false}, {value: undefined, done: true}, {value: undefined, done: true}]
+   log: start, got second, finally
+return before start => [{value: "early", done: true}, {value: undefined, done: true}]
+   log: 
+throw before start !! Error: before start
+   log: 
+throw while suspended => [{value: "after catch", done: false}, {value: undefined, done: true}]
+   log: start, caught Error: inside, finally
+return awaits its argument => {value: "awaited return", done: true}
+   log: start, finally
+completed generator => [{value: "x", done: true}, {value: "resolved on completed", done: true}, "Error: rejected return", "Error: after done"]
+   log: start, finally
+yielded rejection => [{value: "recovered yielded rejection", done: false}, {value: undefined, done: true}]
+   log: 
+bad receiver rejects => [true, "TypeError: AsyncGenerator method called on an incompatible receiver", "TypeError: AsyncGenerator method called on an incompatible receiver"]
+   log: 
+prototype shape => ["[object AsyncGenerator]", "constructor next return throw", "AsyncGenerator", "function"]
+yield* forwards return => [{value: 1, done: false}, {value: "delegated return", done: true}]
+   log: start, finally
+for await => ["a", "b", "p1", "plain"]
+   log: 
+break closes async generator => "broke"
+   log: start, value 1, finally

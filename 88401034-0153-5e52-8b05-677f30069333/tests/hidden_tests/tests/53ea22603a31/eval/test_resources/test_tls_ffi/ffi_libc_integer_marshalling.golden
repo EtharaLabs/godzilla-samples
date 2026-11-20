@@ -1,0 +1,37 @@
+symbols strlen,strlen32,abs,abs8,absU8,absBool,labs,labsFast,toupper,atoi,strcmp,strtoull,strtoullI64,strtoullFast,strtoullU32,strtoullU16,strtoullI16,free,noReturnsKey,strlenUnknownCode function
+strlen("hello") -> 5n
+strlen("") as u32 via buffer type -> 0
+strlen(utf-8 bytes) -> 6
+abs(-42) -> 42
+abs() missing arg -> 0
+abs(-3.9) -> 3
+abs("-17") -> 17
+abs(2**32 + 5) -> 5
+abs as i8 (200) -> -56
+abs as u8 (-3) -> 3
+abs as bool (2, 3, 0) -> [false, true, false]
+labs(-(2n**40n)) -> 1099511627776n
+labs(-12) -> 12n
+labs(1.5) THREW TypeError: Not an integer
+labs(Infinity) THREW TypeError: Not an integer
+labs i64_fast -> 7
+toupper(97) as char -> 65
+toupper(353) wraps to char -> 97
+toupper(255) -> -1
+atoi("  -1234xyz") -> -1234
+strcmp signs -> [-1, 0, 1]
+strtoull u64 max -> 18446744073709551615n
+strtoull as i64 -> -1n
+strtoull as u64_fast -> 9007199254740992
+strtoull 2^32+1 as u32 -> 1
+strtoull 65535 as u16 / i16 -> [65535, -1]
+strtoull hex -> 255n
+free(null) void -> undefined
+default return type is void -> undefined
+string as pointer THREW TypeError: To convert a string to a pointer, encode it as a buffer
+bigint as pointer THREW TypeError: Unable to convert 5 to a pointer
+object as pointer THREW TypeError: To convert a value to a pointer, it must be a TypedArray, number, or null
+array as pointer THREW TypeError: To convert a value to a pointer, it must be a TypedArray, number, or null
+string as cstring THREW TypeError: To convert a string to a pointer, encode it as a buffer
+boolean as pointer is NULL -> 77n
+unknown numeric return code -> 5

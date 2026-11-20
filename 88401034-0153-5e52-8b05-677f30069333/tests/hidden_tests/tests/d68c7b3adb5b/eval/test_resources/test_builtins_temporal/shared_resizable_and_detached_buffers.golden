@@ -1,0 +1,22 @@
+shared views alias: 4,1,254,255,0,-2,-1
+Atomics int32: 10,10,15,12,4,13,12,77,88,88
+Atomics bigint: 5,5,7,-3,-3,-9223372036854775808,-9223372036854775808,1
+Atomics on non-shared: 0,-25536,true,false
+Atomics errors: TypeError:Atomics requires an integer TypedArray | RangeError:Atomics: index out of range | TypeError:Cannot convert a Number to a BigInt | TypeError:Atomics: not an integer TypedArray | TypeError:Atomics.wait requires a SharedArrayBuffer-backed array | RangeError:Atomics: index out of range
+Atomics.wait immediate: not-equal,timed-out,0,0
+Atomics.waitAsync sync results: {"async":false,"value":"not-equal"} {"async":false,"value":"timed-out"}
+growable shared: true,12,16,12,7,4
+growable shrink: RangeError: SharedArrayBuffer grow out of range
+resizable buffer views: 4,2,3,0,0,0,undefined,1,0,0,8,2,4
+out-of-bounds view methods: TypeError | TypeError | TypeError | TypeError
+detached via transfer: true,0,0,undefined,16,1.5,TypeError,TypeError:Cannot slice a detached ArrayBuffer,undefined
+detach via $262: 0,0,0,undefined,0,0
+transferToFixedLength: false,4,true
+immutable buffer: true | 5 | true | TypeError:Cannot write to a TypedArray over an immutable ArrayBuffer | TypeError | TypeError | TypeError
+DataView endianness: 18,52,1.5,18446744073709551615,13330
+DataView errors: RangeError:Offset is outside the bounds of the DataView | RangeError:DataView byteOffset is out of bounds | TypeError:DataView requires an ArrayBuffer
+Float16 and clamped: 1.0009765625,65504,Infinity,0 255,0,2,2,0 1.3369140625
+base64/hex: Hello World SGVsbG8gV29ybGQ 0,255,16 {"read":4,"written":2} 202,254,0,0 4865
+base64 errors: SyntaxError,SyntaxError,SyntaxError,SyntaxError
+typed array set/subarray/sort: 5,99,1,2 99,1 1,2,5,99 -Infinity,0,0,NaN true
+typed array set overlapping: 1,3,5,4,5,6,7,8

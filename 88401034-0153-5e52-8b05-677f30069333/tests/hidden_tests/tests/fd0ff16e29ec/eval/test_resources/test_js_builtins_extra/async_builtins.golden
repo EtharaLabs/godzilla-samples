@@ -1,0 +1,45 @@
+fromAsync nonctor async [1,2]
+fromAsync nonctor sync ["a","b"]
+fromAsync nonctor arraylike ["x","y"]
+fromAsync arraylike huge rejects RangeError: invalid array length
+fromAsync ctor arraylike [1,"q",1]
+async return called
+fromAsync mapper throws async rejects RangeError: map
+fromAsync mapper rejects sync rejects EvalError: amap
+fromAsync return throws rejects TypeError: map2
+fromAsync return noncallable rejects TypeError: map3
+fromAsync bad mapfn rejects TypeError: Array.fromAsync: mapFn is not callable
+fromAsync bad asyncIterator rejects TypeError: iterator method is not callable
+fromAsync result non-object rejects TypeError: iterator result is not an object
+async return called
+fromAsync frozen ctor rejects TypeError: cannot define element '0'
+fromAsync thisArg [10,21]
+ads.use after dispose rejects ReferenceError: AsyncDisposableStack already disposed
+ads.adopt after dispose rejects ReferenceError: AsyncDisposableStack already disposed
+ads.defer after dispose rejects ReferenceError: AsyncDisposableStack already disposed
+ads.move after dispose rejects ReferenceError: AsyncDisposableStack already disposed
+sync dispose used
+adopt dispose v
+ads2 dispose errors rejects SuppressedError: 
+fallback sync dispose
+ads3 dispose 
+ads4 first-registered ran
+ads4 dispose ["SuppressedError","RangeError","ctor getter","TypeError","sync throw"]
+ads4 suppressed ["SuppressedError","inner","outer"]
+ads after dispose disposed [true,null]
+ads adopt noncallable rejects TypeError: onDisposeAsync is not callable
+ads defer noncallable rejects TypeError: onDisposeAsync is not callable
+fr unregister [true,false,false,false]
+fr unregister bad rejects TypeError: unregister token cannot be held weakly
+fr unregister bad recv rejects TypeError: unregister called on a non-FinalizationRegistry
+atomics wait main "timed-out"
+atomics wait mismatch "not-equal"
+atomics waitAsync [false,"not-equal"]
+atomics waitAsync timeout [false,"timed-out"]
+bigint asIntN huge ["5","5"]
+bigint asIntN huge neg rejects RangeError: BigInt is too large to allocate
+bigint asIntN huge2 "-1180591620717411303424"
+promise race sync "first"
+allSettled sync complete [{"status":"fulfilled","value":"a"},{"status":"rejected","reason":"b"}]
+all sync complete ["a"]
+any sync complete ["a"]

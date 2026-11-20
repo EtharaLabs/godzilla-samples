@@ -1,0 +1,11 @@
+useGrouping strings ["auto","auto","12,345","12K","12345","1234"]
+min significant zero ["0.00","-0.00","0","0.0000","integer:0|decimal:.|fraction:00","0.000"]
+all digits discarded ["0.01","-0.01","-0.01","0","1","5"]
+discarded decimal strings ["0.01","-0.01","0.01","0","0.02","0"]
+scientific carry ["10E0","1000E0","10E4","10E-4","10E3","10E1","999.999E3"]
+rounding priority compact ["1.234K","1.5","15","1.55","0.123","1.2K"]
+unit parts integer:50|literal: |unit:km/h / integer:1|literal: |unit:liter / integer:12|literal:K|unit:%
+currency parts literal:(|currency:$|integer:12|currency:K|literal:) / minusSign:-|integer:5|decimal:,|fraction:00|literal: |currency:€ / minusSign:-|currency:$|integer:1|decimal:.|fraction:2|currency:M
+currency compact currency:¥|integer:123|currency:万 / plusSign:+|currency:$|integer:0|decimal:.|fraction:00
+significant strings ["120,000,000,000,000,000,000,000,000,000","99","0.000123","RangeError: maximumFractionDigits must equal minimumFractionDigits with roundingIncrement","120"]
+unit display default short 3 m

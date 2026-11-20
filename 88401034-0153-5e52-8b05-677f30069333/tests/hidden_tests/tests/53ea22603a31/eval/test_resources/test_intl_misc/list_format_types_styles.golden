@@ -1,0 +1,32 @@
+en conjunction long => "" "a" "a and b" "a, b, and c" "a, b, c, and d"
+en conjunction short => "" "a" "a & b" "a, b, & c" "a, b, c, & d"
+en conjunction narrow => "" "a" "a b" "a b c" "a b c d"
+en disjunction long => "" "a" "a or b" "a, b, or c" "a, b, c, or d"
+en disjunction short => "" "a" "a or b" "a, b, or c" "a, b, c, or d"
+en disjunction narrow => "" "a" "a or b" "a, b, or c" "a, b, c, or d"
+en unit long => "" "a" "a, b" "a, b, c" "a, b, c, d"
+en unit short => "" "a" "a, b" "a, b, c" "a, b, c, d"
+en unit narrow => "" "a" "a b" "a b c" "a b c d"
+es conjunction long => "" "a" "a y b" "a, b y c" "a, b, c y d"
+es conjunction short => "" "a" "a y b" "a, b y c" "a, b, c y d"
+es conjunction narrow => "" "a" "a y b" "a, b y c" "a, b, c y d"
+es disjunction long => "" "a" "a o b" "a, b o c" "a, b, c o d"
+es disjunction short => "" "a" "a o b" "a, b o c" "a, b, c o d"
+es disjunction narrow => "" "a" "a o b" "a, b o c" "a, b, c o d"
+es unit long => "" "a" "a y b" "a, b y c" "a, b, c y d"
+es unit short => "" "a" "a y b" "a, b, c" "a, b, c, d"
+es unit narrow => "" "a" "a b" "a b c" "a b c d"
+de conjunction long => "" "a" "a and b" "a, b, and c" "a, b, c, and d"
+de conjunction short => "" "a" "a & b" "a, b, & c" "a, b, c, & d"
+de conjunction narrow => "" "a" "a b" "a b c" "a b c d"
+de disjunction long => "" "a" "a or b" "a, b, or c" "a, b, c, or d"
+de disjunction short => "" "a" "a or b" "a, b, or c" "a, b, c, or d"
+de disjunction narrow => "" "a" "a or b" "a, b, or c" "a, b, c, or d"
+de unit long => "" "a" "a, b" "a, b, c" "a, b, c, d"
+de unit short => "" "a" "a, b" "a, b, c" "a, b, c, d"
+de unit narrow => "" "a" "a b" "a b c" "a b c d"
+[{"type":"element","value":"x"},{"type":"literal","value":", "},{"type":"element","value":"y"},{"type":"literal","value":", and "},{"type":"element","value":"z"}]
+[{"type":"element","value":"uno"},{"type":"literal","value":" o "},{"type":"element","value":"dos"}]
+{"locale":"en","type":"conjunction","style":"long"} {"locale":"es-MX","type":"unit","style":"narrow"} {"locale":"en","type":"conjunction","style":"long"}
+TypeError: Intl.ListFormat list elements must be strings | a, b, and c | p and q |  | [] | ,  , and and
+RangeError: invalid type: x | RangeError: invalid style: x | TypeError: Intl.ListFormat requires 'new' | TypeError: options must be an object or undefined

@@ -1,0 +1,48 @@
+fromAsync sync iterable with promises: a,b
+fromAsync sync iterable next throws: RangeError: next threw
+fromAsync sync iterator result primitive: TypeError: iterator result is not an object
+fromAsync async iterator result primitive: TypeError: iterator result is not an object
+fromAsync rejected element closes: element rejected sync return
+fromAsync async mapfn: 10,21
+fromAsync mapfn throws closes async: mapper async return
+fromAsync mapfn with thisArg on array-like: x!,y!
+fromAsync this constructor array-like: true 2 2
+fromAsync this constructor iterable: true true 1
+fromAsync non-constructor this: true
+fromAsync iterator method not callable: TypeError: iterator method is not callable
+fromAsync null: TypeError: Array.fromAsync called on null or undefined
+fromAsync huge array-like: RangeError: Invalid array length
+fromAsync define fails: TypeError: cannot define element '0'
+fromAsync define fails array-like: TypeError: cannot define element '0'
+asyncDispose shape: function [Symbol.asyncDispose] 0
+asyncDispose calls return: undefined return args=0
+asyncDispose without return: undefined
+asyncDispose return throws: SyntaxError: return threw
+asyncDispose return getter throws: TypeError: getter threw
+asyncDispose return rejects: RangeError: rejected
+asyncDispose on async generator: finally ran {"done":true}
+await using with async generator: in block, cleanup
+allKeyed proxy input: {"a":1,"b":2}
+allKeyed symbol keys: sym plain null
+allKeyed getter throws: EvalError: getter
+allKeyed empty: {}
+allSettledKeyed mixed: {"ok":{"status":"fulfilled","value":1},"bad":{"status":"rejected","reason":"no"}}
+allKeyed resolve not callable: TypeError: Promise combinator: this.resolve is not callable
+allKeyed resolve throws: RangeError: resolve threw
+allKeyed then getter throws: URIError: then getter
+allKeyed non-constructor this: TypeError: NewPromiseCapability: receiver is not a constructor
+Promise.all element called twice: ["first"]
+Promise.allSettled element called twice: [{"status":"rejected","reason":"rej"}]
+Promise.any reject twice: AggregateError ["r1"]
+zip strict next not callable: TypeError: iterator.next is not a function
+zip strict next primitive: TypeError: iterator result is not an object
+zip strict second longer: TypeError: Iterator.zip strict: input iterators have different lengths
+zip strict next throws: b next a closed
+zipKeyed numeric keys order: {"1":4,"2":2,"b":1,"a":3}
+date toLocaleDateString defaults: 1/2/2020 | 3:04:05 AM | 1/2/2020, 3:04:05 AM | January | 3 AM | Jan 2, 2020 | 3:04 AM | 1/2/2020 | 03:04:05
+date toLocaleDateString bad options: TypeError: options must be an object
+date toLocaleString bad options: TypeError: options must be an object
+date toLocaleTimeString bad options: TypeError: options must be an object
+date toLocaleDateString invalid date: Invalid Date
+lithuanian soft dotted: Ɨ̃ I%u0303 J%u0301 i%u0307%u0303 i%u0307%u0301 i%u0307%u0300 i i i%u0323 ii I
+indexOf non-ascii: 7,3,2,1,2,1,2,true,true

@@ -1,0 +1,23 @@
+shl huge: RangeError: BigInt is too large to allocate
+shl zero huge: 0n
+shr huge neg: -1n
+shr huge pos: 0n
+shl negative huge: 0n
+shl negative huge neg: -1n
+shr negative count: 48n
+asIntN undefined: TypeError: Cannot convert value to a BigInt
+asUintN symbol: TypeError: Cannot convert value to a BigInt
+asIntN null: TypeError: Cannot convert value to a BigInt
+str<big: true
+str>big: true
+bad str<big: false
+str>=big: true
+big<=str: true
+hasInstance undefined: true
+hasInstance null: false
+hasInstance non-callable: TypeError: @@hasInstance is not callable
+non-callable rhs undefined handler: TypeError: right-hand side of instanceof is not callable
+IsHTMLDDA: undefined,undefined,true,false,falsy,undefined
+duplicate literal keys: {"a":30,"b":1}
+regexp cache churn: 300
+mod infinity: 5,-5,NaN,0,0 true

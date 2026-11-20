@@ -1,0 +1,21 @@
+chinese add months: chinese 2023/M02L/15 (iso 2023-04-05) -> +1mo chinese 2023/M03/15 (iso 2023-05-04) -> +13mo chinese 2024/M03/15 (iso 2024-04-23) -> -14mo chinese 2022/M01/15 (iso 2022-02-15)
+chinese add years constrains leap month: chinese 2023/M02L/29 (iso 2023-04-19) -> chinese 2024/M02/29 (iso 2024-04-07)
+chinese add years reject: RangeError: leap month does not exist in the target year
+chinese months in year: 2022:12/355/false 2023:13/384/true 2024:12/354/false 2025:13/384/true
+dangi until: P2Y10M25D P34M24D P1028D
+hebrew add: hebrew 5784/M05L/30 (iso 2024-03-10) -> +1y hebrew 5785/M06/29 (iso 2025-03-29) -> +1mo hebrew 5784/M06/29 (iso 2024-04-08) -> -13mo hebrew 5783/M05/30 (iso 2023-02-21)
+hebrew reject: RangeError: leap month does not exist in the target year
+hebrew since: P5Y6M19D -P68M19D months/years: 13,12,13
+coptic/ethiopic 13th month: coptic 1740/M13/5 (iso 2024-09-10) +1mo coptic 1741/M01/5 (iso 2024-09-15) +1y coptic 1741/M13/5 (iso 2025-09-10) months 13 ethiopic 2016/M13/5 (iso 2024-09-10)
+coptic leap epagomenal: 1739:2023-09-11[u-ca=coptic] 1740:RangeError
+persian/indian: persian 1403/M01/1 (iso 2024-03-20) true persian 1402/M12/29 (iso 2024-03-19) | indian 1946/M01/1 (iso 2024-03-21) indian 1946/M07/1 (iso 2024-09-23)
+islamic variants: islamic-civil 1445-M09-30 30 29 | islamic-tbla 1445-M10-1 29 1 | islamic-umalqura 1445-M09-30 30 29
+eras: -4 | 2019-04-30[u-ca=japanese] | reiwa1 | 0 | be2567 | 2024-03-21[u-ca=indian] | 2024-03-20[u-ca=persian] | 2023-09-16[u-ca=hebrew] | 0 | 0 | 0284-08-29[u-ca=coptic]
+invalid era: RangeError: ce is not a valid era in calendar persian
+era without eraYear: TypeError: missing field 'year'
+iso era: 2020-01-01 undefined
+calendar validation: TypeError,TypeError,iso8601,islamic-civil,gregory,RangeError,RangeError
+month/monthCode conflicts: RangeError:month out of range | RangeError:month must be positive | RangeError:month and monthCode disagree | RangeError:invalid monthCode for this calendar | RangeError:invalid monthCode: m01 | RangeError:month must be positive | 2020-01-01
+chinese month/monthCode disagree: RangeError: month and monthCode disagree
+chinese absent leap month: chinese 2024/M06/1 (iso 2024-07-06)
+chinese absent leap month reject: RangeError: invalid monthCode for this calendar

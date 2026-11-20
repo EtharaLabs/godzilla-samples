@@ -1,0 +1,13 @@
+callbacks run synchronously: 0
+resolveSrv                 ENOTIMP syscall=querySrv hostname=_sip._tcp.example.test message="querySrv ENOTIMP _sip._tcp.example.test"
+resolveSoa                 ENOTIMP syscall=querySoa hostname=example.test message="querySoa ENOTIMP example.test"
+resolveNaptr               ENOTIMP syscall=queryNaptr hostname=example.test message="queryNaptr ENOTIMP example.test"
+resolveCaa                 ENOTIMP syscall=queryCaa hostname=example.test message="queryCaa ENOTIMP example.test"
+resolveTlsa                ENOTIMP syscall=queryTlsa hostname=_443._tcp.example.test message="queryTlsa ENOTIMP _443._tcp.example.test"
+resolveAny                 ENOTIMP syscall=queryAny hostname=example.test message="queryAny ENOTIMP example.test"
+resolveSrv with options    ENOTIMP syscall=querySrv hostname=with-options.test message="querySrv ENOTIMP with-options.test"
+resolve(host, 'SRV')       ENOTIMP syscall=querySrv hostname=example.test message="querySrv ENOTIMP example.test"
+resolve(host, 'naptr')     ENOTIMP syscall=queryNaptr hostname=lower.test message="queryNaptr ENOTIMP lower.test"
+lookupService              ENOTIMP syscall=getnameinfo hostname=127.0.0.1 message="getnameinfo ENOTIMP 127.0.0.1"
+Resolver#resolveSoa        ENOTIMP syscall=querySoa hostname=via-resolver.test message="querySoa ENOTIMP via-resolver.test"
+Resolver#resolve CAA       ENOTIMP syscall=queryCaa hostname=via-resolver.test message="queryCaa ENOTIMP via-resolver.test"

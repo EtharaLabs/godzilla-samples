@@ -1,0 +1,29 @@
+for-await non-callable @@asyncIterator: TypeError: @@asyncIterator is not callable
+for-await @@asyncIterator returns primitive: TypeError: @@asyncIterator did not return an object
+for-await null @@asyncIterator uses sync: a,b
+for-await poisoned constructor closes sync: ctor getter closed
+for-await rejection closes sync: rej closed
+break: return not callable: TypeError: iterator 'return' is not callable
+break: return gives primitive: TypeError: iterator result is not an object
+break: sync return gives primitive: TypeError: iterator result is not an object
+break: sync return value awaited: ret
+async yield* non-callable @@asyncIterator: TypeError: @@asyncIterator is not callable
+async yield* @@asyncIterator returns primitive: TypeError: @@asyncIterator did not return an object
+async yield* throw not callable: TypeError: the delegated iterator has no 'throw' method
+async yield* return not callable: {"value":"R","done":true}
+async yield* next gives primitive: TypeError: iterator result is not an object
+async yield* return(rejected): TypeError: the delegated iterator has no 'throw' method
+  finally ran
+async gen return(rejected) runs finally: Error: rr
+sync yield* throw not callable: TypeError: iterator 'throw' is not callable
+sync yield* return not callable: TypeError: iterator 'return' is not callable
+sync yield* return gives primitive: TypeError: iterator result is not an object
+sync yield* without return: {"value":"R","done":true}
+sync yield* next gives primitive: TypeError: iterator result is not an object
+@@iterator returns primitive: TypeError: @@iterator returned a non-object
+destructure: return not callable: TypeError: iterator 'return' is not callable
+destructure: return gives null: TypeError: iterator 'return' must return an object
+for-of break: return not callable: TypeError: iterator 'return' is not callable
+destructure non-iterable: TypeError: value is not iterable
+spread non-iterable: TypeError: value is not iterable
+destructure next gives primitive: TypeError: iterator result is not an object

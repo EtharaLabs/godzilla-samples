@@ -1,0 +1,37 @@
+apply => 3
+apply noncallable !! TypeError: Reflect.apply target is not callable
+apply no args !! TypeError: CreateListFromArrayLike called on a non-object
+construct newTarget => [1, "B", true]
+construct builtin => [true, 0]
+construct non-ctor !! TypeError: Reflect.construct target is not a constructor
+construct bad newTarget !! TypeError: Reflect.construct newTarget is not a constructor
+defineProperty => [false, true]
+defineProperty non-object !! TypeError: Reflect.defineProperty on non-object
+deleteProperty => [true, false, true]
+get receiver => [42, 5, undefined]
+get non-object !! TypeError: Reflect.get called on non-object
+set accessor receiver => [true, {y: 5}]
+set data receiver => [true, {x: 5}]
+set nonwritable => false
+set primitive receiver => false
+set receiver accessor prop => false
+set receiver nonwritable own => false
+getOwnPropertyDescriptor => [{value: 1, writable: true, enumerable: true, configurable: true}, undefined]
+gopd primitive !! TypeError: Reflect.getOwnPropertyDescriptor on non-object
+getPrototypeOf => true
+getPrototypeOf primitive !! TypeError: Reflect.getPrototypeOf called on non-object
+has => [true, true, true, false]
+has primitive !! TypeError: Reflect.has called on non-object
+isExtensible => [true, false]
+isExtensible primitive !! TypeError: Reflect.isExtensible called on non-object
+ownKeys => ["10", "b", "a", Symbol(s)]
+ownKeys primitive !! TypeError: Reflect.ownKeys called on non-object
+preventExtensions => [true, false]
+preventExtensions primitive !! TypeError: Reflect.preventExtensions called on non-object
+setPrototypeOf => [true, false, true]
+setPrototypeOf cycle => false
+setPrototypeOf bad proto !! TypeError: prototype must be an object or null
+setPrototypeOf missing proto !! TypeError: prototype must be an object or null
+array length via Reflect => [true, [1, <hole>, <hole>, <hole>, <hole>], true, 5]
+Reflect shape => ["Reflect", "object", "get set has getOwnPropertyDescriptor deleteProperty ownKeys getPrototypeOf setPrototypeOf defineProperty apply construct isExtensible preventExtensions"]
+Reflect not ctor !! TypeError: object is not a constructor

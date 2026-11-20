@@ -1,0 +1,28 @@
+withCalendar 2020-01-01[u-ca=hebrew]: 2020-01-01[u-ca=hebrew]
+withCalendar 2020-01-01T00:00: 2020-01-01
+withCalendar 2020-01-01[!u-ca=japanese]: 2020-01-01[u-ca=japanese]
+withCalendar 2020-01-01T12:00+01:00[Europe/Berlin][u-ca=persian]: 2020-01-01[u-ca=persian]
+withCalendar 2020-01-01[u-ca=bogus]: RangeError: invalid calendar identifier
+withCalendar hebrew: 2020-01-01[u-ca=hebrew]
+withCalendar HEBREW: 2020-01-01[u-ca=hebrew]
+withCalendar islamicc: 2020-01-01[u-ca=islamic-civil]
+withCalendar ethiopic-amete-alem: 2020-01-01[u-ca=ethioaa]
+withCalendar gregorian: 2020-01-01[u-ca=gregory]
+hebrew year-month: 2020-01-27[u-ca=hebrew] | 2020-01-27[u-ca=hebrew] | 2020-01-27 | 2020-01-27[u-ca=hebrew] | 5780 | M05
+persian year-month: 2025-02-19[u-ca=persian] | 2025-02-19[!u-ca=persian] | 30
+hebrew month-day: 1972-01-17[u-ca=hebrew] | 1972-01-17[u-ca=hebrew] | 1972-01-17 | M05 | 1
+coptic month-day: 1971-09-11[u-ca=coptic] | 1971-09-11[!u-ca=coptic]
+umalqura month-day day 5: 1972-04-19[u-ca=islamic-umalqura]
+month-day with huge year: RangeError: date is outside the supported range
+month-day with huge eraYear: RangeError: date is outside the supported range
+month-day year beyond limits: RangeError: date is outside the supported range
+month-day year before limits: RangeError: date is outside the supported range
+month-day year in range: 1972-03-20[u-ca=persian]
+month-day string beyond: RangeError: date outside representable range
+month-day string before: RangeError: date outside representable range
+month-day string in range: 1970-02-07[u-ca=hebrew]
+year-month string beyond: RangeError: date outside representable range
+year-month string before: RangeError: date outside representable range
+year-month month 13: RangeError: invalid year-month
+year-month month 00: RangeError: invalid year-month
+year-month basic 202012: 2020-12

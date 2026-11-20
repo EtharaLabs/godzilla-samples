@@ -1,0 +1,102 @@
+parse "2020-01-02" 1577923200000 2020-01-02T00:00:00.000Z
+parse "2020-01-02T03:04:05" 1577934245000 2020-01-02T03:04:05.000Z
+parse "2020-01-02T03:04:05Z" 1577934245000 2020-01-02T03:04:05.000Z
+parse "2020-01-02T03:04:05.678Z" 1577934245678 2020-01-02T03:04:05.678Z
+parse "2020-01-02T03:04:05.6789123Z" 1577934245678 2020-01-02T03:04:05.678Z
+parse "2020-01-02T03:04:05.6Z" 1577934245600 2020-01-02T03:04:05.600Z
+parse "2020-01-02T03:04:05+05:30" 1577914445000 2020-01-01T21:34:05.000Z
+parse "2020-01-02T03:04:05-0800" NaN -
+parse "2020-01-02T03:04Z" 1577934240000 2020-01-02T03:04:00.000Z
+parse "2020-01-02T03Z" 1577934000000 2020-01-02T03:00:00.000Z
+parse "2020-01" 1577836800000 2020-01-01T00:00:00.000Z
+parse "2020" 1577836800000 2020-01-01T00:00:00.000Z
+parse "+002020-01-01T00:00:00Z" 1577836800000 2020-01-01T00:00:00.000Z
+parse "-000001-01-01T00:00:00Z" -62198755200000 -000001-01-01T00:00:00.000Z
+parse "-000000-01-01T00:00:00Z" NaN -
+parse "+275760-09-13T00:00:00Z" 8640000000000000 +275760-09-13T00:00:00.000Z
+parse "+275760-09-13T00:00:00.001Z" NaN -
+parse "-271821-04-20T00:00:00Z" -8640000000000000 -271821-04-20T00:00:00.000Z
+parse "-271821-04-19T23:59:59.999Z" NaN -
+parse "2020-13-01" 1609459200000 2021-01-01T00:00:00.000Z
+parse "2020-02-30" 1583020800000 2020-03-01T00:00:00.000Z
+parse "2020-00-10" 1575936000000 2019-12-10T00:00:00.000Z
+parse "2020-01-02T24:00:00Z" 1578009600000 2020-01-03T00:00:00.000Z
+parse "2020-01-02T25:00:00Z" 1578013200000 2020-01-03T01:00:00.000Z
+parse "2020-01-02T12:60:00Z" 1577970000000 2020-01-02T13:00:00.000Z
+parse "20-01-02" NaN -
+parse "2020-1-2" NaN -
+parse "2020-01-02 03:04:05" 1577934245000 2020-01-02T03:04:05.000Z
+parse "2020-01-02 3:4:5" 1577934245000 2020-01-02T03:04:05.000Z
+parse "2020-01-02T" NaN -
+parse "2020-01-02T03:04:05.Z" NaN -
+parse " 2020-01-02 " 1577923200000 2020-01-02T00:00:00.000Z
+parse "Thu, 01 Jan 1970 00:00:00 GMT" 0 1970-01-01T00:00:00.000Z
+parse "Tue, 02 Jan 2024 10:20:30 GMT" 1704190830000 2024-01-02T10:20:30.000Z
+parse "Jan 2 2024" 1704153600000 2024-01-02T00:00:00.000Z
+parse "January 2, 2024 10:20:30" 1704190830000 2024-01-02T10:20:30.000Z
+parse "2 Jan 2024 10:20 GMT+0200" 1704183600000 2024-01-02T08:20:00.000Z
+parse "Tue Jan 02 2024 10:20:30 GMT-0500 (EST)" 1704208830000 2024-01-02T15:20:30.000Z
+parse "Mon, 31 Dec 1999 23:59:59 +0100" -58979923201000 0100-12-31T23:59:59.000Z
+parse "Dec 25, 1995" 819849600000 1995-12-25T00:00:00.000Z
+parse "garbage" NaN -
+parse "" NaN -
+parse "12/25/2020" NaN -
+parse "2020/12/25" NaN -
+parse "Sat Jan 01 2000" 946684800000 2000-01-01T00:00:00.000Z
+parse "1970-01-01T00:00:00.000+00:00" 0 1970-01-01T00:00:00.000Z
+ctor-forms: 0 | 0 | 1577836800000 | 1580515199999 | 1999 | 1900 | 100 | -1 | 0 | "2019-12-01T00:00:00.000Z" | 29
+ctor-coerce: NaN | 1 | 0 | 5 | 77 | 86400000 | 1 | -1 | 1577836800000
+ctor-invalid: NaN | 8640000000000000 | NaN | -8640000000000000 | NaN | NaN | NaN | "Invalid Date"
+ctor-symbol: THROW TypeError: Cannot convert a Symbol value to a number
+typeof-call: "string" | "string" | 7 | "Date"
+UTC: 1577836800000 | 1580515200000 | 1582934400000 | 946598400000 | NaN | NaN | 1577930522001 | -62198755200000 | 8640000000000000 | NaN | 1577750400000 | -1 | NaN | 1577836800000 | -2208988800000
+getters: 2024 | 1 | 29 | 4 | 13 | 45 | 30 | 123 | 2024 | 1 | 29 | 4 | 13 | 45 | 30 | 123 | 0 | 124 | 1709214330123 | 1709214330123
+formats: "Thu Feb 29 2024 13:45:30 GMT+0000 (Coordinated Universal Time)" | "Thu Feb 29 2024" | "13:45:30 GMT+0000 (Coordinated Universal Time)" | "Thu, 29 Feb 2024 13:45:30 GMT" | "2024-02-29T13:45:30.123Z" | "2024-02-29T13:45:30.123Z" | true
+formats-old: "-000050-01-01T00:00:00.000Z" | "Sun Jan 01 -0050 00:00:00 GMT+0000 (Coordinated Universal Time)" | "Sun, 01 Jan -0050 00:00:00 GMT" | "+012345-06-06T00:00:00.000Z" | "Wed, 06 Jun 12345 00:00:00 GMT" | 1905 | "-000001-01-01T00:00:00.000Z" | "Fri Jan 01 -0001 00:00:00 GMT+0000 (Coordinated Universal Time)"
+invalid-formats: "Invalid Date" | "Invalid Date" | "Invalid Date" | "Invalid Date" | null | NaN | NaN | NaN
+invalid-toISOString: THROW RangeError: Invalid time value
+toJSON-generic: "custom-iso" | null
+toJSON-noniso: THROW TypeError: toISOString is not callable
+setMonth-overflow: 1583143200000 | "2020-03-02T10:00:00.000Z"
+setters: 1623715200000 | 1610668800000 | 1609372800000 | "2020-12-31T00:00:00.000Z" | 1609467071500 | "2021-01-01T02:11:11.500Z" | 1609466351500 | 1609469940500 | 1609469939999 | "2021-01-01T02:58:59.999Z" | 86400000 | NaN | NaN
+utc-setters: 946684800000 | 978220800000 | 975628800000 | 975711600000 | 975715199999 | 975715140999 | 975715140005 | "2000-12-01T23:59:00.005Z"
+set-on-invalid: NaN | NaN | 1577836800000 | "2020-01-01T00:00:00.000Z" | 917827200000 | NaN
+set-nan-arg: NaN | NaN | NaN
+setYear: 788918400000 | 1995 | 1104537600000 | 105 | NaN | 915148800000
+setter-arg-coercion-order: ["h", "m"]
+setter-returns: true
+getTime-nondate: THROW TypeError: this is not a Date object
+setTime-nondate: THROW TypeError: this is not a Date object
+toISOString-nondate: THROW TypeError: this is not a Date object
+toString-nondate: THROW TypeError: this is not a Date object
+toPrimitive: 0 | "Thu Jan 01 1970 00:00:00 GMT+0000 (Coordinated Universal Time)" | "Thu Jan 01 1970 00:00:00 GMT+0000 (Coordinated Universal Time)" | "Thu Jan 01 1970 00:00:00 GMT+0000 (Coordinated Universal Time)1" | 4 | true | false | true
+toPrimitive-bad-hint: THROW TypeError: invalid Symbol.toPrimitive hint
+toPrimitive-bad-this: THROW TypeError: Date.prototype[Symbol.toPrimitive] on non-object
+date-subclass: [1970, true, "[object Date]"]
+locale-basic: "string" | "string" | "string" | "Invalid Date"
+now-type: "number" | true | true
+parse2 "2020-01-02 03:04:05+0530" 1577914445000 2020-01-01T21:34:05.000Z
+parse2 "2020-01-02 03:04 +05" NaN -
+parse2 "2020-01-02 03:04:05-08" 1577963045000 2020-01-02T11:04:05.000Z
+parse2 "2020-01-02 03:04:05+5" NaN -
+parse2 "2020-01-02T03:04:05+05" NaN -
+parse2 "2020-01-02 003:04" NaN -
+parse2 "2020-01-02 03:04:05." NaN -
+parse2 "2020-01-02 03:04:05.12x" NaN -
+parse2 "2020-01-02T03:04:05+05:3" NaN -
+parse2 "2020-01-02T03:04:05+0a:00" NaN -
+parse2 "2020-01-02 1:2" 1577926920000 2020-01-02T01:02:00.000Z
+parse2 "2020-1-2 3:4" 1577934240000 2020-01-02T03:04:00.000Z
+parse2 "Jan 2 2024 10:20:30 +0530" -45441869970000 0530-01-02T10:20:30.000Z
+parse2 "10 Feb 15" -61690377600000 0015-02-10T00:00:00.000Z
+parse2 "Feb 15 10 2020" 1581724800000 2020-02-15T00:00:00.000Z
+parse2 "2024 March 3" 1709424000000 2024-03-03T00:00:00.000Z
+parse2 "+2020-01-01" NaN -
+parse2 "2020-01-0x" NaN -
+parse2 "2020-ab-01" NaN -
+locale-invalid: "Invalid Date" | "Invalid Date"
+toPrimitive-no-primitive: THROW TypeError: cannot convert Date to a primitive value
+toPrimitive-hint-nonstring: THROW TypeError: invalid Symbol.toPrimitive hint
+toPrimitive-generic: "str" | 42
+ctor-proxy-of-date: THROW TypeError: this is not a Date object
+ctor-string-object: 1000

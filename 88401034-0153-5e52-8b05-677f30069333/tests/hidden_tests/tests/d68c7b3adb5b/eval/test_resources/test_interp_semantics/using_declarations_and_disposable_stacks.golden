@@ -1,0 +1,29 @@
+in block
+dispose inner
+body end
+dispose b
+dispose a
+basic: returned
+dispose y
+dispose x
+suppressed chain: SuppressedError |  | dispose failed: x | SuppressedError | dispose failed: y | body error
+dispose z
+dispose over return: dispose failed: z
+non-callable dispose: TypeError: value is not disposable
+missing dispose: TypeError: value is not disposable
+primitive resource: TypeError: value is not disposable
+loop body loop1
+dispose loop1
+loop body loop2
+dispose loop2
+dispose iter0
+dispose iter1
+after loop
+adopted returns val, disposed=false
+adopt release val
+deferred
+dispose stack-use
+stack disposed=true
+use after dispose: ReferenceError: DisposableStack already disposed
+SuppressedError: SuppressedError msg e1 e2 true
+async: async body, sync fallback b, async dispose a, caught async reject, async deferred

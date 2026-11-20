@@ -1,0 +1,29 @@
+Symbol basics: Symbol(desc) Symbol() Symbol() null ""   symbol false 0 Symbol Symbol()
+Symbol desc coercion: obj 12
+Symbol desc from symbol: TypeError: Cannot convert a Symbol value to a string
+new Symbol: TypeError: Symbol is not a constructor
+Symbol.for/keyFor: true app   Symbol(undefined) undefined true app
+Symbol.for cross realm: true true shared
+keyFor non-symbol: TypeError: Symbol.keyFor: argument is not a Symbol
+well-known: Symbol.asyncIterator Symbol.hasInstance Symbol.isConcatSpreadable Symbol.iterator Symbol.match Symbol.matchAll Symbol.replace Symbol.search Symbol.species Symbol.split Symbol.toPrimitive Symbol.toStringTag Symbol.unscopables Symbol.dispose Symbol.asyncDispose
+wrapper: object true Symbol(w) w true [object Symbol] true Symbol true
+toString bad this: TypeError: Symbol method called on incompatible receiver
+toString bad object this: TypeError: Symbol method called on incompatible receiver
+valueOf bad this: TypeError: Symbol method called on incompatible receiver
+valueOf bad object: TypeError: Symbol method called on incompatible receiver
+description getter bad this: TypeError: Symbol.prototype.description requires a symbol
+description getter on wrapper: wd
+toPrimitive bad this: TypeError: Symbol method called on incompatible receiver
+toPrimitive descriptor: false,false,true,[Symbol.toPrimitive],1
+symbol arithmetic: TypeError: Cannot convert a Symbol value to a number
+symbol template: TypeError: Cannot convert a Symbol value to a string
+symbol unary plus: TypeError: Cannot convert a Symbol value to a number
+symbol as key: 2 1 {} true
+symbol equality: true,false,false,true,false
+symbol property on primitive: ,p,true,true
+symbols in for-in and keys: a 1 2
+Boolean: false false true false true true false true obj-truthy object true true false false false true false
+Boolean bad this: TypeError: Boolean method called on incompatible receiver
+Boolean bad object this: TypeError: Boolean method called on incompatible receiver
+Boolean subclass: true false [object Boolean]
+IsHTMLDDA: undefined true true false true falsy function IsHTMLDDA() { [native code] } object

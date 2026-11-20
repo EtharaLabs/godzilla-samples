@@ -1,0 +1,25 @@
+hangul ["가","각ᆨ","각","한"] ["ᄀ가","가ᅡ"]
+spacing mark ["का"," ","किः"] ["ก","ำ"]
+controls ["a"," ","b","\r\n","c","\u0007","d","​","e"," ","f"]
+empty [] [] []
+word mid punctuation ["a:b"," ","c·d"," ","e.f"," ","3.4"," ","5,6"," ","7;8"," ","g",";","h"]
+containing ["hi"," ","there",null,null,"hi","there"]
+plural options {"notation":"bad"} RangeError: invalid notation: bad
+plural options {"compactDisplay":"bad"} RangeError: invalid compactDisplay: bad
+plural options {"maximumFractionDigits":101} RangeError: maximumFractionDigits out of range
+plural options {"minimumIntegerDigits":0} RangeError: minimumIntegerDigits out of range
+plural options {"maximumSignificantDigits":22} RangeError: maximumSignificantDigits out of range
+plural options {"minimumSignificantDigits":0} RangeError: minimumSignificantDigits out of range
+plural options {"roundingMode":"bad"} RangeError: invalid roundingMode: bad
+plural options {"roundingPriority":"bad"} RangeError: invalid roundingPriority: bad
+plural options {"trailingZeroDisplay":"bad"} RangeError: invalid trailingZeroDisplay: bad
+plural options {"roundingIncrement":3} 8
+plural compact {"locale":"en","type":"cardinal","notation":"compact","compactDisplay":"short","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":3,"pluralCategories":["one","other"],"roundingMode":"halfExpand"} "other"
+plural infinite range "other" "other" "one"
+rtf numberingSystem RangeError: invalid numberingSystem: ab RangeError: invalid numberingSystem: abc-de "in ٣ days"
+rtf polish ["5 kwartałów temu / za 2 tygodnie","5 kw. temu / za 2 tyg.","5 kw. temu / za 2 tyg."]
+df numberingSystem RangeError: invalid numberingSystem: ab "๑๒ hr, ๓ min"
+df fractional "1.002003 milliseconds" "0.002 milliseconds" "0.005 sec" "3.005 sec" "0.007 ms"
+df hidden seconds "1:00:00.005" "1:00:00.000005" "1:00:00.000000005" "1" "1:00:02"
+df microsecond fold "7.005 microseconds" "7 microseconds" "5 milliseconds" "5.000009 milliseconds"
+df misc "1 sec" "0:00:01.45"

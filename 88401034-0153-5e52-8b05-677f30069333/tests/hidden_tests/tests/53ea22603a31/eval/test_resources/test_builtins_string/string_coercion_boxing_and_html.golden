@@ -1,0 +1,21 @@
+String() => ["Symbol(d)", "null", "undefined", "1,2,3", "0", "1e+21", "ts", "ts", "vo", "123", "[object Object]"]
+new String => ["object", 2, ["0", "1"], "b", {value: "a", writable: false, enumerable: true, configurable: false}, true, false, ["0", "1", "length"]]
+String object writes => [1, "TypeError: cannot assign to read-only property '0'"]
+String object length => [3, false, false, true]
+new String symbol !! TypeError: Cannot convert a Symbol value to a string
+String as function vs ctor => ["string", "object", true, false]
+concat => ["a1null2,3[object Object]undefined", "12", ""]
+html => ["<a name=\"&quot;x&quot;\">a</a>", "<b>b</b>", "<a href=\"u&quot;v\">c</a>", "<font color=\"red\">d</font>", "<sub>e</sub>", "<sup>f</sup>", "<big>g</big>", "<blink>h</blink>", "<tt>i</tt>", "<i>j</i>", "<small>k</small>", "<strike>l</strike>", "<font size=\"7\">m</font>"]
+html null this !! TypeError: String.prototype method called on null or undefined
+methods on null => ["TypeError: String.prototype method called on null or undefined", "TypeError: String.prototype method called on null or undefined", "TypeError: String.prototype.split called on null or undefined", "TypeError: String.prototype method called on null or undefined", "TypeError: String.prototype method called on null or undefined", "TypeError: String.prototype method called on null or undefined", "TypeError: String.prototype.replace called on null or undefined", "TypeError: String.prototype.match called on null or undefined", "TypeError: String.prototype.search called on null or undefined", "TypeError: String.prototype.matchAll called on null or undefined", "TypeError: String.prototype method called on null or undefined"]
+valueOf/toString this checks => ["x", "y"]
+valueOf bad this !! TypeError: not a String object
+@@search not callable !! TypeError: @@search is not callable
+@@match not callable !! TypeError: @@match is not callable
+@@split not callable !! TypeError: @@split is not callable
+@@replace not callable !! TypeError: @@replace is not callable
+toString bad this !! TypeError: not a String object
+lengths => [1, 0, 1, 2, 1, 1, 1]
+string keys => [2, "h", "i", undefined, true, ["0", "1"]]
+primitive property write => [undefined, "abc"]
+primitive property write strict !! TypeError: Cannot create property 'x' on string value

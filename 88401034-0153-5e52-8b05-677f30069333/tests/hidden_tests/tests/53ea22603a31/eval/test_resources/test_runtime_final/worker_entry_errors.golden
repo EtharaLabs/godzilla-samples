@@ -1,0 +1,9 @@
+classic syntax error -> ErrorEvent "SyntaxError: unexpected token Punct(\";\") (line 1)"
+module syntax error -> ErrorEvent "SyntaxError: unexpected token Punct(\";\")"
+classic throws number -> ErrorEvent "Number: 42"
+classic throws object -> ErrorEvent "Object: "
+error without a name -> ErrorEvent "plain message"
+eval syntax error -> error SyntaxError "unexpected token Punct(\";\") (line 1)"
+eval syntax error -> exit 1
+eval throws string -> error Error "String: prim"
+eval throws string -> exit 1

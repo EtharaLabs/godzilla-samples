@@ -1,0 +1,72 @@
+get => 1 :: get(prop;fn)
+get-sym => undefined :: get(Symbol(Symbol.toStringTag);fn)
+set => 2 :: set(prop;2;fn) getOwnPropertyDescriptor(prop) defineProperty(prop;{value})
+has => true :: has(prop)
+delete => true :: deleteProperty(prop)
+defineProperty => true :: defineProperty(x;{value,configurable})
+gopd => {value: 1, writable: false, enumerable: false, configurable: true} :: getOwnPropertyDescriptor(x)
+ownKeys => [] :: ownKeys() getOwnPropertyDescriptor(length) getOwnPropertyDescriptor(name) getOwnPropertyDescriptor(prototype) getOwnPropertyDescriptor(x)
+getOwnPropertyNames => 4 :: ownKeys()
+getPrototypeOf => true :: getPrototypeOf()
+setPrototypeOf => true :: setPrototypeOf(fn)
+isExtensible => true :: isExtensible()
+apply => 3 :: apply(undefined;[1,2])
+call => 7 :: get(call;fn) apply(null;[3,4])
+construct => 5 :: construct([5,6];fn) get(prototype;fn)
+instanceof => false :: get(Symbol(Symbol.hasInstance);fn) get(prototype;fn)
+for-in => [] :: ownKeys() getOwnPropertyDescriptor(length) getOwnPropertyDescriptor(name) getOwnPropertyDescriptor(prototype) getOwnPropertyDescriptor(x) getPrototypeOf()
+spread => {} :: ownKeys() getOwnPropertyDescriptor(length) getOwnPropertyDescriptor(name) getOwnPropertyDescriptor(prototype) getOwnPropertyDescriptor(x)
+hasOwn => false :: 
+preventExtensions => false :: preventExtensions() isExtensible()
+typeof => "function/object/function" :: 
+in-with-proto-chain => false :: has(missing)
+set-via-proto => ["q"] :: set(q;1;{})
+inv get-nonwritable TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+inv get-same-ok 1
+inv set-nonwritable TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+inv has-nonconfig TypeError: proxy 'has' trap hid a non-configurable property
+inv has-nonext TypeError: proxy 'has' trap hid a non-configurable property
+inv delete-nonconfig TypeError: proxy 'deleteProperty' removed a non-configurable property
+inv delete-false-strict TypeError: cannot delete property 'a'
+inv ownKeys-missing TypeError: ownKeys trap omitted a non-configurable target key
+inv ownKeys-extra-nonext TypeError: ownKeys trap added a key to a non-extensible target
+inv ownKeys-dupes TypeError: ownKeys trap result has duplicate keys
+inv ownKeys-nonstring TypeError: ownKeys trap result must contain only strings and symbols
+inv ownKeys-nonarray TypeError: ownKeys trap must return an array-like object
+inv ownKeys-arraylike ["b", "a"]
+inv gopd-nonobj TypeError: getOwnPropertyDescriptor trap must return an object or undefined
+inv gopd-undef-nonconfig TypeError: gOPD trap reported undefined for a non-configurable property
+inv gopd-config-mismatch TypeError: gOPD trap reported a non-configurable descriptor the target lacks
+inv gopd-ok {value: 1, writable: false, enumerable: false, configurable: true}
+inv defineProperty-false TypeError: proxy defineProperty returned a falsish value
+inv defineProperty-false-reflect false
+inv defineProperty-nonext TypeError: proxy 'defineProperty' added a property to a non-extensible target
+inv defineProperty-nonconfig-missing TypeError: proxy 'defineProperty' defined a non-configurable property the target lacks
+inv getPrototypeOf-nonobj TypeError: getPrototypeOf trap must return an object or null
+inv getPrototypeOf-nonext-mismatch TypeError: getPrototypeOf trap result differs from a non-extensible target's prototype
+inv setPrototypeOf-false TypeError: could not set prototype
+inv setPrototypeOf-false-reflect false
+inv setPrototypeOf-nonext-mismatch TypeError: proxy 'setPrototypeOf' changed a non-extensible target's prototype
+inv isExtensible-mismatch TypeError: proxy 'isExtensible' must match the target
+inv preventExtensions-lie TypeError: proxy 'preventExtensions' reported success but the target is extensible
+inv apply-nonfn-target TypeError: expression is not a function
+inv construct-nonobj-result TypeError: proxy construct trap returned a non-object
+inv construct-nonctor-target TypeError: object is not a constructor
+inv trap-noncallable TypeError: proxy 'get' trap is not callable
+inv trap-null-passthrough "through"
+inv trap-getter-handler "from getter trap"
+inv ctor-nonobj TypeError: Cannot create proxy with a non-object as target or handler
+inv ctor-nonobj-handler TypeError: Cannot create proxy with a non-object as target or handler
+inv ctor-no-new TypeError: Constructor Proxy requires 'new'
+inv proxy-proto [undefined, 2, "Proxy", "function"]
+inv revocable-before 1
+inv revoked-get TypeError: cannot read property 'get' of null
+inv revoked-set TypeError: cannot read property 'set' of null
+inv revoked-has TypeError: cannot perform 'has' on a revoked proxy
+inv revoked-keys TypeError: cannot read property 'ownKeys' of null
+inv revoked-typeof "object"
+inv revoked-isArray TypeError: proxy is revoked
+inv revoked-as-target TypeError: proxy is revoked
+inv revoked-as-handler TypeError: cannot read property 'get' of null
+inv revoke-fn ["", 0]
+inv array-proxy [true, 3, "[1,2,3]", [2, 4, 6], "[object Array]", 3]

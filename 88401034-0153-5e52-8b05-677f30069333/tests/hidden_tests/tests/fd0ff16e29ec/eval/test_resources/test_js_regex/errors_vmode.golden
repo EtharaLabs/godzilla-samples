@@ -1,0 +1,61 @@
+"[a&&&b]" | SyntaxError: unexpected '&&&' in class set
+"[a&&b--c]" | SyntaxError: expected ']' in pattern
+"[ab&&c]" | SyntaxError: cannot mix '&&' with a union in a class set
+"[a--b&&c]" | SyntaxError: expected ']' in pattern
+"[ab--c]" | SyntaxError: cannot mix '--' with a union in a class set
+"[(]" | SyntaxError: '(' must be escaped in a v-mode class
+"[)]" | SyntaxError: ')' must be escaped in a v-mode class
+"[{]" | SyntaxError: '{' must be escaped in a v-mode class
+"[}]" | SyntaxError: '}' must be escaped in a v-mode class
+"[/]" | SyntaxError: '/' must be escaped in a v-mode class
+"[|]" | SyntaxError: '|' must be escaped in a v-mode class
+"[-]" | SyntaxError: '-' must be escaped in a v-mode class
+"[a-]" | SyntaxError: '-' must be escaped in a v-mode class
+"[&&a]" | SyntaxError: reserved doubled punctuator '&&' in class set
+"[a&&]" | SyntaxError: expected ']' in pattern
+"[!!]" | SyntaxError: reserved doubled punctuator '!!' in class set
+"[a##]" | SyntaxError: reserved doubled punctuator '##' in class set
+"[a$$]" | SyntaxError: reserved doubled punctuator '$$' in class set
+"[\\q]" | SyntaxError: expected '{' after \q
+"[\\q{a]" | SyntaxError: unterminated \q{...}
+"[\\qa}]" | SyntaxError: expected '{' after \q
+"[\\z]" | SyntaxError: invalid identity escape \z in v-mode class
+"[\\c1]" | SyntaxError: invalid \c escape in class set
+"[\\c]" | SyntaxError: invalid \c escape in class set
+"[\\x4]" | SyntaxError: invalid hexadecimal escape
+"[\\" | SyntaxError: trailing backslash in class
+"[^\\q{ab}]" | SyntaxError: cannot negate a class set containing strings
+"[^\\p{RGI_Emoji}]" | SyntaxError: cannot negate a class set containing strings
+"\\P{RGI_Emoji}" | SyntaxError: \P of a property of strings is invalid
+"[\\P{Emoji_Keycap_Sequence}]" | SyntaxError: \P of a property of strings is invalid
+"[[a-z]-b]" | SyntaxError: '-' must be escaped in a v-mode class
+"[z-a]" | SyntaxError: range out of order in character class
+"[\\d-z]" | SyntaxError: '-' must be escaped in a v-mode class
+"[\\p{Foo}]" | SyntaxError: invalid unicode property Foo
+"[\\p{L]" | SyntaxError: invalid character in property escape
+"[\\p{ L}]" | SyntaxError: invalid character in property escape
+"[\\pL]" | SyntaxError: invalid property escape: expected '{'
+"[a" | SyntaxError: expected ']' in pattern
+"[[a]" | SyntaxError: expected ']' in pattern
+"[a-z--[aeiou]]" | SyntaxError: cannot mix '--' with a union in a class set
+"[^[^\\q{ab}]]" | SyntaxError: cannot negate a class set containing strings
+"\\p{RGI_Emoji" | SyntaxError: unterminated property escape
+"[\\q{a|bc}--[^a]]" | ok /[\q{a|bc}--[^a]]/v
+"[a-\\q{bc}]" | SyntaxError: invalid character class range
+"[a-[bc]]" | SyntaxError: invalid character class range
+"[a-" | SyntaxError: unterminated character class
+valid | "[\\p{Basic_Emoji}--\\q{x}]" | ok /[\p{Basic_Emoji}--\q{x}]/v
+valid | "[\\q{a|bc}&&\\q{bc}]" | ok /[\q{a|bc}&&\q{bc}]/v
+valid | "[^[^a]]" | ok /[^[^a]]/v
+valid | "[\\q{}]" | ok /[\q{}]/v
+valid | "[\\w--\\d--_]" | ok /[\w--\d--_]/v
+valid | "[\\p{L}&&\\p{ASCII}&&[^a-y]]" | ok /[\p{L}&&\p{ASCII}&&[^a-y]]/v
+valid | "[\\-\\&\\!\\#\\%\\,\\:\\;\\<\\=\\>\\@\\`\\~]" | ok /[\-\&\!\#\%\,\:\;\<\=\>\@\`\~]/v
+valid | "[a&b]" | ok /[a&b]/v
+valid | "[^\\q{a|b}]" | ok /[^\q{a|b}]/v
+valid | "[]" | ok /[]/v
+valid | "[^]" | ok /[^]/v
+valid | "[a[]]" | ok /[a[]]/v
+valid | "[\\p{sc=Grek}]" | ok /[\p{sc=Grek}]/v
+valid | "[\\p{Script=Latin}--[a-z]]" | ok /[\p{Script=Latin}--[a-z]]/v
+valid | "[\\p{gc=Lu}&&\\p{ASCII}]" | ok /[\p{gc=Lu}&&\p{ASCII}]/v

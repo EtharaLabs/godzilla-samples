@@ -1,0 +1,16 @@
+long s vs s    /s/i=F /s/iu=T /\u017f/i=T /\u017f/iu=T /[a-z]/i=F /[a-z]/iu=T /\w/i=F /\w/iu=T /\W/iu=F /[^\W]/iu=T /[\W]/iu=F
+kelvin vs k    /k/i=F /k/iu=T /K/i=F /K/iu=T /[k]/i=F /[^k]/iu=F /\bK\b/iu=T /[a-z]/iu=T
+k vs kelvin    /\u212a/i=F /\u212a/iu=T /[\u212a]/i=F /[\u212a]/iu=T /[\u2100-\u2130]/i=F /[\u2100-\u2130]/iu=T
+sharp s        /\u00df/i=F /\u00df/iu=T /\u1e9e/i=T /\u1e9e/iu=T /[\u00df]/iu=T /ss/iu=F
+sigma          /\u03c3/i=T /\u03c2/i=T /\u03a3/i=T /\u03c3/iu=T /\u03c2/iu=T /[\u03c3]/i=T /[\u03c2]/iu=T
+final sigma    /\u03a3/i=T /\u03c3/i=T /\u03a3/iu=T /[\u03a3]/i=T
+dotless i      /i/i=F /I/i=F /i/iu=F /I/iu=F /\u0131/i=T /\u0130/i=F /\u0130/iu=F
+dotted I       /i/i=F /i/iu=F /\u0130/i=T /\u0130/iu=T /\u0131/iu=F
+micro sign     /\u00b5/i=T /\u03bc/i=T /\u00b5/iu=T /\u03bc/iu=T /[\u00b5]/iu=T
+ohm sign       /\u03c9/i=F /\u03a9/i=F /\u03c9/iu=T /[\u03c9]/iu=T /\u2126/i=T
+deseret        /\u{10400}/iu=T /\u{10428}/iu=T /[\u{10400}-\u{10410}]/iu=T /\u{10400}/i=F /^.$/iu=T /^[^\u{10400}]$/iu=F
+latin-1        /\u00e9/i=T /[\u00e0-\u00ff]/i=T /\u00ff/i=F /\u0178/i=F /\u0178/iu=F
+backref fold   /(a)\1/i=T /(s)\1/iu=T /(s)\1/i=F /(?<x>s)\k<x>/iu=T /(K)\1/i=F /(k)\1/iu=T
+boundary iu    /\b\u017f/iu=F /a\b/iu=F /\B\u017f/iu=T /a\b/i=T /\w\b/i=T
+global icase replace ____ ..Áá ### K##
+first-char prescan with i 4 4 2 2 2

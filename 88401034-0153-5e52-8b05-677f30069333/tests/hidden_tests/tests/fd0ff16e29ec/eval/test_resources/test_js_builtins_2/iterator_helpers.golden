@@ -1,0 +1,61 @@
+map-filter-take: [1, 9, 25, 49]
+drop: [3, 4] | []
+flatMap: [1, 10, 2, 20] | ["a", "b", "c"] | [1, "set"]
+flatMap-nonobj: THROW TypeError: value is not iterable
+flatMap-string-rejected: "TypeError: value is not iterable"
+reduce: 10 | 103 | "init"
+reduce-empty: THROW TypeError: Reduce of empty iterator with no initial value
+some/every/find: true | true | 8 | undefined | false | true
+forEach: [["3@0", "4@1"], undefined]
+counter-arg: ["a0", "b1", "c2"] | ["a", "c"] | [0, 1] | "01"
+helper-next: {value: 2, done: false} | {value: 4, done: false}
+helper-return: {value: undefined, done: true} | {value: undefined, done: true} | ["yield 1", "yield 2", "finally"]
+take-closes: [1] | ["yield 1", "finally"]
+find-closes: 2 | ["yield 1", "yield 2", "finally"]
+callback-throw-closes: THROW Error: cb threw
+log4: ["yield 1", "finally"]
+some-closes: true | ["yield 1", "finally"]
+take-negative: THROW RangeError: limit must be a non-negative number
+take-nan: THROW RangeError: limit must be a non-negative number
+drop-negative: THROW RangeError: limit must be a non-negative number
+take-inf: [1, 2] | [] | [1]
+map-noncallable: THROW TypeError: Iterator helper argument is not callable
+filter-noncallable: THROW TypeError: Iterator helper argument is not callable
+forEach-noncallable: THROW TypeError: Iterator.prototype.forEach argument is not callable
+some-noncallable: THROW TypeError: predicate is not callable
+find-noncallable: THROW TypeError: predicate is not callable
+reduce-noncallable: THROW TypeError: reducer is not callable
+helper-on-nonobj: THROW TypeError: Iterator helper called on a non-object
+toArray-on-nonobj: THROW TypeError: Iterator method called on a non-object
+helper-reentrant: THROW TypeError: iterator helper is already running
+helper-proto: "[object Iterator Helper]" | "Iterator Helper" | true | "function" | "function"
+helper-next-bad-this: THROW TypeError: next called on an incompatible receiver
+helper-return-bad-this: THROW TypeError: return called on an incompatible receiver
+Iterator: "function" | true | 0 | "Iterator"
+Iterator-call: THROW TypeError: Abstract class Iterator not directly constructable
+Iterator-new-abstract: THROW TypeError: Abstract class Iterator not directly constructable
+Iterator-subclass: [1, 1] | true
+Iterator.from-iterable: [1, 2] | ["a", "b"] | [4]
+Iterator.from-wrapped: [0, 1] | false | "function" | "[object Iterator]"
+Iterator.from-identity: true
+Iterator.from-prim: THROW TypeError: value is not iterable
+Iterator.from-bad-iterator-method: THROW TypeError: @@iterator is not callable
+Iterator.from-wrap-return: [{done: true, value: "r"}, ["inner return"]]
+Iterator.from-wrap-noreturn: {value: undefined, done: true}
+concat: [1, 2, 3, "x", "y"] | []
+concat-nonobj: THROW TypeError: Iterator.concat argument is not an object
+concat-string: THROW TypeError: Iterator.concat argument is not an object
+concat-noniterable: THROW TypeError: Iterator.concat argument is not iterable
+concat-steps: {value: 1, done: false} | {value: undefined, done: true} | {value: undefined, done: true}
+zip: [[1, "a"], [2, "b"]] | [[1, "a"], [2, undefined]] | [[1, "a"], [2, "P2"]]
+zip-strict: THROW TypeError: Iterator.zip strict: input iterators have different lengths
+zip-bad-mode: THROW TypeError: invalid Iterator.zip mode
+zipKeyed: [{a: 1, b: "x"}, {a: 2, b: "y"}] | [{a: 1, b: "pad"}]
+array-iter: "[object Array Iterator]" | {value: [0, "x"], done: false} | {value: [1, "y"], done: false} | {value: undefined, done: true} | {value: undefined, done: true}
+array-iter-live: {value: 2, done: false} | {value: undefined, done: true} | {value: undefined, done: true}
+array-iter-arraylike: ["a", "b"] | [0, 1, 2]
+array-iter-bad-this: THROW TypeError: Array Iterator next called on an incompatible receiver
+array-iter-on-null: THROW TypeError: Array.prototype method called on null or undefined
+generator-proto: "[object Generator]" | "function" | {value: "early", done: true} | "gen-thrown"
+generator-next-bad-this: THROW TypeError: Generator method called on a non-generator
+generator-running: THROW TypeError: Generator method called on a non-generator

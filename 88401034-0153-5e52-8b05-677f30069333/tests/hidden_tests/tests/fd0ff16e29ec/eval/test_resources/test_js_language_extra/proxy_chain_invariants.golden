@@ -1,0 +1,26 @@
+get via live proxy proto 1
+set via live proxy proto "fresh"
+get via revoked proto !TypeError: cannot perform 'get' on a revoked proxy
+set via revoked proto !TypeError: cannot perform 'set' on a revoked proxy
+in via revoked proto !TypeError: cannot perform 'has' on a revoked proxy
+noncallable get trap !TypeError: proxy 'get' trap is not callable
+noncallable set trap !TypeError: proxy 'set' trap is not callable
+direct noncallable get !TypeError: proxy 'get' trap is not callable
+direct noncallable set !TypeError: proxy 'set' trap is not callable
+passthrough get "b"
+passthrough set "own/b"
+get invariant setter-only !TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+get invariant getter ok "lie"
+get invariant data !TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+get via chain invariant !TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+set invariant getter-only !TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set invariant fixed same "same ok"
+set invariant fixed diff !TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set via chain invariant !TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+delete passthrough "true,false,true"
+delete passthrough strict !TypeError: cannot delete property 'nc'
+delete lie nc !TypeError: proxy 'deleteProperty' removed a non-configurable property
+delete lie non-extensible !TypeError: proxy 'deleteProperty' removed a non-extensible target's property
+delete trap false strict !TypeError: cannot delete property 'z'
+delete noncallable trap !TypeError: proxy 'deleteProperty' trap is not callable
+delete revoked !TypeError: cannot delete on a revoked proxy

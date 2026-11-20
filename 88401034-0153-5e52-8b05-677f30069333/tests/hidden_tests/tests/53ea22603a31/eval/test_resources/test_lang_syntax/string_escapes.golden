@@ -1,0 +1,26 @@
+"ABC😀" 5
+"\u0000" 1
+"ab" 2
+"A\u0007" 2
+"89" 2
+"'\"\\\b\f\n\r\t\u000b" 9
+"q" 1
+"A" 1
+"😀" 2
+"é́" 2
+"S4" 2
+"it's" 4
+"say \"hi\"" 8
+"   " 3
+true 2 2 1 "\ud83d"
+"'\\x4'" SyntaxError: bad \x escape
+"'\\xZZ'" SyntaxError: bad \x escape
+"'\\u12'" SyntaxError: bad \u escape
+"'\\u{}'" SyntaxError: bad \u escape
+"'\\u{110000}'" SyntaxError: undefined Unicode code-point
+"'\\u{1F600'" SyntaxError: unterminated \u{...} escape
+"'abc" SyntaxError: unterminated string literal
+"'line\nbreak'" SyntaxError: unterminated string literal
+"'use strict'; '\\07'" SyntaxError: legacy octal literals are not allowed in strict mode
+"'use strict'; '\\8'" SyntaxError: legacy octal literals are not allowed in strict mode
+"'use strict'; '\\0'" ok "\u0000"

@@ -1,0 +1,13 @@
+write true false false 5 3 true
+w2 error event write after end
+w2 late write returns false
+objw true true true 16 2
+exact hwm true false 4
+late cb write after end
+write error event disk full
+write cb error disk full
+batches v:1/undefined+2/utf8 w:3 v:4/undefined+5/undefined
+drain 2
+end cb
+finish ab:undefined cd:undefined e:undefined !:null
+write 1 > write 2 > write 3 > final > finish

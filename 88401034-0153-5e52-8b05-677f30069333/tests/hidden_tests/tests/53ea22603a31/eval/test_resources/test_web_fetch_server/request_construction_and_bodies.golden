@@ -1,0 +1,17 @@
+http://example.com/b?x=1 POST z text/plain;charset=UTF-8 false null true
+hello true
+read twice THREW TypeError: body already consumed
+GET with body THREW TypeError: GET request cannot have a body
+HEAD with body THREW TypeError: HEAD request cannot have a body
+relative url THREW TypeError: URL: invalid URL '/relative' (relative, and no base given)
+missing host THREW TypeError: URL: invalid URL 'http://': missing host
+{"a":1} {"a":1} PUT http://x/p application/json
+PATCH http://x/p application/json
+null ""
+empty body consumed twice THREW TypeError: body already consumed
+GET GET CUSTOM
+application/x-www-form-urlencoded;charset=UTF-8 q=a+b&r=%C3%A9
+image/png blob!
+text/custom
+null hi
+true

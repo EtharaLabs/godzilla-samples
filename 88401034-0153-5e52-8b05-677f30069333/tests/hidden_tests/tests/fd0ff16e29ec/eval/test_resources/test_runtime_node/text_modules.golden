@@ -1,0 +1,18 @@
+sd "�" "�" "�" "�" utf8
+sd whole "héllo" ""
+sdhex 01ff ""
+sdb64 YWI= Yw==
+sd16 "a" ""
+sdlatin1 éA latin1
+qs {"a":["1","3"],"b":"2","c":" x y","d":"","e":""} x=1&x=2&y=a%20b%26c&z=true&n=&u=&o=%5Bobject%20Object%5D a%20b%2F%C3%BC %41%zz+
+qs2 {"a":"1","b":"2"} a:1;b:2 {"a=1&a=2&a=3":""} A B A+B
+qs3 {} {"":"v","k":""}  true true {"x":"€","y":"%ZZ"}
+url.parse https: user:pw Example.com:8080 Example.com 8080 /p/a/t/h ?query=string&q2=x {"query":"string","q2":"x"} #hash https://user:pw@Example.com:8080/p/a/t/h?query=string&q2=x#hash /p/a/t/h?query=string&q2=x true
+url.parse rel null null /rel/path x=1 /rel/path?x=1 ?x=1
+url.parse mailto mailto: null someone@example.com mailto:someone@example.com
+url.format httph.com:81/x?a=1&b=c%20d https://x.orgp?s=1#h http://a.com/b?c#d https://user:pw@Example.com:8080/p/a/t/h?query=string&q2=x#hash http://str.com/x
+url.resolve http://a.com/d http://a.com/e http://localhost/one/three http://b.com/x http://a.com/b/c?q=1#f
+fileURL /tmp/a%20b.txt /x/y file:///x y/#z xn--mnchen-3ya.de münchen.de
+urlToHttp {"protocol":"https:","hostname":"h.com","hash":"","search":"?q=1","pathname":"/p","path":"/p?q=1","href":"https://u:p@h.com:9/p?q=1","port":9,"auth":"u:p"}
+URL global true true function
+punycode maana-pta mañana xn--maana-pta.com mañana.com ascii.org [97,128512] 😀b

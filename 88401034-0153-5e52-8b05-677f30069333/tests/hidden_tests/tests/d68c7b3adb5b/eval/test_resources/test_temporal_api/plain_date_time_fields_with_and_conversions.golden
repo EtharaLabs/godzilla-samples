@@ -1,0 +1,19 @@
+getters: 2024,2,M02,29,13,45,30,123,456,789,4,60,9,2024,7,29,366,12,true,,,iso8601
+getters japanese: reiwa,6,2024,2,M02,29,,,29,true,2024-02-29T13:45:30.123456789[u-ca=japanese]
+getters chinese: ,,2024,1,M01,20,29,354,12,false
+ctor: 2024-01-01T00:00:00 2024-01-01T00:00:00[u-ca=hebrew]
+ctor errors: RangeError:ISO date field is out of range | RangeError:ISO time field is out of range | RangeError:date-time is outside the representable range | TypeError:constructor requires 'new'
+with: 2024-02-01T00:45:30.123456789 2023-02-28T13:45:30.123456789 2024-12-29T13:45:30.123456 2024-02-29T13:59:30.123456789 2024-02-10T13:45:30.123456789[u-ca=hebrew]
+with errors: RangeError:day out of range | TypeError:with() requires at least one field | TypeError:with() argument must not have 'calendar' | TypeError:with() argument must be a plain object | RangeError:hour out of range
+withPlainTime: 2024-02-29T00:00:00 2024-02-29T07:08:00 2024-02-29T09:00:00 2024-02-29T05:06:00
+withCalendar: 2024-02-29T13:45:30.123456789[u-ca=persian] 12 iso8601
+withCalendar errors: TypeError:calendar argument is required | TypeError:calendar must be a string | RangeError:invalid calendar identifier
+toPlain: 2024-02-29 13:45:30.123456789 2024-02-29[u-ca=roc]
+toZonedDateTime: 2024-02-29T13:45:30.123456789+01:00[Europe/Berlin] 2024-03-31T03:30:00+02:00[Europe/Berlin] 2024-03-31T01:30:00+01:00[Europe/Berlin] 2024-10-27T02:30:00+01:00[Europe/Berlin] 2024-10-27T02:30:00+02:00[Europe/Berlin]
+toZonedDateTime errors: RangeError:no such local time (skipped by a DST gap) | RangeError:ambiguous local time (DST overlap) | TypeError:timeZone must be a string or ZonedDateTime | RangeError:invalid disambiguation: first
+add/subtract: 2024-03-01T01:00:30.123456789 2025-02-28T13:45:30.123456789 2024-01-29T13:45:30.123456 2035-07-28T05:45:30.123456789 2024-02-21T13:45:30.123000789
+add errors: RangeError:date day out of range | RangeError:date is outside the supported range | RangeError:mixed-sign duration
+from: 2020-02-29T23:00:00 2020-01-01T10:00:00 2020-05-05T00:00:00 2020-05-05T10:00:00 2020-01-01T00:00:00[u-ca=japanese] 1989-01-07T12:00:00[u-ca=japanese]
+from errors: RangeError:day out of range | TypeError:missing field 'day' | RangeError:UTC designator not valid for PlainDateTime | TypeError:cannot convert to Temporal.PlainDateTime
+equals/compare: true,false,-1,0,0
+valueOf: TypeError: Temporal.PlainDateTime has no valueOf; use compare

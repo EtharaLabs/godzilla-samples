@@ -1,0 +1,30 @@
+empty module     true ok
+valid            true ok
+not wasm         false CompileError(wasm: bad magic) true
+too short        false CompileError(wasm: unexpected end of input) true
+bad version      false CompileError(wasm: unsupported version) true
+unknown section  false CompileError(wasm: unknown section id 13) true
+out of order     false CompileError(wasm: sections out of order) true
+overrun          false CompileError(wasm: section overruns input) true
+size mismatch    false CompileError(wasm: section 1 size mismatch) true
+bad functype     false CompileError(wasm: expected func type (0x60)) true
+bad valtype      false CompileError(wasm: unknown value type 0x55) true
+type idx range   false CompileError(wasm: function type index out of range) true
+code count       false CompileError(wasm: code/function count mismatch) true
+body no end      false CompileError(wasm: function body not terminated by end) true
+import kind      false CompileError(wasm: unknown import kind 7) true
+export kind      false CompileError(wasm: unknown export kind 9) true
+export range     false ok
+global range     false ok
+elem kind        false CompileError(wasm: unsupported element segment kind 5) true
+data kind        false CompileError(wasm: unsupported data segment kind 3) true
+const expr       false CompileError(wasm: unsupported opcode 0x6a in const expr) true
+leb overflow     false CompileError(wasm: section overruns input) true
+custom only      false CompileError(wasm: section 0 size mismatch) true
+datacount        true ok
+bad code body    false CompileError(wasm: bad code body) true
+mem export range false ok
+table export range false ok
+uleb overflow    false CompileError(wasm: LEB128 overflow) true
+sleb overflow    false CompileError(wasm: LEB128 overflow) true
+unknown global type false CompileError(wasm: unknown value type 0x55) true

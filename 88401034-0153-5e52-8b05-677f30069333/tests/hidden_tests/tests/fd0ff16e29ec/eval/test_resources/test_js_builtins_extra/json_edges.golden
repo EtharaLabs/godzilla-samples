@@ -1,0 +1,24 @@
+stringify replacer throws throws RangeError rep
+stringify nested replacer throws throws EvalError deep
+stringify proxy sym keys "{\"a\":1,\"b\":[1,{\"c\":3}]}"
+stringify proxy array replacer "{\"z\":3,\"x\":1}"
+stringify proxy arraylike replacer len "{\"b\":2}"
+stringify smuggled pair "22 dbfe dc00 22 / 22 dbfe dc00 78 dbff dfff 22"
+smuggled roundtrip [true,2,"dbfe dc00","10f800"]
+parse missing comma throws SyntaxError Expected ',' or '}' in JSON object
+parse missing comma reviver throws SyntaxError Expected ',' or '}' in JSON object
+parse trailing comma throws SyntaxError Expected string key in JSON object
+parse bad array throws SyntaxError Expected ',' or ']' in JSON array
+parse surrogate escapes "d83d de00 d800 78 dc00"
+parse surrogate key ["d83d de00","d800"]
+parse surrogate reviver {"k":"d83d de00 d83d"}
+parse long escapes 92
+proxy define c {"value":21,"writable":true,"enumerable":true,"configurable":true}
+proxy define d {"value":31,"writable":true,"enumerable":true,"configurable":true}
+reviver proxy holder "{\"a\":2,\"b\":{\"c\":21,\"d\":31}}"
+reviver proxy array "{\"a\":1,\"b\":2}"
+reviver nonconfigurable undefined [9,["a","b"]]
+reviver nonconfigurable define 9
+reviver source {"n":["number","12345678901234567890"],"s":["string","\"x\""]}
+rawJSON ["{\"big\":12345678901234567890}",true,false]
+rawJSON bad throws SyntaxError JSON.rawJSON value must be a primitive

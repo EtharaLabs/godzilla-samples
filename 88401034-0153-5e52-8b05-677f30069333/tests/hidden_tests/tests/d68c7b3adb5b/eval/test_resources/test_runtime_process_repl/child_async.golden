@@ -1,0 +1,7 @@
+spawn number 3
+exit 5 null exitCode=5
+close 5
+close+end "got:line1,line2\n" "e1\n" write callback ran: true
+exec null "via exec in1\n" "E\n"
+exec fail Command failed with exit code 9 9 true 0
+execFile null "file arg stdin3\n" ""

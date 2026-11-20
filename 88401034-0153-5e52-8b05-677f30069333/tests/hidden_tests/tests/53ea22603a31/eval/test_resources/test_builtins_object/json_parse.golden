@@ -1,0 +1,60 @@
+values => [[100, -0, 0.5, true, null, "😀\n", 0.01, -125], "A/", {}, 7]
+__proto__ key => [["__proto__"], true]
+duplicate key => {a: 2, b: 0}
+lone surrogate escape => 55296
+big numbers => [Infinity, -0, 12345678901234567000]
+parse "" !! SyntaxError: Unexpected end of JSON input
+parse " " !! SyntaxError: Unexpected end of JSON input
+parse "[1,]" !! SyntaxError: Unexpected token in JSON
+parse "{\"a\":1,}" !! SyntaxError: Expected string key in JSON object
+parse "'x'" !! SyntaxError: Unexpected token in JSON
+parse "01" !! SyntaxError: Unexpected non-whitespace after JSON
+parse "\"\t\"" !! SyntaxError: Unescaped control character in JSON string
+parse "1 2" !! SyntaxError: Unexpected non-whitespace after JSON
+parse "{\"a\" 1}" !! SyntaxError: Expected ':' in JSON object
+parse "[1" !! SyntaxError: Expected ',' or ']' in JSON array
+parse "\"\\x\"" !! SyntaxError: Bad escape in JSON
+parse "nul" !! SyntaxError: Invalid literal in JSON
+parse "-" !! SyntaxError: Invalid number in JSON
+parse "1." !! SyntaxError: Invalid number in JSON
+parse ".5" !! SyntaxError: Unexpected token in JSON
+parse "+1" !! SyntaxError: Unexpected token in JSON
+parse "{a:1}" !! SyntaxError: Expected string key in JSON object
+parse "\"abc" !! SyntaxError: Unterminated JSON string
+parse "[1 2]" !! SyntaxError: Expected ',' or ']' in JSON array
+parse "{\"a\":1 \"b\":2}" !! SyntaxError: Expected ',' or '}' in JSON object
+parse "NaN" !! SyntaxError: Unexpected token in JSON
+parse "undefined" !! SyntaxError: Unexpected token in JSON
+parse " 1" !! SyntaxError: Unexpected token in JSON
+parse "\"\\u12\"" !! SyntaxError: Bad \u escape in JSON
+parse "1e" !! SyntaxError: Invalid number in JSON
+parse "{,}" !! SyntaxError: Expected string key in JSON object
+parse "[,1]" !! SyntaxError: Unexpected token in JSON
+parse "tru" !! SyntaxError: Invalid literal in JSON
+parse undefined !! SyntaxError: Unexpected token in JSON
+parse coerces => [1, null, [2]]
+reviver transform => {a: [10, 20, {b: 30}], c: "x"}
+reviver order => ["b", "a", "0", "1", "c", "<root>"]
+reviver delete => {b: 2, c: [<hole>, 2]}
+reviver this => ["x<x|y>", "0<0>", "y<x|y>", "<>"]
+reviver root replace => "replaced"
+reviver adds keys => {a: 1, b: "mutated"}
+reviver source => ["n=1.0", "big=12345678901234567890", "s=\"a\\u0041\"", "0=1e2", "1=-0", "arr=undefined", "t=true", "z=null", "=undefined"]
+reviver throws !! RangeError: from reviver
+reviver path "{\"a\" 1}" !! SyntaxError: Expected ':' in JSON object
+reviver path "{\"a\":1 \"b\":2}" !! SyntaxError: Expected ',' or '}' in JSON object
+reviver path "[1 2]" !! SyntaxError: Expected ',' or ']' in JSON array
+reviver path "{\"a\":1,}" !! SyntaxError: Expected string key in JSON object
+reviver path "\"\\q\"" !! SyntaxError: Bad escape in JSON
+reviver path "[01]" !! SyntaxError: Expected ',' or ']' in JSON array
+reviver path "\"\\u00g0\"" !! SyntaxError: Bad \u escape in JSON
+reviver path "{\"a\":tru}" !! SyntaxError: Invalid literal in JSON
+reviver path escapes => ["8 c a d 9 2f 5c 22", "1f600", "dc00 d800", "e9"]
+reviver path empty containers => {o: {}, a: [], n: [[]]}
+reviver non-configurable delete => {a: 1, b: "locked"}
+reviver replaces with proxy => 2
+reviver holder is proxy-wrapped array => ["0", "1", "a", ""]
+reviver grafted array-like => {a: 1, b: [11, 21]}
+reviver not fn ignored => [1]
+deep nesting => 1000
+toStringTag => ["JSON", "isRawJSON parse rawJSON stringify"]

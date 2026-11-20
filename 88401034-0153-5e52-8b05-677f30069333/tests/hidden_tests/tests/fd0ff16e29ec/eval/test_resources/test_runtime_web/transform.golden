@@ -1,0 +1,19 @@
+ts start [object TransformStreamDefaultController] 1
+class [object TransformStream] true true
+flushed
+pipeThrough ALPHA| BETA!
+identity 1,2
+async transform 10,20
+pipeTo al/pha/ be/ta/CLOSED
+preventClose al/pha/ be/ta false
+dest aborted: src broke
+pipeTo rejected src broke
+preventAbort e2
+sink error sink broke
+TypeError pipeThrough expects { readable, writable }
+terminate {"value":"only","done":false} {"done":true}
+write after terminate TypeError: TransformStream terminated
+readable errored RangeError tx err
+async flush done {"value":"z","done":false}
+abort errors readable aborted!
+chained 4,6,6,4

@@ -1,0 +1,28 @@
+WeakMap ops => [true, 1, true, false, true, false, undefined, false, false]
+WeakMap symbol keys => [1, false]
+WeakMap registered symbol !! TypeError: Invalid value used as weak map key
+WeakMap primitive key !! TypeError: Invalid value used as weak map key
+WeakMap null key !! TypeError: Invalid value used as weak map key
+WeakSet ops => [true, true, true, false, false, true, false]
+WeakSet null !! TypeError: Invalid value used in weak set
+WeakSet registered symbol !! TypeError: Invalid value used in weak set
+WeakSet well-known symbol ok => true
+Weak tags => ["[object WeakMap]", "[object WeakSet]", "undefined", false]
+WeakMap wrong receiver !! TypeError: method called on incompatible receiver
+WeakRef => [true, "[object WeakRef]", true, "symbol"]
+WeakRef primitive !! TypeError: WeakRef target must be an object or symbol
+WeakRef registered symbol !! TypeError: WeakRef target must be an object or symbol
+WeakRef without new !! TypeError: WeakRef requires 'new'
+WeakRef deref wrong receiver !! TypeError: deref called on a non-WeakRef
+FinalizationRegistry => [undefined, true, false, false, "[object FinalizationRegistry]", undefined]
+register primitive target !! TypeError: target cannot be held weakly
+register target is held !! TypeError: target and held value must not be the same
+register bad token !! TypeError: unregister token cannot be held weakly
+register undefined token ok => undefined
+unregister bad token !! TypeError: unregister token cannot be held weakly
+bad cleanup callback !! TypeError: cleanup callback must be callable
+register wrong receiver !! TypeError: register called on a non-FinalizationRegistry
+unregister wrong receiver !! TypeError: unregister called on a non-FinalizationRegistry
+register symbol target and token => [undefined, true, false]
+FinalizationRegistry without new !! TypeError: FinalizationRegistry requires 'new'
+lengths => [1, 1, 2, 1]

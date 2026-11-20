@@ -1,0 +1,56 @@
+keys: ["2", "10", "4294967294", "b", "a", "-1", "01", "4294967295"]
+ownKeys: ["2", "10", "4294967294", "b", "a", "-1", "01", "4294967295", Symbol(s)]
+getOwnPropertyNames: ["2", "10", "4294967294", "b", "a", "-1", "01", "4294967295"]
+getOwnPropertySymbols: [Symbol(s)]
+values: [1, [2]]
+entries: [["0", "z"], ["x", 1]]
+entries-string: [["0", "h"], ["1", "i"]] | ["0", "1", "2"] | ["a", "b"]
+keys-array: ["0", "2"]
+keys-after-delete: ["1", "y", "z"]
+for-in: ["3", "own", "5", "inherited"]
+for-in-shadow: ["y"]
+fromEntries: {a: 3, b: 2} | {1: "one", [Symbol(s)]: "v"}
+fromEntries-bad: THROW TypeError: Object.fromEntries entry is not an object
+fromEntries-null: THROW TypeError: Object.fromEntries called on null or undefined
+fromEntries-gen: {k: "v", x: "y"}
+assign: {0: "x", 1: "y", z: 0, b: 1, a: 2, [Symbol(s)]: "s"}
+assign-order: ["ownKeys", "gopd:1", "get:1", "gopd:b", "get:b", "gopd:a", "get:a"]
+assign-readonly: THROW TypeError: Cannot assign to read only property 'ro'
+assign-to-null: THROW TypeError: Object.assign called on null or undefined
+assign-primitive-target: "object" | 1
+assign-setter: ["set 42"]
+assign-getter-src: {g: "computed"}
+assign-nonenum: {}
+hasOwn: true | false | true | true
+hasOwn-prim: THROW TypeError: Object.hasOwn called on non-object
+hasOwn-null: THROW TypeError: Object.hasOwn called on non-object
+hasOwnProperty: true | true | false
+hasOwnProperty-null: THROW TypeError: Object.prototype.hasOwnProperty called on null or undefined
+propertyIsEnumerable: true | false | true
+isPrototypeOf: true | false | false
+isPrototypeOf-null-this: THROW TypeError: Object.prototype.isPrototypeOf called on null or undefined
+is: true | false | true | false
+create: "hi bob" | ["n"] | true
+create-null: null | "undefined"
+create-bad: THROW TypeError: Object.create proto must be object or null
+create-bad-props: THROW TypeError: Property description must be an object
+getPrototypeOf-prim: true | true
+getPrototypeOf-null: THROW TypeError: called on null or undefined
+setPrototypeOf: null | 1
+setPrototypeOf-bad: THROW TypeError: Object prototype may only be an Object or null
+setPrototypeOf-undefined: THROW TypeError: Object.setPrototypeOf called on null or undefined
+setPrototypeOf-cycle: THROW TypeError: could not set prototype
+setPrototypeOf-nonext: THROW TypeError: could not set prototype
+setPrototypeOf-nonext-same: 1
+setPrototypeOf-ObjectProto: THROW TypeError: could not set prototype
+reflect-setProto: false | true
+__proto__-set: false | true | "function"
+__proto__-literal: null | ["__proto__"] | []
+__proto__-desc: ["get", "set", "enumerable", "configurable"]
+__proto__-cyclic: THROW TypeError: cyclic __proto__ value
+__proto__-getter-null: THROW TypeError: get __proto__ called on null or undefined
+__proto__-setter-undef: THROW TypeError: __proto__ set on null or undefined
+__proto__-setter-prim: undefined
+defineGetter: "got" | 5 | "function" | undefined | "function"
+defineGetter-nonfn: THROW TypeError: accessor must be a function
+defineGetter-frozen: THROW TypeError: cannot define accessor 'x'

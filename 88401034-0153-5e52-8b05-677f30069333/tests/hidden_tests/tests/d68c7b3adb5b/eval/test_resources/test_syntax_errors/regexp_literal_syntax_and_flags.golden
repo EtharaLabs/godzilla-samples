@@ -1,0 +1,33 @@
+# regexp literals
+"/abc" => SyntaxError: unterminated regular expression
+"/abc\n/" => SyntaxError: unterminated regular expression
+"/a[/" => SyntaxError: unterminated regular expression
+"/a\\" => SyntaxError: unterminated regular expression
+"/[/]/.test(\"/\")" => ok true
+"/\\//.source" => ok "\\/"
+"/a/gimsuyd.flags" => ok "dgimsuy"
+"/a/v.unicodeSets" => ok true
+"/[\\p{L}--[a-z]]/v.test(\"A\")" => ok true
+"/[[a-z]&&[aeiou]]/v.test(\"e\")" => ok true
+"/a/gg" => SyntaxError: duplicate regular expression flag g
+"/a/uv" => SyntaxError: the u and v regular expression flags are mutually exclusive
+"/a/z" => SyntaxError: invalid regular expression flag z
+"/(?<n>a)\\k<n>/.test(\"aa\")" => ok true
+"/\\k<n>/.test(\"k<n>\")" => ok true
+"/\\k<n>/u" => SyntaxError: invalid named back reference <n>
+"/(?<a>x)(?<a>y)/" => SyntaxError: duplicate group name a
+"/(?<a>x)|(?<a>y)/.test(\"y\")" => ok true
+"/a{2,1}/" => SyntaxError: numbers out of order in {} quantifier
+"/(?<=a)b/.test(\"ab\")" => ok true
+"/[z-a]/" => SyntaxError: range out of order in character class
+"/\\p{Nope}/u" => SyntaxError: invalid unicode property Nope
+"/\\u{110000}/u" => SyntaxError: invalid code point escape
+"/(/" => SyntaxError: expected ')' in pattern
+"/)/" => SyntaxError: unexpected character in pattern
+"/a**/" => SyntaxError: nothing to repeat
+"/\\c/u" => SyntaxError: invalid \c escape in unicode pattern
+"/[\\d-a]/u" => SyntaxError: invalid character class range
+"/\\1(a)/u.test(\"a\")" => ok true
+"/(?i:a)b/.test(\"Ab\")" => ok true
+"/(?i-i:a)/" => SyntaxError: inline modifier flag added and removed
+"/x/dg.hasIndices" => ok true

@@ -1,0 +1,10 @@
+instanceof true true 65536 data@100 hello, wasm
+js write seen by wasm 42 wasm write seen by js 42 same buffer true
+size 1 grow 1 size 2 len 131072 new buffer true kept 42
+grow past max -1 grow -1 -1 js grow 2 size 3 196608
+RangeError: WebAssembly.Memory.grow() failed
+copy/fill hehellowasm hello AAA
+RuntimeError: wasm: out of bounds memory.fill
+RuntimeError: wasm: out of bounds memory.copy
+standalone 0 0 65536
+beyond 4GiB RangeError: WebAssembly.Memory.grow() failed

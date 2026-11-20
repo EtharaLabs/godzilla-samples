@@ -1,0 +1,19 @@
+method/getter/setter/field/accessor contexts: method,m,false,false,get,function,:function | getter,g,false,false,get,function,:function | setter,g,false,false,set,function,:function | field,f,false,false,get/set,function,:undefined | accessor,a,false,false,get/set,function,:object | method,sm,true,false,get,function,:function | field,#pf,true,true,get/set,function,:undefined | method,#pm,false,true,get,function,:function | method,Symbol(sym),false,false,get,function,:function | getter,#sg,true,true,get,function,:function
+class decorator replaces class: base extra Orig 
+class decorator bad return: TypeError: decorator must return a function or undefined
+getter/setter decorators wrap: SET!
+getter decorator bad return: TypeError: decorator must return a function or undefined
+field decorator initializer transforms: 60 5 7
+field decorator bad return: TypeError: field decorator must return a function or undefined
+field decorator access: p changed p
+private field access get/set: via access via access
+accessor decorator get/set/init: got:101 got:10 got:102
+accessor decorator partial and undefined: init:x
+accessor decorator bad return: TypeError: accessor decorator must return an object or undefined
+private accessor decorator: #pa=7
+addInitializer order: static this=class, class this=class, defined, method this=instance, field this=instance, ctor body
+addInitializer non-callable: TypeError: addInitializer expects a callable
+decorator not callable: TypeError: decorator is not callable
+decorated static field this: xfunction
+decorator with member chain and call: T:m P:n
+accessor keyword without decorators: 10,2,3,function,function,0

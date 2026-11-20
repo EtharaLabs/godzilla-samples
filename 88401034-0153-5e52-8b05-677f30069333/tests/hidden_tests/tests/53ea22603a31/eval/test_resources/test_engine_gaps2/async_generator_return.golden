@@ -1,0 +1,21 @@
+return before start (fulfil): ok {"value":"R","done":true}
+return before start (reject): err RJ
+  body start
+  ag finally
+return at yield (reject): err at-yield
+after: ok {"done":true} ok {"value":"late","done":true} err late throw
+  body start
+  ag finally
+return at yield (fulfil): ok {"value":"v","done":true}
+  thenable then
+return thenable: ok {"value":"T","done":true}
+  body start
+  ag finally
+return on completed: ok {"value":"C","done":true} err C2
+  body start
+  ag finally
+queued: ok {"value":1,"done":false} | ok {"value":"Q","done":true} | ok {"done":true}
+receivers: err AsyncGenerator method called on an incompatible receiver err AsyncGenerator method called on an incompatible receiver err AsyncGenerator method called on an incompatible receiver
+  sync finally
+sync throw on completed: on completed
+sync return on completed: {"value":"rv","done":true}

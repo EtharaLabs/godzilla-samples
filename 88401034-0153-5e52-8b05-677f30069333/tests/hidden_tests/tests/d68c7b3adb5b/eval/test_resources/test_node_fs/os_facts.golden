@@ -1,0 +1,12 @@
+true true "\n" LE /dev/null
+true suite-host string true
+true string true
+true true ["model","speed","times"]
+IPv4 127.0.0.1 true, IPv6 ::1 true
+string true [0,0,0]
+after setPriority(19): 19 19 19
+TypeError ERR_INVALID_ARG_TYPE The "pid" argument must be of type number. Received string 
+TypeError ERR_INVALID_ARG_TYPE The "priority" argument must be of type number. Received string 
+RangeError ERR_OUT_OF_RANGE The value of "priority" is out of range. It must be >= -20 && <= 19. Received 20 
+Error ERR_SYSTEM_ERROR A system error occurred: uv_os_getpriority returned ESRCH (no such process) ESRCH
+Error ERR_SYSTEM_ERROR A system error occurred: uv_os_setpriority returned ESRCH (no such process) ESRCH

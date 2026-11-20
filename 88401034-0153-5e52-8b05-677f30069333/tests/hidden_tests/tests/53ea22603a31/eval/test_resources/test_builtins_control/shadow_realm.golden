@@ -1,0 +1,29 @@
+primitive => [3, "s1", undefined, null, 100000000000000000000n, "symbol"]
+global isolation => ["undefined", true, false]
+state persists => 1
+separate intrinsics => [undefined, 1]
+object result !! TypeError: only primitives and callables may cross a ShadowRealm boundary
+array result !! TypeError: only primitives and callables may cross a ShadowRealm boundary
+wrapped function => ["function", 42, "", 1, true, false]
+wrapped name/length => ["namedFn", 3]
+wrapped returns object !! TypeError: a wrapped function returned a non-primitive
+wrapped receives object !! TypeError: ShadowRealm wrapped function: arguments must be primitives or callables
+wrapped receives callable => 51
+wrapped throws !! TypeError: a wrapped function threw inside the ShadowRealm
+wrapped not constructible !! TypeError: object is not a constructor
+syntax error !! SyntaxError: unexpected token Eof
+syntax error class => [true, true]
+evaluation throws !! TypeError: ShadowRealm evaluate: the provided source threw an error
+evaluation throws primitive !! TypeError: ShadowRealm evaluate: the provided source threw an error
+error is outer TypeError => [true, "ShadowRealm evaluate: the provided source threw an error"]
+non-string source !! TypeError: ShadowRealm.prototype.evaluate expects a string
+without new !! TypeError: ShadowRealm constructor requires 'new'
+bad receiver !! TypeError: ShadowRealm.prototype.evaluate called on a non-ShadowRealm
+tag => ["[object ShadowRealm]", "function", 0]
+importValue bad export name !! TypeError: importValue exportName must be a string
+importValue bad receiver !! TypeError: ShadowRealm.prototype.importValue called on a non-ShadowRealm
+importValue missing module !! TypeError: module not found: ./does-not-exist.mjs
+strict directive per evaluation => ["number", "TypeError: ShadowRealm evaluate: the provided source threw an error", "undefined"]
+lexicals are per evaluation => [3, "undefined", "number", "number"]
+realm microtasks drained => "ran"
+two realms independent => [1, 100]

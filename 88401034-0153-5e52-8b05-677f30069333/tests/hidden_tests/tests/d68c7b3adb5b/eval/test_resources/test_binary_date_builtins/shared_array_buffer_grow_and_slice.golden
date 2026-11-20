@@ -1,0 +1,8 @@
+ctor: 4,false,4,true,6,[object SharedArrayBuffer],0,false
+ctor errors: TypeError:SharedArrayBuffer constructor requires 'new' | RangeError:Invalid SharedArrayBuffer length | RangeError:Invalid maxByteLength | RangeError:SharedArrayBuffer allocation too large | RangeError:SharedArrayBuffer allocation too large
+getters on non-shared: byteLength:requires a SharedArrayBuffer | growable:requires a SharedArrayBuffer | maxByteLength:requires a SharedArrayBuffer
+grow: 5,5,RangeError:SharedArrayBuffer grow out of range | RangeError:SharedArrayBuffer grow out of range | TypeError:SharedArrayBuffer is not growable | TypeError:not a SharedArrayBuffer | RangeError:SharedArrayBuffer grow out of range,5
+slice: true,4,2,3,4,5,2,0,6,2
+slice errors: TypeError:SharedArrayBuffer.prototype.slice requires a SharedArrayBuffer | TypeError:slice species did not create a SharedArrayBuffer | TypeError:slice species returned the same SharedArrayBuffer | TypeError:slice species buffer is too small | 5:8,7,6,0,0
+views alias: 255,255,255,255 -1 2
+transfer shared: TypeError: transfer requires a non-shared ArrayBuffer

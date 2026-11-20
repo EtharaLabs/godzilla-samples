@@ -1,0 +1,30 @@
+"{ import x from './ok.mjs'; }" -> SyntaxError: 'import' declaration may only appear at the top level of a module
+"if (1) import('./ok.mjs'); export const ok = 1;" -> ok keys=ok
+"import x from 5;" -> SyntaxError: expected a module specifier string
+"import x from './ok.json' with { type: 'json', type: 'json' };" -> SyntaxError: duplicate import attribute key 'type'
+"import { v } from './ok.mjs'\nassert({});" -> ReferenceError: assert is not defined
+"import { v as yield } from './ok.mjs';" -> SyntaxError: 'yield' cannot be used as a binding in strict mode
+"import { implements } from './ok.mjs';" -> SyntaxError: 'implements' cannot be used as a binding in strict mode
+"import { v a\\u0073 w } from './ok.mjs';" -> SyntaxError: 'as' must not contain escape sequences
+"export { v a\\u0073 w } from './ok.mjs';" -> SyntaxError: 'as' must not contain escape sequences
+"export { \"str\" };" -> SyntaxError: 'str' is a string literal and cannot be an exported local binding
+"export { v } fr\\u006fm './ok.mjs';" -> SyntaxError: 'from' must not contain escape sequences
+"export d\\u0065fault 1;" -> SyntaxError: keywords must not contain escape sequences
+"export async function af() {} export default 1;" -> ok keys=af,default default=1
+"let dup; var dup;" -> SyntaxError: Identifier 'dup' has already been declared
+"var vdup; let vdup;" -> SyntaxError: Identifier 'vdup' has already been declared
+"this.#x;" -> SyntaxError: Private name '#x' is not declared in an enclosing class
+"'\\u{110000}'" -> SyntaxError: undefined Unicode code-point
+"let s = 'unterminated" -> SyntaxError: unterminated string literal
+"<!-- html comment" -> SyntaxError: unexpected token Punct("<")
+"import.m\\u0065ta;" -> SyntaxError: 'import.meta' must not contain escape sequences
+"await 1; export const av = 'top-level await ok';" -> ok keys=av top-level await ok
+"using x = null; export const u = 'using at module top';" -> ok keys=u using at module top
+"export { undeclared };" -> SyntaxError: export 'undeclared' is not declared in the module
+"export default class { static nm = this.name; };" -> ok keys=default default=fn:default/default
+"export default (class { static nm = this.name; });" -> ok keys=default default=fn:default/default
+"import { v } from './ok.mjs'; var v;" -> SyntaxError: Identifier 'v' has already been declared
+"import source s from './ok.mjs';" -> SyntaxError: source-text modules have no module source
+"export * fr\\u006fm './ok.mjs';" -> SyntaxError: 'from' must not contain escape sequences
+"export * \\u0061s q from './ok.mjs';" -> SyntaxError: 'as' must not contain escape sequences
+"export default \\u0061sync function f() {}" -> SyntaxError: expected ';'

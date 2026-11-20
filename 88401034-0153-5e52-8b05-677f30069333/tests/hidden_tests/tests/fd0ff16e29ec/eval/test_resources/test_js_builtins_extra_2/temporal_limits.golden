@@ -1,0 +1,90 @@
+ym min-1 throws RangeError invalid year-month
+ym min -271821-04
+ym max +275760-09
+ym max+1 throws RangeError invalid year-month
+ym year over throws RangeError year-month is outside the supported range
+ym ctor over throws RangeError year-month is outside the supported range
+ym ctor under throws RangeError year-month is outside the supported range
+ym ctor year under throws RangeError year-month is outside the supported range
+ym add over throws RangeError date is outside the supported range
+ym str date out +275760-09
+ym str date in +275760-09
+ym until extreme throws RangeError date is outside the supported range
+ym until extreme round throws RangeError date is outside the supported range
+md str out 09-14
+md str in 12-25
+md str bad dash throws RangeError invalid month-day
+md str bad throws RangeError invalid month-day
+pd max add throws RangeError date is outside the supported range
+pd min sub throws RangeError date is outside the supported range
+pd with over throws RangeError date is outside the supported range
+pd toPDT over throws RangeError date-time is outside the representable range
+pd toPDT ok -271821-04-19T00:00:00.000000001
+pd toZDT over throws RangeError date-time is outside the representable range
+pd toZDT over2 throws RangeError instant is outside the representable range
+pdt from over throws RangeError date-time outside representable range
+pdt ctor over throws RangeError date-time is outside the representable range
+pdt add over throws RangeError date is outside the supported range
+pdt with over throws RangeError date-time is outside the representable range
+pdt withPlainTime over throws RangeError date-time is outside the representable range
+pdt round over throws RangeError date is outside the supported range
+pdt toString round over throws RangeError date-time is outside the representable range
+pdt withCalendar edge -271821-04-19T00:00:00.000000001[u-ca=gregory]
+pdt until over P547581Y4M24DT23H59M59.999999999S
+pdt until rounding big throws RangeError date is outside the supported range
+pt toPDT undefined
+zdt from over throws RangeError date-time is outside the representable range
+zdt from over2 throws RangeError instant is outside the representable range
+zdt with over throws RangeError instant is outside the representable range
+zdt with offset ignore over throws RangeError date-time is outside the representable range
+zdt withPlainTime over throws RangeError instant is outside the representable range
+zdt startOfDay edge -271821-04-20T00:00:00+00:00[UTC]
+zdt rel over throws RangeError date is outside the supported range
+zdt rel far 1
+dur ts second PT1S
+dur ts millisecond PT1.123S
+dur ts microsecond PT1.123456S
+dur ts nanosecond PT1.123456789S
+dur ts digits auto neg -PT1.5S
+dur ts round neg -PT1.99S
+dur parse trailing throws RangeError invalid duration
+dur parse trailing2 throws RangeError invalid duration
+dur compare huge 1
+dur compare huge2 1
+dur largest default PT5S,PT0.005S,PT0.000005S,PT0.000000005S
+dur round auto largest PT100S,PT100S,PT100S,PT100S
+dur round time overflow throws RangeError duration is outside the valid range
+dur total micro 1.5
+dur negated zero PT0S PT0S
+dur round incr days P7D
+dur round incr months P12M
+dur round incr years P9Y
+dur round incr weeks P9W
+dur round rel zdt dst P1M
+dur total rel zdt 1.3402777777777777
+dur total rel zdt week 3
+offset sec 60 throws RangeError invalid ZonedDateTime
+offset trailing throws RangeError invalid UTC offset: +01:00x
+offset sec ok throws RangeError offset does not match the time zone
+offset prefer mismatch 2020-01-01T00:00:00+01:00[Europe/Amsterdam]
+offset use 2019-12-31T20:00:00+01:00[Europe/Amsterdam]
+offset ignore gap 2020-03-29T01:30:00+01:00[Europe/Amsterdam]
+instant tz sec offset 1900-01-01T00:00:00+00:00
+instant tz sec offset2 1900-01-01T00:00:00+00:00[Europe/Amsterdam]
+instant tz sec offset round 1900-01-01T00:00:00+00:00[Europe/Amsterdam]
+instant from offset sec 2019-12-31T22:29:45Z
+instant from bad offset throws RangeError invalid Instant string
+tz equals utc true
+tz equals off/iana false
+zdt tz lower utc UTC
+zdt tz bad offset bracket throws RangeError unknown time zone: +01:00:30
+zdt getTimeZoneTransition 2020-10-25T02:00:00+01:00[Europe/Paris]
+zdt hoursInDay 23
+zdt round day dst 2020-03-29T00:00:00+01:00[Europe/Paris]
+zdt round day lord howe 2020-10-05T00:00:00+11:00[Australia/Lord_Howe]
+zdt round day samoa 2011-12-31T00:00:00+14:00[Pacific/Apia]
+zdt since round month throws RangeError offset does not match the time zone
+zdt until round days P30DT23H
+zdt until weeks P10W4D
+pdt until weeks P10W4D
+pd until weeks P11W

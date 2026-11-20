@@ -1,0 +1,35 @@
+[$&] | [abc]-def-ghi | abc-[def]-ghi | abc-[de]f-ghi
+[$`] | []-def-ghi | abc-[abc-]-ghi | abc-[abc-]f-ghi
+[$'] | [-def-ghi]-def-ghi | abc-[-ghi]-ghi | abc-[f-ghi]f-ghi
+[$$] | [$]-def-ghi | abc-[$]-ghi | abc-[$]f-ghi
+[$] | [$]-def-ghi | abc-[$]-ghi | abc-[$]f-ghi
+$ | $-def-ghi | abc-$-ghi | abc-$f-ghi
+[$0] | [$0]-def-ghi | abc-[$0]-ghi | abc-[$0]f-ghi
+[$1] | [a]-def-ghi | abc-[$1]-ghi | abc-[d]f-ghi
+[$2] | [b]-def-ghi | abc-[$2]-ghi | abc-[e]f-ghi
+[$3] | [c]-def-ghi | abc-[$3]-ghi | abc-[$3]f-ghi
+[$01] | [a]-def-ghi | abc-[$01]-ghi | abc-[d]f-ghi
+[$001] | [$001]-def-ghi | abc-[$001]-ghi | abc-[$001]f-ghi
+[$10] | [a0]-def-ghi | abc-[$10]-ghi | abc-[d0]f-ghi
+[$11] | [a1]-def-ghi | abc-[$11]-ghi | abc-[d1]f-ghi
+[$1$2] | [ab]-def-ghi | abc-[$1$2]-ghi | abc-[de]f-ghi
+[$<n>] | [c]-def-ghi | abc-[$<n>]-ghi | abc-[$<n>]f-ghi
+[$<x>] | []-def-ghi | abc-[$<x>]-ghi | abc-[$<x>]f-ghi
+[$<n] | [$<n]-def-ghi | abc-[$<n]-ghi | abc-[$<n]f-ghi
+[$<>] | []-def-ghi | abc-[$<>]-ghi | abc-[$<>]f-ghi
+[$x] | [$x]-def-ghi | abc-[$x]-ghi | abc-[$x]f-ghi
+[$$1] | [$1]-def-ghi | abc-[$1]-ghi | abc-[$1]f-ghi
+[$$$1] | [$a]-def-ghi | abc-[$$1]-ghi | abc-[$d]f-ghi
+[$&$&] | [abcabc]-def-ghi | abc-[defdef]-ghi | abc-[dede]f-ghi
+$`|$' | |-def-ghi-def-ghi | abc-abc-|-ghi-ghi | abc-abc-|f-ghif-ghi
+l|k|j|a|a3|a2|$00|i9|j0m
+$3|a0|b1|$9|b|$03cdefghijklm
+a[]c | a[]c | abbc | aacc
+aXXbXXc | -a-a-a- | aaa | $$ | a$<n>bXc
+caféé | abbc | a$<n>c | 02.01.2025
+two one | a$b$c | a++b | abcabc | abcabc
+[G]
+TypeError: cannot convert null to object | TypeError: cannot convert null to object | ok fn
+[7||xy]b
+[3|a|]
+ab_d

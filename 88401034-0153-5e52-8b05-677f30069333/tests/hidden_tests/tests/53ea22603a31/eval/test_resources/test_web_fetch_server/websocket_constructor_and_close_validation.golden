@@ -1,0 +1,20 @@
+no args THREW TypeError: WebSocket constructor requires a url
+bad url THREW SyntaxError: invalid WebSocket URL: not a url
+http scheme THREW SyntaxError: WebSocket URL scheme must be ws or wss, got 'http:'
+fragment THREW SyntaxError: WebSocket URL must not contain a fragment
+empty protocol THREW SyntaxError: invalid or duplicate WebSocket subprotocol
+duplicate protocol THREW SyntaxError: invalid or duplicate WebSocket subprotocol
+protocol with space THREW SyntaxError: invalid or duplicate WebSocket subprotocol
+0 1 2 3 null
+0 0 ws://127.0.0.1:PORT/x blob
+send while connecting THREW InvalidStateError: WebSocket is still CONNECTING
+binaryType nope THREW SyntaxError: binaryType must be 'blob' or 'arraybuffer'
+binaryType now arraybuffer
+close code 1001 THREW InvalidAccessError: close code must be 1000 or in 3000-4999
+close code 2999 THREW InvalidAccessError: close code must be 1000 or in 3000-4999
+close long reason THREW SyntaxError: close reason too long (>123 bytes)
+onerror error state=3
+error listener
+close 1006 "" false state=3
+send after close is silent undefined
+close after close undefined

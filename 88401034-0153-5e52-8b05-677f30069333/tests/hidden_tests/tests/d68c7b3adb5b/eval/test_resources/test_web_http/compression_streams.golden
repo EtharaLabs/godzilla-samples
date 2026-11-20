@@ -1,0 +1,11 @@
+deflate     inflates zlib-made vector: 114 "Hello, Hello, Hello! compression test "
+deflate-raw inflates zlib-made vector: 114 "Hello, Hello, Hello! compression test "
+gzip        inflates zlib-made vector: 114 "Hello, Hello, Hello! compression test "
+gzip        smaller: true header: 1f 8b method=8 roundtrip: true
+deflate     smaller: true header: cmf=78 check=true roundtrip: true
+deflate-raw smaller: true header: raw roundtrip: true
+gzip garbage: TypeError gzip: bad magic
+deflate garbage: TypeError zlib: unsupported compression method
+TypeError: Unsupported CompressionStream format: 'brotli'
+TypeError: Unsupported DecompressionStream format: 'zip'
+empty input gzip roundtrip: 0

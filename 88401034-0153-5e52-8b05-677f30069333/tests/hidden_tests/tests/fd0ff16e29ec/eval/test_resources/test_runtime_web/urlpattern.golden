@@ -1,0 +1,18 @@
+components * * /books/:id * *
+test true false false
+exec {"input":"/books/42","groups":{"id":"42"}} {"input":"x","groups":{}} {"input":"ex.com","groups":{}} ["https://ex.com/books/42?x#h"] {"input":"https","groups":{}}
+string pattern ["https","*.example.com","/api/:ver(v\\d+)/*","*","*","*"]
+groups {"0":"api"} {"0":"users/7","ver":"v2"}
+regex group false false
+optional group true true {"input":"/files/b","groups":{"name":"b"}}
+repeat group true false
+baseURL ["https","site.org","/users/:uid/posts/:pid"] {"uid":"u1","pid":"p9"}
+host mismatch false true
+anonymous groups {"0":"12","1":"","rest":"a"}
+hostname/search groups {"sub":"www"} {"term":"cats"}
+wildcard all true * null false
+full string ["u","pw","h.com","8080","/x","q=1","frag"]
+full match true false
+literal escaping true false
+protocol group true true false
+object exec inputs {"a":"1","b":"2"}

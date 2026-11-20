@@ -1,0 +1,17 @@
+caller is outer true
+caller top "function"
+fn.arguments live "1+2"
+fn.arguments idle null
+fn.arguments self "1:z"
+arrow caller "TypeError"
+method caller "TypeError"
+gen caller "TypeError"
+async caller "TypeError"
+strict fn caller "TypeError:'caller', 'callee', and 'arguments' may not be accessed on strict mode functions"
+recursive caller true
+caller via call true
+caller from native "function"
+dup params mapped "A1,A0,A1"
+dup3 "1,B,3|3"
+non-simple unmapped 2
+top-level caller true true

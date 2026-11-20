@@ -1,0 +1,21 @@
+rab 8/16/true/false [object ArrayBuffer]
+init 4 2 4 8 4 8 2 4
+grow 12/16/true/false 6 2 8 12 4 12 2 4 Uint8Array[1,2,3,4,5,6,7,8,0,0,0,0]
+shrink5 5/16/true/false 2 0 1 5 4 4 0 4 Uint8Array[5] Uint16Array[513,1027]
+shrink3 1 0 0 3 TypeError: DataView's buffer is detached or out of bounds 2 0 0 undefined TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: DataView's buffer is detached or out of bounds 3 RangeError: Offset is outside the bounds of the DataView
+oob-methods TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: TypedArray target is out of bounds TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray Uint16Array[] TypeError: TypedArray is out of bounds TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray
+regrow 8 2 12 16 4 16 2 4 Uint16Array[3,0]
+resize-errors RangeError: ArrayBuffer resize out of range RangeError: ArrayBuffer resize out of range TypeError: ArrayBuffer is not resizable undefined 0/16/true/false
+ctor-errors RangeError: maxByteLength is below the length RangeError: Invalid ArrayBuffer length RangeError: Invalid maxByteLength TypeError: ArrayBuffer constructor requires 'new' 4/4/false/false 2/2/false/false 3/9/true/false RangeError: ArrayBuffer allocation too large
+slice Uint8Array[30,40,50,60,70,80] Uint8Array[60,70,80] Uint8Array[20,30] 0 false false Uint8Array[10,20,30,40,50,60,70,80]
+transfer 0/0/true/true 6/32/true/false Uint8Array[1,2,3,4,5,6] 0 0 0 undefined TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: Cannot slice a detached ArrayBuffer TypeError: ArrayBuffer is detached TypeError: ArrayBuffer is detached
+transfer3 3/32/true/false Uint8Array[1,2,3]
+fixed5 5/5/false/false Uint8Array[1,2,3,0,0]
+zero 0/0/false/false RangeError: invalid transfer length RangeError: invalid transfer length
+detached-ctor TypeError: ArrayBuffer is detached TypeError: ArrayBuffer is detached TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray TypeError: ArrayBuffer is detached
+immutable true false 4 false
+imm-write 1 TypeError: Cannot write to an immutable ArrayBuffer TypeError: Cannot write to an immutable ArrayBuffer TypeError: Cannot write to an immutable ArrayBuffer TypeError: Cannot write to an immutable ArrayBuffer TypeError: Cannot write to an immutable ArrayBuffer TypeError: Cannot write to an immutable ArrayBuffer TypeError: ArrayBuffer is not resizable TypeError: an immutable ArrayBuffer is not detachable TypeError: cannot write into a view over an immutable ArrayBuffer TypeError: Atomics: cannot write into a view over an immutable ArrayBuffer
+imm-read Uint8Array[4,3,2,1] Uint8Array[4,3,2,1] Uint8Array[7,2,3,4] Uint8Array[2,3,4] 258 2
+sliceToImmutable true Uint8Array[8,7]
+isView true TypeError: not an ArrayBuffer TypeError: requires a non-shared ArrayBuffer
+species true TypeError: slice species buffer is too small Y3

@@ -1,0 +1,20 @@
+conjunction/long: a, b, c, and d ; x and y ; z ; ""
+es conjunction/long: uno, dos y tres ; uno y dos
+conjunction/short: a, b, c, & d ; x & y ; z ; ""
+es conjunction/short: uno, dos y tres ; uno y dos
+disjunction/long: a, b, c, or d ; x or y ; z ; ""
+es disjunction/long: uno, dos o tres ; uno o dos
+disjunction/short: a, b, c, or d ; x or y ; z ; ""
+es disjunction/short: uno, dos o tres ; uno o dos
+disjunction/narrow: a, b, c, or d ; x or y ; z ; ""
+es disjunction/narrow: uno, dos o tres ; uno o dos
+unit/long: a, b, c, d ; x, y ; z ; ""
+es unit/long: uno, dos y tres ; uno y dos
+unit/short: a, b, c, d ; x, y ; z ; ""
+es unit/short: uno, dos, tres ; uno y dos
+unit/narrow: a b c d ; x y ; z ; ""
+es unit/narrow: uno dos tres ; uno dos
+parts: element="red" literal=", " element="green" literal=", and " element="blue" || element="x" literal=" or " element="y" || element="1" literal=", " element="2" literal=" y " element="3"
+iterables: p, q, and r | a, b, and c | k | 
+resolved: {"locale":"ja","type":"unit","style":"narrow"} {"locale":"en","type":"conjunction","style":"long"} {"locale":"es-MX","type":"conjunction","style":"long"}
+errors: TypeError: Intl.ListFormat requires 'new' | RangeError: invalid type: x | RangeError: invalid style: x | TypeError: Intl.ListFormat list elements must be strings | TypeError: value is not iterable | TypeError: options must be an object or undefined | TypeError: method called on an incompatible receiver | TypeError: Intl.ListFormat list elements must be strings | RangeError: invalid localeMatcher: x

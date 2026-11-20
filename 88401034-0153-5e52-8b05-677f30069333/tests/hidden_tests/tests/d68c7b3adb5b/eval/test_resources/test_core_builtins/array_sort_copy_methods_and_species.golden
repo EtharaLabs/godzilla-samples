@@ -1,0 +1,30 @@
+sort: [1,10,2,3] ["a","b","c",,_] [3,2,1] [1,2,3] [1,2] ["b","d","a","c"]
+sort stability large: true 0 197
+sort comparator returns: [1,2,3] [3,2,1] [3,2,1]
+sort comparator throws: cmp [3,2,1]
+sort comparator bigint: TypeError: Cannot convert a BigInt value to a number
+sort toString throws: TypeError: ts
+sort mixed: [-1,10,9,"A",null,"a",false,null,true]
+sort symbols: TypeError: Cannot convert a Symbol value to a string
+sort length getter: len ab
+sort frozen: TypeError: cannot assign to read-only element 0
+sort bad comparator: TypeError: the comparator must be a function or undefined
+sort comparator undefined values: [1,3,,] true
+sort holes with proto: [1,3,"P",_]
+toSorted/toSpliced/with/toReversed: [1,2,3] [3,2,1] [3,1,2] [3,"a","b",2] [3,1,2] [3,1] [3,1,"z"] [3,,1] [1,] [1,"h",2] [3] ["only"]
+with RangeError: RangeError: invalid index
+with neg RangeError: RangeError: invalid index
+toSorted bad comparator: TypeError: comparator is not callable
+change-by-copy ignores species: false,false,false,false,true
+map species: true 2 [2,4] true true true true true true
+species null/undefined: true true
+species bad ctor: TypeError: Array @@species is not a constructor
+species non-constructor: object
+species arrow: TypeError: Array @@species is not a constructor
+species result non-writable: TypeError: cannot create data property
+species on non-array receiver ignored: true
+species cross-realm Array ctor: true 2
+splice species: 2 1 2 2
+slice species: 2 2 2
+concat spreadable getters: [0,"a","b"] spreadable?
+concat: [1,_,3,4,5,[6]] [1,2] ["s","t"]

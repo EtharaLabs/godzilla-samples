@@ -1,0 +1,24 @@
+5784 codes => M01,M02,M03,M04,M05,M05L,M06,M07,M08,M09,M10,M11,M12
+5783 codes => M01,M02,M03,M04,M05,M06,M07,M08,M09,M10,M11,M12
+5784 month lengths => 30,29,29,29,30,30,29,30,29,30,29,30,29
+year lengths => 385L,355,353,384L,355,383L,355,354
+M05L in 5784 => 2024-02-24
+M05L in 5783 constrain => 2023-03-08 M06
+M05L in 5783 reject => threw RangeError: leap month does not exist in this year
+M06 in 5784 => 2024-03-11 month=7
+month 13 in 5783 constrain => M12
+month 13 in 5783 reject => threw RangeError: month is out of range
+month 6 vs M06 disagree in leap year => threw RangeError: month and monthCode disagree
+Cheshvan 30 in short year => threw RangeError: day is out of range
+rosh hashanah 5785 => 2024-10-03
+from iso => 5784 8 M07 15 am 5784 30 383 13 true 221
+add 1 year from M05L => M06 2025-03-10
+add 1 year from M05L reject => threw RangeError: leap month does not exist in the target year
+add 1 month from M05 => M05L
+add 13 months => 5785 M01
+subtract months across leap => 5784 1 M01
+until months across leap => P13M
+until years => P4Y1M
+with monthCode M05L => 6
+with month 6 => M05L
+era am => 2023-09-16

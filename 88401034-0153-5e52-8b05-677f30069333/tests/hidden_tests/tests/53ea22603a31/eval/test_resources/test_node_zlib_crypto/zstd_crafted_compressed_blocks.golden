@@ -1,0 +1,40 @@
+rle_and_repeat_modes 31 "abcabcabcabczzzzzzzzzzzzzzzzzz!"
+two_byte_nseq_and_literal_formats 50 "RAW:0123456789012345901678901234567890123453456789"
+rle_literals_only 5000 "##################################################"
+raw_literals_fmt3_only 17 "twenty-bit header"
+err_reserved_seq_modes Error: zstd: reserved sequence mode bits set
+err_trailing_after_empty_seqs Error: zstd: trailing bytes after empty sequences section
+err_missing_seq_header Error: zstd: missing sequences section header
+err_rle_symbol_range Error: zstd: RLE sequence symbol out of range
+err_treeless_first Error: zstd: treeless literals without a previous Huffman table
+err_repeat_first Error: zstd: repeat mode without a previous sequence table
+err_offset_too_far Error: zstd: sequence offset too far back
+err_literals_overrun Error: zstd: sequence literals overrun
+err_missing_bitstream Error: zstd: missing sequences bitstream
+err_no_sentinel Error: zstd: bitstream missing sentinel bit
+err_not_consumed Error: zstd: sequences bitstream not fully consumed
+err_truncated_bitstream Error: zstd: truncated sequences bitstream
+repeat_offset_minus_one 16 "abcabcabcabcbcbd"
+err_invalid_repeat_offset Error: zstd: invalid repeat offset
+err_block_too_large Error: zstd: block regenerated size too large
+err_literals_too_large Error: zstd: literals section too large
+err_truncated_literals Error: zstd: truncated literals section
+err_truncated_seq_header Error: zstd: truncated sequences header
+err_truncated_seq_header2 Error: zstd: truncated sequences header
+err_missing_modes Error: zstd: missing sequence compression modes
+err_truncated_rle_table Error: zstd: truncated RLE sequence table
+huffman_direct_weights_then_treeless 7 "abbabab"
+huffman_four_streams 8 "aabbabba"
+huffman_three_symbols_with_sequence 15 "aabcabcabcabcab"
+huffman_5byte_header_16500 16500 "bababbbbaaabaaaaaaababaabaaaaaaaabbaaaaaaaaaaaabbb"
+err_huf_weight_too_large Error: zstd: Huffman weight too large
+err_huf_empty_table Error: zstd: empty Huffman table
+err_huf_code_too_long Error: zstd: Huffman code length too large
+err_huf_corrupted_weights Error: zstd: corrupted Huffman weights
+err_huf_truncated_weights Error: zstd: truncated Huffman weights
+err_huf_stream_overrun Error: zstd: Huffman stream overrun
+err_huf_not_consumed Error: zstd: Huffman stream not fully consumed
+err_huf_jump_table_short Error: zstd: truncated literals jump table
+err_huf_jump_table_exceeds Error: zstd: literals jump table exceeds section
+err_huf_fse_desc_truncated Error: zstd: truncated Huffman tree description
+err_huf_missing_tree Error: zstd: missing Huffman tree header

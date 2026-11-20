@@ -1,0 +1,32 @@
+join/toString: a-b--d custom join [object Object]
+map/filter/forEach skip holes: 0a,1b,3d ["A","B",null,"D"] ["a","b","d"]
+reduce/reduceRight: abd >dba
+reduce empty: TypeError: Reduce of empty array with no initial value
+indexOf/lastIndexOf/includes: 1,2,-1,true,true,4,1,-1
+length coercion: |p,q|r,s|v|0
+push/pop/shift/unshift on objects: c a {"0":"z","1":"y","2":"b","length":3}
+push past 2^53-1: TypeError: push would exceed the maximum array length
+pop on empty object sets length: undefined 0
+splice on object: [1,2] {"0":0,"1":"x","2":3,"3":4,"length":4}
+reverse with holes: {"0":"d","2":"b","3":"a","length":4}
+sort array-like with holes and undefined: {"0":"a","1":"b","2":"c","length":6} has3=true o3=undefined has4=false has5=false
+sort comparator: {"0":3,"1":2,"2":1,"length":3}
+sort bad comparator: TypeError: the comparator must be a function or undefined
+copyWithin/fill: {"0":"a","1":"b","2":"c","3":"a","4":"b","length":5} {"1":7,"2":7,"length":3}
+copyWithin deletes holes: {"0":"a","1":"a","3":"c","length":4}
+flat/flatMap on object: [1,2,[3],"x",4] [1,[10],2,[20]]
+flat depth edge cases: [1,2,3,4] [1,[2,[3,[4]]]] [1,2,[3,[4]]] [1,2]
+find/findLast/findIndex on strings: l,e,2,-1
+every/some visit only present: true visits=2 false
+concat spreadable: [0,"s0","s1",[9],"str"]
+slice/at/with/toSpliced on objects: ["b","c"] c ["z","b","c"] ["a","c"] ["c","b","a"] ["a","b"]
+with out of range: RangeError: invalid index
+entries/keys/values on object: [[0,"p"],[1,"q"]] 0,1 p,q
+Array.from array-like and iterables: [null,"mid",null] ["a0","😀1"] [[1,2]]
+Array.from on constructor this: true made=2 length=2 y
+Array.of on constructor: true 2
+null this: TypeError: Array.prototype method called on null or undefined
+non-callable callback: TypeError: Array.prototype.forEach callback is not callable
+callback mutation: 1,2
+lastIndexOf fromIndex: 2,-1,3,0
+join nullish elements: ,,,,0 1;2,3

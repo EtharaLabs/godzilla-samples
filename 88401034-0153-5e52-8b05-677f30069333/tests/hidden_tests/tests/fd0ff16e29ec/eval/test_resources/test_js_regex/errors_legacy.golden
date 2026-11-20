@@ -1,0 +1,61 @@
+"(" | SyntaxError: expected ')' in pattern
+")" | SyntaxError: unexpected character in pattern
+"a)" | SyntaxError: unexpected character in pattern
+"[" | SyntaxError: unterminated character class
+"[a" | SyntaxError: unterminated character class
+"\\" | SyntaxError: trailing backslash
+"a**" | SyntaxError: nothing to repeat
+"a+*" | SyntaxError: nothing to repeat
+"a??+" | SyntaxError: nothing to repeat
+"?" | SyntaxError: nothing to repeat
+"+a" | SyntaxError: nothing to repeat
+"a|*" | SyntaxError: nothing to repeat
+"{2}" | SyntaxError: nothing to repeat
+"x|{1,2}" | SyntaxError: nothing to repeat
+"a{3,2}" | SyntaxError: numbers out of order in {} quantifier
+"(?" | SyntaxError: unsupported group
+"(?x)" | SyntaxError: unsupported group
+"(?<" | SyntaxError: unterminated capture group name
+"(?<a" | SyntaxError: unterminated capture group name
+"(?<1a>x)" | SyntaxError: invalid capture group name <1a>
+"(?<a-b>x)" | SyntaxError: invalid capture group name <a-b>
+"(?<>x)" | SyntaxError: invalid capture group name <>
+"(?<\\x41>x)" | SyntaxError: invalid escape in capture group name
+"(?<a>x)(?<a>y)" | SyntaxError: duplicate group name a
+"(?<a>x)|(?<a>y)(?<a>z)" | SyntaxError: duplicate group name a
+"((?<a>x)|(?<a>y))(?<a>z)" | SyntaxError: duplicate group name a
+"(?<a>x)\\k<b>" | SyntaxError: invalid named back reference <b>
+"(?<a>x)\\k" | SyntaxError: expected '<' in named back reference
+"(?<a>x)\\k<a" | SyntaxError: unterminated capture group name
+"(?<=a)*" | SyntaxError: quantifier on an assertion
+"(?<!a){2}" | SyntaxError: quantifier on an assertion
+"(?<=a)?" | SyntaxError: quantifier on an assertion
+"[b-a]" | SyntaxError: range out of order in character class
+"[\\u0062-a]" | SyntaxError: range out of order in character class
+"(?:ab){1001}" | SyntaxError: repetition count too large
+"(?:ab){2,5000}" | SyntaxError: repetition count too large
+"(a){1001}" | SyntaxError: repetition count too large
+"(?i-i:a)" | SyntaxError: inline modifier flag added and removed
+"(?ii:a)" | SyntaxError: duplicate inline modifier flag
+"(?-:a)" | SyntaxError: empty inline modifier
+"(?i" | SyntaxError: invalid inline modifier
+"(?x:a)" | SyntaxError: unsupported group
+"(?-ii:a)" | SyntaxError: duplicate inline modifier flag
+"(?--i:a)" | SyntaxError: invalid inline modifier
+"(?i-m" | SyntaxError: invalid inline modifier
+"(?<\\ud835>.)" | SyntaxError: invalid capture group name <�>
+"[a-" | SyntaxError: unterminated character class
+"[\\" | SyntaxError: bad escape in class
+"(?<a>(?<a>x))" | SyntaxError: duplicate group name a
+"(?<a>x(?<a>y))" | SyntaxError: duplicate group name a
+"(?<\ud835>.)" | SyntaxError: invalid capture group name
+"(?<a\ud835>.)" | SyntaxError: invalid capture group name
+flags "gg" | SyntaxError: duplicate regular expression flag g
+flags "G" | SyntaxError: invalid regular expression flag G
+flags "uv" | SyntaxError: the u and v regular expression flags are mutually exclusive
+flags "x" | SyntaxError: invalid regular expression flag x
+flags " " | SyntaxError: invalid regular expression flag  
+flags "dgimsuyd" | SyntaxError: duplicate regular expression flag d
+flags "vu" | SyntaxError: the u and v regular expression flags are mutually exclusive
+flags "gimsuyvd" | SyntaxError: the u and v regular expression flags are mutually exclusive
+SyntaxError: numbers out of order in {} quantifier | SyntaxError: duplicate group name n | SyntaxError: duplicate regular expression flag g

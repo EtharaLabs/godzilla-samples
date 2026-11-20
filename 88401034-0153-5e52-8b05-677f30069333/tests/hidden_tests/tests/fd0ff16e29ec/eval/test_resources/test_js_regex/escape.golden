@@ -1,0 +1,11 @@
+\x66oo\.bar\*baz | \x31abc | \x41bc | _x | \x61\x20b\tc\n
+\x2c\x2d\x3d\x3c\x3e\x23\x26\x21\x25\x3a\x3b\x40\x7e\x27\x60\x22 | \^\$\\\.\*\+\?\(\)\[\]\{\}\|\/ | \v\f\r
+\xa0\u2028\u2029\ufeff\u3000z | 😀é | \ud800x\udfff | "" | \x39 | éa
+TypeError: RegExp.escape requires a string | TypeError: RegExp.escape requires a string | TypeError: RegExp.escape requires a string
+"a.b|c" | true | false | true
+"(x)[y]{z}" | true | false | true
+"a\nb" | true | false | true
+"^$" | true | false | true
+"-😀-" | true | false | true
+"x/y" | true | false | true
+1 | escape | function

@@ -1,0 +1,14 @@
+subclass basics => [true, true, 3, 6, 9, 3]
+species-created => ["MyA", "MyA", "MyA", "MyA", "MyA", "MyA", "MyA"]
+not species-created => ["Array", "Array", "Array", "Array"]
+species null => [2, 4]
+constructor undefined => [2, 4]
+constructor primitive !! TypeError: Array @@species is not a constructor
+species not ctor !! TypeError: Array @@species is not a constructor
+species custom => {0: 3, 1: 6, created: 2}
+species non-writable result !! TypeError: cannot create data property
+species length arg => [4, 0, 2, 1]
+cross-type species => [false, true]
+Array[Symbol.species] => [true, true]
+length property of subclass => [6, true]
+extends null proto array => [true, [2, 3]]

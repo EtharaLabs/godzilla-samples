@@ -1,0 +1,51 @@
+all: [1, 2, 3, 4]
+all-empty: []
+all-reject: "first-reject"
+allSettled: [{status: "fulfilled", value: 1}, {status: "rejected", reason: "no"}, {status: "fulfilled", value: "late"}]
+any: "fast"
+any-all-reject: "AggregateError" | "" | ["a", "b"] | true
+any-empty: "AggregateError" | "" | []
+race: "fast"
+race-reject: "fast-reject"
+race-empty-pending: false
+noniter all TypeError: value is not iterable
+noniter allSettled TypeError: value is not iterable
+noniter any TypeError: value is not iterable
+noniter race TypeError: value is not iterable
+resolve-not-callable: "TypeError" | "Promise combinator: this.resolve is not callable" | []
+withResolvers: ["promise", "resolve", "reject"] | true | "function" | "function"
+withResolvers-value: "wr-value"
+try-sync: "sync result"
+try-args: 5
+try-throw: "TypeError" | "thrown in try"
+try-returns-promise: "inner"
+finally-pass: "kept"
+finally-reject-pass: "orig"
+finally-throw: "from finally"
+finally-returns-rejected: "finally-rejected"
+finally-log: ["f1", "f2"]
+finally-noncallable: "nc"
+self-resolve: "TypeError" | "Chaining cycle detected for promise"
+thenable-throw-after: "first"
+thenable-throws: "thenable threw"
+then-getter-throws: "then getter"
+resolve-identity: true | false | false | false
+subclass: true | true | true | true | true
+subclass-value: 10
+no-new: "TypeError" | "Promise constructor requires 'new'"
+bad-executor: "TypeError" | "Promise resolver is not a function"
+then-bad-this: "TypeError" | "Promise.prototype.then called on a non-Promise"
+resolve-bad-this: "TypeError" | "Promise.resolve called on a non-object"
+reject-bad-this: "TypeError" | "Promise.reject called on a non-object"
+withResolvers-bad-this: "TypeError" | "Promise.withResolvers called on a non-object"
+try-bad-this: "TypeError" | "Promise.try called on a non-object"
+finally-bad-this: "TypeError" | "Promise.prototype.finally on non-object"
+capability-noncallable: "TypeError" | "promise capability functions are not callable"
+capability-twice: "TypeError" | "promise capability executor already invoked"
+then-noncallable-args: "passthrough" | "caught r"
+tags: "[object Promise]" | "Promise" | 1 | 2 | 1
+species: true
+allKeyed: {a: 1, b: 2, [Symbol(s)]: 3}
+allSettledKeyed: {ok: {status: "fulfilled", value: 1}, bad: {status: "rejected", reason: "x"}}
+allKeyed-bad: "TypeError" | "argument must be an object"
+allKeyed-reject: "kr"

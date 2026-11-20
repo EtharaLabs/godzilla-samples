@@ -1,0 +1,45 @@
+decl: function decl(a, b /* c */) { return a + b; }
+expr: function named(x) { return x; } | function () {}
+arrows: (a, b) => a * b | x => x | async (x) => x
+async/gen: async function af() { await 1; } | function* gen() { yield 1; } | async function* agen() {}
+class: class Empty {} | class Derived extends K {}
+class full: class K { constructor(v) { this.v = v; } method() { return 1; } static st() {} get g() { return 1; } set g(v) {} *gm() {} async am() {} async *agm() {} ['comp' + 'uted']() {} #priv() {} static #sp() {} }
+class expression: class Named { x = 1; } | class {} | Named | D
+class methods: method() { return 1; } | st() {} | get g() { return 1; } | set g(v) {} | *gm() {} | async am() {} | async *agm() {} | ['comp' + 'uted']() {}
+object methods: m() {} | get acc() { return 1; } | set acc(v) {} | [Symbol.iterator]() {} | 'quoted key'() {} | 42() {} | function () {} | () => 1
+natives: function max() { [native code] } | function push() { [native code] } | function get size() { [native code] } | function Symbol() { [native code] } | function () { [native code] } | function get flags() { [native code] } | function values() { [native code] } | function [Symbol.toPrimitive]() { [native code] }
+bound: function () { [native code] } | function () { [native code] } | function () { [native code] }
+proxy: function () { [native code] } | function () { [native code] }
+new Function: function anonymous(a,b
+) {
+return a + b
+} | function anonymous(
+) {
+
+} | function anonymous(a,b,c
+) {
+
+} | function anonymous(/* x */ a = 1, ...rest
+) {
+// body
+return rest
+}
+GeneratorFunction ctors: GeneratorFunction | AsyncFunction | AsyncGeneratorFunction | function* anonymous(a
+) {
+yield a; yield a * 2
+} | 5 | 10 | async function anonymous(x
+) {
+return await x
+} | async function* anonymous(
+) {
+yield 1
+} | true | object | 1 | true
+toString non-function: TypeError: Function.prototype.toString requires that 'this' be a function
+toString callable proxy object: TypeError: Function.prototype.toString requires that 'this' be a function
+toString comments preserved: function /* a */ weird /* b */ ( /* c */ ) /* d */ { /* e */ }
+getter/setter toString with odd names: get 'a b'() { return 1; } | set [Symbol.for('s')](v) {} | get 0x10() { return 2; } | get() { return 'method named get'; } | function () {}
+names: decl,named,anon,arrow,K,method,get acc,set acc,[Symbol.iterator],42,quoted key,bound decl,bound bound decl,bound ,anonymous,[Symbol.toPrimitive],get g,false
+name inference: ["a","b","c","d","e1","[sym]","","f","g","h",""]
+name descriptors: false,false,true,true,true,["length","name","prototype"]
+length/name descriptors: 1,1,2,false,true,2,0
+prototype properties: object,undefined,undefined,object,object,undefined,undefined,undefined,false,true

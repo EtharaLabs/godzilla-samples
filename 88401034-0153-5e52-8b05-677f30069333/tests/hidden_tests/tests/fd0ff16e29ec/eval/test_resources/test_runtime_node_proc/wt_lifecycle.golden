@@ -1,0 +1,26 @@
+env data {"mode":"test"}
+A message:[false,"wd",{"mode":"test"},["a1","2"],"v","undefined"] | exit:0
+B error:TypeError:worker threw | exit:1
+C message:"before" | exit:7
+D error:RangeError:rej in worker | exit:1
+E message:"late" | exit:0
+F error:Error:String: plain string | exit:1
+G message:"undefined" | exit:0
+H message:1 | exit:0
+I error:SyntaxError:named | exit:1
+env cleared undefined
+terminated exit 1
+terminate resolved 1 1
+receive {"message":{"q":1}} {"message":"second"} undefined
+receive bad TypeError receiveMessageOnPort expects a MessagePort
+relative TypeError The worker script or module filename must be an absolute path or a relative path starting with './' or '../'. Received "w.js"
+share env worker_threads SHARE_ENV is not supported in lumen (realms snapshot the environment)
+stdout opt worker_threads option 'stdout' is not supported in lumen (workers share the process stdio)
+workerData clone DataCloneError
+untransferable undefined false
+transfer worker_threads transferList is not supported in lumen (messages are always copied)
+clone fn DataCloneError value could not be cloned
+unref true true
+heap worker.getHeapSnapshot is not supported in lumen
+w2 42
+w2 exit 0

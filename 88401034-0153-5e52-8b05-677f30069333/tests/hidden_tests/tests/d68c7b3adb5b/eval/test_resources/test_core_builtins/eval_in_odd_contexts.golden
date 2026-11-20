@@ -1,0 +1,45 @@
+completion values: 2,3,undefined,4,10,5,6,8,undefined,undefined,undefined,undefined,undefined,undefined,undefined,3,11,undefined,2
+non-string eval: 5,true,,,symbol,true
+direct eval sees locals: L undefined
+direct eval var leaks into function: number
+direct eval let does not leak: undefined
+strict direct eval var isolation: undefined
+eval in strict string: undefined
+eval in parameter default: 7 number
+eval arguments in parameter default: 1
+eval in arrow sees outer this: true
+eval new.target: true,false
+eval new.target in global: SyntaxError: new.target is only valid inside a function
+eval super property in method: base+derived
+eval super in function-valued property: SyntaxError: 'super' keyword unexpected here
+eval super call in derived constructor: A!
+eval super outside method: SyntaxError: 'super' keyword unexpected here
+eval in class field initializer: SyntaxError
+eval in class field initializer ok: C
+eval in static block: 6
+eval var conflicts with let: SyntaxError
+eval var in block conflicts: SyntaxError
+eval function declaration hoists: h
+eval in with: from with
+eval var in with binds to function: number false
+eval arguments assignment sloppy: 5
+eval delete var: true undefined
+indirect eval global var: true
+indirect eval this: true
+indirect forms: undefined,undefined,undefined,undefined,undefined
+eval syntax errors: (=SyntaxError | return 1=SyntaxError | break=SyntaxError | continue=SyntaxError | let let = 1=SyntaxError | var a; let a;=SyntaxError | new.target=ok | yield 1=SyntaxError | }=SyntaxError | /a/gg=SyntaxError | "\u{110000}"=SyntaxError | a => {=SyntaxError | 1 = 2=SyntaxError | super()=SyntaxError
+eval returns function: fn named
+nested eval: outermid
+eval string with BOM and line terminators: 3
+eval in generator: 42
+eval yield as identifier sloppy: 3
+eval await as identifier: 4
+eval in async function: pending
+eval let shadow and TDZ: inner outer
+eval TDZ: ReferenceError
+eval global let collision: no error
+eval global function non-configurable conflict: TypeError
+eval var undefined global: ok undefined
+eval html comments: 3
+eval html close comment: 7
+Function in eval: undefined

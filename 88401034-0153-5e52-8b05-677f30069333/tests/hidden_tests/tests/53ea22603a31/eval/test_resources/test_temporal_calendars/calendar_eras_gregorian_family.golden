@@ -1,0 +1,35 @@
+0000-06-01 gregory => 0 bce 1
+-000100-06-01 gregory => -100 bce 101
+2019-04-30 japanese => 2019 heisei 31
+2019-05-01 japanese => 2019 reiwa 1
+1989-01-07 japanese => 1989 showa 64
+1989-01-08 japanese => 1989 heisei 1
+1926-12-25 japanese => 1926 showa 1
+1912-07-30 japanese => 1912 taisho 1
+1873-01-01 japanese => 1873 meiji 6
+1872-12-31 japanese => 1872 ce 1872
+1911-06-01 roc => 0 broc 1
+1912-01-01 roc => 1 roc 1
+0001-01-01 buddhist => 544 be 544
+gregory bce bag => 0000-01-01[u-ca=gregory]
+gregory bc alias => -000009-01-01[u-ca=gregory]
+gregory ad alias => 2000-01-01[u-ca=gregory]
+gregory era + matching year => 2000-01-01[u-ca=gregory]
+gregory era + mismatching year => threw RangeError: year and era/eraYear disagree
+gregory era without eraYear => threw TypeError: missing field 'year'
+gregory eraYear without era => threw TypeError: missing field 'year'
+gregory unknown era => threw RangeError: xyz is not a valid era in calendar gregory
+japanese heisei 31 => 2019-04-30[u-ca=japanese]
+japanese reiwa 1 => 2019-05-01[u-ca=japanese]
+japanese showa 64 => 1989-01-07[u-ca=japanese]
+japanese meiji => 1873-01-01[u-ca=japanese]
+japanese year only => 2
+buddhist be => 2024-01-01[u-ca=buddhist]
+buddhist year => 2024-01-01[u-ca=buddhist]
+roc broc => 1911-01-01[u-ca=roc]
+roc minguo => 2024-01-01[u-ca=roc]
+roc year => 2024-01-01[u-ca=roc]
+iso8601 ignores era fields => 2024-01-01
+with era => 1989-05-05[u-ca=japanese]
+with eraYear only => threw TypeError: era and eraYear must both be provided
+with era and year => threw TypeError: eraYear and year are mutually exclusive

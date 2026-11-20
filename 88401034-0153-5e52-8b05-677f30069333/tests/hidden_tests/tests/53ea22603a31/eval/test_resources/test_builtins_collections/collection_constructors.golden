@@ -1,0 +1,20 @@
+Map from iterables => [Map{1 => "a", 2 => undefined}, Map{"k" => "v"}, Map{}, Map{}, Map{}]
+Set from string => Set{"a", "😀"}
+Map entry not object !! TypeError: iterator value is not an entry object
+Map entry string !! TypeError: iterator value is not an entry object
+Map entry array-like => Map{"k" => "v"}
+Map without new !! TypeError: Constructor requires 'new'
+Set without new !! TypeError: Constructor requires 'new'
+not iterable !! TypeError: value is not iterable
+object not iterable !! TypeError: value is not iterable
+adder override used => [0, [10, 20], 2]
+adder not callable !! TypeError: adder is not callable
+adder not looked up for empty => [0, 0]
+closes iterator on bad entry => ["iterator value is not an entry object", true]
+subclass => [Map{1 => 2}, true]
+species => [true, true, "get [Symbol.species]"]
+WeakMap ctor => ["v", false]
+WeakMap bad entry key !! TypeError: Invalid value used as weak map key
+WeakSet ctor => true
+WeakSet bad value !! TypeError: Invalid value used in weak set
+lengths => [0, 0, 0, 0, "Map"]

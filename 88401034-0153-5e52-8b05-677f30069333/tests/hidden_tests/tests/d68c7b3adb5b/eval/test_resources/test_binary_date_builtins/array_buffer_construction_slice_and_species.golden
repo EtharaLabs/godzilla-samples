@@ -1,0 +1,10 @@
+ctor errors: TypeError:ArrayBuffer constructor requires 'new' | RangeError:Invalid ArrayBuffer length | RangeError:Invalid ArrayBuffer length | RangeError:Invalid maxByteLength | RangeError:maxByteLength is below the length | RangeError:ArrayBuffer allocation too large | RangeError:ArrayBuffer allocation too large | RangeError:maxByteLength is below the length
+ctor coercion: 3,0,2,false,2,true,0,false,0
+isView: true,true,false,false,false,false
+slice: 3,4,5,6 | 6,7,8 | 0 | 8 | 7 | 8
+slice species errors: TypeError:slice species did not create an ArrayBuffer | TypeError:slice species returned a SharedArrayBuffer | TypeError:slice species returned a detached ArrayBuffer | TypeError:slice species returned an immutable buffer | TypeError:slice species buffer is too small | 8
+slice species same buffer: TypeError: slice species returned the same ArrayBuffer
+slice detaches source: TypeError: source ArrayBuffer was detached during slice
+slice receivers: TypeError:ArrayBuffer.prototype.slice requires an ArrayBuffer | TypeError:requires a non-shared ArrayBuffer | TypeError:Cannot slice a detached ArrayBuffer
+subclass: B3,B2,true,[object ArrayBuffer]
+getters on non-buffer: byteLength:TypeError maxByteLength:TypeError resizable:TypeError detached:TypeError

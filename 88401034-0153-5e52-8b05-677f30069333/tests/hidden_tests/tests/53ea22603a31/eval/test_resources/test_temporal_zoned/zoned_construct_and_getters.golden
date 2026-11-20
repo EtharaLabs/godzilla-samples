@@ -1,0 +1,27 @@
+ctor => 1969-12-31T19:00:00-05:00[America/New_York]
+ctor number => threw TypeError: Cannot convert a Number to a BigInt
+ctor calendar => 1970-01-01T00:00:00+00:00[UTC][u-ca=japanese]
+ctor bad calendar => threw RangeError: invalid calendar identifier
+ctor calendar number => threw TypeError: calendar must be a string
+ctor bad zone => threw RangeError: invalid time zone identifier
+ctor zone number => threw TypeError: time zone must be a string
+ctor zone missing => threw TypeError: missing timeZone
+ctor lowercase zone => Europe/Paris
+ctor alias zone => Asia/Calcutta
+ctor utc alias => Etc/UTC UTC Etc/GMT
+ctor Etc/GMT+5 => 1969-12-31T19:00:00-05:00[Etc/GMT+5]
+ctor offset zone => +05:30
+ctor offset zone basic => -08:00
+ctor offset zone seconds => threw RangeError: invalid time zone identifier
+ctor offset zone hours => +05:00
+ctor iso string zone => threw RangeError: invalid time zone identifier
+ctor out of range => threw RangeError: instant is outside the representable range
+date getters => 2024 7 M07 4 4 186 27 2024 7 31 366 12 true undefined
+time getters => 15 16 17 123 456 789
+epoch getters => 1720120577123 1720120577123456789 -14400000000000 -04:00 America/New_York iso8601 24
+kolkata offset => +05:30
+kathmandu offset => 20700000000000
+LMT offset => 1800-01-01T00:00:00-00:01[Europe/London] -75000000000
+valueOf => threw TypeError: Temporal.ZonedDateTime has no valueOf; use compare
+toJSON => 2024-07-04T15:16:17.123456789-04:00[America/New_York]
+conversions => 2024-07-04T19:16:17.123456789Z | 2024-07-04 | 15:16:17.123456789 | 2024-07-04T15:16:17.123456789

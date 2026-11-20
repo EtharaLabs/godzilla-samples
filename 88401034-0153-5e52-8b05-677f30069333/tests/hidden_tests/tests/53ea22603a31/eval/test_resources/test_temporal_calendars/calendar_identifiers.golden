@@ -1,0 +1,36 @@
+"iso8601" => iso8601
+"ISO8601" => iso8601
+"gregory" => gregory
+"japanese" => japanese
+"buddhist" => buddhist
+"roc" => roc
+"islamic-umalqura" => islamic-umalqura
+"islamic-civil" => islamic-civil
+"islamic-tbla" => islamic-tbla
+"islamicc" => islamic-civil
+"hebrew" => hebrew
+"chinese" => chinese
+"dangi" => dangi
+"persian" => persian
+"indian" => indian
+"ethiopic" => ethiopic
+"ethioaa" => ethioaa
+"ethiopic-amete-alem" => ethioaa
+"coptic" => coptic
+"Hebrew" => hebrew
+"islamic" => threw RangeError: invalid calendar identifier
+"islamic-rgsa" => threw RangeError: invalid calendar identifier
+"gregorian" => gregory
+"iso-8601" => threw RangeError: invalid calendar identifier
+"" => threw RangeError: invalid calendar identifier
+from string calendar => coptic
+from string without annotation => iso8601
+from Temporal object => persian
+from ZonedDateTime => indian
+annotation case => hebrew
+annotation bogus => threw RangeError: unsupported calendar
+annotation islamic => threw RangeError: unsupported calendar
+toString hebrew => 2024-03-11[u-ca=hebrew]
+toJSON chinese => 2024-03-11
+PlainDateTime with calendar => 2024-03-11T10:00:00[u-ca=roc]
+equals across calendars => false 0

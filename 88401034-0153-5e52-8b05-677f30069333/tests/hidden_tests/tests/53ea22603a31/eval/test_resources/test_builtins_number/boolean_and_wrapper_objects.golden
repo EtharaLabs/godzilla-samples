@@ -1,0 +1,13 @@
+Boolean() => [false, false, false, false, false, true, true, false, false, true, true, false, true, true]
+new Boolean(false) => ["object", true, true, false, "false", "false", "[object Boolean]", true, "truthy"]
+toString/valueOf => ["true", false, "true", false, "[object Boolean]"]
+toString bad receiver !! TypeError: Boolean method called on incompatible receiver
+valueOf bad receiver !! TypeError: Boolean method called on incompatible receiver
+Boolean shape => [1, "Boolean", "constructor toString valueOf"]
+subclass => [false, true, "B", "[object Boolean]"]
+Symbol valueOf bad receiver !! TypeError: Symbol method called on incompatible receiver
+Symbol valueOf boxed => "symbol"
+Number valueOf boxed => [3, "ff"]
+wrapper typeof => ["object", "object", "object", "object", "object"]
+wrapper equality => [true, false, true, true, false]
+logical operators => ["a", "", "c", 0, true, true, null, "undefined"]

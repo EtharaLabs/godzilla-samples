@@ -1,0 +1,34 @@
+ctor bad executor !! TypeError: Promise resolver is not a function
+ctor without new !! TypeError: Promise constructor requires 'new'
+resolve functions => [1, "", 1, false]
+resolve twice => 1
+executor throws after resolve => "first"
+executor throws !! RangeError: exec
+self resolution !! TypeError: Chaining cycle detected for promise
+Promise.resolve non-object this !! TypeError: Promise.resolve called on a non-object
+Promise.reject non-ctor this !! TypeError: NewPromiseCapability: receiver is not a constructor
+then on non-promise !! TypeError: Promise.prototype.then called on a non-Promise
+resolve identity => [true, false]
+then non-callable args => 7
+catch passthrough => "got 8"
+catch calls then => ["then result", ["undefined", "function"]]
+finally value passthrough => 1
+finally throw overrides !! Error: fin
+finally reject passthrough => "reason 2"
+finally waits for promise => ["inner", "outer"]
+finally non-callable => 4
+then getter throws !! Error: then getter threw
+withResolvers => ["wr", "function", ["promise", "resolve", "reject"]]
+withResolvers non-ctor !! TypeError: NewPromiseCapability: receiver is not a constructor
+try sync value => 3
+try throws !! Error: t
+try returns promise => "inner"
+try is async => ["callback ran", "after try"]
+subclass => [true, true, true, true, true, false]
+species override => [false, true]
+then with non-promise species => [true, false, ["resolve 10"], 10]
+capability functions not callable => ["all: promise capability functions are not callable", "allSettled: promise capability functions are not callable", "any: promise capability functions are not callable", "race: promise capability functions are not callable", "resolve: promise capability functions are not callable", "reject: promise capability functions are not callable", "withResolvers: promise capability functions are not callable"]
+capability executor called twice !! TypeError: promise capability executor already invoked
+combinator on undefined this !! TypeError: NewPromiseCapability: receiver is not a constructor
+proto keys => ["then", "catch", "finally", "constructor", "Symbol(Symbol.toStringTag)"]
+tags => ["[object Promise]", "Promise", 1, 2, 1]

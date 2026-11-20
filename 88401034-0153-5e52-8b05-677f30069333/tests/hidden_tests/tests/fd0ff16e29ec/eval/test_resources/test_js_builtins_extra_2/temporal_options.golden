@@ -1,0 +1,121 @@
+zdt ctor no tz throws TypeError missing timeZone
+zdt ctor tz num throws TypeError time zone must be a string
+zdt ctor bad tz throws RangeError invalid time zone identifier
+zdt ctor bad cal throws RangeError invalid calendar identifier
+zdt ctor cal num throws TypeError calendar must be a string
+zdt ctor cal alias 1970-01-01T05:30:00+05:30[+05:30]
+zdt toLocaleString bad recv throws TypeError not an object
+zdt from bad disamb throws RangeError invalid disambiguation: bogus
+zdt from bad offset opt throws RangeError invalid offset: bogus
+zdt with bad disamb throws RangeError invalid disambiguation: bogus
+zdt with bad offset opt throws RangeError invalid offset: bogus
+zdt with bad offset throws RangeError invalid UTC offset: bogus
+zdt with offset use 2020-03-14T23:20:30+01:00[Europe/Paris]
+zdt with offset reject throws RangeError offset does not match the time zone
+zdt toString bad calendarName throws RangeError invalid calendarName: bogus
+zdt toString bad offset throws RangeError invalid offset: bogus
+zdt toString bad tzName throws RangeError invalid timeZoneName: bogus
+zdt toString critical 2020-03-15T10:20:30+01:00[!Europe/Paris][!u-ca=japanese]
+zdt round bad mode throws RangeError invalid roundingMode
+pdt toZDT bad disamb throws RangeError invalid disambiguation: bogus
+pdt toZDT over throws RangeError instant is outside the representable range
+pdt toZDT over west throws RangeError instant is outside the representable range
+pdt add reject throws RangeError date day out of range
+pdt add bad overflow throws RangeError invalid overflow (bogus)
+pdt round floor over throws RangeError date-time is outside the representable range
+pdt from bad cal throws RangeError unsupported calendar
+pdt from bag over throws RangeError date-time outside representable range
+pdt until bogus largest throws RangeError invalid largestUnit
+pdt until small>large throws RangeError smallestUnit is larger than largestUnit
+ym from far nonISO throws RangeError date outside representable range
+md from far nonISO throws RangeError date outside representable range
+md with day reject throws RangeError day out of range
+md with day 0 throws RangeError day must be positive
+md toPlainDate far throws RangeError date is outside the supported range
+md gregory far year throws RangeError date is outside the supported range
+chinese md M01L reject throws RangeError invalid monthCode for this calendar
+chinese md M01L 1970-03-07[u-ca=chinese]
+chinese md M02L reject throws RangeError invalid monthCode for this calendar
+chinese md M02L 1972-04-13[u-ca=chinese]
+chinese md M11L reject throws RangeError invalid monthCode for this calendar
+chinese md M11L 1970-01-07[u-ca=chinese]
+chinese md M12L reject throws RangeError invalid monthCode for this calendar
+chinese md M12L 1972-02-14[u-ca=chinese]
+chinese md M09L reject throws RangeError invalid monthCode for this calendar
+chinese md M09L 1972-11-05[u-ca=chinese]
+hebrew md day 31 reject throws RangeError day is out of range
+hebrew md M12 day 30 1972-09-08[u-ca=hebrew]
+hebrew md M05L 1970-03-07[u-ca=hebrew]
+islamic-civil md day 31 reject throws RangeError day is out of range
+islamic-civil md M12 day 30 1971-02-26[u-ca=islamic-civil]
+islamic-civil md M05L throws RangeError invalid monthCode for this calendar
+islamic-umalqura md day 31 reject throws RangeError day is out of range
+islamic-umalqura md M12 day 30 1971-02-26[u-ca=islamic-umalqura]
+islamic-umalqura md M05L throws RangeError invalid monthCode for this calendar
+persian md day 31 reject 1972-04-20[u-ca=persian]
+persian md M12 day 30 1972-03-20[u-ca=persian]
+persian md M05L throws RangeError invalid monthCode for this calendar
+indian md day 31 reject 1972-04-20[u-ca=indian]
+indian md M12 day 30 1972-03-20[u-ca=indian]
+indian md M05L throws RangeError invalid monthCode for this calendar
+coptic md day 31 reject throws RangeError day is out of range
+coptic md M12 day 30 1972-09-05[u-ca=coptic]
+coptic md M05L throws RangeError invalid monthCode for this calendar
+ethiopic md day 31 reject throws RangeError day is out of range
+ethiopic md M12 day 30 1972-09-05[u-ca=ethiopic]
+ethiopic md M05L throws RangeError invalid monthCode for this calendar
+dangi md day 31 reject throws RangeError day is out of range
+dangi md M12 day 30 1972-02-14[u-ca=dangi]
+dangi md M05L 1971-07-21[u-ca=dangi]
+offset sec 60 throws RangeError invalid UTC offset: +00:00:60
+offset frac junk throws RangeError invalid UTC offset: +00:00:00.5x
+offset colon junk throws RangeError invalid UTC offset: +00:00:
+instant tostring tz iso sec throws RangeError invalid time zone identifier
+instant tostring tz iso 2020-01-01T01:30:00+01:30
+instant tostring tz Z 2020-01-01T00:00:00+00:00
+instant tostring tokyo lmt 1880-01-01T09:18:59+09:19
+instant tostring brussels 1885-01-01T00:17:30+00:18
+zdt tokyo lmt +09:18:59 33539000000000 1880-01-01T09:18:59+09:19[Asia/Tokyo]
+zdt from tokyo prefer 1880-01-01T09:18:59+09:19[Asia/Tokyo]
+zdt from tokyo reject 1880-01-01T09:18:59+09:19[Asia/Tokyo]
+zdt from tokyo exact 1880-01-01T09:18:59+09:19[Asia/Tokyo]
+zdt compare bag offset 0
+zdt compare bag bad offset throws RangeError invalid UTC offset: x
+zdt from bad cal throws RangeError unsupported calendar
+zdt withPlainTime over throws RangeError date-time is outside the representable range
+zdt startOfDay min throws RangeError date-time is outside the representable range
+dur relTo cal obj P29D
+dur relTo cal bad throws TypeError calendar is not a string
+dur relTo offset P29D
+dur relTo bad offset throws TypeError offset must be a string
+dur relTo far zdt throws RangeError date is outside the supported range
+dur round relTo zdt err throws RangeError date is outside the supported range
+dur round relTo pd err throws RangeError date is outside the supported range
+dur total relTo pd err throws RangeError date is outside the supported range
+dur total relTo zdt err throws RangeError date is outside the supported range
+dur round week relTo zdt P5W
+dur round months zdt huge P4M
+ym until incr P8Y
+ym until incr extreme throws RangeError date is outside the supported range
+pd until incr P11Y5M
+hebrew add month reject throws RangeError day is out of range in the target month
+hebrew add years+month reject 2024-12-01[u-ca=hebrew]
+hebrew md huge year throws RangeError date is outside the supported range
+hebrew md huge eraYear throws RangeError date is outside the supported range
+chinese add month reject 2023-03-20[u-ca=chinese]
+chinese add years+month reject 2024-04-07[u-ca=chinese]
+chinese md huge year throws RangeError date is outside the supported range
+coptic add month reject 2023-11-10[u-ca=coptic]
+coptic add years+month reject 2024-11-09[u-ca=coptic]
+coptic md huge year throws RangeError date is outside the supported range
+coptic md huge eraYear throws RangeError date is outside the supported range
+gregory add month reject throws RangeError date day out of range
+gregory add years+month reject throws RangeError date day out of range
+gregory md huge year throws RangeError date is outside the supported range
+gregory md huge eraYear throws RangeError date is outside the supported range
+gregory era year disagree throws RangeError year and era/eraYear disagree
+japanese add month reject throws RangeError date day out of range
+japanese add years+month reject throws RangeError date day out of range
+japanese md huge year throws RangeError date is outside the supported range
+japanese md huge eraYear throws RangeError date is outside the supported range
+japanese era year disagree throws RangeError year and era/eraYear disagree

@@ -1,0 +1,34 @@
+empty Error zstd: empty input
+short Error zstd: truncated frame
+magic Error zstd: bad magic number
+skip_hdr Error zstd: truncated skippable frame
+skip_payload Error zstd: truncated skippable frame
+reserved Error zstd: reserved frame header bit set
+dict Error zstd: dictionary frames are not supported
+hdr_trunc Error zstd: truncated frame header
+blk_trunc Error zstd: truncated block header
+blk_max Error zstd: block size exceeds maximum
+raw_trunc Error zstd: truncated raw block
+rle_trunc Error zstd: truncated RLE block
+reserved_block Error zstd: reserved block type
+comp_trunc Error zstd: truncated compressed block
+size_mismatch Error zstd: frame content size mismatch
+cks_trunc Error zstd: truncated content checksum
+cks_bad Error zstd: content checksum mismatch
+lit_missing Error zstd: missing literals section header
+lit_trunc Error zstd: truncated literals section
+lit_huge Error zstd: literals section too large
+seq_missing Error zstd: missing sequences section header
+seq_trailing Error zstd: trailing bytes after empty sequences section
+treeless Error zstd: treeless literals without a previous Huffman table
+modes_missing Error zstd: missing sequence compression modes
+modes_reserved Error zstd: reserved sequence mode bits set
+repeat_first Error zstd: repeat mode without a previous sequence table
+rle_seq_range Error zstd: RLE sequence symbol out of range
+bits_missing Error zstd: missing sequences bitstream
+no_sentinel Error zstd: bitstream missing sentinel bit
+bits_truncated Error zstd: truncated sequences bitstream
+bad_repeat Error zstd: invalid repeat offset
+lit_overrun Error zstd: sequence literals overrun
+too_far Error zstd: sequence offset too far back
+not_consumed Error zstd: sequences bitstream not fully consumed

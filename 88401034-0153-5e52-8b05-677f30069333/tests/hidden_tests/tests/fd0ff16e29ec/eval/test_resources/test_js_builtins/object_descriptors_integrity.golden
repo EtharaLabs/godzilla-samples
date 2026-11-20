@@ -1,0 +1,55 @@
+default-desc: {value: 1, writable: false, enumerable: false, configurable: false}
+accessor-desc: {get: [Function get], set: undefined, enumerable: true, configurable: false}
+missing-desc: undefined
+redefine-nonconfig: THROW TypeError: Cannot redefine property
+redefine-same: true
+redefine-enum: THROW TypeError: Cannot redefine property
+redefine-to-accessor: THROW TypeError: Cannot redefine property
+mixed-desc: THROW TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute
+getter-nonfn: THROW TypeError: Getter must be a function
+setter-nonfn: THROW TypeError: Setter must be a function
+desc-nonobj: THROW TypeError: Property description must be an object
+target-nonobj: THROW TypeError: Object.defineProperty called on non-object
+writable-to-true: THROW TypeError: Cannot redefine property
+after-w: {value: 2, writable: false, enumerable: false, configurable: false}
+data-to-accessor: undefined | "now accessor" | "function"
+accessor-to-data: {value: "data again", writable: false, enumerable: false, configurable: true}
+desc-inherited-fields: {value: "from proto", writable: false, enumerable: true, configurable: false}
+desc-read-order: ["has:enumerable", "get:enumerable", "has:configurable", "has:value", "get:value", "has:writable", "has:get", "has:set"]
+defineProperties: {x: 1, y: 2, [Symbol(z)]: 3} | 1
+defineProperties-bad: THROW TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute
+defineProperties-nonobj: THROW TypeError: Object.defineProperties on non-object
+getOwnPropertyDescriptors: {a: {value: 1, writable: true, enumerable: true, configurable: true}, b: {get: [Function get b], set: undefined, enumerable: true, configurable: true}}
+gopd-string: {value: "b", writable: false, enumerable: true, configurable: false} | {value: 3, writable: false, enumerable: false, configurable: false}
+gopd-array-len: {value: 2, writable: true, enumerable: false, configurable: false}
+gopd-fn: {value: 2, writable: false, enumerable: false, configurable: true} | {value: "f", writable: false, enumerable: false, configurable: true} | {value: {constructor: [Function f]}, writable: true, enumerable: false, configurable: false}
+gopd-class-proto: {value: {constructor: [Function ]}, writable: false, enumerable: false, configurable: false}
+isFrozen: true | true | false
+frozen-sloppy: 1 | 3 | undefined
+frozen-strict-set: THROW TypeError: cannot assign to read-only property 'a'
+frozen-strict-add: THROW TypeError: cannot add property, object is not extensible
+frozen-strict-delete: THROW TypeError: cannot delete non-configurable property 'a'
+frozen-desc: {value: 1, writable: false, enumerable: true, configurable: false} | false
+sealed: {a: 2} | true | false | {value: 2, writable: true, enumerable: true, configurable: false}
+preventExtensions: {} | false | true | true
+empty-nonext: true | true
+prims: 1 | true | true | false | "s" | true
+frozen-array-push: THROW TypeError: Cannot assign to read only property '2'
+frozen-array-sort: THROW TypeError: cannot assign to read-only element 0
+frozen-array-shift: THROW TypeError: Cannot assign to read only property '0'
+frozen-array-concat-ok: [1, 2, 3] | [1, 2] | true
+sealed-array-push: 2
+nonext-array-push: 2
+sealed-array-set: ["z", 2]
+freeze-proxy-traps: ["pe", "ownKeys", "gopd:x", "dp:x:{\"writable\":false,\"configurable\":false}"]
+isFrozen-proxy: true | ["ownKeys", "gopd:x"]
+freeze-proxy-false: THROW TypeError: Object.freeze could not freeze the object
+seal-proxy-false: THROW TypeError: Object.seal could not seal the object
+pe-proxy-false: THROW TypeError: could not prevent extensions
+reflect-pe-false: false
+toString-tags: ["[object Undefined]", "[object Null]", "[object Array]", "[object Object]", "[object Function]", "[object Date]", "[object RegExp]", "[object Number]", "[object String]", "[object Boolean]", "[object Symbol]", "[object BigInt]", "[object Error]", "[object Math]", "[object JSON]", "[object Arguments]", "[object Map]", "[object Promise]", "[object Custom]", "[object Object]"]
+toLocaleString: "TS" | "1,a,"
+toLocaleString-null: THROW TypeError: cannot read property 'toString' of null
+valueOf: "object" | true
+valueOf-null: THROW TypeError: Object.prototype.valueOf called on null or undefined
+Object-ctor: "object" | true | true | true | true

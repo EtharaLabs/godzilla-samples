@@ -1,0 +1,22 @@
+23h30 round to hour on 23h day: P1DT1H
+ceil to minute reaching day end: P1D
+negative from next midnight: -P1DT1H
+largest hour across DST: PT26H
+total month across DST: 1.0309555854643337
+round near max duration: RangeError: duration is outside the valid range
+round near max duration trunc: PT2501999792983H
+compare huge with relativeTo: -1
+compare weeks overflow with relativeTo: RangeError: duration is outside the valid range
+date add -25h: 2020-01-09
+date add -48h: 2020-01-08
+date subtract 25h: 2020-01-09
+Monrovia instant toString: 1949-12-31T23:15:30-00:45
+Monrovia zoned: 1949-12-31T23:15:30-00:45[Africa/Monrovia]
+Monrovia 1972: 1972-06-01T00:00:00+00:00
+offset field +010000: 2020-01-01T00:00:00+01:00[+01:00]
+offset field +0100:00: RangeError: invalid UTC offset: +0100:00
+offset field +01:0000: RangeError: invalid UTC offset: +01:0000
+timeZone plain object: TypeError: timeZone must be a string or ZonedDateTime
+timeZone PlainDate object: TypeError: timeZone must be a string or ZonedDateTime
+timeZone ZonedDateTime object: 2020-01-01T09:00:00+09:00[Asia/Tokyo]
+equals offset vs named: false true true

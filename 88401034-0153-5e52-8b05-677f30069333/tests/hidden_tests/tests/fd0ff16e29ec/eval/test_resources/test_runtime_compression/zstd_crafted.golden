@@ -1,0 +1,37 @@
+seq-rle-copy OK 7 "abcabca"
+seq-repeat-offset OK 7 "abccccc"
+two-blocks-repeat-tables OK 14 "abcabcaabcabca"
+lit-rle OK 4 "zzzz"
+lit-raw-2byte-hdr OK 5 "hello"
+lit-raw-3byte-hdr OK 5 "hello"
+lit-rle-3byte-hdr OK 5 "qqqqq"
+window-descriptor OK 9 "wwwwwwwww"
+fcs-4-bytes OK 5 "aaaaa"
+fcs-8-bytes OK 5 "aaaaa"
+fcs-2-bytes OK 256 "aaaaaaaaaaaaaaaaaaaaaaaa"
+did-2-bytes-zero OK 3 "aaa"
+did-4-bytes-zero OK 3 "aaa"
+err-trailing-after-empty-seq Error: zstd: trailing bytes after empty sequences section
+err-seq-header-255 Error: zstd: truncated sequences header
+err-seq-header-long Error: zstd: missing sequence compression modes
+err-seq-header-128 Error: zstd: truncated sequences header
+err-missing-seq-header Error: zstd: missing sequences section header
+err-rle-symbol-range Error: zstd: RLE sequence symbol out of range
+err-rle-table-truncated Error: zstd: truncated RLE sequence table
+err-fse-table-truncated Error: zstd: truncated FSE table description
+err-missing-bitstream Error: zstd: missing sequences bitstream
+err-no-sentinel Error: zstd: bitstream missing sentinel bit
+err-bitstream-short Error: zstd: truncated sequences bitstream
+err-bitstream-leftover Error: zstd: sequences bitstream not fully consumed
+err-invalid-repeat-offset Error: zstd: invalid repeat offset
+err-regenerated-too-large Error: zstd: block regenerated size too large
+err-literals-overrun Error: zstd: sequence literals overrun
+err-repeat-without-previous Error: zstd: repeat mode without a previous sequence table
+err-reserved-seq-mode-bits Error: zstd: reserved sequence mode bits set
+err-raw-literals-too-large Error: zstd: literals section too large
+err-compressed-literals-too-large Error: zstd: literals section too large
+err-literals-jump-table Error: zstd: truncated literals jump table
+err-treeless-without-table Error: zstd: treeless literals without a previous Huffman table
+err-lit-truncated-2byte Error: zstd: truncated literals section
+err-huffman-direct-truncated Error: zstd: truncated Huffman weights
+err-huffman-fse-truncated Error: zstd: truncated Huffman tree description

@@ -1,0 +1,17 @@
+client:
+connecting=true readyState=opening
+connect callback
+connect event readyState=open connecting=false remote=127.0.0.1 family=IPv4
+ready
+write callback
+finish
+end response="echo:HELLO WORLD"
+close hadError=false
+server:
+listening event
+listen callback 127.0.0.1 IPv4 number true listening=true
+connection remote=127.0.0.1/IPv4 local=127.0.0.1 localPortIsServerPort=true remotePort=number
+end request="hello world"
+finish
+close hadError=false
+server close callback listening=false

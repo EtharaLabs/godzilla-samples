@@ -1,0 +1,12 @@
+listening 127.0.0.1 IPv4 number true
+second listen on same port: Error | EADDRINUSE | listen |  | 127.0.0.1 | PORT | listen EADDRINUSE 127.0.0.1:PORT
+client connect 127.0.0.1 true number
+client end echo:ping
+client close false false 4 9
+server closed false conn 127.0.0.1 IPv4 number {"address":"127.0.0.1","family":"IPv4","port":"P"} ; data ping
+refused: Error | ECONNREFUSED | connect |  | 127.0.0.1 | PORT | connect ECONNREFUSED 127.0.0.1:PORT
+refused close true
+unix listening "sock.ipc"
+unix reply unix:hi
+unix closed
+unix missing: ENOENT connect connect ENOENT missing.ipc

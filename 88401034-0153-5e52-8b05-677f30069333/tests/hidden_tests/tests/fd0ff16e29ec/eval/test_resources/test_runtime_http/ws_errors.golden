@@ -1,0 +1,30 @@
+/badop        open error(error) close(1002,"unknown opcode",false) readyState 3
+/badutf8      open error(error) close(1007,"text message is not UTF-8",false) readyState 3
+/rsv          open error(error) close(1002,"reserved bits set (no extension negotiated)",false) readyState 3
+/ctrlfrag     open error(error) close(1002,"malformed control frame",false) readyState 3
+/cont         open error(error) close(1002,"continuation without a message",false) readyState 3
+/interleave   open error(error) close(1002,"new data frame during fragmented message",false) readyState 3
+/toobig       open error(error) close(1009,"message too big",false) readyState 3
+/badreason    open error(error) close(1007,"close reason is not UTF-8",false) readyState 3
+/nocode       open close(1005,"",true) readyState 3
+/drop         open error(error) close(1006,"",false) readyState 3
+/closed-early close() while 2 open close(4001,"",true) readyState 3
+/404          error(error) close(1006,"",false) readyState 3
+/badaccept    error(error) close(1006,"",false) readyState 3
+/noupgrade    error(error) close(1006,"",false) readyState 3
+/badproto     error(error) close(1006,"",false) readyState 3
+/toolarge     error(error) close(1006,"",false) readyState 3
+ctor ["http://x/"] SyntaxError WebSocket URL scheme must be ws or wss, got 'http:'
+ctor ["ws://x/#frag"] SyntaxError WebSocket URL must not contain a fragment
+ctor ["not a url"] SyntaxError invalid WebSocket URL: not a url
+ctor ["ws://x/",["a","a"]] SyntaxError invalid or duplicate WebSocket subprotocol
+ctor ["ws://x/",[""]] SyntaxError invalid or duplicate WebSocket subprotocol
+ctor ["ws://x/","a b"] SyntaxError invalid or duplicate WebSocket subprotocol
+ctor ["ws://x/",["ok","x,y"]] SyntaxError invalid or duplicate WebSocket subprotocol
+ctor [] TypeError WebSocket constructor requires a url
+close [999] InvalidAccessError close code must be 1000 or in 3000-4999
+close [1001] InvalidAccessError close code must be 1000 or in 3000-4999
+close [2999] InvalidAccessError close code must be 1000 or in 3000-4999
+close [5000] InvalidAccessError close code must be 1000 or in 3000-4999
+close [1000,"xxxxxxxxxxxxx SyntaxError close reason too long (>123 bytes)
+close [3000,"ééééééééééééé SyntaxError close reason too long (>123 bytes)

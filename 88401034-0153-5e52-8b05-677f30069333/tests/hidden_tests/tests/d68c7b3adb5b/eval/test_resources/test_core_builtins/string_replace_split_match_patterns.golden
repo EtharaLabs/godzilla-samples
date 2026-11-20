@@ -1,0 +1,32 @@
+split: ["a","b","c"] ["a","b"] [] ["a","b","c"] ["a","b","c"] [] [""] ["a","b","c"] ["a","1","b","2","c"] ["a","b","c"] ["","t","e",null,"s","t",""] ["a"] ["ab"] ["\ud83d","\ude00","a"] ["a","b"] ["a","a",""] ["a","b",""] ["",""] ["x"]
+split regex flags: ["","1","2",""] ["a\n","b"] ["😀","😀"] ["x","y"] ["a","b"] ["a","b",null,"c"]
+split custom splitter: custom:xyz:3
+split splitter not callable: TypeError: @@split is not callable
+split null this: TypeError: String.prototype.split called on null or undefined
+split limit coercion order: limit,sep
+replace patterns: [John] Smith || JJ|hn Smithhn Smith || John $ || Smith, John || $3$0John || Smith John | || J0o0h0n0 S0m0i0t0h0 || ab$001c || a$<x>c || [a0aaa]aa || undefined || a{"n":"b"}c || k-j-ab-a2-a1l || >b
+replace with $ at end: a$c a$xc a$9c a$0c a$<c a$<gc
+replace non-string search: aoneb Nx aU _abc abc
+replace replacer coercion: aOBJc a42c anullc
+replace replacer throws: RangeError: replacer
+replaceAll: a-b-c aaaaaa ba _a_b_c_ 0a2 a<1>b<2> aaaaba yxy E 4567
+replaceAll non-global regex: TypeError: replaceAll must be called with a global RegExp
+replaceAll flags getter: TypeError: replaceAll must be called with a global RegExp
+replaceAll null flags: TypeError: regexp flags is null or undefined
+replace custom replacer: R(q,w) R(q,w)
+replace replacer not callable: TypeError: @@replace is not callable
+replace null this: TypeError: String.prototype.replace called on null or undefined
+match/matchAll/search: ["1","22","333"] 1  ["1@1","22@3","333@6"] 2 3 -1 [""] 0 [1,3] ["+b"] 0 ["","","",""] [0,1,2,3]
+match string becomes regexp: ["a"] -1 0
+match bad pattern: SyntaxError: expected ')' in pattern
+matchAll non-global: TypeError: String.prototype.matchAll called with a non-global RegExp
+matchAll null flags: TypeError: regexp.flags is null or undefined
+matchAll iterator protocol: 1 1 2 {"done":true} [object RegExp String Iterator]
+matchAll empty matches advance: 0,2,3 0,1,2,3
+matchAll iterator next bad this: TypeError: next called on a non-RegExp-String-Iterator
+match custom matcher: M:z 42 MA
+match matcher not callable: TypeError: @@match is not callable
+search searcher not callable: TypeError: @@search is not callable
+match null this: TypeError: String.prototype.match called on null or undefined
+regexp exec via subclass: aXcX calls=3 a|c|
+legacy statics after replace: b,2,b2,b2,xa1,y,2,xa1b2y

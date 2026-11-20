@@ -1,0 +1,8 @@
+server saw GET /events HTTP/1.1 [Accept: text/event-stream; Cache-Control: no-cache]
+open readyState=1
+message "first" lastEventId=""
+greet "secure\nevent" lastEventId="7"
+closed readyState=2
+untrusted: error readyState=0
+closed readyState=2
+untrusted server: TLS server handshake failed (SSL error 1: error:0A000418:SSL routines::tlsv1 alert unknown ca)

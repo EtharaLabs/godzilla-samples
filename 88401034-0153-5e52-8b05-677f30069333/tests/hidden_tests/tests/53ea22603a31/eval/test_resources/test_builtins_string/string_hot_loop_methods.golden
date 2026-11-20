@@ -1,0 +1,43 @@
+"bc" "bc" "bcd" "b" 98 98 "b" 1
+"bc" "" "d" "d" 100 100 "d" -1
+"ab" "" "ef" "" NaN undefined "e" 1
+"abcd" "abcd" "abcd" "a" 97 97 "a" 1
+"cdef" "cdef" "cdef" "c" 99 99 "c" -1
+"bcdef" "bcdef" "bcdef" "b" 98 98 "b" 1
+"abcdef" "" "" "" NaN undefined undefined -1
+"b" "b" "bc" "b" 98 98 "b" 1
+"él" "él" "éll" "é" 233 233 "é" 6
+"él" "" "l" "l" 108 108 "l" 6
+"hé" "" " b" "" NaN undefined " " 6
+"héll" "héll" "héll" "h" 104 104 "h" 6
+"llo b" "llo b" "llo b" "l" 108 108 "l" 6
+"éllo b" "éllo b" "éllo b" "é" 233 233 "é" 6
+"héllo b" "" "" "" NaN undefined undefined -1
+"é" "é" "él" "é" 233 233 "é" 6
+"😀" "😀" "😀b" "\ud83d" 55357 128512 "\ud83d" 3
+"😀" "" "b" "b" 98 98 "b" 3
+"a\ud83d" "" "😁" "" NaN undefined "\ud83d" 3
+"a😀b" "a😀b" "a😀b" "a" 97 97 "a" 3
+"\ude00b😁" "\ude00b😁" "\ude00b😁" "\ude00" 56832 56832 "\ude00" 3
+"😀b😁" "😀b😁" "😀b😁" "\ud83d" 55357 128512 "\ud83d" 3
+"a😀b😁" "" "" "" NaN undefined undefined -1
+"\ud83d" "\ud83d" "😀" "\ud83d" 55357 128512 "\ud83d" 3
+"ab" "ab" "ab\udc00" "a" 97 97 "a" 2
+"ab" "" "\udc00" "\udc00" 56320 56320 "\udc00" -1
+"\ud800a" "" "b\udc00" "" NaN undefined "b" 2
+"\ud800ab\udc00" "\ud800ab\udc00" "\ud800ab\udc00" "\ud800" 55296 55296 "\ud800" 2
+"b\udc00" "b\udc00" "b\udc00" "b" 98 98 "b" 2
+"ab\udc00" "ab\udc00" "ab\udc00" "a" 97 97 "a" 2
+"\ud800ab\udc00" "" "" "" NaN undefined undefined -1
+"a" "a" "ab" "a" 97 97 "a" 2
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+"" "" "" "" NaN undefined undefined -1
+consistent across iterations: true
+valueOf calls: 165 valueOf 1, valueOf 2, valueOf 1, valueOf 2
+loop total 6223

@@ -1,0 +1,19 @@
+parsed 7 [["a","1"],["b","x y"],["a","2"],["c","%20%zz"],["d",""],["","e"],["f","€"]]
+get 1 ["1","2"] null true "" false
+toString a=1&b=x+y&a=2&c=%2520%25zz&d=&=e&f=%E2%82%AC
+mutated a=9&c=%2520%25zz&d=&=e&f=%E2%82%AC&g=a+b%26c%3Dd%2F%C3%A9~*'()!
+sorted =e&a=9&c=%2520%25zz&d=&f=%E2%82%AC&g=a+b%26c%3Dd%2F%C3%A9~*'()!
+forEach =etrue!;a=9true!;c=%20%zztrue!;d=true!;f=€true!;g=a b&c=d/é~*'()!true!
+iterators ,a,c,d,f,g e|9|%20%zz||€|a b&c=d/é~*'()! ["","e"]
+object init x=1&y=1%2C2&z=null
+pairs init k=v&k=2&sp+ace=%2B
+copy init q=1 true 0
+TypeError URLSearchParams: each init pair needs exactly two items
+TypeError URLSearchParams: each init pair needs exactly two items
+set dedupes k=new&x=a
+set appends k=new&x=a&fresh=f
+linked http://h/p?x=1&y=2&z=a+b#frag true
+emptied http://h/p#frag
+url->params 5 1
+href->params 6 false
+sort on url ?n=6

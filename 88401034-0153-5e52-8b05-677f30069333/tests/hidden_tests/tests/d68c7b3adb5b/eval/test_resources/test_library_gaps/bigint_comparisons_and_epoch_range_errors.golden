@@ -1,0 +1,10 @@
+BigInt vs fractional Number: true false true true true true true true true false true false true
+BigInt shifts and carries: 0 0 340282366920938463463374607431768211456 6277101735386680763835789423207666416102355444464034512896 -680564733841876926926749214863536422911
+BigInt two's complement bitwise ops: -18446744073709551616 -18446744073709551616 -18446744073709551616 -340282366920938463463374607431768211456 -340282366920938463463374607431768211456 -9223372036854775808 -18446744073709551616 18446744073709551616
+Instant from huge BigInt: RangeError: epochNanoseconds out of range
+Instant from 2^127: RangeError: epochNanoseconds out of range
+Instant from -2^127-1: RangeError: epochNanoseconds out of range
+ZonedDateTime from 2^128: RangeError: epochNanoseconds out of range
+fromEpochNanoseconds -2^130: RangeError: epochNanoseconds out of range
+Instant at the limit: +275760-09-13T00:00:00Z -271821-04-20T00:00:00Z
+Instant just past the limit: RangeError: instant is outside the representable range

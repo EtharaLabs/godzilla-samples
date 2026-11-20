@@ -1,0 +1,65 @@
+omitted: {"d":null,"e":0,"f":null,"g":null,"i":[null,null,null]}
+top-level:    null "s"
+escapes: "  \"\\\b\f\n\r\t\u0001\u001f /"
+surrogates: "\ud800" "\udc00\ud800" "😀" "a\udbffb"
+boxed: ["s",1,false,{}]
+date: {"d":"2020-01-02T03:04:05.006Z","bad":null}
+indent 2: {
+  "a": [
+    1,
+    {
+      "b": 2
+    }
+  ],
+  "c": {},
+  "e": []
+}
+indent string: [
+--1,
+--[
+----2
+--]
+]
+indent clamp num: {
+          "a": 1
+}
+indent clamp str: {
+abcdefghij"a": 1
+}
+indent zero/empty/neg: {"a":1} [1] [1]
+indent boxed: {
+   "a": 1
+} {
+	"a": [
+		1
+	]
+}
+replacer array: {"a":1,"c":{"a":3}}
+replacer array numbers: {"1":"one","2":"two"}
+replacer array on arrays: [{"b":2}]
+replacer fn: {"a":101,"b":[102,103]}
+replacer this: [":","a:a","b:b"]
+replacer replaces root: [9]
+toJSON: {"a":"Aa","b":["Bstring0"]}
+toJSON then replacer: {"a":2}
+non-enumerable/symbol keys: {"a":1}
+map/set/error/regexp: [{},{},{},{}]
+proxy array: [1,{"a":2}]
+sparse array: [1,null,3]
+proxy replacer array: {"c":3,"a":1}
+proxy value object: {"p":{"k":[1]},"q":{"v":"virtual"}}
+non-array replacer ignored: {"a":1}
+replacer array with numbers and dups: {"10":"x","1.5":"y"}
+cycle object !! TypeError: Converting circular structure to JSON
+cycle array !! TypeError: Converting circular structure to JSON
+repeated non-cyclic ok => "[{\"v\":1},{\"v\":1},{\"s\":{\"v\":1}}]"
+bigint !! TypeError: Do not know how to serialize a BigInt
+bigint nested !! TypeError: Do not know how to serialize a BigInt
+boxed bigint !! TypeError: Do not know how to serialize a BigInt
+bigint toJSON => "{\"a\":\"1n\"}"
+getter throws !! RangeError: inside getter
+rawJSON => ["{\"a\":12345678901234567890,\"b\":[\"s\",null]}", true, false, false, true, "true", null]
+rawJSON object !! SyntaxError: JSON.rawJSON value must be a primitive
+rawJSON whitespace !! SyntaxError: JSON.rawJSON: leading/trailing whitespace
+rawJSON empty !! SyntaxError: JSON.rawJSON: empty string
+rawJSON invalid !! SyntaxError: JSON.rawJSON: invalid JSON text

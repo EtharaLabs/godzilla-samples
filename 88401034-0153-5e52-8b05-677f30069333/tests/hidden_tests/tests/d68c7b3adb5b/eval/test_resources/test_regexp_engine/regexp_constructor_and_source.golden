@@ -1,0 +1,18 @@
+source escaping: a\/b[/]c  \/  [\]/]  a\u2028b\u2029c\rd\ne  \n  x\\\/y  [\[/]\/  \u2028
+toString re-parses: /a\/b\n[/]/gi true
+prototype getters: (?:),,,,,,/(?:)/
+getter on non-regexp: source:RegExp.prototype.source called on a non-RegExp | global:RegExp.prototype getter called on a non-RegExp | flags= | dotAll:RegExp.prototype getter called on a non-RegExp | unicode:RegExp.prototype getter called on a non-RegExp | multiline:RegExp.prototype getter called on a non-RegExp | ignoreCase:RegExp.prototype getter called on a non-RegExp
+flags getter on primitive: TypeError: RegExp.prototype.flags getter called on non-object
+flags getter order and coercion: gmuy hgimduus
+IsRegExp via Symbol.match: true,false,q+,g,i,q+
+regexp with Symbol.match false: false,ab,g
+call with other constructor: false,false,true,g
+new.target prototype: true,true
+subclass: true true 2 aXcX ["b","b"] a|c
+coercion order: pattern,flags
+regexp-like reads: sm @@match,constructor,source,flags
+undefined pattern/flags: (?:)  null 123 /(?:)/
+throwing pattern coercion: EvalError: nope
+exec result shape: 0,1,2,index,input,groups 7 object zab
+test/toString receivers: RegExp.prototype.test requires an object | RegExp.prototype.toString requires an object | /S/F | TypeError
+test uses exec: true false true

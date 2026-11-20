@@ -1,0 +1,60 @@
+# identifiers
+"var \\u0030x" => SyntaxError: invalid character in escaped identifier
+"var a\\u002Fb" => SyntaxError: invalid character in escaped identifier
+"var \\u{zz}" => SyntaxError: invalid unicode escape in identifier
+"var \\u12" => SyntaxError: invalid unicode escape in identifier
+"var \\x41" => SyntaxError: unexpected character '\\'
+"\\u0061\\u{62}c = 1" => ok 1
+"v\\u0061r x = 1" => SyntaxError: keywords must not contain escape sequences
+"#" => SyntaxError: private name '#' may only be used in a member access or 'in' expression
+"@" => SyntaxError: expected a decorator expression after '@'
+"\u0000" => SyntaxError: unexpected character '\0'
+"a ~ b" => SyntaxError: expected ';'
+"a b" => ReferenceError: a is not defined
+"1 +2" => ok 3
+# escaped keywords and unicode identifiers
+"v\\u0061r x = 1" => SyntaxError: keywords must not contain escape sequences
+"\\u0076ar x" => SyntaxError: keywords must not contain escape sequences
+"n\\u0065w Object()" => SyntaxError: keywords must not contain escape sequences
+"n\\u0065w.target" => SyntaxError: keywords must not contain escape sequences
+"function f() { n\\u0065w.target; }" => SyntaxError: keywords must not contain escape sequences
+"function f() { new.t\\u0061rget; }" => SyntaxError: 'new.target' must not contain escape sequences
+"\\u0061sync function f() {} 1" => SyntaxError: expected ';'
+"async function f() { aw\\u0061it 1; }" => SyntaxError: 'await' keyword must not contain escape sequences
+"async function f() { var aw\\u0061it; }" => SyntaxError: 'await' cannot be used as a binding here
+"var yi\\u0065ld = 2; yield" => ok 2
+"l\\u0065t x = 1" => SyntaxError: expected ';'
+"var l\\u0065t = 3; let" => ok 3
+"for (x \\u006ff []) ;" => SyntaxError: expected ';'
+"for (var x \\u006ff []) ;" => SyntaxError: expected ';'
+"class C { st\\u0061tic m() {} }" => SyntaxError: expected ';'
+"class C { \\u0067et x() {} }" => SyntaxError: expected ';'
+"({ \\u0067et x() {} })" => SyntaxError: expected '}'
+"({ \\u0061sync m() {} })" => SyntaxError: expected '}'
+"class C { \\u0061ccessor x = 1 } 1" => ok 1
+"o = { v\\u0061r: 1 }; o.var" => ok 1
+"o = {}; o.v\\u0061r = 2; o[\"var\"]" => ok 2
+"o = { if: 1 }; o.i\\u0066" => ok 1
+"th\\u0069s" => SyntaxError: keywords must not contain escape sequences
+"tru\\u0065" => SyntaxError: keywords must not contain escape sequences
+"nul\\u006c" => SyntaxError: keywords must not contain escape sequences
+"\\u{74}ypeof 1" => SyntaxError: keywords must not contain escape sequences
+"a\\u{200D}b = 4; a\\u200db" => ok 4
+"x\\u0041 = 5; xA" => ok 5
+"\\u{1d4b6} = 6; \\u{1d4b6}" => ok 6
+"\\u{1d4b6}x = 7; 𝒶x" => ok 7
+"ñandú = 8" => ok 8
+"ゆ = 9" => ok 9
+"x‍y = 10" => ok 10
+"℘ = 11" => ok 11
+"\\u2118 = 12; ℘" => ok 12
+"a\\u0030 = 13" => ok 13
+"\\u0030a = 14" => SyntaxError: invalid character in escaped identifier
+"\\u{2F800} = 15; 丽" => ReferenceError: 丽 is not defined
+"i\\u{66} (1) 16" => SyntaxError: keywords must not contain escape sequences
+"import.m\\u0065ta" => SyntaxError: 'import.meta' must not contain escape sequences
+"impor\\u0074(\"x\")" => SyntaxError: keywords must not contain escape sequences
+"defaul\\u0074: 1" => SyntaxError: keywords must not contain escape sequences
+"try {} c\\u0061tch {}" => SyntaxError: missing catch or finally after try
+"O\\u0062ject.keys" => ok fn
+"label\\u0031: 1" => ok 1

@@ -1,0 +1,43 @@
+init-order Base static block > Derived ctor before super > Base field > Base ctor > Derived field > Derived ctor after super
+getters 1007 pubval 10070 D:secret-7 Derived<Base(7)>
+static 1 T0 1 7 false
+brand true false true false
+priv-accessor privget Base field,Base ctor,privset x
+static-inherit Derived Derived.create 1003
+readonly-setter undefined
+priv-on-wrong-obj !TypeError: cannot read private member #secret from an object whose class did not declare it
+priv-read-wrong !TypeError: cannot read private member #id from an object whose class did not declare it
+priv-static-wrong !TypeError: the right-hand side of 'in' must be an object
+class-call !TypeError: Class constructor cannot be invoked without 'new'
+class-proto-methods constructor,id,reveal,usePriv,toString | false | boolean
+no-super !ReferenceError: derived constructor returned without calling super()
+return-obj {"custom":true}
+return-prim-after-super !TypeError: a derived constructor may only return an object or undefined
+return-prim-derived !TypeError: a derived constructor may only return an object or undefined
+Plain ctor,Plain ctor
+super-twice !ReferenceError: super() may only be called once
+this-before-super !ReferenceError: cannot access 'this' before initialization
+super-in-arrow 42
+extends-null true
+extends-null-new !TypeError: super constructor is not a constructor
+extends-expr mixed 9
+extends-non-ctor !TypeError: Class extends value is not a constructor or null
+extends-arrow !TypeError: Class extends value is not a constructor or null
+extends-bad-proto !TypeError: Class extends value does not have a valid prototype property
+new-target NTBase,NTDerived
+reflect-construct Other,true
+inner-name-const !TypeError: assignment to constant 'C'
+outer-rebind Inner
+computed function function 1 2 1,2 q num notkeyword
+fields 1,true,true,true,true
+priv-method-assign !TypeError: private method #m is not writable
+priv-getter-only !TypeError: private accessor #g has no setter
+priv-setter-only !TypeError: private accessor #s has no getter
+priv-double-init !TypeError: cannot initialize the same private field twice
+in-non-object !TypeError: the right-hand side of 'in' must be an object
+hasInstance true,false
+species true,false,3,MyArr
+subclass-array 6,true,true
+subclass-error true | bad | MyErr: bad | [object Error]
+object-super lit+proto greet | true | true
+getter-setter-literal 42

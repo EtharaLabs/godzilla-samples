@@ -1,0 +1,21 @@
+/a response head "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\nSec-WebSocket-Protocol: chat\r\nX-Extra: 1"
+server /a got text:"hi"
+server /a got binary:1,2
+server /a got text:"frag"
+server /a got text:"unmasked ok"
+server /a onclose 1000 "bye" true
+/a frames from server: op=10 masked=false "pp" ; op=8 masked=false 1000:""
+/b response head "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=\r\nx-from-headers: yes"
+server /b onclose 1002 "unknown opcode" false
+/b frames from server: op=8 masked=false 1002:"unknown opcode"
+/c response head "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: C/0nmHhBztSRGR1CwL6Tf4ZjwpY="
+server /c got text:"then drop"
+server /c onclose 1006 "failed to fill whole buffer" false
+/c frames from server: (none)
+/d response head "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: C/0nmHhBztSRGR1CwL6Tf4ZjwpY="
+server /d onclose 1005 "" true
+/d frames from server: op=8 masked=false 1000:""
+/nokey response head "HTTP/1.1 426 \r\ncontent-type: text/plain;charset=UTF-8\r\nContent-Length: 16\r\nServer: lumen/VER\r\nConnection: close"
+/nokey body "upgrade required"
+/nokey frames from server: (none)
+done

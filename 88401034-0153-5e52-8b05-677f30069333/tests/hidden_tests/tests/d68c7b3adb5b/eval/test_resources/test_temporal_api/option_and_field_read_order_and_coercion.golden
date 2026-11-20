@@ -1,0 +1,25 @@
+PlainDateTime.toString: calendarName,fractionalSecondDigits,roundingMode,smallestUnit => 2024-07-04T09:08:07.654321987
+PlainTime.toString: fractionalSecondDigits,roundingMode,smallestUnit => 09:08:07.654321987
+ZonedDateTime.toString: calendarName,fractionalSecondDigits,offset,roundingMode,smallestUnit,timeZoneName => 2024-07-04T09:08:07.654321987+02:00[Europe/Berlin]
+Instant.toString: fractionalSecondDigits,roundingMode,smallestUnit,timeZone => 2024-07-04T07:08:07.654321987Z
+Duration.toString: fractionalSecondDigits,roundingMode,smallestUnit => P1DT2H3M4.5S
+Duration.round: largestUnit,relativeTo,roundingIncrement,roundingMode,smallestUnit => PT26H3M4.5S
+Duration.total: relativeTo,unit => 1563.075
+ZonedDateTime.from: disambiguation,offset,overflow => 2024-11-03T01:30:00-04:00[America/New_York]
+ZonedDateTime.from bad string:  => RangeError:invalid ZonedDateTime
+ZonedDateTime.with: disambiguation,offset,overflow => 2024-07-04T01:08:07.654321987+02:00[Europe/Berlin]
+ZonedDateTime.round: roundingIncrement,roundingMode,smallestUnit => 2024-07-04T09:00:00+02:00[Europe/Berlin]
+ZonedDateTime.until: largestUnit,roundingIncrement,roundingMode,smallestUnit => PT960H
+Instant.round: roundingIncrement,roundingMode,smallestUnit => 2024-07-04T07:08:00Z
+PlainTime.round: roundingIncrement,roundingMode,smallestUnit => 09:08:00
+PlainDateTime.round: roundingIncrement,roundingMode,smallestUnit => 2024-07-04T09:08:00
+PlainYearMonth.until: largestUnit,roundingIncrement,roundingMode,smallestUnit => P4Y6M
+PlainDate.add: overflow => 2024-02-29
+PlainDateTime.from bag: calendar,day,hour,microsecond,millisecond,minute,month,monthCode,nanosecond,second,year => 2024-02-29T01:02:03.004005006
+ZonedDateTime.from bag: calendar,day,hour,microsecond,millisecond,minute,month,monthCode,nanosecond,offset,second,timeZone,year => 2024-02-29T01:00:00+00:00[UTC]
+Duration.from bag: days,hours,microseconds,milliseconds,minutes,months,nanoseconds,seconds,weeks,years => P2DT1H
+PlainMonthDay.from bag: calendar,day,era,eraYear,month,monthCode,year => 1972-02-29[u-ca=gregory]
+PlainYearMonth.from bag: calendar,era,eraYear,month,monthCode,year => 2024-02-01[u-ca=japanese]
+PlainTime.from bag: hour,microsecond,millisecond,minute,nanosecond,second => 01:00:02
+relativeTo bag: calendar,day,hour,microsecond,millisecond,minute,month,monthCode,nanosecond,offset,second,timeZone,year => 29
+coercions: RangeError:fractionalSecondDigits out of range | RangeError:fractionalSecondDigits out of range | RangeError:fractionalSecondDigits must be 'auto' or a number | 2024-07-04T09:08:07.654 | 2024-07-04T09:08:07 | 2024-07-04T09:15:00 | 2024-07-04T09:00:00 | RangeError:invalid smallestUnit | RangeError:invalid smallestUnit | RangeError:invalid smallestUnit | 2024-07-04T09:08:00 | RangeError:roundingIncrement out of range | 2024-07-04T09:08:08

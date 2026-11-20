@@ -1,0 +1,25 @@
+no options -> TypeError: tls.createServer requires cert and key options
+cert only -> TypeError: tls.createServer requires cert and key options
+key only -> TypeError: tls.createServer requires cert and key options
+busy port -> Error: TLS listen: Address already in use (os error 98)
+port 70000 -> RangeError: Invalid TLS port 70000
+port -1 -> RangeError: Invalid TLS port -1
+port "abc" -> RangeError: Invalid TLS port abc
+port 1.5 -> RangeError: Invalid TLS port 1.5
+refused -> Error: connect 127.0.0.1:1: Connection refused (os error 111) -> close hadError=true
+client ALPN name of 300 bytes -> client: Error: TLS ALPN protocol names must contain 1 to 255 bytes -> close hadError=true | server: Error: TLS server handshake failed
+NUL in servername -> client: Error: TLS hostname contains NUL -> close hadError=true | server: Error: TLS server handshake failed
+default verification -> client: Error: TLS handshake failed -> close hadError=true | server: Error: TLS server handshake failed
+verification for localhost -> client: Error: TLS handshake failed -> close hadError=true | server: Error: TLS server handshake failed
+options as third argument -> client: Error: TLS handshake failed -> close hadError=true | server: Error: TLS server handshake failed
+plain-text client -> server: Error: TLS server handshake failed | raw socket closed 1
+key does not match cert -> client: Error: TLS handshake failed -> close hadError=true | server: Error: TLS certificate/private key configuration failed
+cert is not PEM -> client: Error: TLS handshake failed -> close hadError=true | server: Error: invalid PEM
+key is not PEM -> client: Error: TLS handshake failed -> close hadError=true | server: Error: invalid PEM
+server ALPN name of 300 bytes -> client: Error: TLS handshake failed -> close hadError=true | server: Error: TLS ALPN protocol names must contain 1 to 255 bytes
+non-TLS server -> Error: TLS handshake failed -> close hadError=true
+secureContext + array/Buffer forms -> secureConnect authorized=false alpn=false -> close hadError=false
+listen() with no arguments binds 0.0.0.0 IPv4
+connect via 127.0.0.1 -> secureConnect authorized=false alpn=false -> close hadError=false
+0.0.0.0 server closed
+close() of a server that never listened calls back

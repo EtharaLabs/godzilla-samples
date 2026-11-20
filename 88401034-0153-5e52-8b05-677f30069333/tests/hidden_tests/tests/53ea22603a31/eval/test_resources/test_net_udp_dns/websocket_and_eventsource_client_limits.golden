@@ -1,0 +1,9 @@
+EventSource /bighead -> error readyState=2 -> after close() 2
+EventSource /cut -> error readyState=0 -> after close() 2
+EventSource /noloc -> error readyState=2 -> after close() 2
+EventSource /loop -> error readyState=2 -> after close() 2
+EventSource /hop -> open, message reached -> readyState 2
+WebSocket /ws-huge -> open -> error -> close 1009 "message too big" wasClean=false
+server received close frame: masked=1 code=1009 reason="message too big"
+WebSocket /ws-bighead -> error -> close 1006 "" wasClean=false
+requests seen {"/bighead":1,"/cut":1,"/noloc":1,"/loop":6,"/hop":1,"/ok?from=hop":1,"/ws-huge":1,"/ws-bighead":1}

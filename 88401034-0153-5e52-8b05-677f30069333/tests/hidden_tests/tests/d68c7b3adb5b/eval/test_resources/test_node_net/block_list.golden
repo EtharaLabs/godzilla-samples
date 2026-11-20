@@ -1,0 +1,32 @@
+[
+ "Subnet: IPv4 100.64.0.0/10",
+ "Address: IPv6 ::1",
+ "Subnet: IPv6 2001:db8::/32",
+ "Subnet: IPv4 172.16.0.0/12",
+ "Range: IPv4 192.168.1.10-192.168.1.20",
+ "Address: IPv4 10.0.0.5"
+]
+check 10.0.0.5 (auto) true
+check 10.0.0.6 (auto) false
+check 192.168.1.9 (auto) false
+check 192.168.1.10 (auto) true
+check 192.168.1.20 (auto) true
+check 192.168.1.21 (auto) false
+check 172.16.0.0 (auto) true
+check 172.31.255.255 (auto) true
+check 172.32.0.0 (auto) false
+check 100.127.1.1 (auto) true
+check 100.128.0.0 (auto) false
+check 2001:db8:ffff::1 ipv6 true
+check 2001:db9:: ipv6 false
+check ::1 ipv6 true
+check ::2 ipv6 false
+check 10.0.0.5 ipv6 false
+check not-an-ip ipv4 false
+check SocketAddress true
+/0 matches anything v4: true but not v6: false
+Error: The value of "start" is out of range. It must be <= end
+RangeError: Invalid prefix: 33
+TypeError: Invalid family: ipx
+Error: Invalid IPv4 address: 1.2.3
+rules after failed adds: 6

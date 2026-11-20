@@ -1,0 +1,24 @@
+number 127.0.0.1 function function function function
+200 OK true http://127.0.0.1:PORT/echo false application/json r close 187 true
+["connection","content-length","content-type","server","x-reply"]
+{"method":"POST","body":"hello body","ct":"text/plain;charset=UTF-8","len":"10","custom":"abc","headerNames":["connection","content-length","content-type","host","user-agent","x-custom"]}
+418 I'm a teapot false teapot
+404 "Not Found" ""
+201 Created 0
+0,1,2,255,10,13 application/octet-stream
+[["connection","close"],["content-length","1"],["content-type","text/plain;charset=UTF-8"],["server","custom"],["x-multi","a, b"]]
+{"method":"PUT","body":"k=v+w","ct":"application/x-www-form-urlencoded;charset=UTF-8","len":"5","custom":null,"headerNames":["connection","content-length","content-type","host","user-agent"]}
+200 "" 111
+404 false not found: /missing
+shutdown returns finished true
+onListen 127.0.0.1 number true
+POST /echo host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /status host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /nostatus host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /created host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /bin host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /bin host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /headers host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+PUT /echo host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+HEAD /echo host-ok=true ua-ok=true remote=127.0.0.1/tcp/number
+GET /missing?q=1 host-ok=true ua-ok=true remote=127.0.0.1/tcp/number

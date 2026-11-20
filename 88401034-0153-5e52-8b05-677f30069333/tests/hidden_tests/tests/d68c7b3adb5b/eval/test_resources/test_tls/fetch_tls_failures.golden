@@ -1,0 +1,10 @@
+fetch self-signed: TypeError: fetch 'https://127.0.0.1:PORT/': TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed)
+  server tlsClientError: TLS server handshake failed (SSL error 1: error:0A000418:SSL routines::tlsv1 alert unknown ca)
+https.get self-signed: TypeError: fetch 'https://127.0.0.1:PORT/https-get': TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed)
+  server tlsClientError: TLS server handshake failed (SSL error 1: error:0A000418:SSL routines::tlsv1 alert unknown ca)
+fetch certificate for other.test: TypeError: fetch 'https://127.0.0.1:PORT/': TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed)
+  server tlsClientError: TLS server handshake failed (SSL error 1: error:0A000412:SSL routines::sslv3 alert bad certificate)
+fetch chunked: 200 "chunk-over-TLS"
+  server completed the handshake
+fetch oversized chunk: TypeError: fetch 'https://127.0.0.1:PORT/huge': body: response body too large
+  server completed the handshake

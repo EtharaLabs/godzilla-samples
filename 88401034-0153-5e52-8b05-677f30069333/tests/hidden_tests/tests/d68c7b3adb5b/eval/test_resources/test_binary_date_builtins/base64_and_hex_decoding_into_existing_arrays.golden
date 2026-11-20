@@ -1,0 +1,9 @@
+setFromBase64: {"read":4,"written":3} 102,111,111,0,0 {"read":9,"written":3} 102,111,111,0,0,0,0,0 {"read":8,"written":4} 102,111,111,98 {"read":0,"written":0} {"read":0,"written":0} 0,0 {"read":8,"written":6} 102,111,111,98,97,114
+setFromBase64 url and partial: {"read":3,"written":2}251,255,0,0,0,0 {"read":4,"written":3}102,111,111,0,0,0 {"read":7,"written":5}102,111,111,98,97,0 {"read":8,"written":4}102,111,111,98 {"read":4,"written":3}102,111,111,0
+setFromBase64 exact fit: {"read":4,"written":3}102,111,111 {"read":4,"written":3}102,111,111,0
+setFromBase64 error writes prefix: SyntaxError:invalid base64 string 102,111,111,0,0,0
+setFromBase64 strict bad tail: SyntaxError 102,111,111,0,0,0
+setFromBase64 misc: {"read":0,"written":0} | TypeError:setFromBase64 requires a string | TypeError:alphabet must be 'base64' or 'base64url' | TypeError:requires a Uint8Array | TypeError:detached buffer
+setFromHex: {"read":6,"written":3}170,187,204 {"read":4,"written":2}1,2,0,0 SyntaxError:invalid hex string SyntaxError 0,0,0,0 1,0,0,0
+setFromHex misc: TypeError:setFromHex requires a string | {"read":0,"written":0} | TypeError:requires a Uint8Array
+setFrom on subarray: 0,0,255,238,221,0 0,0,0,1,2,3 {"read":4,"written":3}

@@ -1,0 +1,45 @@
+ctor => 2024-02
+ctor ref day => 2024-02-15[u-ca=iso8601]
+ctor bad month => threw RangeError: invalid year-month
+"2024-02" => 2024-02
+"202402" => 2024-02
+"+002024-02" => 2024-02
+"2024-02-29" => 2024-02
+"2024-02-29T12:00" => 2024-02
+"2024-02[u-ca=iso8601]" => 2024-02
+"2024-02[u-ca=hebrew]" => threw RangeError: invalid year-month
+"2024-02-01[u-ca=hebrew]" => 2024-01-11[u-ca=hebrew]
+"2024-13" => threw RangeError: invalid year-month
+"-271821-04" => -271821-04
+"-271821-03" => threw RangeError: invalid year-month
+"+275760-09" => +275760-09
+"+275760-10" => threw RangeError: invalid year-month
+"2024-02Z" => threw RangeError: invalid year-month
+bag => 2024-12
+bag reject => threw RangeError: month out of range
+bag monthCode => 2024-07
+bag missing year => threw TypeError: missing field 'year'
+getters => 2024 1 M01 31 366 12 true undefined iso8601
+add months => 2025-02
+add years => 2026-01
+subtract months => 2023-12
+add days => threw RangeError: cannot add units smaller than months to a PlainYearMonth
+add weeks => threw RangeError: cannot add units smaller than months to a PlainYearMonth
+add hours => threw RangeError: cannot add units smaller than months to a PlainYearMonth
+add negative days => threw RangeError: cannot add units smaller than months to a PlainYearMonth
+with => 2024-12
+with year => 1999-01
+until => P2Y6M
+until months => P30M
+since years round => P2Y
+until weeks => threw RangeError: largestUnit must be year or month
+until days => threw RangeError: smallestUnit must be year or month
+toPlainDate => 2024-01-31
+toPlainDate constrain => 2023-02-28
+toPlainDate missing => threw TypeError: toPlainDate() requires a day
+toPlainDate none => threw TypeError: toPlainDate() argument must be an object
+compare => 1 0
+equals => true
+toJSON => 2024-01
+valueOf => threw TypeError: Temporal.PlainYearMonth has no valueOf; use compare
+toString calendarName always => 2024-01-01[u-ca=iso8601]

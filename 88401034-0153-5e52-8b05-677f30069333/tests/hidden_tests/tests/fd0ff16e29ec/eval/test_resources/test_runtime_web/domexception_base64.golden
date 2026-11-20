@@ -1,0 +1,32 @@
+domexception NotFoundError boom true true NotFoundError: boom [object Error]
+defaults "Error" "" 42: m string
+btoa "" 
+btoa "f" Zg==
+btoa "fo" Zm8=
+btoa "foo" Zm9v
+btoa "foob" Zm9vYg==
+btoa "fooba" Zm9vYmE=
+btoa "foobar" Zm9vYmFy
+btoa "\u0000ÿ" AP+A
+btoa "héllo" aOlsbG8=
+btoa coerce MTIz bnVsbA== dW5kZWZpbmVk MSwy
+atob "" ""
+atob "Zg==" "f"
+atob "Zg=" InvalidCharacterError atob: invalid base64 true
+atob "Zg" "f"
+atob "Zm9v" "foo"
+atob "Zm9vYg" "foob"
+atob " Zm 9v\nYmFy\t" "foobar"
+atob "AAEC/w==" "\u0000\u0001\u0002ÿ"
+atob "+/+/" "ûÿ¿"
+atob "Zm9vYmFy==" InvalidCharacterError atob: invalid base64 true
+atob "Z" InvalidCharacterError atob: invalid base64
+atob "Zm9v!" InvalidCharacterError atob: invalid base64
+atob "Zg===" InvalidCharacterError atob: invalid base64
+atob "Z===" InvalidCharacterError atob: invalid base64
+atob "-_" InvalidCharacterError atob: invalid base64
+atob "Zm9vY" InvalidCharacterError atob: invalid base64
+btoa error InvalidCharacterError btoa: character beyond latin1 range true
+btoa error InvalidCharacterError btoa: character beyond latin1 range true
+btoa error InvalidCharacterError btoa: character beyond latin1 range true
+roundtrip true

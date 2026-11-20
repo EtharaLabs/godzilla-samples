@@ -1,0 +1,16 @@
+get 1 ["1","2"] true blob app/x true renamed.txt true null []
+set ["a","blob","file","orig"] only
+set/delete ["a","file","orig","new"]
+forEach a:onlytrue file:File(renamed.txt)true orig:File(a.txt)true new:ntrue [object FormData]
+iterators ["string","object","object","string"] ["a","file","orig","new"] ["a","only"]
+TypeError FormData: a filename is only valid with a Blob/File value
+set with filename named.bin true
+content-type true
+wire "--BOUNDARY\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\nonly\r\n--BOUNDARY\r\nContent-Disposition: form-data; name=\"file\"; filename=\"renamed.txt\"\r\nContent-Type: text/plain\r\n\r\nabc\r\n--BOUNDARY\r\nContent-Disposition: form-data; name=\"orig\"; filename=\"a.txt\"\r\nContent-Type: text/plain\r\n\r\nabc\r\n--BOUNDARY\r\nContent-Disposition: form-data; name=\"new\"\r\n\r\nn\r\n--BOUNDARY\r\nContent-Disposition: form-data; name=\"blob2\"; filename=\"named.bin\"\r\nContent-Type: application/octet-stream\r\n\r\nq\r\n--BOUNDARY--\r\n"
+roundtrip [["a","only"],["file",["renamed.txt","text/plain",3]],["orig",["a.txt","text/plain",3]],["new","n"],["blob2",["named.bin","application/octet-stream",1]]]
+escaping [["q\"x","line1\nline2"],["bin","we\"ird.bin"]] 0,13,10,45,45,255
+external [["t","hello"],["up",["u.txt","text/markdown",4]]]
+urlencoded [["a","1"],["b","two words"],["a","3"]]
+formData error TypeError formData(): unsupported content-type 'text/plain'
+formData error TypeError formData(): unsupported content-type 'multipart/form-data'
+formData error TypeError formData(): unsupported content-type 'text/plain;charset=UTF-8'

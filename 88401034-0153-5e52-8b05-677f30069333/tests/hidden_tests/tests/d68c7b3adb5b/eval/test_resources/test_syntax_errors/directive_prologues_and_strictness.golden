@@ -1,0 +1,34 @@
+# directive prologues
+"\"use strict\"; (function () { return this; })()" => ok
+"\"other\"; \"use strict\"; (function () { return this; })()" => ok
+"1; \"use strict\"; (function () { return typeof this; })()" => ok "object"
+"(\"use strict\"); (function () { return typeof this; })()" => ok "object"
+"\"use\\x20strict\"; (function () { return typeof this; })()" => ok "object"
+"'use strict'; (function () { return this; })()" => ok
+"\"use strict\" + 1; (function () { return typeof this; })()" => ok "object"
+"\"use strict\"\n010" => SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"\n;010" => SyntaxError: legacy octal literals are not allowed in strict mode
+"\"\\07\"; \"use strict\"" => SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"; \"\\07\"" => SyntaxError: legacy octal literals are not allowed in strict mode
+"function f() { \"use strict\"; return this; } f()" => ok
+"function f() { \"use strict\"; return function () { return this; }(); } f()" => ok
+"function f() { return function () { \"use strict\"; return typeof this; }(); } f()" => ok "undefined"
+"(() => { \"use strict\"; return this === globalThis; })()" => ok true
+"class C { m() { return function () { return this; }(); } } new C().m()" => ok
+"class C { m() { return eval(\"var leaked = 1; typeof leaked\"); } } new C().m() + \" \" + typeof leaked" => ok "number undefined"
+"({ get g() { \"use strict\"; return typeof this; } }).g" => ok "object"
+"function f() { \"use strict\"; return eval(\"this\"); } f()" => ok
+"function f() { \"use strict\"; eval(\"var e1 = 1\"); return typeof e1; } f()" => ok "undefined"
+"function f() { eval(\"'use strict'; var e2 = 1\"); return typeof e2; } f()" => ok "undefined"
+"\"use strict\"; function g() { return typeof this; } g.call(5)" => ok "number"
+"function g() { return typeof this; } g.call(5)" => ok "object"
+"\"use strict\"; Object.defineProperty({}, \"x\", { value: 1 }).x = 2" => TypeError: cannot assign to read-only property 'x'
+"Object.defineProperty({}, \"x\", { value: 1 }).x = 2; \"silent\"" => ok "silent"
+"function f(a, b) { \"use strict\"; a = 9; return arguments[0]; } f(1, 2)" => ok 1
+"function f(a, b) { a = 9; return arguments[0]; } f(1, 2)" => ok 9
+"\"use strict\"; (function () { return arguments.callee; })()" => TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+"function f() { \"use strict\"; } f.caller" => TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+"\"use strict\"; typeof Function(\"return this\")()" => ok "object"
+"\"use strict\"; var o = { a: 1 }; Object.freeze(o); o.a = 2" => TypeError: cannot assign to read-only property 'a'
+"\"use strict\"; undefinedName = 1" => ReferenceError: undefinedName is not defined
+"\"use strict\"; ({}).x.y" => TypeError: cannot read property 'y' of undefined

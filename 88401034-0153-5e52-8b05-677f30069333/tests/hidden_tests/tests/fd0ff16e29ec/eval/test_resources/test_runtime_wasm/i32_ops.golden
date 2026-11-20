@@ -1,0 +1,32 @@
+add     10 -4 4 2147483647 30 38 305419900 3
+sub     4 -10 10 -2147483647 -32 -28 305419892 3
+mul     21 -21 -21 -2147483648 -31 165 1221679584 0
+div_s   2 -2 -2 RuntimeError(wasm: integer overflow) 0 0 76354974 RuntimeError(wasm: integer divide by zero)
+div_u   2 1431655763 0 0 138547332 0 76354974 RuntimeError(wasm: integer divide by zero)
+rem_s   1 -1 1 0 -1 5 0 RuntimeError(wasm: integer divide by zero)
+rem_u   1 0 7 -2147483648 3 5 0 RuntimeError(wasm: integer divide by zero)
+and     3 1 5 -2147483648 31 1 0 0
+or      7 -5 -1 -1 -1 37 305419900 3
+xor     4 -6 -6 2147483647 -32 36 305419900 3
+shl     56 -56 -536870912 0 -2147483648 10 591751040 3
+shr_s   0 -1 0 -1 -1 2 19088743 3
+shr_u   0 536870911 0 1 1 2 19088743 3
+rotl    56 -49 -536870912 1073741824 -1 10 591751041 3
+rotr    -536870912 1073741823 56 1 -1 -2147483646 -2128394905 3
+eq      0 0 0 0 0 0 0 0
+ne      1 1 1 1 1 1 1 1
+lt_s    0 1 0 1 1 1 0 0
+lt_u    0 0 1 1 0 1 0 0
+gt_s    1 0 1 0 0 0 1 1
+gt_u    1 1 0 0 1 0 1 1
+le_s    0 1 0 1 1 1 0 0
+le_u    0 0 1 1 0 1 0 0
+ge_s    1 0 1 0 0 0 1 1
+ge_u    1 1 0 0 1 0 1 1
+clz        32 31 0 24 16 8 0
+ctz        32 0 0 7 15 12 31
+popcnt     0 1 32 1 1 8 1
+eqz        1 0 0 0 0 0 0
+extend8_s  0 1 -1 -128 0 0 0
+extend16_s 0 1 -1 128 -32768 -4096 0
+coerce 5 -1 13 0 -2147483648 42

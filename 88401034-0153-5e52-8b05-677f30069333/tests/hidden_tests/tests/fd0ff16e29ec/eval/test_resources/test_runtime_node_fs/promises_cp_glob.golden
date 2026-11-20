@@ -1,0 +1,45 @@
+read B+b 41
+readdir a.txt,sub
+stat true true
+lstat true a.txt
+accessErr ENOENT
+cp dst/a.txt=A dst/ln@a.txt dst/sub/ dst/sub/b.js=B+b dst/sub/deep/ dst/sub/deep/c.md=C
+cpfilter dst2/a.txt=A dst2/ln@a.txt dst2/sub/ dst2/sub/deep/ dst2/sub/deep/c.md=C
+cpderef dst4/a.txt=A dst4/ln=A dst4/sub/ dst4/sub/b.js=B+b dst4/sub/deep/ dst4/sub/deep/c.md=C
+cpfile A
+cpExist ERR_FS_CP_EEXIST cp ERR_FS_CP_EEXIST: destination already exists, cp 'single/x/a.txt'
+cp force:false keeps old
+cpp dst3/b.js=B+b dst3/deep/ dst3/deep/c.md=C
+glob [] | src/a.txt,src/ln,src/sub,src/sub/b.js,src/sub/deep,src/sub/deep/c.md
+glob2 dst/sub/deep/c.md,dst2/sub/deep/c.md,dst3/deep/c.md,dst4/sub/deep/c.md,src/sub/deep/c.md | src/a.txt | src/a.txt | 
+globmulti dst3/b.js,src/a.txt
+globcwd b.js,deep
+globex src/a.txt,src/sub
+globtypes a.txt:true:false,ln:false:true,sub:false:false
+globasync dst/a.txt
+opendir a.txt,ln,sub/ src null
+opendirAsync b.js,deep
+dir.read promise string true null
+fh number true
+fhw 11
+fhr 4 hand
+fhr2 3 fil
+fhstat 11
+fhreadFile file
+fhwv 2
+fhrv 6 12l|eWX
+fhmode 604
+fhtimes 10000 20000
+fhafter null 12leWXYZ++
+readFileFH 12leWXYZ++
+fh3 written through handle+more null
+rm false
+mkdtemp 13 true
+trunc B 6000
+chmod 611
+err ENOENT cannot read 'nope.txt': No such file or directory (os error 2)
+err2 EEXIST EEXIST: File exists (os error 17), mkdir 'src'
+err3 undefined openSync 'nope/x.txt': No such file or directory (os error 2)
+err4 ENOSYS: lchmod is not supported on this platform, lchmod 'src/a.txt'
+blob 1 text/plain A true
+blob err ENOENT

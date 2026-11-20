@@ -1,0 +1,44 @@
+sync start
+async fn body (sync part)
+sync end
+microtask 1
+then 1
+after await null
+thenable.then called
+resolved rv
+then 2
+after await thenable
+caught async TypeError async boom
+async finally
+all-reject all-rejects
+allSettled ["rejected:no","fulfilled:ok"]
+race settled-first
+any AggregateError 1,2 
+then 3
+resolved rp
+all 1,2,3
+timeout 0
+after await timeout
+--- async iteration
+agen finally
+for-await a1,a2,a3-unwrapped
+for-await-sync p1,plain,p2
+first only a1
+agen finally
+agen finally
+queued [{"value":"a1","done":false},{"value":"a2","done":false},{"value":"R","done":true},{"done":true}]
+agen caught X
+agen-throw {"value":"ready","done":false} {"value":"stopped","done":true} {"done":true}
+agen finally
+async-delegate s1,s2,a1,a2,a3-unwrapped,after
+custom-async 0,1,4
+err1 TypeError: @@asyncIterator is not callable
+err2 TypeError: value is not iterable
+err3 TypeError: iterator result is not an object
+await-positions 1,2 {"a":"x","k":"v"} 7 tpl
+interleave A1,B1,A2,B2,A3,B3
+async-yield*-forward [{"value":"in0","done":false},{"value":"in1","done":false},{"value":"handled-T","done":false},{"value":"ret-Z","done":true},{"done":true}] next:undefined next:b throw:T return:Z
+async-no-throw TypeError: the delegated iterator has no 'throw' method closed
+del3 finally
+async-no-return {"value":"early","done":true}
+async-yield*-sync sync-p1,sync-v2

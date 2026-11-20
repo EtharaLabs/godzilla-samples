@@ -1,0 +1,31 @@
+host callback receives a wrapped realm function: function -> realm fn got x
+host callback given an object: inner caught TypeError: wrapped function arguments must be primitives or callables
+host callback returns a function: function 8
+host callback returns an object: inner caught TypeError: a wrapped function returned a non-primitive
+host callback throws: inner caught TypeError: a wrapped function threw in the host realm
+primitives cross unchanged: 1|two|null|undefined|3|Symbol.iterator
+object argument to wrapped fn: TypeError: ShadowRealm wrapped function: arguments must be primitives or callables
+wrapped fn returns object: TypeError: a wrapped function returned a non-primitive
+wrapped fn returns callable: function inner/2 5
+wrapped fn throws: TypeError: a wrapped function threw inside the ShadowRealm
+wrapper of plain: "named"/3
+wrapper of no-length: "named"/0
+wrapper of string-length: "named"/0
+wrapper of inf-length: "named"/Infinity
+wrapper of neg-length: "named"/0
+wrapper of frac-length: "named"/2
+wrapper of num-name: ""/3
+wrapper of throw-length: TypeError: a wrapped function returned a non-primitive
+wrapper of throw-name: TypeError: a wrapped function returned a non-primitive
+wrapper of proxy-gopd: TypeError: a wrapped function returned a non-primitive
+evaluate returns length-less fn: 0
+new proxy of Math.max: TypeError: object is not a constructor
+new proxy of arrow: TypeError: object is not a constructor
+new proxy of method: TypeError: object is not a constructor
+new proxy of async fn: TypeError: object is not a constructor
+new proxy of wrapped fn: TypeError: object is not a constructor
+deep newTarget chain: true 0
+foreign newTarget with null prototype: true
+native fn with long proto chain: 9 2
+construct proxy after createRealm: 5
+construct foreign proxy: 10 true

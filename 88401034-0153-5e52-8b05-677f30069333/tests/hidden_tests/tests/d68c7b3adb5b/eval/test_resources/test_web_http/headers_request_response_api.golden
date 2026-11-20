@@ -1,0 +1,23 @@
+entries [["content-type","text/html"],["x-a","1, 2"],["x-c","3"]] get 1, 2 null has true
+keys content-type,x-a,x-c values text/html|1, 2|3
+forEach content-type:text/html:true x-a:1, 2:true x-c:3:true
+from pairs [["a","1"],["b","2"]] copy [["content-type","text/html"],["x-a","1, 2"],["x-c","3"]]
+bad name TypeError: invalid header name 'bad name' | TypeError: invalid header name 'a:b' | bad pair TypeError: Headers: init pair needs two items
+request POST http://example.test/path?q=1 r text/plain;charset=UTF-8 false
+text payload true clone text payload consume twice TypeError: body already consumed
+GET body TypeError: GET request cannot have a body | HEAD body TypeError: HEAD request cannot have a body
+relative url TypeError: URL: invalid URL '/relative' (relative, and no base given)
+derived PUT http://x.test/a 1 orig
+response 201 Made true yes text/plain;charset=UTF-8 true false false
+arrayBuffer 9 clone bytes 9 clone used TypeError: cannot clone a used Response
+defaults 200 "" null 200
+bad status RangeError: invalid response status 99 | RangeError: invalid response status 600
+error() 0 error false
+json() 202 application/vnd.test+json {"a":[1,"two"]}
+json parse error SyntaxError
+blob true 7 text/x-test blobbed
+formData urlencoded [["a","1"],["b","two words"],["a","3"]]
+formData multipart v true f.txt text/plain file text
+formData unsupported TypeError: formData(): unsupported content-type 'text/plain'
+body stream true chunky body false true true body already consumed
+async iterate body iterated

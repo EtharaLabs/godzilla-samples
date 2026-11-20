@@ -1,0 +1,31 @@
+fsd 0 => 09:05:07
+fsd 1 => 09:05:07.1
+fsd 3 => 09:05:07.123
+fsd 5 => 09:05:07.12345
+fsd 9 => 09:05:07.123456789
+fsd auto => 09:05:07.123456789
+smallestUnit minute => 09:05
+smallestUnit second => 09:05:07
+smallestUnit millisecond => 09:05:07.123
+smallestUnit microsecond => 09:05:07.123456
+smallestUnit nanosecond => 09:05:07.123456789
+smallestUnit wins over digits => 09:05:07
+fsd 2 halfExpand => 09:05:07.12
+fsd 0 ceil => 09:05:08
+fsd 10 => threw RangeError: fractionalSecondDigits out of range
+fsd -1 => threw RangeError: fractionalSecondDigits out of range
+fsd 2.7 => 09:05:07.12
+fsd "3" => threw RangeError: fractionalSecondDigits must be 'auto' or a number
+fsd NaN => threw RangeError: fractionalSecondDigits out of range
+smallestUnit hour => threw RangeError: smallestUnit must be a time unit
+smallestUnit bad => threw RangeError: invalid smallestUnit
+roundingMode bad => threw RangeError: invalid roundingMode
+auto trims zeros => 09:05:07.1
+zero seconds kept => 09:05:00
+JSON => "09:05:07.123456789"
+pdt carry into next year => 2000-01-01T00:00:00
+pdt minute ceil => 2000-01-01T00:00
+pdt fsd 1 trunc => 1999-12-31T23:59:59.9
+pdt calendarName always => 1999-12-31T23:59:59.999[u-ca=iso8601]
+pdt calendar critical => 1999-12-31T23:59[!u-ca=roc]
+pdt max carry out of range => threw RangeError: date-time is outside the representable range

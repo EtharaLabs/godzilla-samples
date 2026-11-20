@@ -1,0 +1,25 @@
+AB normal ArrayBuffer(4) [2,3,4,5]
+AB species plain obj TypeError: slice species did not create an ArrayBuffer
+AB species sab TypeError: slice species returned a SharedArrayBuffer
+AB species detached TypeError: slice species returned a detached ArrayBuffer
+AB species same TypeError: slice species returned the same ArrayBuffer
+AB species immutable TypeError: slice species returned an immutable buffer
+AB species small TypeError: slice species buffer is too small
+AB species detaches source TypeError: source ArrayBuffer was detached during slice
+AB species larger ArrayBuffer(4) [3,4,0,0]
+SAB normal SharedArrayBuffer(3) [4,3,2]
+SAB species AB TypeError: slice species did not create a SharedArrayBuffer
+SAB species same TypeError: slice species returned the same SharedArrayBuffer
+SAB species small TypeError: slice species buffer is too small
+SAB bad max RangeError: Invalid maxByteLength RangeError: Invalid maxByteLength
+SAB too large RangeError: SharedArrayBuffer allocation too large
+SAB growable true 5 8
+transfer shared TypeError: transfer requires a non-shared ArrayBuffer
+slice shared TypeError: requires a non-shared ArrayBuffer
+resize immutable TypeError: ArrayBuffer is not resizable
+resize detach in coercion TypeError: ArrayBuffer is detached
+resize NaN 0
+sliceToImmutable shrink RangeError: source ArrayBuffer shrank below the resolved range
+sliceToImmutable empty ArrayBuffer(0) []
+sliceToImmutable detached TypeError: ArrayBuffer is detached
+transfer newlen ArrayBuffer(3) [1,2,3] RangeError: invalid transfer length

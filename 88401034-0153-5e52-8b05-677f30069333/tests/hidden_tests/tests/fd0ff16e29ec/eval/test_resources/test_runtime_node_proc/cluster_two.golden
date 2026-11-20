@@ -1,0 +1,13 @@
+cluster exit 1 0 true true
+cluster exit 2 0 true true
+cluster message 1 {"ready":true,"n":1,"args":["x"],"isWorker":true,"connected":true}
+cluster message 1 {"result":11,"id":1}
+cluster message 2 {"ready":true,"n":2,"args":["x"],"isWorker":true,"connected":true}
+cluster message 2 {"result":21,"id":2}
+fork 1
+fork 2
+online 1
+online 2
+setup ["x"] true cl.js
+primary true true false undefined true function true
+disconnect callback with no workers

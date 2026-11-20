@@ -1,0 +1,26 @@
+empty            false CompileError: wasm: unexpected end of input true
+header only      true compiled
+bad magic        false CompileError: wasm: bad magic true
+version 2        false CompileError: wasm: unsupported version true
+truncated        false CompileError: wasm: section overruns input true
+out of order     false CompileError: wasm: sections out of order true
+unknown section  false CompileError: wasm: unknown section id 13 true
+size mismatch    false CompileError: wasm: section 1 size mismatch true
+bad functype     false CompileError: wasm: expected func type (0x60) true
+bad valtype      false CompileError: wasm: unknown value type 0x55 true
+type idx oob     false CompileError: wasm: function type index out of range true
+export oob       false compiled
+count mismatch   false CompileError: wasm: code/function count mismatch true
+no end           false CompileError: wasm: function body not terminated by end true
+empty custom     true compiled
+named custom     false CompileError: wasm: section 0 size mismatch true
+bad import kind  false CompileError: wasm: unknown import kind 7 true
+bad export kind  false CompileError: wasm: unknown export kind 9 true
+unsupported elem false CompileError: wasm: unsupported element segment kind 5 true
+bad utf8 name    false CompileError: wasm: invalid utf-8 in name true
+bad const expr   false CompileError: wasm: unsupported opcode 0x6a in const expr true
+validate non-buffer false
+Module non-buffer THREW TypeError: WebAssembly: expected a BufferSource false true
+compile rejects CompileError: wasm: unexpected end of input
+instantiate rejects CompileError: wasm: bad magic
+true CompileError LinkError z RuntimeError: r

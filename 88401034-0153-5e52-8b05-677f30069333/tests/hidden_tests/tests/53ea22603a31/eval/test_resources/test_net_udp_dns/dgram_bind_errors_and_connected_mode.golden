@@ -1,0 +1,18 @@
+dup bind error Error [EADDRINUSE] bind EADDRINUSE 127.0.0.1:PORT syscall=bind address=127.0.0.1 portMatches=true
+dup address after failed bind THREW Error [EBADF] getsockname EBADF
+dup close -> true
+dup close event
+non-local bind error Error [EADDRNOTAVAIL] bind EADDRNOTAVAIL 192.0.2.1:0 syscall=bind address=192.0.2.1 port=0
+remoteAddress before connect event -> "{\"address\":\"127.0.0.1\",\"family\":\"IPv4\",\"port\":PORT}"
+connect event then connect callback
+remoteAddress -> "{\"address\":\"127.0.0.1\",\"family\":\"IPv4\",\"port\":PORT}"
+connect twice THREW Error [ERR_SOCKET_DGRAM_IS_CONNECTED] Already connected
+send with port on connected socket Error [ERR_SOCKET_DGRAM_IS_CONNECTED] Already connected
+connected send null 2
+connected offset send null 3
+server got hi | server got bye
+disconnect -> undefined
+remoteAddress after disconnect THREW Error [ERR_SOCKET_DGRAM_NOT_CONNECTED] Not connected
+disconnect twice THREW Error [ERR_SOCKET_DGRAM_NOT_CONNECTED] Not connected
+send without port after disconnect THREW RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received undefined.
+closed all

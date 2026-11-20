@@ -1,0 +1,57 @@
+PlainDateTime string => threw TypeError: with() argument must be a plain object
+PlainDateTime temporal => threw TypeError: with() argument must be a plain object
+PlainDateTime calendar => threw TypeError: with() argument must not have 'calendar'
+PlainDateTime timeZone => threw TypeError: with() argument must not have 'timeZone'
+PlainDateTime month 0 => threw RangeError: month must be positive
+PlainDateTime day 0 => threw RangeError: day must be positive
+PlainDateTime monthCode number => threw TypeError: monthCode must be a string
+PlainDateTime monthCode bad => threw RangeError: invalid monthCode: M3
+PlainDateTime monthCode M02 => 2024-02-29T10:00:00
+PlainDateTime monthCode M02 reject => threw RangeError: day out of range
+PlainDateTime monthCode+month disagree => threw RangeError: month and monthCode disagree
+PlainDateTime era only => threw TypeError: with() requires at least one field
+PlainDateTime empty => threw TypeError: with() requires at least one field
+PlainDateTime year => 2023-05-31T10:00:00
+PlainYearMonth string => threw TypeError: with() argument must be a plain object
+PlainYearMonth temporal => threw TypeError: with() argument must be a plain object
+PlainYearMonth calendar => threw TypeError: with() argument must not have 'calendar'
+PlainYearMonth timeZone => threw TypeError: with() argument must not have 'timeZone'
+PlainYearMonth month 0 => threw RangeError: month must be positive
+PlainYearMonth day 0 => threw TypeError: with() requires at least one field
+PlainYearMonth monthCode number => threw TypeError: monthCode must be a string
+PlainYearMonth monthCode bad => threw RangeError: invalid monthCode: M3
+PlainYearMonth monthCode M02 => 2024-02
+PlainYearMonth monthCode M02 reject => 2024-02
+PlainYearMonth monthCode+month disagree => threw RangeError: month and monthCode disagree
+PlainYearMonth era only => threw TypeError: with() requires at least one field
+PlainYearMonth empty => threw TypeError: with() requires at least one field
+PlainYearMonth year => 2023-05
+PlainMonthDay string => threw TypeError: with() argument must be a plain object
+PlainMonthDay temporal => threw TypeError: with() argument must be a plain object
+PlainMonthDay calendar => threw TypeError: with() argument must not have 'calendar'
+PlainMonthDay timeZone => threw TypeError: with() argument must not have 'timeZone'
+PlainMonthDay month 0 => threw RangeError: month must be positive
+PlainMonthDay day 0 => threw RangeError: day must be positive
+PlainMonthDay monthCode number => threw TypeError: monthCode must be a string
+PlainMonthDay monthCode bad => threw RangeError: invalid monthCode: M3
+PlainMonthDay monthCode M02 => 02-29
+PlainMonthDay monthCode M02 reject => threw RangeError: day out of range
+PlainMonthDay monthCode+month disagree => threw RangeError: month and monthCode disagree
+PlainMonthDay era only => threw TypeError: with() requires at least one field
+PlainMonthDay empty => threw TypeError: with() requires at least one field
+PlainMonthDay year => 05-31
+PlainTime string => threw TypeError: with() argument must be a plain object
+PlainTime temporal => threw TypeError: with() argument must be a plain object
+PlainTime calendar => threw TypeError: with() argument must not have 'calendar'
+PlainTime timeZone => threw TypeError: with() argument must not have 'timeZone'
+PlainTime ns => 10:00:00.007006005
+gregory dt era+eraYear => -000004-05-31T10:00:00[u-ca=gregory]
+gregory dt eraYear only => threw TypeError: era and eraYear must both be provided
+gregory dt era+eraYear+year => threw TypeError: eraYear and year are mutually exclusive
+gregory ym era+eraYear => -000004-05-01[u-ca=gregory]
+gregory ym eraYear only => threw TypeError: era and eraYear must both be provided
+gregory ym era+eraYear+year => threw TypeError: eraYear and year are mutually exclusive
+gregory ym monthCode => 2024-12-01[u-ca=gregory]
+gregory md era+eraYear+day => 1972-02-29[u-ca=gregory]
+gregory md era only => threw TypeError: era and eraYear must both be provided
+gregory md with month and year => 1972-02-28[u-ca=gregory]

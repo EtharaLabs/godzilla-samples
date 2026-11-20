@@ -1,0 +1,8 @@
+string           text/plain;charset=UTF-8 | 6 bytes | héllo
+Uint8Array       (none) | 2 bytes | hi
+ArrayBuffer      (none) | 3 bytes | 
+Int16Array view  (none) | 2 bytes | DC
+URLSearchParams  application/x-www-form-urlencoded;charset=UTF-8 | 13 bytes | q=a+b%26c&n=1
+Blob             text/x-blob | 10 bytes | blob parts
+ReadableStream   (none) | 15 bytes | streamed chunks
+FormData         multipart/form-data; boundary=... | 329 bytes | --BOUNDARY\r\nContent-Disposition: form-data; name="name"\r\n\r\nlumen\r\n--BOUNDARY\r\nContent-Disposition: form-data; name="file"; filename="a.txt"\r\nContent-Type: text/plain\r\n\r\nfile body\r\n--BOUNDARY--\r\n | parsed: name=lumen file=File(a.txt,text/plain,9)

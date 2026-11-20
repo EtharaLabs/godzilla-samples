@@ -1,0 +1,29 @@
+replacer array dedupe and numbers: {"b":"B","1":"one","a":"A"}
+replacer function holder: ""@obj "x"@obj "0"@arr "1"@arr "y"@obj
+replacer removes and transforms: {"keep":10,"nested":{"n":40}}
+toJSON order: {"k":"toJSON(k)","arr":["toJSON(0)"]}
+toJSON then replacer: {"a":2}
+gap clamping: 12 abcdefghij"a": 1 [\n  1\n] [1] {}[]
+wrapper objects: ["s",3,false,true]
+bigint: TypeError: Do not know how to serialize a BigInt
+bigint toJSON: {"n":"12n"}
+cycle: TypeError: Converting circular structure to JSON
+cycle in array: TypeError: Converting circular structure to JSON
+special numbers and undefined: [null,null,0,null,null,null] {} undefined undefined
+well-formed stringify: "\ud800 \udc00 😀    \u0007\"\\"
+symbol keys skipped: {"a":1}
+proxy array: [1,2] {"z":"v-z","q":"v-q"}
+parse reviver: {"a":[100,200,{}],"c":"x"}
+reviver source context: 0=1.50 1="s" k=1e2
+reviver mutating holder: {"a":1,"c":"added"}
+parse errors: SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError
+parse error message: SyntaxError: Invalid literal in JSON
+parse __proto__ key: true
+parse duplicate keys: {"a":2}
+parse numbers: [0,null,0,1,1.2345678901234568e+29] true
+parse whitespace and unicode escapes: é😀/ 1
+rawJSON: {"big":1e1000,"s":"str"} true false true null
+rawJSON invalid: SyntaxError: JSON.rawJSON value must be a primitive
+rawJSON whitespace: SyntaxError: JSON.rawJSON: leading/trailing whitespace
+toStringTag: [object JSON] 3 2
+deep nesting: 499 1000

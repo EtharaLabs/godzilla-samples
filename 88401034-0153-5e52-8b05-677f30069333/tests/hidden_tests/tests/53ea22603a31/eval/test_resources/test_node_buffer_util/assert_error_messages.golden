@@ -1,0 +1,58 @@
+ok passed
+ok0 | AssertionError ERR_ASSERTION "The expression evaluated to a falsy value:" == 0 true true true
+okmsg | AssertionError ERR_ASSERTION "nope" == false true true true
+okerr | AssertionError ERR_ASSERTION "TypeError: custom error" == null true true true
+eq passed
+eqf | AssertionError ERR_ASSERTION "Assertion failed" == null 0 true true
+eqnull passed
+neq | AssertionError ERR_ASSERTION "loose same" != 1 "1" true true
+seq | AssertionError ERR_ASSERTION "Assertion failed" strictEqual "a" "b" true true
+seqNaN passed
+seq0 | AssertionError ERR_ASSERTION "Assertion failed" strictEqual 0 0 true true
+nseq | AssertionError ERR_ASSERTION "should differ" notStrictEqual 2 2 true true
+deq passed
+deqf | AssertionError ERR_ASSERTION "Assertion failed" deepEqual [ 1, 2 ] [ 1, 3 ] true true
+ndeq | AssertionError ERR_ASSERTION "Assertion failed" notDeepEqual [ 1 ] [ '1' ] true true
+dseq passed
+dseqf | AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual [ 1 ] [ '1' ] true true
+dseqproto | AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual {} {} true true
+dseqmap passed
+dseqset | AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual Set(2) { 1, 2 } Set(2) { 2, 3 } true true
+dseqdate | AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual 1970-01-01T00:00:00.005Z 1970-01-01T00:00:00.006Z true true
+ndseq | AssertionError ERR_ASSERTION "Assertion failed" notDeepStrictEqual { a: 1 } { a: 1 } true true
+partial passed
+partialf | AssertionError ERR_ASSERTION "Assertion failed" partialDeepStrictEqual { a: 1 } { a: 2 } true true
+match passed
+matchf | AssertionError ERR_ASSERTION "no x" match "hello" /^x/ true true
+dnm | AssertionError ERR_ASSERTION "Assertion failed" doesNotMatch "abc" /b/ true true
+throws passed
+throwsre passed
+throwsobj passed
+throwsobjf | AssertionError ERR_ASSERTION "The error did not match the expected criteria." throws Error(m) { code: 'E2' } true true
+throwsfn passed
+throwsclassf | AssertionError ERR_ASSERTION "The error did not match the expected criteria." throws Error(plain) fn RangeError true true
+throwsnone | AssertionError ERR_ASSERTION "Missing expected exception." fail undefined undefined true true
+throwsnonemsg | AssertionError ERR_ASSERTION "expected boom" fail undefined undefined true true
+dnt | AssertionError ERR_ASSERTION "Got unwanted exception." doesNotThrow Error(oops) undefined true true
+dntmsg | AssertionError ERR_ASSERTION "Got unwanted exception. extra" doesNotThrow Error(oops) undefined true true
+dntother | TypeError undefined "other kind" undefined undefined undefined false true
+iferr passed
+iferr2 | AssertionError ERR_ASSERTION "ifError got unwanted exception: cb failed" ifError Error(cb failed) null true true
+iferr3 | AssertionError ERR_ASSERTION "ifError got unwanted exception: str" ifError "str" null true true
+fail | AssertionError ERR_ASSERTION "Failed" fail undefined undefined true true
+failmsg | AssertionError ERR_ASSERTION "explicit" fail undefined undefined true true
+failerr | RangeError undefined "as is" undefined undefined undefined false true
+strict.equal | AssertionError ERR_ASSERTION "Assertion failed" strictEqual 1 "1" true true
+strict.deepEqual | AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual [ 1 ] [ '1' ] true true
+strict.ok | AssertionError ERR_ASSERTION "The expression evaluated to a falsy value:" == "" true true true
+true true true m
+Assertion failed AssertionError ERR_ASSERTION AssertionError: Assertion failed
+tracked result 42
+[["Expected the named function to be executed 2 time(s) but was executed 1 time(s).",1,2,"named"],["Expected the fn function to be executed 1 time(s) but was executed 0 time(s).",0,1,"fn"]]
+verify | AssertionError ERR_ASSERTION "Expected the named function to be executed 2 time(s) but was executed 1 time(s).\nExpected the fn function to be executed 1 time(s) but was executed 0 time(s)." verify undefined undefined true true
+verify2 passed
+rejects ok
+rejects none Missing expected rejection. fail
+rejects mismatch The error did not match the expected criteria. rejects TypeError(t)
+dnr Got unwanted rejection. doesNotReject
+dnr ok undefined

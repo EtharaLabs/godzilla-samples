@@ -1,0 +1,12 @@
+refused          TypeError TypeError "fetch 'http://127.0.0.1:DEAD/x': connect: Connection refused (os error 111)"
+refused https    TypeError TypeError "fetch 'https://127.0.0.1:DEAD/secure': connect: Connection refused (os error 111)"
+ftp scheme       TypeError TypeError "fetch: unsupported scheme 'ftp'"
+data scheme      TypeError TypeError "fetch: unsupported scheme 'data'"
+relative         TypeError TypeError "URL: invalid URL '/just/a/path' (relative, and no base given)"
+bad port         TypeError TypeError "URL: invalid port '99999'"
+GET with body    TypeError TypeError "GET request cannot have a body"
+pre-aborted      DOMException AbortError "signal is aborted without reason"
+custom reason    Error Error "custom abort reason"
+fetch returns a promise even on bad input: true
+in-flight abort: AbortError signal is aborted without reason true
+server drained

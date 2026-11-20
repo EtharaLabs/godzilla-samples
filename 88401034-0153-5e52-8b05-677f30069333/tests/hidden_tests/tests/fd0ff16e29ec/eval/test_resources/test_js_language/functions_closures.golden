@@ -1,0 +1,55 @@
+fn-hoist hoisted ok
+var-hoist undefined
+tdz-let !ReferenceError: cannot access 'tl' before initialization
+tdz-typeof !ReferenceError: cannot access 'tdzv' before initialization
+tdz-closure !ReferenceError: cannot access 'later' before initialization
+tdz-class !ReferenceError: cannot access 'K' before initialization
+tdz-self-ref !ReferenceError: cannot access 's' before initialization
+tdz-default-param !ReferenceError: cannot access 'b' before initialization
+tdz-switch !ReferenceError: cannot access 'sx' before initialization
+const-assign !TypeError: assignment to constant 'c'
+const-assign-compound !TypeError: assignment to constant 'c'
+const-in-loop !TypeError: assignment to constant 'i'
+fn-name-binding function
+fn-name-binding-strict !TypeError: assignment to constant 'g'
+closures 2,1
+param-scope param
+param-arguments 1:2
+args-sloppy changed,b2,2
+args-strict 1,2,2
+args-default 1
+args-rest 1
+args-extra 3:1,x,3
+args-unpassed undefined:1
+args-tag [object Arguments]function
+args-callee true
+args-callee-strict !TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+args-arrow outerArg
+args-delete orig
+this-method obj
+this-detached undefined
+this-nested-sloppy true
+this-nested-arrow obj
+this-strict-call 5
+this-sloppy-call object
+this-sloppy-null true
+this-paren obj
+this-comma undefined
+call 106
+apply 206
+bind 306,bound sum,2
+bind-new 7,8,true
+names anon|arrowN|m|ck|get gg|[desc]|true|anonymous|true
+new-target true,undefined
+mutual true,true
+iife 1,2,true,
+annexb function
+annexb-strict undefined
+call-non-fn !TypeError: (intermediate value).foo is not a function
+call-undef-var !TypeError: u is not a function
+call-number !TypeError: expression is not a function
+new-arrow !TypeError: object is not a constructor
+new-method !TypeError: object is not a constructor
+undefined-var !ReferenceError: notDefinedAnywhere is not defined
+assign-undeclared-strict !ReferenceError: undeclaredStrict is not defined
+assign-undeclared-sloppy 1

@@ -1,0 +1,34 @@
+legacy octal literals: 8,511,8,9.5,19,0,0.5,8
+legacy octal escapes: A|%00|%008|8|9|%FF|2|1|7|10|%001
+octal in template is error: SyntaxError
+tagged template octal raw: undefined|\101
+labelled function declaration: labelled
+if function declaration: if-fn
+if-else function declaration: else-fn undefined
+for-in var initializer: init k
+block function hoisting: undefined,block
+html comments in eval: 2
+html close comment after block comment: 5
+html comment not in module-like context: 3
+getYear/setYear: 99,1999,2005,105,NaN,NaN
+setYear on invalid date: 2000 0 1
+toGMTString: true Thu, 01 Jan 1970 00:00:00 GMT
+RegExp compile: true b+ i 0 true x m (?:)
+RegExp compile bad flags: SyntaxError: duplicate regular expression flag g
+RegExp compile regexp with flags: TypeError: cannot supply flags when compiling a RegExp
+RegExp compile subclass: TypeError: RegExp.prototype.compile requires a direct RegExp instance
+RegExp compile cross realm: TypeError: RegExp.prototype.compile requires a direct RegExp instance
+legacy regexp syntax: true,true,true,true,true,true,true,true,true,true,true,true,true,true
+legacy static properties: 1,2,,,12,,a,b,a12b,a12b,set
+legacy statics descriptors: $1:function/undefined/false input:function/function/false $_:function/function/false lastMatch:function/undefined/false leftContext:function/undefined/false
+legacy statics on subclass: TypeError
+legacy statics bad receiver: TypeError: RegExp legacy static accessor called on an incompatible receiver
+substr/trimLeft/trimRight: de x |   x| trimEnd true
+arguments.callee and caller: true
+__proto__ duplicate in literal: SyntaxError
+__proto__ duplicate allowed with shorthand: null 1
+__proto__ in destructuring pattern ok: true true
+escape/unescape round trip: %DCn%EFc%F8d%E9%20%u2713%20%uD83D%uDE00%20%00 true
+String HTML methods: <a name="a&quot;b">x</a><font color="&quot;red&quot;">x</font><b>x</b><a href="l">x</a>
+Date parse legacy formats: 0,0,86400000
+sloppy-only with and delete: 2 false

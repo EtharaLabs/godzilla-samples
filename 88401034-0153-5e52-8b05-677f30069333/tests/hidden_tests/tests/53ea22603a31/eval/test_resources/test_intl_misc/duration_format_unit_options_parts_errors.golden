@@ -1,0 +1,26 @@
+1:05:03 | 5 seconds, 123 milliseconds, 456 microseconds | 1:02:03.045 | 1.005 sec | 0 hr, 0 min, 5 sec | 05:03
+2y, 1 day, 3 hr | 1h 0s | 0 days, 1 hr | 0:00:03 | 3:04 | 1.000000005
+[{"type":"integer","value":"1","unit":"hour"},{"type":"literal","value":":"},{"type":"integer","value":"05","unit":"minute"},{"type":"literal","value":":"},{"type":"integer","value":"03","unit":"second"}]
+[{"type":"integer","value":"1","unit":"hour"},{"type":"literal","value":" ","unit":"hour"},{"type":"unit","value":"hr","unit":"hour"},{"type":"literal","value":", "},{"type":"integer","value":"30","unit":"minute"},{"type":"literal","value":" ","unit":"minute"},{"type":"unit","value":"min","unit":"minute"}]
+[{"type":"minusSign","value":"-","unit":"day"},{"type":"integer","value":"3","unit":"day"},{"type":"literal","value":" ","unit":"day"},{"type":"unit","value":"Tage","unit":"day"},{"type":"literal","value":", "},{"type":"integer","value":"1","unit":"hour"},{"type":"literal","value":" ","unit":"hour"},{"type":"unit","value":"Stunde","unit":"hour"}]
+{"locale":"en","numberingSystem":"latn","style":"short","years":"short","yearsDisplay":"auto","months":"short","monthsDisplay":"auto","weeks":"short","weeksDisplay":"auto","days":"short","daysDisplay":"auto","hours":"short","hoursDisplay":"auto","minutes":"short","minutesDisplay":"auto","seconds":"short","secondsDisplay":"auto","milliseconds":"short","millisecondsDisplay":"auto","microseconds":"short","microsecondsDisplay":"auto","nanoseconds":"short","nanosecondsDisplay":"auto"}
+{"locale":"fr-u-nu-arab","numberingSystem":"arab","style":"digital","years":"short","yearsDisplay":"auto","months":"short","monthsDisplay":"auto","weeks":"short","weeksDisplay":"auto","days":"short","daysDisplay":"auto","hours":"numeric","hoursDisplay":"always","minutes":"2-digit","minutesDisplay":"always","seconds":"2-digit","secondsDisplay":"always","milliseconds":"numeric","millisecondsDisplay":"auto","microseconds":"numeric","microsecondsDisplay":"auto","nanoseconds":"numeric","nanosecondsDisplay":"auto","fractionalDigits":4}
+RangeError: duration fields have mixed signs | RangeError: invalid duration field hours | TypeError: duration has no recognized fields | RangeError: invalid style: x | RangeError: fractionalDigits out of range | RangeError: minutes style conflicts with a preceding numeric unit | TypeError: Intl.DurationFormat requires 'new' | TypeError: duration must be an object | RangeError: invalid duration field hours | RangeError: invalid ISO 8601 duration string | RangeError: invalid hoursDisplay: sometimes | RangeError: invalid days: numeric
+iso "-P1DT2.5S" -1 day, 2 sec, 500 ms | -1 day, 0:00:02.5
+iso "p1w" 1 wk | 1 wk, 0:00:00
+iso "PT" RangeError: invalid ISO 8601 duration string | RangeError: invalid ISO 8601 duration string
+iso "P" RangeError: invalid ISO 8601 duration string | RangeError: invalid ISO 8601 duration string
+iso "PT1.5H" RangeError: invalid ISO 8601 duration string | RangeError: invalid ISO 8601 duration string
+iso "+P1Y" 1 yr | 1 yr, 0:00:00
+iso "P1Y2M3W4DT5H6M7.123456789S" 1 yr, 2 mths, 3 wks, 4 days, 5 hr, 6 min, 7 sec, 123 ms, 456 μs, 789 ns | 1 yr, 2 mths, 3 wks, 4 days, 5:06:07.123456789
+iso "−PT1M" -1 min | -0:01:00
+iso "PT0,5S" 500 ms | 0:00:00.5
+iso "P1" RangeError: invalid ISO 8601 duration string | RangeError: invalid ISO 8601 duration string
+iso "PTS" RangeError: invalid ISO 8601 duration string | RangeError: invalid ISO 8601 duration string
+iso "P1DT" RangeError: invalid ISO 8601 duration string | RangeError: invalid ISO 8601 duration string
+iso "PT1H1H" 1 hr | 1:00:00
+1.005007 sec | 1 | RangeError: microseconds style conflicts with a preceding numeric unit | RangeError: invalid numberingSystem: a | RangeError: calendar unit out of range | RangeError: duration time total out of range | RangeError: duration time total out of range
+-0:00:01.5 | -0:00:01.50 | 3.004005 ms | -0:00:03 | -5m | -0 hours, 0 minutes, 3 seconds
+[{"type":"integer","value":"10","unit":"hour"},{"type":"literal","value":":"},{"type":"integer","value":"00","unit":"minute"},{"type":"literal","value":":"},{"type":"integer","value":"07","unit":"second"},{"type":"decimal","value":".","unit":"second"},{"type":"fraction","value":"89","unit":"second"}]
+[{"type":"integer","value":"1","unit":"day"},{"type":"unit","value":"d","unit":"day"},{"type":"literal","value":" "},{"type":"integer","value":"2","unit":"minute"},{"type":"unit","value":"m","unit":"minute"}]
+2 godz., 5 min | 2 часа, 5 минуты | ٢ س | 3天, 2小时 | 3 dias, 2 horas | 3일 2시간 | 3 giorni, 2 h

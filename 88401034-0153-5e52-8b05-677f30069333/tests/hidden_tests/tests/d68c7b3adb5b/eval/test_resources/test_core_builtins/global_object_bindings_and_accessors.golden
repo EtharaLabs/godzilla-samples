@@ -1,0 +1,19 @@
+global constants: NaN:000 Infinity:000 undefined:000 globalThis:101 parseInt:101 Math:101 JSON:101 Reflect:101 Object:101 eval:101
+assign constants sloppy: NaN,,Infinity
+assign undefined strict: TypeError: cannot assign to read-only property 'undefined'
+assign NaN strict: TypeError: cannot assign to read-only property 'NaN'
+globalThis: true,object,true,true,object,true
+global getter accessed by name: 1,2,number,undefined
+global setter by assignment: 1,sink-get1 sink-get
+global getter throws: EvalError: global getter
+global non-writable strict assignment: TypeError
+implicit global creation: made,true,true,true,undefined
+strict implicit global: ReferenceError: undeclaredStrict is not defined
+typeof undeclared: undefined
+delete global var: true true
+global property via this in sloppy function: true
+globalThis property descriptor: true,false,true
+global proto chain: true
+global symbol properties: true
+global var redefinition: 2
+print builtin: function 1

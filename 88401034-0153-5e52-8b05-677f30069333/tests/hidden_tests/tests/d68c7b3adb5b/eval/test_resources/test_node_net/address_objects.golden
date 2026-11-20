@@ -1,0 +1,10 @@
+server.address() keys ["address","family","port"]
+client address() keys ["address","family","port"]
+server-side address() keys ["address","family","port"]
+client local == server remote: true true true
+server local == client remote: true true
+server-side local port is the listening port: true
+client localFamily IPv4 remoteFamily IPv4 server address() family IPv4
+ports differ: true
+client closed; address() now {}
+done; server address() now null

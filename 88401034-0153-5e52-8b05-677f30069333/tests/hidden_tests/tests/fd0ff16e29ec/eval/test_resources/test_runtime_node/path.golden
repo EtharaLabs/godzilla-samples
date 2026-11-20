@@ -1,0 +1,16 @@
+join /a/c/d a/b/ . ../.. a/b
+normalize /a/c ../y . a/b/ /a / ..
+resolve /root/y /b/c /a/b /
+resolve relative drops the leading slash true true false
+dirname /a/b . / a . /
+basename c.txt c b c.txt "" x.
+extname .gz "" . "" .c ".b"
+parse {"root":"/","dir":"/home/u","base":"file.txt","ext":".txt","name":"file"} {"root":"","dir":"rel","base":"x","ext":"","name":"x"} {"root":"/","dir":"/","base":"","ext":"","name":""} {"root":"","dir":".","base":".env","ext":"","name":".env"}
+format /x/y.js /n.e ne d/b.f
+relative ../../d b/c "" ../.. ../b
+isAbs true false false false
+sep / : true / function
+win32 \C:\b \ ; y.txt true \C:\a\b C:\x
+glob true false true
+ns /x /y
+submodules true true

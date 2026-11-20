@@ -1,0 +1,12 @@
+high surrogate escape then non-low escape: 2 d800 41 "\ud800A"
+high surrogate escape then high escape: 3 "\ud800\ud801x"
+escaped pair: 2 1f600
+high surrogate escape then bad escape: SyntaxError: Bad \u escape in JSON
+reviver sees proxy ownKeys: a,ownKeys,d,c,b, {"a":10,"b":{"d":60,"c":50}}
+reviver result into proxy whose defineProperty throws: EvalError: no define
+reviver result into proxy whose defineProperty returns false: {"a":2,"b":{"c":5}}
+reviver deleting through a proxy: delete c {"a":1,"b":{"e":1}}
+rawJSON: {"x":1e1000,"y":["s",null]} true false
+rawJSON object: true null true rawJSON
+rawJSON rejects objects: SyntaxError: JSON.rawJSON value must be a primitive
+rawJSON rejects whitespace: SyntaxError: JSON.rawJSON: leading/trailing whitespace

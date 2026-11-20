@@ -1,0 +1,21 @@
+1 1 1
+x
+20
+1 2 3 4 1
+true
+7 8 4
+19
+jp 2
+1
+var a\u0020b -> SyntaxError: invalid character in escaped identifier
+var \u0031x -> SyntaxError: invalid character in escaped identifier
+var a\u{zz} -> SyntaxError: invalid unicode escape in identifier
+var \u0066or = 1 -> SyntaxError: expected binding identifier
+var x\u -> SyntaxError: invalid unicode escape in identifier
+var \u{110000} -> SyntaxError: invalid unicode escape in identifier
+\u0069f (1) {} -> SyntaxError: keywords must not contain escape sequences
+var a = n\u0065w Object() -> SyntaxError: unexpected token Keyword("new")
+var x = { g\u0065t y() {} } -> SyntaxError: expected '}'
+var 1a -> SyntaxError: identifier starts immediately after numeric literal
+var a€ -> SyntaxError: unexpected character '€'
+var ⸯ -> SyntaxError: unexpected character 'ⸯ'

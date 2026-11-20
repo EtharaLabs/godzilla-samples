@@ -1,0 +1,40 @@
+finally runs after return expr evaluated
+f1 => try
+f2 => finally overrides
+f3 => finally swallows throw
+finally on 1
+finally on 2
+f4 => loop done
+continue finally 1
+continue finally 2
+continue finally 3
+f5 => 3
+inner finally
+f6 => outer caught inner
+f7 => 1,2
+f8 => initial
+f9 => optional catch binding
+break-out-of-try finally
+f10 => after labelled try
+return expr
+finally after expr
+f11 => r
+f12 => outer e/x
+f14 => fin 0,body 1,fin 1
+caught in finally inner
+f16 => try
+f17 => finally break wins
+do-while finally 1
+do-while finally 2
+do-while finally 3
+f18 => 3
+finally before rethrow propagates
+f13 threw rethrow me
+generator finally on return()
+{"value":"done","done":true}
+true TypeError
+finally throw wins: second
+string
+undefined
+caught undefined: undefined
+custom thrown object

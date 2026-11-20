@@ -1,0 +1,16 @@
+number export: number 42
+function export: function 5
+object export: rejects TypeError only primitives and callables may cross a ShadowRealm boundary
+missing export: rejects TypeError importValue: no export named 'nope'
+missing module: rejects TypeError module not found: ./missing-module.mjs
+throwing module: rejects TypeError importValue: module evaluation failed
+same realm state: number 2
+sync name: TypeError importValue exportName must be a string
+sync brand: TypeError ShadowRealm.prototype.importValue called on a non-ShadowRealm
+sync spec: RangeError specifier coercion
+promise kind: [object Promise]
+eval strict: true
+eval sloppy: object
+eval empty: undefined undefined undefined 2
+eval fn: function 42
+eval object: TypeError only primitives and callables may cross a ShadowRealm boundary

@@ -1,0 +1,14 @@
+Number() => [0, 12, 31, 26, 5, 1, 15, 7, NaN, NaN, NaN, NaN, Infinity, -0]
+Number() more => [0, NaN, 0, 5, NaN, 1, Infinity, Infinity, NaN, NaN, 10, NaN, 5, 5, 50, NaN, NaN, 0, 3, NaN]
+Number(symbol) !! TypeError: Cannot convert a Symbol value to a number
+unary plus bigint !! TypeError: Cannot convert a BigInt value to a number
+Number(bigint) rounding => [Infinity, -Infinity, 9007199254740992, 9007199254740996, 27021597764222972]
+parseInt => [31, -16, 0, 8, 1, NaN, 35, NaN, NaN, 10, 255, -0, 123, NaN, NaN, NaN]
+parseInt numbers => [5, 1, 0, 1112745, NaN, NaN, 1, 123]
+parseInt radix wrap => [2, NaN, 3, 3, 16, 0, 100000000000000020000, Infinity]
+parseInt whitespace => [42, 7, NaN, NaN]
+parseInt coercion order => ["string", "radix"]
+parseFloat => [3.14, 0.5, -0.0005, Infinity, -Infinity, NaN, 0, 1, 1, NaN, -0, 1, 1.2]
+parseFloat more => [Infinity, -0, 0.01, NaN, 100000, NaN, 5, 1.5, 2.5]
+identity => [true, true, 2, 1]
+literals => [10, 15, 255, 1000000, 5, 1e-7, 15, 8, 1e-7, 1.23e-18]

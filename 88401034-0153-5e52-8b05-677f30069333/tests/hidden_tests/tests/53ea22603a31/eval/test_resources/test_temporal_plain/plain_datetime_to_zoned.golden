@@ -1,0 +1,15 @@
+gap compatible => 2024-03-10T03:30:00-04:00[America/New_York]
+fold compatible => 2024-11-03T01:30:00-04:00[America/New_York]
+gap earlier => 2024-03-10T01:30:00-05:00[America/New_York]
+fold earlier => 2024-11-03T01:30:00-04:00[America/New_York]
+gap later => 2024-03-10T03:30:00-04:00[America/New_York]
+fold later => 2024-11-03T01:30:00-05:00[America/New_York]
+gap reject => threw RangeError: no such local time (skipped by a DST gap)
+fold reject => threw RangeError: ambiguous local time (DST overlap)
+bad disambiguation => threw RangeError: invalid disambiguation: latest
+default => 2024-03-10T03:30:00-04:00[America/New_York]
+missing tz => threw TypeError: timeZone must be a string or ZonedDateTime
+tz object => threw TypeError: timeZone must be a string or ZonedDateTime
+UTC => 2024-03-10T02:30:00+00:00[UTC]
+offset zone => 2024-03-10T02:30:00-03:30[-03:30]
+london fold later => 2024-10-27T01:30:00+00:00[Europe/London]

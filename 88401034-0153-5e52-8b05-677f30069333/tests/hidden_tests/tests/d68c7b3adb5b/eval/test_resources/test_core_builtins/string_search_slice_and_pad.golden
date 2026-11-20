@@ -1,0 +1,25 @@
+indexOf/lastIndexOf: 2,5,0,6,-1,3,0,0,6,5,2,1,-1,0,0,5,1,-1
+includes/startsWith/endsWith: true,false,true,true,true,true,true,true,true,false,false,true
+includes regexp: TypeError: argument must not be a regular expression
+startsWith regexp: TypeError: argument must not be a regular expression
+endsWith regexp: TypeError: argument must not be a regular expression
+regexp with match false: true true
+IsRegExp match getter: TypeError: argument must not be a regular expression
+IsRegExp getter throws: EvalError: match getter
+null this: indexOf:TypeError includes:TypeError startsWith:TypeError endsWith:TypeError slice:TypeError trim:TypeError at:TypeError padStart:TypeError repeat:TypeError normalize:TypeError concat:TypeError localeCompare:TypeError replace:TypeError match:TypeError search:TypeError split:TypeError replaceAll:TypeError matchAll:TypeError substring:TypeError substr:TypeError charAt:TypeError toLowerCase:TypeError
+slice/substring/substr: bc,ef,,bc,ab,ab,cd,ef,,,abcdef,abcdef,cd,abcdef,abcdef,ab,bcdef,abcdef
+at/charAt/charCodeAt/codePointAt: a,56832,,1,,55357,NaN,128512,56832,,,,NaN,a,b,55296,56320
+codePointAt bad this: TypeError: String.prototype method called on null or undefined
+trim: ["x​",3,18,1,0]
+pad: 005|abc1231231|   x|x|xlo|[ox|abc|%uD83D%uDE00%uD83Dab|x-|x
+repeat: ababab|||aa|aa|
+repeat huge: RangeError: Invalid string length
+repeat negative: RangeError: invalid count value
+concat: a1nullundefined2,3[object Object] 56 x
+concat symbol: TypeError: Cannot convert a Symbol value to a string
+string compare: true,true,true,false,true,false,true,true,false
+length immutable: TypeError: Cannot create property 'length' on string value
+string index assign strict: TypeError: Cannot create property '0' on string value
+string prop assign strict: TypeError: Cannot create property 'foo' on string value
+string index assign sloppy: abc undefined
+string indices: é,é,,,5,,true,true,false

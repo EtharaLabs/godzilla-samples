@@ -1,0 +1,44 @@
+ok pass
+okFail AssertionError ERR_ASSERTION "The expression evaluated to a falsy value:" == 0 true true
+okMsg AssertionError ERR_ASSERTION "custom msg" == false true true
+okErrObj AssertionError ERR_ASSERTION "TypeError: thrown as is" == false true true
+equal pass
+equalFail AssertionError ERR_ASSERTION "Assertion failed" == 1 2 true
+strictEqual AssertionError ERR_ASSERTION "Assertion failed" strictEqual 1 2 true
+strictEqualMsg AssertionError ERR_ASSERTION "values differ" strictEqual "a" "b" true
+notStrictEqual AssertionError ERR_ASSERTION "Assertion failed" notStrictEqual 1 1 true
+deepEqual pass
+notDeepEqual AssertionError ERR_ASSERTION "Assertion failed" notDeepEqual {"a":1} {"a":1} true
+deepStrictEqual AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual {"a":[1]} {"a":["1"]} true
+deepStrictEqualOk pass
+notDeepStrictEqual AssertionError ERR_ASSERTION "Assertion failed" notDeepStrictEqual [1] [1] true
+throws pass
+throwsWrongClass AssertionError ERR_ASSERTION "The error did not match the expected criteria." throws {} undefined true
+throwsRe pass
+throwsReMiss AssertionError ERR_ASSERTION "The error did not match the expected criteria." throws {} {} true
+throwsObj pass
+throwsFn pass
+throwsNone AssertionError ERR_ASSERTION "Missing expected exception." fail undefined undefined true
+doesNotThrow AssertionError ERR_ASSERTION "Got unwanted exception." doesNotThrow {} undefined true
+doesNotThrowOk pass
+match AssertionError ERR_ASSERTION "Assertion failed" match "abc" {} true
+matchOk pass
+doesNotMatch AssertionError ERR_ASSERTION "Assertion failed" doesNotMatch "abc" {} true
+fail AssertionError ERR_ASSERTION "boom" fail undefined undefined true
+failNoArg AssertionError ERR_ASSERTION "Failed" fail undefined undefined true
+ifError AssertionError ERR_ASSERTION "ifError got unwanted exception: iferr" ifError {} null true
+ifErrorNull pass
+ifErrorUndef pass
+strict AssertionError ERR_ASSERTION "Assertion failed" strictEqual 1 "1" true
+strictMod AssertionError ERR_ASSERTION "Assertion failed" deepStrictEqual [1] ["1"] true
+notEqual pass
+notEqualFail AssertionError ERR_ASSERTION "Assertion failed" != 1 "1" true
+AE AssertionError 1 2 ERR_ASSERTION strictEqual "Assertion failed"
+AssertionError pass
+AE2 mine undefined
+AssertionErrorMsg pass
+rejects ERR_ASSERTION "Missing expected rejection."
+rejects ok
+rejects fn ok
+doesNotReject ERR_ASSERTION "Got unwanted rejection."
+doesNotReject ok

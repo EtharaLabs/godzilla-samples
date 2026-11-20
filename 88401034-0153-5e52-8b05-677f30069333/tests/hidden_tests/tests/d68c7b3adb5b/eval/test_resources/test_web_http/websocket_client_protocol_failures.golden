@@ -1,0 +1,22 @@
+/huge: open protocol="" | error event error | close code=1009 reason="message too big" clean=false state=3
+/rsv: open protocol="" | error event error | close code=1002 reason="reserved bits set (no extension negotiated)" clean=false state=3
+/badutf8: open protocol="" | error event error | close code=1007 reason="text message is not UTF-8" clean=false state=3
+/opcode: open protocol="" | error event error | close code=1002 reason="unknown opcode" clean=false state=3
+/cont: open protocol="" | error event error | close code=1002 reason="continuation without a message" clean=false state=3
+/newdata: open protocol="" | error event error | close code=1002 reason="new data frame during fragmented message" clean=false state=3
+/ctlfrag: open protocol="" | error event error | close code=1002 reason="malformed control frame" clean=false state=3
+/badclose: open protocol="" | error event error | close code=1007 reason="close reason is not UTF-8" clean=false state=3
+/hangup: open protocol="" | error event error | close code=1006 reason="" clean=false state=3
+/bighead: error event error | close code=1006 reason="" clean=false state=3
+/badaccept: error event error | close code=1006 reason="" clean=false state=3
+/refuse: error event error | close code=1006 reason="" clean=false state=3
+/noupgrade: error event error | close code=1006 reason="" clean=false state=3
+/proto: error event error | close code=1006 reason="" clean=false state=3
+server /badclose: saw close masked=True code=1007 reason='close reason is not UTF-8'
+server /badutf8: saw close masked=True code=1007 reason='text message is not UTF-8'
+server /cont: saw close masked=True code=1002 reason='continuation without a message'
+server /ctlfrag: saw close masked=True code=1002 reason='malformed control frame'
+server /huge: saw close masked=True code=1009 reason='message too big'
+server /newdata: saw close masked=True code=1002 reason='new data frame during fragmented message'
+server /opcode: saw close masked=True code=1002 reason='unknown opcode'
+server /rsv: saw close masked=True code=1002 reason='reserved bits set (no extension negotiated)'

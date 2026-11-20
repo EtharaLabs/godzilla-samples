@@ -1,0 +1,40 @@
+arg i8 number:-123 number:0
+arg u8 number:133 number:0
+arg i16 number:-123 number:0
+arg u16 number:65413 number:0
+arg u32 number:4294967173 number:0
+arg bool boolean:true boolean:false
+arg u64 bigint:18446744073709551493 bigint:0
+arg char number:-123 number:0
+arg ptr number:18446744073709552000 object:null
+arg i64 bigint:-123 bigint:0
+arg u64_fast bigint:18446744073709551493 bigint:0
+ret ptr from number "1234n"
+ret ptr from string "0n"
+ret ptr from null "0n"
+ret bool true 1
+ret bool false 0
+ret bigint "-5n"
+ret float to int 7
+ret string to int 12
+ret undefined 0
+ret ptr from typed array "number"
+throwing callback returns 0
+before close 123
+after close 0
+ptr after close null
+pool ERR Error bun:ffi JSCallback pool exhausted (16 live callbacks of arity 5)
+pool size 16
+other arity still free 5
+pool reuse after close 42
+free(true) passes NULL undefined
+unknown numeric return type 5
+object type spec ERR TypeError bun:ffi: unknown FFIType [object Object]
+tagged type spec 3
+CString of string ERR TypeError To convert a string to a pointer, encode it as a buffer
+CString of true (NULL) ""
+  raw arg number 77
+unknown numeric arg code 1
+pthread_create 0
+pthread_join 0
+foreign-thread result / JS ran ["0n",false]

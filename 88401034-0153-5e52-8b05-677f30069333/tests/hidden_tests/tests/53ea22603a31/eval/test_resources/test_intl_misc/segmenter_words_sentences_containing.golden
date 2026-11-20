@@ -1,0 +1,14 @@
+word [["Hello",0,true],[",",5,false],[" ",6,false],["world",7,true],["!",12,false],[" ",13,false],["It's",14,true],[" ",18,false],["3.14",19,true],[" ",23,false],["and",24,true],[" ",27,false],["don't",28,true],["-",33,false],["stop",34,true],[".",38,false],[".",39,false],[".",40,false],[" ",41,false],["e",42,true],["-",43,false],["mail",44,true],[" ",48,false],["東京タワー",49,true],[" ",54,false],["1,000",55,true],[" ",60,false],["_",61,false],["id",62,true],[" ",64,false],["x2",65,true],[" ",67,false],["ö",68,true]]
+word [["สวัสดีครับ",0,true],[" ",10,false],["ไทย",11,true]]
+word [["日本語のテキストです。中文分词测试",0,true]]
+word []
+word [["a",0,true],["   ",1,false],["b",4,true],[" ",5,false],["😀x",6,true],[" ",9,false],["𝒳yz",10,true],["\t",14,false],["\t",15,false],["!",16,false]]
+sentence [["Hello there. ",0],["How are you? ",13],["I am fine! ",26],["Mr. ",37],["Smith said \"hi.",41],["\" Ok",56]]
+sentence [["第一句。第二句！第三句？",0]]
+sentence [["No terminator here",0]]
+sentence [["Line one.\n",0],["Line two.\n\n",10],["New para",21]]
+{"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true} {"segment":" ","index":3,"input":"foo bar baz","isWordLike":false} {"segment":"bar","index":4,"input":"foo bar baz","isWordLike":true} {"segment":"baz","index":8,"input":"foo bar baz","isWordLike":true}   {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true} {"segment":"bar","index":4,"input":"foo bar baz","isWordLike":true} {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true} {"segment":"foo","index":0,"input":"foo bar baz","isWordLike":true}
+{"segment":"b","index":1,"input":"ab"} {"segment":"C d.","index":5,"input":"A b. C d."}
+{"value":{"segment":"a","index":0,"input":"ab"},"done":false} {"value":{"segment":"b","index":1,"input":"ab"},"done":false} {"done":true} function
+{"locale":"en","granularity":"grapheme"} {"locale":"ja-JP","granularity":"sentence"} {"locale":"en","granularity":"grapheme"}
+RangeError: invalid granularity: line | TypeError: Intl.Segmenter requires 'new' | u-n-d-e-f-i-n-e-d | 4

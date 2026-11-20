@@ -1,0 +1,7 @@
+unix server.address() "u.sock" socket file exists true
+unix client address() {} remote undefined setNoDelay->this true setKeepAlive->this true ref->this true
+reply re:x | server side address={} remote=undefined/undefined setNoDelay->this=true setKeepAlive->this=true
+socket file after close false
+server unref/ref/unref return this true true true
+client unref/ref/unref return this true true true
+exiting with an open server and connection

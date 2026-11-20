@@ -1,0 +1,27 @@
+db :memory: function 20 2 4
+run {"changes":1,"lastInsertRowid":1} {"changes":1,"lastInsertRowid":2} {"changes":1,"lastInsertRowid":3}
+paramsCount 4 0
+all [{"id":1,"name":"alice","score":9.5,"data":"u8:1,2,3","big":1099511627776},{"id":2,"name":"bob","score":null,"data":null,"big":-7},{"id":3,"name":"carol","score":7,"data":"u8:104,105","big":9007199254740991}]
+get {"id":2,"name":"bob","score":null,"data":null,"big":-7} null
+values [["alice",9.5],["bob",null],["carol",7]]
+columnNames id,name,score,data,big one,two
+named {"s":3,"c":"colon","d":null}
+named missing {"a":5,"b":null} {"a":null}
+positional array {"cat":"xy"} {"a":1,"b":"two"}
+count mismatch Error SQLite query expected 2 values, received 1
+types {"a":"integer","b":"real","c":"text","d":"null","e":"blob","f":"integer"}
+bool/bigint {"t":1,"f":0,"b":123,"neg":-4611686018427388000}
+real results {"a":1,"b":0.30000000000000004,"inf":null,"idiv":3,"fdiv":3.5}
+iterate carol,bob,alice 3
+iterate early return 1 {"value":9,"done":true} {"done":true}
+as ALICE true
+safeIntegers {"big":"9007199254740991n"} {"big":9007199254740991}
+db safeIntegers {"n":"5n"} {"changes":0,"lastInsertRowid":"0n"} {"changes":1,"lastInsertRowid":"1n"}
+query cache true false
+toString SELECT 42 AS v, 's''q' AS w SELECT NULL AS v
+reuse bindings {"v":42,"w":"s'q"} [{"v":42,"w":"s'q"}]
+exec multi {"changes":2,"lastInsertRowid":2} 2
+run with params {"changes":1,"lastInsertRowid":3} {"changes":2,"lastInsertRowid":3}
+run select changes {"changes":0,"lastInsertRowid":3} [{"x":9}]
+strict {"a":1,"b":2}
+strict missing Missing parameter "a"

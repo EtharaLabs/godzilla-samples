@@ -1,0 +1,30 @@
+TA proto: valid index: {"value":300,"writable":true,"enumerable":true,"configurable":true} ta[0]=0
+TA proto: invalid indices inert: 0 len=2
+TA proto: named property: n false
+Reflect.set TA receiver: true,77,true
+Reflect.set BigInt TA receiver: true,5
+Reflect.set BigInt TA bad value: TypeError: Cannot convert a Number to a BigInt
+frozen array length via Reflect.set: false,2
+non-writable length (strict): TypeError: cannot assign to read-only property 'length'
+non-writable length append (sloppy): 1 undefined
+  setter this type object
+BigInt primitive via proto setter: done
+BigInt primitive write (strict): TypeError: Cannot create property 'foo' on bigint value
+Symbol primitive write (strict): TypeError: Cannot create property 'foo' on symbol value
+  proxy set viaProxy receiver number
+Number proto chain proxy: ok
+String proto getter-only (strict): TypeError: cannot set getter-only property 'ro'
+TA on chain, receiver is the TA: 44,2,0
+BigInt TA on chain, receiver is the TA: 9
+strict add index to sealed array: TypeError: cannot add property, object is not extensible
+sloppy add index to frozen array: 1
+primitive with shadowed data prop (sloppy): function
+primitive with shadowed data prop (strict): TypeError: Cannot create property 'toFixed' on number value
+String wrapper indices: |b|b|
+33000 distinct regexp subjects: 3300
+sloppy namespace write: 1 false
+sloppy super set with namespace this: no throw
+strict super set with namespace this: TypeError: Cannot assign to read only property 'late' of module namespace object
+strict namespace write: TypeError: Cannot assign to read only property 'late' of module namespace object
+strict namespace delete: TypeError: cannot delete non-configurable property 'late'
+Reflect.set namespace: false

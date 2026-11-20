@@ -1,0 +1,8 @@
+range => 3–5 | $3.00 – $5.00 | ~€3 | -5–5 | 1K–5K | 1K–5M | 10%–20% | 1 m–2 m | 1 meter–2 meters | 5–3 | -∞–∞ | 1–100,000,000,000,000,000,000 | ~+1 | 10,00 € – 20,00 € | ¥100 – ¥200
+range missing => THROW TypeError: formatRange requires two arguments
+range undefined => THROW TypeError: formatRange requires two arguments
+range NaN => THROW RangeError: formatRange arguments must not be NaN
+rangeParts percent => [{"type":"integer","value":"10","source":"startRange"},{"type":"percentSign","value":"%","source":"startRange"},{"type":"literal","value":"–","source":"shared"},{"type":"integer","value":"20","source":"endRange"},{"type":"percentSign","value":"%","source":"endRange"}]
+rangeParts approx => [{"type":"approximatelySign","value":"~","source":"shared"},{"type":"integer","value":"3","source":"shared"}]
+rangeParts currency => [{"type":"minusSign","value":"-","source":"startRange"},{"type":"currency","value":"$","source":"startRange"},{"type":"integer","value":"1","source":"startRange"},{"type":"decimal","value":".","source":"startRange"},{"type":"fraction","value":"00","source":"startRange"},{"type":"literal","value":"–","source":"shared"},{"type":"integer","value":"2","source":"endRange"},{"type":"decimal","value":".","source":"endRange"},{"type":"fraction","value":"00","source":"endRange"}]
+rangeParts NaN => THROW RangeError: formatRange arguments must not be NaN

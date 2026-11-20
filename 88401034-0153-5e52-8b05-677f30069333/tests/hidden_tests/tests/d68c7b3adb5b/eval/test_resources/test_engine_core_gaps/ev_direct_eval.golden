@@ -1,0 +1,28 @@
+global eval var over global let: SyntaxError: Identifier 'lexG' has already been declared
+global eval function over global let: SyntaxError: Identifier 'lexG' has already been declared
+global let survives: 1
+local let in eval stays local: 5,undefined
+global eval fn over non-configurable var: function fn configurable=false enumerable=true writable=true
+annexB re-create in function eval: undefined,true,function,q!,true,undefined
+annexB re-create at global: undefined,true,function,true
+eval sees private names: 42s
+super() in field init eval: SyntaxError: 'super' keyword unexpected here
+super() in method eval: SyntaxError: 'super' keyword unexpected here
+eval super prop in nested function: SyntaxError: 'super' keyword unexpected here
+eval super prop via arrows: function
+eval walks every construct: 0;1;p;q;r1\n;3;false;pqz
+eval private in: true false
+script fn over configurable prop: we- function fn
+script fn over non-configurable writable prop: we- function fixed fn
+script fn over non-configurable accessor: TypeError: cannot declare global function 'accProp'
+script fn over non-enumerable non-configurable: TypeError: cannot declare global function 'hiddenProp'
+script var over non-configurable keeps attrs: w-- number 5
+script let over var: SyntaxError: Identifier 'cfgProp' has already been declared
+script let over restricted global: SyntaxError: Identifier 'NaN' has already been declared
+script var over earlier script let: SyntaxError: Identifier 'scriptLet' has already been declared
+script function over earlier script let: SyntaxError: Identifier 'scriptLet' has already been declared
+failed script declares nothing: undefined absent
+labelled function declaration hoists: L! we- function
+script var on non-extensible global: TypeError: cannot declare global variable 'brandNew'
+script fn on non-extensible global: TypeError: cannot declare global function 'brandNewFn'
+script fn redefining existing on non-extensible: again

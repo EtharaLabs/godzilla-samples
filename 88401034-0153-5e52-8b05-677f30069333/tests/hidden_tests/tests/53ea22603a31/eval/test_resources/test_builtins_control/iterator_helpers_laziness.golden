@@ -1,0 +1,37 @@
+chain created => "nothing pulled"
+   log: 
+chain next 1 => {value: 0, done: false}
+   log: next0 map0 filter0
+chain next 2 => {value: 4, done: false}
+   log: next1 map1 filter2 next2 map2 filter4
+chain next 3 closes => {value: undefined, done: true}
+   log: return
+chain after done => {value: undefined, done: true}
+   log: 
+drop => [3, 4]
+   log: next0 next1 next2 next3 next4 next5
+flatMap => [0, 0, 1, 1]
+   log: next0 fm0 next1 fm1 next2
+some => true
+   log: next0 next1 next2 return
+every => false
+   log: next0 next1 return
+find => 3
+   log: next0 next1 next2 next3 return
+find none => undefined
+   log: next0 next1 next2
+take(0) => {value: undefined, done: true}
+   log: return
+return after start => [{value: undefined, done: true}, {value: undefined, done: true}]
+   log: next0 return
+return before start => [{value: undefined, done: true}, {value: undefined, done: true}]
+   log: return
+reduce => [10, 13]
+   log: next0 next1 next2 next3 next4 next5 next0 next1 next2 next3
+forEach => ["0:0", "1:1", "2:2"]
+   log: next0 next1 next2 next3
+counter argument => ["0@0", "2@1"]
+   log: next0 next1 next2 next3
+infinite source => [9, 25, 49, 81]
+array iterator helpers => [[3, 4], ["a0", "b1"]]
+generator helpers => ["x", "X", "y", "Y"]

@@ -1,0 +1,49 @@
+udp5 THREW Error [ERR_SOCKET_BAD_TYPE] Bad socket type specified. Valid types are: udp4, udp6
+no type THREW Error [ERR_SOCKET_BAD_TYPE] Bad socket type specified. Valid types are: udp4, udp6
+options object -> "udp4"
+bad options type THREW Error [ERR_SOCKET_BAD_TYPE] Bad socket type specified. Valid types are: udp4, udp6
+is EventEmitter true true function
+raw handle THREW Error [undefined] node:dgram raw socket handles are not supported in lumen (use dgram.createSocket)
+address before bind THREW Error [EBADF] getsockname EBADF
+setTTL before bind THREW Error [EBADF] setTTL EBADF
+setBroadcast before bind THREW Error [EBADF] setBroadcast EBADF
+remoteAddress unconnected THREW Error [ERR_SOCKET_DGRAM_NOT_CONNECTED] Not connected
+disconnect unconnected THREW Error [ERR_SOCKET_DGRAM_NOT_CONNECTED] Not connected
+bound 127.0.0.1 IPv4 number address,family,port
+bind twice THREW Error [ERR_SOCKET_ALREADY_BOUND] Socket is already bound
+setTTL 64 -> 64
+setTTL "7" -> 7
+setTTL 0 THREW RangeError [ERR_OUT_OF_RANGE] The value of "ttl" is out of range. It must be >= 1 and <= 255. Received 0
+setTTL 256 THREW RangeError [ERR_OUT_OF_RANGE] The value of "ttl" is out of range. It must be >= 1 and <= 255. Received 256
+setTTL 1.5 THREW RangeError [ERR_OUT_OF_RANGE] The value of "ttl" is out of range. It must be >= 1 and <= 255. Received 1.5
+setMulticastTTL 0 -> 0
+setMulticastTTL 255 -> 255
+setMulticastTTL -1 THREW RangeError [ERR_OUT_OF_RANGE] The value of "ttl" is out of range. It must be >= 0 and <= 255. Received -1
+setMulticastTTL "x" THREW RangeError [ERR_OUT_OF_RANGE] The value of "ttl" is out of range. It must be >= 0 and <= 255. Received NaN
+setMulticastLoopback 0 -> false
+setMulticastLoopback "yes" -> true
+setBroadcast 1 -> undefined
+setRecvBufferSize 0 THREW RangeError [ERR_OUT_OF_RANGE] The value of "size" is out of range. It must be a positive integer. Received 0
+setRecvBufferSize -5 THREW RangeError [ERR_OUT_OF_RANGE] The value of "size" is out of range. It must be a positive integer. Received -5
+setSendBufferSize "x" THREW RangeError [ERR_OUT_OF_RANGE] The value of "size" is out of range. It must be a positive integer. Received NaN
+setSendBufferSize 2^31 THREW RangeError [ERR_OUT_OF_RANGE] The value of "size" is out of range. It must be a positive integer. Received 2147483648
+setMulticastInterface "nope" THREW Error [UNKNOWN] setMulticastInterface: IPv4 multicast interface must be an IPv4 address
+addMembership "nope" THREW TypeError [undefined] Invalid multicast address: nope
+addMembership bad iface THREW TypeError [undefined] Invalid interface address: eth0
+dropMembership bad group THREW TypeError [undefined] Invalid multicast address: 300.1.1.1
+ssm bad source THREW TypeError [undefined] Invalid source address: x
+ssm unicast group THREW TypeError [undefined] Invalid multicast address: 10.0.0.2
+ssm bad group THREW TypeError [undefined] Invalid multicast address: zz
+ssm bad iface THREW TypeError [undefined] Invalid interface address: q
+ref -> true
+unref -> true
+ref again -> true
+close returns this true
+close callback
+close again THREW Error [ERR_SOCKET_DGRAM_NOT_RUNNING] Not running
+send after close THREW Error [ERR_SOCKET_DGRAM_NOT_RUNNING] Not running
+address after close THREW Error [EBADF] getsockname EBADF
+setTTL after close THREW Error [EBADF] setTTL EBADF
+ref after close -> true
+sync part of close callback done
+close(cb) again -> Error [ERR_SOCKET_DGRAM_NOT_RUNNING] Not running

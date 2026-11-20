@@ -1,0 +1,37 @@
+"P1Y" => P1Y sign=1
+"P1M" => P1M sign=1
+"P1W" => P1W sign=1
+"P1D" => P1D sign=1
+"PT1H" => PT1H sign=1
+"PT1M" => PT1M sign=1
+"PT1S" => PT1S sign=1
+"P1Y1M1W1DT1H1M1.1S" => P1Y1M1W1DT1H1M1.1S sign=1
+"PT0.5H" => PT30M sign=1
+"PT0.5M" => PT30S sign=1
+"PT0.5S" => PT0.5S sign=1
+"PT1.000000001S" => PT1.000000001S sign=1
+"PT36H" => PT36H sign=1
+"P0D" => PT0S sign=0
+"-PT0S" => PT0S sign=0
+"P1Y-1M" => THROW RangeError: invalid duration
+"P-1Y" => THROW RangeError: invalid duration
+"P1YT" => THROW RangeError: invalid duration
+"PT1H1S" => PT1H1S sign=1
+"PT1S1M" => THROW RangeError: invalid duration
+"P1W1Y" => THROW RangeError: invalid duration
+"P1.0Y" => THROW RangeError: invalid duration
+"PT1,1H" => PT1H6M sign=1
+"PT1.H" => THROW RangeError: invalid duration
+"PT.5S" => THROW RangeError: invalid duration
+"p1y" => P1Y sign=1
+"P1y1m1d" => P1Y1M1D sign=1
+"P4294967295Y" => P4294967295Y sign=1
+"P4294967296Y" => THROW RangeError: duration field is outside the valid range
+"PT9007199254740991S" => PT9007199254740991S sign=1
+"P104249991374DT7H36M31.999999999S" => P104249991374DT7H36M31.999999999S sign=1
+"P104249991375D" => THROW RangeError: duration is outside the valid range
+"PT1E3S" => THROW RangeError: invalid duration
+" P1D" => P1D sign=1
+"P1D " => P1D sign=1
+"1D" => THROW RangeError: invalid duration
+"P1DT1H1M1.123456789S" => P1DT1H1M1.123456789S sign=1

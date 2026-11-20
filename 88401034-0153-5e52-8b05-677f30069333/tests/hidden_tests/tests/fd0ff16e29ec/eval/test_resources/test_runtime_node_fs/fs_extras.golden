@@ -1,0 +1,27 @@
+rename file onto dir Error EISDIR | EISDIR: Is a directory (os error 21), rename 'file.txt'
+mkdir recursive over file ok undefined
+realpath missing ok "does/not/exist"
+utimes nul Error undefined | path contains a NUL byte
+statfs nul Error undefined | path contains a NUL byte
+dev null stat ok [false,false,false,false,0]
+chown self ok undefined
+lchown self ok undefined
+chown missing Error ENOENT | ENOENT: No such file or directory (os error 2), chown 'missing'
+lchown missing Error ENOENT | ENOENT: No such file or directory (os error 2), lchown 'missing'
+fchown self ok undefined
+read zero length ok 0
+ftruncate negative ok 0
+fchown closed TypeError undefined | bad file descriptor 2
+fstat dir ok [true,false,false]
+read dir fd Error undefined | read 'fd': Is a directory (os error 21)
+fsync dir fd ok undefined
+fstat devnull ok [false,false,0]
+getPriority bad pid Error ERR_SYSTEM_ERROR | A system error occurred: uv_os_getpriority returned ESRCH (no such process)
+setPriority bad pid Error ERR_SYSTEM_ERROR | A system error occurred: uv_os_setpriority returned ESRCH (no such process)
+setPriority range RangeError ERR_OUT_OF_RANGE | The value of "priority" is out of range. It must be >= -20 && <= 19. Received 100
+zlib number TypeError undefined | Buffer.from: unsupported value
+zlib object TypeError undefined | Buffer.from: unsupported value
+crc32 number TypeError undefined | Buffer.from: unsupported value
+gunzip null TypeError undefined | Buffer.from: unsupported value
+promises chown ok
+cb lchown null

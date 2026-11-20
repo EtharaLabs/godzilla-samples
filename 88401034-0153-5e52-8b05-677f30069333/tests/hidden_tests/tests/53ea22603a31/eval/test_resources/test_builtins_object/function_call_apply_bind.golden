@@ -1,0 +1,31 @@
+call => ["object", 2, 3, undefined]
+call this boxing => ["number", null, "string"]
+apply => ["object", 4, 5, undefined]
+apply arraylike => ["object", "x", "y", undefined]
+apply null args => ["object", undefined, undefined, undefined]
+apply bad !! TypeError: apply: argument list must be array-like
+apply on non-fn !! TypeError: value is not a function
+call on non-fn !! TypeError: number is not a function
+bound => ["bound foo", 2, ["object", 1, 2, 3]]
+bound bound => ["bound bound foo", 1, false, ["object", 1, 2, 3]]
+bound len over => 0
+bound fractional len => 2
+bound inf len => [Infinity, Infinity]
+bound neg inf len => 0
+bound string len => 0
+bound name nonstring => "bound "
+bound anon => "bound "
+bound new => [7, 8, true, true, true]
+bound new.target => [{}, false]
+bound arrow not ctor !! TypeError: object is not a constructor
+bound class call !! TypeError: Class constructor cannot be invoked without 'new'
+bind non-callable !! TypeError: bind must be called on a function
+bound desc => [false, false, true]
+fn props => [3, "foo", ["length", "name", "prototype"], ["length", "name"]]
+Function.prototype => ["function", undefined, 0, "", true]
+strict caller !! TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+sloppy caller/arguments => [null, null]
+hasInstance => [true, false, true]
+instanceof non-callable !! TypeError: right-hand side of instanceof is not callable
+instanceof bad proto !! TypeError: prototype property is not an object
+instanceof bound => true

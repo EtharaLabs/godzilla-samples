@@ -1,0 +1,13 @@
+compile: true,x+,im,0,true
+compile string: b+,gy,true,true,!
+compile undefined: "(?:)" y
+compile regexp+flags: TypeError: cannot supply flags when compiling a RegExp
+compile bad pattern: SyntaxError expected ')' in pattern kept=keep
+compile bad flags: SyntaxError invalid regular expression flag q kept=keep
+compile on subclass: TypeError: RegExp.prototype.compile requires a direct RegExp instance
+compile on non-regexp: TypeError: compile called on non-RegExp
+compile frozen lastIndex: TypeError: Cannot assign to read only property 'lastIndex'
+compile flags coercion: true
+escape: \x66oo\.bar ~ \x39\x20lives ~ _x\$\^ ~ \t\n\v\f\r ~ \x2c\x2d\x3d\x3c\x3e\x23\x26\x21\x25\x3a\x3b\x40\x7e\x27\x60\x22 ~ \xa0\u2028\ufeff ~ \ud800x ~ \x78\udfff ~ 😀é ~  ~ \u3000\u2029 ~ \x41 ~ \(\)\[\]\{\}\|\/\\\*\+\?
+escape non-string: TypeError,TypeError,TypeError
+escape roundtrip: true true false

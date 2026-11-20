@@ -1,0 +1,18 @@
+raw eof -> Error "inflate: unexpected end of input" undefined
+raw too_far -> Error "inflate: distance too far back" undefined
+raw lit_sym -> Error "inflate: invalid literal/length symbol" undefined
+raw stored_trunc -> Error "inflate: truncated stored block" undefined
+raw stored_overrun -> Error "inflate: stored block overruns input" undefined
+raw reserved -> Error "inflate: reserved block type" undefined
+raw repeat_first -> Error "inflate: repeat with no previous length" undefined
+raw bad_code -> Error "inflate: invalid Huffman code" undefined
+raw overrun -> Error "inflate: code-length overrun" undefined
+zlib short -> Error "zlib: input too short" undefined
+zlib method -> Error "zlib: unsupported compression method" undefined
+zlib body -> Error "inflate: reserved block type" undefined
+gzip magic -> Error "gzip: bad magic" undefined
+gzip short -> Error "gzip: bad magic" undefined
+gzip method -> Error "gzip: unsupported compression method" undefined
+gzip name -> Error "gzip: truncated" undefined
+unzip -> Error "gzip: bad magic" undefined
+type -> TypeError "Buffer.from: unsupported value" undefined

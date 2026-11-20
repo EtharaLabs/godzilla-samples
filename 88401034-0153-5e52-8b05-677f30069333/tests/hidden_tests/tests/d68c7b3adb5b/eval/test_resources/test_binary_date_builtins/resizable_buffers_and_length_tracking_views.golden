@@ -1,0 +1,9 @@
+resize: 1,2,3,4,0,0,0,0 | 1,2 | 1,2,0,0,0,0 | 6/12 true
+resize errors: RangeError:ArrayBuffer resize out of range | RangeError:ArrayBuffer resize out of range | TypeError:ArrayBuffer is not resizable | 0 | TypeError:ArrayBuffer is detached | TypeError:ArrayBuffer is detached | RangeError:ArrayBuffer resize out of range | TypeError:ArrayBuffer is not resizable
+length tracking views: 4,3,2,6,2,1,2,3,0,0,0,0,0,0,dv:DataView's buffer is detached or out of bounds,dvoff:TypeError,dvget:TypeError,8,7,2,14,0
+oob typed array ops: fill:TypeError copyWithin:TypeError sort:TypeError reverse:TypeError indexOf:TypeError lastIndexOf:TypeError includes:TypeError join:TypeError slice:TypeError map:TypeError filter:TypeError forEach:TypeError at:TypeError with:TypeError set:TypeError subarray:RangeError toLocaleString:TypeError entries:TypeError toSorted:TypeError toReversed:TypeError every:TypeError find:TypeError len=0 [0]=undefined
+tracking view element access: ,2,false,0/1,0
+subarray of tracking: 7 2
+method resizes mid-call: -1 | true | 7,7,7 | 2,3,3 | 0
+fill/copyWithin detach mid-call: TypeError:TypedArray is out of bounds | TypeError:TypedArray is out of bounds
+integrity: TypeError:Object.freeze could not freeze the object | TypeError:Object.seal could not seal the object

@@ -1,0 +1,52 @@
+reverse-holes [[3, <hole>, <hole>], [<hole>, <hole>, 1], [<hole>, 4, <hole>, 2, <hole>], {0: undefined, 3: "a", length: 4}]
+reverse-frozen-holes THROW TypeError: Cannot assign to read only property '0'
+reduceRight-noncallable THROW TypeError: Array.prototype.reduceRight callback is not callable
+reduceRight-holes "3:2;1:1;"
+includes-fromIndex [false, true, true, false, true, false, true]
+includes-empty-skips-coercion []
+indexOf-empty-skips-coercion []
+from-iter-result-nonobj THROW TypeError: iterator result is not an object
+from-arraylike-mapfn-nonctor-huge THROW RangeError: invalid array length
+from-arraylike-mapfn ["0a", "1undefined", "2c"]
+splice-holes [[1, "x", <hole>, 5], [<hole>, 3]]
+splice-grow-holes [1, "p", "q", <hole>, 3]
+splice-frozen THROW TypeError: Cannot assign to read only property '0'
+splice-sealed-delete THROW TypeError: Cannot delete property '2'
+splice-nonconfig-tail THROW TypeError: Cannot delete property '2'
+shift-holes [undefined, [2, <hole>, 4]]
+unshift-holes [0, 1, <hole>, 3]
+copyWithin-frozen THROW TypeError: Cannot assign to read only property '0'
+fill-frozen THROW TypeError: Cannot assign to read only property '0'
+concat-spreadable-holes [0, <hole>, "one", <hole>]
+concat-spreadable-proxy-array [0, 1, 2]
+concat-spreadable-false-array [0, 1]
+flat-depth-coercion [[1], [2]]
+flatMap-thisArg [11]
+sort-accessors-frozen-ok THROW TypeError: cannot assign to read-only element 0
+toSorted-holes-undefined [1, 3, undefined, undefined]
+lastIndexOf-holes -1
+toString-non-callable-join "[object Object]"
+toLocaleString-elements "1.5,x,,,custom"
+toLocaleString-noncallable THROW TypeError: toLocaleString is not a function
+entries-on-string-object [[0, "h"], [1, "i"]]
+toStringTag-nonstring ["[object Object]", "[object Array]", "[object Tagged]"]
+toStringTag-builtins-overridden ["[object Array]", "[object Function]", "[object Object]", "[object Map]"]
+toLocaleString-toString-noncallable THROW TypeError: toString is not callable
+match-null-this THROW TypeError: String.prototype.match called on null or undefined
+search-null-this THROW TypeError: String.prototype.search called on null or undefined
+matchAll-null-this THROW TypeError: String.prototype.matchAll called on null or undefined
+replaceAll-null-this THROW TypeError: String.prototype.replaceAll called on null or undefined
+match-search-undefined ["", 0, 0, 3]
+replaceAll-flags-null THROW TypeError: regexp flags is null or undefined
+matchAll-flags-null THROW TypeError: regexp.flags is null or undefined
+replaceAll-flags-nonglobal-isregexp THROW TypeError: replaceAll must be called with a global RegExp
+replaceAll-flags-global-isregexp "custom a b"
+tr-lower ["131", "69", "69", "69 323"]
+az-upper ["İ", "I", "İI"]
+lt-lower ["69 307 300", "6a 307 301", "12f 307 301", "69 307 300", "69 307 301", "69 307 303", "69", "69 61"]
+lt-upper ["49", "4a 58", "49 323", "41 307", "12e"]
+locale-list ["ı", "ı", "ı", "I"]
+locale-bad THROW RangeError: Incorrect locale information provided: not a tag!
+boxed-newtarget [true, true, true]
+boxed-subclass ["HEY!", 3, true, "[object String]", "\"hey\""]
+boxed-newtarget-proto-getter-throws THROW Error: proto getter

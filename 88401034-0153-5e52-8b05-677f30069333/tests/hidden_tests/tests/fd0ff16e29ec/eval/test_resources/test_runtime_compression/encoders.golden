@@ -1,0 +1,44 @@
+empty deflate 789c030000000001
+empty raw 0300
+empty gzip 1f8b08000000000000ff03000000000000000000
+empty brotli 3b
+empty zstd 28b52ffd240001000099e9d851
+empty roundtrip true true true true true true true Buffer
+a deflate 789c4b040000620062
+a raw 4b0400
+a gzip 1f8b08000000000000ff4b040043beb7e801000000
+a brotli 0b00806103
+a zstd 28b52ffd2401090000615b6e8ca9
+a roundtrip true true true true true true true Buffer
+hello deflate 789ccb48cdc9c957c02001680308b1
+hello raw cb48cdc9c957c02001
+hello gzip 1f8b08000000000000ffcb48cdc9c957c02001e3513d8d17000000
+hello brotli 0b0b8068656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f03
+hello zstd 28b52ffd2417b9000068656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f175eae0d
+hello roundtrip true true true true true true true Buffer
+abc deflate 789c4b4c4ac68f00d6cd0ca3
+abc raw 4b4c4ac68f00
+abc gzip 1f8b08000000000000ff4b4c4ac68f00961dbcd121000000
+abc brotli 1b20000020c3c4c602a300aeb5d65a6badb506
+abc zstd 28b52ffd24210901006162636162636162636162636162636162636162636162636162636162636162633afa61eb
+abc roundtrip true true true true true true true Buffer
+bytes deflate 789c63606462feff0f0003180204
+bytes raw 63606462feff0f00
+bytes gzip 1f8b08000000000000ff63606462feff0f00a8dccced06000000
+bytes brotli 8b028000010203fffe03
+bytes zstd 28b52ffd240631000000010203fffe91c343de
+bytes roundtrip true true true true true true true Buffer
+utf8 deflate 789ccb38bc3227275fe1d18c66850ff3673400003ec70800
+utf8 raw cb38bc3227275fe1d18c66850ff367340000
+utf8 gzip 1f8b08000000000000ffcb38bc3227275fe1d18c66850ff3673400000412fbc50f000000
+utf8 brotli 0b078068c3a96c6c6f20e2988320f09f988003
+utf8 zstd 28b52ffd240f79000068c3a96c6c6f20e2988320f09f9880191ddb9b
+utf8 roundtrip true true true true true true true Buffer
+run1000 1000 3b41c9e6 deflate=16/7a5ea51b/true raw=10/146fb8bf/true gzip=28/e435fcff/true brotli=11/a5ba3363/true zstd=15/5ba3862c/true
+allbytes 512 1c613576 deflate=281/1181ce42/true raw=275/36ebd7cf/true gzip=293/c630de75/true brotli=516/8eb31f11/true zstd=526/1f522059/true
+abcd 2000 33339b29 deflate=25/c9f2af77/true raw=19/d0b6c073/true gzip=37/1c0a6fa3/true brotli=576/c9f4591d/true zstd=2014/f74052fa/true
+noise 3000 ccb759d4 deflate=3173/dad81cff/true raw=3167/8e46fdd8/true gzip=3185/5cf502a5/true brotli=3004/e51840c1/true zstd=3014/7b7110ec/true
+text 1800 43d465f0 deflate=67/be09d105/true raw=61/e696c3a4/true gzip=79/7579b9e4/true brotli=1048/b4b6184e/true zstd=1814/b1d37866/true
+crc32 907060870 0 cbf43926 222957957 222957957 1438416925 899311407 235179326 2703296241
+constants 9 -1 2 1 24 2 100 -3 Z_DATA_ERROR Z_NEED_DICT 170 18
+keys BrotliCompress,BrotliDecompress,Deflate,DeflateRaw,Gunzip,Gzip,Inflate,InflateRaw,Unzip,ZstdCompress,ZstdDecompress,brotliCompress,brotliCompressSync,brotliDecompress,brotliDecompressSync,codes,constants,crc32,createBrotliCompress,createBrotliDecompress,createDeflate,createDeflateRaw,createGunzip,createGzip,createInflate,createInflateRaw,createUnzip,createZstdCompress,createZstdDecompress,deflate,deflateRaw,deflateRawSync,deflateSync,gunzip,gunzipSync,gzip,gzipSync,inflate,inflateRaw,inflateRawSync,inflateSync,unzip,unzipSync,zstdCompress,zstdCompressSync,zstdDecompress,zstdDecompressSync

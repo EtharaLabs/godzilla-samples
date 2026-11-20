@@ -1,0 +1,29 @@
+gopd undefined on nonext !! TypeError: gOPD trap reported undefined for a non-extensible target's property
+gopd missing on nonext !! TypeError: gOPD trap reported a property missing from a non-extensible target
+gopd report configurable !! TypeError: proxy can't report an existing non-configurable property 'c' as configurable
+gopd different enumerable !! TypeError: proxy can't report a different 'enumerable' for 'c' when the target property is not configurable
+gopd shape change !! TypeError: proxy can't report a differently-shaped descriptor for the non-configurable property 'c'
+gopd report writable !! TypeError: proxy can't report a non-configurable, non-writable property 'c' as writable
+gopd same getter ok => {get: [Function getter], set: undefined, enumerable: true, configurable: false}
+gopd different getter !! TypeError: proxy must report the same getter for the non-configurable property 'a'
+gopd different setter !! TypeError: proxy must report the same setter for the non-configurable property 'a'
+gopd nonconfig for configurable !! TypeError: gOPD trap reported non-configurable for a configurable target property
+gopd nonwritable for writable !! TypeError: gOPD trap reported non-writable for a writable target property
+gopd ok => {value: 1, writable: true, enumerable: true, configurable: false}
+gopd accessor completed => [["get", "set", "enumerable", "configurable"], true, undefined, false]
+gopd invalid descriptor !! TypeError: Getter must be a function
+gopd via hasOwnProperty !! TypeError: gOPD trap reported undefined for a non-configurable property
+dp configurable made nonconfig !! TypeError: proxy 'defineProperty' made a configurable target property non-configurable
+dp nonconfig made configurable !! TypeError: proxy 'defineProperty' made a non-configurable target property configurable
+dp enumerable change !! TypeError: proxy can't report a different 'enumerable' for 'c' when the target property is not configurable
+dp shape change !! TypeError: proxy can't change the descriptor shape of the non-configurable property 'c'
+dp different getter !! TypeError: proxy must define the same getter for the non-configurable property 'a'
+dp different setter !! TypeError: proxy must define the same setter for the non-configurable property 'a'
+dp same getter => true
+dp made writable !! TypeError: proxy 'defineProperty' made a non-writable property writable
+dp changed value !! TypeError: proxy 'defineProperty' changed a non-configurable non-writable value
+dp same value => true
+dp writable reported nonwritable !! TypeError: proxy 'defineProperty' reported a non-configurable writable property as non-writable
+dp trap receives normalized descriptor => ["string", "x", {value: 1, enumerable: true}, true]
+dp symbol key => "symbol"
+gopd trap key types => ["string:a", "symbol:Symbol(z)"]

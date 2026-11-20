@@ -1,0 +1,11 @@
+/a response head: HTTP/1.1 101 Switching Protocols | Upgrade: websocket | Connection: Upgrade | Sec-WebSocket-Accept: INzC15OFZl+FQXW1ujc3iyjD3kQ=
+/a fin=1 op=1 masked=0 text 'echo:a1'
+/a fin=1 op=2 masked=0 bytes 1,2,3
+/a fin=1 op=1 masked=0 text len=200 first='m'
+/a fin=1 op=1 masked=0 text len=70000 first='L'
+/a fin=1 op=1 masked=0 text '42'
+/a fin=1 op=8 masked=0 code=4002 reason='server bye'
+/a EOF
+/b response head: HTTP/1.1 101 Switching Protocols | Upgrade: websocket | Connection: Upgrade | Sec-WebSocket-Accept: f+/MrAhc3tfn6fEtbCxipu0IqqM=
+/b fin=1 op=8 masked=0 code=4005 reason='closing b'
+/b EOF

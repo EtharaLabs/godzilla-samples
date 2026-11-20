@@ -1,0 +1,21 @@
+toHex on Int8Array => threw TypeError: method requires a Uint8Array
+toBase64 on Uint8ClampedArray => threw TypeError: requires a Uint8Array
+setFromHex on Uint16Array => threw TypeError: requires a Uint8Array
+setFromBase64 on object => threw TypeError: not a Uint8Array
+"Z"         SyntaxError  SyntaxError  0/0[]
+"ZZ"        2/1[101]  SyntaxError  0/0[]
+"ZZZ"       3/2[101,150]  SyntaxError  0/0[]
+"ZZ="       SyntaxError  SyntaxError  0/0[]
+"ZZZ="      4/2[101,150]  SyntaxError  4/2[101,150]
+"ZZ=="      4/1[101]  SyntaxError  4/1[101]
+"AAAAZ"     SyntaxError  SyntaxError  4/3[0,0,0]
+"AAAAZZ"    6/4[0,0,0,101]  SyntaxError  4/3[0,0,0]
+"AAAA ZZ Z" 9/5[0,0,0,101,150]  SyntaxError  4/3[0,0,0]
+"ZZ=Z"      SyntaxError  SyntaxError  SyntaxError
+toLocaleString after shrink => x1,,, calls=1
+clamped ctor/from/of => 2,2,4,0,255,0,2 | 2,2,4,0,255,0,2 | 2,2,4,0,255,0,2
+clamped set/store => 2,2,4,0,255,0,2 | 2,2,4,0,255,0,2
+clamped fill/with/map => 2,2 | 0,2 | 3,3
+float16 DataView underflow => 0,true,5.960464477539063e-8
+Float16Array underflow => 0,0,5.960464477539063e-8,0,Infinity,0 true
+Math.f16round => 0,true,5.960464477539063e-8

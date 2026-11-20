@@ -1,0 +1,43 @@
+writeFile null false
+appendFile null
+readFile null callback data!
+readFile buf true 14
+mkdir null cbdir/a
+readdir null cb.txt,cbdir
+readdir types atrue
+stat null 14 true
+lstat err ENOENT ENOENT: No such file or directory (os error 2), lstat 'nope'
+exists true
+access ENOENT
+copyFile null
+rename null true
+symlink null
+readlink null cb.txt
+realpath null true true
+open null number
+read null 8 callback
+write str null 4 CALL
+write buf null 2 xyz
+read opts null 4 CALL
+writev null 4
+readv null 14 CALLx "yck V1V2!"
+fstat null 14
+close null null CALL 2000
+open default null number
+read default null 4 16384 CALL
+open err openSync 'nope/x': No such file or directory (os error 2)
+read err TypeError bad file descriptor 4242
+truncate null CA
+chmod null 700
+utimes null 200000
+mkdtemp null 16
+cp null a,cb3.txt
+cp no recursive EISDIR
+glob null cbdir-copy/a,cbdir-copy/cb3.txt,cbdir/a,cbdir/cb3.txt
+opendir null a,cb3.txt null null
+unlink null
+rm null
+rmdir null cb.txt
+readFile err ENOENT undefined
+no cb TypeError callback is not a function
+all done

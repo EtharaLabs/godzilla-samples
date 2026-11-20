@@ -1,0 +1,68 @@
+parse-basic: {a: [1, 2500, -0, true, false, null, "sA\n"], b: {}}
+parse-prims: 1 | "x" | null | -0 | 100 | [] | 123 | true | null
+parse-dup: {a: 2} | {__proto__: 1} | true
+parse-order: ["1", "2", "b", "a"]
+parse-bignum: 12345678901234567000 | Infinity | -0 | 1
+parse-escapes: "\"\\/\b\f\n\r\té😀"
+parse-err "" SyntaxError: Unexpected end of JSON input
+parse-err " " SyntaxError: Unexpected end of JSON input
+parse-err "{" SyntaxError: Expected string key in JSON object
+parse-err "[1,]" SyntaxError: Unexpected token in JSON
+parse-err "{\"a\":1,}" SyntaxError: Expected string key in JSON object
+parse-err "01" SyntaxError: Unexpected non-whitespace after JSON
+parse-err "1." SyntaxError: Invalid number in JSON
+parse-err ".5" SyntaxError: Unexpected token in JSON
+parse-err "+1" SyntaxError: Unexpected token in JSON
+parse-err "-" SyntaxError: Invalid number in JSON
+parse-err "NaN" SyntaxError: Unexpected token in JSON
+parse-err "undefined" SyntaxError: Unexpected token in JSON
+parse-err "'s'" SyntaxError: Unexpected token in JSON
+parse-err "\"\\x41\"" SyntaxError: Bad escape in JSON
+parse-err "\"\t\"" SyntaxError: Unescaped control character in JSON string
+parse-err "{a:1}" SyntaxError: Expected string key in JSON object
+parse-err "[1 2]" SyntaxError: Expected ',' or ']' in JSON array
+parse-err "tru" SyntaxError: Invalid literal in JSON
+parse-err "nul" SyntaxError: Invalid literal in JSON
+parse-err "\"abc" SyntaxError: Unterminated JSON string
+parse-err "1e" SyntaxError: Invalid number in JSON
+parse-err "[" SyntaxError: Unexpected end of JSON input
+parse-err "{\"a\"}" SyntaxError: Expected ':' in JSON object
+parse-err "{\"a\":}" SyntaxError: Unexpected token in JSON
+parse-err "\"\\u12\"" SyntaxError: Bad \u escape in JSON
+parse-err "1 2" SyntaxError: Unexpected non-whitespace after JSON
+parse-err "  1" SyntaxError: Unexpected token in JSON
+parse-err "\"\\ud800\"x" SyntaxError: Unexpected non-whitespace after JSON
+parse-err "{\"a\":1}}" SyntaxError: Unexpected non-whitespace after JSON
+parse-err "[1]]" SyntaxError: Unexpected non-whitespace after JSON
+parse-err "0x10" SyntaxError: Unexpected non-whitespace after JSON
+parse-err "Infinity" SyntaxError: Unexpected token in JSON
+parse-err "-Infinity" SyntaxError: Invalid number in JSON
+parse-err "\" \"x" SyntaxError: Unexpected non-whitespace after JSON
+lone-surrogate-ok: 1 | 8232
+reviver: {a: 2, b: [11, 21], c: {d: "x"}} | ["a:1", "0:10", "1:20", "b:arr", "d:x", "c:obj", ":obj"]
+reviver-delete: {a: 1, c: [1, <hole>, 3]}
+reviver-root: "root replaced"
+reviver-this: {p: {q: "q"}}
+reviver-mutate: {a: 1, b: "changed-by-a"}
+reviver-add: [1, 2, <hole>, <hole>, <hole>, "later"]
+reviver-noncallable: {a: 1}
+source-text: ["n=\"1.50\"", "s=\"\\\"a\\\\u0062\\\"\"", "big=\"12345678901234567890\"", "neg=\"-0\"", "t=\"true\"", "z=\"null\"", "x=\"1e2\"", "o=nosrc", "0=\"1.0\"", "arr=nosrc", "=nosrc"]
+source-bigint: 12345678901234567890123n
+source-after-modify: ["0:1", "1:none", ":none"]
+rawJSON: true | false | false | null | true | "12345678901234567890" | ["rawJSON"]
+rawJSON-stringify: {"a":12345678901234567890,"b":["str",null,true,-1e3]}
+rawJSON-err "{}" SyntaxError: JSON.rawJSON value must be a primitive
+rawJSON-err "[]" SyntaxError: JSON.rawJSON value must be a primitive
+rawJSON-err "" SyntaxError: JSON.rawJSON: empty string
+rawJSON-err " 1" SyntaxError: JSON.rawJSON: leading/trailing whitespace
+rawJSON-err "1 " SyntaxError: JSON.rawJSON: leading/trailing whitespace
+rawJSON-err "undefined" SyntaxError: Unexpected token in JSON
+rawJSON-err "\"a" SyntaxError: Unterminated JSON string
+rawJSON-err "\t1" SyntaxError: JSON.rawJSON: leading/trailing whitespace
+rawJSON-err "1n" SyntaxError: JSON.rawJSON: invalid JSON text
+rawJSON-coerce: "42" | "true"
+rawJSON-symbol: THROW TypeError: Cannot convert a Symbol value to a string
+parse-coerce: [7] | 1
+parse-symbol: THROW TypeError: Cannot convert a Symbol value to a string
+parse-deepish: 400
+roundtrip: {s: "\u0000😀\ud800", n: [1e-7, 5e-324, 9007199254740992]}

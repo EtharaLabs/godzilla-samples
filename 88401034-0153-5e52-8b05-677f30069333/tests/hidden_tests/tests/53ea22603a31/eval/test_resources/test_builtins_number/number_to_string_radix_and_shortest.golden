@@ -1,0 +1,11 @@
+radix => ["ff", "11111111", "-73", "0.1", "3.6", "ff.8", "-0.1", "0.0001", "80000000000"]
+radix long fractions => ["0.0022002200220022002200220022002201000021002100001101", "0.1999999999999a", "0.1", "3f.gez4w97ry0a18ymf6qadcxr", "0.0000000000000000000000011010110101111111001010011010"]
+radix huge => ["3w5e11264sgsf", "-45012021522523134134601", 13, 54]
+radix specials => ["0", "NaN", "Infinity", "-Infinity", "10", "10"]
+radix 1 !! RangeError: toString() radix must be between 2 and 36
+radix 37 !! RangeError: toString() radix must be between 2 and 36
+radix NaN !! RangeError: toString() radix must be between 2 and 36
+shortest => ["1e+21", "1e-7", "1.23e-18", "0.000001", "1.7976931348623157e+308", "5e-324", "9007199254740992", "-1e-7", "100", "0.30000000000000004", "0.3333333333333333", "123456789012345680000", "1.5e+300", "4.35", "0.000123"]
+integers near limits => ["9007199254740992", "9007199254740994", "9007199254740992", "18446744073709552000", "1.1805916207174113e+21", "-2147483648"]
+wrong receiver !! TypeError: Number method called on incompatible receiver
+boxed receiver => "2a"

@@ -1,0 +1,24 @@
+sync start
+a1 start
+a2 start
+arrow await order
+sync end
+micro 1
+a1 after await
+a2 caught rej
+a2 finally
+thenable.then called
+queueMicrotask
+loop 0
+micro 2
+a1 resolved a1
+a2 rejected TypeError
+a3 got thenable value
+loop 1
+micro 3
+thenable.then called
+loop 2
+a3 resolved thenable value
+true [object Promise] function
+t1 awaitPromise awaited t2 retPromise inner t3 t4
+caught RangeError | all 1,2,3 | rejected with plain

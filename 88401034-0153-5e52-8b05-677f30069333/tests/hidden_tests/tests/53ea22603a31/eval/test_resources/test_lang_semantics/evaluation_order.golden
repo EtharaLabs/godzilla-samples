@@ -1,0 +1,24 @@
+binary: 1 2 3 4 5
+object literal: k1 v1 k2 v2
+member assign: [object Object] prop rhs
+assign to null base: null p value TypeError
+read null base: undefined key TypeError
+call non-function: notfn arg1 arg2 TypeError
+new non-constructor: 5 ctorArg TypeError
+array: e0 e1 e2
+short circuit: true then 0 or 1 and null nullish
+x += (x = 10) gives 11: 10
+compound with object key gives 1add: key->string add
+update via accessor: get g set g 2 get g set g 6
+args: a1 a2 a3 body
+template: tpl1 tpl2
+computed method call: m marg m called
+relational: 1 2 [object Object] [object Object] left valueOf right valueOf
+destructuring defaults: given default2
+assignment pattern: dk dflt
+comma: c1 c2 c3
+unary: [object Object] z typeof operand void operand
+class definition: static key inst key method key static val
+class instantiation: inst val
+3 true true str:a str:b 1 str:a 2 -1 2
+ToPrimitive hints: a.valueOf b.valueOf a.valueOf b.valueOf a.valueOf a.toString b.toString a.valueOf a.toString a.valueOf b.valueOf a.valueOf b.valueOf

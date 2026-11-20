@@ -1,0 +1,17 @@
+valid true
+div_s -7/2 -3n
+div_s by zero RuntimeError: wasm: integer divide by zero true
+div_u by zero RuntimeError: wasm: integer divide by zero true
+div_s overflow RuntimeError: wasm: integer overflow true
+data_drop RuntimeError: wasm: unsupported 0xfc op 9 true
+stray_end 7
+else_without_if 2
+br_too_deep RuntimeError: wasm: branch depth out of range true
+pair returns [20,22] 42 direct=[20,22]
+pair returns [5] 5 direct=[5,0]
+pair returns [1,2,3] 3 direct=[1,2]
+pair returns 7 0 direct=[0,0]
+pair returns null 0 direct=[0,0]
+pair returns Set 0 direct=[0,0]
+zero-size body CompileError: wasm: unexpected end of input false
+overlong body CompileError: wasm: bad code body false

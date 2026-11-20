@@ -1,0 +1,42 @@
+ctor => 02-29
+ctor ref year => 2000-02-29[u-ca=iso8601]
+ctor bad => threw RangeError: ISO date field is out of range
+ctor bad ref => threw RangeError: ISO date field is out of range
+"-02-29" => threw RangeError: invalid month-day
+"--2-29" => threw RangeError: invalid month-day
+"-0229" => threw RangeError: invalid month-day
+"02-29" => 02-29
+"--02-29" => 02-29
+"0229" => 02-29
+"--0229" => 02-29
+"2024-02-29" => 02-29
+"2023-02-29" => threw RangeError: invalid month-day
+"12-31T10:00" => threw RangeError: invalid month-day
+"02-29[u-ca=iso8601]" => 02-29
+"02-29[u-ca=hebrew]" => threw RangeError: invalid month-day
+"2024-02-29[u-ca=hebrew]" => 1970-02-26[u-ca=hebrew]
+"13-01" => threw RangeError: invalid month-day
+"1972-02-29T00:00Z" => threw RangeError: invalid month-day
+"-271821-01-01" => 01-01
+"+275760-12-31" => 12-31
+bag monthCode => 02-29
+bag month needs year => 02-29
+bag year month day => 02-28
+bag year reject => threw RangeError: day out of range
+bag leap year reject => 02-29
+bag day 32 => 01-31
+bag missing day => threw TypeError: missing field 'day'
+getters => M02 29 undefined iso8601
+toPlainDate 2023 => 2023-02-28
+toPlainDate 2024 => 2024-02-29
+toPlainDate missing => threw TypeError: toPlainDate() requires a year
+with day => 02-01
+with monthCode => 04-30
+with month => 04-29
+with year => 02-28
+equals => true false
+compare exists? => undefined
+toJSON => 02-29
+valueOf => threw TypeError: Temporal.PlainMonthDay has no valueOf; use equals
+toString always => 1972-02-29[u-ca=iso8601]
+add exists? => undefined

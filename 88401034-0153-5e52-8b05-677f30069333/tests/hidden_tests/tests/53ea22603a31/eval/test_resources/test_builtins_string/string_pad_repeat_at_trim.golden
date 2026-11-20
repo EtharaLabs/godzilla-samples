@@ -1,0 +1,13 @@
+padStart => ["005", "12121abc", "abc", "  x", "nulx", "x", "abx"]
+padEnd => ["x   ", "x", "xababa", 6, "zzz"]
+repeat => ["ababab", "", "", "aa", "aa", "", ""]
+repeat negative !! RangeError: invalid count value
+repeat infinity !! RangeError: invalid count value
+repeat empty infinity !! RangeError: invalid count value
+at => ["c", undefined, undefined, undefined, "c", undefined, "b", "a", 1]
+charAt => ["b", "", NaN, "", undefined, "a", 98]
+trimmed set => "11111111111111111"
+other candidates => "333313"
+trimStart/trimEnd => [5, 5, true, "trimEnd", "trimStart"]
+trim null this !! TypeError: String.prototype method called on null or undefined
+trim coerces this => ["42", "o"]

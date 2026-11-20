@@ -1,0 +1,6 @@
+ranges: 3–5 | $3.00 – $5.00 | ~$3 | 5–3 | 1,000–100,000 | 1–10 | 0.5–0.75 | ~1 | 1,200–5,700
+pt range separator: 1 - 2 | 10 - 20
+rangeToParts currency: currency="€"@startRange integer="3"@startRange decimal="."@startRange fraction="00"@startRange literal=" – "@shared currency="€"@endRange integer="5"@endRange decimal="."@endRange fraction="00"@endRange
+rangeToParts equal: approximatelySign="~"@shared integer="1"@shared
+rangeToParts grouped: integer="1"@startRange group=","@startRange integer="000"@startRange literal="–"@shared integer="2"@endRange group=","@endRange integer="500"@endRange decimal="."@endRange fraction="5"@endRange
+range errors: TypeError: formatRange requires two arguments | RangeError: formatRange arguments must not be NaN | TypeError: formatRange requires two arguments | RangeError: formatRange arguments must not be NaN | TypeError: formatRange requires two arguments | TypeError: method called on an incompatible receiver

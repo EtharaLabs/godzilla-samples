@@ -1,0 +1,9 @@
+issuer not in the store
+  client: error: TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed) | close hadError=true
+  server: tlsClientError: TLS server handshake failed (SSL error 1: error:0A000418:SSL routines::tlsv1 alert unknown ca)
+issuer not in the store, rejectUnauthorized false
+  client: secure authorized=false authorizationError=string servername=localhost alpn=false | data "hi issuer not in the store, rejectUnauthorized false" | close hadError=false
+  server: secureConnection alpn=false | closed
+configured anchor itself
+  client: secure authorized=true authorizationError=null servername=localhost alpn=false | data "hi configured anchor itself" | close hadError=false
+  server: secureConnection alpn=false | closed

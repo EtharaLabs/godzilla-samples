@@ -1,0 +1,63 @@
+PlainDateTime number => threw TypeError: cannot convert to Temporal.PlainDateTime
+PlainDateTime null => threw TypeError: cannot convert to Temporal.PlainDateTime
+PlainDateTime bad calendar annotation => threw RangeError: unsupported calendar
+PlainDateTime missing year => threw TypeError: missing field 'year'
+PlainDateTime missing month => threw TypeError: missing field 'month'
+PlainDateTime missing day => threw TypeError: missing field 'day'
+PlainDateTime calendar number => threw TypeError: calendar is not a string
+PlainDateTime calendar object => threw TypeError: calendar is not a string
+PlainDateTime calendar Temporal => 2024-05-06T00:00:00[u-ca=gregory]
+PlainDateTime calendar ISO string => 3935-05-06T00:00:00[u-ca=roc]
+PlainDateTime month 0 => threw RangeError: month must be positive
+PlainDateTime day 0 => threw RangeError: day must be positive
+PlainDateTime monthCode object => 2024-05-06T00:00:00
+PlainDateTime monthCode number => threw TypeError: monthCode must be a string
+PlainDateTime monthCode bad => threw RangeError: invalid monthCode: M5
+PlainDateTime calendarId brand => threw TypeError: calendarId called on a non-Temporal receiver
+PlainDateTime toJSON => -000012-05-06T00:00:00
+PlainYearMonth number => threw TypeError: cannot convert to Temporal.PlainYearMonth
+PlainYearMonth null => threw TypeError: cannot convert to Temporal.PlainYearMonth
+PlainYearMonth bad calendar annotation => threw RangeError: invalid year-month
+PlainYearMonth missing year => threw TypeError: missing field 'year'
+PlainYearMonth missing month => threw TypeError: missing field 'month'
+PlainYearMonth missing day => 2024-05
+PlainYearMonth calendar number => threw TypeError: calendar is not a string
+PlainYearMonth calendar object => threw TypeError: calendar is not a string
+PlainYearMonth calendar Temporal => 2024-05-01[u-ca=gregory]
+PlainYearMonth calendar ISO string => 3935-05-01[u-ca=roc]
+PlainYearMonth month 0 => threw RangeError: month must be positive
+PlainYearMonth day 0 => 2024-05
+PlainYearMonth monthCode object => 2024-05
+PlainYearMonth monthCode number => threw TypeError: monthCode must be a string
+PlainYearMonth monthCode bad => threw RangeError: invalid monthCode: M5
+PlainYearMonth calendarId brand => threw TypeError: calendarId called on a non-Temporal receiver
+PlainYearMonth toJSON => -000012-05
+PlainMonthDay number => threw TypeError: cannot convert to Temporal.PlainMonthDay
+PlainMonthDay null => threw TypeError: cannot convert to Temporal.PlainMonthDay
+PlainMonthDay bad calendar annotation => threw RangeError: invalid month-day
+PlainMonthDay missing year => 05-06
+PlainMonthDay missing month => threw TypeError: missing field 'month'
+PlainMonthDay missing day => threw TypeError: missing field 'day'
+PlainMonthDay calendar number => threw TypeError: calendar is not a string
+PlainMonthDay calendar object => threw TypeError: calendar is not a string
+PlainMonthDay calendar Temporal => 1972-05-06[u-ca=gregory]
+PlainMonthDay calendar ISO string => 1972-05-06[u-ca=roc]
+PlainMonthDay month 0 => threw RangeError: month must be positive
+PlainMonthDay day 0 => threw RangeError: day must be positive
+PlainMonthDay monthCode object => 05-06
+PlainMonthDay monthCode number => threw TypeError: monthCode must be a string
+PlainMonthDay monthCode bad => threw RangeError: invalid monthCode: M5
+PlainMonthDay calendarId brand => threw TypeError: calendarId called on a non-Temporal receiver
+PlainMonthDay toJSON => 05-06
+PlainDate calendarId brand => threw TypeError: calendarId called on a non-Temporal receiver
+PDT from PDT keeps calendar => japanese
+PDT from PlainDate checks overflow => threw RangeError: invalid overflow (x)
+YM from YM checks overflow => threw RangeError: invalid overflow (x)
+MD from MD checks overflow => threw RangeError: invalid overflow (x)
+MD from string checks overflow => threw RangeError: invalid overflow (x)
+MD from PlainDate => 02-29
+YM from PlainDate => 2024-02
+MD toPlainDate number => threw TypeError: toPlainDate() argument must be an object
+MD toPlainDate era gregory => 2023-02-28[u-ca=gregory]
+MD toPlainDate era only => threw TypeError: toPlainDate() requires a year
+YM toPlainDate number => threw TypeError: toPlainDate() argument must be an object

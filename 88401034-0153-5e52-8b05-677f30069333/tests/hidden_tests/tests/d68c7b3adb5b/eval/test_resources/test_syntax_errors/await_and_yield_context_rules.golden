@@ -1,0 +1,41 @@
+# await and yield contexts
+"async function f() { function inner() { var await = 1; return await; } return inner(); } 1" => ok 1
+"async function f() { return () => await 1; } 2" => SyntaxError: expected ';'
+"async function f() { return async () => await 1; } 3" => ok 3
+"async function f() { (function () { await 1; }); }" => SyntaxError: expected ';'
+"function* g() { function inner() { var yield = 1; return yield; } return inner(); } g().next().value" => ok 1
+"function* g() { return () => yield; }" => ok
+"function* g() { yield yield 1; } var it = g(); it.next(); it.next(5).value" => ok 5
+"function* g() { yield* yield; } 4" => ok 4
+"function* g() { var x = yield; return x; } var it = g(); it.next(); it.next(7).value" => ok 7
+"function* g() { yield\n1; } [...g()].length" => ok 1
+"async (await) => 1" => SyntaxError: 'await' cannot be used as a binding here
+"async (x = await 1) => x" => SyntaxError: await expression is not allowed in formal parameters
+"async ({ await }) => 1" => SyntaxError: 'await' cannot be used as a shorthand property here
+"async function await() {} 5" => ok 5
+"async function f(await) {}" => SyntaxError: 'await' cannot be used as a binding here
+"function* yield() {}" => ok
+"function* g(yield) {}" => SyntaxError: 'yield' cannot be used as a binding here
+"(function* yield() {})" => SyntaxError: 'yield' cannot name this function expression
+"(async function await() {})" => SyntaxError: 'await' cannot name this function expression
+"var async = function (x) { return \"called \" + x; }; async(1)" => ok "called 1"
+"var async = 2; async\n(3)" => TypeError: async is not a function
+"class C { async *[Symbol.asyncIterator]() { yield await 1; } } 6" => ok 6
+"class C { static async m() { for await (const x of []) ; } } 7" => ok 7
+"class C { x = await; }" => ok
+"async function f() { class C { x = await 1; } }" => SyntaxError: expected ';'
+"async function f() { class C { [await 1]() {} } } 8" => ok 8
+"function* g() { class C { [yield 1]() {} } } 9" => ok 9
+"function* g() { class C { x = yield; } }" => SyntaxError: 'yield' is a reserved word in strict mode
+"class C { static { function f() { var await = 1; return await; } } } 10" => ok 10
+"class C { static { (() => await) } }" => ok
+"async () => { for await (x of y) ; }; 11" => ok 11
+"async function f() { await using x = null; using y = null; } 12" => ok 12
+"function* g() { yield /x/g; } 13" => ok 13
+"function* g() { yield\n/x/g; } 14" => ok 14
+"async function f() { await /x/; } 15" => ok 15
+"yield\n/1/g" => ok NaN
+"async function f() { await\n1; } 16" => ok 16
+"function f() { return typeof yield; } f()" => ok "function"
+"function* g() { return typeof yield; } g().next().value" => SyntaxError: 'yield' is not a valid identifier in a generator
+"async function* ag() { yield* [1]; await 1; for await (var x of [2]) yield x; } typeof ag().next" => ok "function"

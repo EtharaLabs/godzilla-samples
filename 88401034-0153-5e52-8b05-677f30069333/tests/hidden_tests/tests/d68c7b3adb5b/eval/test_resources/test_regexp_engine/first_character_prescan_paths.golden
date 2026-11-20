@@ -1,0 +1,47 @@
+/needle/              45 "needle"
+/needle/g             0 "needle"
+/needle/y             0 "needle"
+/e/                   null
+/^abc/                0 "abc"
+/^abc/                null
+/^b/m                 2 "b"
+/^b|c/                2 "c"
+/(?:^|x)b/            0 "xb"
+/a?b/                 40 "b"
+/a*b/                 40 "aab"
+/[xy]+z/              40 "yyz"
+/[^-]z/               40 "qz"
+/\u00e9z/             40 "éz"
+/[\u00e9\u0101]z/     40 "āz"
+/\u0101/i             40 "Ā"
+/[\u0100-\u017f]{2}/  40 "āĂ"
+/\Sz/                 41 "kz"
+/.z/s                 40 "\nz"
+/.z/                  null
+/(a|b)c/              40 "bc"
+/(?:a|)c/             40 "c"
+/\bword/              40 "word"
+/(?=w)wo/             40 "wo"
+/\p{Lu}x/u            40 "Ax"
+/K/iu                 40 "K"
+/[k]x/iu              40 "Kx"
+/s/iu                 40 "ſ"
+/ab/i                 40 "AB"
+/\u212a/i             null
+/(?:|)a/              40 "a"
+/abc/                 null
+/abc/                 null
+/q/                   null
+/\ud83d/i             null
+/(?:(?<=(a))b)+/      1 "b"
+/x\d/                 40 "x9"
+/\d+/                 null
+/z/                   null
+/(?:)/                0 ""
+/a{0}b/               40 "b"
+/(?:a+)?b/            40 "ab"
+/(a)?b\1/             40 "b"
+lone surrogate patterns true false true true 1
+offset literal 8 14 null 0
+sticky literal 8 14 false
+counts 300 300 200

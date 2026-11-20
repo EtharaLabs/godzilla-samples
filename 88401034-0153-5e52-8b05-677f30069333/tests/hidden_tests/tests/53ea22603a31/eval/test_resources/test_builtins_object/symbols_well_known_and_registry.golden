@@ -1,0 +1,26 @@
+well-knowns => "asyncDispose asyncIterator dispose hasInstance isConcatSpreadable iterator match matchAll metadata replace search species split toPrimitive toStringTag unscopables"
+well-known descriptors => [false, false, false]
+description => ["x", undefined, "", "Symbol()", "Symbol(null)", "1", "Symbol.iterator", "Symbol(Symbol.asyncIterator)"]
+registry => [true, "app", undefined, undefined, "Symbol(undefined)", "undefined", false]
+keyFor non-symbol !! TypeError: Symbol.keyFor: argument is not a Symbol
+new Symbol !! TypeError: Symbol is not a constructor
+to number !! TypeError: Cannot convert a Symbol value to a number
+template !! TypeError: Cannot convert a Symbol value to a string
+concat !! TypeError: Cannot convert a Symbol value to a string
+explicit String => ["Symbol(ok)", "Symbol(d)", "Symbol(e)"]
+boxed => ["object", "w", true, "[object Symbol]", "symbol", true]
+truthiness => [true, false, "symbol"]
+description getter bad this !! TypeError: Symbol.prototype.description requires a symbol
+toString bad this !! TypeError: Symbol method called on incompatible receiver
+as property key => [1, ["plain"], "{\"plain\":2}", true, true, 1]
+string protocol => ["M:x", "R:xy", "S:x", "P:x3"]
+matchAll without flags !! TypeError: regexp.flags is null or undefined
+replaceAll without flags !! TypeError: regexp flags is null or undefined
+matchAll/replaceAll global => ["R2:xz", "A2:x"]
+matchAll non-global !! TypeError: String.prototype.matchAll called with a non-global RegExp
+Symbol.match false => [true, true]
+isConcatSpreadable => [["a", "b"], 1]
+unscopables => ["outer", 2]
+array unscopables => ["at copyWithin entries fill find findIndex findLast findLastIndex flat flatMap includes keys toReversed toSorted toSpliced values", null]
+species getters => [true, true, true, true, "get [Symbol.species]"]
+Symbol statics => [0, "Symbol", 1, 1]

@@ -1,0 +1,26 @@
+# using
+"using x = null" => SyntaxError: 'using' declaration is not allowed at the top level of a script
+"{ using x = null; } 1" => ok 1
+"{ using x = { [Symbol.dispose]() {} }, y = null; } 2" => ok 2
+"{ using [a] = [] }" => ReferenceError: using is not defined
+"{ using {a} = {} }" => SyntaxError: expected ';'
+"{ using x; }" => SyntaxError: missing initializer in using declaration
+"switch (1) { case 1: using x = null; }" => SyntaxError: 'using' declaration is not allowed directly in a case clause
+"switch (1) { case 1: { using x = null; } } 3" => ok 3
+"for (using x in {}) ;" => SyntaxError: 'using' declaration is not allowed in a for-in head
+"for (using x of []) ; 4" => ok 4
+"for (using of []) ; 6" => ok 6
+"for (using x = null;;) break; 7" => ok 7
+"for (using\nx of []) ; 8" => SyntaxError: expected ';'
+"{ await using x = null; }" => SyntaxError: expected ';'
+"async function f() { await using x = null; } 9" => ok 9
+"async function f() { for (await using x of []) ; } 10" => ok 10
+"async function f() { await using [a] = []; }" => SyntaxError: invalid assignment target
+"var using = 11; using" => ok 11
+"using = 12" => ok 12
+"var using = [13]; using[0]" => ok 13
+"function f() { using x = null; } 14" => ok 14
+"using\nx = null" => ok null
+"{ using let = null; }" => SyntaxError: 'let' is disallowed as a lexically bound name
+"{ using await = null; } 15" => ok 15
+"label: using x = null" => SyntaxError: lexical declaration cannot appear in a single-statement context

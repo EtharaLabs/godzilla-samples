@@ -1,0 +1,19 @@
+toPlainDateTime() => 2024-03-10T00:00:00
+toPlainDateTime(time) => 2024-03-10T13:45:01.5
+toPlainDateTime(bag) => 2024-03-10T07:00:00
+toPlainDateTime(bad) => threw RangeError: invalid PlainTime string
+toPlainYearMonth => 2024-03
+toPlainMonthDay => 03-10
+toZonedDateTime string => 2024-03-10T00:00:00-05:00[America/New_York]
+toZonedDateTime bag => 2024-03-10T03:30:00-04:00[America/New_York]
+toZonedDateTime no time => 2024-03-10T00:00:00+00:00[Europe/London]
+toZonedDateTime missing tz => threw TypeError: timeZone must be a string or ZonedDateTime
+toZonedDateTime bad tz => threw RangeError: invalid time zone identifier
+toZonedDateTime offset tz => 2024-03-10T00:00:00+05:30[+05:30]
+toZonedDateTime min date midnight => threw RangeError: date-time is outside the representable range
+Apia skipped day start => 2011-12-31T00:00:00+14:00[Pacific/Apia]
+withCalendar => 2024-03-10[u-ca=japanese]
+withCalendar missing => threw TypeError: calendar argument is required
+withCalendar object => threw TypeError: calendar must be a string
+withCalendar PlainDate => 2024-03-10[u-ca=buddhist]
+withCalendar iso string => 2024-03-10[u-ca=roc]

@@ -1,0 +1,29 @@
+parse odd strings: P1Y2M3W4DT5H6M7.00800901S PT1H30M PT30S -P1D PT1.25S PT0S PT1H30S PT36H
+parse invalid strings: RangeError RangeError RangeError RangeError RangeError RangeError RangeError RangeError RangeError
+mixed signs: RangeError: mixed-sign duration
+non-integer field: RangeError: value must be an integer
+out of range: RangeError: duration is outside the valid range
+years out of range: RangeError: duration field is outside the valid range
+bag errors: TypeError TypeError RangeError RangeError P2W
+toString options: PT1H2M3.45S PT1H2M3S PT1H2M3.456S PT1H2M4S PT60.000S PT1.5S -PT0.000001S
+toString bad options: RangeError:fractionalSecondDigits out of range | RangeError:smallestUnit must be second or smaller | RangeError:fractionalSecondDigits must be 'auto' or a number | RangeError:invalid roundingMode
+round time units: PT26H P1DT1H59M30S PT26H PT25H45M -PT2H -PT2H
+round increments invalid: RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range
+round needs relativeTo: RangeError: rounding calendar units requires relativeTo
+round largest < smallest: RangeError: smallestUnit is larger than largestUnit
+round missing units: RangeError: round() requires smallestUnit or largestUnit
+round with PlainDate relativeTo: P1M16D P2M P1M P1Y1M P2Y P1M3W
+total with relativeTo: 29 28 1.5161290322580645 1.5 52.285714285714285 23
+total errors: TypeError RangeError RangeError RangeError
+zoned relativeTo across DST: P2D P2D 1 PT47H
+relativeTo bag and strings: P29D P29D
+relativeTo invalid: RangeError RangeError TypeError TypeError
+add/subtract: PT25H -PT4H -PT20H PT20H -1 true PT20H5M
+add calendar units: RangeError: Duration arithmetic with years, months, or weeks requires a relativeTo
+compare: 0,-1,-1,1
+compare needs relativeTo: RangeError: comparing calendar durations requires relativeTo
+options type: RangeError: roundingIncrement out of range
+options primitive: TypeError: options must be an object or undefined
+range limits: PT9007199254740991S PT9007199254740990.999S RangeError PT2504501H47M33.995731991S P104249991374D RangeError
+valueOf throws: TypeError: Temporal.Duration has no valueOf; use compare
+toLocaleString en: 1 hr, 30 min, 5 sec | 2 days | 1:02:00

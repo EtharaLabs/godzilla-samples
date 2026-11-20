@@ -1,0 +1,20 @@
+getters: 2024,2,M02,29,366,12,true,,,iso8601,2024-02,2024-02,2024-02-15[u-ca=gregory],2024-02,2024-02-15[u-ca=iso8601]
+getters non-iso: hebrew:5784,3,M03,29,383,13,true,am,5784,2023-11-14[u-ca=hebrew] | chinese:2023,3,M02L,29,384,13,true,,,2023-03-22[u-ca=chinese] | japanese:2024,3,M03,31,366,12,true,reiwa,6,2024-03-01[u-ca=japanese] | islamic-civil:1445,3,M03,30,355,12,true,ah,1445,2023-09-16[u-ca=islamic-civil] | persian:1403,3,M03,31,366,12,true,ap,1403,2024-05-21[u-ca=persian] | coptic:1740,3,M03,30,365,13,false,am,1740,2023-11-11[u-ca=coptic] | roc:113,3,M03,31,366,12,true,roc,113,2024-03-01[u-ca=roc] | indian:1946,3,M03,31,366,12,true,shaka,1946,2024-05-22[u-ca=indian] | dangi:2023,3,M02L,29,384,13,true,,,2023-03-22[u-ca=dangi] | buddhist:2567,3,M03,31,366,12,true,be,2567,2024-03-01[u-ca=buddhist]
+ctor errors: RangeError:invalid year-month | RangeError:invalid year-month | RangeError:year-month is outside the supported range | RangeError:year-month is outside the supported range | RangeError:value must be finite | RangeError:invalid calendar identifier | TypeError:constructor requires 'new'
+with: 2024-12 2025-02 2024-07 2024-12
+with errors: RangeError:month out of range | TypeError:with() requires at least one field | TypeError:with() requires at least one field | TypeError:with() argument must not have 'calendar' | TypeError:with() argument must be a plain object | RangeError:month and monthCode disagree
+add/subtract: 2025-01 2025-02 2023-12 2025-03 1993-03 2022-12
+add errors: RangeError:cannot add units smaller than months to a PlainYearMonth | RangeError:cannot add units smaller than months to a PlainYearMonth | RangeError:cannot add units smaller than months to a PlainYearMonth | RangeError:cannot add units smaller than months to a PlainYearMonth | RangeError:date is outside the supported range | RangeError:leap month does not exist in the target year
+add non-iso: chinese:2024-02-10[u-ca=chinese]>2024-07-06[u-ca=chinese]>2022-01-03[u-ca=chinese] islamic-umalqura:2024-01-13[u-ca=islamic-umalqura]>2024-06-07[u-ca=islamic-umalqura]>2022-01-04[u-ca=islamic-umalqura] ethiopic:2024-02-09[u-ca=ethiopic]>2024-07-08[u-ca=ethiopic]>2022-01-09[u-ca=ethiopic] japanese:2024-02-01[u-ca=japanese]>2024-07-01[u-ca=japanese]>2022-01-01[u-ca=japanese] hebrew:2024-02-10[u-ca=hebrew]>2024-07-07[u-ca=hebrew]>2022-01-03[u-ca=hebrew]
+add hebrew leap: M06 M06 2025-03-01[u-ca=hebrew]
+until/since: P4Y3M P4Y3M P51M P4Y P4Y -P4Y -P4Y3M P4Y
+until errors: RangeError:largestUnit must be year or month | RangeError:smallestUnit must be year or month | RangeError:smallestUnit is larger than largestUnit | RangeError:invalid roundingMode | RangeError:cannot compare dates in different calendars
+until non-iso: P4Y6M P55M P4Y
+toPlainDate: 2024-02-29 2024-02-29 2023-02-28 2024-03-10[u-ca=hebrew]
+toPlainDate errors: TypeError:toPlainDate() argument must be an object | TypeError:toPlainDate() requires a day | TypeError:toPlainDate() argument must be an object | RangeError:value must be finite
+equals/compare: true,true,true,-1,0,false
+toString calendarName: 2024-02-01[u-ca=gregory] 2024-02-01 2024-02-01[!u-ca=gregory] 2024-02-01[u-ca=iso8601] 2024-02-01[!u-ca=iso8601]
+valueOf: TypeError: Temporal.PlainYearMonth has no valueOf; use compare
+from strings: 2024-02 2024-02 RangeError 2024-02 RangeError RangeError RangeError RangeError 2024-02-01[u-ca=japanese]
+from bag: 2024-12 2024-02 2019-06-01[u-ca=japanese] 2024-07 false
+from bag errors: TypeError:missing field 'month' | TypeError:missing field 'year' | RangeError:month out of range | TypeError:cannot convert to Temporal.PlainYearMonth

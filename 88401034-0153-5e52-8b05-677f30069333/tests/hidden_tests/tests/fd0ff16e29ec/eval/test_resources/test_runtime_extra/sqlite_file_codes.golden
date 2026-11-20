@@ -1,0 +1,9 @@
+directory read-write SQLiteError SQLITE_CANTOPEN 14 "unable to open database file"
+directory read-only SQLiteError SQLITE_IOERR_READ 266 "disk I/O error"
+vacuum into missing dir SQLiteError SQLITE_CANTOPEN 14 "unable to open database: nope/x.db"
+attach directory SQLiteError SQLITE_CANTOPEN 14 "unable to open database: dir.db"
+rtree constraint SQLiteError SQLITE_CONSTRAINT 19 "rtree constraint failed: rt.(x0<=x1)"
+write after rename SQLiteError SQLITE_READONLY_RECOVERY 1032 "attempt to write a readonly database"
+read after rename ok {"n":1}
+write after unlink SQLiteError SQLITE_READONLY_RECOVERY 1032 "attempt to write a readonly database"
+files dir.db,moved.db

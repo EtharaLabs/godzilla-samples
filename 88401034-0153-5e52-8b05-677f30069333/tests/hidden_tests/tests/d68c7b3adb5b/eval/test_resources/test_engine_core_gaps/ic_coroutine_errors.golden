@@ -1,0 +1,18 @@
+sync throw from async call: no
+dispose g1
+["g1 1","g1 2"]
+dispose g2
+{"value":"g2 1","done":false} {"value":"early","done":true}
+dispose error surfaces: URIError: dispose failed
+duplicate params: one zero 2
+duplicate params, 3: 1,2,set
+destructure null: rejected TypeError: cannot destructure null or undefined
+destructure non-iterable: rejected TypeError: value is not iterable
+throwing default: rejected RangeError: default threw
+defaults ok: resolved "dflt/rest-dflt"
+await poisoned in async fn: resolved "caught constructor of fn"
+async gen await poisoned: resolved {"value":"gen caught constructor of gen","done":false}
+async gen next: resolved {"value":"after","done":false}
+return(poisoned) before start: rejected EvalError: constructor of start
+drain: resolved {"done":true}
+return(poisoned) when done: rejected EvalError: constructor of done

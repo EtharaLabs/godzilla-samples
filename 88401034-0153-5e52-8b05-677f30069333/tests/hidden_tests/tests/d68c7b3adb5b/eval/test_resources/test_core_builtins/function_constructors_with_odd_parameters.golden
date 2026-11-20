@@ -1,0 +1,14 @@
+odd params: 10 2 3 3 1 7 3 5 no params 1/2
+param errors: a b=SyntaxError )=SyntaxError a){=SyntaxError ...a, b=SyntaxError a = =SyntaxError /*=SyntaxError //=ok a,=ok ,a=SyntaxError 1=SyntaxError a, a = 1=SyntaxError yield=ok let=ok
+body errors: "}"=SyntaxError "/*"=SyntaxError "})({"=SyntaxError "return return"=SyntaxError "break"=SyntaxError "continue"=SyntaxError "a:a:1"=SyntaxError "new.target"=ok "super.x"=SyntaxError "super()"=SyntaxError "yield 1"=SyntaxError "await 1"=SyntaxError "return /*"=SyntaxError "\"use strict\"; with (a) {}"=SyntaxError
+strict body: SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,SyntaxError,2
+global scope value: undefinedg2
+sloppy this: true,
+new.target: undefined,false,string
+generator constructor: 1,2,3,done SyntaxError,SyntaxError object
+async constructor parse errors: SyntaxError,SyntaxError,body SyntaxError
+async constructor runs: function
+Function.prototype.constructor: true,true,1,Function,undefined
+Function called with symbol param: TypeError: Cannot convert a Symbol value to a string
+toString of constructed with newlines: "function anonymous(a\n,b\n) {\n\nreturn 1\n\n}"
+async constructor result: 42

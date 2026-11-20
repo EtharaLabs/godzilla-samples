@@ -1,0 +1,44 @@
+body
+dispose b
+dispose a
+ret
+dispose b
+dispose a
+SuppressedError: "" | error=fail a | suppressed=SuppressedError / fail b / body
+TypeError: value is not disposable
+TypeError: value is not disposable
+iter loop1
+dispose loop1
+iter loop2
+dispose loop2
+in block
+dispose block
+after block
+dispose labelled
+case
+dispose switch
+c-for iter 0 for-head
+c-for iter 1 for-head
+dispose for-head
+after c-for
+stack disposed? false
+adopt val
+deferred
+dispose s1
+stack disposed? true
+"using x = 1" parses
+"if (1) using x = res()" SyntaxError: lexical declaration cannot appear in a single-statement context
+"{ using [a] = b }" parses
+"{ using x }" SyntaxError: missing initializer in using declaration
+"switch (1) { case 1: using x = y }" SyntaxError: 'using' declaration is not allowed directly in a case clause
+"for (using x in {}) ;" SyntaxError: 'using' declaration is not allowed in a for-in head
+"{ await using x = y }" SyntaxError: expected ';'
+async body
+dispose sync-in-await-using
+async dispose x
+after async block
+TypeError: value is not disposable
+async c-for iter
+async dispose c-for head
+for-await-using body
+for-await-using element disposed

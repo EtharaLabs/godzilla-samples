@@ -1,0 +1,80 @@
+arr pattern default fn name "f,g,c"
+obj pattern default fn name "f,g"
+assign arr default fn name "f,g"
+assign obj default fn name "f,g"
+param default fn name "f,g"
+logical assign fn name "a,b,c"
+assign class name "K"
+var class name "K2,K3"
+export-like default naming "comp1|[desc]|"
+array destr close on throw "dflt,ret,tgt"
+array assign elision exhausts "undefined,undefined"
+array destr break closes "closed,1,closed,y1"
+for-of destr return 3
+with null !TypeError: Cannot convert undefined or null to object
+with undefined !TypeError: Cannot convert undefined or null to object
+with assign unscopable "10,2,set"
+with delete in body "undefined,number"
+with function call this true
+with strict-mode ref 1
+nested labels "02"
+labeled block break "x1"
+label continue while "24"
+label do-while 3
+for test false 0
+for let closure "0,1,2"
+tagged member "a|b1"
+tagged index true
+tagged nonfn !TypeError: tag is not a function
+tagged nonfn index !TypeError: tag is not a function
+tagged call "hey"
+tagged cache true
+tail tagged "done"
+tail member tagged "m-done"
+tail call-callee "cc-done"
+tail logical "l"
+tail nullish "nn"
+tail and "and"
+tail optional base null "undefined"
+tail member base null !TypeError: cannot read property 'm' of null
+tail non-callable !TypeError: (intermediate value).m is not a function
+tail comma "seq"
+opt call short "undefined"
+opt index short "undefined"
+opt index call true
+opt call on undefined fn "undefined"
+opt deep "undefined"
+opt in call args "undefined"
+delete opt "true,true,true,false"
+delete opt chain short true
+delete paren "true,false"
+delete super !ReferenceError: cannot delete a super property
+delete super idx !ReferenceError: cannot delete a super property
+delete null base !TypeError: cannot delete property 'x' of null or undefined
+delete null idx !TypeError: cannot delete property '0' of null or undefined
+delete ta index "false,true,true,true"
+delete ta index strict !TypeError: cannot delete a TypedArray index
+delete global prop "true,undefined,false,true"
+bitops coerced "2,5,16,6,15"
+exp nan "NaN,NaN,NaN,5e-324"
+mod edge "5,-0,NaN,NaN,NaN"
+bigint shift huge "-1,0,-1"
+bigint obj eq "true,true,true,true"
+bigint mixed unary !TypeError: Cannot convert a BigInt value to a number
+instanceof non-obj !TypeError: right-hand side of instanceof is not an object
+instanceof non-callable !TypeError: right-hand side of instanceof is not callable
+instanceof hasInstance "true,true"
+instanceof hasInstance noncallable !TypeError: @@hasInstance is not callable
+in non-obj !TypeError: 'in' requires an object on the right
+string wrapper in "true,true,false"
+to string objects "tstp"
+to prim object result !TypeError: cannot convert object to primitive value
+sym key via toPrimitive "found"
+zero to string "0,0,0,0"
+update via with 3
+compound super idx 6
+super set member "B2"
+super private set 5
+private set foreign !TypeError: cannot write private member #p to an object whose class did not declare it
+private set prim !TypeError: cannot write private member #p to an object whose class did not declare it
+private get prim !TypeError: cannot read private member #p from an object whose class did not declare it

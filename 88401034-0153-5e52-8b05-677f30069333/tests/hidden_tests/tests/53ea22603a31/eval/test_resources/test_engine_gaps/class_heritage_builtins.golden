@@ -1,0 +1,29 @@
+extends proxy ctor: construct trap 7 nt=D {"a":7,"d":1} true
+extends bound ctor: bound1,own
+extends bound ctor without prototype: TypeError: Class extends value does not have a valid prototype property
+extends null: null function
+new on extends null: TypeError: super constructor is not a constructor
+extends null returning object: true
+extends non-constructor: TypeError: Class extends value is not a constructor or null
+extends generator function: TypeError: Class extends value is not a constructor or null
+parent swapped to non-constructor: TypeError: super constructor is not a constructor
+super() twice: ReferenceError: super() may only be called once
+this before super(): ReferenceError: cannot access 'this' before initialization
+no super() call: ReferenceError: derived constructor returned without calling super()
+derived returns primitive: TypeError: a derived constructor may only return an object or undefined
+derived returns object without super(): {"own":"obj"}
+Promise subclass: true true
+Map subclass: one 1
+DataView subclass: 2 4 true
+ArrayBuffer subclass: 8 true 6
+Uint8Array subclass: 1,2,44 true 3
+RegExp subclass: b
+Error subclass: msg true [object Error]
+Function subclass: 8 true
+Array subclass: 4 true true
+Date and wrapper subclasses: 1970-01-01T00:00:00.000Z,false,5,2
+Set subclass via super() in arrow: 2
+object rest from proxy: {"b":2} get a,ownKeys,gopd b,get b,gopd c
+object rest from string and number: a{"1":"b","2":"c"}{}
+RegExp newTarget with primitive prototype: true a+g
+300 distinct dynamic regexps: 300 true

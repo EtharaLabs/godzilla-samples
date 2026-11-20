@@ -1,0 +1,12 @@
+intersect "a|b|c" "Α|Β" "b|c|x|y|z" "2"
+subtract "a|b|c|x|y|z|_" "γ|δ" "0|9" "a|b|c|0|1|2|9"
+nested "a|b|c|x|y|z|0|1|2|9" "z|9| |Α|Β|γ|δ|_|-" "a|b|c|Α|Β|γ|δ|-" "a|b|c" "a|_"
+empty null "a|b" "a" null
+escapes "-|&|!|#|%|,|:|;|<|=|>|@|`|~" "()[]{}/|\\^$.*+?" "\n|\t|\u0000|\r|\f|\u000b|\b"
+code points "A|B|C|😀|😁" "😀" "😀|😂"
+q strings "abc|x|z" "abc|ab|a" true "AB|\n|😀x"
+q set ops "ab|e" "cd" "ab" "|}" true true
+v classes "a|b" " |\t" "5" "!|#" null
+v icase "ab|C" false false "a|B"
+v dot and astral "😀|a" 2 "B" "B|1"
+v source/flags [a&&b] v true false false gv

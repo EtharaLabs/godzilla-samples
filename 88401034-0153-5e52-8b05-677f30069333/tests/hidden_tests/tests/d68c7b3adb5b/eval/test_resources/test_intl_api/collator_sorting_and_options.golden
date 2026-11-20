@@ -1,0 +1,20 @@
+default sort: a b a-b ab Äpfel apple Apple eclair éclair item1 item10 item2 resume Resume résume résumé zebra Zoo
+numeric: a a0 a2b a10 ab item1 item2 item02 item10 v1.9 v1.10 x99y x100y | 1 9 10 010 | 1 10 9
+caseFirst: upper=A,a,AB,Ab,ab,B,b | lower=a,A,ab,Ab,AB,b,B | false=a,A,ab,Ab,AB,b,B | kf=A,a
+sensitivity: base=-1,0,0,0,0,0,0 | accent=-1,-1,0,0,1,1,-1 | case=-1,0,-1,0,-1,0,0 | variant=-1,-1,-1,0,1,1,-1
+ignorePunctuation: 0,0,0,-1,true,false
+german: Möbius Moe Mueller Muller Müller Mzz | Moe Möbius Mueller Müller Muller Mzz | Moe Möbius Müller Mueller Muller Mzz | 0
+hot sort: f0a,f1B,f2B,f3a,f4a,f5B,f6B,f7a,f8a,f9B,f10B,f11a ... f57B,f58B,f59a,f60a
+resolved de-u-co-phonebk-kn-kf-upper: {"locale":"de-u-co-phonebk-kf-upper-kn","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"phonebk","numeric":true,"caseFirst":"upper"}
+resolved es-u-co-trad: {"locale":"es-u-co-trad","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"trad","numeric":false,"caseFirst":"false"}
+resolved zh-u-co-pinyin: {"locale":"zh-u-co-pinyin","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"pinyin","numeric":false,"caseFirst":"false"}
+resolved sv-u-co-reformed: {"locale":"sv-u-co-reformed","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"reformed","numeric":false,"caseFirst":"false"}
+resolved en-u-co-phonebk: {"locale":"en","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"default","numeric":false,"caseFirst":"false"}
+resolved ar-u-co-compat: {"locale":"ar-u-co-compat","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"compat","numeric":false,"caseFirst":"false"}
+resolved ko-u-co-searchjl: {"locale":"ko-u-co-searchjl","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"searchjl","numeric":false,"caseFirst":"false"}
+resolved en-u-co-emoji: {"locale":"en-u-co-emoji","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"emoji","numeric":false,"caseFirst":"false"}
+resolved options override: {"locale":"de","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"eor","numeric":false,"caseFirst":"lower"}
+  {"locale":"es","usage":"search","sensitivity":"variant","ignorePunctuation":false,"collation":"default","numeric":false,"caseFirst":"false"}
+  {"locale":"en","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"emoji","numeric":false,"caseFirst":"false"}
+  {"locale":"sv","usage":"sort","sensitivity":"accent","ignorePunctuation":false,"collation":"reformed","numeric":false,"caseFirst":"false"}
+  {"locale":"de-u-kf-lower-kn","usage":"sort","sensitivity":"variant","ignorePunctuation":false,"collation":"default","numeric":true,"caseFirst":"lower"}

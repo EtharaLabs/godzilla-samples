@@ -1,0 +1,29 @@
+{"obj":true} undefined 3 [null,9,0] [1,2,2]
+async ident called with 5 function AsyncFunction
+outer undefined
+captured arg
+6 42 4
+2 3 undefined 12
+yes
+8
+undefined false 2
+iife iife2 iife3
+TypeError: object is not a constructor
+"(a, b) \n => a" SyntaxError: unexpected token Punct("=>")
+"async x \n => x" SyntaxError: expected ';'
+"async \n x => x" parses
+"() => {} ()" SyntaxError: expected ';'
+"(a = yield) => a" parses
+"x => { \"use strict\"; with (x) {} }" SyntaxError: 'with' statements are not allowed in strict mode
+"((a)) => 1" SyntaxError: expected binding identifier
+"(...a, b) => 1" SyntaxError: expected ')'
+"(a, ...b,) => 1" SyntaxError: expected ')'
+"async (a, a) => 1" SyntaxError: duplicate parameter name 'a'
+"async await => 1" SyntaxError: 'await' cannot be used as a binding here
+"({a}) = 1" SyntaxError: invalid assignment target
+"(a, b) => { let a; }" SyntaxError: Identifier 'a' has already been declared
+"(a = 1, {b} = {}) => { \"use strict\" }" SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"async (x = await 1) => x" SyntaxError: await expression is not allowed in formal parameters
+"() => { super.x }" SyntaxError: 'super' keyword unexpected here
+"(x) => { new.target }" parses
+async arrow 8

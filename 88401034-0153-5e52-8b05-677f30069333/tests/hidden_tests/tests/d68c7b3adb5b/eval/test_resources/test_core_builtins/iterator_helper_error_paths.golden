@@ -1,0 +1,51 @@
+forEach non-callable closes: TypeError return
+forEach throwing callback closes: forEach cb next,return
+reduce non-callable closes: TypeError return
+reduce throwing callback closes: reduce cb next,next,return
+some non-callable closes: TypeError return
+some throwing callback closes: some cb next,return
+every non-callable closes: TypeError return
+every throwing callback closes: every cb next,return
+find non-callable closes: TypeError return
+find throwing callback closes: find cb next,return
+map non-callable closes: TypeError return
+map throwing callback closes: map cb next,return
+filter non-callable closes: TypeError return
+filter throwing callback closes: filter cb next,return
+flatMap non-callable closes: TypeError return
+flatMap throwing callback closes: flatMap cb next,return
+take/drop bad limit closes: take:RangeError:return take:RangeError:return take:EvalError:return drop:RangeError:return drop:RangeError:return drop:EvalError:return
+drop past end: {"done":true} {"done":true} next,next,next
+take zero closes immediately: {"done":true} return
+flatMap inner throws closes outer: inner next next,return
+flatMap non-iterable result closes: TypeError next,return
+flatMap return closes inner and outer: next,inner return,return
+helper return before start: {"done":true} {"done":true} return
+helper return after done: {"done":true} next
+helper next bad receiver: TypeError,TypeError [object Iterator Helper]
+helpers on non-object this: map:TypeError filter:TypeError take:TypeError drop:TypeError flatMap:TypeError reduce:TypeError toArray:TypeError forEach:TypeError some:TypeError every:TypeError find:TypeError
+next not callable: TypeError: iterator.next is not a function
+next returns primitive: TypeError: iterator result is not an object
+reduce with initial and index: >0:0 1:1 2:2 | 4
+find returns undefined when exhausted: undefined next,next,next
+Iterator.from wrapper return: {"done":true,"value":"r"} plain return {"done":true} true
+Iterator.from wrapper return not callable: TypeError: iterator return is not callable
+Iterator.from wrapper bad receiver: TypeError,TypeError
+Iterator.from returns iterator objects as is: true true
+Iterator.from bad @@iterator result: TypeError: iterator is not an object
+Iterator.from string object: a,b
+Iterator.concat return: {"done":true} {"done":true} a closed {"done":true}
+Iterator.concat bad @@iterator result: TypeError: @@iterator did not return an object
+Iterator.concat non-callable @@iterator: TypeError: Iterator.concat argument is not iterable
+Iterator.concat next after done: {"done":true}{"done":true}
+Iterator.zip return: {"done":true} {"done":true} {"done":true} close b,close a,close c
+Iterator.zip errors: TypeError:Iterator.zip input is not an object | TypeError:Iterator.zip options is not an object | TypeError:Iterator.zip padding is not an object | ok | TypeError:Iterator.zip input is not an object | TypeError:value is not iterable
+Iterator.zip empty input: {"done":true} {"done":true}
+Iterator.zip strict mismatch closes: TypeError: Iterator.zip strict: input iterators have different lengths b closed
+Iterator.zip longest padding iterator: [[1,"a"],[2,"P1"]] pad next,pad next,pad closed
+Iterator.zip longest short padding: [[1,null,null],[2,null,null]]
+Iterator.zipKeyed proxy input: [{"a":1,"b":"x"},{"a":2,"b":"y"}]
+Iterator.zipKeyed symbol keys and non-enumerable: 1 1 2 false
+Iterator.zipKeyed padding object: [{"a":1,"b":"B"},{"a":2,"b":"B"}]
+Iterator constructor: TypeError,TypeError,true,true
+Iterator.prototype dispose: return function

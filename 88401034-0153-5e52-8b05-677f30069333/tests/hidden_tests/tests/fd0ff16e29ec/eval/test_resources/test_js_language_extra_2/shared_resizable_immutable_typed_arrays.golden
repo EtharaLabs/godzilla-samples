@@ -1,0 +1,16 @@
+sab write/read "-2,255,1.5,-9,254,255"
+sab views share "4294967294,255"
+sab set/slice "254,255,255,255|254,255,255,255,255"
+sab set from "7,8"
+sab atomics "-2,3,3,1,2,-9,1"
+sab fill/copyWithin/sort "-1,-1,3,3,3,3,3,3"
+sab DataView "-300,9223372036854775808,254"
+sab TextDecoder "hi!"
+rab shrink oob "0,2,,undefined,0"
+rab oob writes ignored "0,0|0"
+rab oob methods "0,0,0"
+rab oob method throws !TypeError: Cannot perform operation on a detached or out-of-bounds TypedArray
+detached reads "0,undefined,undefined,true"
+immutable buffer "true,7"
+immutable buffer strict !TypeError: Cannot write to a TypedArray over an immutable ArrayBuffer
+immutable bigint strict !TypeError: Cannot write to a TypedArray over an immutable ArrayBuffer

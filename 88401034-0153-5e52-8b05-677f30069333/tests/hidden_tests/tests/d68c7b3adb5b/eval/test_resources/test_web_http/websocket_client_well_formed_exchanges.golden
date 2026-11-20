@@ -1,0 +1,10 @@
+/echo: open protocol="two" | message "hi there" | message binary(3 bytes, first=9) | message text(200 chars) | close code=3001 reason="client done" clean=true state=3
+/ping: open protocol="" | message "pong:marco" | close code=1000 reason="" clean=true state=3
+/frag: open protocol="" | message "fragment" | message binary(300 bytes, first=7) | message text(70000 chars) | message "masked by server" | close code=1000 reason="done" clean=true state=3
+/close4001: open protocol="" | close code=4001 reason="going away" clean=true state=3
+/closenocode: open protocol="" | close code=1005 reason="" clean=true state=3
+server /close4001: saw close masked=True code=4001 reason=''
+server /closenocode: saw close masked=True code=1000 reason=''
+server /echo: handshake GET /echo HTTP/1.1 / Upgrade: websocket / Connection: Upgrade / Sec-WebSocket-Version: 13 / Sec-WebSocket-Protocol: one, two | saw op=1 masked=True 'hi there' | saw op=2 masked=True [9, 8, 7] | saw op=1 masked=True 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | saw close masked=True code=3001 reason='client done'
+server /frag: saw close masked=True code=1000 reason=''
+server /ping: saw close masked=True code=1000 reason=''

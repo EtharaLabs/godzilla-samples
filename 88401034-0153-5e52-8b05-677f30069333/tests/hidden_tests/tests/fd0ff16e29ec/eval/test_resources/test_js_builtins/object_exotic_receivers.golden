@@ -1,0 +1,40 @@
+mapped-arguments: ["changed-via-arguments", "changed-via-param", "defined", "changed-via-param", "getter", {value: "changed-via-param", writable: false, enumerable: true, configurable: true}, "[object Arguments]", 2, "function", ["0", "1"]]
+unmapped-arguments: ["orig", "x", ["0", "callee", "length"]]
+arguments-gopd-live: {value: "live", writable: true, enumerable: true, configurable: true}
+strict-callee: THROW TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+ta-keys: ["0", "1", "2", "extra"] | [10, 20, 30, "expando"] | [["0", 10], ["1", 20], ["2", 30], ["extra", "expando"]] | ["0", "1", "2", "extra"]
+ta-gopd: {value: 20, writable: true, enumerable: true, configurable: true} | undefined | undefined | undefined
+ta-hasOwn: true | false | false | true | true | false
+ta-define: true | 99 | false | false | false | false | true
+ta-set: true | 44 | true | true | true | 1
+ta-set-receiver: true | {0: 5} | true | ["0"]
+ta-get-receiver: 30 | undefined | undefined
+bigint-ta-set: true | 5n | "TypeError"
+ta-freeze: "TypeError: Object.freeze could not freeze the object" | false | true
+proxy-gopds: {a: {value: "A", writable: true, enumerable: false, configurable: true}, [Symbol(ps)]: {value: 2, writable: true, enumerable: true, configurable: true}}
+proxy-symbols: ["Symbol(ps)"]
+proxy-propertyIsEnumerable: false | true | false
+proxy-hasOwnProperty: true | false
+lookupGetter-proxy: "proxGetter" | undefined | undefined | "proxGetter"
+lookupGetter-chain: "get __proto__" | undefined | undefined | undefined
+defineGetter-proxy: ["w:set/enumerable/configurable"]
+proto-prims: true | true | true | true
+Object-subclass: true | "sub" | true
+Object-newtarget-nonobj-proto: true
+Object-newtarget-with-arg: "object" | undefined
+nc-accessor: true | true | false | false | false | false | true | false
+nc-data-samevalue: true | false | true
+accessor-merge: "function" | "function"
+accessor-clear-getter: undefined | undefined
+generic-desc: {value: undefined, writable: false, enumerable: false, configurable: false} | {value: 1, writable: true, enumerable: false, configurable: true}
+array-index-past-nonwritable-length: false | true | [1, "ok"] | false | 2
+array-length-define-variants: [[1], {value: 1, writable: false, enumerable: false, configurable: false}, true, false, false]
+array-length-shrink-partial: [false, 3, [0, 1, "nc"]]
+array-length-shrink-to-nonwritable: [false, 2, false]
+defineProperties-order: ["ownKeys", "gopd b", "get b", "gopd a", "get a"]
+defineProperties-partial-failure: ["TypeError", ["fresh"]]
+defineProperties-nonenum-skipped: ["own"]
+defineProperties-props-null: THROW TypeError: Object.defineProperties called on null or undefined
+create-with-props-null-proto: ["k"]
+freeze-accessor-and-symbol: [false, true, true, false]
+isFrozen-variants: false | true | true | false

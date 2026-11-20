@@ -1,0 +1,13 @@
+cyc-b: start
+cyc-b: reading a during cycle -> ReferenceError: cannot access 'a' before initialization
+cyc-b: end
+cyc-a: start
+cyc-a: end, b = B
+tla-slow: before await
+tla-fast: sync body runs while slow is pending
+tla-fast: after await null
+tla-slow: after await
+tla-join: both deps done
+main: a = A | useB() = B+A | hoisted from b = fn-from-b
+main: tla module values
+main: slow-value fast-value

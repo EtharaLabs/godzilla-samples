@@ -1,0 +1,29 @@
+missing export SyntaxError: the requested module '<dir>/a.mjs' does not provide an export named 'nope'
+ambiguous import SyntaxError: the requested module provides an ambiguous export named 'dup'
+ambiguous names hidden from namespace: ok false
+ambiguous ns ok 
+not found TypeError: module not found: ./does-not-exist.mjs (imported from <dir>/notfound.mjs)
+duplicate export SyntaxError: Identifier 'x' has already been declared
+throws.mjs running
+body throws RangeError: module body failed
+body throws again (cached error) RangeError: module body failed
+same ns twice ok true
+non-string specifier ok dup
+dyn options bad TypeError: import options must be an object
+dyn options undefined ok dup
+dyn with undefined ok dup
+dyn with non-object TypeError: import attributes must be an object
+dyn with non-string value TypeError: import attribute values must be strings
+dyn json attribute ok {"k":[1,2],"s":"json"}
+dyn json via proxy attributes ok json
+dyn json without attribute ok object
+text attribute escapes ok "q\"uote back\\slash\nline\r\nCRLF\ttab\u0001ctl ls ps end"
+bytes attribute ok Uint8Array 50 34
+indirect ambiguous re-export SyntaxError: the requested module provides an ambiguous export named 'dup'
+unexported await-in-sloppy-fn SyntaxError: 'await' is not a valid identifier here
+undeclared export SyntaxError: export 'notDeclared' is not declared in the module
+html comment in module SyntaxError: unexpected token Punct("<")
+import in function SyntaxError: 'import' declaration may only appear at the top level of a module
+source phase of source-text module SyntaxError: source-text modules have no module source
+module code is strict ok ReferenceError,TypeError
+meta object null true true true true url,filename,dirname

@@ -1,0 +1,23 @@
+refused Error ECONNREFUSED connect 127.0.0.1 true connect ECONNREFUSED 127.0.0.1:PORT
+refused close hadError true true
+listen non-local EADDRNOTAVAIL listen 192.0.2.1 0 listen EADDRNOTAVAIL 192.0.2.1:0 false
+half-open client saw end true
+client error EPIPE write EPIPE
+write cb Error EPIPE write write EPIPE
+client close false
+unref'd client got t1;t2;t3;
+unref'd server closed
+udp bind non-local EADDRNOTAVAIL bind 192.0.2.1 0 bind EADDRNOTAVAIL 192.0.2.1:0
+broadcast without SO_BROADCAST Error EACCES send 127.255.255.255 9 send EACCES 127.255.255.255:9 undefined
+oversized datagram UNKNOWN send send UNKNOWN 127.0.0.1:9 undefined
+error event EACCES send EACCES 127.255.255.255:9
+unref'd socket received one,two
+ssm group not multicast TypeError undefined undefined Invalid multicast address: 10.1.2.3
+ssm bad interface TypeError undefined undefined Invalid interface address: not-an-ip
+drop ssm bad source TypeError undefined undefined Invalid source address: nope
+drop ssm not multicast TypeError undefined undefined Invalid multicast address: 127.0.0.2
+drop ssm bad interface TypeError undefined undefined Invalid interface address: 999.1.1.1
+add bad interface TypeError undefined undefined Invalid interface address: eth-zero
+drop bad interface TypeError undefined undefined Invalid interface address: 1.2.3
+multicast interface not local Error EADDRNOTAVAIL setMulticastInterface setMulticastInterface EADDRNOTAVAIL
+all steps done

@@ -1,0 +1,52 @@
+bind-basic "T/1/2/3 2 bound three"
+bind-overbind 0
+bind-of-bind "first/x/y/z bound bound three 1"
+bind-infinity-length "Infinity,0,2,0"
+bind-nonstring-name "\"bound \""
+bind-non-callable !TypeError: bind must be called on a function
+bind-new-ignores-this "constructed true true false"
+bind-arrow-not-ctor !TypeError: object is not a constructor
+bind-class "bound-arg TypeError"
+apply-arraylike "AL/p/q/"
+apply-null-args "N///"
+apply-bad-args !TypeError: apply: argument list must be array-like
+apply-string-args !TypeError: apply: argument list must be array-like
+call-non-function !TypeError: number is not a function
+apply-many 9999
+call-primitive-this "bigint"
+toString-native-getter "function get size() { [native code] }"
+toString-symbol-method "[Symbol.iterator]() {}"
+toString-native-symbol "function values() { [native code] }"
+toString-bound "function () { [native code] }"
+toString-proxy "function () { [native code] }"
+toString-non-fn !TypeError: Function.prototype.toString requires that 'this' be a function
+toString-async-gen "async function* ag(x) { yield x; }"
+toString-getter "get prop() { return 1; }"
+toString-class-static "m() { return 'S'; }"
+toString-arrow-async "async (a, b) => a + b"
+toString-computed-method "['comp' + 'uted'](a) { return a; }"
+throwTypeError "true,true,0,\"\",true"
+fp-itself "function,,0,\"\",true"
+fp-not-ctor !TypeError: object is not a constructor
+fn-ctor-no-args "function anonymous(\n) {\n\n}"
+fn-ctor-param-order "a,b,return a + b"
+fn-ctor-new-target-proto "7,true,true"
+gen-fn-ctor-proto "GeneratorFunction,1,true,GeneratorFunction,1"
+async-gen-fn-ctor "AsyncGeneratorFunction,function"
+fn-ctor-strict-body undefined
+fn-ctor-use-strict-dupe !SyntaxError: duplicate parameter name 'a'
+fn-ctor-super !SyntaxError: 'super' keyword unexpected here
+fn-ctor-param-close !SyntaxError: expected ')'
+parseInt "42,31,31,0,0,35,NaN,NaN,NaN,1,5,-10,7"
+parseFloat "3.14,0.5,-0.0005,Infinity,-Infinity,0,1,NaN,12"
+Number.parse-same true
+isNaN-isFinite "true,false,true,true,true,false,false,false"
+isNaN-symbol !TypeError: Cannot convert a Symbol value to a number
+encodeURIComponent "a%20b%26c%2Fd%3F%C3%A9%F0%9F%98%80%3B%2C http://x.y/a%20b?q=1&r=%C3%A9#h"
+decodeURI "€ / | € %2F%23 | 😀"
+decode-malformed !URIError: URI malformed
+decode-bad-hex !URIError: URI malformed
+encode-lone-surrogate !URIError: URI malformed
+escape-unescape "%E4%u20AC%20@*_+-./ | ä€%zz%u12 | %"
+global-descriptors "parseInt:101 eval:101 globalThis:101 NaN:000"
+eval-props "eval,1,undefined,TypeError"

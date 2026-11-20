@@ -1,0 +1,16 @@
+halfTrunc => "P1M P2M -P1M -P3Y P1M PT0S -P1Y"
+halfEven => "P2M P2M -P1M -P3Y P2M PT0S -P1Y"
+halfCeil => "P2M P3M -P1M -P3Y P2M P1Y -P1Y"
+halfFloor => "P1M P2M -P1M -P3Y P1M PT0S -P1Y"
+halfExpand => "P2M P3M -P1M -P3Y P2M P1Y -P1Y"
+trunc => "P1M P2M -P1M -P2Y P1M PT0S -P1Y"
+expand => "P2M P3M -P2M -P3Y P2M P1Y -P2Y"
+total tie => 1.5
+zoned relativeTo tie => "P2M"
+zoned until halfTrunc => "P1M"
+week increment => "PT0S"
+day increment => "P7D"
+month increment => "P15M"
+increment zero => threw RangeError: roundingIncrement out of range
+increment negative => threw RangeError: roundingIncrement out of range
+calendar increment zero => threw RangeError: roundingIncrement out of range

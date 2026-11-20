@@ -1,0 +1,22 @@
+primitives cross: 2,st,,undefined,symbol,bigint
+isolated globals: undefined 3 object
+object result rejected: TypeError: only primitives and callables may cross a ShadowRealm boundary
+array result rejected: TypeError: only primitives and callables may cross a ShadowRealm boundary
+wrapped function: function name=namedInside length=3 result=42 proto=true
+wrapped is not constructor: TypeError: object is not a constructor
+wrapped arg object rejected: TypeError: ShadowRealm wrapped function: arguments must be primitives or callables
+wrapped returns object: TypeError: a wrapped function returned a non-primitive
+wrapped throws: TypeError: a wrapped function threw inside the ShadowRealm
+evaluate throws: TypeError: ShadowRealm evaluate: the provided source threw an error
+evaluate syntax error: SyntaxError: 'let' is disallowed as a lexically bound name
+evaluate non-string: TypeError: ShadowRealm.prototype.evaluate expects a string
+callback crosses: host saw arg|function|0
+callback throws in host: TypeError in realm
+returned function wraps again: 15
+length edge cases: Infinity 0 []
+name getter throws: TypeError: wrapped function name/length are not accessible
+requires new: TypeError: ShadowRealm constructor requires 'new'
+evaluate wrong receiver: TypeError: ShadowRealm.prototype.evaluate called on a non-ShadowRealm
+two realms independent: AB
+toStringTag: [object ShadowRealm]
+microtasks inside realm: sync then job

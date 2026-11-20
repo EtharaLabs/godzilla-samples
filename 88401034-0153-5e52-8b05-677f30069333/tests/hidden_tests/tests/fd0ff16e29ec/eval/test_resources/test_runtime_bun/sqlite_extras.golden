@@ -1,0 +1,35 @@
+setCustomSQLite missing Error undefined undefined Database.setCustomSQLite library not found: /definitely/not/libsqlite.so
+setCustomSQLite after open Error undefined undefined Database.setCustomSQLite must be called before opening a database
+fk SQLiteError SQLITE_CONSTRAINT_FOREIGNKEY 787 FOREIGN KEY constraint failed
+check SQLiteError SQLITE_CONSTRAINT_CHECK 275 CHECK constraint failed: n > 0
+unique SQLiteError SQLITE_CONSTRAINT_UNIQUE 2067 UNIQUE constraint failed: c.u
+mismatch SQLiteError SQLITE_MISMATCH 20 datatype mismatch
+range ok {"a":null}
+strict datatype SQLiteError SQLITE_CONSTRAINT_DATATYPE 3091 cannot store TEXT value in INTEGER column s.v
+trigger SQLiteError SQLITE_CONSTRAINT_TRIGGER 1811 trigger says no
+bind symbol TypeError undefined undefined Binding expected string, TypedArray, boolean, number, bigint or null
+bind object in array TypeError undefined undefined Binding expected string, TypedArray, boolean, number, bigint or null
+bind function TypeError undefined undefined Binding expected string, TypedArray, boolean, number, bigint or null
+bind huge bigint ok {"a":0}
+bind dataview TypeError undefined undefined Binding expected string, TypedArray, boolean, number, bigint or null
+bind empty u8 ok {"t":"blob","l":0}
+bind float32 ok {"h":"0000803F"}
+loadExtension SQLiteError undefined 1 ./definitely-missing-ext.so: cannot open shared object file: No such file or directory
+fileControl bad value TypeError undefined undefined Database.fileControl value must be a number, TypedArray, null, or undefined
+fileControl number SQLiteError undefined 0 not an error
+fileControl null SQLiteError undefined 0 not an error
+fileControl typed SQLiteError undefined 0 not an error
+deserialize string opens a file ok ["not bytes",true]
+deserialize empty ok {"x":1}
+deserialize garbage SQLiteError SQLITE_NOTADB 26 file is not a database
+libversion-ish ok "string"
+busy SQLiteError SQLITE_BUSY 5 database is locked
+notadb SQLiteError SQLITE_NOTADB 26 file is not a database
+closed stmt after db close Error undefined undefined Statement has finalized
+finalize then all Error undefined undefined Statement has finalized
+multiple statements prepare ok [{"a":1}]
+empty sql Error undefined undefined no SQL statement to prepare
+comment only ok {"changes":0,"lastInsertRowid":1}
+columnNames of insert ok []
+paramsCount named ok 4
+native ok "object"

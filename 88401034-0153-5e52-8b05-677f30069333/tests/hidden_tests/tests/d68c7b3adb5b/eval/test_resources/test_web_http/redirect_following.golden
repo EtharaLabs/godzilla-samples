@@ -1,0 +1,32 @@
+POST  /301        -> 200 true http://127.0.0.1:PORT/final?via=301 "GET /final?via=301 "
+POST  /302        -> 200 true http://127.0.0.1:PORT/final?via=302 "GET /final?via=302 "
+PUT   /303        -> 200 true http://127.0.0.1:PORT/final?via=303 "GET /final?via=303 "
+POST  /307        -> 200 true http://127.0.0.1:PORT/final?via=307 "POST /final?via=307 payload"
+PATCH /308        -> 200 true http://127.0.0.1:PORT/final?via=308 "PATCH /final?via=308 payload"
+GET   /301        -> 200 true http://127.0.0.1:PORT/final?via=301 "GET /final?via=301 "
+GET   /chain/1    -> 200 true http://127.0.0.1:PORT/final?via=chain "GET /final?via=chain "
+GET   /nolocation -> 302 false http://127.0.0.1:PORT/nolocation "stay here"
+loop: TypeError fetch 'http://127.0.0.1:PORT/loop': too many redirects
+server saw:
+  POST /301 body=payload
+  GET /final?via=301
+  POST /302 body=payload
+  GET /final?via=302
+  PUT /303 body=payload
+  GET /final?via=303
+  POST /307 body=payload
+  POST /final?via=307 body=payload
+  PATCH /308 body=payload
+  PATCH /final?via=308 body=payload
+  GET /301
+  GET /final?via=301
+  GET /chain/1
+  GET /chain/2
+  GET /final?via=chain
+  GET /nolocation
+  GET /loop
+  GET /loop
+  GET /loop
+  GET /loop
+  GET /loop
+  GET /loop

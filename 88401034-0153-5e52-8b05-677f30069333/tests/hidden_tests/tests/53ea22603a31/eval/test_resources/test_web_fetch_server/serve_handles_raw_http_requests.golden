@@ -1,0 +1,72 @@
+1 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 9\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/plain
+2 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 11\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/chunked
+3 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 7\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/abs
+4 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 19\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/relative-target
+5 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 10\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/nohost
+6 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 9\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/lower
+7 HTTP/1.1 400 Bad Request\r\nContent-Length: 22\r\nConnection: close\r\n\r\nmalformed request line
+8 HTTP/1.1 400 Bad Request\r\nContent-Length: 25\r\nConnection: close\r\n\r\nrequest headers too large
+9 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 6\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/cl
+10 HTTP/1.1 400 Bad Request\r\nContent-Length: 37\r\nConnection: close\r\n\r\nchunked body: bad chunk size "qq\r\n"
+11 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 15\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/eof-headers
+12 HTTP/1.1 400 Bad Request\r\nContent-Length: 13\r\nConnection: close\r\n\r\nempty request
+13 HTTP/1.1 200 OK\r\ncontent-type: text/plain;charset=UTF-8\r\nx-kept: k\r\nContent-Length: 14\r\nServer: lumen/V\r\nConnection: close\r\n\r\nok:/after-junk
+status HTTP/1.1 200 OK
+status HTTP/1.1 201 Created
+status HTTP/1.1 202 Accepted
+status HTTP/1.1 204 No Content
+status HTTP/1.1 301 Moved Permanently
+status HTTP/1.1 302 Found
+status HTTP/1.1 303 See Other
+status HTTP/1.1 304 Not Modified
+status HTTP/1.1 307 Temporary Redirect
+status HTTP/1.1 308 Permanent Redirect
+status HTTP/1.1 400 Bad Request
+status HTTP/1.1 401 Unauthorized
+status HTTP/1.1 403 Forbidden
+status HTTP/1.1 404 Not Found
+status HTTP/1.1 405 Method Not Allowed
+status HTTP/1.1 409 Conflict
+status HTTP/1.1 410 Gone
+status HTTP/1.1 422 Unprocessable Entity
+status HTTP/1.1 429 Too Many Requests
+status HTTP/1.1 500 Internal Server Error
+status HTTP/1.1 501 Not Implemented
+status HTTP/1.1 502 Bad Gateway
+status HTTP/1.1 503 Service Unavailable
+status HTTP/1.1 299 
+status HTTP/1.1 418 
+GET http://example.test/plain body=null headers=[["host","example.test"]]
+POST http://h/chunked body="Wikipedia" headers=[["host","h"],["transfer-encoding","chunked"]]
+GET http://absolute.example/abs?q=1 body=null headers=[["host","h"]]
+GET http://h/relative-target body=null headers=[["host","h"]]
+GET http://127.0.0.1:PORT/nohost body=null headers=[]
+GET http://h/lower body=null headers=[["host","h"],["x-dup","a, b"]]
+POST http://h/cl body="hello" headers=[["content-length","5"],["host","h"]]
+GET http://h/eof-headers body=null headers=[["host","h"]]
+GET http://h/after-junk body=null headers=[["host","h"]]
+GET http://h/status/200 body=null headers=[["host","h"]]
+GET http://h/status/201 body=null headers=[["host","h"]]
+GET http://h/status/202 body=null headers=[["host","h"]]
+GET http://h/status/204 body=null headers=[["host","h"]]
+GET http://h/status/301 body=null headers=[["host","h"]]
+GET http://h/status/302 body=null headers=[["host","h"]]
+GET http://h/status/303 body=null headers=[["host","h"]]
+GET http://h/status/304 body=null headers=[["host","h"]]
+GET http://h/status/307 body=null headers=[["host","h"]]
+GET http://h/status/308 body=null headers=[["host","h"]]
+GET http://h/status/400 body=null headers=[["host","h"]]
+GET http://h/status/401 body=null headers=[["host","h"]]
+GET http://h/status/403 body=null headers=[["host","h"]]
+GET http://h/status/404 body=null headers=[["host","h"]]
+GET http://h/status/405 body=null headers=[["host","h"]]
+GET http://h/status/409 body=null headers=[["host","h"]]
+GET http://h/status/410 body=null headers=[["host","h"]]
+GET http://h/status/422 body=null headers=[["host","h"]]
+GET http://h/status/429 body=null headers=[["host","h"]]
+GET http://h/status/500 body=null headers=[["host","h"]]
+GET http://h/status/501 body=null headers=[["host","h"]]
+GET http://h/status/502 body=null headers=[["host","h"]]
+GET http://h/status/503 body=null headers=[["host","h"]]
+GET http://h/status/299 body=null headers=[["host","h"]]
+GET http://h/status/418 body=null headers=[["host","h"]]

@@ -1,0 +1,22 @@
+star_missing_as: SyntaxError: expected 'as'
+export_star_missing_from: SyntaxError: expected 'from'
+import_assign: TypeError: assignment to import binding 'x'
+import_assign_ns: TypeError: Cannot assign to read only property 'x' of module namespace object
+import_live_binding: ok 2
+assert_newline: ReferenceError: assert is not defined
+import_from_from: ok from module
+escaped_as_import: SyntaxError: 'as' must not contain escape sequences
+escaped_as_export_from: SyntaxError: 'as' must not contain escape sequences
+escaped_as_star: SyntaxError: 'as' must not contain escape sequences
+default_escaped_import: ok lib default
+export_default_let: SyntaxError: 'let' is a reserved word in strict mode
+export_let_list: ok 3
+export_destructured: ok 7
+export_class_and_fn: ok functionfunction
+export_reserved_local: ok 1
+export_keyword_name: ok undefined
+import_keyword_name: ok keyword export
+tla_in_function: SyntaxError: 'await' is not a valid identifier here
+tla_for_await: ok 1,2
+module_this_arrow: ok undefined
+module_eval_var: ok undefined

@@ -1,0 +1,22 @@
+throws after posting
+  message [8,"env-data","set"]
+  error TypeError boom in worker
+  exit 1
+rejects
+  error RangeError rejected in worker
+  exit 1
+finishes
+  message "finishing naturally"
+  exit 0
+syntax error
+  error SyntaxError unexpected token Punct(";") (line 1)
+  exit 1
+terminated after echo
+  message "echo hello"
+  exit 1
+  terminate resolved 1
+terminate idle worker
+  terminate result 1
+  terminate again 1
+TypeError: The worker script or module filename must be an absolute path or a relative path starting with './' or '../'. Received "relative.js"
+worker_threads option 'stdout' is not supported in lumen (workers share the process stdio)

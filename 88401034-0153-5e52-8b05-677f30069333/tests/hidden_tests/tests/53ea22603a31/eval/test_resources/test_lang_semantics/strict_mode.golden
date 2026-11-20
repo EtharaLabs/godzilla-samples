@@ -1,0 +1,30 @@
+undeclared assign: ReferenceError: undeclaredStrictVar is not defined
+write non-writable: TypeError: cannot assign to read-only property 'ro'
+write getter-only: TypeError: cannot set getter-only property 'g'
+add to non-extensible: TypeError: cannot add property, object is not extensible
+add to sealed: TypeError: cannot add property, object is not extensible
+delete non-configurable: TypeError: cannot delete non-configurable property 'a'
+write frozen array elem: TypeError: cannot assign to read-only property '0'
+write string index: TypeError: Cannot create property '0' on string value
+write string length: TypeError: Cannot create property 'length' on string value
+set prop on primitive: TypeError: Cannot create property 'x' on number value
+this in function: ok undefined
+this via call primitive: ok number
+arguments.callee: TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+fn.caller: TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+eval var scope: ok undefined
+arguments unmapped: ok 1
+NaN assign: TypeError: cannot assign to read-only property 'NaN'
+undefined assign: TypeError: cannot assign to read-only property 'undefined'
+Infinity assign: TypeError: cannot assign to read-only property 'Infinity'
+octal in eval: SyntaxError: legacy octal literals are not allowed in strict mode
+with in eval: SyntaxError: 'with' statements are not allowed in strict mode
+duplicate params via Function: SyntaxError: duplicate parameter name 'a'
+sloppy Function inside strict: ok 2
+sloppy fn this: ok true
+array length shrink frozen: TypeError: cannot assign to read-only property 'length'
+defineProperty on frozen: TypeError: Cannot redefine property
+Reflect.set result: ok false
+class body strict: ok undefined
+setter on proto chain: TypeError: cannot assign to read-only property 'inherited'
+non-writable via super: TypeError: cannot assign to read-only property 'k'

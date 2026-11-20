@@ -1,0 +1,137 @@
+"let a; let a;"                                  -> SyntaxError: Identifier 'a' has already been declared
+"const a = 1; var a;"                            -> SyntaxError: Identifier 'a' has already been declared
+"let let = 1;"                                   -> SyntaxError: 'let' is disallowed as a lexically bound name
+"const c;"                                       -> SyntaxError: missing initializer in const declaration
+"for (const x; ;) {}"                            -> SyntaxError: missing initializer in for-loop declaration
+"a => { \"use strict\"; delete a; }"             -> SyntaxError: delete of an unqualified identifier in strict mode
+"\"use strict\"; delete x;"                      -> SyntaxError: delete of an unqualified identifier in strict mode
+"\"use strict\"; with (o) {}"                    -> SyntaxError: 'with' statements are not allowed in strict mode
+"\"use strict\"; var eval = 1;"                  -> SyntaxError: 'eval' cannot be used as a binding in strict mode
+"\"use strict\"; arguments = 1;"                 -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; eval++;"                        -> SyntaxError: cannot increment/decrement 'eval' or 'arguments' in strict mode
+"\"use strict\"; var yield;"                     -> SyntaxError: 'yield' cannot be used as a binding in strict mode
+"\"use strict\"; var let = 1;"                   -> SyntaxError: 'let' cannot be used as a binding in strict mode
+"\"use strict\"; implements = 1;"                -> SyntaxError: 'implements' is a reserved word in strict mode
+"\"use strict\"; 010"                            -> SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"; \"\\01\""                       -> SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"; function f(a, a) {}"            -> SyntaxError: duplicate parameter name 'a'
+"function f(a, a) { \"use strict\" }"            -> SyntaxError: duplicate parameter name 'a'
+"(a, a) => 1"                                    -> SyntaxError: duplicate parameter name 'a'
+"function f(a = 1) { \"use strict\" }"           -> SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"function* g() { var yield; }"                   -> SyntaxError: 'yield' cannot be used as a binding here
+"function* g() { yield = 1; }"                   -> SyntaxError: unexpected token Punct("=")
+"async function f() { var await; }"              -> SyntaxError: 'await' cannot be used as a binding here
+"async function f(a = await 1) {}"               -> SyntaxError: await expression is not allowed in formal parameters
+"function* g(a = yield) {}"                      -> SyntaxError: yield expression is not allowed in formal parameters
+"return 1"                                       -> SyntaxError: 'return' outside of a function
+"break;"                                         -> SyntaxError: illegal 'break' statement
+"continue;"                                      -> SyntaxError: illegal 'continue' statement
+"x: while (1) { (() => { break x; })(); }"       -> SyntaxError: undefined break label
+"x: { continue x; }"                             -> SyntaxError: continue label does not target an iteration statement
+"x: x: ;"                                        -> SyntaxError: label 'x' has already been declared
+"while (1) { break nope; }"                      -> SyntaxError: undefined break label
+"if (1) let x = 1;"                              -> SyntaxError: expected ';'
+"if (1) function* g() {}"                        -> SyntaxError: function declaration cannot appear in a single-statement context
+"while (0) function f() {}"                      -> SyntaxError: function declaration cannot appear in a single-statement context
+"label: function* g() {}"                        -> SyntaxError: a labelled function declaration must be a plain function
+"try {}"                                         -> SyntaxError: missing catch or finally after try
+"switch (1) { default: default: }"               -> SyntaxError: more than one default clause in switch statement
+"new.target"                                     -> SyntaxError: new.target is only valid inside a function
+"super.x"                                        -> SyntaxError: 'super' keyword unexpected here
+"function f() { super(); }"                      -> SyntaxError: 'super' call unexpected here
+"class A { constructor() { super(); } }"         -> SyntaxError: 'super' call unexpected here
+"class A { constructor() {} constructor() {} }"  -> SyntaxError: a class may only have one constructor
+"class A { get constructor() {} }"               -> SyntaxError: class constructor can't be a generator, async, or accessor
+"class A { *constructor() {} }"                  -> SyntaxError: class constructor can't be a generator, async, or accessor
+"class A { static prototype() {} }"              -> SyntaxError: classes may not have a static method named 'prototype'
+"class A { #x; #x; }"                            -> SyntaxError: duplicate private name '#x'
+"class A { #constructor; }"                      -> SyntaxError: '#constructor' is a reserved private name
+"class A { m() { this.#y; } }"                   -> SyntaxError: Private name '#y' is not declared in an enclosing class
+"this.#z"                                        -> SyntaxError: Private name '#z' is not declared in an enclosing class
+"class A { #p; m() { delete this.#p; } }"        -> SyntaxError: private fields cannot be deleted
+"class A { #q; m() { super.#q; } }"              -> SyntaxError: cannot access a private member through 'super'
+"class A { static { return; } }"                 -> SyntaxError: 'return' is not allowed directly in a class static block
+"class A { static { await 1; } }"                -> SyntaxError: 'await' is not a valid identifier here
+"class A { static { arguments; } }"              -> SyntaxError: 'arguments' is not allowed in a class static block
+"class A { get g(a) {} }"                        -> SyntaxError: getter functions must have no arguments
+"class A { set s() {} }"                         -> SyntaxError: setter functions must have exactly one argument
+"class A { set s(...r) {} }"                     -> SyntaxError: setter functions must have exactly one argument
+"class A extends B { x = super(); }"             -> SyntaxError: 'super' call unexpected here
+"({ a: 1 } = 1);"                                -> SyntaxError: invalid destructuring assignment target
+"1 = 2;"                                         -> SyntaxError: invalid assignment target
+"a + 1 = 2;"                                     -> SyntaxError: invalid assignment target
+"++a++;"                                         -> SyntaxError: invalid increment/decrement operand
+"(a, b) = 1;"                                    -> SyntaxError: invalid assignment target
+"[...a, b] = c;"                                 -> SyntaxError: invalid destructuring assignment target
+"for (let x of [], []) {}"                       -> SyntaxError: expected ')'
+"for (var i = 0 of []) {}"                       -> SyntaxError: expected ';'
+"for (let [a] = 1 in {}) {}"                     -> SyntaxError: expected ';'
+"for await (const x of []) {}"                   -> SyntaxError: 'for await' is only valid in an async context
+"async function f() { for await (x in y) {} }"   -> SyntaxError: 'for await' is only valid with a for-of head
+"a ?? b || c"                                    -> SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"-2 ** 2"                                        -> SyntaxError: a unary expression cannot be the base of '**' (use parentheses)
+"async function f() { await 2 ** 2 }"            -> SyntaxError: an await expression cannot be the base of '**' (use parentheses)
+"new a?.b()"                                     -> SyntaxError: an optional chain cannot follow 'new' without arguments
+"a?.`tpl`"                                       -> SyntaxError: expected property name
+"a?.b = 1"                                       -> SyntaxError: invalid assignment target
+"import.meta"                                    -> SyntaxError: 'import.meta' is only valid in a module
+"import x from \"y\";"                           -> SyntaxError: expected '('
+"export const e = 1;"                            -> SyntaxError: 'export' declaration may only appear at the top level of a module
+"yield => 1; function* g() { yield => 1; }"      -> SyntaxError: unexpected token Punct("=>")
+"var obj = { get x(a) {} };"                     -> SyntaxError: getter functions must have no arguments
+"var obj = { async *[x] () {} , async\n m() {} };" -> SyntaxError: line terminator not allowed after 'async' in a method
+"({ a = 1 });"                                   -> SyntaxError: invalid shorthand property initializer
+"let [a, a] = [];"                               -> SyntaxError: Identifier 'a' has already been declared
+"try {} catch ([e, e]) {}"                       -> SyntaxError: duplicate binding 'e' in catch parameter
+"try {} catch (e) { let e; }"                    -> SyntaxError: Identifier 'e' has already been declared
+"`\\unicode`"                                    -> SyntaxError: invalid escape sequence in template literal
+"\"unterminated"                                 -> SyntaxError: unterminated string literal
+"/unterminated"                                  -> SyntaxError: unterminated regular expression
+"/a/gg"                                          -> SyntaxError: duplicate regular expression flag g
+"0b12"                                           -> SyntaxError: identifier starts immediately after numeric literal
+"1__0"                                           -> SyntaxError: invalid use of numeric separator
+"1_"                                             -> SyntaxError: invalid use of numeric separator
+"08n"                                            -> SyntaxError: invalid BigInt literal (leading zero)
+".5n"                                            -> SyntaxError: identifier starts immediately after numeric literal
+"1e5n"                                           -> SyntaxError: identifier starts immediately after numeric literal
+"var a\\u0020b;"                                 -> SyntaxError: invalid character in escaped identifier
+"v\\u0061r x = 1;"                               -> SyntaxError: keywords must not contain escape sequences
+"throw\nnew Error()"                             -> SyntaxError: illegal newline after throw
+"a\n=>1"                                         -> SyntaxError: unexpected token Punct("=>")
+"async x\n=> 1"                                  -> SyntaxError: expected ';'
+"({ async\nfoo() {} })"                          -> SyntaxError: line terminator not allowed after 'async' in a method
+"let\nlet = 1"                                   -> SyntaxError: 'let' is disallowed as a lexically bound name
+"function f() { \"use strict\"; 0777 }"          -> SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"; ({ eval } = {});"               -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; function eval() {}"             -> SyntaxError: 'eval' can't be a function name in strict mode
+"\"use strict\"; (function arguments() {})"      -> SyntaxError: 'arguments' can't be a function name in strict mode
+"\"use strict\"; label: function f() {}"         -> SyntaxError: function declaration cannot appear in a single-statement context
+"class let {}"                                   -> SyntaxError: 'let' cannot be used as a class name
+"class A { [super.x]() {} }"                     -> SyntaxError: 'super' keyword unexpected here
+"(async function await() {})"                    -> SyntaxError: 'await' cannot name this function expression
+"(function* yield() {})"                         -> SyntaxError: 'yield' cannot name this function expression
+"using x = 1;"                                   -> SyntaxError: 'using' declaration is not allowed at the top level of a script
+"{ using x; }"                                   -> SyntaxError: missing initializer in using declaration
+"switch (1) { case 1: using y = null; }"         -> SyntaxError: 'using' declaration is not allowed directly in a case clause
+"for (using x in {}) {}"                         -> SyntaxError: 'using' declaration is not allowed in a for-in head
+"{ using [a] = b; }"                             -> (runtime) ReferenceError: using is not defined
+"@dec function f() {}"                           -> SyntaxError: expected '{'
+"x = { __proto__: 1, __proto__: 2 }"             -> SyntaxError: duplicate __proto__ property in object literal
+"let x = 1; { var x; }"                          -> SyntaxError: Identifier 'x' has already been declared
+"function f(a) { let a; }"                       -> SyntaxError: Identifier 'a' has already been declared
+"eval => { \"use strict\" }; (eval) => { \"use strict\" }" -> SyntaxError: 'eval' cannot be used as a binding in strict mode
+"((a)) => 1"                                     -> SyntaxError: expected binding identifier
+"({}) => 1"                                      -> no error
+"async (a = await 1) => a"                       -> SyntaxError: await expression is not allowed in formal parameters
+"(...a, b) => 1"                                 -> SyntaxError: expected ')'
+"function f(...a,) {}"                           -> SyntaxError: expected ')'
+"a ? b"                                          -> SyntaxError: expected ':'
+"[a, b"                                          -> SyntaxError: expected ']'
+"{"                                              -> SyntaxError: expected '}'
+"f("                                             -> SyntaxError: unexpected token Eof
+"new.foo"                                        -> SyntaxError: expected 'target' after 'new.'
+"import.foo"                                     -> SyntaxError: expected 'meta', 'source', or 'defer' after 'import.'
+"x = 1 +"                                        -> SyntaxError: unexpected token Eof
+"\"\\u{110000}\""                                -> SyntaxError: undefined Unicode code-point
+"\"\\u{zz}\""                                    -> SyntaxError: bad \u escape
+"\"\\x0\""                                       -> SyntaxError: bad \x escape

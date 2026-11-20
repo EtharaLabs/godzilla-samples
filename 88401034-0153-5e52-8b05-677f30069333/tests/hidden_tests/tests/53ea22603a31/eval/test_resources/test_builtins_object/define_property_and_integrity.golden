@@ -1,0 +1,38 @@
+non-object target !! TypeError: Object.defineProperty called on non-object
+desc not object !! TypeError: Property description must be an object
+accessor+value !! TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute
+getter not fn !! TypeError: Getter must be a function
+setter not fn !! TypeError: Setter must be a function
+defaults => {value: 1, writable: false, enumerable: false, configurable: false}
+accessor defaults => ["function", undefined, false, false]
+redefine nonconfig !! TypeError: Cannot redefine property
+redefine same value => 1
+writable to false ok => {value: 3, writable: false, enumerable: false, configurable: false}
+writable back to true !! TypeError: Cannot redefine property
+nonconfig enumerable change !! TypeError: Cannot redefine property
+nonconfig data to accessor !! TypeError: Cannot redefine property
+config data to accessor => ["g", true]
+nonext add !! TypeError: Cannot redefine property
+nonconfig accessor same getter => true
+nonconfig accessor new getter !! TypeError: Cannot redefine property
+nonconfig accessor add setter !! TypeError: Cannot redefine property
+nonconfig accessor set undefined => "ok"
+nonconfig to configurable !! TypeError: Cannot redefine property
+generic descriptor ok => {value: 1, writable: false, enumerable: true, configurable: false}
+-0 vs 0 nonwritable !! TypeError: Cannot redefine property
+freeze => [true, true, false, 2, false]
+seal => [{a: 2}, false, true]
+preventExtensions => [{}, false, true, true]
+primitives => [true, true, false, 5, "s", true]
+empty nonext is frozen => true
+accessor counts frozen => true
+frozen array push !! TypeError: Cannot assign to read only property '1'
+frozen array index !! TypeError: cannot assign to read-only property '0'
+strict write readonly !! TypeError: cannot assign to read-only property 'a'
+strict add nonext !! TypeError: cannot add property, object is not extensible
+strict delete nonconfig !! TypeError: cannot delete non-configurable property 'k'
+strict setter-less accessor !! TypeError: cannot set getter-only property 'g'
+sloppy writes ignored => [1, undefined, false]
+array length nonwritable => [false, 2, false]
+array length nonconfig element => [2, [1, 2]]
+strict length truncate blocked !! TypeError: cannot delete non-configurable array element via length

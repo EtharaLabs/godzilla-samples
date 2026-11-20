@@ -1,0 +1,13 @@
+direct get, trap not callable !! TypeError: proxy 'get' trap is not callable
+direct get, trap throws !! RangeError: get-trap-boom
+inherited get, trap not callable !! TypeError: proxy 'get' trap is not callable
+inherited get, trap throws !! EvalError: chain-get-q
+inherited get, trap result -> trap(hello, receiver is child: true)
+direct set, trap not callable !! TypeError: proxy 'set' trap is not callable
+direct set, trap throws !! URIError: set-trap-boom
+inherited set, trap not callable !! TypeError: proxy 'set' trap is not callable
+inherited set, trap throws !! SyntaxError: chain-set-y
+inherited set, invariant violated !! TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+  set trap w=9 receiver is child: true
+inherited set, truthy trap result -> own keys 0
+inherited set, falsy trap result in strict code !! TypeError: cannot assign to property 'w'

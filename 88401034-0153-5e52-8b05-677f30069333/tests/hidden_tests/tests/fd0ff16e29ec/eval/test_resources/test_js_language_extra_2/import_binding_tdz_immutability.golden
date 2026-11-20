@@ -1,0 +1,18 @@
+b.mjs body (a not yet evaluated): typeof aVal -> ReferenceError: cannot access 'aVal' before initialization
+a.mjs body: typeof bVal string b-value readA() a-initialized
+typeof import "number,string,undefined"
+compound on import !TypeError: assignment to import binding 'counter'
+logical on import 1
+nullish on import undefined
+update on import !TypeError: assignment to import binding 'counter'
+assign on import !TypeError: assignment to import binding 'fixed'
+destructure into import !TypeError: assignment to import binding 'counter'
+live after inc "2,2"
+ns assign !TypeError: Cannot assign to read only property 'counter' of module namespace object
+ns delete !TypeError: cannot delete non-configurable property 'counter'
+ns define !TypeError: Cannot redefine property
+Reflect.set ns recv new key false
+ns has/keys "true|false|counter,fixed,inc|4"
+ns getOwnPropertyDescriptor "{\"value\":\"F\",\"writable\":true,\"enumerable\":true,\"configurable\":false}"
+ns extensible/frozen "false,false,true"
+ns proto set "false,true"

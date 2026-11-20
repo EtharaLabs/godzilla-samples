@@ -1,0 +1,30 @@
+basic => ["Error", "msg", "Error: msg", [], ["message"], true, "[object Error]"]
+no message => ["Error", false, "x", false, "Error: null", "Error"]
+message coercion => ["42", "obj", "1,2"]
+message symbol !! TypeError: Cannot convert a Symbol value to a string
+message descriptor => [true, false, true]
+cause => [0, true, false, false, true, {value: 0, writable: true, enumerable: false, configurable: true}]
+cause getter called once => ["get"]
+native types => [["EvalError", "EvalError: x", true, true, "", 1], ["RangeError", "RangeError: x", true, true, "", 1], ["ReferenceError", "ReferenceError: x", true, true, "", 1], ["SyntaxError", "SyntaxError: x", true, true, "", 1], ["TypeError", "TypeError: x", true, true, "", 1], ["URIError", "URIError: x", true, true, "", 1]]
+prototype props => ["Error", "TypeError", "", "[object Object]", true]
+toString variants => ["N: M", "Error", "only", "onlyname", "Error", "5: true"]
+toString non-object !! TypeError: Error.prototype.toString called on a non-object
+AggregateError => ["AggregateError", "multi", 2, 2, "c", "AggregateError: multi", ["cause", "errors", "message"], true, false, 2]
+AggregateError fresh array => [true, "", false]
+AggregateError not iterable !! TypeError: value is not iterable
+AggregateError no args (message JSON-escaped) => "TypeError: cannot read property '\u00001' of undefined"
+subclass => ["MyErr: boom", true, true, "MyErr", "[object Error]"]
+call without new => [true, "t"]
+isError => [true, false, true, false, false, true]
+captureStackTrace => ["string", true, "number"]
+stack first line => ["string", "Error: s", "TypeError: t"]
+stack accessor shape => ["function", "function", false, true, "get stack", "set stack"]
+stack head is computed at read => ["Error: first", "Renamed: changed", "TypeError", "m"]
+stack getter non-error => [undefined, undefined]
+stack getter primitive !! TypeError: Error.prototype.stack getter called on a non-object
+stack setter primitive !! TypeError: Error.prototype.stack setter requires an object
+stack setter non-string !! TypeError: Error.prototype.stack setter requires a string value
+stack setter on Error.prototype !! TypeError: cannot set stack on %Error.prototype%
+stack setter defines own => [{value: "custom", writable: true, enumerable: true, configurable: true}, "replaced", true]
+stack setter non-extensible !! TypeError: cannot define stack
+engine errors => ["ReferenceError: undefinedVar is not defined", "TypeError: cannot read property 'f' of null", "TypeError: cannot read property 'p' of undefined", "TypeError: (intermediate value).foo is not a function", "SyntaxError: unexpected token Eof", "ReferenceError: cannot access 'x' before initialization", "TypeError: assignment to constant 'c'", "TypeError: object is not a constructor", "TypeError: Reduce of empty array with no initial value", "RangeError: Invalid array length", "RangeError: invalid count value", "TypeError: Cannot convert a Symbol value to a string", "TypeError: Cannot mix BigInt and other types, use explicit conversions", "TypeError: right-hand side of instanceof is not an object", "TypeError: 'in' requires an object on the right", "TypeError: Class extends value is not a constructor or null", "TypeError: cannot read private member #p from an object whose class did not declare it"]

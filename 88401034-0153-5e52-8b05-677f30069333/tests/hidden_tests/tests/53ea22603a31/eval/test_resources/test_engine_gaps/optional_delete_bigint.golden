@@ -1,0 +1,29 @@
+delete through short-circuit: true,true,true,true
+delete optional on live object: true {"b":{}}
+delete null member: TypeError: cannot delete property 'x' of null or undefined
+delete null index: TypeError: cannot delete property '0' of null or undefined
+delete super index: key evaluated ReferenceError: cannot delete a super property
+delete global non-configurable names: false,false,true
+parenthesized optional call keeps this: true
+parenthesized optional call short-circuits: arg evaluated -> TypeError: callee is not a function
+optional member call short: undefinedundefinedundefined
+optional mixed results: 1,true,,
+bigint huge right shifts: 0,-1,-1,0,0
+bigint huge left shift: RangeError: BigInt is too large to allocate
+bigint plus number: TypeError: Cannot mix BigInt and other types, use explicit conversions
+unary plus bigint: TypeError: Cannot convert a BigInt value to a number
+unary plus boxed bigint: TypeError: Cannot convert a BigInt value to a number
+compound bigint ops: 10
+loose equality with objects: true,true,true,true,true,true
+loose equality bigint/string: true,false,true,false,false,false,true
+relational bigint: true,true,true,false,false,false,true
+instanceof hasInstance: true,false
+instanceof hasInstance not callable: TypeError: @@hasInstance is not callable
+instanceof primitive rhs: TypeError: right-hand side of instanceof is not an object
+instanceof plain object rhs: TypeError: right-hand side of instanceof is not callable
+instanceof bad prototype: TypeError: prototype property is not an object
+proxy delete forwards to nested proxy: true inner trap k
+proxy delete forward non-configurable: false
+proxy delete trap not callable: TypeError: proxy 'deleteProperty' trap is not callable
+proxy delete non-extensible invariant: TypeError: proxy 'deleteProperty' removed a non-extensible target's property
+proxy delete revoked: TypeError: cannot delete on a revoked proxy

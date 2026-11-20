@@ -1,0 +1,17 @@
+basics: 2023-11-14T22:13:20.123Z 1700000000123 1700000000123000000 2024-12-31T23:59:59.999999999Z 1735689599999 1969-12-31T23:59:59.999Z -1 1970-01-01T00:00:00Z 1969-12-31T23:59:59.876543211Z -124
+fromEpochMilliseconds: RangeError:epochMilliseconds must be an integer | RangeError:epochMilliseconds must be an integer | RangeError:instant is outside the representable range | 1970-01-01T00:00:00.012Z | RangeError:epochMilliseconds must be an integer | -271821-04-20T00:00:00Z
+fromEpochNanoseconds: TypeError:epochNanoseconds must be a BigInt | 1970-01-01T00:00:00.000000001Z | RangeError:instant is outside the representable range
+ctor errors: TypeError:epochNanoseconds must be a BigInt | TypeError:epochNanoseconds must be a BigInt | TypeError:constructor requires 'new'
+toZonedDateTimeISO: 2023-11-15T06:13:20.123+08:00[Asia/Shanghai] 2023-11-14T14:13:20.123-08:00[-08:00] 2023-11-15T00:13:20.123+02:00[Africa/Cairo] iso8601
+toZonedDateTimeISO errors: TypeError:timeZone must be a string or ZonedDateTime | RangeError:invalid time zone identifier | TypeError:timeZone must be a string or ZonedDateTime
+add/subtract: 2023-11-15T23:14:20.123Z 2023-11-14T22:13:18.623Z 2023-11-14T22:13:20Z 2023-11-14T22:13:20.123007Z 2023-11-14T23:13:20.123Z
+add errors: RangeError:Instant.add does not accept calendar units | RangeError:Instant.add does not accept calendar units | RangeError:Instant.subtract does not accept calendar units | RangeError:Instant.add does not accept calendar units | RangeError:instant is outside the representable range
+until/since: PT35689599.876999999S PT35689599.876999999S PT9913H46M39.876999999S PT594827M PT35689599.876999999S PT35689599.876999999S PT35689599.876999999S PT35689599.877S PT9912H -PT35689590S PT35689599.5S
+until errors: RangeError:largestUnit must be a time unit | RangeError:smallestUnit must be a time unit | RangeError:roundingIncrement out of range | RangeError:largestUnit cannot be smaller than smallestUnit | RangeError:roundingIncrement out of range | RangeError:invalid Instant string
+round: 2023-11-14T22:13:20Z 2023-11-14T22:13:00Z 2023-11-15T00:00:00Z 2023-11-15T00:00:00Z 2023-11-14T22:13:20Z 2023-11-14T22:13:20.123001Z 1969-12-31T23:59:58Z 1969-12-31T23:59:58Z 1969-12-31T23:59:59Z
+round errors: TypeError:options must be an object or a string | RangeError:smallestUnit is required | RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range | RangeError:smallestUnit is required
+toString: 2023-11-14T22:13Z 2023-11-15T03:43:20+05:30 2023-11-14T22:13:20.123000Z 2023-11-14T22:13:20.2Z 2023-11-15T11:58:20.123+13:45 2023-11-14T22:13:20.123000Z 1970-01-01T00:00:00.000Z
+toString errors: RangeError:invalid smallestUnit for toString | RangeError:invalid time zone identifier | RangeError:fractionalSecondDigits out of range | RangeError:invalid roundingMode
+equals/compare: true,false,-1,1,0,2020-01-01T00:00:00Z,false,2020-06-01T15:00:00.5Z
+from errors: TypeError:cannot convert to Temporal.Instant | RangeError:invalid Instant string | RangeError:invalid Instant string | RangeError:invalid Instant string | RangeError:invalid Instant string
+valueOf: TypeError: Temporal.Instant has no valueOf; use compare

@@ -1,0 +1,30 @@
+/(?i:a)b/                          "Ab"             ["Ab"]@0
+/(?i:a)b/                          "AB"             null
+/(?-i:a)b/i                        "aB"             ["aB"]@0
+/(?-i:a)b/i                        "AB"             null
+/(?i:a(?-i:b)c)/                   "AbC"            ["AbC"]@0
+/(?i:a(?-i:b)c)/                   "ABC"            null
+/(?m:^b)/                          "a\nb"           ["b"]@2
+/^b/                               "a\nb"           null
+/(?-m:^b)/m                        "a\nb"           null
+/(?s:.)/                           "\n"             ["\n"]@0
+/(?-s:.)/s                         "\n"             null
+/(?s-m:a.$)/m                      "a\n\nb"         null
+/(?ims:^A.b$)/                     "x\na\nB"        ["a\nB"]@2
+/(?i:(\w))\1/                      "aA"             null
+/(?i:(\w)\1)/                      "aA"             ["aA","a"]@0
+/(?i:\w)\b/u                       "K "             null
+/(?i:[a-z]+)\d/                    "ABC1"           ["ABC1"]@0
+/(?i:k)/u                          "K"              ["K"]@0
+/(?i:k)/                           "K"              null
+/x(?i:y)*z/                        "xYyYz"          ["xYyYz"]@0
+/(?<=(?i:a)b)c/                    "Abc"            ["c"]@2
+/(?<=(?-i:a)b)c/i                  "ABC aBc"        ["c"]@6
+/(?i:a|b)c/                        "Bc"             ["Bc"]@0
+/(?i-s:.)x/s                       "\nx Ax"         ["Ax"]@3
+/(?s:a.)|b./                       "b\n a\n"        ["a\n"]@3
+/(?m:$)\n/                         "a\nb"           ["\n"]@1
+/(?i:\u00e9)/                      "É"              ["É"]@0
+/(?i:[^a])/                        "Ab"             ["b"]@1
+/(?i:a)+?b/                        "AaAb"           ["AaAb"]@0
+/(?i:a{2})/                        "aA"             ["aA"]@0

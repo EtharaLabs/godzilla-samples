@@ -1,0 +1,124 @@
+## declarations
+"let a; let a;" SyntaxError: Identifier 'a' has already been declared true
+"const x;" SyntaxError: missing initializer in const declaration true
+"let let = 1" SyntaxError: 'let' is disallowed as a lexically bound name true
+"class await {}" ok
+"let x, x" SyntaxError: Identifier 'x' has already been declared true
+"var x; let x" SyntaxError: Identifier 'x' has already been declared true
+"let x; { var x; }" SyntaxError: Identifier 'x' has already been declared true
+"function f() {} let f" SyntaxError: Identifier 'f' has already been declared true
+"const a = 1, a = 2" SyntaxError: Identifier 'a' has already been declared true
+"{ function g() {} let g; }" SyntaxError: Identifier 'g' has already been declared true
+"{ function g() {} function g() {} }" ok
+"let [a, a] = []" SyntaxError: Identifier 'a' has already been declared true
+"try {} catch ([e, e]) {}" SyntaxError: duplicate binding 'e' in catch parameter true
+"try {} catch (e) { let e; }" SyntaxError: Identifier 'e' has already been declared true
+"try {} catch (e) { var e; }" ok
+"const {a} = 1, b;" SyntaxError: missing initializer in const declaration true
+"let [a] " ok
+"var [a] = " SyntaxError: unexpected token Punct("}") true
+"var 1x" SyntaxError: identifier starts immediately after numeric literal true
+"\\u0076ar x = 1" SyntaxError: keywords must not contain escape sequences true
+"x = { #a: 1 }" SyntaxError: private names are only allowed in class bodies true
+"function f(a, a) { \"use strict\" }" SyntaxError: duplicate parameter name 'a' true
+"(a, a) => 1" SyntaxError: duplicate parameter name 'a' true
+"function f(a, ...a) {}" SyntaxError: duplicate parameter name 'a' true
+## tokens
+"0b12" SyntaxError: identifier starts immediately after numeric literal true
+"0o9" SyntaxError: invalid numeric literal true
+"1__0" SyntaxError: invalid use of numeric separator true
+"1_" SyntaxError: invalid use of numeric separator true
+"08n" SyntaxError: invalid BigInt literal (leading zero) true
+"'abc" SyntaxError: unterminated string literal true
+"`abc" SyntaxError: unterminated template literal true
+"/abc" SyntaxError: unterminated regular expression true
+"/* x" SyntaxError: unterminated block comment true
+"'\\x4'" SyntaxError: bad \x escape true
+"'\\u{110000}'" SyntaxError: undefined Unicode code-point true
+"\"\\u{FFFFFF}\"" SyntaxError: undefined Unicode code-point true
+"`${`" SyntaxError: unterminated nested template true
+"`${a`" SyntaxError: unterminated nested template true
+"/(?<n>a)(?<n>b)/" SyntaxError: duplicate group name n true
+"/a{2,1}/" SyntaxError: numbers out of order in {} quantifier true
+"/\\p{Nope}/u" SyntaxError: invalid unicode property Nope true
+"/[b-a]/" SyntaxError: range out of order in character class true
+"/a/gg" SyntaxError: duplicate regular expression flag g true
+"1.." SyntaxError: expected property name true
+"1.a" SyntaxError: identifier starts immediately after numeric literal true
+"..1" SyntaxError: unexpected token Punct(".") true
+"#!/x\n1" SyntaxError: unterminated regular expression true
+"a b" SyntaxError: expected ';' true
+"a b" ok
+"a b" ok
+"x = @" SyntaxError: expected a decorator expression after '@' true
+"\"\\u{1F600\"" SyntaxError: bad \u escape true
+## expressions
+"a ?? b || c" SyntaxError: cannot mix '??' with '&&' or '||' without parentheses true
+"a || b ?? c" SyntaxError: cannot mix '??' with '&&' or '||' without parentheses true
+"a && b ?? c" SyntaxError: cannot mix '??' with '&&' or '||' without parentheses true
+"-2 ** 2" SyntaxError: a unary expression cannot be the base of '**' (use parentheses) true
+"typeof 2 ** 2" SyntaxError: a unary expression cannot be the base of '**' (use parentheses) true
+"!a ** 2" SyntaxError: a unary expression cannot be the base of '**' (use parentheses) true
+"(-2) ** 2" ok
+"await 1" SyntaxError: expected ';' true
+"1 = 2" SyntaxError: invalid assignment target true
+"++1" SyntaxError: invalid increment/decrement operand true
+"a++ = 1" SyntaxError: invalid assignment target true
+"(a, b) = 1" SyntaxError: invalid assignment target true
+"a + 1 = 2" SyntaxError: invalid assignment target true
+"this = 1" SyntaxError: invalid assignment target true
+"new.target = 1" SyntaxError: invalid assignment target true
+"import.meta = 1" SyntaxError: 'import.meta' is only valid in a module true
+"a?.b = 1" SyntaxError: invalid assignment target true
+"a?.b++" SyntaxError: invalid increment/decrement operand true
+"delete a?.b" ok
+"[...a,] = b" SyntaxError: invalid destructuring assignment target true
+"({a: 1} = b)" SyntaxError: invalid destructuring assignment target true
+"({a} += 1)" SyntaxError: invalid assignment target true
+"x = {a b}" SyntaxError: expected '}' true
+"x = {a: 1 b: 2}" SyntaxError: expected '}' true
+"f(a b)" SyntaxError: expected ')' true
+"f(...)" SyntaxError: unexpected token Punct(")") true
+"f(,)" SyntaxError: unexpected token Punct(",") true
+"[,,] = []" ok
+"({__proto__: 1, __proto__: 2})" SyntaxError: duplicate __proto__ property in object literal true
+"({__proto__: 1, [\"__proto__\"]: 2})" ok
+"({__proto__: 1, __proto__})" ok
+"({ get a() {}, get a() {} })" ok
+"a => {} + 1" SyntaxError: expected ';' true
+"(a) => {}()" SyntaxError: expected ';' true
+"x = function () {} ()" ok
+"new a?.b" SyntaxError: an optional chain cannot follow 'new' without arguments true
+"new a?.b()" SyntaxError: an optional chain cannot follow 'new' without arguments true
+"a?.`x`" SyntaxError: expected property name true
+"super.x" SyntaxError: 'super' keyword unexpected here true
+"super()" SyntaxError: 'super' call unexpected here true
+"a ? b" SyntaxError: expected ':' true
+"a ? b :" SyntaxError: unexpected token Punct("}") true
+"x = 1 2" SyntaxError: expected ';' true
+"let = 1; let" ok
+"async () => await" SyntaxError: unexpected token Punct("}") true
+"function* g() { yield\n* 1 }" SyntaxError: unexpected token Punct("*") true
+"function* g() { yield = 1 }" SyntaxError: unexpected token Punct("=") true
+"async function f() { await => 1 }" SyntaxError: 'await' cannot be used as a binding here true
+"({a = 1})" SyntaxError: invalid shorthand property initializer true
+"obj = {get a(){}, async *}" SyntaxError: expected property key true
+"1 +" SyntaxError: unexpected token Punct("}") true
+"foo(" SyntaxError: unexpected token Punct("}") true
+"(1, 2" SyntaxError: expected ')' true
+"[1, 2" SyntaxError: expected ']' true
+"({a:1" SyntaxError: expected ')' true
+"?" SyntaxError: unexpected token Punct("?") true
+"x = 1 ++ 2" SyntaxError: invalid increment/decrement operand true
+"import.foo" SyntaxError: expected 'meta', 'source', or 'defer' after 'import.' true
+"@" SyntaxError: expected a decorator expression after '@' true
+"var x = yield 1" SyntaxError: expected ';' true
+## modules
+"import.meta" SyntaxError: 'import.meta' is only valid in a module true
+"import(\"a\", \"b\", \"c\")" SyntaxError: expected ')' true
+"export default 1" SyntaxError: 'export' declaration may only appear at the top level of a module true
+"import x from \"y\"" SyntaxError: expected '(' true
+"export { x }" SyntaxError: 'export' declaration may only appear at the top level of a module true
+"import(\"a\")" ok
+"import.source" SyntaxError: expected '(' true
+"import.defer(\"x\")" ok

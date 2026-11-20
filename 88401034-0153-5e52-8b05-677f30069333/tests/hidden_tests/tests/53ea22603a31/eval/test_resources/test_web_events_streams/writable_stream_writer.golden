@@ -1,0 +1,19 @@
+true 2 true
+after write a 1
+after write b 0
+after awaits 2
+start:true write-begin:a write-end:a write-begin:b write-end:b close
+desiredSize after close 0
+write after close undefined
+closed resolved
+second getWriter THREW TypeError: WritableStream is already locked
+close locked stream THREW TypeError: WritableStream is locked
+failing write THREW RangeError: no 2
+write after error THREW RangeError: no 2
+closed rejects THREW RangeError: no 2
+desiredSize errored null
+abort resolves undefined sink abort stop
+write after abort THREW non-error "stop"
+close unlocked undefined false
+released writer THREW TypeError: writer released
+released desiredSize THREW TypeError: writer released

@@ -1,0 +1,35 @@
+unary + => 10
+   calls: t.valueOf
+binary + => "10"
+   calls: t.valueOf
+template => "str-t"
+   calls: t.toString
+String() => "str-t"
+   calls: t.toString
+loose == => true
+   calls: t.valueOf
+relational => true
+   calls: t.valueOf
+multiply => 20
+   calls: t.valueOf
+property key => {str-t: 1}
+   calls: t.toString
+Number() => 10
+   calls: t.valueOf
+array join => "str-t"
+   calls: t.toString
+Date ctor => 10
+   calls: t.valueOf
+toPrimitive hints => [42, "str", "dflt", 84, "str", "str", true, true]
+   hints: number string default number string string default number
+Date hint => ["string", "number", 0, "Thu"]
+Date bad hint !! TypeError: invalid Symbol.toPrimitive hint
+toPrimitive returns object !! TypeError: Cannot convert object to a primitive value
+toPrimitive not callable !! TypeError: @@toPrimitive is not callable
+toPrimitive null is ignored => 7
+both return objects !! TypeError: cannot convert object to primitive value
+valueOf object falls back => [5, 5]
+null proto object !! TypeError: cannot convert object to primitive value
+Symbol toPrimitive => [true, "symbol"]
+array to number => [0, 5, NaN, 3, 7, "", "[object Object]", true, true]
+boolean/null/undefined => [1, 0, NaN, 1, NaN, 2, 12, "34", "43", 2.5, 9]

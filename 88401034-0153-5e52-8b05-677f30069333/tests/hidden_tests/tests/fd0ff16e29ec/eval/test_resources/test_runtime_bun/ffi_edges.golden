@@ -1,0 +1,45 @@
+i8 -56
+u8 200
+i16 -25536
+u16 40000
+u32 7
+bool0 false
+bool1 true
+char 65
+i64_fast 123
+u64_fast 5
+u64 9n
+i64 non-integer ERR TypeError Not an integer
+null ptr return null
+memcmp buffer [true,0]
+ptr string ERR TypeError To convert a string to a pointer, encode it as a buffer
+ptr bigint ERR TypeError Unable to convert 5 to a pointer
+ptr object ERR TypeError To convert a value to a pointer, it must be a TypedArray, number, or null
+ptr null undefined
+ptr arraybuffer ERR TypeError bun:ffi ptr expects a TypedArray (ArrayBuffer views are not supported in lumen)
+toArrayBuffer null 0
+toBuffer null 0
+read.ptr true
+read.intptr "number"
+cstring len ["world",5,5]
+cstring no len arraybuffer ERR TypeError bun:ffi CString.arrayBuffer needs an explicit byteLength
+CFunction over JSCallback 42
+linkSymbols 73
+void callback ran
+void cb undefined
+i64 cb -77n
+cb float arg ERR Error bun:ffi JSCallback with floating-point arguments is not supported in lumen
+cb float ret ERR Error bun:ffi JSCallback with a floating-point return is not supported in lumen
+cb many args ERR Error bun:ffi JSCallback with 9 arguments is not supported in lumen (max 8)
+cb not fn ERR TypeError bun:ffi JSCallback expects a function
+call many args ERR Error bun:ffi call with 9 arguments is not supported in lumen (max 8; struct-by-value and varargs are unsupported)
+powf 2.25
+fmaf 6.5
+ldexp mixed 24
+hypot 5
+cc missing source ERR Error bun:ffi cc source not found: ./nope.c
+cc bad options ERR TypeError bun:ffi cc expects an options object
+cc bad source ERR TypeError bun:ffi cc options.source must be a file path
+viewSource non fn ERR TypeError bun:ffi viewSource expects a function
+viewSource js fn "function named() { return 1; }"
+native "function"

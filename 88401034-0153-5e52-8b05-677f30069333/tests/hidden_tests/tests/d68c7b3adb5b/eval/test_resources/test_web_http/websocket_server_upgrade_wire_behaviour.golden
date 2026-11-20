@@ -1,0 +1,16 @@
+/talk
+  head: "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\nSec-WebSocket-Protocol: chat\r\nX-Extra: 1"
+  frames: op=10 fin=true masked=false "p1" ; op=8 fin=true masked=false code=1000 reason=""
+/violate
+  head: "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\nSec-WebSocket-Protocol: chat\r\nX-Extra: 1"
+  frames: op=8 fin=true masked=false code=1002 reason="reserved bits set (no extension negotiated)"
+/drop
+  head: "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\nSec-WebSocket-Protocol: chat\r\nX-Extra: 1"
+  frames: 
+server /talk message "hello"
+server /talk message binary 7,8
+server /talk onclose 1000 "bye" true
+server /violate message "ok"
+server /violate onclose 1002 "reserved bits set (no extension negotiated)" false
+server /drop message "then hang up"
+server /drop onclose 1006 "failed to fill whole buffer" false

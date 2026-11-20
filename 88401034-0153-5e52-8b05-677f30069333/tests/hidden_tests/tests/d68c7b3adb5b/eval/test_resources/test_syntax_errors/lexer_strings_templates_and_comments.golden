@@ -1,0 +1,66 @@
+# strings, templates, comments
+"\"abc" => SyntaxError: unterminated string literal
+"'abc\ndef'" => SyntaxError: unterminated string literal
+"`abc" => SyntaxError: unterminated template literal
+"/* never closed" => SyntaxError: unterminated block comment
+"\"\\x4\"" => SyntaxError: bad \x escape
+"\"\\xZZ\"" => SyntaxError: bad \x escape
+"\"\\u12\"" => SyntaxError: bad \u escape
+"\"\\u{}\"" => SyntaxError: bad \u escape
+"\"\\u{110000}\"" => SyntaxError: undefined Unicode code-point
+"\"\\u{12\"" => SyntaxError: unterminated \u{...} escape
+"\"\\u{zz}\"" => SyntaxError: bad \u escape
+"\"\\" => SyntaxError: unterminated escape
+"`${`" => SyntaxError: unterminated nested template
+"`${1`" => SyntaxError: unterminated nested template
+"`${ \"}`\" }`" => ok "}`"
+"`${ /}`/ }`" => ok "/}`/"
+"`${ /*}*/ 1 }`" => ok "1"
+"`${ `in${\"n\"}er` }`" => ok "inner"
+"`${ //c\n 2 }`" => ok "2"
+"`${ 'x}' }`" => ok "x}"
+"`${ {a: 1}.a }`" => ok "1"
+"\"\\08\"" => ok "\u00008"
+"\" \"" => ok " "
+"\" \".length" => ok 1
+"'line\\\ncontinuation'" => ok "linecontinuation"
+"'crlf\\\r\ncontinuation'" => ok "crlfcontinuation"
+"'cr\\\rcontinuation'" => ok "crcontinuation"
+"\"a\rb\"" => SyntaxError: unterminated string literal
+"`a\rb` === \"a\\nb\"" => ok true
+"`a\r\nb`.length" => ok 3
+"`\\u{1F600}`.length" => ok 2
+"\"\\uD83D\\uDE00\".length" => ok 2
+"\"\\uD83D\".length" => ok 1
+"\"\\u{D83D}\\u{DE00}\".length" => ok 2
+"\"\\x41\\u0041\\u{41}\\101\"" => ok "AAAA"
+"\"\\v\\b\\f\\t\\r\\n\".length" => ok 6
+"'\\''" => ok "'"
+"\"\\\"\\\\\"" => ok "\"\\"
+"\"\\q\\w\\e\"" => ok "qwe"
+"`${ `${ `deep` }` }`" => ok "deep"
+"`a${1}b${2}c`" => ok "a1b2c"
+"`\\unicode`" => SyntaxError: invalid escape sequence in template literal
+"`\\01`" => SyntaxError: invalid escape sequence in template literal
+"`\\1`" => SyntaxError: invalid escape sequence in template literal
+"`\\u{`" => SyntaxError: invalid escape sequence in template literal
+"`\\x0`" => SyntaxError: invalid escape sequence in template literal
+"`${1}${2}${3}`.length" => ok 3
+"`$`" => ok "$"
+"`$ {1}`" => ok "$ {1}"
+"`\\${1}`" => ok "${1}"
+"`${\"a\"}${`b${\"c\"}`}`" => ok "abc"
+"`line1\\\nline2`" => ok "line1line2"
+"/* a */ /* b */ 1" => ok 1
+"/*\n*/ 2" => ok 2
+"// only comment" => ok
+"/**/3" => ok 3
+"/*/ 4 */ 5" => ok 5
+# tagged templates (compiled with Function)
+"String.raw`a\r\nb`.length" => ok 3
+"(function (s) { return s.raw[0].length + \":\" + s[0].length; })`x\r\ny\rz`" => ok "5:5"
+"(function (s) { return s[0] + \"|\" + s.raw[0]; })`\\unicode`" => ok "undefined|\\unicode"
+"(function (s) { return String(s[0]) + \"|\" + s.raw[0]; })`\\x0`" => ok "undefined|\\x0"
+"(function (s) { return String(s[0]) + \"|\" + s.raw[0]; })`\\u{110000}`" => ok "undefined|\\u{110000}"
+"(function (s) { return s.length + \"|\" + s.raw.join(\",\"); })`a${1}b${2}`" => ok "3|a,b,"
+"(function (s) { return Object.isFrozen(s) + \"|\" + Object.isFrozen(s.raw) + \"|\" + Array.isArray(s); })`x`" => ok "true|true|true"

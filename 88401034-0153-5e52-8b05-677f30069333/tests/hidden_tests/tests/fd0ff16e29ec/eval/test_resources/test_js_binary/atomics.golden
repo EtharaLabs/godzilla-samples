@@ -1,0 +1,20 @@
+sab 16 false 16 [object SharedArrayBuffer] false false
+growable 4 true 12 1
+grown 8 2 RangeError: SharedArrayBuffer grow out of range RangeError: SharedArrayBuffer grow out of range TypeError: SharedArrayBuffer is not growable 8
+sab-errors TypeError: SharedArrayBuffer constructor requires 'new' RangeError: Invalid SharedArrayBuffer length RangeError: Invalid maxByteLength TypeError: requires a SharedArrayBuffer TypeError: SharedArrayBuffer.prototype.slice requires a SharedArrayBuffer TypeError: requires a non-shared ArrayBuffer
+sab-slice SharedArrayBuffer 4 Uint8Array[3,4,5,6] Uint8Array[0,0]
+rmw 5 5 8 7 7 6 15 12 42 7 7
+wrap 2147483648 -2147483648 -2147483648 2147483647 3 0 12 0 0 0
+u8 0 44 0 255 255 3 0 255
+i16 2979 2979 0 -25536 1
+big 9223372036854775808n -9223372036854775808n -9223372036854775808n 9223372036854775807n 0n 5n TypeError: Cannot convert a Number to a BigInt 0n 0n
+errors TypeError: Atomics requires an integer TypedArray TypeError: Atomics requires an integer TypedArray TypeError: Atomics: not an integer TypedArray RangeError: Atomics: index out of range RangeError: Atomics: index out of range 2147483647 2147483647 TypeError: Atomics requires an integer TypedArray RangeError: Atomics: index out of range
+lockfree true,true,false,true,true,false
+wait not-equal timed-out timed-out TypeError: Atomics.wait requires a SharedArrayBuffer-backed array TypeError: Atomics.wait/notify requires an Int32Array or BigInt64Array timed-out not-equal RangeError: Atomics: index out of range timed-out
+notify 0 0 0 TypeError: Atomics.wait/notify requires an Int32Array or BigInt64Array RangeError: Atomics: index out of range 0
+waitAsync-ne false not-equal
+waitAsync-0 false not-equal
+waitAsync-pending true [object Promise]
+notify-one 1
+waitAsync-errors TypeError: Atomics.waitAsync requires a SharedArrayBuffer-backed array TypeError: Atomics.wait/notify requires an Int32Array or BigInt64Array
+pause undefined undefined TypeError: Atomics.pause iterationNumber must be an integer TypeError: Atomics.pause iterationNumber must be an integer [object Atomics] function

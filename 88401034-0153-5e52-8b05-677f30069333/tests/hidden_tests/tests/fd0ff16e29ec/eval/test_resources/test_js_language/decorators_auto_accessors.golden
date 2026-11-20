@@ -1,0 +1,36 @@
+tag outer on count
+decorate field count static=false private=false
+decorate field sfield static=true private=false
+decorate accessor size static=false private=false
+decorate field #secret static=false private=true
+decorate method greet static=false private=false
+decorate method make static=true private=false
+decorate getter label static=false private=false
+decorate setter label static=false private=false
+decorate method #hidden static=false private=true
+init field sfield = 2
+decorate class Widget static=false private=false
+class initializer for 
+--- class defined
+call make()
+init field count = 4
+accessor init 7
+init field #secret = 3
+call greet(bob)
+greet -> hi bob #30
+count -> 40, sfield -> 20, decorated -> true
+accessor get size=8
+size -> 8
+accessor set 20
+accessor get size=20
+size after set -> 20
+getter label
+label -> L40
+setter label
+call #hidden()
+hidden -> hidden
+SyntaxError: expected a decorator expression after '@'
+TypeError: decorator must return a function or undefined
+TypeError: addInitializer expects a callable
+auto-accessor 5 S Q constructor,a,getP,setP function 0
+after debugger statement

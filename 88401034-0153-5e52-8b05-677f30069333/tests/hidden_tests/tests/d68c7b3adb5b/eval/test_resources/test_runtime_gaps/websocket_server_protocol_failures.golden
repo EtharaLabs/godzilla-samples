@@ -1,0 +1,20 @@
+/fragments: HTTP/1.1 101 Switching Protocols | op=10 fin=true masked=false "ping!" ; op=8 fin=true masked=false code=1000 reason=""
+/long-control: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1002 reason="malformed control frame"
+/fragmented-ping: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1002 reason="malformed control frame"
+/bad-utf8: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1007 reason="text message is not UTF-8"
+/bad-close-reason: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1007 reason="close reason is not UTF-8"
+/orphan-continuation: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1002 reason="continuation without a message"
+/interleaved-data: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1002 reason="new data frame during fragmented message"
+/unknown-opcode: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1002 reason="unknown opcode"
+/too-big: HTTP/1.1 101 Switching Protocols | op=8 fin=true masked=false code=1009 reason="message too big"
+server /fragments message "fragment"
+server /fragments message binary 1,2,3
+server /fragments onclose 1005 "" clean=true
+server /long-control onclose 1002 "malformed control frame" clean=false
+server /fragmented-ping onclose 1002 "malformed control frame" clean=false
+server /bad-utf8 onclose 1007 "text message is not UTF-8" clean=false
+server /bad-close-reason onclose 1007 "close reason is not UTF-8" clean=false
+server /orphan-continuation onclose 1002 "continuation without a message" clean=false
+server /interleaved-data onclose 1002 "new data frame during fragmented message" clean=false
+server /unknown-opcode onclose 1002 "unknown opcode" clean=false
+server /too-big onclose 1009 "message too big" clean=false

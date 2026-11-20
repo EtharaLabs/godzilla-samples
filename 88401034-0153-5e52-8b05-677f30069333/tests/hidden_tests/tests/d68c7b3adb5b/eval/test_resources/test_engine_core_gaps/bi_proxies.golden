@@ -1,0 +1,31 @@
+proxy on chain: true
+trap log: set trap k=1 recv=true
+ta index foreign: true {"1":9} ta=0,0,0,0
+ta non-index numeric: true 1
+ta 1.5: true 1
+ta ordinary key: true n
+recv ta in range: true 0,44
+recv ta out of range: false 2
+recv accessor: false
+recv readonly: false
+recv primitive: false
+recv frozen: false
+get via proxy chain: got q recv=true
+getPrototypeOf: TypeError
+lookupGetter: TypeError
+isPrototypeOf: TypeError
+instanceof: TypeError
+construct newTarget: TypeError
+defineProperties: {"real":{"value":1,"writable":false,"enumerable":true,"configurable":false}}
+values: [1,3] entries [["a",1],["c",3]]
+gOPD acc: {"get":"fn","enumerable":true,"configurable":false}
+gOPD frozen: {"value":5,"writable":false,"enumerable":true,"configurable":false}
+gOPD nc: {"value":1,"writable":true,"enumerable":false,"configurable":false}
+define acc same: true
+define frozen same: true
+define nc enumerable same: true
+define acc different getter: TypeError
+define frozen other value: TypeError
+define nc enumerable flip: TypeError
+gOPD frozen lie: TypeError
+gOPD acc lie: TypeError

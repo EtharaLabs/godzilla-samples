@@ -1,0 +1,34 @@
+with rest target "{\"x\":[1,2],\"y\":{\"k\":3}}"
+with rest unscopable "{\"x\":0}|9"
+const rest target !TypeError: assignment to constant 'c'
+nfe rest target sloppy "function"
+nfe rest target strict !TypeError: assignment to constant 'nfe'
+strict undeclared rest !ReferenceError: undeclaredRestTarget is not defined
+sloppy undeclared rest "{\"q\":1}"
+nfe compound sloppy "function"
+nfe compound strict !TypeError: assignment to constant 'nfe3'
+global accessor read "from-getter"
+global inherited read "inherited"
+for-of super target "2,k"
+for-of private target 8
+for-in member target "b"
+array-like length NaN "0,0,2"
+fake eval call "fake 1"
+arrow super after ctor "ReferenceError: super() may only be called once"
+arrow super before 3
+static block using throws "disposed,sb"
+nested obj pattern no default !TypeError: cannot destructure null or undefined
+hasInstance undefined "true,false"
+toPrimitive null 5
+toPrimitive undefined "ts"
+toPrimitive noncallable !TypeError: @@toPrimitive is not callable
+sym anon names "[\"\",\"[d]\"]"
+getter name sym "get [gs]|set [gs]"
+class sym method names "[\"\",\"[st]\"]"
+fn with class decorator "class"
+fn with rest arguments "{\"p\":1,\"q\":2}"
+adopt after dispose ReferenceError: AsyncDisposableStack already disposed
+defer after dispose ReferenceError: AsyncDisposableStack already disposed
+use after dispose ReferenceError: AsyncDisposableStack already disposed
+fn with import options TypeError: import attributes must be an object
+disposeAsync error SuppressedError  ctor getter in disposer sync disposer throw

@@ -1,0 +1,55 @@
+apply: 3 x el 3
+apply non-callable: TypeError: Reflect.apply target is not callable
+apply no args: TypeError: CreateListFromArrayLike called on a non-object
+apply primitive args: TypeError: CreateListFromArrayLike called on a non-object
+construct: 1 true true 0 3 al true
+construct non-ctor: TypeError: Reflect.construct target is not a constructor
+construct bad newTarget: TypeError: Reflect.construct newTarget is not a constructor
+construct arrow newTarget: TypeError: Reflect.construct newTarget is not a constructor
+construct no args: TypeError: CreateListFromArrayLike called on a non-object
+construct class newTarget: B true
+construct builtin newTarget proto: e 2 true
+defineProperty: true,false,true,1,false,true
+defineProperty bad length: RangeError: Invalid array length
+defineProperty non-object: TypeError: Reflect.defineProperty on non-object
+defineProperty bad desc: TypeError: Property description must be an object
+deleteProperty: true,false,true,false,false,false,false,true
+deleteProperty non-object: TypeError: Reflect.deleteProperty called on non-object
+get: 1 recv  5 1 proxyrecv via proto M 9  
+get non-object: TypeError: Reflect.get called on non-object
+get typed array on proto chain: 5,,,2,TypeError
+set: true,5,,true,1,false,false,false,false,false,false,false,true,recv-updated
+set array length via receiver: true 1 true 0
+set non-object: TypeError: Reflect.set called on non-object
+set setter-less accessor: false
+set typed array receivers: true,44,true,true,true,bar,true,7,0,true,44,true,true,5
+set typed array bigint type error: TypeError: Cannot convert a Number to a BigInt
+set through proxy on proto: x=1 recvIsChild=true own=false
+getOwnPropertyDescriptor: {"value":1,"writable":true,"enumerable":true,"configurable":true}  {"value":0,"writable":true,"enumerable":false,"configurable":false} {"value":3,"writable":true,"enumerable":true,"configurable":true}  
+getOwnPropertyDescriptor non-object: TypeError: Reflect.getOwnPropertyDescriptor on non-object
+getPrototypeOf: true,
+getPrototypeOf non-object: TypeError: Reflect.getPrototypeOf called on non-object
+has: true,true,true,true,true,true,false,true
+has non-object: TypeError: Reflect.has called on non-object
+isExtensible: true,false
+isExtensible non-object: TypeError: Reflect.isExtensible called on non-object
+ownKeys: 2,10,b,a,Symbol(s) | 0,1,length | length,name,prototype | 0,1,length | 0,1
+ownKeys non-object: TypeError: Reflect.ownKeys called on non-object
+preventExtensions non-object: TypeError: Reflect.preventExtensions called on non-object
+setPrototypeOf: true,true,false,false
+setPrototypeOf bad proto: TypeError: prototype must be an object or null
+setPrototypeOf undefined proto: TypeError: prototype must be an object or null
+setPrototypeOf non-object: TypeError: Reflect.setPrototypeOf called on non-object
+Reflect.set proxy with trap and receiver: true,false,true a:1:true b:no:false c:2:false
+Reflect.set proxy trap invariant: TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+Reflect.set proxy without trap: false,true,1
+Reflect.set revoked: TypeError: proxy is revoked
+Reflect.gopd mapped arguments: {"value":"changed","writable":true,"enumerable":true,"configurable":true}
+Reflect.gopd proxy: {"value":1,"writable":true,"enumerable":true,"configurable":true}
+Reflect.gopd private-looking key: undefined
+Reflect.deleteProperty typed array: false,true,true,true
+Reflect.getPrototypeOf proxy: true
+Reflect.defineProperty proxy: false
+Reflect props: apply,construct,defineProperty,deleteProperty,get,getOwnPropertyDescriptor,getPrototypeOf,has,isExtensible,ownKeys,preventExtensions,set,setPrototypeOf Reflect object 32323
+Reflect not callable: TypeError: R is not a function
+Reflect not constructor: TypeError: object is not a constructor

@@ -1,0 +1,49 @@
+forEach throws throws RangeError cb
+map throws throws RangeError cb
+filter throws throws RangeError cb
+some throws throws RangeError cb
+every throws throws RangeError cb
+find throws throws RangeError cb
+findIndex throws throws RangeError cb
+findLast throws throws RangeError cb
+findLastIndex throws throws RangeError cb
+flatMap throws throws RangeError cb
+reduce throws throws RangeError cb
+reduceRight throws throws RangeError cb
+map huge throws RangeError invalid array length
+filter huge species {"length":0}
+species undefined ctor true
+species null true 2,4
+species non-object ctor throws TypeError Array @@species is not a constructor
+indexOf +Inf -1
+lastIndexOf -Inf -1
+flat Infinity [1,2,3,4,5]
+toString bool [object Boolean]
+toString num [object Number]
+toString nojoin array [object Array]
+toString tagged [object Tagged]
+toString proxy array [object Array]
+Array.of non-ctor [1,2]
+Array.of frozen throws TypeError Array.of: cannot define property
+Array.from non-ctor arraylike ["x",null]
+Array.from non-ctor iterable [1,2]
+Array.from mapper throws throws RangeError cb
+Array.from huge non-ctor throws RangeError invalid array length
+concat spreadable [0,"p","q",[9]]
+concat too long throws TypeError concat result is too long
+fill huge throws RangeError array length exceeds engine limit
+toSpliced huge throws RangeError array length exceeds engine limit
+toSpliced too long throws TypeError toSpliced result is too long
+unshift generic 4 {"0":"x","1":"y","2":"a","3":"b","length":4}
+unshift holes {"0":"z","1":"a","3":"c","length":4}
+splice generic [2,3]{"0":1,"1":"n","2":4,"length":3}
+splice frozen len throws TypeError Cannot assign to read only property 'length'
+push frozen arr throws TypeError Cannot assign to read only property '1'
+push len nonwritable throws TypeError Cannot assign to read only property '1'
+flatMap proxy target [1,2]
+lookupGetter proxy function undefined
+lookupGetter plain chain function undefined undefined
+Object toString bool [object Boolean][object Number]
+groupBy throws throws RangeError cb
+groupBy key throws throws EvalError key
+Map.groupBy [["odd",[1,3]],["even",[2,4]]]

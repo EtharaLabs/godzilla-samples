@@ -1,0 +1,14 @@
+error threw Error("plain failure") proto-ok=true native-is-error=1
+type threw TypeError("wrong type") proto-ok=true native-is-error=1
+range threw RangeError("out of range") proto-ok=true native-is-error=1
+nullmsg threw Error("") proto-ok=true native-is-error=1
+utf8 threw Error("échec ✗") proto-ok=true native-is-error=1
+value threw number 42
+value threw object {"custom":true}
+value threw string "str"
+value threw undefined "<undefined>"
+value threw URIError("prebuilt") proto-ok=true native-is-error=1
+created threw Error("made by napi_create_error") proto-ok=true native-is-error=1
+created threw Error("99") proto-ok=true native-is-error=1
+cleared returned Error("swallowed") proto-ok=true native-is-error=1
+none returned string "returned normally"

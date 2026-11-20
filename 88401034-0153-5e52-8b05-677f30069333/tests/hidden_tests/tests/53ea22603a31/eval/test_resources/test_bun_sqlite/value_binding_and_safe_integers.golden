@@ -1,0 +1,48 @@
+bind 42 -> integer 3432 42
+bind 2^40 -> integer 31303939353131363237373736 1099511627776
+bind 2^50 -> integer 31313235383939393036383432363234 1125899906842624
+bind 2^51-1 -> integer 32323531373939383133363835323437 2251799813685247
+bind 2^51 -> real 322E3235313739393831333638353235652B3135 2251799813685248
+bind 2^53 -> real 392E3030373139393235343734303939652B3135 9007199254740992
+bind -2^51 -> integer 2D32323531373939383133363835323438 -2251799813685248
+bind -2^51-1 -> real 2D322E3235313739393831333638353235652B3135 -2251799813685249
+bind 1.5 -> real 312E35 1.5
+bind -0 -> real 302E30 0
+bind 0 -> integer 30 0
+bind NaN -> null  null
+bind Infinity -> real 496E66 Infinity
+bind -Infinity -> real 2D496E66 -Infinity
+bind MAX_VALUE -> real 312E3739373639333133343836323332652B333038 1.7976931348623157e+308
+bind MIN_VALUE -> real 342E3934303635363435383431323437652D333234 5e-324
+bind 0.1+0.2 -> real 302E33 0.30000000000000004
+bind true -> integer 31 1
+bind false -> integer 30 0
+bind null -> null  null
+bind undefined -> null  null
+bind 10n -> integer 3130 10
+bind -1n -> integer 2D31 -1
+bind 2^63-1n -> integer 39323233333732303336383534373735383037 9223372036854776000
+bind -2^63n -> integer 2D39323233333732303336383534373735383038 -9223372036854776000
+bind 2^63n -> integer 2D39323233333732303336383534373735383038 -9223372036854776000
+bind 2^64n -> integer 30 0
+bind empty -> text  ""
+bind nul -> text 610062 "a\u0000b"
+bind unicode -> text F09F9880C3A9 "😀é"
+bind buffer -> blob 6869 "u8:104,105"
+bind u16 -> blob 01000001 "u8:1,0,0,1"
+bind f32 -> blob 0000803F "u8:0,0,128,63"
+bind i8 -> blob FF80 "u8:255,128"
+bind sub -> blob 0807 "u8:8,7"
+bind empty-u8 -> blob  "u8:"
+default ["number:9007199254740992","number:-9007199254740992","number:9223372036854776000","number:-9223372036854776000","number:42","number:1.25"]
+chain true
+safe ["bigint:9007199254740993","bigint:-9007199254740993","bigint:9223372036854775807","bigint:-9223372036854775808","bigint:42","number:1.25"]
+get-safe {"v":"9007199254740993n"} {"v":"-9223372036854775808n"}
+off-again ["number","number","number","number","number","number"]
+bigint-param-compare {"v":"9007199254740993n"}
+rowid-number {"changes":1,"lastInsertRowid":7}
+rowid-safe {"changes":1,"lastInsertRowid":"8n"}
+db-safe bigint 1 bigint 2 bigint number
+db-safe-rows [{"v":"5n","t":"integer"},{"v":"6n","t":"integer"},{"v":2.5,"t":"real"}]
+db-safe-off [{"v":5},{"v":6},{"v":2.5}]
+bool-and-null-params {"a":1,"b":0,"c":null,"d":null}

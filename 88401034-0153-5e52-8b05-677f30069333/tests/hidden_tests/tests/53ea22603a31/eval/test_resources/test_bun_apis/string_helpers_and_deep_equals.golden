@@ -1,0 +1,33 @@
+escape ["&lt;a href=&quot;x&quot; title=&#x27;y&#x27;&gt;Tom &amp; Jerry&lt;/a&gt;","42","","no specials ünïcode 🌍","&lt;obj&gt;","null","&amp;amp;&amp;&amp;","&lt;&lt;&gt;&gt;"]
+strip ["red plain bold","link end","csi8","nothing","cur","7"]
+width [5,0,4,2,3,1,1,2,3,6,5,3,2]
+deepEquals nested true true
+deepEquals extra-undef-key false false
+deepEquals array-len false false
+deepEquals num-vs-str false false
+deepEquals NaN true true
+deepEquals zeros true true
+deepEquals class-vs-plain true false
+deepEquals dates true true
+deepEquals dates-differ false false
+deepEquals regex true true
+deepEquals regex-flags false false
+deepEquals maps true true
+deepEquals maps-differ false false
+deepEquals sets true true
+deepEquals sets-differ false false
+deepEquals u8 true true
+deepEquals u8-differ false false
+deepEquals array-vs-object false false
+deepEquals null-undef false false
+deepEquals null-object false false
+deepEquals cycles true true
+deepEquals undef-vs-null-elem false false
+deepEquals hole true true
+deepEquals different-keys false false
+deepEquals strings true true
+deepEquals key-order true true
+deepMatch [true,false,true,true,false,true,true,true,false,false,true,true,false]
+{ a: 1, s: 'x', arr: [ 1, 2, [ 3, [Array] ] ], m: Map(1) { 'k' => 1 }, set: Set(1) { 'v' }, n: null, u: undefined }
+str 12n [ 1, 'two', { three: 3 } ] { deep: [Object] }
+CUSTOM true

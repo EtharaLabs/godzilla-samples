@@ -1,0 +1,39 @@
+P in v class ["cd"]@2
+neg P in v class ["CD"]@2
+empty v class ["c"]@2
+neg empty v class ["a\nb"]@0
+dup names backref ["bxxb",null,"b"]@0 {"n":"b"}
+dup names backref second ["axxa","a",null]@5 {"n":"a"}
+dup names no match null
+astral group name ["q","q"]@0 {"𝒜":"q"}
+astral group name u ["qr","q"]@0 {"𝒜":"q"}
+escaped pair group name ["z","z"]@2 {"𝒜":"z"}
+lone lead u ["\ud83dA"]@1
+vt ff ["\u000b\u000b\f"]@1
+lookbehind modifier ["b"]@1
+lookbehind modifier no null
+lookbehind lazy ["y",""]@2
+lookbehind lazy bounded ["y","x"]@4
+lookbehind greedy bounded ["y","xxx"]@4
+lookbehind backref ic ["b","a"]@2
+lookbehind backref ic2 ["b","a"]@2
+lookbehind backref no null
+D class ic ["ab"]@2
+D class in class ic ["aB"]@2
+repeat containing lookbehind group ["b","a"]@1
+backref inside lookahead ["a","a"]@1
+lookahead group then backref ["ab","a"]@0
+class astral u ["😀"]@1
+class lead then non-trail u ["AA\ud83d"]@0
+class lead then braced escape u ["AA"]@0
+lead then braced escape u ["\ud83dA"]@0
+octal escape two digits ["\n"]@1
+null escape then digit ["\u00008"]@0
+dup names mismatch ["bb",null,"b"]@1 {"n":"b"}
+dup names mismatch ic ["BB",null,"B"]@1 {"n":"B"}
+dup names in lookbehind ["c",null,"b"]@3 {"n":"b"}
+ic lone surrogate ["\ud800"]@1
+ic lone surrogate class u ["\ud800"]@1
+ic lone surrogate backref ["\ud800\ud800","\ud800"]@0
+sticky past end null
+global at end [""]@3

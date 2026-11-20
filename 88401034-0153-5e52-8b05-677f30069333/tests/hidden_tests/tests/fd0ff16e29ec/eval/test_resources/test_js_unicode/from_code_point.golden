@@ -1,0 +1,15 @@
+5 | dbff dfff | true | 62976 | 65535
+-1 | RangeError: Invalid code point
+1114112 | RangeError: Invalid code point
+1.5 | RangeError: Invalid code point
+NaN | RangeError: Invalid code point
+x | RangeError: Invalid code point
+Infinity | RangeError: Invalid code point
+-0.5 | RangeError: Invalid code point
+undefined | RangeError: Invalid code point
+[object Object] | RangeError: Invalid code point
+"" | 41 42 0 43 | d800 | d83d de00 | 1 | 1
+false | true | 61 fffd 62 fffd 63 d83d de00 | fffd fffd | true | true
+true | TypeError: String.prototype method called on null or undefined | fffd
+"\ud800" | "\udc00😀\ud83d" | {"\udfff":1} | "  \u0000\u001f" | true | d800 78
+\u{1F600} | true | true | A | d800 | 2

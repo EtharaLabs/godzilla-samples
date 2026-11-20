@@ -1,0 +1,28 @@
+1e9b 323         -> NFC[1e9b 323] NFD[17f 323 307] NFKC[1e69] NFKD[73 323 307]
+c5               -> NFC[c5] NFD[41 30a] NFKC[c5] NFKD[41 30a]
+41 30a           -> NFC[c5] NFD[41 30a] NFKC[c5] NFKD[41 30a]
+212b             -> NFC[c5] NFD[41 30a] NFKC[c5] NFKD[41 30a]
+1e0b 323         -> NFC[1e0d 307] NFD[64 323 307] NFKC[1e0d 307] NFKD[64 323 307]
+71 307 323       -> NFC[71 323 307] NFD[71 323 307] NFKC[71 323 307] NFKD[71 323 307]
+ac01             -> NFC[ac01] NFD[1100 1161 11a8] NFKC[ac01] NFKD[1100 1161 11a8]
+1100 1161 11a8   -> NFC[ac01] NFD[1100 1161 11a8] NFKC[ac01] NFKD[1100 1161 11a8]
+2460             -> NFC[2460] NFD[2460] NFKC[31] NFKD[31]
+338f             -> NFC[338f] NFD[338f] NFKC[6b 67] NFKD[6b 67]
+ff76 ff9e        -> NFC[ff76 ff9e] NFD[ff76 ff9e] NFKC[30ac] NFKD[30ab 3099]
+fb01             -> NFC[fb01] NFD[fb01] NFKC[66 69] NFKD[66 69]
+bd               -> NFC[bd] NFD[bd] NFKC[31 2044 32] NFKD[31 2044 32]
+2126             -> NFC[3a9] NFD[3a9] NFKC[3a9] NFKD[3a9]
+344              -> NFC[308 301] NFD[308 301] NFKC[308 301] NFKD[308 301]
+65 301 327       -> NFC[229 301] NFD[65 327 301] NFKC[229 301] NFKD[65 327 301]
+default form is NFC => [1, 1]
+ascii unchanged => "plain ASCII 123"
+lone surrogate kept => "d800 301"
+bad form !! RangeError: The normalization form should be one of NFC, NFD, NFKC, NFKD
+null form !! RangeError: The normalization form should be one of NFC, NFD, NFKC, NFKD
+empty form !! RangeError: The normalization form should be one of NFC, NFD, NFKC, NFKD
+normalize null this !! TypeError: String.prototype method called on null or undefined
+isWellFormed => [true, false, false, true, false, true]
+toWellFormed => ["61 fffd 62 fffd", "fffd fffd", "d83d de00"]
+surrogate joining => [true, 2, 1, "1f600", 3]
+slicing pairs => ["d83d", 2, "de00 62", "\"\\ud83d\""]
+comparison by code units => [false, false, ["7a", "ff61", "1f600"]]

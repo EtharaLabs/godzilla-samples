@@ -1,0 +1,18 @@
+ip literal host, no servername
+  client: secure authorized=true authorizationError=null servername=127.0.0.1 alpn=false | data "hi ip literal host, no servername" | close hadError=false
+  server: secureConnection alpn=false | closed
+wrong ip
+  client: error: TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed) | close hadError=true
+  server: tlsClientError: TLS server handshake failed (SSL error 1: error:0A000412:SSL routines::sslv3 alert bad certificate)
+upper-case OTHER.TEST
+  client: secure authorized=true authorizationError=null servername=OTHER.TEST alpn=false | data "hi upper-case OTHER.TEST" | close hadError=false
+  server: secureConnection alpn=false | closed
+wildcard one label
+  client: secure authorized=true authorizationError=null servername=api.wild.test alpn=false | data "hi wildcard one label" | close hadError=false
+  server: secureConnection alpn=false | closed
+wildcard two labels
+  client: error: TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed) | close hadError=true
+  server: tlsClientError: TLS server handshake failed (SSL error 1: error:0A000412:SSL routines::sslv3 alert bad certificate)
+no ip san
+  client: error: TLS handshake failed (SSL error 1: error:0A000086:SSL routines::certificate verify failed) | close hadError=true
+  server: tlsClientError: TLS server handshake failed (SSL error 1: error:0A000412:SSL routines::sslv3 alert bad certificate)

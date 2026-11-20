@@ -1,0 +1,28 @@
+init 0 true true 0 1 2 2 null true
+open 1 open
+message "first" "" true message true
+  (listener saw it too)
+custom "line1\nline2" 7
+message " two spaces" "8" true message true
+  (listener saw it too)
+message "" "8" true message true
+  (listener saw it too)
+message "ünïcode ✓" "9" true message true
+  (listener saw it too)
+error, readyState 0 error
+open 1 open
+message "reconnected lei=9 accept=text/event-stream cache=no-cache" "9" true message true
+  (listener saw it too)
+closed state 2
+/html error readyState 2
+/204 error readyState 2
+/500 error readyState 2
+/noloc error readyState 2
+/redir opened
+/redir msg via redirect
+closed before open 2
+SyntaxError EventSource: unsupported scheme 'ftp'
+SyntaxError invalid EventSource URL: bad url
+TypeError EventSource constructor requires a url
+SyntaxError EventSource: unsupported scheme 'ws'
+done

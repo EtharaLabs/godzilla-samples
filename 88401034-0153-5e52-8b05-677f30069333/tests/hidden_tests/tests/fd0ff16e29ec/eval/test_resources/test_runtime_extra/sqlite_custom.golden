@@ -1,0 +1,12 @@
+./sq.so -> status 0 stderr ""
+    setCustomSQLite returned undefined
+    opened string 42
+    again: Database.setCustomSQLite must be called before opening a database
+./notsqlite.so -> status 0 stderr ""
+    setCustomSQLite returned undefined
+    error Error bun:sqlite unavailable: libsqlite3 is missing the sqlite3_open_v2 symbol
+./junk.so -> status 0 stderr ""
+    setCustomSQLite returned undefined
+    error Error bun:sqlite unavailable: could not load custom libsqlite3 './junk.so' (./junk.so: invalid ELF header)
+./missing.so -> status 0 stderr ""
+    error Error Database.setCustomSQLite library not found: ./missing.so

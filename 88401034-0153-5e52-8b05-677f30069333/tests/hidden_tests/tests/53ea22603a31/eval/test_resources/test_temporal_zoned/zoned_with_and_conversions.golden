@@ -1,0 +1,26 @@
+with year => 2023-01-15T10:20:30+01:00[Europe/Paris]
+with month to summer => 2024-07-15T10:20:30+02:00[Europe/Paris]
+with day overflow constrain => 2024-02-29T10:20:30+01:00[Europe/Paris]
+with day overflow reject => threw RangeError: day out of range
+with offset field => 2024-01-15T10:20:30+01:00[Europe/Paris]
+with offset field use => 2024-01-15T09:20:30+01:00[Europe/Paris]
+with timeZone field => threw TypeError: with() argument must not have 'timeZone'
+with calendar field => threw TypeError: with() argument must not have 'calendar'
+with empty => threw TypeError: with() requires at least one field
+with string => threw TypeError: with() argument must be an object
+withPlainTime => 2024-01-15T23:00:00+01:00[Europe/Paris]
+withPlainTime none => 2024-01-15T00:00:00+01:00[Europe/Paris]
+withPlainTime gap => 2024-03-31T03:30:00+02:00[Europe/Paris]
+withTimeZone => 2024-01-15T18:20:30+09:00[Asia/Tokyo]
+withTimeZone offset => 2024-01-15T06:20:30-03:00[-03:00]
+withTimeZone missing => threw TypeError: timeZone must be a string or ZonedDateTime
+withTimeZone bad => threw RangeError: invalid time zone identifier
+withCalendar => 2024-01-15T10:20:30+01:00[Europe/Paris][u-ca=buddhist]
+withCalendar missing => threw TypeError: calendar argument is required
+toInstant => 2024-01-15T09:20:30Z
+toPlainDate => 2024-01-15
+toPlainTime => 10:20:30
+toPlainDateTime => 2024-01-15T10:20:30
+startOfDay => 2024-01-15T00:00:00+01:00[Europe/Paris]
+startOfDay sao paulo 2018 midnight gap => 2018-11-04T01:00:00-02:00[America/Sao_Paulo]
+hoursInDay sao paulo => 23

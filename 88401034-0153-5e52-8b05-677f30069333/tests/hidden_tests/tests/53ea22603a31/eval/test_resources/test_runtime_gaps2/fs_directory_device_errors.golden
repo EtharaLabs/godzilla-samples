@@ -1,0 +1,12 @@
+devnull false false false false false false
+mkdir-recursive-on-file undefined
+mkdir-on-file Error: EEXIST: File exists (os error 17), mkdir 'target.txt' | EEXIST mkdir
+mkdir-recursive-existing-dir "adir"
+write-dir Error: openSync 'adir': Is a directory (os error 21) | undefined undefined
+unlink-dir Error: unlinkSync 'adir': Is a directory (os error 21) | undefined undefined
+read-dir Error: cannot read 'adir': Is a directory (os error 21) | EIO undefined
+open-dir-write Error: openSync 'adir': Is a directory (os error 21) | undefined undefined
+copy-dir Error: EIO: the source path is neither a regular file nor a symlink to a regular file, copyfile 'adir' | EIO copyfile
+rename-file-over-dir Error: EISDIR: Is a directory (os error 21), rename 'target.txt' | EISDIR rename
+chmod-missing Error: ENOENT: No such file or directory (os error 2), chmod 'nope' | ENOENT chmod
+target intact data true

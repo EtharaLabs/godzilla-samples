@@ -1,0 +1,40 @@
+weekOfYear iso8601 => 1 2025 1 7
+weekOfYear gregory => undefined undefined 1 7
+weekOfYear hebrew => undefined undefined 1 7
+weekOfYear chinese => undefined undefined 1 7
+weekOfYear persian => undefined undefined 1 7
+PDT weekOfYear hebrew => undefined undefined am 5785 12 7
+PDT toJSON hebrew => 2024-12-30T00:00:00
+japanese bce => bce 6
+japanese bce bag => -000005-01-01[u-ca=japanese]
+roc before => broc 12 -11
+roc roc-inverse era => threw RangeError: invalid era: roc-inverse
+buddhist negative => be -57 -57
+hebrew 30 Tishri +1M constrain => M02 29
+hebrew 30 Tishri +1M reject => threw RangeError: day is out of range in the target month
+hebrew 30 Adar I +1Y constrain => M06 29 2025-03-29
+hebrew +1Y1M2W3D => 2024-11-19
+hebrew -P2Y => 2022-02-16
+hebrew until weeks => P54W5D
+hebrew until days => P383D
+hebrew since years leap end => P1Y12M25D
+hebrew until M05L to M06 next year => P1Y
+hebrew same date until years => PT0S
+hebrew backward from M05L to M06 => -P12M
+hebrew 30 Tishri until 29 Cheshvan months => P29D
+chinese forward leap clamp years => P12M
+chinese day 30 clamp years => P1Y P12M29D
+chinese 30 +1M reject => threw RangeError: day is out of range in the target month
+chinese 30 +1M constrain => M02L 29
+chinese leap +1Y reject => threw RangeError: leap month does not exist in the target year
+chinese since years from leap => P2Y10M
+chinese until same month leap => P1M
+coptic YM add 13 months => 2024-09-11[u-ca=coptic]
+coptic YM until => P2Y12M
+persian YM add => 2026-03-21[u-ca=persian]
+indian YM since => P66M
+hebrew YM add years from M05L => 2025-03-01[u-ca=hebrew]
+hebrew YM until => P61M
+islamic duration total years => 1.1299435028248588
+chinese duration round months => P3M12D
+coptic duration round years => P1Y2M

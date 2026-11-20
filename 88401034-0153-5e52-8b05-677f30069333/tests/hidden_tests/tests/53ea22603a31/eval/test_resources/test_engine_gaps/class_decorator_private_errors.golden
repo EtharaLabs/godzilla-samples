@@ -1,0 +1,35 @@
+computed static prototype method: TypeError: classes may not have a static property named 'prototype'
+computed static prototype field: TypeError: classes may not have a static property named 'prototype'
+computed instance prototype ok: inst
+symbol-keyed static names: [sym]|get [Symbol.iterator]
+method decorator not callable: TypeError: decorator is not callable
+field decorator not callable: TypeError: decorator is not callable
+accessor decorator not callable: TypeError: decorator is not callable
+class decorator not callable: TypeError: decorator is not callable
+method decorator returns number: TypeError: decorator must return a function or undefined
+field decorator returns object: TypeError: field decorator must return a function or undefined
+accessor decorator returns number: TypeError: accessor decorator must return an object or undefined
+class decorator returns string: TypeError: decorator must return a function or undefined
+getter decorator returns object: TypeError: decorator must return a function or undefined
+addInitializer non-callable: TypeError: addInitializer expects a callable
+field access get/set: field value,changed,undefined
+private/static field access: s,set via access
+getter decorator access: got t hasSet=false
+setter decorator access: 9 hasGet=false
+decorated static auto-accessor: 22,6
+decorated private auto-accessor: p!
+decorated static method: wrapped sm static=true
+decorated private getter: dec pg
+decorated static field + initializer: 6 static init this=true
+auto-accessor getter on unrelated object: TypeError: cannot read auto-accessor backing field from an unrelated object
+auto-accessor setter on unrelated object: TypeError: cannot write auto-accessor backing field on an unrelated object
+private field on frozen object: TypeError: cannot add a private field to a non-extensible object
+private field on proxy object: 1
+private methods stamped twice: TypeError: cannot initialize private methods of a class twice on the same object
+private methods on non-extensible: TypeError: cannot add private members to a non-extensible object
+private accessor on sealed: TypeError: cannot add private members to a non-extensible object
+static private field after sealing ctor: TypeError: cannot add a private field to a non-extensible object
+write undeclared private: TypeError: cannot write private member #x to an object whose class did not declare it
+write private method: TypeError: private method #m is not writable
+write getter-only private: TypeError: private accessor #g has no setter
+read setter-only private: TypeError: private accessor #s has no getter

@@ -1,0 +1,19 @@
+  closed
+take throwing limit => threw Error: limit boom
+  closed
+drop symbol limit => threw TypeError: Cannot convert a Symbol value to a number
+  closed
+take NaN => threw RangeError: limit must be a non-negative number
+  closed
+take -1 => threw RangeError: limit must be a non-negative number
+drop Infinity => []
+  closed
+take 0 then next => {"done":true}
+from throwing define => threw Error: dp boom
+from refusing define => threw TypeError: cannot define element '0'
+of on non-extensible result => threw TypeError: Array.of: cannot define property
+zip longest short padding => [[1,2,3],["p0","b",null]]
+zipKeyed symbol key => [{"a":1}] 2
+zipKeyed key order => [{"1":5,"2":2,"b":1,"4294967295":3,"01":4}]
+zipKeyed proxy gopd undefined => [{"b":2}]
+zipKeyed longest padding => [{"x":1,"y":3},{"x":2,"y":"Y"}]

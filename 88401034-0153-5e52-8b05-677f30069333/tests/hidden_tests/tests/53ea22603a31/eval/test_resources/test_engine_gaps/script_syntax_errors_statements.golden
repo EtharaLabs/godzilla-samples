@@ -1,0 +1,29 @@
+"({if})" -> SyntaxError: 'if' is a reserved word and cannot be a shorthand property
+"\"use strict\"; ({implements})" -> SyntaxError: 'implements' cannot be used as a shorthand property in strict mode
+"function* g() { ({yield}); }" -> SyntaxError: 'yield' cannot be used as a shorthand property here
+"async function g() { ({await}); }" -> SyntaxError: 'await' cannot be used as a shorthand property here
+"debugger; return \"after debugger\"" -> ok after debugger
+"l: function* g() {}" -> SyntaxError: a labelled function declaration must be a plain function
+"l1: l2: function* g() {}" -> SyntaxError: a labelled function declaration must be a plain function
+"l: async function f() {}" -> SyntaxError: function declaration cannot appear in a single-statement context
+"if (1) l: function f() {}" -> SyntaxError: function declaration cannot appear in a single-statement context
+"using [a] = null;" -> ReferenceError: using is not defined
+"do x; foo" -> SyntaxError: expected 'while' after do-body
+"for (const x; ;) ;" -> SyntaxError: missing initializer in for-loop declaration
+"for (let [let] of []) ;" -> SyntaxError: 'let' is disallowed as a lexically bound name
+"for (async of []) ;" -> SyntaxError: 'async' as a for-of left side must be parenthesized
+"switch (1) { foo: 1 }" -> SyntaxError: expected 'case' or 'default'
+"#x: 1" -> SyntaxError: private names cannot be used as labels
+"function #x() {}" -> SyntaxError: private names cannot be used as binding identifiers
+"let #x = 1;" -> SyntaxError: private names cannot be used as binding identifiers
+"function* g() { var yield; }" -> SyntaxError: 'yield' cannot be used as a binding here
+"function f(a) { let a; }" -> SyntaxError: Identifier 'a' has already been declared
+"(a) => { let a; }" -> SyntaxError: Identifier 'a' has already been declared
+"function f(implements) { \"use strict\"; }" -> SyntaxError: 'implements' can't be a parameter name in strict mode
+"class implements {}" -> SyntaxError: 'implements' cannot be used as a class name
+"class C extends (function () { with ({}) {} }) {}" -> SyntaxError: 'with' statements are not allowed in strict mode
+"{ var y; function y() {} }" -> SyntaxError: Identifier 'y' has already been declared
+"l: function f( {}" -> SyntaxError: expected ')'
+"let { \"a\" } = {};" -> SyntaxError: invalid shorthand destructuring target
+"return function (o) { return #x in o; }" -> SyntaxError: Private name '#x' is not declared in an enclosing class
+"class C { ;;; m() { return \"m\"; } ;; } return new C().m();" -> ok m

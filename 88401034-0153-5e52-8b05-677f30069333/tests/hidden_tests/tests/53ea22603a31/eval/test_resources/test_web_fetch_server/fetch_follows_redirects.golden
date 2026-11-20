@@ -1,0 +1,22 @@
+200 true http://127.0.0.1:PORT/final?from=2 final ?from=2 body=null
+303 true {"method":"GET","body":null,"ct":"text/plain;charset=UTF-8"}
+307 true {"method":"POST","body":"kept","ct":"text/plain;charset=UTF-8"}
+302 POST {"method":"GET","body":null,"ct":"text/plain;charset=UTF-8"}
+TypeError fetch 'http://127.0.0.1:PORT/loop': too many redirects
+301 false http://127.0.0.1:PORT/noloc no location header
+GET /a/start
+GET /a/next?step=2
+GET /final?from=2
+POST /r303
+GET /echo
+POST /r307
+POST /echo
+POST /r302post
+GET /echo
+GET /loop
+GET /loop
+GET /loop
+GET /loop
+GET /loop
+GET /loop
+GET /noloc

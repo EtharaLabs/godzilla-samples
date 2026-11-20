@@ -1,0 +1,23 @@
+all => [1, 2, 3]
+all empty => []
+all first rejection !! Error: A
+all order by index => ["slow", "fast"]
+allSettled => [{status: "fulfilled", value: 1}, {status: "rejected", reason: "no"}, {status: "rejected", reason: "thenable no"}]
+any => 2
+any all rejected => ["AggregateError", "", [1, 2], true, []]
+any empty => ["AggregateError", "", []]
+race => "fast"
+race rejection wins !! Error: first
+all non-iterable !! TypeError: value is not iterable
+race undefined (message JSON-escaped) => "TypeError: cannot read property '\u00001' of undefined"
+string iterable => ["a", "b"]
+then called synchronously => [["x"], ["after all()", "then called"]]
+resolve called per element => 4
+resolve not callable !! TypeError: Promise combinator: this.resolve is not callable
+iterator closed when resolve throws => ["resolve threw", true]
+allKeyed => {a: 1, b: 2, Symbol(s): 3}
+allKeyed result shape => [["b", "a"], null]
+allSettledKeyed => {ok: {status: "fulfilled", value: 1}, bad: {status: "rejected", reason: "no"}}
+allKeyed rejection !! Error: keyed
+allKeyed primitive !! TypeError: argument must be an object
+statics => "all allKeyed allSettled allSettledKeyed any length name prototype race reject resolve try withResolvers"

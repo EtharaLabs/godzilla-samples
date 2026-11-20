@@ -1,0 +1,21 @@
+get through revoked proto: TypeError: cannot perform 'get' on a revoked proxy
+set through revoked proto: TypeError: cannot perform 'set' on a revoked proxy
+get: proto proxy null trap: target x
+get: proto proxy bad trap: TypeError: proxy 'get' trap is not callable
+get: proto proxy trap throws: Error: get trap threw
+get: proto proxy receiver: receiver is child
+set: proto proxy undefined trap: [{"y":2},{}]
+set: proto proxy bad trap: TypeError: proxy 'set' trap is not callable
+set: proto proxy trap throws: Error: set trap threw
+set: proto proxy false in strict: TypeError: cannot assign to property 'y'
+set: proto proxy invariant: TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set: own proxy bad trap: TypeError: proxy 'set' trap is not callable
+super set onto own getter (strict): TypeError: cannot assign to read only property 'x'
+super set onto own getter (sloppy): 1
+Reflect.set non-writable receiver: false,1
+Reflect.set accessor receiver: false
+super set on non-extensible this: TypeError: cannot add property, object is not extensible
+Reflect.set proxy receiver: true gopd w; define w {"value":9,"writable":true,"enumerable":true,"configurable":true}
+super set: proxy this refuses define: TypeError: cannot create property 'v' on the receiver
+set: own proxy trap throws: RangeError: own set trap
+super set: proxy this define trap throws: Error: define trap threw

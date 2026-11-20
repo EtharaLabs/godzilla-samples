@@ -1,0 +1,25 @@
+round day (23h day) => 2024-03-11T00:00:00-04:00[America/New_York]
+round day before noon => 2024-03-10T00:00:00-05:00[America/New_York]
+round hour => 2024-03-10T14:00:00-04:00[America/New_York]
+round minute incr 15 trunc => 2024-03-10T13:45:00-04:00[America/New_York]
+round ms halfEven => 2024-03-10T13:45:30.556-04:00[America/New_York]
+round hour into gap => 2024-03-10T03:00:00-04:00[America/New_York]
+round day incr 2 => threw RangeError: roundingIncrement out of range
+round week => threw RangeError: invalid smallestUnit
+round none => threw TypeError: round() requires an options argument
+fall day round => 2024-11-04T00:00:00-05:00[America/New_York]
+default => 2024-03-10T13:45:30.555555555-04:00[America/New_York]
+offset never => 2024-03-10T13:45:30.555555555[America/New_York]
+offset bad => threw RangeError: invalid offset: sometimes
+timeZoneName never => 2024-03-10T13:45:30.555555555-04:00
+timeZoneName critical => 2024-03-10T13:45:30.555555555-04:00[!America/New_York]
+timeZoneName bad => threw RangeError: invalid timeZoneName: long
+calendarName always => 2024-03-10T13:45:30.555555555-04:00[America/New_York][u-ca=iso8601]
+calendarName critical japanese => 2024-03-10T13:45:30.555555555-04:00[America/New_York][!u-ca=japanese]
+all never => 2024-03-10T13:45:30.555555555
+fsd 3 => 2024-03-10T13:45:30.555-04:00[America/New_York]
+smallestUnit minute => 2024-03-10T13:45-04:00[America/New_York]
+smallestUnit second ceil => 2024-03-10T13:45:31-04:00[America/New_York]
+fsd 0 halfExpand into next minute => 2024-01-01T00:01:00+00:00[UTC]
+offset zone string => 2024-01-01T00:00:00+05:30[+05:30]
+LMT offset string => 1850-06-01T12:00:00-04:56[America/New_York]

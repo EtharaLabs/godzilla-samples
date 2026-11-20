@@ -1,0 +1,38 @@
+readMissing Error ENOENT undefined undefined | cannot read 'missing.txt': No such file or directory (os error 2)
+readMissingUtf8 Error ENOENT undefined undefined | cannot read 'missing.txt': No such file or directory (os error 2)
+statMissing Error ENOENT stat sub/missing | ENOENT: No such file or directory (os error 2), stat 'sub/missing'
+lstatMissing Error ENOENT lstat missing | ENOENT: No such file or directory (os error 2), lstat 'missing'
+mkdirExists Error EEXIST mkdir dir | EEXIST: File exists (os error 17), mkdir 'dir'
+mkdirNoParent Error ENOENT mkdir a/b/c | ENOENT: No such file or directory (os error 2), mkdir 'a/b/c'
+mkdirRecursiveOverFile Error ENOTDIR mkdir file.txt/sub | ENOTDIR: Not a directory (os error 20), mkdir 'file.txt/sub'
+readdirMissing Error undefined undefined undefined | readdirSync 'nodir': No such file or directory (os error 2)
+readdirFile Error undefined undefined undefined | readdirSync 'file.txt': Not a directory (os error 20)
+readdirTypesFile Error ENOTDIR scandir file.txt | ENOTDIR: Not a directory (os error 20), scandir 'file.txt'
+unlinkMissing Error undefined undefined undefined | unlinkSync 'missing': No such file or directory (os error 2)
+rmMissing Error ENOENT rm missing | ENOENT: No such file or directory (os error 2), rm 'missing'
+rmdirNotEmpty Error ENOTEMPTY rm dir | ENOTEMPTY: Directory not empty (os error 39), rm 'dir'
+rmDirNoRecursive Error ENOTEMPTY rm dir | ENOTEMPTY: Directory not empty (os error 39), rm 'dir'
+renameMissing Error ENOENT rename missing | ENOENT: No such file or directory (os error 2), rename 'missing'
+copyMissing Error ENOENT copyfile missing | ENOENT: No such file or directory (os error 2), copyfile 'missing'
+readlinkNotLink Error EIO readlink file.txt | EIO: Invalid argument (os error 22), readlink 'file.txt'
+symlinkExists Error EEXIST symlink dir | EEXIST: File exists (os error 17), symlink 'dir'
+accessMissing Error ENOENT access missing | ENOENT: No such file or directory (os error 2), access 'missing'
+chmodMissing Error ENOENT chmod missing | ENOENT: No such file or directory (os error 2), chmod 'missing'
+linkMissing Error ENOENT link missing | ENOENT: No such file or directory (os error 2), link 'missing'
+utimesMissing Error ENOENT utime missing | ENOENT: No such file or directory (os error 2), utime 'missing'
+lutimesMissing Error ENOENT lutime missing | ENOENT: No such file or directory (os error 2), lutime 'missing'
+openMissing Error undefined undefined undefined | openSync 'missing': No such file or directory (os error 2)
+readFileDir Error EIO undefined undefined | cannot read 'dir': Is a directory (os error 21)
+writeIntoFile Error undefined undefined undefined | openSync 'file.txt/x': Not a directory (os error 20)
+statNotDir Error ENOTDIR stat file.txt/x | ENOTDIR: Not a directory (os error 20), stat 'file.txt/x'
+closeBad ok undefined
+fstatBad TypeError undefined undefined undefined | bad file descriptor 9999
+readSyncBad TypeError undefined undefined undefined | bad file descriptor 12345
+writeSyncBad TypeError undefined undefined undefined | bad file descriptor -1
+cpDirNoRecursive Error EISDIR cp dir | EISDIR: recursive option not set for a directory, cp 'dir'
+watch Error ENOSYS watch file.txt | ENOSYS: fs.watch requires a filesystem-event backend that is not available, watch 'file.txt'
+promisesWatch Error ENOSYS watch file.txt | ENOSYS: fs.watch requires a filesystem-event backend that is not available, watch 'file.txt'
+lchmod Error undefined undefined undefined | ENOSYS: lchmod is not supported on this platform, lchmod 'file.txt'
+statfs ok ["number","number","number"]
+statfsMissing Error ENOENT statfs missing | ENOENT: No such file or directory (os error 2), statfs 'missing'
+cbNotFunction TypeError undefined undefined undefined | callback is not a function

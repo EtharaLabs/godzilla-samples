@@ -1,0 +1,9 @@
+default /ok      200 OK | fine /ok
+default /throw   500 Internal Server Error | Internal Server Error
+default /reject  500 Internal Server Error | Internal Server Error
+default /string  500 Internal Server Error | Internal Server Error
+default /used    200 OK | 
+onError /throw   502 Bad Gateway | custom: RangeError: handler exploded
+onError /string  502 Bad Gateway | custom: TypeError: serve handler did not return a Response
+onError /ok      200 OK | fine /ok
+onError throws 500 Internal Server Error | Internal Server Error

@@ -1,0 +1,66 @@
+revived: "{}" | {}
+revived: "[]" | []
+revived: "{\"a\":[]}" | {a: []}
+revived: "[{}]" | [{}]
+revive-err: "{\"a\":1 \"b\":2}" | SyntaxError: Expected ',' or '}' in JSON object
+revive-err: "{\"a\":1,}" | SyntaxError: Expected string key in JSON object
+revive-err: "{,}" | SyntaxError: Expected string key in JSON object
+revive-err: "{\"a\" 1}" | SyntaxError: Expected ':' in JSON object
+revive-err: "{1:2}" | SyntaxError: Expected string key in JSON object
+revive-err: "[1 2]" | SyntaxError: Expected ',' or ']' in JSON array
+revive-err: "[1,]" | SyntaxError: Unexpected token in JSON
+revive-err: "[,1]" | SyntaxError: Unexpected token in JSON
+revive-err: "[\"a\"" | SyntaxError: Expected ',' or ']' in JSON array
+revive-err: "{\"a\":1" | SyntaxError: Expected ',' or '}' in JSON object
+revive-err: "  [1] x" | SyntaxError: Unexpected non-whitespace after JSON
+revived: "\"\\ud83d\\ude00\"" | 😀
+revived: "\"\\uD800\\u0041\"" | "\ud800A"
+revived: "-0" | -0
+revived: "1e-2" | 0.01
+revived: "[true,false,null]" | [true, false, null]
+revived: "{\"__proto__\":{\"x\":1}}" | {__proto__: {x: 1}}
+revived: "{\"a\":{\"b\":{\"c\":[1,{\"d\":2}]}}}" | {a: {b: {c: [1, {d: 2}]}}}
+revive-proto-key: true | ["__proto__"]
+graft-result: ["first", "second", "third"] | true | {"p2":"P2"} | [8, 8]
+graft-proxy-traps: ["ownKeys", "gopd p1", "gopd p2", "delete p1", "define p2", "ownKeys", "gopd p2"]
+graft-array-proxy: true | [0,[5,60]]
+graft-frozen: {keep: 1, drop: 2}
+replacer-proxy-array: {"c":3,"a":1}
+replacer-array-mixed: {"1":"one","a":"A","b":"B"}
+replacer-array-dupes-order: {"z":3,"x":1,"y":2}
+replacer-fn-holder-root: "=\"v\""
+replacer-fn-proxy-value: {"p":{"z":1,"y":2}}
+stringify-boxed-bigint: TypeError: Do not know how to serialize a BigInt
+stringify-boxed-symbol: {} | [{}]
+stringify-custom-boxed-toString: "overridden" | 2
+stringify-space-object: [1] | [1] | abcdefghij1
+stringify-toJSON-key: ["idx0"] | {"deep":"deep"}
+stringify-toJSON-inherited: "from proto"
+stringify-getter-throws: SyntaxError: getter threw
+stringify-array-like-not-array: {"0":"a","length":2} | {} | [] | []
+stringify-revoked: TypeError: cannot read property 'get' of null
+stringify-revoked-replacer: TypeError: Cannot perform IsArray on a revoked Proxy
+stringify-sparse-indent: [
+ null,
+ null,
+ 1
+]
+stringify-empty-nested-indent: {
+	"a": {},
+	"b": [],
+	"c": [
+		[]
+	],
+	"d": [
+		{}
+	]
+}
+rawJSON-in-array-indent: [
+  1e1000
+]
+rawJSON-props: {value: "1", writable: false, enumerable: true, configurable: false} | false
+rawJSON-as-replacer-result: {"n":0.10}
+isRawJSON-lookalike: false
+parse-reviver-context-arrays: ["0:1", "1:\"x\"", "0:-", "0:true", "k:-", "1:-", ":-"]
+parse-reviver-replaced-primitive: ["a:1", "b:-", ":-"]
+parse-reviver-same-value-keeps-source: ["a:1", "b:2", ":-"]

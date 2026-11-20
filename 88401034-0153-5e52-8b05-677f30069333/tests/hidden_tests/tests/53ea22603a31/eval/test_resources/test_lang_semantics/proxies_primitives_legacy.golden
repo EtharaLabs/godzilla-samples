@@ -1,0 +1,36 @@
+fn.caller: caller is outer
+fn.arguments: 3:x
+fn.arguments when not running: null
+arrow caller: TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+class method caller: TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+hasOwn caller: false,false,true
+set trap own=own recvIsChild=true
+get via proxy proto: trap:own,trap:anything
+set trap fresh=1 recvIsChild=true
+set via proxy proto: false
+in via proxy proto: true,false,false
+get revoked: TypeError: cannot read property 'get' of null
+set revoked: TypeError: cannot read property 'set' of null
+call revoked: TypeError: cannot read property 'apply' of null
+get trap not callable: TypeError: proxy 'get' trap is not callable
+set trap not callable: TypeError: proxy 'set' trap is not callable
+apply trap: applied 1,2
+apply trap not callable: TypeError: proxy 'apply' trap is not callable
+construct trap: m
+construct trap returns primitive: TypeError: proxy construct trap returned a non-object
+get invariant: TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+set invariant: TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set trap false strict: TypeError: cannot assign to property 'x'
+set trap false sloppy: silently ignored
+setter this type object v=7
+setter on primitive proto: done
+strict setter this boolean
+strict setter primitive this: done
+assign getter-only on primitive sloppy: ignored
+assign getter-only on primitive strict: TypeError: cannot set getter-only property 'getterOnly'
+assign symbol prop on primitive strict: TypeError: Cannot create property 'x' on symbol value
+Reflect.set receiver: true,9,
+Reflect.set data to receiver: true,2
+Reflect.set non-writable receiver prop: false
+Reflect.set accessor receiver prop: false
+Reflect.set primitive receiver: false

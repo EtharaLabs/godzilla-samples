@@ -1,0 +1,31 @@
+bind: T/1/2/3 2 0 bound f true undefined T/1/x/ 1
+bind length odd: Infinity,0,0,1,0,0,0,9007199254740992,len getter,0
+bind name odd: "bound " "bound "
+bind non-callable: TypeError: bind must be called on a function
+bind proxy target: 3 1 bound target bind,gopd:length,length,name
+bound new.target: true true true false
+bound arrow new: TypeError: object is not a constructor
+bound class call: TypeError: Class constructor cannot be invoked without 'new'
+bound method of builtin: ["b","c"] 2,4,8
+call/apply receivers: object:true object:true object:false object:false null undef number boolean object:false object:false bigint
+apply arg lists: 0: | 0: | 0: | 2:a, | 2:a,b | 3:1,,3 | 2:,x | 2:p,q | 2:7,8
+apply primitive arg list: TypeError: apply: argument list must be array-like
+apply string arg list: TypeError: apply: argument list must be array-like
+apply non-callable: TypeError: value is not a function
+call non-callable: TypeError: number is not a function
+apply arg list getter throws: SyntaxError: length getter
+apply proxy arg list: 2 length,0,1
+Function.prototype itself: ,0,true,function,true,
+new Function.prototype: TypeError: object is not a constructor
+hasInstance: true,false,false,true,false,false,[Symbol.hasInstance],true
+hasInstance bad prototype: TypeError: prototype property is not an object
+hasInstance primitive lhs skips prototype: false
+instanceof custom: true,false
+instanceof custom truthiness: true,false
+instanceof non-callable: TypeError: right-hand side of instanceof is not callable
+instanceof non-callable hasInstance: TypeError: @@hasInstance is not callable
+instanceof proxy function: true true
+instanceof cross realm: false,true,true,true
+arguments object: changed,2,[object Arguments],function,true
+strict arguments callee: TypeError: 'caller', 'callee', and 'arguments' may not be accessed on strict mode functions
+arrow has no own arguments: outer

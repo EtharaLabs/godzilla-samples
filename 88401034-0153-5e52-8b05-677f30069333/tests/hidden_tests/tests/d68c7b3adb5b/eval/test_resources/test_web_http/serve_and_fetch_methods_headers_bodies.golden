@@ -1,0 +1,14 @@
+GET 200 "OK" true false true
+  headers [["connection","close"],["content-length","181"],["content-type","application/json"],["server","test-server"],["x-reply","yes"]]
+  body {"method":"GET","path":"/items","query":{"id":"7","tag":"a b"},"custom":"hello","accept":"application/json","type":null,"length":null,"body":"","transport":"tcp","from":"127.0.0.1"}
+POST 200 "OK" true false true
+  headers [["connection","close"],["content-length","182"],["content-type","application/json"],["server","test-server"],["x-reply","yes"]]
+  body {"method":"POST","path":"/items","query":{},"custom":null,"accept":null,"type":"text/plain;charset=UTF-8","length":"15","body":"plain text body","transport":"tcp","from":"127.0.0.1"}
+PUT 200 "OK" true false true
+  headers [["connection","close"],["content-length","168"],["content-type","application/json"],["server","test-server"],["x-reply","yes"]]
+  body {"method":"PUT","path":"/items/7","query":{},"custom":null,"accept":null,"type":"application/json","length":"7","body":"{\"n\":1}","transport":"tcp","from":"127.0.0.1"}
+DELETE 200 "OK" true false true
+  headers [["connection","close"],["content-length","149"],["content-type","application/json"],["server","test-server"],["x-reply","yes"]]
+  body {"method":"DELETE","path":"/items/7","query":{},"custom":null,"accept":null,"type":null,"length":null,"body":"","transport":"tcp","from":"127.0.0.1"}
+HEAD 200 144 ""
+server finished

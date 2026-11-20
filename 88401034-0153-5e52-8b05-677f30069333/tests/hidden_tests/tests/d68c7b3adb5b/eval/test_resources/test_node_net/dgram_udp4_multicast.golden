@@ -1,0 +1,29 @@
+ssm join ok undefined
+ssm drop ok undefined
+ssm bad source threw TypeError undefined undefined "Invalid source address: nope"
+ssm non-multicast group threw TypeError undefined undefined "Invalid multicast address: 10.1.2.3"
+ssm bad interface threw TypeError undefined undefined "Invalid interface address: eth0"
+ssm unparsable group threw TypeError undefined undefined "Invalid multicast address: bogus"
+ssm drop never joined threw Error UNKNOWN dropSourceSpecificMembership "dropSourceSpecificMembership: Invalid argument (os error 22)"
+join ok undefined
+join again threw Error EADDRINUSE addMembership "addMembership EADDRINUSE"
+drop ok undefined
+drop again threw Error EADDRNOTAVAIL dropMembership "dropMembership EADDRNOTAVAIL"
+join bad group threw TypeError undefined undefined "Invalid multicast address: 224.1.2"
+join bad interface threw TypeError undefined undefined "Invalid interface address: lo"
+setMulticastInterface ok this
+setMulticastInterface bad threw Error UNKNOWN setMulticastInterface "setMulticastInterface: IPv4 multicast interface must be an IPv4 address"
+setMulticastInterface non-local threw Error EADDRNOTAVAIL setMulticastInterface "setMulticastInterface EADDRNOTAVAIL"
+setMulticastTTL ok 3
+setMulticastTTL 256 threw RangeError ERR_OUT_OF_RANGE undefined "The value of \"ttl\" is out of range. It must be >= 0 and <= 255. Received 256"
+setMulticastLoopback ok false
+setTTL ok 64
+setTTL 0 threw RangeError ERR_OUT_OF_RANGE undefined "The value of \"ttl\" is out of range. It must be >= 1 and <= 255. Received 0"
+setBroadcast ok undefined
+buffer sizes ok true,true
+buffer size 0 threw RangeError ERR_OUT_OF_RANGE undefined "The value of \"size\" is out of range. It must be a positive integer. Received 0"
+closed
+setTTL after close threw Error EBADF undefined "setTTL EBADF"
+address after close threw Error EBADF undefined "getsockname EBADF"
+send after close threw Error ERR_SOCKET_DGRAM_NOT_RUNNING undefined "Not running"
+close again threw Error ERR_SOCKET_DGRAM_NOT_RUNNING undefined "Not running"

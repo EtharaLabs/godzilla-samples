@@ -1,0 +1,33 @@
+  got X
+  g1 finally
+basic {"value":1,"done":false} {"value":2,"done":false} {"value":"end","done":true} {"done":true} {"done":true}
+  got a
+  g1 finally
+return-in-try {"value":"early","done":true} {"done":true}
+return-before-start {"value":"r0","done":true} {"done":true}
+throw-before-start before start {"done":true}
+  caught inside E1
+throw-caught {"value":"waiting","done":false} {"value":"recovered","done":false} {"value":"waiting","done":false} {"value":"done","done":true}
+  after finally yield
+yield-in-finally {"value":1,"done":false} {"value":"from-finally","done":false} {"value":"R","done":true} {"done":true}
+finally-override {"value":"override","done":true}
+  inner received undefined
+delegate i1,i2,outer got inner-ret,10,20,a,b
+  inner received sent
+delegate-next-arg {"value":"i2","done":false}
+  logIter.next undefined
+  logIter.next second
+  logIter.throw T
+  logIter.return Z
+fwd {"value":"n0","done":false} {"value":"n1","done":false} {"value":"thrown-handled","done":false} {"value":"ret-Z","done":true}
+  noThrow.return called
+no-throw-method TypeError: the delegated iterator has no 'throw' method
+reentrant TypeError: Generator method called on a non-generator
+new-gen TypeError: object is not a constructor
+proto [object Generator] GeneratorFunction true function true
+take 0,1,2,3,4
+method-gen 101,4
+consume a b,c A,B,C 9
+precedence {"value":2,"done":false} {"done":false} {"value":["A","default"],"done":false} {"value":"nested","done":false} {"value":"inner-sent","done":false} {"done":true}
+gen-throw gen boom {"done":true}
+helpers 1,9,25,49

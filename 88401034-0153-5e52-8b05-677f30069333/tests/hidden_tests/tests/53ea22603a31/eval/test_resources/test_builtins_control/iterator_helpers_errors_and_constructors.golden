@@ -1,0 +1,53 @@
+map not callable !! TypeError: Iterator helper argument is not callable
+   log: return
+take NaN !! RangeError: limit must be a non-negative number
+   log: return
+take negative !! RangeError: limit must be a non-negative number
+   log: return
+drop negative !! RangeError: limit must be a non-negative number
+   log: return
+reduce no reducer !! TypeError: reducer is not callable
+   log: return
+reduce empty !! TypeError: Reduce of empty iterator with no initial value
+   log: next0
+callback throws closes !! Error: cb
+   log: next0 return
+next throws does not close !! Error: next threw
+   log: 
+next returns primitive !! TypeError: iterator result is not an object
+flatMap string !! TypeError: value is not iterable
+flatMap String object => ["x", "y"]
+flatMap number !! TypeError: value is not iterable
+helper on non-object !! TypeError: Iterator helper called on a non-object
+toArray without next !! TypeError: iterator.next is not a function
+already running !! TypeError: iterator helper is already running
+take Infinity => [1, 2]
+Iterator abstract !! TypeError: Abstract class Iterator not directly constructable
+Iterator call !! TypeError: Abstract class Iterator not directly constructable
+Iterator subclass => [true, []]
+from iterator => true
+from wraps plain next => [false, [1, 1], "[object Iterator]"]
+from wrapped return => {done: true}
+   log: return
+from iterables => [[1, 2], ["a", "b"], [7, 8]]
+from number !! TypeError: value is not iterable
+from bad @@iterator !! TypeError: @@iterator is not callable
+from @@iterator returns primitive !! TypeError: iterator is not an object
+concat => [1, 2, 3, "a", "b"]
+concat no args => [[], "[object Iterator]"]
+concat primitive !! TypeError: Iterator.concat argument is not an object
+concat non-iterable object !! TypeError: Iterator.concat argument is not iterable
+concat lazy + return => [{value: 0, done: false}, {value: undefined, done: true}]
+   log: next0 return
+zip shortest => [[1, "a"], [2, "b"]]
+zip longest padding => [[1, "a"], [2, "z"]]
+zip strict mismatch !! TypeError: Iterator.zip strict: input iterators have different lengths
+zip bad mode !! TypeError: invalid Iterator.zip mode
+zip non-object !! TypeError: Iterator.zip input is not an object
+zip non-iterable element !! TypeError: value is not iterable
+zip empty => []
+zipKeyed => [[{a: 1, b: 3}, {a: 2, b: 4}], [{a: 1, b: 3}, {a: 2, b: "pad"}]]
+prototype shape => ["map filter take drop flatMap toArray forEach reduce some every find constructor Symbol(Symbol.iterator) Symbol(Symbol.dispose) Symbol(Symbol.toStringTag)", "concat from length name prototype zip zipKeyed", "Iterator"]
+toStringTag setter on prototype !! TypeError: cannot assign to a property of Iterator.prototype
+toStringTag setter on instance => ["[object Mine]", "Iterator"]
+helper tag => "[object Iterator Helper]"

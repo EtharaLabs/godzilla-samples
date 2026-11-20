@@ -1,0 +1,8 @@
+dotAll false true false true false true true
+multiline terms true true true 3 false
+anchors ["l1","l2","l3"] ["",""] [""] ["","",""]
+empty advance 9 -😀-😀- ["","",""] ["",""]
+matchAll empty 0,1,3 0,1,2,3 3
+split unicode ["a","😀","b"] ["a","\ud83d","\ude00","b"] ["\ud83d","\ude00"]
+lone surrogates ["𐀀","\ud800"] ["\udc00","\ud800"] false false true
+replace empty global u |a|b| .é.😀. _😀__

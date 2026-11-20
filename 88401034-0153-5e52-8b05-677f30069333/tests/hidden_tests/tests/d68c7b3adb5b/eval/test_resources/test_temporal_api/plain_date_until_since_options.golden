@@ -1,0 +1,11 @@
+default: P1629D -P1629D -P1629D P1D
+largestUnit: years=P4Y5M17D months=P53M17D weeks=P232W5D days=P1629D auto=P1629D year=P4Y5M17D month=P53M17D week=P232W5D day=P1629D
+smallestUnit: years=P4Y/P4Y months=P53M/P54M weeks=P232W/P233W days=P1629D/P1629D
+modes: ceil=P54M/-P53M/P5Y floor=P53M/-P54M/P4Y expand=P54M/-P54M/P5Y trunc=P53M/-P53M/P4Y halfCeil=P54M/-P54M/P4Y halfFloor=P54M/-P54M/P4Y halfExpand=P54M/-P54M/P4Y halfTrunc=P54M/-P54M/P4Y halfEven=P54M/-P54M/P4Y
+half modes on a tie: halfCeil=P20D/-P10D halfFloor=P10D/-P20D halfExpand=P20D/-P20D halfTrunc=P10D/-P10D halfEven=P20D/-P20D
+increments: P50M P53M10D P234W P4Y P1628D
+since rounding: P53M -P54M P233W
+errors: RangeError:largestUnit must be a date unit | RangeError:smallestUnit must be a date unit | RangeError:invalid largestUnit | RangeError:smallestUnit is larger than largestUnit | RangeError:invalid roundingMode | RangeError:cannot compare dates in different calendars | TypeError:options must be an object or undefined | RangeError:invalid date string
+increment range: RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range | RangeError:roundingIncrement out of range | P1629D | PT0S
+non-iso: P4Y5M7D P55M P4Y5M5D P4Y7M4D P53M15D P4Y6M
+same: PT0S true

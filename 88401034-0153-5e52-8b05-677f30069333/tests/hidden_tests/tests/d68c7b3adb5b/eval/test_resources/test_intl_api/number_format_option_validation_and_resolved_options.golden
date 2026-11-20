@@ -1,0 +1,40 @@
+{"style":"money"}: RangeError: invalid style: money
+{"style":"currency"}: TypeError: currency is required for currency style
+{"currency":"US"}: RangeError: invalid currency: US
+{"currency":"US$"}: RangeError: invalid currency: US$
+{"style":"unit"}: TypeError: unit is required for unit style
+{"style":"unit","unit":"parsec"}: RangeError: invalid unit: parsec
+{"style":"unit","unit":"meter-per-"}: RangeError: invalid unit: meter-per-
+{"currencyDisplay":"full"}: RangeError: invalid currencyDisplay: full
+{"currencySign":"neg"}: RangeError: invalid currencySign: neg
+{"unitDisplay":"wide"}: RangeError: invalid unitDisplay: wide
+{"notation":"fancy"}: RangeError: invalid notation: fancy
+{"compactDisplay":"tiny"}: RangeError: invalid compactDisplay: tiny
+{"signDisplay":"sometimes"}: RangeError: invalid signDisplay: sometimes
+{"roundingMode":"up"}: RangeError: invalid roundingMode: up
+{"roundingPriority":"most"}: RangeError: invalid roundingPriority: most
+{"roundingIncrement":3}: RangeError: invalid roundingIncrement
+{"roundingIncrement":2.5}: RangeError: invalid roundingIncrement
+{"roundingIncrement":5,"maximumSignificantDigits":2}: TypeError: roundingIncrement is only supported with fractionDigits rounding
+{"roundingIncrement":5,"minimumFractionDigits":1,"maximumFractionDigits":2}: RangeError: maximumFractionDigits must equal minimumFractionDigits with roundingIncrement
+{"trailingZeroDisplay":"never"}: RangeError: invalid trailingZeroDisplay: never
+{"useGrouping":"sometimes"}: RangeError: invalid useGrouping: sometimes
+{"minimumIntegerDigits":0}: RangeError: minimumIntegerDigits out of range
+{"minimumIntegerDigits":22}: RangeError: minimumIntegerDigits out of range
+{"minimumFractionDigits":101}: RangeError: minimumFractionDigits out of range
+{"maximumFractionDigits":-1}: RangeError: maximumFractionDigits out of range
+{"minimumFractionDigits":3,"maximumFractionDigits":1}: RangeError: minimumFractionDigits > maximumFractionDigits
+{"minimumSignificantDigits":0}: RangeError: minimumSignificantDigits out of range
+{"maximumSignificantDigits":22}: RangeError: maximumSignificantDigits out of range
+{"minimumSignificantDigits":5,"maximumSignificantDigits":2}: RangeError: minimumSignificantDigits > maximumSignificantDigits
+{"minimumFractionDigits":"NaN"}: RangeError: minimumFractionDigits is NaN
+{"numberingSystem":"latn!"}: RangeError: invalid numberingSystem: latn!
+{"localeMatcher":"best"}: RangeError: invalid localeMatcher: best
+null options: TypeError: options cannot be null
+primitive options: 1.235
+bad locale: RangeError: Incorrect locale information provided: en_US
+resolved currency: {"locale":"en-US","numberingSystem":"latn","style":"currency","currency":"JPY","currencyDisplay":"name","currencySign":"accounting","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":0,"useGrouping":"auto","notation":"standard","signDisplay":"auto","roundingIncrement":1,"roundingMode":"halfExpand","roundingPriority":"auto","trailingZeroDisplay":"auto"}
+resolved unit compact: {"locale":"de-CH","numberingSystem":"latn","style":"unit","unit":"liter","unitDisplay":"long","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":0,"minimumSignificantDigits":1,"maximumSignificantDigits":2,"useGrouping":"min2","notation":"compact","compactDisplay":"long","signDisplay":"auto","roundingIncrement":1,"roundingMode":"halfExpand","roundingPriority":"auto","trailingZeroDisplay":"auto"}
+resolved priority: {"locale":"ar-u-nu-latn","numberingSystem":"latn","style":"decimal","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":3,"minimumSignificantDigits":1,"maximumSignificantDigits":3,"useGrouping":"auto","notation":"standard","signDisplay":"auto","roundingIncrement":1,"roundingMode":"floor","roundingPriority":"lessPrecision","trailingZeroDisplay":"auto"}
+resolved increment: {"locale":"hi-IN","numberingSystem":"latn","style":"decimal","minimumIntegerDigits":1,"minimumFractionDigits":2,"maximumFractionDigits":2,"useGrouping":false,"notation":"standard","signDisplay":"negative","roundingIncrement":50,"roundingMode":"halfExpand","roundingPriority":"auto","trailingZeroDisplay":"auto"}
+resolved defaults: {"locale":"en-US","numberingSystem":"latn","style":"percent","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":0,"useGrouping":"auto","notation":"scientific","signDisplay":"auto","roundingIncrement":1,"roundingMode":"halfExpand","roundingPriority":"auto","trailingZeroDisplay":"auto"}

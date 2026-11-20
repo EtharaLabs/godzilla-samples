@@ -1,0 +1,30 @@
+"var await = 1;"                                             -> SyntaxError: 'await' cannot be used as a binding here
+"export default 1; export default 2;"                        -> SyntaxError: duplicate export name 'default'
+"export const a = 1; export { a };"                          -> SyntaxError: duplicate export name 'a'
+"const a = 1; export { a as b, a as b };"                    -> SyntaxError: duplicate export name 'b'
+"with ({}) {}"                                               -> SyntaxError: 'with' statements are not allowed in strict mode
+"var x = 010;"                                               -> SyntaxError: legacy octal literals are not allowed in strict mode
+"delete x;"                                                  -> SyntaxError: delete of an unqualified identifier in strict mode
+"export { x };"                                              -> SyntaxError: export 'x' is not declared in the module
+"import { a, a } from './ok.mjs';"                           -> SyntaxError: Identifier 'a' has already been declared
+"import { a } from './ok.mjs'; let a;"                       -> SyntaxError: Identifier 'a' has already been declared
+"new.target;"                                                -> SyntaxError: new.target is only valid inside a function
+"return 1;"                                                  -> SyntaxError: 'return' outside of a function
+"arguments;"                                                 -> ReferenceError: arguments is not defined
+"label: label: ;"                                            -> SyntaxError: label 'label' has already been declared
+"export * as default from './ok.mjs'; export default 1;"     -> SyntaxError: duplicate export name 'default'
+"import { 'not-identifier' } from './ok.mjs';"               -> SyntaxError: imported binding name must be an identifier
+"export { 'str' } from './ok.mjs';"                          -> SyntaxError: the requested module does not provide an export named 'str'
+"export { a as 'x' }; const a = 1;"                          -> ok null
+"import x, * as y, { z } from './ok.mjs';"                   -> SyntaxError: expected 'from'
+"import * as ns from './ok.mjs'; ns = 1;"                    -> TypeError: assignment to constant 'ns'
+"export let let1 = 1; yield = 1;"                            -> SyntaxError: 'yield' is a reserved word in strict mode
+"if (1) { export const z = 1; }"                             -> SyntaxError: 'export' declaration may only appear at the top level of a module
+"import x from './ok.mjs' with { type: 'json', type: 'json' };" -> SyntaxError: duplicate import attribute key 'type'
+"import x from './ok.mjs' with { type: 1 };"                 -> SyntaxError: import attribute value must be a string literal
+"await;"                                                     -> SyntaxError: unexpected token Punct(";")
+"export async function f() {} export function f() {}"        -> SyntaxError: duplicate export name 'f'
+"const x = import.meta; import.meta = 1;"                    -> SyntaxError: invalid assignment target
+"function f() { return import.meta.url.length > 0; } export const ok = f();" -> ok true
+"export const ok = typeof this;"                             -> ok "undefined"
+"export const ok = (() => typeof arguments)();"              -> ok "undefined"

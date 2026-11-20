@@ -1,0 +1,59 @@
+withCalendar missing => threw TypeError: calendar argument is required
+withCalendar object => threw TypeError: calendar must be a string
+withCalendar number => threw TypeError: calendar must be a string
+withCalendar zoned => 2020-01-01T00:00:00[u-ca=coptic]
+withCalendar date => 2020-01-01T00:00:00[u-ca=hebrew]
+limit with => threw RangeError: date-time is outside the representable range
+limit with ns => -271821-04-19T00:00:00.000000001
+limit toPlainDateTime => threw RangeError: date-time is outside the representable range
+limit date string => threw RangeError: date outside representable range
+limit date string ok => -271821-04-19
+limit hebrew year-month => threw RangeError: date outside representable range
+limit hebrew month-day => threw RangeError: date outside representable range
+limit iso month-day => 04-18
+month-day --12-25 => 12-25
+month-day --1225 => 12-25
+month-day 1225 => 12-25
+month-day -12-25 => threw RangeError: invalid month-day
+month-day --x2-25 => threw RangeError: invalid month-day
+month-day --13-01 => threw RangeError: invalid month-day
+month-day --02-30 => threw RangeError: invalid month-day
+iso month 0 => threw RangeError: month must be positive
+hebrew month 0 => threw RangeError: month must be positive
+chinese month 0 => threw RangeError: month must be positive
+year-month month 0 => threw RangeError: month must be positive
+hebrew equal until => PT0S
+hebrew equal since => PT0S
+month-day persian M05L 1 => "RangeError: invalid monthCode for this calendar / RangeError: invalid monthCode for this calendar"
+month-day islamic-civil M05L 1 => "RangeError: invalid monthCode for this calendar / RangeError: invalid monthCode for this calendar"
+month-day indian M03L 1 => "RangeError: invalid monthCode for this calendar / RangeError: invalid monthCode for this calendar"
+month-day coptic M14 1 => "RangeError: invalid monthCode for this calendar / RangeError: invalid monthCode for this calendar"
+month-day gregory M02L 1 => "RangeError: invalid monthCode for this calendar / RangeError: invalid monthCode for this calendar"
+month-day ethiopic M13 1 => "1972-09-06[u-ca=ethiopic] / 1972-09-06[u-ca=ethiopic]"
+month-day coptic M13 7 => "RangeError: day is out of range / 1971-09-11[u-ca=coptic]"
+month-day hebrew M05L 30 => "1970-03-08[u-ca=hebrew] / 1970-03-08[u-ca=hebrew]"
+month-day hebrew M06L 1 => "RangeError: invalid monthCode for this calendar / RangeError: invalid monthCode for this calendar"
+month-day chinese M12L 1 => "RangeError: invalid monthCode for this calendar / 1972-01-16[u-ca=chinese]"
+month-day dangi M04L 31 => "RangeError: invalid monthCode for this calendar / 1944-06-20[u-ca=dangi]"
+offset +00:00:00x => threw RangeError: invalid UTC offset: +00:00:00x
+offset +00:00x => threw RangeError: invalid UTC offset: +00:00x
+offset +0000x => threw RangeError: invalid UTC offset: +0000x
+offset +00:00:00. => threw RangeError: invalid UTC offset: +00:00:00.
+offset +00:00:00.1234567891 => threw RangeError: invalid UTC offset: +00:00:00.1234567891
+offset +00:00:00,5 => "2019-12-31T23:59:59.5+00:00[UTC]"
+offset +00:00:60 => threw RangeError: invalid UTC offset: +00:00:60
+offset +0000:00 => threw RangeError: invalid UTC offset: +0000:00
+offset +00:0000 => threw RangeError: invalid UTC offset: +00:0000
+zoned toLocaleString primitive => threw TypeError: not an object
+zoned toLocaleString object => threw TypeError: Temporal.ZonedDateTime.prototype.toLocaleString called on an incompatible receiver
+time until day => threw RangeError: largestUnit must be a time unit
+instant until week => threw RangeError: largestUnit must be a time unit
+withPlainTime limit => threw RangeError: date-time is outside the representable range
+month 0 gregory => threw RangeError: month must be positive
+month 0 japanese => threw RangeError: month must be positive
+month 0 coptic => threw RangeError: month must be positive
+month 0 persian => threw RangeError: month must be positive
+month 0 indian => threw RangeError: month must be positive
+month 0 ethiopic => threw RangeError: month must be positive
+month 0 islamic-civil => threw RangeError: month must be positive
+hebrew time-only differences => ["PT1H","P1D","PT5H","PT5H"]

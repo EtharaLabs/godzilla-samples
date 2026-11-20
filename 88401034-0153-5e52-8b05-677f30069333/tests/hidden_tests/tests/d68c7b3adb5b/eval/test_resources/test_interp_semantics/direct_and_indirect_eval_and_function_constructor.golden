@@ -1,0 +1,25 @@
+sloppy eval var leaks: from-eval fn
+strict eval own var env: undefined
+eval let/const stay inside: undefined undefined
+completion values: 2|then|20|try|do|undefined|undefined
+eval non-string: true
+indirect eval global scope: global local string
+indirect eval var creates global: 3 {"value":3,"writable":true,"enumerable":true,"configurable":true}
+eval sees arguments: 2:x
+eval this in method: true
+eval syntax error: SyntaxError: identifier starts immediately after numeric literal
+eval let redeclare: SyntaxError: Identifier 'dup' has already been declared
+eval new.target in function: true
+eval super outside method: SyntaxError: 'super' keyword unexpected here
+Function params: 6,12,12
+Function length/name: 2 anonymous true
+Function toString: function anonymous(a,b\n) {\nreturn a\n}
+Function global scope: undefined
+Function body syntax error: SyntaxError: unexpected token Punct("}")
+Function param syntax error: SyntaxError: expected ')'
+Function sloppy this: true
+Function strict body: undefined
+generator via constructor: 4,8 GeneratorFunction
+async fn constructor: AsyncFunction function
+eval returns function decl: function
+nested eval: outer-nested

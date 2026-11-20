@@ -1,0 +1,25 @@
+TypeError upgradeWebSocket: the request was not delivered by Lumen.serve
+TypeError upgradeWebSocket: the request was not delivered by Lumen.serve
+server: upgrade on non-websocket request -> null
+plain fetch plain
+connecting 0 true blob "" "" 0
+constants 0 1 2 3 1 3
+InvalidStateError WebSocket is still CONNECTING
+client open open 1 chat
+after close() 2
+client close 4001 "" true 3 true
+SyntaxError binaryType must be 'blob' or 'arraybuffer'
+binaryType arraybuffer
+server saw:
+  upgraded /sock function function 127.0.0.1
+  double upgrade Error upgradeWebSocket: connection already upgraded
+  got text:"hello"
+  got binary:1,2,3:Uint8Array
+  got binary:1,2:Uint8Array
+  got binary:8,7:Uint8Array
+  got text:"42"
+  got text of length 200 (m)
+  got text of length 70000 (L)
+  got binary:98,108,111,98,100,97,116,97:Uint8Array
+  onclose 4001 "client bye" true
+done

@@ -1,0 +1,48 @@
+close B
+close A
+keyed getter !! RangeError: getter c
+close A
+keyed not iterable !! TypeError: value is not iterable
+close A
+keyed gopd throws !! SyntaxError: gopd b
+keyed gopd undefined -> [{"a":1},{"a":2}]
+close A
+keyed padding getter !! TypeError: pad a
+keyed key order -> ["2","7","b","01","4294967295"]
+close P
+zip outer throws !! Error: outer step
+close Q
+zip padding not iterable !! TypeError: value is not iterable
+close R
+zip padding next throws !! EvalError: pad next
+close pad2
+close T
+close S
+zip padding return throws !! Error: pad2 return boom
+zip padding exhausted -> [[1,2],["p",3]]
+strict bad result !! TypeError: iterator result is not an object
+strict next not callable !! TypeError: iterator.next is not a function
+close C2
+close B2
+shortest close error wins !! Error: C2 return boom
+zip reenter next !! TypeError: Iterator.zip iterator is already running
+zip reenter return !! TypeError: Iterator.zip iterator is already running
+zip finished -> [{"value":[1],"done":false},{"done":true},{"done":true},{"done":true}]
+concat reenter next !! TypeError: Iterator.concat iterator is already running
+concat reenter return !! TypeError: Iterator.concat iterator is already running
+concat return unstarted -> [{"done":true},{"done":true}]
+close F
+concat return mid -> [{"value":1,"done":false},{"done":true},{"done":true}]
+helper reenter return !! TypeError: iterator helper is already running
+take short [{"value":1,"done":false},{"value":2,"done":false},{"done":true},{"done":true}]
+flatMap bad iterator !! TypeError: @@iterator is not callable
+source closed 1
+subclass true 30,20,10
+abstract Iterator !! TypeError: Abstract class Iterator not directly constructable
+tag on child [object Mine] own=1
+tag on home !! TypeError: cannot assign to a property of Iterator.prototype
+tag on primitive !! TypeError: cannot create property on a primitive
+constructor on child true true
+done gen return -> {"value":42,"done":true}
+done gen throw !! RangeError: after completion
+gen next on primitive !! TypeError: Generator method called on a non-generator

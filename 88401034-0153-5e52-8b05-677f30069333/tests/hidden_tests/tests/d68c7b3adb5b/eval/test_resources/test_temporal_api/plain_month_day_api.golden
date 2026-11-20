@@ -1,0 +1,10 @@
+getters: M02,29,iso8601,,,02-29,02-29,1972-12-25[u-ca=gregory],12-25,2000-12-25[u-ca=iso8601],1972-12-25
+ctor errors: RangeError:ISO date field is out of range | RangeError:ISO date field is out of range | RangeError:ISO date field is out of range | RangeError:invalid calendar identifier | RangeError:date is outside the supported range | TypeError:constructor requires 'new'
+with: 02-01 04-30 06-29 02-28 02-28
+with errors: RangeError:day out of range | TypeError:with() requires at least one field | TypeError:with() argument must not have 'calendar' | TypeError:with() argument must be a plain object | RangeError:month and monthCode disagree | TypeError:with() argument must be a plain object | RangeError:invalid monthCode for this calendar
+toPlainDate: 2024-02-29 2023-02-28 2024-03-01[u-ca=hebrew] 2025-03-21[u-ca=hebrew] 2019-05-01[u-ca=japanese] 2019-05-01[u-ca=japanese]
+toPlainDate errors: TypeError:toPlainDate() argument must be an object | TypeError:toPlainDate() requires a year | TypeError:toPlainDate() argument must be an object | RangeError:value must be finite | RangeError:date is outside the supported range
+equals: true,true,false,true
+from: 02-29 02-28 02-28 04-30 07-04 07-04 1972-02-28[u-ca=gregory] 1970-03-08[u-ca=hebrew] false
+from errors: TypeError:missing field 'month' | TypeError:missing field 'day' | TypeError:missing field 'day' | TypeError:year is required to interpret an ordinal month | RangeError:day out of range | TypeError:year is required to interpret an ordinal month | TypeError:cannot convert to Temporal.PlainMonthDay
+valueOf: TypeError: Temporal.PlainMonthDay has no valueOf; use equals

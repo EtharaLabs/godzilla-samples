@@ -1,0 +1,38 @@
+shape: "[object DisposableStack]" | false | ["__ds", "__ds_kind", "__ds_disposed"] | "function" | true | 0
+use-returns: true | null | undefined
+adopt-returns: "adopted-value"
+defer-returns: undefined
+dispose-order: ["deferred", "adopt cb got adopted-value", "dispose res"] | true | undefined
+use-after-dispose: THROW ReferenceError: DisposableStack already disposed
+adopt-after-dispose: THROW ReferenceError: DisposableStack already disposed
+defer-after-dispose: THROW ReferenceError: DisposableStack already disposed
+move-after-dispose: THROW ReferenceError: DisposableStack already disposed
+use-nondisposable: THROW TypeError: value is not disposable
+use-prim: THROW TypeError: value is not disposable
+use-dispose-noncallable: THROW TypeError: value is not disposable
+adopt-noncallable: THROW TypeError: onDispose is not callable
+defer-noncallable: THROW TypeError: onDispose is not callable
+no-new: THROW TypeError: Constructor DisposableStack requires 'new'
+bad-receiver: THROW TypeError: receiver is not a DisposableStack
+bad-receiver-async: THROW TypeError: receiver is not a DisposableStack
+disposed-getter-bad: THROW TypeError: receiver is not a DisposableStack
+suppressed-chain: "SuppressedError" | "first registered" | "last registered" | true | ["middle runs"]
+single-error: THROW RangeError: only
+move: true | false | true | []
+moved-dispose: ["moved disposer"]
+src-dispose-after-move: []
+subclass: true | true
+using-block: ["in block", "using-block disposed"]
+async-shape: "[object AsyncDisposableStack]" | false | "function" | true
+async-order: ["disposeAsync returned true", "async defer start", "async defer end", "async adopt av", "sync fallback res", "asyncDispose res"] | true | undefined
+async-use-after: "ReferenceError" | "AsyncDisposableStack already disposed"
+async-use-nondisposable: "TypeError" | "value is not async-disposable"
+async-adopt-noncallable: "TypeError" | "onDisposeAsync is not callable"
+async-defer-noncallable: "TypeError" | "onDisposeAsync is not callable"
+async-no-new: "TypeError" | "Constructor AsyncDisposableStack requires 'new'"
+async-bad-receiver: "TypeError: receiver is not a AsyncDisposableStack"
+async-suppressed: "SuppressedError" | "async first" | "async second"
+async-move: [] | true
+async-moved-dispose: ["async moved"]
+async-move-after-dispose: "ReferenceError" | "AsyncDisposableStack already disposed"
+await-using: ["await-using disposed"]

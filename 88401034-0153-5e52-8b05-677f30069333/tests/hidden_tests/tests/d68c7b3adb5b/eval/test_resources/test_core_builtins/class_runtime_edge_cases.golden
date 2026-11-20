@@ -1,0 +1,46 @@
+super computed member: A.greet A.val:b A.greet
+super computed on null proto: TypeError: cannot read property 'x' of a null super base
+super property set: 3 false
+super in object literal methods: base hi + derived | base hi
+super in static and arrow: A.s!
+super call returning other object: {"replaced":true,"after":1} false
+super call with arrow capturing this: true
+super call twice: ReferenceError: super() may only be called once
+this before super: ReferenceError: cannot access 'this' before initialization
+derived constructor no super: ReferenceError: derived constructor returned without calling super()
+derived constructor returns primitive: TypeError: a derived constructor may only return an object or undefined
+derived constructor returns object without super: {"manual":1}
+base constructor returns primitive: object
+super constructor not constructor: TypeError: super constructor is not a constructor
+extends null: ,true
+extends null implicit ctor: TypeError: super constructor is not a constructor
+extends non-constructor: TypeError: Class extends value is not a constructor or null
+extends with bad prototype: TypeError: Class extends value does not have a valid prototype property
+private field on non-extensible: TypeError: cannot add a private field to a non-extensible object false
+private field twice: TypeError: cannot initialize the same private field twice
+private method write: TypeError: private method #m is not writable
+private getter only write: TypeError: private accessor #g has no setter
+private setter only read: TypeError: private accessor #s has no getter
+private read wrong object: TypeError: cannot read private member #p from an object whose class did not declare it
+private write wrong object: TypeError: cannot write private member #p to an object whose class did not declare it
+private write primitive: TypeError: cannot write private member #p to an object whose class did not declare it
+private static brand: 1 TypeError
+private names with same spelling in different classes: TypeError
+static computed prototype key: TypeError: classes may not have a static property named 'prototype'
+static computed prototype method: TypeError: classes may not have a static property named 'prototype'
+computed keys evaluation order: a,b,c,init b,after class,init c
+field initializers this and new.target: C undefined C!
+static block this and scoping: C private number undefined
+static block using: in block, disposed a
+static block throws: in static block undefined
+class binding inside body is const: TypeError: assignment to constant 'C'
+class expression name scope: Inner undefined
+class in TDZ during heritage: ReferenceError
+class fields with ASI: 1,,3,4,5
+accessors with odd names: q num [object Tagged] static getter
+method enumerability and descriptors: false,true,true,false,0,length,name,prototype,s
+class constructor call without new: TypeError: Class constructor cannot be invoked without 'new'
+generator and async methods: 1,2 function function
+instance fields defined with define semantics: 0 true
+derived default constructor passes args: 1,2,3
+derived default constructor with spread override: no iterator

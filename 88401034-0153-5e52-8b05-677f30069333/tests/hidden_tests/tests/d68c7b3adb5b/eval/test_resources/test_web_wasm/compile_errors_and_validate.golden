@@ -1,0 +1,30 @@
+bad magic          false true CompileError: wasm: bad magic
+version 2          false true CompileError: wasm: unsupported version
+short header       false true CompileError: wasm: unexpected end of input
+unknown section    false true CompileError: wasm: unknown section id 13
+out of order       false true CompileError: wasm: sections out of order
+duplicate section  false true CompileError: wasm: sections out of order
+overrun            false true CompileError: wasm: section overruns input
+size mismatch      false true CompileError: wasm: section 1 size mismatch
+bad functype       false true CompileError: wasm: expected func type (0x60)
+bad valtype        false true CompileError: wasm: unknown value type 0x55
+type index         false true CompileError: wasm: function type index out of range
+import kind        false true CompileError: wasm: unknown import kind 4
+export kind        false true CompileError: wasm: unknown export kind 5
+bad utf8 name      false true CompileError: wasm: invalid utf-8 in name
+count mismatch     false true CompileError: wasm: code/function count mismatch
+no end             false true CompileError: wasm: function body not terminated by end
+elem kind          false true CompileError: wasm: unsupported element segment kind 8
+data kind          false true CompileError: wasm: unsupported data segment kind 3
+const expr         false true CompileError: wasm: unsupported opcode 0x6a in const expr
+leb overflow       false true CompileError: wasm: LEB128 overflow
+truncated name     false true CompileError: wasm: unexpected end of input
+const leb overflow false true CompileError: wasm: LEB128 overflow
+code body overrun  false true CompileError: wasm: bad code body
+empty module true ArrayBuffer true
+export index checks false false true false true false true
+TypeError: WebAssembly: expected a BufferSource
+TypeError: WebAssembly.Instance expects a Module
+compile rejects true wasm: bad magic
+instantiate rejects CompileError wasm: unexpected end of input
+error classes CompileError true r

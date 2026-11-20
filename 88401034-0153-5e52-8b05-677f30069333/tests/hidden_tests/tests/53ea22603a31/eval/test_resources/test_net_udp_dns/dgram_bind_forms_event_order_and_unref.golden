@@ -1,0 +1,13 @@
+no args            0.0.0.0 IPv4 true sync,listening#1,listening#2
+empty object       0.0.0.0 IPv4 true sync,listening#1,listening#2
+string port        0.0.0.0 IPv4 true sync,listening#1,listening#2
+callback only      0.0.0.0 IPv4 true sync,listening#1,bind callback,listening#2
+port + callback    0.0.0.0 IPv4 true sync,listening#1,bind callback,listening#2
+options + address  127.0.0.1 IPv4 true sync,listening#1,bind callback,listening#2
+send byte counts [3,3,5,4,4]
+ctor listener one | on listener one 3 | ctor listener two | on listener two 3 | ctor listener three | on listener three 5 | ctor listener four | on listener four 4 | ctor listener five | on listener five 4
+after first send() call,implicit listening
+after close(),close listener,close callback
+unref/ref return the socket true true true
+unref socket received late ctor listener late | on listener late 4
+unref: bound socket no longer keeps the process alive

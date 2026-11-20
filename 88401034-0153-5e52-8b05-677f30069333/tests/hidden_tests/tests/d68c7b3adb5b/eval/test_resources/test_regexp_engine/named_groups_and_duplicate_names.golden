@@ -1,0 +1,31 @@
+/(?<year>\d{4})-(?<month>\d\d)(?:-(?<day>\d\d))?/ "on 2024-07 ok"  ["2024-07","2024","07",null]@3 groups={"year":"2024","month":"07","day":"<undef>"}
+/(?<a>x)|(?<a>y)/                  "y"              ["y",null,"y"]@0 groups={"a":"y"}
+/(?:(?<a>x)|(?<a>y))\k<a>/         "yy"             ["yy",null,"y"]@0 groups={"a":"y"}
+/(?:(?<a>x)|(?<a>y))\k<a>/         "yx"             null
+/(?:(?<a>x)|(?<a>y))\k<a>/         "xx"             ["xx","x",null]@0 groups={"a":"x"}
+/(?:(?<n>a)|(?<n>b))+/             "ab"             ["ab",null,"b"]@0 groups={"n":"b"}
+/(?:(?<n>a)|(?<n>b))\k<n>{2}/i     "bBb"            ["bBb",null,"b"]@0 groups={"n":"b"}
+/(?<=(?:(?<d>1)|(?<d>2))\k<d>)x/   "22x"            ["x",null,"2"]@2 groups={"d":"2"}
+/(?:(?<n>a)|(?<n>b))?\k<n>c/       "c"              ["c",null,null]@0 groups={"n":"<undef>"}
+/(?<ab>c)\k<ab>/                   "cc"             ["cc","c"]@0 groups={"ab":"c"}
+/\k<a>(?<a>b)/                     "b"              ["b","b"]@0 groups={"a":"b"}
+/(?<\u{1d453}>z)/u                 "z"              ["z","z"]@0 groups={"𝑓":"z"}
+/(?<\ud835\udc53>z)/               "z"              ["z","z"]@0 groups={"𝑓":"z"}
+/(?<\ud835\udc53>z)/u              "z"              ["z","z"]@0 groups={"𝑓":"z"}
+/(?<\u0061\u0062>z)/               "z"              ["z","z"]@0 groups={"ab":"z"}
+/(?<\u{62}c>z)/                    "z"              ["z","z"]@0 groups={"bc":"z"}
+/(?<\u{1d453}>z)/                  "z"              ["z","z"]@0 groups={"𝑓":"z"}
+/(?<𝑓>z)/                         "z"              ["z","z"]@0 groups={"𝑓":"z"}
+/(?<$_\u03b6\u200d>.)/             "!"              ["!","!"]@0 groups={"$_ζ‍":"!"}
+/(?<a>.)(?<b>.)(?<c>.)(?<d>.)(?<e>.)/ "vwxyz"          ["vwxyz","v","w","x","y","z"]@0 groups={"a":"v","b":"w","c":"x","d":"y","e":"z"}
+/(?<=\k<d>(?:(?<d>ab)|(?<d>c)))x/  "abx"            null
+/(?<=\k<d>(?:(?<d>ab)|(?<d>c)))x/  "ccx"            ["x",null,"c"]@2 groups={"d":"c"}
+/(?<=\k<d>(?:(?<d>ab)|(?<d>c)))x/  "ababx"          ["x","ab",null]@4 groups={"d":"ab"}
+/(?i:(?<n>a))\k<n>/                "Aa AA"          ["AA","A"]@3 groups={"n":"A"}
+true first,last Lovelace, Ada
+"[x][1][y][2]"
+SyntaxError: 26 invalid capture group name
+SyntaxError: 31 invalid capture group name
+SyntaxError: 31 invalid capture group name
+SyntaxError: 31 invalid capture group name
+SyntaxError: 31 invalid capture group name

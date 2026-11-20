@@ -1,0 +1,15 @@
+ru fractions: one,other,other one,few,many,other
+en: 0:other 1:one 1.5:other 2:other 3:other 4:other 5:other 11:other 12:other 21:other 22:other 25:other 100:other 101:other 102:other 103:other 1000000:other 0.5:other
+fr: 0:one 1:one 1.5:one 2:other 3:other 4:other 5:other 11:other 12:other 21:other 22:other 25:other 100:other 101:other 102:other 103:other 1000000:many 0.5:one
+pl: 0:many 1:one 1.5:other 2:few 3:few 4:few 5:many 11:many 12:many 21:many 22:few 25:many 100:many 101:many 102:few 103:few 1000000:many 0.5:other
+sl: 0:other 1:one 1.5:few 2:two 3:few 4:few 5:other 11:other 12:other 21:other 22:other 25:other 100:other 101:one 102:two 103:few 1000000:other 0.5:few
+gv: 0:few 1:one 1.5:many 2:two 3:other 4:other 5:other 11:one 12:two 21:one 22:two 25:other 100:few 101:one 102:two 103:other 1000000:few 0.5:many
+ja: 0:other 1:other 1.5:other 2:other 3:other 4:other 5:other 11:other 12:other 21:other 22:other 25:other 100:other 101:other 102:other 103:other 1000000:other 0.5:other
+de: 0:other 1:one 1.5:other 2:other 3:other 4:other 5:other 11:other 12:other 21:other 22:other 25:other 100:other 101:other 102:other 103:other 1000000:other 0.5:other
+ko: 0:other 1:other 1.5:other 2:other 3:other 4:other 5:other 11:other 12:other 21:other 22:other 25:other 100:other 101:other 102:other 103:other 1000000:other 0.5:other
+ordinal type: one,other,other ordinal
+operands: one,one,one,other,other
+compact: many,many,many,other,other {"locale":"fr","type":"cardinal","notation":"compact","compactDisplay":"short","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":3,"pluralCategories":["one","many","other"],"roundingMode":"halfExpand"}
+selectRange: en/1/2=other | en/0/1.5=other | fr/0/1=one | fr/1/2=other | pl/1/5=many | pl/1/3=few | ja/1/5=other | en/5/1=one | en/1/Infinity=other
+resolved: ar-EG:zero/one/two/few/many/other | de:one/other | pl:one/few/many/other | sl:one/two/few/other | gv:one/two/few/many/other | ja:other | en:one/other | fr:one/many/other | en:one/other || {"locale":"de","type":"cardinal","notation":"standard","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":3,"pluralCategories":["one","other"],"roundingMode":"halfExpand"} || {"locale":"en","type":"cardinal","notation":"standard","minimumIntegerDigits":1,"minimumFractionDigits":0,"maximumFractionDigits":3,"minimumSignificantDigits":1,"maximumSignificantDigits":3,"pluralCategories":["one","other"],"roundingMode":"floor"}
+errors: TypeError: Intl.PluralRules requires 'new' | RangeError: invalid type: cardinal2 | RangeError: minimumFractionDigits out of range | RangeError: maximumSignificantDigits out of range | TypeError: selectRange requires two numbers | RangeError: selectRange arguments must not be NaN | TypeError: method called on an incompatible receiver | TypeError: options must be an object or undefined | TypeError: Cannot convert a BigInt value to a number | RangeError: invalid notation: tiny | RangeError: invalid roundingMode: up

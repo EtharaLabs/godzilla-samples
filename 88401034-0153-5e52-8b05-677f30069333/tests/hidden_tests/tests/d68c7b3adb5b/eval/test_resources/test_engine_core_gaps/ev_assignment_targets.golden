@@ -1,0 +1,27 @@
+for-of member: abb
+for-of index: {"k0":10,"k1":20}
+for-in index: x|y
+for-of super/private targets: base set 1;base set 2;base set 3 #p=5 own s=false
+super compound: NaN
+null super base get: TypeError: cannot read property 'x' of a null super base
+null super base set: TypeError: cannot set property on null super base
+null super base update: TypeError: cannot read property of null super base
+call target for-of: 1 ReferenceError: invalid assignment target
+keyed patterns: S,seven,D,onefive,P,dflt,fn1,fn2
+array nested default: nxny
+has trap non-callable: TypeError: proxy 'has' trap is not callable
+has false on configurable: false
+has false on absent: false
+has false on non-configurable: TypeError: proxy 'has' trap hid a non-configurable property
+has symbol key: true symbol
+trap a
+delete trap true present: true still=true
+trap missing
+delete trap true absent: true
+delete trap false: false
+delete forwards to target: true false
+delete in with non-configurable: false,true,true  2
+rest over proxy: 1 {"b":2}
+rest over string: wy {"1":"x","3":"z"}
+private read on primitive: TypeError: cannot read private member #v from an object whose class did not declare it
+private in on primitive: TypeError: the right-hand side of 'in' must be an object

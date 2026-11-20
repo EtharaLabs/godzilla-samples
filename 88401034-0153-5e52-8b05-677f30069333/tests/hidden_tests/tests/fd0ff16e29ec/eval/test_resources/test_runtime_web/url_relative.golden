@@ -1,0 +1,34 @@
+"d"                http://user:pw@x.com:8080/a/b/d
+"../d"             http://user:pw@x.com:8080/a/d
+"../../../../d"    http://user:pw@x.com:8080/d
+"/d"               http://user:pw@x.com:8080/d
+"?q=2"             http://user:pw@x.com:8080/a/b/c?q=2
+"#g"               http://user:pw@x.com:8080/a/b/c?old#g
+""                 http://user:pw@x.com:8080/a/b/c?old
+"//y.com/z"        http://y.com/z
+"//y.com"          http://y.com/
+"./"               http://user:pw@x.com:8080/a/b/
+"."                http://user:pw@x.com:8080/a/b/
+".."               http://user:pw@x.com:8080/a/
+"d/./e/../f/"      http://user:pw@x.com:8080/a/b/d/f/
+"  d  "            http://user:pw@x.com:8080/a/b/d
+"d?x#y"            http://user:pw@x.com:8080/a/b/d?x#y
+"/"                http://user:pw@x.com:8080/
+"https://abs.com/" https://abs.com/
+"mailto:x@y"       mailto:x@y
+base object http://b.com/dir/z
+TypeError URL: invalid base URL 'also-rel'
+opaque base ok
+setters http://b.com:8080/path?y=2#h b.com:8080 http://b.com:8080
+default port http://b.com/path?y=2#h ""
+cleared http://b.com/path
+prefixed http://b.com/path?already#hashed
+href setter https://z.org/ https://z.org https:
+TypeError URL: invalid URL 'bad' (relative, and no base given)
+TypeError URL: invalid port 'x'
+TypeError URL: invalid URL 'https:/': special scheme without //
+unchanged after failed set https://z.org/
+recompose keeps credentials http://user:pw@h.com:81/b?q#f
+username only http://user@h.com/#x
+file recompose file:///etc/b.txt?v=1
+opaque recompose mailto:a@b.c?subject=x

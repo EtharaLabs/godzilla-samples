@@ -1,0 +1,15 @@
+Map.groupBy => Map{1 => [1, 4], 2 => [2, 5], 0 => [3, 6]}
+object keys by identity => [2, 2]
+-0 normalised => [false]
+NaN key => [1, 2]
+callback index => Map{0 => ["a", "c"], 1 => ["b"]}
+Object.groupBy keys coerced => {1: [1], big: [2, 3]}
+Object.groupBy symbol key => [1]
+Object.groupBy null proto => [null, true]
+empty => [0, 0]
+Map.groupBy not callable !! TypeError: Map.groupBy callback is not callable
+Map.groupBy not iterable !! TypeError: value is not iterable
+Map.groupBy null (message JSON-escaped) => "TypeError: cannot read property '\u00001' of null"
+iteration vs callback order => "next next next next cb0 cb1 cb2"
+callback throws => ["cb threw", "next next next next cb0 cb1"]
+groups are arrays => [true, [3, 1, 2]]

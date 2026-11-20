@@ -1,0 +1,16 @@
+async-dep: start (has top-level await)
+tla-inner.mjs: evaluated eagerly despite defer
+main body starts
+same deferred object for repeated import defer true
+async dep already evaluated eagerly: true
+async dep value async-v
+throwing.mjs runs once
+throwing access 0 EvalError: deferred module failed
+throwing access 1 EvalError: deferred module failed
+cyc.mjs evaluating; peek from helper -> TypeError: cannot access a deferred namespace while its module graph is evaluating
+in operator on deferred true true
+cyc value cyc-value
+wrapper.mjs evaluated (lazily)
+wrapper (sync, deferred) over TLA dependency wrapper inner-value
+import.defer missing TypeError: module not found: ./missing-deferred.mjs (imported from file://<dir>/main.mjs)
+import.defer of already-evaluated module true wrapper

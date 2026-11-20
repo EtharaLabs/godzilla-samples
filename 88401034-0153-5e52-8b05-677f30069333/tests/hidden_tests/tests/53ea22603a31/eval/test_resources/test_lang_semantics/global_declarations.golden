@@ -1,0 +1,19 @@
+direct global eval function NaN: TypeError: cannot declare global binding 'NaN'
+direct global eval var undefined: undefined
+indirect eval function undefined: TypeError: cannot declare global binding 'undefined'
+eval function over configurable: function enumerable=true
+eval function over writable enumerable non-configurable: function configurable=false
+eval function over non-configurable accessor: TypeError: cannot declare global binding 'acc'
+eval let is local to the eval: undefined
+global let then eval var: SyntaxError: Identifier 'topLet' has already been declared
+global const then eval function: SyntaxError: Identifier 'topConst' has already been declared
+eval var then eval let: 2
+eval var is deletable global: true,true,undefined
+script var is not deletable: false,false
+global lexical not on globalThis: false,,string
+assign to global const: TypeError: assignment to constant 'topConst'
+function declaration in eval sees caller let: 1
+eval var on non-extensible global: TypeError: cannot declare global binding 'brandNew'
+eval function on non-extensible global: TypeError: cannot declare global binding 'brandNewFn'
+existing var still assignable: 3
+sloppy implicit global on non-extensible: undefined

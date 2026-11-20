@@ -1,0 +1,40 @@
+eval-scope local,global,global,global
+eval-var-leak number
+eval-let-noleak undefined
+eval-strict-noleak undefined
+eval-strict-inner undefined
+eval-fn-decl-leak evf
+indirect-creates-global 42
+eval-this obj-this
+eval-arguments 3
+eval-new-target true
+eval-non-string 42,object,
+eval-returns-last branch
+eval-syntax-err !SyntaxError: identifier starts immediately after numeric literal
+eval-closure-capture cap
+eval-modify-local 99
+eval-let-conflict undefined
+eval-var-conflict !SyntaxError: Identifier 'conflict2' has already been declared
+eval-super proto
+fn-ctor 42
+fn-ctor-params 3
+fn-ctor-global-scope global
+fn-ctor-sloppy-this true
+fn-ctor-tostring "function anonymous(a,b\n) {\nreturn a\n}"
+fn-ctor-syntax !SyntaxError: unexpected token Punct("}")
+fn-ctor-bad-param !SyntaxError: expected ')'
+fn-ctor-injection !SyntaxError: unterminated block comment
+generator-fn-ctor 5,10
+async-fn-ctor AsyncFunction:function
+fn-tostring ["function   spaced ( a,b ) { /* c */ return a+b }","x => x * 2","class Q { m() {} }","m(a) { }","function max() { [native code] }","function () { [native code] }"]
+with 3,10,v,undefined,string
+with-unscopables outer-values,function,2
+with-proto-chain inh
+with-fn-call-this withobj
+with-proxy-has x,x,y
+globalThis object,true,true,false
+global-props undefined,false,false
+global-fn-decl function
+undefined-readonly undefined
+undefined-readonly-strict !TypeError: cannot assign to read-only property 'undefined'
+NaN-assign-strict !TypeError: cannot assign to read-only property 'NaN'

@@ -1,0 +1,113 @@
+"using [a] = x;"                                     -> (runtime) ReferenceError: using is not defined
+"{ using {a} = x; }"                                 -> SyntaxError: expected ';'
+"{ using a; }"                                       -> SyntaxError: missing initializer in using declaration
+"switch (1) { foo: }"                                -> SyntaxError: expected 'case' or 'default'
+"switch (1) { case 1: break; bogus }"                -> ok undefined
+"#x: 1"                                              -> SyntaxError: private names cannot be used as labels
+"l1: while (0) { break\nl1; }"                       -> ok undefined
+"var f; (f) = function(){}; f.name"                  -> ok ""
+"var g; (g) = class {}; g.name"                      -> ok ""
+"var h; h = function(){}; h.name"                    -> ok "h"
+"var k; (k) ||= function(){}; k.name"                -> ok ""
+"delete undefined"                                   -> ok false
+"class A { m() { super.#x; } }"                      -> SyntaxError: cannot access a private member through 'super'
+"class A { #x; m() { super.#x; } }"                  -> SyntaxError: cannot access a private member through 'super'
+"n\\u0065w Object()"                                 -> SyntaxError: keywords must not contain escape sequences
+"new a?.b()"                                         -> SyntaxError: an optional chain cannot follow 'new' without arguments
+"new (a?.b)()"                                       -> (runtime) ReferenceError: a is not defined
+"\\u0069mport(\"x\")"                                -> SyntaxError: keywords must not contain escape sequences
+"function* g() { yi\\u0065ld; }"                     -> ok undefined
+"function* g() { var yi\\u0065ld; }"                 -> SyntaxError: 'yield' cannot be used as a binding here
+"async function f() { class A { static { await 1; } } }" -> SyntaxError: 'await' is not a valid identifier here
+"class A { static { await; } }"                      -> SyntaxError: 'await' is not a valid identifier here
+"({ m() { super(); } })"                             -> SyntaxError: 'super' call unexpected here
+"function f() { super(); }"                          -> SyntaxError: 'super' call unexpected here
+"function f() { super.x; }"                          -> SyntaxError: 'super' keyword unexpected here
+"class A { m() { super(); } }"                       -> SyntaxError: 'super' call unexpected here
+"class A { constructor() { super(); } }"             -> SyntaxError: 'super' call unexpected here
+"class A extends Object { [super()] = 1 }"           -> SyntaxError: 'super' call unexpected here
+"class A { [arguments] = 1 }"                        -> SyntaxError: 'arguments' is not allowed in a class field initializer
+"class A { x = arguments; }"                         -> SyntaxError: 'arguments' is not allowed in a class field initializer
+"class A { static { arguments; } }"                  -> SyntaxError: 'arguments' is not allowed in a class static block
+"class A { static { return; } }"                     -> SyntaxError: 'return' is not allowed directly in a class static block
+"class A { static { super(); } }"                    -> SyntaxError: 'super' call unexpected here
+"#x"                                                 -> SyntaxError: private name '#x' may only be used in a member access or 'in' expression
+"class A { #x; m() { return #x; } }"                 -> SyntaxError: private name '#x' may only be used in a member access or 'in' expression
+"class A { #x; m() { return !#x; } }"                -> SyntaxError: private name '#x' may only be used in a member access or 'in' expression
+"function f(interface) { \"use strict\"; }"          -> SyntaxError: 'interface' can't be a parameter name in strict mode
+"function f(a, implements) { \"use strict\"; }"      -> SyntaxError: 'implements' can't be a parameter name in strict mode
+"\"use strict\"; (package) => 1"                     -> SyntaxError: 'package' cannot be used as a binding in strict mode
+"\"use strict\"; var { a: [static] } = {};"          -> SyntaxError: 'static' cannot be used as a binding in strict mode
+"\"use strict\"; [eval] = [1];"                      -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ a: arguments } = {});"           -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ __proto__: eval } = {});"        -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ __proto__: eval = 1 } = {});"    -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; [...eval] = [];"                    -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; [ , eval = 1] = [];"                -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({...arguments} = {});"             -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"[a, , b] = [1, 2, 3];"                              -> ok 1,2,3
+"({ __proto__: a } = {});"                           -> ok [object Object]
+"({ __proto__: a = 5 } = {}); a"                     -> ok [object Object]
+"[...a, ] = []"                                      -> SyntaxError: invalid destructuring assignment target
+"({ ...{a} } = {})"                                  -> SyntaxError: invalid destructuring assignment target
+"({ m() {} } = {})"                                  -> SyntaxError: invalid destructuring assignment target
+"({ get x() {} } = {})"                              -> SyntaxError: invalid destructuring assignment target
+"@dec.prop class Q {}"                               -> (runtime) ReferenceError: dec is not defined
+"@(dec) class Q {}"                                  -> (runtime) ReferenceError: dec is not defined
+"class Q { @this m() {} }"                           -> (runtime) TypeError: decorator is not callable
+"class Q { @x.y.z m() {} }"                          -> (runtime) ReferenceError: x is not defined
+"class Q { accessor y }"                             -> ok undefined
+"class Q { accessor\n y }"                           -> ok undefined
+"for (using of = null;;) break;"                     -> ok undefined
+"for (using of [1]) ;"                               -> ok undefined
+"async function f() { for (await using x of []) ; }" -> ok undefined
+"async function f() { for (await using of []) ; }"   -> SyntaxError: expected ';'
+"x\n/foo/g"                                          -> (runtime) ReferenceError: x is not defined
+"let a = 1\n/2/g"                                    -> ok undefined
+"label: function f() {}"                             -> ok undefined
+"if (1) label: function f() {}"                      -> SyntaxError: function declaration cannot appear in a single-statement context
+"while (1) function f() {}"                          -> SyntaxError: function declaration cannot appear in a single-statement context
+"if (1) class C {}"                                  -> SyntaxError: lexical declaration cannot appear in a single-statement context
+"if (1) let x = 1;"                                  -> SyntaxError: expected ';'
+"do function f(){} while(0)"                         -> SyntaxError: function declaration cannot appear in a single-statement context
+"a\n++\nb"                                           -> ok 4
+"async\nfunction f(){}"                              -> (runtime) ReferenceError: async is not defined
+"yield = 1"                                          -> ok 1
+"function* g() { yield\n* 2 }"                       -> SyntaxError: unexpected token Punct("*")
+"({ async: 1, await: 2, get: 3, set: 4, static: 5 }).async" -> ok 1
+"({ async, get, set } = { async: 1, get: 2, set: 3 }); async + get + set" -> ok 6
+"({ async *gen() { yield 1; } }).gen().next().constructor.name" -> ok "Promise"
+"async () => { await: 1 }"                           -> SyntaxError: 'await' cannot be used as a label here
+"function f() { \"use strict\"; 010 }"               -> SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"; \"\\08\""                           -> SyntaxError: legacy octal literals are not allowed in strict mode
+"function f() { \"\\07\"; \"use strict\"; }"         -> SyntaxError: legacy octal literals are not allowed in strict mode
+"`\\07`"                                             -> SyntaxError: invalid escape sequence in template literal
+"String.raw`\\07`"                                   -> ok "\\07"
+"(function(){ return typeof (x => x) })()"           -> ok "function"
+"let [a, ...b,] = []"                                -> SyntaxError: expected ']'
+"let {a, ...b,} = {}"                                -> SyntaxError: expected '}'
+"for (let [a] = [1], b of []) ;"                     -> SyntaxError: expected ';'
+"for (var i, j of []) ;"                             -> SyntaxError: expected ';'
+"for (let x of [], []) ;"                            -> SyntaxError: expected ')'
+"for (x => x in {}) ;"                               -> SyntaxError: invalid for-in/of target
+"import.meta"                                        -> SyntaxError: 'import.meta' is only valid in a module
+"export var x = 1;"                                  -> SyntaxError: 'export' declaration may only appear at the top level of a module
+"import x from \"y\";"                               -> SyntaxError: expected '('
+"new.target"                                         -> SyntaxError: new.target is only valid inside a function
+"function f() { new.t\\u0061rget }"                  -> SyntaxError: 'new.target' must not contain escape sequences
+"a?.b = 1"                                           -> SyntaxError: invalid assignment target
+"a?.b++"                                             -> SyntaxError: invalid increment/decrement operand
+"a?.`x`"                                             -> SyntaxError: expected property name
+"({a: 1} = 1)"                                       -> SyntaxError: invalid destructuring assignment target
+"(a, b) = 1"                                         -> SyntaxError: invalid assignment target
+"a + 1 = 2"                                          -> SyntaxError: invalid assignment target
+"++(a + 1)"                                          -> SyntaxError: invalid increment/decrement operand
+"for ((a, b) of []) ;"                               -> SyntaxError: invalid for-in/of target
+"arguments => { \"use strict\" }"                    -> SyntaxError: 'arguments' cannot be used as a binding in strict mode
+"class C extends D { constructor() { super()?.x; } }" -> (runtime) ReferenceError: D is not defined
+"let x; { var x; }"                                  -> SyntaxError: Identifier 'x' has already been declared
+"try {} catch ([e]) { var e; }"                      -> ok undefined
+"try {} catch (e) { let e; }"                        -> SyntaxError: Identifier 'e' has already been declared
+"try {} catch (e) { for (var e of []); }"            -> ok undefined
+"function f(a = super.x) {}"                         -> SyntaxError: 'super' keyword unexpected here
+"({ f(a = super.x) { return a; } })"                 -> ok [object Object]

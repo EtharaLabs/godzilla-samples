@@ -1,0 +1,25 @@
+negative length: RangeError: Invalid array length
+fractional length: RangeError: Invalid array length
+huge length: RangeError: Invalid array length
+length coercion twice: 1 calls=2
+length string: [1,2]
+frozen length sloppy: 2
+frozen length strict: TypeError: cannot assign to read-only property 'length'
+non-configurable blocker sloppy: 3 [0,1,"pinned"]
+non-configurable blocker strict: TypeError: cannot delete non-configurable array element via length -> length 2
+sealed append sloppy: ["changed"] 1
+sealed append strict: TypeError: cannot add property, object is not extensible
+read-only length append sloppy: ["ok",2] 2
+read-only length append strict: TypeError: cannot add an element past a read-only array length
+read-only length push: TypeError: Cannot assign to read only property '1'
+existing element attributes kept: {"value":"new","writable":true,"enumerable":false,"configurable":true} keys=1
+read-only element sloppy: 2
+read-only element strict: TypeError: cannot assign to read-only property '1'
+index 2^32-1 is not an index: 4294967295 4294967294,4294967295
+setter on element: 4 via-setter
+getter-only element strict: TypeError: cannot set getter-only property '0'
+inherited setter: proto-set x own=false len=0
+inherited read-only: TypeError: cannot assign to read-only property '0'
+defineProperty length shrink: [1,2]
+defineProperty length invalid: RangeError: Invalid array length
+length grows holes: [1,null,null] false

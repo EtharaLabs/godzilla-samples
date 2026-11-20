@@ -1,0 +1,15 @@
+strict extra bits 2 SyntaxError: invalid base64 string [65]
+strict extra bits 3 [65,66] SyntaxError: invalid base64 string [65,66]
+stop-before-partial pad [65,66,67] [65,66,67]
+ws after pad [65] [65] SyntaxError: invalid base64 string SyntaxError: invalid base64 string SyntaxError: invalid base64 string
+loose partial SyntaxError: invalid base64 string [65,66,67,65,66] [65,66,67,65]
+url [251,255] SyntaxError: invalid base64 string SyntaxError: invalid base64 string
+setFromBase64 {"read":4,"written":3} [65,66,67,0]
+setFromBase64 partial fit {"read":0,"written":0} {"read":0,"written":0}
+setFromBase64 zero {"read":0,"written":0} {"read":0,"written":0}
+setFromBase64 error SyntaxError: invalid base64 string
+non-u8 TypeError: requires a Uint8Array TypeError: requires a Uint8Array TypeError: requires a Uint8Array
+hex [10,255] SyntaxError: invalid hex string SyntaxError: invalid hex string {"read":2,"written":1} SyntaxError: invalid hex string
+immutable TypeError: cannot write into a view over an immutable ArrayBuffer TypeError: cannot write into a view over an immutable ArrayBuffer TypeError: cannot write into a view over an immutable ArrayBuffer
+toBase64 +/8= -_8 01020304
+TypeError: fromBase64 requires a string TypeError: alphabet must be 'base64' or 'base64url' TypeError: lastChunkHandling must be 'loose', 'strict', or 'stop-before-partial' TypeError: options must be an object

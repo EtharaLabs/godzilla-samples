@@ -1,0 +1,32 @@
+object rest from proxy: 1 {"b":2} 1 ownKeys,gopd b,gopd c,gopd Symbol(s)
+object rest from array and string: 10 {"1":20,"2":30} 3 {"0":"x","1":"y","2":"z"}
+object rest excluded computed keys: 2 {"a":1,"c":3}
+object rest getter order: {"x":1,"y":2} x,y
+object rest null: TypeError: cannot destructure null or undefined
+assignment rest from proxy: 1 {"n":2}
+extends bound function without prototype: TypeError: Class extends value does not have a valid prototype property
+extends bound function: bound-tag 5 true
+extends proxy of class: A true
+extends proxy with construct trap: val construct trap nt=B true
+extends Function: 42 true function
+extends DataView and ArrayBuffer: 200 true true 4
+extends Map Set Promise RegExp Date: 2,true,true,true,2,0,true
+extends Array length behaviour: 2 true [null,null]
+extends Error captures message: E: msg [object Error]
+strict assignment to deleted with-binding: ReferenceError: x is not defined
+sloppy assignment to deleted with-binding: {"x":2} undefined
+strict read deleted with-binding: 1
+with binding unscopables: outer
+with typeof and call this: number true
+with proxy has traps: has z,has z,get z,has z,has z
+inner finally
+return result {"value":"early","done":true}
+noThrow return called
+throw result TypeError: the delegated iterator has no 'throw' method
+inner throw got err3
+delegate returned recovered
+outer after throw {"done":true}
+return without inner return {"value":"awaited value","done":true}
+bad async iterator TypeError: @@asyncIterator did not return an object
+sync fallback p1,p2
+return not done {"value":"still going x","done":false}

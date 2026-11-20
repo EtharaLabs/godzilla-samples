@@ -1,0 +1,15 @@
+ns[0] -> undefined
+ns['0'] -> undefined
+ns[i] in loop -> undefined
+ns[i] in loop -> undefined
+ns[0] = 1 !! TypeError: Cannot assign to read only property '0' of module namespace object
+ns.sub = 1 (star-as export) !! TypeError: Cannot assign to read only property 'sub' of module namespace object
+ns.live = 5 !! TypeError: Cannot assign to read only property 'live' of module namespace object
+Reflect.set(ns) -> false
+forwarded Reflect.set, ns receiver -> false
+forwarded Reflect.set, ns receiver, star-as key -> false
+super.live = v with ns as this !! TypeError: Cannot assign to read only property 'live' of module namespace object
+ns.sub.deep -> 42
+live after bump -> 2
+sloppy fn caller from module top level -> null
+sloppy fn caller from sloppy fn -> viaSloppy

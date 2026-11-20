@@ -1,0 +1,15 @@
+isInteger => [true, false, false, false, true, true, false]
+isSafeInteger => [false, true, true, true, false, false]
+isNaN => [false, true, true, true, false, false, true, false, true]
+isFinite => [false, true, true, true, true, false, false, false]
+global isNaN symbol !! TypeError: Cannot convert a Symbol value to a number
+global isFinite bigint !! TypeError: Cannot convert a BigInt value to a number
+Number.isNaN bigint => [false, false, false]
+constants => [true, 9007199254740991, -9007199254740991, 1.7976931348623157e+308, 5e-324, Infinity, -Infinity, NaN]
+epsilon use => [false, true, true, true]
+constant descriptors => [false, false, false]
+new Number => ["object", 6, 5, "[object Number]", true, false, "number", 0]
+Number.prototype => [0, "[object Number]", "0.0"]
+arithmetic => [1, -1, 1.5, -0, Infinity, -Infinity, NaN, 4, 0.30000000000000004, 9007199254740992, 9007199254740994]
+int32 ops => [-2147483648, 1, 4294967295, 15, 2, -3, 3, -3, -2147483648, 0, -2147483648, 0, 0]
+float accumulate => [0.9999999999999999, "1.000000000000000", false]

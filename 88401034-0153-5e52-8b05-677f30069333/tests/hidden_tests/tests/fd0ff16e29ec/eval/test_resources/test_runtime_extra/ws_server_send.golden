@@ -1,0 +1,18 @@
+/a got "a1"
+/a send text -> true
+/a send bytes -> true
+/a send 200 chars -> true
+/a send 70000 chars -> true
+/a send number -> true
+/a got "a2"
+/a send after close() -> false
+/a got "a3"
+/a send while closing -> false
+/a got "pad"
+/a onclose 4002 "client echo" true
+/a send after onclose -> false
+/b got "b1"
+/b got "pad"
+/b onclose 1002 "unknown opcode" false
+/b send after onclose -> false
+server shut down

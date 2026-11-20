@@ -1,0 +1,72 @@
+"{" | SyntaxError: lone '{' is not valid in a unicode pattern
+"}" | SyntaxError: lone '}' is not valid in a unicode pattern
+"]" | SyntaxError: lone ']' is not valid in a unicode pattern
+"a{" | SyntaxError: lone '{' is not valid in a unicode pattern
+"a{1" | SyntaxError: lone '{' is not valid in a unicode pattern
+"\\-" | SyntaxError: invalid identity escape \- in unicode pattern
+"\\a" | SyntaxError: invalid identity escape \a in unicode pattern
+"\\z" | SyntaxError: invalid identity escape \z in unicode pattern
+"\\c" | SyntaxError: invalid \c escape in unicode pattern
+"\\c1" | SyntaxError: invalid \c escape in unicode pattern
+"[\\c1]" | SyntaxError: invalid \c escape in unicode pattern
+"\\x1" | SyntaxError: invalid hexadecimal escape
+"\\xg0" | SyntaxError: invalid hexadecimal escape
+"\\u12" | SyntaxError: invalid unicode escape
+"\\u{}" | SyntaxError: invalid code point escape
+"\\u{110000}" | SyntaxError: invalid code point escape
+"\\u{12x}" | SyntaxError: invalid code point escape
+"\\u{FFFFFFFFFFFF}" | SyntaxError: invalid code point escape
+"\\01" | SyntaxError: legacy octal escape in unicode pattern
+"[\\01]" | SyntaxError: legacy octal escape in unicode pattern
+"\\1" | SyntaxError: back reference \1 exceeds the number of capture groups
+"(a)\\2" | SyntaxError: back reference \2 exceeds the number of capture groups
+"\\8" | SyntaxError: back reference \8 exceeds the number of capture groups
+"\\k<a>" | SyntaxError: invalid named back reference <a>
+"\\k" | SyntaxError: expected '<' in named back reference
+"\\p" | SyntaxError: invalid property escape: expected '{'
+"\\pL" | SyntaxError: invalid property escape: expected '{'
+"\\p{" | SyntaxError: unterminated property escape
+"\\p{L" | SyntaxError: unterminated property escape
+"\\p{ L}" | SyntaxError: invalid character in property escape
+"\\p{Foo}" | SyntaxError: invalid unicode property Foo
+"\\p{gc=Foo}" | SyntaxError: invalid unicode property gc=Foo
+"\\p{Foo=L}" | SyntaxError: invalid unicode property Foo=L
+"\\p{lu}" | SyntaxError: invalid unicode property lu
+"\\p{Script}" | SyntaxError: invalid unicode property Script
+"\\p{General_Category}" | SyntaxError: invalid unicode property General_Category
+"\\p{ascii}" | SyntaxError: invalid unicode property ascii
+"\\p{Block=Basic_Latin}" | SyntaxError: invalid unicode property Block=Basic_Latin
+"\\P{RGI_Emoji}" | SyntaxError: invalid unicode property RGI_Emoji
+"\\p{RGI_Emoji}" | SyntaxError: invalid unicode property RGI_Emoji
+"[\\d-z]" | SyntaxError: invalid character class range
+"[a-\\w]" | SyntaxError: invalid character class range
+"[\\p{L}-z]" | SyntaxError: invalid character class range
+"[\\z]" | SyntaxError: invalid identity escape \z in unicode class
+"(?=a)*" | SyntaxError: quantifier on an assertion
+"(?!a)+" | SyntaxError: quantifier on an assertion
+"(?=a){1}" | SyntaxError: quantifier on an assertion
+"(?<a\\u{E000}>.)" | SyntaxError: invalid capture group name <a>
+"(?<a\\u{1D7CE}\\u0300>.)" | ok /(?<a\u{1D7CE}\u0300>.)/u
+"(?<\\ud835>.)" | SyntaxError: invalid capture group name <�>
+"[\\uDBFF\\uDFFF-\\uD800\\uDC00]" | SyntaxError: range out of order in character class
+"\\uD83D\\u12" | SyntaxError: invalid unicode escape
+"(?<\\uD835\\u0041>x)" | SyntaxError: invalid capture group name <�A>
+"[\\x4]" | SyntaxError: invalid hexadecimal escape
+"[\\u{110000}]" | SyntaxError: invalid code point escape
+valid | "\\/" | ok /\//u
+valid | "[\\-]" | ok /[\-]/u
+valid | "\\p{L}" | ok /\p{L}/u
+valid | "\\P{Lu}" | ok /\P{Lu}/u
+valid | "\\p{gc=L}" | ok /\p{gc=L}/u
+valid | "\\p{sc=Grek}" | ok /\p{sc=Grek}/u
+valid | "\\p{scx=Grek}" | ok /\p{scx=Grek}/u
+valid | "\\u{1F600}" | ok /\u{1F600}/u
+valid | "[\\u{1F600}-\\u{1F64F}]" | ok /[\u{1F600}-\u{1F64F}]/u
+valid | "(?<\\u0061>.)\\k<a>" | ok /(?<\u0061>.)\k<a>/u
+valid | "\\0" | ok /\0/u
+valid | "[\\0]" | ok /[\0]/u
+valid | "\\^\\$\\\\\\.\\*\\+\\?\\(\\)\\[\\]\\{\\}\\|" | ok /\^\$\\\.\*\+\?\(\)\[\]\{\}\|/u
+valid | "(?<\\uD835\\uDC9C>x)\\k<\\u{1D49C}>" | ok /(?<\uD835\uDC9C>x)\k<\u{1D49C}>/u
+valid | "\\uD83D\\u0041" | ok /\uD83D\u0041/u
+valid | "[\\x41\\u0042\\u{43}\\cJ\\f\\v\\t]" | ok /[\x41\u0042\u{43}\cJ\f\v\t]/u
+SyntaxError: invalid unicode property Foo | ok true

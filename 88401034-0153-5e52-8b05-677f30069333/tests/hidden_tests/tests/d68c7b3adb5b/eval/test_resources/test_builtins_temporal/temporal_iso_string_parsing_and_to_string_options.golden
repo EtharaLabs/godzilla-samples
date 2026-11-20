@@ -1,0 +1,12 @@
+PlainDate: 2024-02-29 | 2024-02-29 | 2024-02-29 | -000001-01-01 | RangeError | RangeError | RangeError | 2024-02-29 | RangeError | 2024-02-29 | 2024-02-29[u-ca=gregory] | 2024-02-29 | 2024-02-29 | RangeError | 2024-02-29 | RangeError | 2024-02-29 | 2024-02-29[u-ca=japanese] | RangeError | RangeError | RangeError | RangeError | RangeError
+PlainTime: 12:34:00 | 12:34:00 | 12:34:56.123456789 | 12:34:00 | 12:34:56.5 | 23:59:59 | RangeError | 12:34:00 | RangeError | 12:00:00 | RangeError | 12:34:00 | 12:00:00 | 12:00:00 | RangeError | RangeError | 12:01:00 | RangeError
+PlainDateTime: 2024-01-01T00:00:00 | 2024-01-01T00:00:00 | RangeError | 2024-01-01T12:00:00.5 | RangeError | -271821-04-19T00:00:00.000000001 | RangeError | +275760-09-13T23:59:59.999999999
+Instant: 2024-01-01T00:00:00Z | 2023-12-31T18:30:00Z | 2024-01-01T23:59:00.123456789Z | RangeError | 2024-01-01T00:00:00Z | 2024-01-01T00:00:00Z | -271821-04-20T00:00:00Z | RangeError | 2023-12-31T22:59:30Z
+PlainYearMonth: 2024-05 | 2024-05 | 2024-05 | RangeError | 2024-05 | RangeError | 2024-04-09[u-ca=hebrew] | -271821-04 | +275760-09
+toString options PlainDateTime: 2024-07-04T09:08:07.6543 2024-07-04T09:08 2024-07-04T09:08:08 2024-07-04T09:08:07.654321987[u-ca=iso8601] 2024-07-04T09:08:07.654321987[!u-ca=hebrew] 2024-07-04T09:08:07.654321987 2025-01-01T00:00:00
+toString options Instant: 2024-03-10T06:59:59.5Z 2024-03-10T01:59:59.5-05:00 2024-03-10T12:44+05:45 2024-03-10T06:59:59.5Z 2024-03-10T07:00:00Z 2024-03-10T07:00:00Z 2024-03-10T07:00:00Z
+toString options ZonedDateTime: 2024-03-10T01:59:59.999999999-05:00[America/New_York][u-ca=japanese] 2024-03-10T01:59:59.999999999-05:00 2024-03-10T01:59:59.999999999[!America/New_York][u-ca=japanese] 2024-03-10T03:00:00-04:00[America/New_York][u-ca=japanese] 2024-03-10T03:00:00-04:00[America/New_York][u-ca=japanese]
+bad toString options: RangeError:invalid calendarName: sometimes | RangeError:invalid timeZoneName: short | RangeError:invalid offset: maybe | RangeError:invalid smallestUnit for toString | RangeError:invalid smallestUnit for toString
+PlainTime round/with/until: 00:00:00 00:00:00 01:59:59.600000005 -PT23H59M59.6S PT719M59S 00:59:59.6 -1
+PlainTime bag overflow: 23:59:00 RangeError TypeError
+limits arithmetic: RangeError:date is outside the supported range | RangeError:date-time is outside the representable range | RangeError:instant is outside the representable range | -271821-04-20T00:00:00Z | +275760-09-13T14:00:00 | RangeError:instant is outside the representable range

@@ -1,0 +1,33 @@
+defineProperties: {"a":1} 2 value=s,writable=true,enumerable=false,configurable=false get=fn:get,set=undefined,enumerable=false,configurable=true
+defineProperties non-object descriptor: TypeError: Property description must be an object
+defineProperties getter+value: TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute
+defineProperties bad getter: TypeError: Getter must be a function
+defineProperties bad setter: TypeError: Setter must be a function
+defineProperties on primitive: TypeError: Object.defineProperties on non-object
+defineProperties null props: TypeError: Object.defineProperties called on null or undefined
+defineProperties string props: TypeError: Property description must be an object
+defineProperties via proxy props: ["a"] ownKeys,gopd a,gopd h
+defineProperties onto proxy: yes:value no:get TypeError
+defineProperty returns: true value=1,writable=false,enumerable=false,configurable=false
+defineProperty non-object: TypeError: Object.defineProperty called on non-object
+defineProperty redefine non-configurable: TypeError: Cannot redefine property
+defineProperty same value ok: ok NaN
+defineProperty -0 vs +0: TypeError: Cannot redefine property
+defineProperty enumerable change on non-configurable: false false false true
+defineProperty non-configurable accessor: true,false,false,true,false
+defineProperty accessor to data: value=5,writable=false,enumerable=false,configurable=true
+defineProperty data to accessor: get=undefined,set=fn:setK,enumerable=true,configurable=true
+defineProperty descriptor via proto/getters: inherited p enumerable
+array length descriptors: true,1,true,true,false,false,false,false,false
+array length vs non-configurable element: false 2 [1,"pin"]
+array length bad values: RangeError RangeError RangeError RangeError true/3 true/2
+array index on non-writable length: false true 9 1
+getOwnPropertyDescriptors: a{value=1,writable=true,enumerable=true,configurable=true} b{get=fn:get b,set=undefined,enumerable=true,configurable=true} c{get=undefined,set=fn:set c,enumerable=true,configurable=true} Symbol(sym){value=3,writable=true,enumerable=true,configurable=true}
+getOwnPropertyDescriptors array: 0,length value=1,writable=true,enumerable=false,configurable=false
+getOwnPropertyDescriptors string: 0,1,length value=i,writable=false,enumerable=true,configurable=false value=2,writable=false,enumerable=false,configurable=false
+getOwnPropertyDescriptors proxy undefined: a
+getOwnPropertyDescriptor primitive: value=3,writable=false,enumerable=false,configurable=false | value=a,writable=false,enumerable=true,configurable=false | undefined
+getOwnPropertyDescriptor null: TypeError: Object.getOwnPropertyDescriptor called on null or undefined
+getOwnPropertyDescriptor function: value=2,writable=false,enumerable=false,configurable=true | value=f,writable=false,enumerable=false,configurable=true | value=[object Object],writable=true,enumerable=false,configurable=false
+getOwnPropertyDescriptor key coercion: value=7,writable=true,enumerable=true,configurable=true toString
+getOwnPropertyDescriptor private-looking key: undefined 0

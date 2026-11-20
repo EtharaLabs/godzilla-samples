@@ -1,0 +1,60 @@
+read-prop-undef              => TypeError/TypeError: cannot read property 'x' of undefined
+read-prop-null-computed      => TypeError/TypeError: cannot read property of null or undefined
+write-prop-undef             => TypeError/TypeError: cannot set property 'x' of undefined
+call-method-missing          => TypeError/TypeError: (intermediate value).missing is not a function
+call-nested-missing          => TypeError/TypeError: (intermediate value).c is not a function
+call-computed-missing        => TypeError/TypeError: expression is not a function
+call-number-prop             => TypeError/TypeError: (intermediate value).n is not a function
+call-global-undef            => TypeError/TypeError: (intermediate value).nope is not a function
+call-result                  => TypeError/TypeError: expression is not a function
+call-string                  => TypeError/TypeError: expression is not a function
+new-non-ctor-var             => TypeError/TypeError: number is not a constructor
+new-math-fn                  => TypeError/TypeError: object is not a constructor
+new-symbol                   => TypeError/TypeError: Symbol is not a constructor
+new-bigint                   => TypeError/TypeError: BigInt is not a constructor
+new-async-fn                 => TypeError/TypeError: object is not a constructor
+new-bound-arrow              => TypeError/TypeError: object is not a constructor
+in-primitive                 => TypeError/TypeError: 'in' requires an object on the right
+instanceof-non-callable      => TypeError/TypeError: right-hand side of instanceof is not callable
+instanceof-bad-proto         => TypeError/TypeError: prototype property is not an object
+hasInstance-not-callable     => TypeError/TypeError: @@hasInstance is not callable
+spread-non-iterable          => TypeError/TypeError: value is not iterable
+spread-call-non-iterable     => TypeError/TypeError: value is not iterable
+for-of-non-iterable          => TypeError/TypeError: value is not iterable
+iterator-next-not-object     => TypeError/TypeError: iterator result is not an object
+iterator-returns-primitive   => TypeError/TypeError: @@iterator returned a non-object
+symbol-to-string             => TypeError/TypeError: Cannot convert a Symbol value to a string
+symbol-to-number             => TypeError/TypeError: Cannot convert a Symbol value to a number
+symbol-template              => TypeError/TypeError: Cannot convert a Symbol value to a string
+bigint-mix                   => TypeError/TypeError: Cannot mix BigInt and other types, use explicit conversions
+toPrimitive-not-callable     => TypeError/TypeError: @@toPrimitive is not callable
+toPrimitive-returns-object   => TypeError/TypeError: Cannot convert object to a primitive value
+valueOf-toString-objects     => TypeError/TypeError: cannot convert object to primitive value
+null-proto-to-string         => TypeError/TypeError: cannot convert object to primitive value
+object-freeze-strict         => TypeError/TypeError: cannot assign to read-only property 'a'
+nonextensible-add-strict     => TypeError/TypeError: cannot add property, object is not extensible
+getter-only-strict           => TypeError/TypeError: cannot set getter-only property 'g'
+delete-nonconfig-strict      => TypeError/TypeError: cannot delete non-configurable property 'prototype'
+array-length-readonly        => TypeError/TypeError: cannot add property, object is not extensible
+invalid-array-length         => RangeError/RangeError: Invalid array length
+invalid-array-length-set     => RangeError/RangeError: Invalid array length
+repeat-negative              => RangeError/RangeError: invalid count value
+toFixed-range                => RangeError/RangeError: toFixed() digits argument must be between 0 and 100
+string-too-long              => RangeError/RangeError: Invalid string length
+json-cycle                   => TypeError/TypeError: Converting circular structure to JSON
+json-bigint                  => TypeError/TypeError: Do not know how to serialize a BigInt
+json-parse                   => SyntaxError/SyntaxError: Expected string key in JSON object
+define-on-frozen             => TypeError/TypeError: Cannot redefine property
+set-proto-cycle              => TypeError/TypeError: could not set prototype
+reduce-empty                 => TypeError/TypeError: Reduce of empty array with no initial value
+super-prop-null-proto        => TypeError/TypeError: cannot read property 'x' of a null super base
+throw-in-getter              => RangeError/RangeError: from getter
+error-cause                  => Error/Error: outer cause=the cause
+aggregate                    => AggregateError/AggregateError: agg msg errors=1
+finally sees pending error
+outer got first
+outer got second from catch
+outer got finally wins
+error-props TypeError msg true true 0 string TypeError: msg true
+error-toString N: M Error only msg only name
+error-call-no-new true RangeError false Error

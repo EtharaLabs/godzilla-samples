@@ -1,0 +1,47 @@
+"1; 2; 3"                                                    3
+""                                                           undefined
+"var q = 5"                                                  undefined
+"if (true) { \"then\" } else { \"else\" }"                   "then"
+"for (var i = 0; i < 3; i++) i * 10"                         20
+"do { 7; break; } while (false)"                             7
+"try { \"t\" } finally { \"f\" }"                            "t"
+"try { throw 1 } catch (e) { \"c\" }"                        "c"
+"switch (1) { case 1: \"one\"; case 2: \"two\"; break; }"    "two"
+"switch (3) { case 1: \"one\"; }"                            undefined
+"{}"                                                         undefined
+"({})"                                                       {}
+"L: { \"in label\"; break L; }"                              "in label"
+"while (false);"                                             undefined
+"1; if (false) 2;"                                           undefined
+"3; var z = 4;"                                              3
+"\"before\"; function f(){}"                                 "before"
+"\"before\"; class K {}"                                     "before"
+"\"before\"; let l = 1;"                                     "before"
+"1; try { 2 } finally { 3 }"                                 2
+"4; do { 5; continue; } while (false)"                       5
+"6; with ({}) 7"                                             7
+"8; x: 9"                                                    9
+"9; for (const k in {}) 10"                                  undefined
+"10; for (const k of [1, 2]) { k; }"                         2
+"11; for (const k of [1, 2]) { if (k == 2) break; \"body\" + k; }" undefined
+"12; while (true) { 13; break; }"                            13
+"14; if (true) {}"                                           undefined
+"15; try {} catch {}"                                        undefined
+"16; switch (0) {}"                                          undefined
+"17; ;"                                                      17
+"18; { }"                                                    18
+"var n = 0; while (n < 3) { n++; if (n == 2) continue; \"w\" + n; }" "w3"
+"\"x\"; try { \"y\"; throw 0; } catch { } finally { \"z\" }" undefined
+"outer: for (const a of [1]) { for (const b of [2]) { \"ab\" + a + b; continue outer; } }" "ab12"
+"1; do { } while (false)"                                    undefined
+"typeof undefinedThing"                                      "undefined"
+"void 1"                                                     undefined
+"\"s\" + 1"                                                  "s1"
+"[1, 2]"                                                     [1,2]
+"null"                                                       null
+"x => x"                                                     function
+"20; try { 21 } catch (e) { 22 } finally { }"                21
+"23; label: { 24; { 25; break label; } }"                    25
+"26; if (false) ; else 27"                                   27
+"28; for (;false;) 29"                                       undefined
+"(function () { return 30; })()"                             30

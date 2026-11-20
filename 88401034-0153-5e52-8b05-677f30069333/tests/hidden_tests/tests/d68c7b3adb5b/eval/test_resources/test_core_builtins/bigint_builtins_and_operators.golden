@@ -1,0 +1,45 @@
+BigInt(): 10 31 3 7 42 0 1 0 0 1152921504606846976 9007199254740993 7 -12 3 5 0 9 1000000000000000000000 77
+BigInt bad string: SyntaxError: Cannot convert string to a BigInt
+BigInt bad string 2: SyntaxError: Cannot convert string to a BigInt
+BigInt -0x: SyntaxError: Cannot convert string to a BigInt
+BigInt 1e3 string: SyntaxError: Cannot convert string to a BigInt
+BigInt fraction: RangeError: The number cannot be converted to a BigInt
+BigInt NaN: RangeError: The number cannot be converted to a BigInt
+BigInt Infinity: RangeError: The number cannot be converted to a BigInt
+BigInt undefined: TypeError: Cannot convert value to a BigInt
+BigInt null: TypeError: Cannot convert value to a BigInt
+BigInt symbol: TypeError: Cannot convert value to a BigInt
+new BigInt: TypeError: BigInt is not a constructor
+asIntN/asUintN: -1 -128 127 255 0 0 0 -9223372036854775808 18446744073709551615 -1 50 -18446744073709551616 -1 1 -170141183460469231731687303715884105728 1
+asIntN bad bits: RangeError: index out of range
+asUintN huge bits: RangeError: index out of range
+asIntN number: TypeError: Cannot convert a Number to a BigInt
+asIntN bits coercion first: bits,value TypeError
+asIntN huge bits: 5,7,-3
+asUintN huge bits negative: RangeError: BigInt is too large to allocate
+toString radix: ff -11111111 0 3ewfdnca0n6ld1ggvfgg 10 5 -1 z
+toString bad radix: RangeError: toString radix must be between 2 and 36
+toString radix 0: RangeError: toString radix must be between 2 and 36
+toString bad this: TypeError: BigInt method called on incompatible receiver
+toString bad obj this: TypeError: BigInt method called on incompatible receiver
+valueOf: bigint 3
+valueOf bad: TypeError: BigInt method called on incompatible receiver
+valueOf bad object: TypeError: BigInt method called on incompatible receiver
+toLocaleString: 1,234,567 1.234.567 -5
+toLocaleString bad: TypeError: BigInt method called on incompatible receiver
+arith: 18446744073709551616 -3 -1 1 40 -5 1 7 6 -6 3 1 1 -8 0 -1 251 -1 393530540239137101141 -2 2
+div zero: RangeError: Division by zero
+mod zero: RangeError: Division by zero
+neg exp: RangeError: Exponent must be non-negative
+unsigned shift: TypeError: unsupported BigInt operator
+unary plus: TypeError: Cannot convert a BigInt value to a number
+mix: TypeError: Cannot mix BigInt and other types, use explicit conversions
+mix compound: TypeError: Cannot mix BigInt and other types, use explicit conversions
+compare: true true true false true true false true true false false false true -1,0,0.5,1 false false true true true
+inc/dec: 2 bigint -2
+bigint truthiness: false,true,n,object,fallback,and
+bigint to number ops: TypeError: Cannot convert a BigInt value to a number
+bigint string concat: 1x2-34
+bigint keys: 1 one
+bigint typeof and wrappers: object 8 true false [object BigInt] ["asIntN","asUintN","length","name","prototype"]
+bigint literal radixes: 31 15 5 1000 0 18446744073709551616 4722366482869645213695

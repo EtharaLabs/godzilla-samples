@@ -1,0 +1,7 @@
+isIP 4 6 0 true false 0 false 0 6
+blocklist true false true false true false true false
+socketaddress 127.0.0.1 8080 ipv4 0
+autoselect true number
+address 127.0.0.1 IPv4 number true true
+client log connected 127.0.0.1 true IPv4 | local 127.0.0.1 IPv4 | client end "echo:HELLO TCP\n[eof]" | client close false
+server log listening event | conn 127.0.0.1 IPv4 number 127.0.0.1 | server saw end | server sock close | connections null 0 | server closed false

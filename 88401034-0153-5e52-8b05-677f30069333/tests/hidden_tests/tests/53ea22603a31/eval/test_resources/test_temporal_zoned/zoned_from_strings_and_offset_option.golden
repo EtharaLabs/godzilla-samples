@@ -1,0 +1,31 @@
+conflict offset=use => 2024-07-03T02:30:00-04:00[America/New_York]
+conflict offset=ignore => 2024-07-03T01:30:00-04:00[America/New_York]
+conflict offset=prefer => 2024-07-03T01:30:00-04:00[America/New_York]
+conflict offset=reject => threw RangeError: offset does not match the time zone
+conflict offset=undefined => threw RangeError: offset does not match the time zone
+bad offset option => threw RangeError: invalid offset: maybe
+fold -05 offset=use => 2024-11-03T01:30:00-05:00[America/New_York]
+fold -05 offset=ignore => 2024-11-03T01:30:00-04:00[America/New_York]
+fold -05 offset=prefer => 2024-11-03T01:30:00-05:00[America/New_York]
+fold -05 offset=reject => 2024-11-03T01:30:00-05:00[America/New_York]
+fold -04 default => 2024-11-03T01:30:00-04:00[America/New_York]
+fold no offset => 2024-11-03T01:30:00-04:00[America/New_York]
+fold no offset later => 2024-11-03T01:30:00-05:00[America/New_York]
+gap with offset -05 => threw RangeError: offset does not match the time zone
+gap with offset -04 reject => threw RangeError: offset does not match the time zone
+gap reject => threw RangeError: no such local time (skipped by a DST gap)
+Z with zone => 2024-07-02T21:30:00-04:00[America/New_York]
+Z with zone offset reject => 2024-07-02T21:30:00-04:00[America/New_York]
+no zone => threw RangeError: missing time zone
+date only with zone => 2024-07-03T00:00:00+02:00[Europe/Berlin]
+offset zone => 2024-07-03T01:30:00+02:00[+02:00]
+offset zone mismatch => threw RangeError: offset does not match the time zone
+minute-rounded offset match => 1800-01-01T00:00:00-00:01[Europe/London]
+exact LMT offset match => 1800-01-01T00:00:00-00:01[Europe/London]
+wrong seconds offset => threw RangeError: offset does not match the time zone
+calendar annotation => 2024-07-03T01:30:00+09:00[Asia/Tokyo][u-ca=japanese]
+critical unknown annotation => threw RangeError: invalid ZonedDateTime
+zone case => Asia/Tokyo
+bad zone => threw RangeError: unknown time zone: Asia/Atlantis
+options not object => threw TypeError: options must be an object or undefined
+string ignores overflow but validates => threw RangeError: invalid overflow (bogus)

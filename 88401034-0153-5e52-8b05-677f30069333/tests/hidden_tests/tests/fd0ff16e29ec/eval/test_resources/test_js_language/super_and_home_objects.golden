@@ -1,0 +1,33 @@
+method B>A.who(B-inst)
+static B>A.sw(B)
+getter B>A.g(B-inst)
+setter A.s:x!
+field-init-super A.who(A-ctor)
+arrow-field-super A.who(B-inst)
+assign-super true:assigned via super:false
+arrow-super A.who(B-inst)
+eval-super A.who(B-inst)
+delete-super !ReferenceError: cannot delete a super property
+computed-super A.who(B-inst)
+super-incr NaN
+borrowed-method B>A.who(plain-obj)
+object-super-dynamic-proto lit>other
+object-super-after-swap lit>swapped
+reparented C2>replaced-parent
+dynamic-super-ctor P2 proto-still-P1=true
+static-field-super A.sw(S) | A.sw(S)
+literal-getter-super derived>base-v:D
+super-this-primitive object
+default-ctor-forwards 1,2,3
+default-ctor-no-iter 2
+static-vs-instance static-x,inst-x,9
+accessor-keys sym-get,zero,str
+inherited-hasInstance true,false
+class-props false,false,false,Q,0,function
+class-toString class T extends Object { m() { return 1; } }
+paren-optional-callee recv,recv,recv
+paren-optional-short TypeError: callee is not a function args-evaluated=1
+super-computed-null-base !TypeError: cannot read property 'x' of a null super base
+super-set-null-base !TypeError: cannot set property on null super base
+fn-arguments-legacy 3:y
+fn-arguments-inactive null

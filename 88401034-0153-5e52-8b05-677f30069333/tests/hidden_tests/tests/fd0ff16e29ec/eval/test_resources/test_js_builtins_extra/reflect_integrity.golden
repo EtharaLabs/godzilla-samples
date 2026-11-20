@@ -1,0 +1,28 @@
+set via proto proxy true {"y":2}
+set recv accessor false
+set recv readonly false
+set ta recv in range true 44
+set ta recv out of range false 2
+set ta recv -0 false
+get setter-only undefined
+get proxy chain recv recv-ok
+pop noDel throws TypeError Cannot delete property '2'
+shift noDel throws TypeError Cannot delete property '2'
+splice noDel throws TypeError Cannot delete property '2'
+defineProperties on proxy {"a":{"value":1,"writable":false,"enumerable":true,"configurable":false},"b":{"enumerable":false,"configurable":false}}
+trace def:a:{"value":1,"enumerable":true} def:b:{} keys gopd:a gopd:b
+defineProperties props proxy ["b"]
+defineProperties rejecting throws TypeError cannot define property
+freeze ta throws TypeError Object.freeze could not freeze the object
+freeze empty ta true
+seal ta throws TypeError Object.seal could not seal the object
+isFrozen ta false
+isSealed ta false
+isFrozen empty ta true
+freeze proxy true
+trace keys gopd:a def:a:{"writable":false,"configurable":false} gopd:b def:b:{"configurable":false} keys gopd:a gopd:b
+isFrozen writable proxy false
+isSealed writable proxy true
+isFrozen ghost true
+isFrozen sealed proxy false true
+isFrozen missing throws TypeError ownKeys trap added a key to a non-extensible target

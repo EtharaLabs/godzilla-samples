@@ -1,0 +1,23 @@
+from string => ["a", "😀", "b"]
+from length => [0, 1, 4]
+from set/map => [[1, 2], [[1, "a"]]]
+from thisArg => [11, 12]
+from prefers iterator => ["it"]
+from bad mapFn !! TypeError: Array.from: mapFn is not callable
+from array-like no iterator => [undefined, "b"]
+from null !! TypeError: Array.from called on null or undefined
+from number => []
+from too long !! RangeError: Invalid array length
+from closes iterator => ["m", true]
+from this ctor => [true, 2, 2, "b"]
+from this ctor iterable => [true, 0, 1]
+from non-ctor this => true
+of => [[1, 2], [undefined], false]
+isArray => [true, true, true, false, true, false]
+iterator objects => ["[object Array Iterator]", "Array Iterator", {value: 7, done: false}, {value: undefined, done: true}, {value: undefined, done: true}, true]
+iterator identity => [true, "values", "entries"]
+for-of growth => [1, 2, 4]
+exhausted stays done => {value: undefined, done: true}
+iterating array-like => ["p", "q"]
+destructuring holes => ["dflt", "z"]
+spread string => [2, 1]

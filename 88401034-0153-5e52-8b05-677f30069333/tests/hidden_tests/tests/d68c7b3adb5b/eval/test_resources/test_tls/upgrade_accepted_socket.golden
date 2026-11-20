@@ -1,0 +1,4 @@
+tls.connect({socket}): encrypted=true connecting=true accepted socket destroyed=true | secureConnect authorized=true servername=localhost alpn=lumen-proto/1 protocolOk=true | data "greetings over an upgraded socket" | end | close hadError=false
+new tls.TLSSocket(socket): encrypted=true connecting=true accepted socket destroyed=true | secureConnect authorized=true servername=localhost alpn=false protocolOk=true | data "and again" | end | close hadError=false
+unconnected socket: Error: TLS socket upgrade requires a paused net.Socket
+connected outgoing socket: Error: TLS socket upgrade requires a paused net.Socket

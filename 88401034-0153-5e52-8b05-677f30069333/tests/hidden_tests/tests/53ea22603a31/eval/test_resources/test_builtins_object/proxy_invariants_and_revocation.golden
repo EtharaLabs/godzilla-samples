@@ -1,0 +1,45 @@
+get invariant !! TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+get same value ok => 3
+get accessor without getter !! TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+set invariant !! TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set falsish strict !! TypeError: cannot assign to property 'x'
+set falsish sloppy => false
+has hides nonconfig !! TypeError: proxy 'has' trap hid a non-configurable property
+has hides on nonext !! TypeError: proxy 'has' trap hid a non-configurable property
+delete nonconfig !! TypeError: proxy 'deleteProperty' removed a non-configurable property
+delete falsish strict !! TypeError: cannot delete property 'x'
+defineProperty falsish !! TypeError: proxy defineProperty returned a falsish value
+defineProperty falsish Reflect => false
+defineProperty on nonext !! TypeError: proxy 'defineProperty' added a property to a non-extensible target
+defineProperty nonconfig missing !! TypeError: proxy 'defineProperty' defined a non-configurable property the target lacks
+gopd hides nonconfig !! TypeError: gOPD trap reported undefined for a non-configurable property
+gopd bad type !! TypeError: getOwnPropertyDescriptor trap must return an object or undefined
+gopd invents nonconfig !! TypeError: gOPD trap reported a non-configurable descriptor the target lacks
+gopd incompatible !! TypeError: proxy must report the same value for the non-writable, non-configurable property 'c'
+gopd completes descriptor => {value: 5, writable: false, enumerable: false, configurable: true}
+ownKeys duplicate !! TypeError: ownKeys trap result has duplicate keys
+ownKeys non-object !! TypeError: ownKeys trap must return an array-like object
+ownKeys bad element !! TypeError: ownKeys trap result must contain only strings and symbols
+ownKeys omits nonconfig !! TypeError: ownKeys trap omitted a non-configurable target key
+ownKeys adds on nonext !! TypeError: ownKeys trap added a key to a non-extensible target
+ownKeys array-like ok => ["p", Symbol(Symbol.iterator)]
+getPrototypeOf bad !! TypeError: getPrototypeOf trap must return an object or null
+getPrototypeOf nonext mismatch !! TypeError: getPrototypeOf trap result differs from a non-extensible target's prototype
+setPrototypeOf falsish !! TypeError: could not set prototype
+setPrototypeOf nonext !! TypeError: proxy 'setPrototypeOf' changed a non-extensible target's prototype
+isExtensible mismatch !! TypeError: proxy 'isExtensible' must match the target
+preventExtensions lies !! TypeError: proxy 'preventExtensions' reported success but the target is extensible
+preventExtensions falsish !! TypeError: could not prevent extensions
+apply on non-callable target !! TypeError: expression is not a function
+construct returns primitive !! TypeError: proxy construct trap returned a non-object
+construct non-ctor target !! TypeError: object is not a constructor
+construct trap args => {args: [1, 2], same: false}
+trap not callable !! TypeError: proxy 'get' trap is not callable
+trap null falls through => "target"
+revocable => [1, "function", 0, "", "cannot read property 'get' of null", "cannot perform 'has' on a revoked proxy", "cannot read property 'ownKeys' of null", "proxy is revoked", "object"]
+revoked function typeof => "function"
+Proxy without new !! TypeError: Constructor Proxy requires 'new'
+Proxy non-object target !! TypeError: Cannot create proxy with a non-object as target or handler
+Proxy null handler !! TypeError: Cannot create proxy with a non-object as target or handler
+typeof proxies => ["function", "function", "object", true]
+Proxy shape => [undefined, 2, "Proxy", "length name revocable"]

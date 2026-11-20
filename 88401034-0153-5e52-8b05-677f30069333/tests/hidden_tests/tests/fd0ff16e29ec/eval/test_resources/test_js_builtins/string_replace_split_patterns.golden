@@ -1,0 +1,36 @@
+replace-first: "a+b-c" | "baa" | "_abc" | "abc"
+replace-patterns: "John [Smith]" | "a[a]c" | "a[c]c" | "a$c" | "a$1c" | "a$<name>c" | "a$c" | "a$0c" | "abbc" | "aacc"
+replace-fn: "a<1|1|a1b2>b2" | "x$&z" | "x42z" | "xundefinedz"
+replaceAll: "a/b/c" | "bb" | "-a-b-c-" | "x1y3z" | "a[Xa]b[XaXb]" | "E"
+replaceAll-nonglobal-re: THROW TypeError: replaceAll must be called with a global RegExp
+replaceAll-global-re: "bXb"
+replace-coerce: "aoneb" | "N" | "und" | "U" | "1x321"
+symbol-replace: "custom(str,rep)" | "custom(str,rep2)"
+symbol-split: ["custom", "a,b", 3]
+symbol-search-match: "searched:q" | ["matched:q"]
+symbol-replace-noncallable: THROW TypeError: @@replace is not callable
+symbol-split-noncallable: THROW TypeError: @@split is not callable
+symbol-match-noncallable: THROW TypeError: @@match is not callable
+symbol-search-noncallable: THROW TypeError: @@search is not callable
+symbol-matchAll-noncallable: THROW TypeError: @@matchAll is not callable
+symbol-null-ignored: ["a", "b"] | "a!b"
+replace-on-null: THROW TypeError: String.prototype.replace called on null or undefined
+split-on-undefined: THROW TypeError: String.prototype.split called on null or undefined
+split-sep-coerce: ["a", "b", "c"] | ["a", "b"] | ["abc"] | ["a", "b"] | ["aundefinedb"]
+split-limit-coerce: ["a", "b"] | 3 | ["a"] | [] | 3
+split-order: ["limit", "sep"]
+split-unicode: ["😀😁"] | ["a", "b"]
+match-string: 1 | "b" | null | 1 | 0
+concat-many: "01234" | "x" | "xundefined"
+concat-symbol: THROW TypeError: Cannot convert a Symbol value to a string
+at-coerce: "b" | "a" | "a" | undefined | undefined | "a"
+indexOf-coerce: 1 | 2 | -1 | 2 | 1 | true | true
+padStart-big-fill: "abcdx" | 4 | "zzz" | "abc" | "ab"
+substring-coerce: "el" | "he" | "hello" | "he" | "he" | "he"
+codepoint-edge: 2 | 1 | 1114111 | "AB\u0000C"
+case-misc: "Ǉ" | "ǉ" | "όσο" | "σ" | "aς b" | "ΑΙ" | 2 | "SS" | "TRUE"
+localeCompare-misc: -1 | 1 | 0 | -1 | 0 | 0
+localeCompare-null: THROW TypeError: String.prototype method called on null or undefined
+trim-all-ws: "\"x​\""
+string-index-props: ["a", "x", 2, ["0", "1", "5"]] | "TypeError: cannot assign to read-only property '0'"
+string-iterator-surrogates: ["😀", "\ud83d", "|", "\ude00"] | [1, 2]

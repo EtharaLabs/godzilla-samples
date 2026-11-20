@@ -1,0 +1,20 @@
+all bad resolve err TypeError: Promise combinator: this.resolve is not callable
+all twice err raw "three"
+all twice ok ok ["one","x"] 0,1,length proto
+allSettled twice ok [{"status":"fulfilled","value":1},{"status":"rejected","reason":9}] 0,1,length proto
+any rejects err AggregateError:  errors=[1,"b"]
+any twice ok 3 number
+cap resolve throws -> resolve boom
+keyed bad resolve err TypeError: Promise combinator: this.resolve is not callable
+keyed empty ok {}  nullproto
+keyed getter throws err TypeError: getter
+keyed non-object err TypeError: argument must be an object
+keyed proxy ok {"a":1,"b":2} a,b nullproto
+keyed resolve throws err SyntaxError: resolve throws
+keyed sym+hidden ok {"v":1,"z":"zz","h2":2} v,z,h2,Symbol(k) nullproto
+keyed then call throws err URIError: then call
+keyed then getter throws err EvalError: then getter
+keyed throwing proxy err RangeError: no keys
+keyed twice err raw "three"
+keyedSettled twice ok {"a":{"status":"rejected","reason":"r1"},"b":{"status":"fulfilled","value":"one"}} a,b nullproto
+settled mix ok {"ok":{"status":"fulfilled","value":1},"bad":{"status":"rejected","reason":"Error: nope"},"plain":{"status":"fulfilled","value":3}} ok,bad,plain nullproto

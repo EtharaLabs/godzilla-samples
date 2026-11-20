@@ -1,0 +1,58 @@
+dup_export: SyntaxError: duplicate export name 'a'
+dup_export_default: SyntaxError: duplicate export name 'default'
+export_undeclared: SyntaxError: export 'nothere' is not declared in the module
+dup_lexical: SyntaxError: Identifier 'a' has already been declared
+var_lexical_clash: SyntaxError: Identifier 'a' has already been declared
+fn_lexical_clash: SyntaxError: Identifier 'f' has already been declared
+dup_fn_module: SyntaxError: Identifier 'f' has already been declared
+attr_dup: SyntaxError: duplicate import attribute key 'type'
+attr_nonstring: SyntaxError: import attribute value must be a string literal
+attr_ok: ok json value
+attr_string_key: ok json value
+export_string_local: SyntaxError: 'str' is a string literal and cannot be an exported local binding
+export_string_from: ok re-exported
+import_string_no_as: SyntaxError: imported binding name must be an identifier
+import_string_as: ok AB
+import_reserved_binding: SyntaxError: 'eval' cannot be used as a binding in strict mode
+import_reserved_binding2: SyntaxError: 'arguments' cannot be used as a binding in strict mode
+lone_surrogate_name: SyntaxError: module export name must be well-formed Unicode
+await_ident: SyntaxError: 'await' cannot be used as a binding here
+await_label: SyntaxError: 'await' cannot be used as a label here
+await_class: SyntaxError: 'await' cannot be used as a class name here
+await_top: ok tla
+html_comment: SyntaxError: unexpected token Punct("<")
+html_close: SyntaxError: unexpected token Punct(">")
+new_target_top: SyntaxError: new.target is only valid inside a function
+import_meta_ok: ok object
+escaped_default: SyntaxError: keywords must not contain escape sequences
+escaped_as: SyntaxError: 'as' must not contain escape sequences
+escaped_from: SyntaxError: 'from' must not contain escape sequences
+escaped_import_meta: SyntaxError: 'import.meta' must not contain escape sequences
+escaped_import: SyntaxError: keywords must not contain escape sequences
+nested_export: SyntaxError: 'export' declaration may only appear at the top level of a module
+nested_import: SyntaxError: 'import' declaration may only appear at the top level of a module
+export_default_async_fn: ok async function named() { return 5; }
+export_default_class: ok class { static v = 6 }
+export_default_fn_anon: ok function () { return 7; }
+strict_in_module: SyntaxError: 'with' statements are not allowed in strict mode
+delete_ident_module: SyntaxError: delete of an unqualified identifier in strict mode
+octal_module: SyntaxError: legacy octal literals are not allowed in strict mode
+yield_ident: SyntaxError: 'yield' cannot be used as a binding in strict mode
+let_ident: SyntaxError: 'let' cannot be used as a binding in strict mode
+export_star_as: ok star as
+export_star_as_string: ok star as string
+import_defer: ok object
+import_source: SyntaxError: source-text modules have no module source
+missing_specifier: SyntaxError: expected a module specifier string
+export_let_dup_import: SyntaxError: Identifier 'x' has already been declared
+import_dup_binding: SyntaxError: Identifier 'x' has already been declared
+using_top_module: ok using ok
+await_using_top_module: ok await using ok
+super_top: SyntaxError: 'super' keyword unexpected here
+return_top: SyntaxError: 'return' outside of a function
+private_top: SyntaxError: Private name '#x' is not declared in an enclosing class
+hashbang_module: ok hashbang module
+arguments_top: ok undefined
+this_top: ok undefined
+export_default_expr_then_decl: ok 2
+export_async_arrow: ok 8

@@ -1,0 +1,38 @@
+sloppy primitive set ignored: undefined
+strict primitive set: TypeError: Cannot create property 'extra' on string value
+strict number set: TypeError: Cannot create property 'x' on number value
+strict boolean set: TypeError: Cannot create property 'x' on boolean value
+strict symbol set: TypeError: Cannot create property 'x' on symbol value
+strict bigint set: TypeError: Cannot create property 'x' on bigint value
+undefined base set: TypeError: cannot set property 'x' of undefined
+null base set: TypeError: cannot set property 'x' of null
+  setter this type=object value=v1
+setter on String.prototype strict: done
+  setter this type=object value=v2
+setter on String.prototype sloppy: done
+getter-only on Number.prototype strict: TypeError: cannot set getter-only property 'primGetterOnly'
+getter-only on Number.prototype sloppy: g
+  setter this type=object value=v3
+Reflect.set primitive receiver: true
+Reflect.set data on primitive receiver: false
+inherited proxy get: trapped-missing trapped-own
+inherited proxy set: false
+  log: set own=mine recv=true | get missing recv=true | get own recv=true | set fresh=1 recv=true
+revoked proxy on chain get: TypeError: cannot perform 'get' on a revoked proxy
+revoked proxy on chain set: TypeError: cannot perform 'set' on a revoked proxy
+trapless proxy on chain: from-target set newProp
+Reflect.set proxy receiver: true true gopd k ; k:{"value":1,"writable":true,"enumerable":true,"configurable":true} ; gopd k ; k:{"value":2}
+Reflect.set refusing receiver: false
+TA proto valid index creates own: true ta[1]=0 child[1]=7
+TA proto invalid index ignored: false false
+Reflect.set TA receiver itself: true ta[2]=9
+TA own numeric non-index: undefined 0,1,2,3
+TA coerces even out of range: valueOf calls=1
+BigInt TA set number: TypeError: Cannot convert a Number to a BigInt
+BigInt TA set bigint: 5
+Reflect.set getter-only inherited: false
+Reflect.set non-writable receiver prop: false 1
+Reflect.set accessor on receiver: false
+Reflect.set non-object receiver: false
+Reflect.get receiver: receiver
+Reflect.get primitive receiver: object

@@ -1,0 +1,15 @@
+system list is an array of strings: true true
+new resolvers start from the system list: true
+a after setServers ["192.0.2.1","[2001:db8::1]:5353","198.51.100.2"]
+b unaffected: true
+mutating the returned array does not leak: ["192.0.2.1","[2001:db8::1]:5353","198.51.100.2"]
+b keeps a copy of its input: ["192.0.2.10"]
+b emptied []
+TypeError true
+TypeError true
+TypeError true
+setLocalAddress/cancel are no-ops: undefined undefined
+promise resolver ["192.0.2.77"] a still ["192.0.2.1","[2001:db8::1]:5353","198.51.100.2"]
+promise resolver rejects non-arrays: TypeError
+default resolver ["192.0.2.200"] promises view ["192.0.2.200"]
+a unaffected by default change: ["192.0.2.1","[2001:db8::1]:5353","198.51.100.2"]

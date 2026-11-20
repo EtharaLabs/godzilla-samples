@@ -1,0 +1,43 @@
+param-eval-var "from-param-eval"
+param-eval-arguments 3
+var-redeclares-param "kept"
+var-init-param "body,body"
+fn-decl-over-var "number"
+fn-decl-hoist-before-var "function"
+arguments-shadow-param "param-arguments"
+arguments-shadow-fn "function"
+arguments-var-no-shadow "object"
+named-fn-expr-shadowed-by-param "number"
+named-fn-expr-shadowed-by-var "var"
+catch-param-closure "1,2"
+catch-var-same-name "undefined"
+class-heritage-tdz !ReferenceError: cannot access 'C' before initialization
+for-of-head-tdz !ReferenceError: cannot access 'x' before initialization
+for-in-head-tdz !ReferenceError: cannot access 'y' before initialization
+for-let-closure-init "0,0"
+block-shadow "outer"
+switch-block-shared !ReferenceError: cannot access 'sv' before initialization
+global-let-vs-var-eval undefined
+global-let-not-on-globalThis !ReferenceError: globalLet2 is not defined
+global-let-shadows-property "prop,prop"
+global-fn-redecl-nonconfig !TypeError: cannot declare global binding 'NaN'
+global-var-nonwritable Infinity
+implicit-global-in-with "undefined,number"
+with-closure "second"
+with-deleted-binding "undefined"
+with-let-in-block "block"
+with-var-init "assigned-to-obj,undefined"
+eval-var-in-block-fn "number"
+eval-function-in-block "function"
+closure-counter-shared 2
+iife-loop-capture "0,1,2"
+let-in-loop-body-closure "0,1,2"
+delete-binding "false,number"
+typeof-undeclared-member "ReferenceError"
+const-object-mutable 2
+generator-arguments "2,b"
+arrow-new-target "false,true,function"
+arrow-this-in-class-field "W"
+nested-class-private-shadow "TypeError: cannot read private member #x from an object whose class did not declare it"
+private-static-subclass !TypeError: cannot read private member #p from an object whose class did not declare it
+private-in-proxy "true,false"

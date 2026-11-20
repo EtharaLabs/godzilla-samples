@@ -1,0 +1,28 @@
+read missing | Error ENOENT undefined undefined | cannot read 'missing.txt': No such file or directory (os error 2)
+read dir | Error EIO undefined undefined | cannot read 'd': Is a directory (os error 21)
+read through file | Error EIO undefined undefined | cannot read 'f.txt/x': Not a directory (os error 20)
+mkdir exists | Error EEXIST mkdir "d" | EEXIST: File exists (os error 17), mkdir 'd'
+mkdir under file | Error ENOTDIR mkdir "f.txt/sub" | ENOTDIR: Not a directory (os error 20), mkdir 'f.txt/sub'
+mkdir no parent | Error ENOENT mkdir "p/q/r" | ENOENT: No such file or directory (os error 2), mkdir 'p/q/r'
+readdir file | Error undefined undefined undefined | readdirSync 'f.txt': Not a directory (os error 20)
+readdir missing | Error undefined undefined undefined | readdirSync 'nope': No such file or directory (os error 2)
+unlink missing | Error undefined undefined undefined | unlinkSync 'nope': No such file or directory (os error 2)
+unlink dir | Error undefined undefined undefined | unlinkSync 'd': Is a directory (os error 21)
+rmdir non-empty | Error ENOTEMPTY rm "full" | ENOTEMPTY: Directory not empty (os error 39), rm 'full'
+rm missing | Error ENOENT rm "nope" | ENOENT: No such file or directory (os error 2), rm 'nope'
+rm dir | Error ENOTEMPTY rm "full" | ENOTEMPTY: Directory not empty (os error 39), rm 'full'
+stat missing | Error ENOENT stat "nope" | ENOENT: No such file or directory (os error 2), stat 'nope'
+lstat missing | Error ENOENT lstat "nope" | ENOENT: No such file or directory (os error 2), lstat 'nope'
+rename missing | Error ENOENT rename "nope" | ENOENT: No such file or directory (os error 2), rename 'nope'
+copy missing | Error ENOENT copyfile "nope" | ENOENT: No such file or directory (os error 2), copyfile 'nope'
+open missing | Error undefined undefined undefined | openSync 'nope': No such file or directory (os error 2)
+write no dir | Error undefined undefined undefined | openSync 'nodir/x.txt': No such file or directory (os error 2)
+readlink file | Error EIO readlink "f.txt" | EIO: Invalid argument (os error 22), readlink 'f.txt'
+access missing | Error ENOENT access "nope" | ENOENT: No such file or directory (os error 2), access 'nope'
+symlink exists | Error EEXIST symlink "f.txt" | EEXIST: File exists (os error 17), symlink 'f.txt'
+link exists | Error EEXIST link "f.txt" | EEXIST: File exists (os error 17), link 'f.txt'
+realpath missing ok "nope"
+close unknown ok undefined
+exists missing ok false
+open wx existing ok "number"
+""

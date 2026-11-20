@@ -1,0 +1,14 @@
+true true true true false false true true
+"(function (exports, require, module, __filename, __dirname) { x\n});"
+rewritten by load hook true
+resolve virtual:hello require/node/default | load target.js undefined | resolve node:os require/node/default | resolve os require/node/default
+after deregister MODULE_NOT_FOUND
+package.json undefined
+CUSTOM LOADER function fs node:fs
+target.js null false
+true undefined
+{"enabled":false,"nodeModules":false,"generatedCode":false} undefined
+rewritten by load hook /a/b/node_modules,/a/node_modules,/node_modules
+node:module register() (async ESM loader hooks) is not supported in lumen; module.registerHooks (the sync API) is
+TypeError undefined Cannot destructure property 'resolve' of 'hooks' as it is null.
+TypeError ERR_INVALID_ARG_TYPE The "hooks.resolve" property must be of type function. Received type number

@@ -1,0 +1,32 @@
+checkServerIdentity example.com -> ok
+checkServerIdentity WWW.Example.COM -> ok
+checkServerIdentity a.example.com -> ok
+checkServerIdentity a.b.example.com -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: a.b.example.com. is not in the cert's altnames: DNS:*.example.com | reason=Host: a.b.example.com. is not in the cert's altnames: DNS:*.example.com | host=a.b.example.com | cert kept=true
+checkServerIdentity example.com -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: example.com. is not in the cert's altnames: DNS:*.example.com | reason=Host: example.com. is not in the cert's altnames: DNS:*.example.com | host=example.com | cert kept=true
+checkServerIdentity 10.0.0.1 -> ok
+checkServerIdentity 10.0.0.2 -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: 10.0.0.2. is not in the cert's altnames: DNS:10.0.0.2, IP Address:10.0.0.1 | reason=Host: 10.0.0.2. is not in the cert's altnames: DNS:10.0.0.2, IP Address:10.0.0.1 | host=10.0.0.2 | cert kept=true
+checkServerIdentity localhost -> ok
+checkServerIdentity other -> ok
+checkServerIdentity nope -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: nope. is not in the cert's altnames: DNS:localhost | reason=Host: nope. is not in the cert's altnames: DNS:localhost | host=nope | cert kept=true
+checkServerIdentity x.test -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: x.test. is not in the cert's altnames: DNS:y.test | reason=Host: x.test. is not in the cert's altnames: DNS:y.test | host=x.test | cert kept=true
+checkServerIdentity x.test -> ok
+checkServerIdentity x -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: x. is not in the cert's altnames:  | reason=Host: x. is not in the cert's altnames:  | host=x | cert kept=true
+checkServerIdentity x -> Error [ERR_TLS_CERT_ALTNAME_INVALID] Hostname/IP does not match certificate's altnames: Host: x. is not in the cert's altnames:  | reason=Host: x. is not in the cert's altnames:  | host=x | cert kept=true
+alpn array [2,104,50,8,104,116,116,112,47,49,46,49,2,195,169] true
+alpn bytes [2,104,50]
+alpn string []
+alpn without context undefined
+ciphers 62 true true false ["aes128-gcm-sha256","aes128-sha","aes128-sha256"]
+constants TLSv1.2 TLSv1.3 auto 3 600 TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256
+roots [] true []
+secure context true {"context":{"cert":"C","key":"K","ALPNProtocols":["h2"]}} {"context":{}}
+Error: tls.createSecurePair is deprecated and not supported in lumen
+keys CLIENT_RENEG_LIMIT,CLIENT_RENEG_WINDOW,DEFAULT_CIPHERS,DEFAULT_ECDH_CURVE,DEFAULT_MAX_VERSION,DEFAULT_MIN_VERSION,SecureContext,Server,TLSSocket,checkServerIdentity,connect,convertALPNProtocols,createSecureContext,createSecurePair,createServer,getCACertificates,getCiphers,rootCertificates
+server 1 false null {"cert":"x","key":"y"} true true
+fresh socket true false null true false false undefined {} null null {} {} undefined false undefined undefined false true true true
+setServername example.test renegotiate false
+renegotiate callback TLS renegotiation is not supported
+wrap connected net.Socket -> Error: TLS socket upgrade requires a paused net.Socket
+tls.connect({ socket }) -> Error: TLS socket upgrade requires a paused net.Socket
+write before handshake -> error: TLS socket is not connected -> write callback: TLS socket is not connected -> error: TLS handshake failed -> close hadError=true destroyed=true
+server saw Error: TLS server handshake failed

@@ -1,0 +1,24 @@
+leap day => 2024-02-29
+common-year feb 29 => threw RangeError: ISO date field is out of range
+month 13 => threw RangeError: ISO date field is out of range
+day 0 => threw RangeError: ISO date field is out of range
+call without new => threw TypeError: constructor requires 'new'
+gregory => 2024-01-01[u-ca=gregory]
+calendar case-insensitive => 2024-01-01[u-ca=gregory]
+alias islamicc => islamic-civil
+unknown calendar => threw RangeError: invalid calendar identifier
+iso string as calendar => threw RangeError: invalid calendar identifier
+numeric calendar => threw TypeError: calendar must be a string
+infinite year => threw RangeError: value must be finite
+NaN month => threw RangeError: value must be finite
+fractional fields truncate => 2024-01-01
+string fields => 2024-02-03
+negative year => -000005-01-01
+six-digit year => +012345-01-01
+min date => -271821-04-19
+below min => threw RangeError: date is outside the supported range
+max date => +275760-09-13
+above max => threw RangeError: date is outside the supported range
+length => 3 PlainDate
+toStringTag => [object Temporal.PlainDate]
+symbol arg => threw TypeError: Cannot convert a Symbol value to a number

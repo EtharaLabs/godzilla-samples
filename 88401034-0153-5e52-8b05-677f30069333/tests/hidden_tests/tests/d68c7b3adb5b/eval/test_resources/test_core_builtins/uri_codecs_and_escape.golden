@@ -1,0 +1,10 @@
+URI encode: a%20b%26c%3Dd%2F%C3%A9%F0%9F%98%80 | http://x.y/a%20b?q=1&r=%C3%A9#h | -_.!~*'() | ;,/?:@&=+$# | %3B%2C%2F%3F%3A%40%26%3D%2B%24%23 | %5B%5D%7B%7D%7C%5E%60%22%3C%3E%5C | %00%7F%C2%80%DF%BF%E0%A0%80%EF%BF%BF | undefined | 12.5 | %25
+URI encode lone surrogate: URIError: URI malformed
+URI encode lone low: URIError: URI malformed
+URI encode reversed pair: URIError: URI malformed
+URI decode: a b&é😀 | %3B%2F%3F%3A%40%26%3D%2B%24%2C%23  | ;/# | € | no escapes | AB | 2 | 0 | %2f%2F | 
+URI decode bad: URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed URIError:URI malformed
+URI decode bad via decodeURI: URIError: URI malformed
+URI error class: true,true,true,URIError: URI malformed
+escape/unescape: a%20b+c/@*_-.%E9%u0100%uD83D%uDE00%7E%21 | AB%zz%u12%4 | éé | héllo wörld 😀 |  | % | %u | %u004 | abc% | %U0041 | %FF%u0100 | undefined | null
+escape symbol: TypeError: Cannot convert a Symbol value to a string

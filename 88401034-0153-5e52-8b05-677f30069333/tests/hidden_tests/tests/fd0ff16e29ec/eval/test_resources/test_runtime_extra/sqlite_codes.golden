@@ -1,0 +1,23 @@
+empty values ok {"t":"","b":{},"z":{},"tt":"text","bt":"blob","bl":0}
+empty values arr ok [["",{}]]
+blob class ok ["[object Uint8Array]",0,[0,255]]
+named + positional ok {"a":1,"b":null,"c":3,"d":"four"}
+toobig SQLiteError SQLITE_TOOBIG 18 "string or blob too big"
+toobig randomblob SQLiteError SQLITE_TOOBIG 18 "string or blob too big"
+rowid SQLiteError SQLITE_CONSTRAINT_ROWID 2579 "UNIQUE constraint failed: r.rowid"
+rowid prepared SQLiteError SQLITE_CONSTRAINT_ROWID 2579 "UNIQUE constraint failed: r.rowid"
+full SQLiteError SQLITE_FULL 13 "database or disk is full"
+full count ok {"n":4}
+iterate first {"value":{"v":1},"done":false}
+locked SQLiteError SQLITE_LOCKED 6 "database table is locked"
+unlocked ok {"changes":0,"lastInsertRowid":3}
+corrupt SQLiteError SQLITE_CORRUPT 11 "database disk image is malformed"
+intact ok [{"v":"hello"}]
+keep ok {"v":42}
+hard_heap_limit ok {"hard_heap_limit":1}
+nomem prepare SQLiteError SQLITE_NOMEM 7 "out of memory"
+nomem cached ok {"v":42}
+nomem exec SQLiteError SQLITE_NOMEM 7 ""
+nomem open memory SQLiteError SQLITE_NOMEM 7 "unable to open database file: :memory:"
+nomem open file SQLiteError SQLITE_NOMEM 7 "unable to open database file: x.db"
+x.db exists false

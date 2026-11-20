@@ -1,0 +1,78 @@
+"[a&&&b]"/v SyntaxError: unexpected '&&&' in class set
+"[ab&&c]"/v SyntaxError: cannot mix '&&' with a union in a class set
+"[a--b--]"/v SyntaxError: expected ']' in pattern
+"[ab--c]"/v SyntaxError: cannot mix '--' with a union in a class set
+"[a-\\d]"/v SyntaxError: invalid character class range
+"[z-a]"/v SyntaxError: range out of order in character class
+"[abc"/v SyntaxError: expected ']' in pattern
+"["/v SyntaxError: unterminated character class
+"[\\qabc]"/v SyntaxError: expected '{' after \q
+"[\\q{abc"/v SyntaxError: unterminated \q{...}
+"[(]"/v SyntaxError: '(' must be escaped in a v-mode class
+"[)]"/v SyntaxError: ')' must be escaped in a v-mode class
+"[{]"/v SyntaxError: '{' must be escaped in a v-mode class
+"[/]"/v SyntaxError: '/' must be escaped in a v-mode class
+"[|]"/v SyntaxError: '|' must be escaped in a v-mode class
+"[a-]"/v SyntaxError: '-' must be escaped in a v-mode class
+"[&&a]"/v SyntaxError: reserved doubled punctuator '&&' in class set
+"[a!!b]"/v SyntaxError: reserved doubled punctuator '!!' in class set
+"[##]"/v SyntaxError: reserved doubled punctuator '##' in class set
+"[\\"/v SyntaxError: trailing backslash in class
+"[\\c1]"/v SyntaxError: invalid \c escape in class set
+"[\\z]"/v SyntaxError: invalid identity escape \z in v-mode class
+"[\\xZZ]"/v SyntaxError: invalid hexadecimal escape
+"[\\u{110000}]"/v SyntaxError: invalid code point escape
+"[\\pL]"/v SyntaxError: invalid property escape: expected '{'
+"[\\p{L!}]"/v SyntaxError: invalid character in property escape
+"[\\p{L"/v SyntaxError: unterminated property escape
+"\\P{RGI_Emoji}"/v SyntaxError: \P of a property of strings is invalid
+"[^\\p{Emoji_Keycap_Sequence}]"/v SyntaxError: cannot negate a class set containing strings
+"[\\p{Nope}]"/v SyntaxError: invalid unicode property Nope
+"[^\\q{ab}]"/v SyntaxError: cannot negate a class set containing strings
+"[^[\\q{xy}a]]"/v SyntaxError: cannot negate a class set containing strings
+"[z-a]"/ SyntaxError: range out of order in character class
+"[a"/ SyntaxError: unterminated character class
+"[\\d-z]"/u SyntaxError: invalid character class range
+"[a-\\p{L}]"/u SyntaxError: invalid character class range
+"[\\01]"/u SyntaxError: legacy octal escape in unicode pattern
+"[\\c1]"/u SyntaxError: invalid \c escape in unicode pattern
+"[\\z]"/u SyntaxError: invalid identity escape \z in unicode class
+"[\\"/ SyntaxError: bad escape in class
+"[\\x4]"/u SyntaxError: invalid hexadecimal escape
+"[\\u12]"/u SyntaxError: invalid unicode escape
+"\\01"/u SyntaxError: legacy octal escape in unicode pattern
+"\\c1"/u SyntaxError: invalid \c escape in unicode pattern
+"\\c"/u SyntaxError: invalid \c escape in unicode pattern
+"\\k"/u SyntaxError: expected '<' in named back reference
+"\\k<a"/u SyntaxError: unterminated capture group name
+"\\k<1>"/u SyntaxError: invalid capture group name <1>
+"\\z"/u SyntaxError: invalid identity escape \z in unicode pattern
+"\\-"/u SyntaxError: invalid identity escape \- in unicode pattern
+"\\xZ"/u SyntaxError: invalid hexadecimal escape
+"\\u{110000}"/u SyntaxError: invalid code point escape
+"\\u{}"/u SyntaxError: invalid code point escape
+"\\u{12x}"/u SyntaxError: invalid code point escape
+"\\u12"/u SyntaxError: invalid unicode escape
+"\\uD83D\\u12"/u SyntaxError: invalid unicode escape
+"\\uD83D\\u"/u SyntaxError: invalid unicode escape
+"(?<a\\x41>b)"/ SyntaxError: invalid escape in capture group name
+"(?<1a>b)"/ SyntaxError: invalid capture group name <1a>
+"(?<ab"/ SyntaxError: unterminated capture group name
+"(?<>b)"/ SyntaxError: invalid capture group name <>
+"(?<a-b>c)"/ SyntaxError: invalid capture group name <a-b>
+"(?<a\\u0020>c)"/ SyntaxError: invalid capture group name <a >
+"\\p"/u SyntaxError: invalid property escape: expected '{'
+"\\p{"/u SyntaxError: unterminated property escape
+"\\pL"/u SyntaxError: invalid property escape: expected '{'
+"\\p{Script=Nope}"/u SyntaxError: invalid unicode property Script=Nope
+"\\p{ L }"/u SyntaxError: invalid character in property escape
+"\\p{Lowercase_Letter=x}"/u SyntaxError: invalid unicode property Lowercase_Letter=x
+"\\p{letter}"/u SyntaxError: invalid unicode property letter
+"\\p{gc=lu}"/u SyntaxError: invalid unicode property gc=lu
+"\\p{IsGreek}"/u SyntaxError: invalid unicode property IsGreek
+"\\p{General_Category}"/u SyntaxError: invalid unicode property General_Category
+"\\p{Script}"/u SyntaxError: invalid unicode property Script
+"\\p{=L}"/u SyntaxError: invalid unicode property =L
+"\\p{L=}"/u SyntaxError: invalid unicode property L=
+"\\p{RGI_Emoji}"/u SyntaxError: invalid unicode property RGI_Emoji
+"\\P{Basic_Emoji}"/v SyntaxError: \P of a property of strings is invalid

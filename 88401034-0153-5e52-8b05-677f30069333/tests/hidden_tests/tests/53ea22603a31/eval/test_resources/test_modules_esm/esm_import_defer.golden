@@ -1,0 +1,22 @@
+async_mod start
+tla_dep start
+eager evaluated
+async_mod end
+tla_dep end
+main start
+true Deferred Module [object Deferred Module] symbol access is lazy
+lazy evaluated
+first touch 42
+second touch o other,value
+false Module 42
+thr evaluated
+thr access 0 Error: deferred boom
+thr access 1 Error: deferred boom
+cyc evaluated
+cyc saw: TypeError: cannot access a deferred namespace while its module graph is evaluating
+with_tla evaluated
+tla value
+import.defer resolved Deferred Module
+dyn_lazy evaluated
+touch dynamic deferred async w true
+SyntaxError: source-text modules have no module source

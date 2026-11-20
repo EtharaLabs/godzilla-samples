@@ -1,0 +1,38 @@
+<cwd>/pages nextjs https://example.test /assets/ [".js",".jsx",".ts",".tsx"]
+route /about <cwd>/pages/about.jsx
+route /blog <cwd>/pages/blog/index.tsx
+route /settings <cwd>/pages/settings.tsx
+route / <cwd>/pages/index.tsx
+route /api/users/[id] <cwd>/pages/api/users/[id].ts
+route /shop/[cat]/[item] <cwd>/pages/shop/[cat]/[item].tsx
+route /blog/[slug] <cwd>/pages/blog/[slug].tsx
+route /shop/[cat] <cwd>/pages/shop/[cat].jsx
+route /[...all] <cwd>/pages/[...all].tsx
+route /docs/[[...path]] <cwd>/pages/docs/[[...path]].js
+/ -> exact / {} {} / https://example.test/assets/index.tsx <cwd>/pages/index.tsx []
+/blog -> exact /blog {} {} /blog https://example.test/assets/blog/index.tsx <cwd>/pages/blog/index.tsx []
+/blog/ -> exact /blog {} {} /blog/ https://example.test/assets/blog/index.tsx <cwd>/pages/blog/index.tsx []
+/blog/hello%20world?q=a%20b&q=c&r=1 -> dynamic /blog/[slug] {"slug":"hello world"} {"q":["a b","c"],"r":"1","slug":"hello world"} /blog/hello world?q=a b&q=c&r=1 https://example.test/assets/blog/[slug].tsx <cwd>/pages/blog/[slug].tsx []
+/one/two/three -> catch-all /[...all] {"all":"one/two/three"} {"all":"one/two/three"} /one/two/three https://example.test/assets/[...all].tsx <cwd>/pages/[...all].tsx []
+/docs -> catch-all /[...all] {"all":"docs"} {"all":"docs"} /docs https://example.test/assets/[...all].tsx <cwd>/pages/[...all].tsx []
+/docs/a/b -> catch-all /[...all] {"all":"docs/a/b"} {"all":"docs/a/b"} /docs/a/b https://example.test/assets/[...all].tsx <cwd>/pages/[...all].tsx []
+/api/users/42?id=override -> dynamic /api/users/[id] {"id":"42"} {"id":"42"} /api/users/42?id=override https://example.test/assets/api/users/[id].ts <cwd>/pages/api/users/[id].ts []
+/shop/shoes -> dynamic /shop/[cat] {"cat":"shoes"} {"cat":"shoes"} /shop/shoes https://example.test/assets/shop/[cat].jsx <cwd>/pages/shop/[cat].jsx []
+/shop/shoes/red -> dynamic /shop/[cat]/[item] {"cat":"shoes","item":"red"} {"cat":"shoes","item":"red"} /shop/shoes/red https://example.test/assets/shop/[cat]/[item].tsx <cwd>/pages/shop/[cat]/[item].tsx []
+/settings?x=1#frag -> exact /settings {} {"x":"1"} /settings?x=1 https://example.test/assets/settings.tsx <cwd>/pages/settings.tsx []
+/about -> exact /about {} {} /about https://example.test/assets/about.jsx <cwd>/pages/about.jsx []
+/readme -> catch-all /[...all] {"all":"readme"} {"all":"readme"} /readme https://example.test/assets/[...all].tsx <cwd>/pages/[...all].tsx []
+http://other.host/blog/x -> dynamic /blog/[slug] {"slug":"x"} {"slug":"x"} /blog/x https://example.test/assets/blog/[slug].tsx <cwd>/pages/blog/[slug].tsx []
+https://example.test/settings -> exact /settings {} {} /settings https://example.test/assets/settings.tsx <cwd>/pages/settings.tsx []
+/%E4%BD%A0%E5%A5%BD -> catch-all /[...all] {"all":"你好"} {"all":"你好"} /你好 https://example.test/assets/[...all].tsx <cwd>/pages/[...all].tsx []
+request /blog/[slug]
+TypeError: FileSystemRouter.match expects a path, Request, or Response
+before reload /[...all]
+after reload /new true
+TypeError: Expected 'style' option (ex: "style": "nextjs")
+TypeError: Expected 'style' option (ex: "style": "nextjs")
+TypeError: Only 'nextjs' style is currently implemented
+Error: Unable to find directory: ./missing
+Error: Unable to find directory: undefined
+Error: Unable to find directory: ./pages/index.tsx
+http://localhost true [".jsx",".md"] ["/about","/readme","/shop/[cat]"] http://localhost/readme.md null [object FileSystemRouter]

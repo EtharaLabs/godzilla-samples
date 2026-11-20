@@ -1,0 +1,22 @@
+compare a b => -1
+compare b a => 1
+compare equal => 0
+compare bag => 0
+compare ignores calendar => 0
+equals same => true
+equals different calendar => false
+sort => 2023-12-31 2024-01-15 2024-03-01
+valueOf => threw TypeError: Temporal.PlainDate has no valueOf; use compare
+less-than operator => threw TypeError: Temporal.PlainDate has no valueOf; use compare
+string concat => 2024-01-01
+toJSON => {"d":"2024-01-01"}
+toString auto => 2024-01-01
+toString always => 2024-01-01[u-ca=iso8601]
+toString never on hebrew => 2024-01-01
+toString critical => 2024-01-01[!u-ca=hebrew]
+toString auto on gregory => 2024-01-01[u-ca=gregory]
+toString bad calendarName => threw RangeError: invalid calendarName: bogus
+toString options not object => threw TypeError: options must be an object
+toString brand => threw TypeError: receiver is not a Temporal.PlainDate
+toJSON brand => threw TypeError: receiver is not a Temporal.PlainDate
+equals brand arg => threw TypeError: cannot convert to Temporal.PlainDate

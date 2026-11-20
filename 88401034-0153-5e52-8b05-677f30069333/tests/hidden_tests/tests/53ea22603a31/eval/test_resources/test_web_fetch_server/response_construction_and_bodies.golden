@@ -1,0 +1,33 @@
+201 Created true text/plain;charset=UTF-8 yes "" false false undefined
+body text body text true true
+clone used THREW TypeError: cannot clone a used Response
+200 "" true null "" 0
+status 199 THREW RangeError: invalid response status 199
+status 600 THREW RangeError: invalid response status 600
+status 0 THREW RangeError: invalid response status 0
+status 204 204 true
+status 299 299 true
+status 300 300 false
+status 404 404 false
+status 599 599 false
+status 250 250 true
+status NaN NaN false
+status undefined 200
+202 text/plain;charset=UTF-8 1 {"a":[1,2],"s":"é"}
+application/vnd+json str
+json(undefined) text ""
+json(bigint) THREW TypeError: Do not know how to serialize a BigInt
+0 error false "" undefined
+true 3 Uint8Array 1,2,255 true 3 ""
+text/x x
+bad json THREW SyntaxError: Expected string key in JSON object
+"str bytes !"
+Uint8Array streamed {"done":true}
+true false
+true
+read body stream after text() THREW TypeError: body already consumed
+async stream body THREW TypeError: a body ReadableStream must produce its data synchronously in this runtime
+locked stream body THREW TypeError: cannot construct a body from a locked ReadableStream
+object chunk THREW TypeError: ReadableStream chunk is not binary data
+application/x-www-form-urlencoded;charset=UTF-8 42 obj false
+1 true

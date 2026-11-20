@@ -1,0 +1,17 @@
+true true
+read 3 false Uint8Array [1,2,3] 3 3
+read 10 false Uint8Array [4,5,6,7] 4 10
+read 10 true Uint8Array [] 0 10
+read 4 true Uint8Array [] 0 4
+byob on default stream THREW TypeError: BYOB readers require a byte stream (type: 'bytes')
+byob reader ctor THREW TypeError: BYOB reader requires a byte ReadableStream
+byob read non-view THREW TypeError: BYOB read expects an ArrayBufferView
+bytes enqueue string THREW TypeError: byte stream enqueue expects an ArrayBufferView
+pull 1 true 8
+auto false 101,201
+pull 2 true 8
+auto false 102,202
+auto true 
+byobRequest outside pull null
+default reader on bytes Uint8Array 9,9,9 {"done":true}
+u16 view Uint16Array 2 1,2,3,4

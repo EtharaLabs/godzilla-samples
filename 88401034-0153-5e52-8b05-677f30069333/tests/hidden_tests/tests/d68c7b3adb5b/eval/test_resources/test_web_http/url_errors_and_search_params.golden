@@ -1,0 +1,20 @@
+["relative/path",null]               TypeError: URL: invalid URL 'relative/path' (relative, and no base given)
+["http://",null]                     TypeError: URL: invalid URL 'http://': missing host
+["http:",null]                       TypeError: URL: invalid URL 'http:': special scheme without //
+["http://host.test:99999/",null]     TypeError: URL: invalid port '99999'
+["http://host.test:abc/",null]       TypeError: URL: invalid port 'abc'
+["http://[::1/",null]                TypeError: URL: invalid host '[::1'
+["http://bücher.example/",null]      TypeError: URL: non-ASCII host 'bücher.example' (IDNA is not implemented yet)
+["x","not a base"]                   TypeError: URL: invalid base URL 'not a base'
+["",null]                            TypeError: URL: invalid URL '' (relative, and no base given)
+parsed [["a","1"],["b","two words"],["a","3"],["c","✓"],["d",""],["","empty-key"],["bad","%zz"],["flag",""]] size 8
+get 1 null getAll ["1","3"] has true false
+mutated a=only&b=replaced&d=&=empty-key&bad=%25zz&flag=
+sorted (stable) a=2&a=1&m=x&z=last
+encode sp+ace=a+b&amp=x%26y%3Dz&plus=1%2B1&uni=%C3%A9%E2%9C%93&star=*-._
+copy true keys a,a,m,z values 2,1,x,last
+forEach a=2:true a=1:true m=x:true z=last:true
+bad pair TypeError: URLSearchParams: each init pair needs exactly two items
+live searchParams http://h.test/p?x=9&y=a+b#keep ?x=9&y=a+b
+emptied http://h.test/p#keep
+search setter refreshes params reset 1

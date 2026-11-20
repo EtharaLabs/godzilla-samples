@@ -1,0 +1,16 @@
+replace first only => ["baa", "^abc", "abc"]
+$ patterns => ["abbc", "aac", "acc", "a$c", "a$c", "a$0c", "a$1c", "a$<x>c", "a$&c", "aaac", "ab$9$"]
+regex captures => ["01/2020 01 $3 | 2020 20200 $00", "a[b$2]c"]
+replacer fn args => [["-", 1, "x-y-"]]
+replacer fn result coerced => ["a42c", "anullc", "aTc"]
+replacer not $-expanded => "a$&$&c"
+search coercion => ["aXb", "a_b", "U", "a;b"]
+replaceAll => ["a-b-c", "ba", "_a_b_c_", "x--y", "a[a|c]c", "a$c", "a$1$<n>$c"]
+replaceAll fn offsets => ["ab14ab34", "a1b3c"]
+replaceAll empty => ["x", "y", "|a|b|"]
+replaceAll global regex => "a_b_"
+replaceAll non-global regex !! TypeError: replaceAll must be called with a global RegExp
+replaceAll check order => ["get match", "get replace", "toString"]
+custom Symbol.replace => "custom:abc:R"
+replaceAll null this !! TypeError: String.prototype.replaceAll called on null or undefined
+unicode => ["xax", 3, "eéé"]

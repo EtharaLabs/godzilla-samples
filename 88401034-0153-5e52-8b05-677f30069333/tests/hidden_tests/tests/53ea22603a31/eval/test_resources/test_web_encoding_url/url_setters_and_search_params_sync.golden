@@ -1,0 +1,17 @@
+true 1
+http://h.com/y z?a=1&b=2#h
+http://h.com/y z?c=3#h 3 null
+?d=4 d=4
+http://h.com/y z?d=4#top
+http://h.com/y z?d=4
+http://h.com:8081/y z?d=4 h.com:8081 http://h.com:8081
+http://h.com/y z?d=4 ""
+http://example.org/y z?d=4
+https://new.example/q?z=9 9 null
+https://new.example/q?z=9&k=v+w%26x ?z=9&k=v+w%26x
+https://new.example/q?z=1&k=v+w%26x
+https://new.example/q?k=v+w%26x
+"https://new.example/q" ""
+bad port THREW TypeError: URL: invalid port 'abc'
+protocol THREW TypeError: cannot set getter-only property 'protocol'
+https://new.example/q

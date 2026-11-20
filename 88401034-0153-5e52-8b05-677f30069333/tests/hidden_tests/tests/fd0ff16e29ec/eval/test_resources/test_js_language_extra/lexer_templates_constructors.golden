@@ -1,0 +1,47 @@
+regex in template "a[/]x\\/bgic/"
+nested template regex "true"
+template regex class bracket "true|a\\/b"
+template division "3"
+template obj literal "}`"
+ident escapes 3
+surrogate pair escapes "2,128512,128512,2"
+lone surrogate escape "2,65,56832"
+template surrogates "128512,6"
+tagged invalid escapes "\\u{110000}\\x1\\01"
+tagged invalid u{ "[null,\"\\\\u{12345678901}\"]"
+yield as ident division 2
+await as ident division 2
+new F proto prim true
+Reflect.construct nt proto prim true
+Reflect.construct bound nt true
+Reflect.construct proxy nt true
+Function ctor nt proto prim 1
+Function ctor bad params function anonymous(a,
+) {
+return a
+}
+Function ctor comment param 5
+Function ctor super !SyntaxError: 'super' call unexpected here
+new arrow !TypeError: object is not a constructor
+new method !TypeError: object is not a constructor
+new gen !TypeError: object is not a constructor
+new async !TypeError: object is not a constructor
+new Math.max !TypeError: object is not a constructor
+new Symbol !TypeError: Symbol is not a constructor
+new bound arrow !TypeError: object is not a constructor
+bind null-proto fn "null,b"
+bind custom proto true
+toString native "function max() { [native code] }"
+toString bound "function () { [native code] }"
+toString class "class Q { m() {} }"
+toString method "m(a) { return a; }"
+toString getter "get g() { return 1; }"
+toString proxy "function () { [native code] }"
+toString nonfn !TypeError: Function.prototype.toString requires that 'this' be a function
+toString Function ctor "function anonymous(a,b\n) {\nreturn a+b\n}"
+parseFloat identity true
+isNaN/isFinite coercion "true,false,true,true,true"
+globalThis props "{\"value\":null,\"writable\":false,\"enumerable\":false,\"configurable\":false} {\"value\":null,\"writable\":false,\"enumerable\":false,\"configurable\":false} {\"writable\":false,\"enumerable\":false,\"configurable\":false}"
+encode/decode "a%20b%26%C3%BC € http://x/a%20b?q=1#f %3B%2F"
+decode malformed !URIError: URI malformed
+escape/unescape "a%20b+%FC%u20AC €A%zz"

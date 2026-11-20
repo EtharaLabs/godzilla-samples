@@ -1,0 +1,28 @@
+helpers chain: 9,25,49
+flatMap: 1,-1,s1,s2,3,-3
+flatMap rejects string primitives: TypeError: value is not iterable
+flatMap accepts String objects: h,i
+reduce/some/every/find/forEach: 10 | 110 | true | true | 3 | 0:1 1:2 2:3 3:4
+reduce empty: TypeError: Reduce of empty iterator with no initial value
+take/drop validation: RangeError,RangeError,RangeError,3,drop:RangeError
+closing on early exit: return called,return called
+Iterator.from wraps: true {"value":1,"done":true} true a,b
+Iterator.from bad: TypeError: value is not iterable
+helper protocol: [object Iterator Helper] {"value":1,"done":false} {"done":true} {"done":true}
+helper running reentry: TypeError: iterator helper is already running
+Iterator.concat: 1,2,3,x,y 0
+Iterator.concat bad: TypeError: Iterator.concat argument is not an object
+Iterator.zip shortest: [[1,"a"],[2,"b"]]
+Iterator.zip rejects string input: TypeError: value is not iterable
+Iterator.zip longest: [[1,"a"],[2,"P2"],[3,"P2"]]
+Iterator.zip strict: TypeError: Iterator.zip strict: input iterators have different lengths
+Iterator.zip strict ok: [[1,"a"],[2,"b"]]
+Iterator.zip bad mode: TypeError: invalid Iterator.zip mode
+Iterator.zipKeyed: [{"a":1,"b":"x"},{"a":2,"b":"y"}] [{"a":1,"b":"pad"}]
+zip closes others: close c,close a
+generator helpers via Symbol.iterator: 1=a 2=b 10,21
+Iterator constructor abstract: TypeError: Abstract class Iterator not directly constructable
+Iterator subclass: 0,3,6
+toStringTag/constructor weird setters: [object Custom] ctor Iterator true
+weird setter on prototype itself: TypeError: cannot assign to a property of Iterator.prototype
+fromAsync: 1,2,3 a0,b1 x,y | TypeError: Array.fromAsync: mapFn is not callable | async next failed | true 2

@@ -1,0 +1,16 @@
+main start
+thr body runs
+deferred access threw thr failed
+second access threw thr failed
+dynamic import after deferred failure rejects: thr failed
+ok body runs
+ok via defer ok value
+dynamic import after deferred eval ok value false
+tla start
+import.defer(mid) resolved Deferred Module
+touch while tla pending: TypeError: cannot access a deferred namespace while its module graph is evaluating
+tla end
+leaf body runs
+mid body runs
+touch mid later mid sees tla value and leaf
+import.defer(tla) of evaluated module tla value

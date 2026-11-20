@@ -1,0 +1,47 @@
+"var a\\u{zz} = 1"                       -> SyntaxError: invalid unicode escape in identifier
+"var \\u00zz = 1"                        -> SyntaxError: invalid unicode escape in identifier
+"var \\u{110000}x = 1"                   -> SyntaxError: invalid unicode escape in identifier
+"var x\\u0030y = 7; x0y"                 -> ok 7
+"\"abc\\"                                -> SyntaxError: unterminated escape
+"\"\\uD83D\\u{DE00\""                    -> SyntaxError: unterminated \u{...} escape
+"\"\\uD83D\\uZZZZ\""                     -> SyntaxError: bad \u escape
+"\"\\uD83D\\u{DE00}\".codePointAt(0)"    -> ok 128512
+"\"\\uDBFE\\uDC00\".codePointAt(0)"      -> ok 1112064
+"\"\\uDBFE\\uDC00\".length"              -> ok 2
+"\"\\u{10F800}\" === \"\\uDBFE\\uDC00\"" -> ok true
+"\"\\uDBFF\\uDFFF\".codePointAt(0)"      -> ok 1114111
+"\"\\uDBFE\\uDC00x\".slice(2)"           -> ok "x"
+"encodeURIComponent(\"\\uDBFE\\uDC00\")" -> ok "%F4%8F%A0%80"
+"\"\\uDBFE\\uDC00\".normalize(\"NFC\").length" -> ok 2
+"\"\\uD800\\uDC00\".codePointAt(0)"      -> ok 65536
+"(s => s[0] === undefined)`\\u{g}`"      -> ok true
+"(s => s.raw[0])`\\u{12g}`"              -> ok "\\u{12g}"
+"(s => String(s[0]))`\\u{110000}`"       -> ok "undefined"
+"`\\u{g}`"                               -> SyntaxError: invalid escape sequence in template literal
+"`\\x`"                                  -> SyntaxError: invalid escape sequence in template literal
+"08.5"                                   -> ok 8.5
+"09 + 1"                                 -> ok 10
+"07 + 1"                                 -> ok 8
+"0_7"                                    -> SyntaxError: numeric separator not allowed in legacy literal
+"08n"                                    -> SyntaxError: invalid BigInt literal (leading zero)
+"1_000_000"                              -> ok 1000000
+"1__0"                                   -> SyntaxError: invalid use of numeric separator
+"0x_1"                                   -> SyntaxError: invalid use of numeric separator
+".5e-3"                                  -> ok 0.0005
+"5.e2"                                   -> ok 500
+"0b102"                                  -> SyntaxError: identifier starts immediately after numeric literal
+"0o78"                                   -> SyntaxError: identifier starts immediately after numeric literal
+"1n.toString()"                          -> ok "1"
+"1.toString()"                           -> SyntaxError: identifier starts immediately after numeric literal
+"1..toString()"                          -> ok "1"
+"typeof 1.e"                             -> SyntaxError: invalid numeric literal
+"a b"                                    -> (runtime) ReferenceError: a is not defined
+"a b"                                    -> (runtime) ReferenceError: a is not defined
+"\"a b\".length"                         -> ok 3
+"/[/]/.source"                           -> ok "[/]"
+"/a/gg"                                  -> SyntaxError: duplicate regular expression flag g
+"/(?<n>a)\\k<n>/.test(\"aa\")"           -> ok true
+"\"\\u2028\\u2029\".length"              -> ok 2
+"`a\\\nb`"                               -> ok "ab"
+"`a\r\nb`.length"                        -> ok 3
+"\"line1\\\nline2\""                     -> ok "line1line2"

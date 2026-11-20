@@ -1,0 +1,41 @@
+fromEntries: {"a":3,"b":2} {"1":"one","[object Object]":"obj"} {"g":"gen"}
+fromEntries bad entry: TypeError: Object.fromEntries entry is not an object
+fromEntries null: TypeError: Object.fromEntries called on null or undefined
+fromEntries closes iterator: TypeError closed=true
+fromEntries entry getter order: k,v {"key":"val"}
+fromEntries symbol keys: symval 1.5
+groupBy: null {"odd":[1,3,5],"even":[2,4]}
+groupBy keys coerced: 1,2 {"1":["a"],"2":["bb","cc"]}
+groupBy string: {"a":["a","a"],"b":["b","b"],"c":["c"]}
+groupBy index arg: {"first":["x"],"rest":["y","z"]}
+groupBy non-callable: TypeError: Object.groupBy callback is not callable
+groupBy non-iterable: TypeError: value is not iterable
+Map.groupBy: 2 2,3 1 1
+assign: {"0":9,"1":"y","a":1,"g":"got"} symval
+assign setter on target: set a=1
+assign to non-writable: TypeError: Cannot assign to read only property 'a'
+assign primitive target: object 1 true
+assign null target: TypeError: Object.assign called on null or undefined
+assign proxy source order: ownKeys gopd:a get:a gopd:b get:b
+assign getter deletes later key: {"a":1,"c":3}
+keys/values/entries order: 1,2,b,a,-1,01,4294967295 | one,two,1,2,neg,lead,big | 1=one,2=two,b=1,a=2,-1=neg,01=lead,4294967295=big
+keys on primitives: 0,1,2 0 0,x;1,y 0
+keys null: TypeError: Object.keys called on null or undefined
+values undefined: TypeError: Object.values called on null or undefined
+values getter deletes: A,C
+entries proxy: [["x",1]] [1] x
+keys of arguments and functions: 0,1 0 1
+getOwnPropertyNames: 0,1,length | 0,1,length | length,name,prototype | 0
+getOwnPropertyNames null: TypeError: Object.getOwnPropertyNames called on null or undefined
+getOwnPropertyNames proxy: z,a Symbol(sym)
+getOwnPropertySymbols: Symbol(sym),Symbol(Symbol.iterator) 0
+getOwnPropertySymbols null: TypeError: Object.getOwnPropertySymbols called on null or undefined
+create: 1 {"own":2} null
+create bad proto: TypeError: Object.create proto must be object or null
+create undefined: TypeError: Object.create proto must be object or null
+create bad props: TypeError: Object.create called on null or undefined
+is: true,false,true,true,false,true,true,true
+hasOwn: true,true,false,true
+hasOwn null: TypeError: Object.hasOwn called on non-object
+Object(): true,object,object,true,1,object,object,true,1,Object
+Object subclass new.target: true object

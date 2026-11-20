@@ -1,0 +1,31 @@
+read "hello\nworld\n"
+buf 68656c6c6f0a776f726c640a true
+append "hello\nworld\nmore"
+bin 00ff800a0d
+u8 hi
+b64 hello aGVsbG8=
+exists true false false
+mkdir d1/d2/d3 d1/d2/d3
+mkdir1 solo
+readdir d2,x.txt
+types d2:false:true:false:d1:d1 x.txt:true:false:false:d1:d1
+bufnames trued2,truex.txt
+stat 2 true false 100000 1 false false false false true number number number
+statdir true false 40000
+rename d2,z.txt
+copy x
+unlinked false
+link a.txt true false 16
+realpath a.txt true true
+hard 2 true
+chmod 640
+chmod string is decimal 363
+utimes 1000000000000 1500000000000 2017-07-14T02:40:00.000Z 2001-09-09T01:46:40.000Z
+utimes coerced 1234567890000 1600000000000
+trunc "hel"
+rm false
+rmdir false
+access ok 0 4 2 1 8 40960
+mkdtemp true 14 true true
+mkdtemp buffer true 14
+final a.txt,b64.txt,bin.dat,hard.txt,link.txt,u.txt

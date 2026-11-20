@@ -1,0 +1,34 @@
+  close filter
+filter throws RangeError: f
+  close fm1
+flatMap mapper throws RangeError: fm
+  close fm2
+flatMap primitive TypeError: value is not iterable
+  close fm3
+flatMap string TypeError: value is not iterable
+  close fm4
+flatMap inner throws SyntaxError: inner
+  close fm5
+flatMap {"value":1,"done":false} {"value":10,"done":false} {"done":true} {"done":true}
+  close inner
+  close fm6
+flatMap return with inner {"done":true}
+drop exhausted {"done":true} {"done":true}
+  close d3
+  close d4
+drop [3,4] RangeError: limit must be a non-negative number RangeError: limit must be a non-negative number
+  close take
+  close t0
+  close tbad
+take {"value":1,"done":false} {"done":true} {"done":true} {"done":true} RangeError: limit must be a non-negative number
+  close mt
+map ["1:0","2:1","3:2"] RangeError: m
+non-object receivers TypeError: Iterator method called on a non-object TypeError: Iterator helper called on a non-object TypeError: Iterator method called on a non-object
+regexp string iterator TypeError: next called on a non-RegExp-String-Iterator ax
+{"done":true} {"done":true}
+empty matches 0,1,2
+1
+generator receivers TypeError: Generator method called on a non-generator TypeError: Generator method called on a non-generator TypeError: Generator method called on a non-generator
+generator return override {"value":"from finally","done":true} {"done":true}
+generator yield in finally {"value":"cleanup","done":false} {"value":"r","done":true} {"done":true}
+string iterator pair {"value":"😀","done":false} {"value":"z","done":false} {"done":true}

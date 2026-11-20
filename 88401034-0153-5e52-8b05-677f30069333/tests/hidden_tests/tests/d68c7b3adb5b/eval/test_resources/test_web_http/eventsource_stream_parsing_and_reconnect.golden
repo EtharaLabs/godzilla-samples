@@ -1,0 +1,37 @@
+created readyState=0 url-ok=true withCredentials=false
+open readyState=1
+message "hello" lastEventId="" origin-ok=true
+tick "42" type=tick
+message "line one\nline two\n two spaces" lastEventId="7" origin-ok=true
+message "crlf ends" lastEventId="7" origin-ok=true
+tick "cr only" type=tick
+message "id reset" lastEventId="" origin-ok=true
+message "" lastEventId="9" origin-ok=true
+final bye lastEventId="9"
+error readyState=0
+open readyState=1
+message "resumed after 9" lastEventId="9" origin-ok=true
+closed readyState=2
+/redirect message arrived via redirect
+/text error readyState=2
+/204 error readyState=2
+/missing error readyState=2
+/to-ftp error readyState=2
+/no-location error readyState=2
+/loop error readyState=2
+requests:
+  /stream accept=text/event-stream cache=no-cache last-event-id=null
+  /stream accept=text/event-stream cache=no-cache last-event-id=9
+  /redirect accept=text/event-stream cache=no-cache last-event-id=null
+  /redirected accept=text/event-stream cache=no-cache last-event-id=null
+  /text accept=text/event-stream cache=no-cache last-event-id=null
+  /204 accept=text/event-stream cache=no-cache last-event-id=null
+  /missing accept=text/event-stream cache=no-cache last-event-id=null
+  /to-ftp accept=text/event-stream cache=no-cache last-event-id=null
+  /no-location accept=text/event-stream cache=no-cache last-event-id=null
+  /loop accept=text/event-stream cache=no-cache last-event-id=null
+  /loop accept=text/event-stream cache=no-cache last-event-id=null
+  /loop accept=text/event-stream cache=no-cache last-event-id=null
+  /loop accept=text/event-stream cache=no-cache last-event-id=null
+  /loop accept=text/event-stream cache=no-cache last-event-id=null
+  /loop accept=text/event-stream cache=no-cache last-event-id=null

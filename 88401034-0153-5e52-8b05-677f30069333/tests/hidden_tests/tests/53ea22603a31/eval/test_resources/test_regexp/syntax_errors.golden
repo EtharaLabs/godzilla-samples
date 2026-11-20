@@ -1,0 +1,67 @@
+"("  => SyntaxError: expected ')' in pattern
+")"  => SyntaxError: unexpected character in pattern
+"a**"  => SyntaxError: nothing to repeat
+"*a"  => SyntaxError: nothing to repeat
+"a{2,1}"  => SyntaxError: numbers out of order in {} quantifier
+"[b-a]"  => SyntaxError: range out of order in character class
+"a" gg => SyntaxError: duplicate regular expression flag g
+"a" x => SyntaxError: invalid regular expression flag x
+"a" uv => SyntaxError: the u and v regular expression flags are mutually exclusive
+"a" G => SyntaxError: invalid regular expression flag G
+"\\k<x>(?<y>.)" u => SyntaxError: invalid named back reference <x>
+"(?<a>.)(?<a>.)"  => SyntaxError: duplicate group name a
+"(?<1a>x)"  => SyntaxError: invalid capture group name <1a>
+"(?<a"  => SyntaxError: unterminated capture group name
+"\\p{Foo}" u => SyntaxError: invalid unicode property Foo
+"\\pL" u => SyntaxError: invalid property escape: expected '{'
+"\\p{Lu" u => SyntaxError: unterminated property escape
+"\\p{Script=Foo}" u => SyntaxError: invalid unicode property Script=Foo
+"\\u{110000}" u => SyntaxError: invalid code point escape
+"\\c" u => SyntaxError: invalid \c escape in unicode pattern
+"]" u => SyntaxError: lone ']' is not valid in a unicode pattern
+"{" u => SyntaxError: lone '{' is not valid in a unicode pattern
+"\\1(a)\\2" u => SyntaxError: back reference \2 exceeds the number of capture groups
+"\\01" u => SyntaxError: legacy octal escape in unicode pattern
+"\\-" u => SyntaxError: invalid identity escape \- in unicode pattern
+"[\\z]" u => SyntaxError: invalid identity escape \z in unicode class
+"\\u{12" u => SyntaxError: invalid code point escape
+"\\xZ" u => SyntaxError: invalid hexadecimal escape
+"\\uZZZZ" u => SyntaxError: invalid unicode escape
+"[a&&&b]" v => SyntaxError: unexpected '&&&' in class set
+"[a-z&&b]" v => SyntaxError: cannot mix '&&' with a union in a class set
+"[a--b|c]" v => SyntaxError: expected ']' in pattern
+"[(]" v => SyntaxError: '(' must be escaped in a v-mode class
+"[a||b]" v => SyntaxError: '|' must be escaped in a v-mode class
+"[\\q{]" v => SyntaxError: unterminated \q{...}
+"[\\q]" v => SyntaxError: expected '{' after \q
+"[a-\\d]" v => SyntaxError: invalid character class range
+"[^\\p{RGI_Emoji}]" v => SyntaxError: cannot negate a class set containing strings
+"\\P{RGI_Emoji}" v => SyntaxError: \P of a property of strings is invalid
+"[\\q{a}]" u => SyntaxError: invalid identity escape \q in unicode class
+"(?ii:a)"  => SyntaxError: duplicate inline modifier flag
+"(?-:a)"  => SyntaxError: empty inline modifier
+"(?x:a)"  => SyntaxError: unsupported group
+"(?i"  => SyntaxError: invalid inline modifier
+"(?i-i:a)"  => SyntaxError: inline modifier flag added and removed
+"(?i)a"  => SyntaxError: invalid inline modifier
+"(?<=a)*"  => SyntaxError: quantifier on an assertion
+"(?=a){2}" u => SyntaxError: quantifier on an assertion
+"a\\"  => SyntaxError: trailing backslash
+"[a"  => SyntaxError: unterminated character class
+"(?<n>a)\\k<m>"  => SyntaxError: invalid named back reference <m>
+"(a{2})|(b{1001})"  => compiles
+"(?:ab){1001}"  => SyntaxError: repetition count too large
+"(?:ab){2,1001}"  => SyntaxError: repetition count too large
+"x{2}{3}"  => SyntaxError: nothing to repeat
+ok a{,2}
+ok \p{Lu}
+ok (?=a){2}
+ok ]
+ok {
+ok \c
+ok \8
+ok (?i:a)(?-m:b)(?s-i:c)
+ok [\q{a|bc}]
+ok x{99999999999}
+literal SyntaxError: expected ')' in pattern
+literal SyntaxError: duplicate regular expression flag g

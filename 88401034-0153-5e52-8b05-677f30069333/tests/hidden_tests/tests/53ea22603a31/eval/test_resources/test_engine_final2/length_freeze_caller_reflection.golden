@@ -1,0 +1,12 @@
+freeze in valueOf (sloppy) => 3 true
+freeze in valueOf (strict) => threw TypeError: cannot assign to read-only property 'length'
+non-writable length (sloppy) => 2
+non-writable length (strict) => threw TypeError: cannot assign to read-only property 'length'
+Reflect.set length frozen by valueOf => false 1
+caller is the sloppy caller => true
+caller after return => true
+fn.arguments => 2,2
+fn.arguments from inner => lz
+mapped write and length => A,2,X,1
+mapped delete then write => on
+mapped defineProperty => ddz

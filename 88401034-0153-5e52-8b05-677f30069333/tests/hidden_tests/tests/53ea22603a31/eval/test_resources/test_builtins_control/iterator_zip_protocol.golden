@@ -1,0 +1,47 @@
+shortest closes others => [["a0", "b0", "c0"]]
+   log: open a, open b, open c, next a, next b, next c, next a, close c, close b
+longest => [["a0", "b0"], [undefined, "b1"]]
+   log: open a, open b, next a, next b, next a, next b, next b
+strict ok => [["a0", "b0"], ["a1", "b1"]]
+   log: open a, open b, next a, next b, next a, next b, next a, next b
+strict first shorter !! TypeError: Iterator.zip strict: input iterators have different lengths
+   log: open a, open b, open c, next a, next b, next c, next a, next b, close c, close b
+strict first longer !! TypeError: Iterator.zip strict: input iterators have different lengths
+   log: open a, open b, next a, next b, next a, next b, close a
+return closes in reverse => {value: undefined, done: true}
+   log: open a, open b, open c, next a, next b, next c, close c, close b, close a
+return before start => [{value: undefined, done: true}, {value: undefined, done: true}]
+   log: open a, open b, close b, close a
+padding iterable => [["a0", "b0", "c0"], ["p0", "b1", "c1"], ["p0", "p1", "c2"]]
+   log: open a, open b, open c, open p, next p, next p, next p, close p, next a, next b, next c, next a, next b, next c, next b, next c, next c
+padding too short => [["a0", "b0"], ["only", "b1"]]
+   log: open a, open b, next a, next b, next a, next b, next b
+padding not object !! TypeError: Iterator.zip padding is not an object
+   log: 
+options not object !! TypeError: Iterator.zip options is not an object
+   log: 
+mode not string !! TypeError: invalid Iterator.zip mode
+   log: 
+setup error closes opened !! TypeError: value is not iterable
+   log: open a, open b, close b, close a
+strings rejected !! TypeError: value is not iterable
+   log: 
+input next throws !! Error: inner next
+   log: open a, open c, next a, close c, close a
+close errors !! Error: close b
+   log: close b, close a
+reentrant next !! TypeError: Iterator.zip iterator is already running
+   log: 
+zipKeyed => [{x: "a0", y: "b0"}, {x: "a1", y: "b1"}]
+   log: open a, open b, next a, next b, next a, next b, next a, close b
+zipKeyed key order => [["1", "2", "b", "Symbol(s)"], null]
+   log: open one, open two, open b, open sym, next one, next two, next b, next sym
+zipKeyed non-enumerable skipped => [{a: 1}]
+   log: 
+zipKeyed padding object => [{a: "a0", b: "b0"}, {a: "PA", b: "b1"}]
+   log: open a, open b, next a, next b, next a, next b, next b
+zipKeyed primitive !! TypeError: Iterator.zip input is not an object
+   log: 
+zipKeyed value not iterable !! TypeError: value is not iterable
+   log: 
+result tags => ["[object Iterator Helper]", "[object Iterator Helper]", 1, 1]

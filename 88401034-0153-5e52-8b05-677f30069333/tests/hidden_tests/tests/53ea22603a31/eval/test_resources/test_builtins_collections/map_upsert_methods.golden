@@ -1,0 +1,10 @@
+getOrInsert => [1, 1, Map{"a" => 1}]
+getOrInsertComputed => [["b!", "b!", 0], ["b"], Map{"x" => 0, "b" => "b!"}]
+-0 key => [[false], "pos"]
+callback not callable !! TypeError: callback is not callable
+callback throws => ["cb", false]
+callback mutates map => ["outer", Map{"k" => "outer"}]
+WeakMap getOrInsert => [1, 1, "c"]
+WeakMap bad key !! TypeError: Invalid value used as weak map key
+WeakMap computed bad key !! TypeError: Invalid value used as weak map key
+lengths => [2, 2]

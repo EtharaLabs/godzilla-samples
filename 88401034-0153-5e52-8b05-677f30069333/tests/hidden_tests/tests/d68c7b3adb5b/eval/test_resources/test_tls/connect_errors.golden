@@ -1,0 +1,7 @@
+port 70000: RangeError: Invalid TLS port 70000
+port -1: RangeError: Invalid TLS port -1
+port 1.5: RangeError: Invalid TLS port 1.5
+port "abc": RangeError: Invalid TLS port abc
+refused (port, host): error Error: "connect 127.0.0.1:DEAD: Connection refused (os error 111)" | close hadError=true authorized=false
+refused (options): error Error: "connect 127.0.0.1:DEAD: Connection refused (os error 111)" | close hadError=true authorized=false
+unresolvable host: error Error: "getaddrinfo no\u0000such.host: file name contained an unexpected NUL byte" | close hadError=true authorized=false

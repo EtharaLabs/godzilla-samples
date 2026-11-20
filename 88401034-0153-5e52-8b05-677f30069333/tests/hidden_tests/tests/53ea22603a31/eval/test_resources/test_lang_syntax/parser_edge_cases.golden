@@ -1,0 +1,64 @@
+"var r = []; for ([a, b = 2] of [[1]]) r.push(a + b); r.join()" value "3"
+"var o = {}; for ({ x: o.p = \"d\" } of [{}]) ; o.p" value "d"
+"var x; for ((x) of [7]) ; x"                      value 7
+"var x; for ((x) in { k: 1 }) ; x"                 value "k"
+"for (f() of []) ; \"call head ok when empty\""    value "call head ok when empty"
+"function f() {} for (f() in { k: 1 }) ;"          ReferenceError: invalid assignment target
+"for ([a + 1] of []) ;"                            SyntaxError: invalid for-in/of target
+"for ({ a: 1 } of []) ;"                           SyntaxError: invalid for-in/of target
+"for (let [x = 1, ...y] of [[undefined, 2, 3]]) var res = x + y.length; res" value 3
+"\"use strict\"; for (f() of []) ;"                SyntaxError: invalid for-in/of target
+"\"use strict\"; for ([eval] of [[1]]) ;"          SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; for ({ arguments } of [{}]) ;"    SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"var yield = 10; yield /2/1"                       value 5
+"var await = 12; await /3/ 2"                      value 2
+"var a, b, c; [a = 1, [b] = [2], { c } = { c: 3 }] = []; [a, b, c].join()" value "1,2,3"
+"var a, b; ({ a: [b] = [5] } = {}); b"             value 5
+"var t = {}; [t.x = 1, ...t.rest] = [undefined, 2, 3]; JSON.stringify(t)" value "{\"x\":1,\"rest\":[2,3]}"
+"\"use strict\"; [eval = 1] = []"                  SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ a: arguments } = {})"          SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; [...[eval]] = []"                 SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ ...arguments } = {})"          SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ __proto__: eval } = {})"       SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; ({ a: { b: eval } } = {})"        SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"x = [{ a = 1 }]"                                  SyntaxError: invalid shorthand property initializer
+"var a; [{ a = 1 }] = [{}]; a"                     value 1
+"f({ a = 1 })"                                     SyntaxError: invalid shorthand property initializer
+"(({ a = 1 }) => a)({})"                           value 1
+"({ a = 1 }).a"                                    SyntaxError: invalid shorthand property initializer
+"[{ a = 1 }.a] = []"                               SyntaxError: invalid shorthand property initializer outside a pattern position
+"var q; ({ q = 1, __proto__: q } = {}); q === Object.prototype" value true
+"({ m(a, a) {} })"                                 SyntaxError: duplicate parameter name 'a'
+"({ get x(a) {} })"                                SyntaxError: getter functions must have no arguments
+"({ set x(...a) {} })"                             SyntaxError: setter functions must have exactly one argument
+"({ set x(a = 1) {} }); \"default param in setter ok\"" value "default param in setter ok"
+"function f(static) { \"use strict\" }"            SyntaxError: 'static' can't be a parameter name in strict mode
+"(interface) => { \"use strict\" }"                SyntaxError: 'interface' cannot be used as a binding in strict mode
+"({ m(implements) { \"use strict\" } }); \"method param not re-checked\"" value "method param not re-checked"
+"`${ 0b2 }`"                                       SyntaxError: invalid numeric literal
+"`${ \"\\x\" }`"                                   SyntaxError: bad \x escape
+"`${ /a\\/b/.source }`"                            value "a\\/b"
+"if (true) {} /foo/.test(\"foo\")"                 value true
+"({} / 2)"                                         value NaN
+"'abc\\"                                           SyntaxError: unterminated escape
+"'\\uD83D\\u{DE00x}'"                              SyntaxError: bad \u escape
+"'\\uD83D\\uDEzz'"                                 SyntaxError: bad \u escape
+"['\\uD83D\\uDE00'.length, '\\uD83D\\u{DE00}'.codePointAt(0)].join()" value "2,128512"
+"08.5"                                             value 8.5
+"019.5e1"                                          value 195
+"07.5"                                             value 7.5
+"09e1"                                             value 90
+"0.0e-0"                                           value 0
+"/a\\\n/"                                          SyntaxError: unterminated regular expression
+"/[\\]/]/.source"                                  value "[\\]/]"
+"x = 1\n/2/g"                                      ReferenceError: g is not defined
+"let\nawait = 1; await"                            value 1
+"async\nfunction f() {} typeof f"                  ReferenceError: async is not defined
+"a\n?.5:1"                                         value 0.5
+"var { if: iff } = { if: \"kw key\" }; iff"        value "kw key"
+"var o = { \"\": \"empty\", \" \": \"space\" }; o[\"\"] + o[\" \"]" value "emptyspace"
+"({ 0x10: \"hex\", 1e2: \"exp\", .5: \"half\" })[16]" value "hex"
+"new new Function(\"this.v = 1\")().v"             value 1
+"new (class { constructor() { this.k = 1 } })().k" value 1
+"typeof new.target"                                SyntaxError: new.target is only valid inside a function
+"void (() => {})?.()"                              value undefined

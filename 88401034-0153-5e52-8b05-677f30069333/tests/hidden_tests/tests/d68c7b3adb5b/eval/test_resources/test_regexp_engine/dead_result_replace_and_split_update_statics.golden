@@ -1,0 +1,23 @@
+34
+replace /(\d+)/g on a1b22c333: lastIndex=0 $1=333 lastMatch="333" left=a1b22c right=
+replace /(\d)/ on a1b22c333: lastIndex=0 $1=1 lastMatch="1" left=a right=b22c333
+replace /(?:)/g on xyz: lastIndex=0 $1= lastMatch="" left=xyz right=
+replace /(?:)/gu on 😀a😀: lastIndex=0 $1= lastMatch="" left=😀a😀 right=
+replace /a/y on aaa: lastIndex=1 $1= lastMatch="a" left= right=aa
+replace /a/y on baaa: lastIndex=0 $1= lastMatch="a" left= right=aa
+replace /(\d)/g on no digits: lastIndex=0 $1= lastMatch="a" left= right=aa
+replace /k(\d)/gy on k1k2: lastIndex=0 $1=2 lastMatch="k2" left=k1 right=
+replace /(\u00e9)/g on été: lastIndex=0 $1=é lastMatch="é" left=ét right=
+split /(\d+)/ on "a1b22c333": lastIndex=0 $1=333 lastMatch="333" input="a1b22c333"
+split /(\d)/y on "a1b2": lastIndex=0 $1=2 lastMatch="2" input="a1b2"
+split /(?:)/ on "abc": lastIndex=0 $1= lastMatch="" input="abc"
+split /x?/ on "": lastIndex=0 $1= lastMatch="" input=""
+split /x/ on "": lastIndex=0 $1=- lastMatch="-" input="-"
+split /(?:)/u on "😀😀": lastIndex=0 $1= lastMatch="" input="😀😀"
+split /,/g on "a,b,,c": lastIndex=0 $1= lastMatch="," input="a,b,,c"
+split /q/ on "zzz": lastIndex=0 $1=- lastMatch="-" input="-"
+split /(a)/i on "xay": lastIndex=0 $1=a lastMatch="a" input="xay"
+exec 3 ofo
+own flags $1=7
+species data $1=8
+after delete $1=5 flags=""

@@ -1,0 +1,47 @@
+toLocaleString prim opts throws TypeError options must be an object
+toLocaleDateString prim opts throws TypeError options must be an object
+toLocaleTimeString prim opts throws TypeError options must be an object
+toLocaleString tz only "5/6/2021, 4:08:09 PM"
+toLocaleString hour only "7 AM"
+toLocaleDateString with time comp "5/6/2021, 7 AM"
+toLocaleTimeString with date comp "2021, 7:08:09 AM"
+toLocaleTimeString with dayPeriod "in the morning"
+toLocaleTimeString with timeStyle "7:08 AM"
+then ctor undefined true
+then ctor prim throws TypeError constructor is not an object
+finally ctor undefined true
+finally species null true
+ab slice ctor undefined 6
+ab slice ctor prim throws TypeError constructor is not an object
+re split ctor undefined ["a","b"]
+species called /,/ y
+re split species ["a","b"]
+matchAll ctor undefined 2
+filter species frozen throws TypeError cannot create data property
+map species proxy [[3,6],["0","1"]]
+flat species proxy reject throws TypeError cannot create data property
+splice species proxy reject throws TypeError cannot create data property
+concat species proxy throws TypeError cannot define element '1'
+slice species proxy ok [2,3,2]
+some holes arraylike [1]
+every holes arraylike [0,3]
+zipKeyed key order ["1","2","b","01","4294967295","a"]
+zip next bad recv throws TypeError next called on an incompatible receiver
+zip return bad recv {"done":true}
+concat next bad recv throws TypeError next called on an incompatible receiver
+helper next bad recv throws TypeError next called on an incompatible receiver
+helper return bad recv throws TypeError return called on an incompatible receiver
+lt lower ["69 307 300","69 307 300","6a 307 301","12f 307 303","69"]
+lt upper soft-dotted ["49","4a","2148","1d422","1d456 58","1e2c","49 301 307","1df1a","1e04c","49 323","49 5a2"]
+tr az casing ["ı/I/ı","i/İ/i","i/İ/i","i/İ/i"]
+split huge throws RangeError string too large to split in this engine
+split huge sep throws RangeError string too large to split in this engine
+substr wide ["abcdef","def","abc"]
+toExponential pad ["1.00000e+0","1.23456000000000003070e+2","5.0000000000000000000000000e-1","4.9406564584e-324","1.500000000000000078757140382807e+300","0.000e+0","1.00e+1"]
+toPrecision pad ["1.00000000000000000000","123.456000000000003069544618484","4.9407e-324","1000000000000000000000.000"]
+toFixed ["1.00","1e+21","123.45600000000000306954","-2","0.0000010"]
+replace fn throws throws EvalError repl
+replaceAll fn throws throws URIError replAll
+replace fn args "x[\"ab\",1,\"xaby\"]y"
+replaceAll empty "-a-b-c-"
+at surrogate [55357,56832]

@@ -1,0 +1,21 @@
+keys => ["a", "aliased", "b", "bump", "counter", "default"]
+ownKeys => ["a", "aliased", "b", "bump", "counter", "default", "Symbol(Symbol.toStringTag)"]
+tag => ["[object Module]", "Module", {value: "Module", writable: false, enumerable: false, configurable: false}]
+proto/extensible => [null, false, false, true]
+binding descriptor => {value: 1, writable: true, enumerable: true, configurable: false}
+live binding => [1, 2, 2]
+assign existing !! TypeError: Cannot assign to read only property 'counter' of module namespace object
+assign new !! TypeError: Cannot assign to read only property 'newProp' of module namespace object
+delete export !! TypeError: cannot delete non-configurable property 'counter'
+delete missing => true
+Reflect.set => false
+Reflect.deleteProperty => [false, true]
+defineProperty same => true
+defineProperty different => [false, false, false]
+Object.defineProperty !! TypeError: Cannot redefine property
+setPrototypeOf => [true, false]
+preventExtensions => true
+freeze !! TypeError: could not set the object's integrity level
+in => [true, true, false, true]
+entries => [["a", "ay"], ["aliased", 2], ["b", "bee"], ["counter", 2], ["default", "dflt"]]
+hasOwn => [true, undefined]

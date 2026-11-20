@@ -1,0 +1,14 @@
+0 true false 0 1 2 true
+open open 1
+message "first" "" true true
+custom "line1\nline2" 7
+message "no-space" "7" true true
+message " two spaces" "" true true
+message "" "" true true
+message "last before drop" "9" true true
+error error 0
+open open 1
+done reconnected 9
+closed 2
+server: conn 1 /events accept=text/event-stream cache=no-cache last-event-id=null
+server: conn 2 /events accept=text/event-stream cache=no-cache last-event-id=9

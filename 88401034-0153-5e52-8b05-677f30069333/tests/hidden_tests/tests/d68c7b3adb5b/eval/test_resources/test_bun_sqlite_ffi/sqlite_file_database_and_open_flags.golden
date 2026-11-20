@@ -1,0 +1,13 @@
+data.db true SQLite format 3
+[{"k":"blob","h":"00FF07","t":"blob"},{"k":"text","h":"706C61696E","t":"text"}]
+readonly write SQLiteError "SQLITE_READONLY" 8 attempt to write a readonly database
+numeric readonly SQLiteError "SQLITE_READONLY" 8 attempt to write a readonly database
+missing readonly SQLiteError "SQLITE_CANTOPEN" 14 unable to open database file
+create false SQLiteError "SQLITE_MISUSE" 21 bad parameter or other API misuse
+empty options SQLiteError "SQLITE_MISUSE" 21 bad parameter or other API misuse
+readwrite only SQLiteError "SQLITE_CANTOPEN" 14 unable to open database file
+no directory SQLiteError "SQLITE_CANTOPEN" 14 unable to open database file
+false,false,false,false
+readonly+create OK {"changes":1,"lastInsertRowid":3}
+strict opens rw OK {"changes":0,"lastInsertRowid":0}
+data.db,strict.db

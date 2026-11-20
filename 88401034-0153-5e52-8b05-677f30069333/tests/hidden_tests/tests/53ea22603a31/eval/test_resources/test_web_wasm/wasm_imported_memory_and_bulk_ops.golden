@@ -1,0 +1,10 @@
+[{"module":"js","name":"mem","kind":"memory"}]
+after instantiate 1,2,3,4,5,0,0,0,0,0,0,0,0,0,0,0
+fill 1,2,3,4,5,171,171,171,0,0,0,0,0,0,0,0
+copy 0,0,0,4,5,171,171,171,0,0,0,0,0,0,0,0
+overlap copy 0,0,0,0,4,5,171,171,0,0,0,0,0,0,0,0
+sum 551 fill,copy,sum false
+fill oob RuntimeError wasm: out of bounds memory.fill
+copy oob RuntimeError wasm: out of bounds memory.copy
+second instance sees 77
+after JS grow 131072 9

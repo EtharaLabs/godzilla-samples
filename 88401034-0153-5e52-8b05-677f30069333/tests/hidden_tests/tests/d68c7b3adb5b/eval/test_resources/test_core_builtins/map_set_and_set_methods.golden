@@ -1,0 +1,32 @@
+Map basics: 5 a b obj nan zero true true false 4 1,[object Object],NaN,0 true true 
+Map iteration mutation: 1,3,4 1,again;3,3;4,4
+Map delete and re-add during iteration: a,b,a,a,a,a
+Map clear during iteration: 1 {"value":9,"done":false} {"done":true}
+Map ctor errors: TypeError,TypeError,TypeError,Constructor requires 'new',0,0
+Map custom set: a,b
+Map set non-callable: TypeError
+Map ctor closes iterator on bad entry: TypeError closed=true
+Map methods bad this: get:TypeError set:TypeError has:TypeError delete:TypeError clear:TypeError forEach:TypeError keys:TypeError values:TypeError entries:TypeError size:TypeError
+Map forEach non-callable: TypeError: forEach callback is not callable
+Map getOrInsert: 1,1,b!,b!,2,true
+Map getOrInsertComputed non-callable: TypeError: callback is not callable
+Map iterator protocol: [object Map Iterator] function true {"value":[1,2],"done":false} {"done":true} true Map
+Map species and statics: true function 0 Map clear,constructor,delete,entries,forEach,get,getOrInsert,getOrInsertComputed,has,keys,set,size,values
+Set basics: 4 true true true true {1,NaN,0,2} true true ["h","e","l","o"] [[1,1],[2,2]] true
+Set forEach thisArg: >aa2,>bb2
+Set forEach additions visited: 1,2,3,4
+Set custom add: a,b
+Set methods: {1,2,3,4,5} {3,4} {1,2} {1,2,5} false true true true false {3,4} {5} {1,2,3,4} true true
+Set methods with Map: {k1,z,k2} {k1} {z} false {z,k2}
+Set methods with set-like: {1} {2,3} {1,2,3,7} false false | keys,keys,keys,keys,keys
+Set methods small this uses has: {1} {2} false false | has 1,has 2,has 1,has 2,has 1,has 2,has 1
+Set methods bad size: TypeError:set-like size is NaN | TypeError:set-like size is NaN | RangeError:set-like size is negative | TypeError:set-like has is not callable | TypeError:set-like keys is not callable | TypeError:argument is not an object
+Set methods size Infinity: true {1,2}
+Set method keys next not object: TypeError: iterator result is not an object
+Set method keys returns primitive: TypeError: set-like keys iterator has no next method
+Set isSupersetOf closes: false closed=true
+Set isDisjointFrom closes: false closed=true
+Set mutation during methods: {1,3} {1,3}
+Set methods result order and -0: {5,0} true
+Set methods bad this: TypeError: method called on an incompatible receiver
+Set species and statics: true 0 add,clear,constructor,delete,difference,entries,forEach,has,intersection,isDisjointFrom,isSubsetOf,isSupersetOf,keys,size,symmetricDifference,union,values

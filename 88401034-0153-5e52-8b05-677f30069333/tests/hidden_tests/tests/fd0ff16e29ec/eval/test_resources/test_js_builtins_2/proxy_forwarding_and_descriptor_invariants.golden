@@ -1,0 +1,97 @@
+chain-get [1, 3, true, false]
+chain-ownKeys ["a", "hidden", Symbol(s)]
+chain-keys/values/entries [["a"], [1], [["a", 1]]]
+chain-gopd {value: 3, writable: false, enumerable: false, configurable: true}
+chain-gopds ["a", "hidden"]
+chain-define [true, "B"]
+chain-set [true, "C", true]
+chain-delete [true, false]
+chain-proto [true, true, null]
+chain-extensible [true, true, false]
+chain-frozen [false, false, true, true]
+chain-hasOwnProperty [true, false, true]
+chain-names/symbols [["a", "hidden", "b"], ["Symbol(s)"]]
+chain-assign {a: 1, b: "B", [Symbol(s)]: 2}
+chain-json "{\"a\":1,\"b\":\"B\"}"
+chain-call ["called 1", 1]
+isArray-chain true
+noncallable-get THROW TypeError: proxy 'get' trap is not callable
+noncallable-set THROW TypeError: proxy 'set' trap is not callable
+noncallable-has THROW TypeError: proxy 'has' trap is not callable
+noncallable-deleteProperty THROW TypeError: proxy 'deleteProperty' trap is not callable
+noncallable-ownKeys THROW TypeError: proxy 'ownKeys' trap is not callable
+noncallable-getOwnPropertyDescriptor THROW TypeError: proxy 'getOwnPropertyDescriptor' trap is not callable
+noncallable-defineProperty THROW TypeError: proxy 'defineProperty' trap is not callable
+noncallable-getPrototypeOf THROW TypeError: proxy 'getPrototypeOf' trap is not callable
+noncallable-setPrototypeOf THROW TypeError: proxy 'setPrototypeOf' trap is not callable
+noncallable-isExtensible THROW TypeError: proxy 'isExtensible' trap is not callable
+noncallable-preventExtensions THROW TypeError: proxy 'preventExtensions' trap is not callable
+noncallable-apply THROW TypeError: proxy 'apply' trap is not callable
+noncallable-construct THROW TypeError: proxy 'construct' trap is not callable
+revoked-get THROW TypeError: cannot read property 'get' of null
+revoked-set THROW TypeError: proxy is revoked
+revoked-has THROW TypeError: cannot perform 'has' on a revoked proxy
+revoked-deleteProperty THROW TypeError: cannot delete on a revoked proxy
+revoked-ownKeys THROW TypeError: cannot read property 'ownKeys' of null
+revoked-getOwnPropertyDescriptor THROW TypeError: proxy is revoked
+revoked-defineProperty THROW TypeError: cannot read property 'defineProperty' of null
+revoked-getPrototypeOf THROW TypeError: proxy is revoked
+revoked-setPrototypeOf THROW TypeError: proxy is revoked
+revoked-isExtensible THROW TypeError: proxy is revoked
+revoked-preventExtensions THROW TypeError: proxy is revoked
+revoked-apply THROW TypeError: cannot read property 'apply' of null
+revoked-construct THROW TypeError: cannot read property 'construct' of null
+false-set-reflect false
+false-set-strict THROW TypeError: cannot assign to property 'x'
+false-set-sloppy "no throw"
+false-delete [false, false]
+false-delete-strict THROW TypeError: cannot delete property 'x'
+false-define false
+false-setProto false
+false-pe false
+false-has-with [false, false]
+gopd ncData {"value":1,"configurable":true} THROW TypeError: proxy can't report an existing non-configurable property 'ncData' as configurable
+gopd ncData {"value":1,"configurable":false,"enumerable":false} THROW TypeError: proxy can't report a different 'enumerable' for 'ncData' when the target property is not configurable
+gopd ncData {"get":"g1","configurable":false,"enumerable":true} THROW TypeError: proxy can't report a differently-shaped descriptor for the non-configurable property 'ncData'
+gopd ncData {"value":1,"writable":true,"configurable":false,"enumerable":true} THROW TypeError: proxy can't report a non-configurable, non-writable property 'ncData' as writable
+gopd ncData {"value":2,"configurable":false,"enumerable":true} THROW TypeError: proxy must report the same value for the non-writable, non-configurable property 'ncData'
+gopd ncData {"value":1,"writable":false,"configurable":false,"enumerable":true} {value: 1, writable: false, enumerable: true, configurable: false}
+gopd ncAcc {"get":"other","configurable":false,"enumerable":false} THROW TypeError: proxy must report the same getter for the non-configurable property 'ncAcc'
+gopd ncAcc {"get":"g1","set":"other","configurable":false,"enumerable":false} THROW TypeError: proxy must report the same setter for the non-configurable property 'ncAcc'
+gopd ncAcc {"value":1,"configurable":false,"enumerable":false} THROW TypeError: proxy can't report a differently-shaped descriptor for the non-configurable property 'ncAcc'
+gopd ncAcc {"get":"g1","set":"s1","configurable":false,"enumerable":false} {get: [Function g1], set: [Function s1], enumerable: false, configurable: false}
+gopd cfg {"value":1,"configurable":false,"enumerable":true} THROW TypeError: gOPD trap reported non-configurable for a configurable target property
+gopd ncWritable {"value":1,"writable":false,"configurable":false,"enumerable":false} THROW TypeError: gOPD trap reported non-writable for a writable target property
+gopd ncWritable {"value":5,"writable":true,"configurable":false,"enumerable":false} {value: 5, writable: true, enumerable: false, configurable: false}
+gopd-undefined-for-nonext THROW TypeError: gOPD trap reported undefined for a non-extensible target's property
+gopd-new-on-nonext THROW TypeError: gOPD trap reported a property missing from a non-extensible target
+gopd-undefined-ok undefined
+gopd-desc-getter-fields {value: "from getter", writable: false, enumerable: true, configurable: true}
+gopd-bad-desc THROW TypeError: Getter must be a function
+gopd-mixed-desc THROW TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute
+define cfg {"value":1,"configurable":false} THROW TypeError: proxy 'defineProperty' made a configurable target property non-configurable
+define ncData {"configurable":true} THROW TypeError: proxy 'defineProperty' made a non-configurable target property configurable
+define ncData {"enumerable":false} THROW TypeError: proxy can't report a different 'enumerable' for 'ncData' when the target property is not configurable
+define ncData {"get":"g1"} THROW TypeError: proxy can't change the descriptor shape of the non-configurable property 'ncData'
+define ncData {"writable":true} THROW TypeError: proxy 'defineProperty' made a non-writable property writable
+define ncData {"value":2} THROW TypeError: proxy 'defineProperty' changed a non-configurable non-writable value
+define ncData {"value":1,"writable":false} true
+define ncAcc {"get":"other"} THROW TypeError: proxy must define the same getter for the non-configurable property 'ncAcc'
+define ncAcc {"set":"other"} THROW TypeError: proxy must define the same setter for the non-configurable property 'ncAcc'
+define ncAcc {"value":1} THROW TypeError: proxy can't change the descriptor shape of the non-configurable property 'ncAcc'
+define ncAcc {"get":"g1","set":"s1"} true
+define ncWritable {"writable":false,"configurable":false} THROW TypeError: proxy 'defineProperty' reported a non-configurable writable property as non-writable
+define ncWritable {"value":9} true
+define missing {"value":1} true
+define-trap-desc-arg ["k", {get: [Function g1], enumerable: false}, true]
+ownKeys-omit-config-nonext THROW TypeError: ownKeys trap omitted a key of a non-extensible target
+ownKeys-exact-nonext ["b", "a"]
+ownKeys-symbol-ok ["Symbol(Symbol.iterator)", "z"]
+ownKeys-for-in ["y", "x"]
+values-entries-trap-order [[["a", 1], ["b", 2]], [1, 2], ["ownKeys", "gopd a", "get a", "gopd b", "get b", "ownKeys", "gopd a", "get a", "gopd b", "get b"]]
+proto-trap-ok true
+proto-instanceof true
+proto-isPrototypeOf true
+pe-trap-ok [true, false]
+setProto-trap-ok-nonext-same true
+isExtensible-trap-truthy true

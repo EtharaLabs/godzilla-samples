@@ -1,0 +1,30 @@
+min apply nan [null,null,"-0","-0",0]
+min coercion order [null,[1,2,3]]
+sumPrecise half-even [1.0000000000000002,0.9999999999999999,9007199254740994,-9007199254740994,1e+308,2.7755575615628914e-17]
+sumPrecise misc ["-0","-0",0,null,1e+300]
+sumPrecise bad throws TypeError Math.sumPrecise: not a number
+bigint shifts ["0n","0n","-9223372036854775808n","5n","-1n","2n"]
+bigint bitops neg multi ["1162144876643701751808","-340282366920938463463374607431768211453","-55340232221128654853","-18446744073709551617","-18446744073709551616"]
+bigint asUintN ["18446744073709551615","-18446744073709551616","-1","0"]
+epochNs extremes ["RangeError: epochNanoseconds out of range","RangeError: epochNanoseconds out of range","RangeError: epochNanoseconds out of range","+275760-09-13T00:00:00Z","RangeError: instant is outside the representable range","-271821-04-20T00:00:00Z"]
+bigint compare double [false,true,true,true,true,true,true,true]
+bigint toString radix ["6x5kxtvuwilukg",67,"ff","3115512162124626343001006330151620356026315303"]
+bigint from strings ["1461501637330902918203684832716283019655932542975","-123","5","511"]
+BigInt64Array big ["-9223372036854775808","-1"]
+bind null proto [null,"bound named",1]
+trap getPrototypeOf
+bind proxy proto [true,"bound "]
+fn toString natives ["function max() { [native code] }","function () { [native code] }","function () { [native code] }","function get size() { [native code] }","function values() { [native code] }"]
+fn toString bad throws TypeError Function.prototype.toString requires that 'this' be a function
+array iter oob [{"value":0,"done":false},"TypeError","TypedArray is out of bounds"]
+array iter tracking [0,{"done":true},{"done":true}]
+array iter decorated [[0,10],[1,20],[2,30],true]
+array iter proto swap ["a","b",true]
+len read
+len read
+len read
+array iter proxy target [1,2]
+array iter string target [0,1,2,3]
+array iter num target []
+captureStackTrace frozen "TypeError"
+symbol registry [true,"app",null,null,"Symbol(Symbol.asyncDispose)","Symbol(Symbol.metadata)"]

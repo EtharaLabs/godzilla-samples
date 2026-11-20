@@ -1,0 +1,35 @@
+binary +                 a b L.valueOf R.valueOf
+less-than                a b L.valueOf R.valueOf
+greater-than (no swap)   a b L.valueOf R.valueOf
+exponent                 a b c
+member assign            index rhs
+  arr [1]
+computed assign          objexpr key value
+compound +=              get v rhs set v=11
+??= no set               get v
+postfix ++               get v set v=12
+call non-fn              callee arg1 arg2 TypeError
+method call              get m x y call m x,y
+new                      ctor arg C body A
+object literal           k1 v1 v2 k3 v3 spread
+  keys a,b,c,d
+array literal            e0 spreadsrc e3
+template                 first ts.toString second
+conditional              cond no
+&& short                 l
+|| short                 l
+?? evaluates right       l r
+destructure assign       ta get a default a tb get b
+  tgt {"x":"A","y":"B"}
+ToPropertyKey            keyexpr val key.toString
+in                       lhs rhs
+comma/void/delete        c1 c2 void delobj delkey
+class definition         key m key s key f static init static block
+class construction       field init
+switch                   disc case1 case2 body2 body3 (fallthrough)
+for loop                 init test0 body0 update0 test1 body1 update1 test2
+for-in adds key          forin obj key a key b
+param defaults           def a def b def b
+tagged template          tag sub1 sub2 tag called with 1,2
+optional chain           arg
+abrupt middle            before caught mid

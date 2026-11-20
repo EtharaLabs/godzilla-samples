@@ -1,0 +1,28 @@
+in revoked proxy: TypeError: cannot perform 'has' on a revoked proxy
+has trap hides non-configurable: TypeError: proxy 'has' trap hid a non-configurable property
+has trap hides on non-extensible: TypeError: proxy 'has' trap hid a non-configurable property
+has without trap forwards: true
+in typed array: true,false,false,false,true
+in String wrapper: true,false,true
+in arguments: true,false
+delete optional index: true,false,true
+delete typed array index sloppy: false,true,true
+delete typed array index strict: TypeError: cannot delete a TypedArray index
+delete string index sloppy: false,true,false
+delete string index strict: TypeError: cannot delete non-configurable property '1'
+delete string length strict: TypeError: cannot delete non-configurable property 'length'
+delete proxy trap: true trap a
+delete proxy trap false strict: TypeError: cannot delete property 'a'
+delete proxy trap false sloppy: false
+delete proxy lies about non-configurable: TypeError: proxy 'deleteProperty' removed a non-configurable property
+instanceof via proxy getPrototypeOf: true
+instanceof bound chain: true
+TDZ compound: ReferenceError: cannot access 'x' before initialization
+TDZ update: ReferenceError: cannot access 'y' before initialization
+TDZ logical assign: ReferenceError: cannot access 'z' before initialization
+TDZ destructuring assign: ReferenceError: cannot access 'w' before initialization
+await throwing then: then threw
+await throwing then getter: then getter threw
+await thenable resolves once: first
+await non-callable then: true
+await async-rejecting thenable: RangeError

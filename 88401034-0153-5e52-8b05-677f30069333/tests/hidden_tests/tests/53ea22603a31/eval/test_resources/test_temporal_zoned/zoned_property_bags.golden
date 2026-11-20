@@ -1,0 +1,19 @@
+basic => 2024-03-10T03:30:00-04:00[America/New_York]
+earlier => 2024-03-10T01:30:00-05:00[America/New_York]
+missing timeZone => threw TypeError: missing timeZone
+missing day => threw TypeError: missing field 'day'
+with offset field => 2024-11-03T01:30:00-05:00[America/New_York]
+conflicting offset field => threw RangeError: offset does not match the time zone
+conflicting offset use => 2024-07-03T01:00:00-04:00[America/New_York]
+bad offset string => threw RangeError: invalid UTC offset: 5
+offset number => threw TypeError: offset must be a string
+overflow constrain => 2024-02-29T23:00:00+00:00[UTC]
+overflow reject => threw RangeError: day out of range
+timeZone from zdt => 2024-01-01T00:00:00+09:00[Asia/Tokyo]
+timeZone iso string => Europe/Paris
+timeZone iso string Z only => UTC
+timeZone iso offset only => -07:00
+timeZone object => threw TypeError: timeZone must be a string or ZonedDateTime
+calendar field => 2024-01-01T00:00:00+00:00[UTC][u-ca=gregory]
+from ZonedDateTime copy => 2024-01-01T00:00:00+00:00[UTC]
+from PlainDateTime => threw TypeError: missing timeZone

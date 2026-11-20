@@ -1,0 +1,67 @@
+schema_version = "1.4"
+reward_type = "bounded_continuous"
+artifacts = [{ source = "/workspace", exclude = ["./executable", "./target", "./.git"] }]
+
+[task]
+name = "ethara/88401034-0153-5e52-8b05-677f30069333"
+version = "1.0.0"
+description = "Rebuild lumen, a from-scratch JavaScript engine and runtime (lexer, parser, tree-walking interpreter, bytecode VM and template JIT, with an event loop and Node-style host APIs), in Rust with only the standard library, from its documentation and a compiled reference binary; graded by 3,746 hidden tests that compare the rebuilt program's behavior with the original's."
+authors = [{ name = "Vaibhav Singh", email = "vaibhav.singh@ethara.ai" }]
+keywords = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "javascript", "interpreter", "runtime"]
+
+[metadata]
+instance_id = "lucid-softworks__lumen.a0f0314"
+repository = "lucid-softworks/lumen"
+commit = "a0f0314de7835f76eaa913995489945aabebf345"
+language = "rust"
+difficulty = "medium"
+base_commit = "a33cb735aa22c786cb37f172e58d7b9e08e2a68c"
+reference_commit = "a714d7f9bce225cee060b0eebfab54c49c9044d7"
+platforms = ["linux/arm64", "linux/amd64"]
+test_branches = 3
+active_tests = 3746
+ignored_tests = 15
+language_policy = "original"
+tests_provenance = "mixed"
+generator_fingerprint = "1456e8187ce6dd51"
+test_suite_sha256 = "4b03341b8d67b1235d6915bb274de908de8907b5d09ea634ff801265fc012d69"
+category = "software-engineering"
+reward_type = "bounded_continuous"
+domain = "software-engineering"
+field = "computer-science"
+subfield = "compilers"
+tags = ["reverse-engineering", "clean-room-reimplementation", "rust", "cli", "javascript", "interpreter", "runtime"]
+expert_time_estimate_hours = 300.0
+null_floor = 0.0
+discrimination_weight = 1.0
+
+[agent]
+timeout_sec = 86400
+user = "agent"
+network_mode = "allowlist"
+allowed_hosts = ["api.openai.com", "api.anthropic.com"]
+
+[verifier]
+timeout_sec = 43200
+user = "root"
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 2400
+cpus = 4
+memory_mb = 8192
+storage_mb = 20480
+gpus = 0
+workdir = "/workspace"
+env = { PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/cargo/bin" }

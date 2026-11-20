@@ -1,0 +1,11 @@
+B before await
+B after await
+A body runs after B settled: fromB = b
+B reads A after A initialised: a
+ca namespace fromA a
+FC body
+FB before await
+./fa.mjs rejected RangeError: FB failed after await
+./fa.mjs rejected RangeError: FB failed after await
+./fb.mjs rejected RangeError: FB failed after await
+./fc.mjs resolved 0

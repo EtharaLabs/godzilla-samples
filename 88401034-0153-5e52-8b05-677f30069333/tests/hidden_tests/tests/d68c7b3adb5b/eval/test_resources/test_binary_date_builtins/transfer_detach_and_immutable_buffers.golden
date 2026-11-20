@@ -1,0 +1,10 @@
+transfer: true,true,true,6,8,9,true,false,2,9,false,1
+transfer grows with zeros: 5,6,0,0 0,0,0,0,0,0
+transfer errors: TypeError:ArrayBuffer is detached | RangeError:invalid transfer length | TypeError:transfer requires a non-shared ArrayBuffer | TypeError:an immutable ArrayBuffer is not detachable | TypeError:not an ArrayBuffer | TypeError:ArrayBuffer is detached | RangeError:invalid transfer length
+transfer length read before detach check: len,TypeError
+detached getters: 0,0,true,true
+detached views: 0,0,0,,false,,TypeError:Cannot perform operation on a detached or out-of-bounds TypedArray | TypeError:DataView's buffer is detached or out of bounds | TypeError:DataView's buffer is detached or out of bounds | TypeError:ArrayBuffer is detached | TypeError:ArrayBuffer is detached | TypeError:Cannot perform operation on a detached or out-of-bounds TypedArray
+detach via $262: 0,0,true
+sliceToImmutable: true | 4 | 2,3,4,5 | false | 6 | 0 | false | TypeError:ArrayBuffer is detached | TypeError:requires a non-shared ArrayBuffer | TypeError:not an ArrayBuffer | RangeError:source ArrayBuffer shrank below the resolved range
+immutable writes: true | true | false | 4,3,2,1 | fill:Cannot write to an immutable ArrayBuffer | copyWithin:Cannot write to an immutable ArrayBuffer | reverse:Cannot write to an immutable ArrayBuffer | sort:Cannot write to an immutable ArrayBuffer | set:Cannot write to an immutable ArrayBuffer | TypeError:Atomics: cannot write into a view over an immutable ArrayBuffer | TypeError:cannot write into a view over an immutable ArrayBuffer | TypeError:cannot write into a view over an immutable ArrayBuffer | TypeError:Cannot write to an immutable ArrayBuffer | TypeError:ArrayBuffer is not resizable | TypeError:an immutable ArrayBuffer is not detachable | 9,3,2,1 | 1,2,3,4 | 4 | TypeError:Cannot write to a TypedArray over an immutable ArrayBuffer
+immutable species targets: TypeError:TypedArray destination is backed by an immutable buffer | TypeError:TypedArray destination is backed by an immutable buffer | 0

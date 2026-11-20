@@ -1,0 +1,62 @@
+hole after spread "3:false:[1,null,3]"
+proto literal prim true
+proto literal null null
+setter then getter literal "got1"
+getter twice literal 2
+tail tagged null base !TypeError: cannot read property 't' of null
+tail tagged index tag "idx:y"
+tail tagged nonfn !TypeError: tag is not a function
+tail tagged paren tag "paren:z"
+tail call short-circuit callee "undefined"
+tail optional call result "undefined"
+opt idx call short "undefined"
+opt idx base short "undefined"
+opt call call short "undefined"
+delete nested opt "true,true,true"
+const compound !TypeError: assignment to constant 'c'
+const compound strict !TypeError: assignment to constant 'c'
+undeclared compound !ReferenceError: undeclaredCompound is not defined
+call compound !ReferenceError: invalid assignment target
+call assign !ReferenceError: invalid assignment target
+call destr target "0 SyntaxError: invalid destructuring assignment target"
+super destr assign "1,2,3"
+private destr assign 6
+nested pattern defaults "1,2,3"
+destr keys kinds "s,seven,D,zero"
+obj rest from string excl "a{\"1\":\"b\",\"2\":\"c\"}"
+obj rest proxy ghost "{\"a\":1}"
+gen return during destr "{\"value\":\"R\",\"done\":true}"
+gen return during destr close "closed"
+gen return close throws !Error: close-throw
+gen return close prim !TypeError: iterator 'return' must return an object
+for-of return close prim !TypeError: iterator 'return' must return an object
+for-of return noncallable !TypeError: iterator 'return' is not callable
+spread result prim !TypeError: iterator result is not an object
+spread not iterable !TypeError: value is not iterable
+spread non-obj iterator !TypeError: iterator.next is not a function
+with compound vanish "{\"x\":null}"
+strict global vanish !ReferenceError: gvanish is not defined
+super null base compound !TypeError: cannot read property of null super base
+super null base get !TypeError: cannot read property 'x' of a null super base
+instanceof null-proto fn "false,true"
+instanceof bound true
+exp coerced "8,9,0.5"
+num keys "zbigh"
+length freeze during coercion 3
+length freeze during coercion strict !TypeError: cannot assign to read-only property 'length'
+strict Reflect.set proxy recv false
+strict Reflect.set ro recv false
+annexB generator not hoisted "undefined,undefined,function"
+annexB in switch "s"
+annexB shadowed by let "string"
+unary bigint var !TypeError: Cannot convert a BigInt value to a number
+unary minus bigint var "-5-6"
+DataView subclass "dv4:7:true"
+PlainDate subclass "pd:2020-02-29"
+super into bound parent "bound,passed,true"
+RegExp nt proto prim true
+field init arrow arguments !SyntaxError: 'arguments' is not allowed in a class field initializer
+field init arrow super call !SyntaxError: 'super' call unexpected here
+eval field init exprs 3
+param expr + same-name fn decl "function,function,number"
+param expr + same-name var "1,6"

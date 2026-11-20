@@ -1,0 +1,26 @@
+/proto
+  response: HTTP/1.1 101 Switching Protocols | Upgrade: websocket | Connection: Upgrade | Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo= | Sec-WebSocket-Protocol: chat | X-Extra: yes | X-Num: 7
+  frame fin=1 op=10 masked=0 len=2 "p1"
+  frame fin=1 op=10 masked=0 len=0 ""
+  frame fin=1 op=8 masked=0 len=2 code=4000 reason=""
+/rsv
+  response: HTTP/1.1 101 Switching Protocols | Upgrade: websocket | Connection: Upgrade | Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+  frame fin=1 op=8 masked=0 len=45 code=1002 reason="reserved bits set (no extension negotiated)"
+/pairs
+  response: HTTP/1.1 101 Switching Protocols | Upgrade: websocket | Connection: Upgrade | Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo= | X-A: 1 | X-B: two
+  frame fin=1 op=8 masked=0 len=2 code=1000 reason=""
+/headers
+  response: HTTP/1.1 101 Switching Protocols | Upgrade: websocket | Connection: Upgrade | Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo= | x-from-headers: h
+  frame fin=1 op=8 masked=0 len=2 code=1000 reason=""
+/proto: upgraded, remoteAddress=127.0.0.1, handle keys=close,onclose,onmessage,remoteAddress,send
+/proto: got text "hello"
+/proto: got binary [1,2,3] len=3
+/proto: got binary [5,5,5,5] len=300
+/proto: onclose 4000 "bye" wasClean=true
+/rsv: upgraded, remoteAddress=127.0.0.1, handle keys=close,onclose,onmessage,remoteAddress,send
+/rsv: onclose 1002 "reserved bits set (no extension negotiated)" wasClean=false
+/pairs: upgraded, remoteAddress=127.0.0.1, handle keys=close,onclose,onmessage,remoteAddress,send
+/pairs: onclose 1000 "" wasClean=true
+/headers: upgraded, remoteAddress=127.0.0.1, handle keys=close,onclose,onmessage,remoteAddress,send
+/headers: onclose 1005 "" wasClean=true
+server shut down

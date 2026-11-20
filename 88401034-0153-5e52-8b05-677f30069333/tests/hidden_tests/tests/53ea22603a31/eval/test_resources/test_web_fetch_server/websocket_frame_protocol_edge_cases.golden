@@ -1,0 +1,15 @@
+ping        open | message "after-ping" | close 1000 "" true  || server saw: client pong "hb", client close 1000 "", socket closed
+frag        open | message "Hello world" | message binary(3:1,2,3) | message binary(300:7,7,7) | message binary(70000:9,9,9) | message "masked-ok" | close 1005 "" true  || server saw: client pong "mid", client close 1000 "", socket closed
+closecode   open | close 4001 "bye now" true  || server saw: client close 4001 "", socket closed
+badutf8     open | error | close 1007 "text message is not UTF-8" false  || server saw: client close 1007 "text message is not UTF-8", socket closed
+rsv         open | error | close 1002 "reserved bits set (no extension negotiated)" false  || server saw: client close 1002 "reserved bits set (no extension negotiated)", socket closed
+badcontrol  open | error | close 1002 "malformed control frame" false  || server saw: client close 1002 "malformed control frame", socket closed
+cont        open | error | close 1002 "continuation without a message" false  || server saw: client close 1002 "continuation without a message", socket closed
+newdata     open | error | close 1002 "new data frame during fragmented message" false  || server saw: client close 1002 "new data frame during fragmented message", socket closed
+opcode      open | error | close 1002 "unknown opcode" false  || server saw: client close 1002 "unknown opcode", socket closed
+closeutf8   open | error | close 1007 "close reason is not UTF-8" false  || server saw: client close 1007 "close reason is not UTF-8", socket closed
+eof         open | error | close 1006 "" false  || server saw: socket closed
+refuse      error | close 1006 "" false  || server saw: socket closed
+badaccept   error | close 1006 "" false  || server saw: socket closed
+noupgrade   error | close 1006 "" false  || server saw: socket closed
+badproto    error | close 1006 "" false  || server saw: socket closed

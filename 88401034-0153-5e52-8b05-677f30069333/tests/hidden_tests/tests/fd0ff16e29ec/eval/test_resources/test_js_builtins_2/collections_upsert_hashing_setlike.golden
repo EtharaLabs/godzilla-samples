@@ -1,0 +1,47 @@
+getOrInsert [1, 2, [["a", 1], ["b", 2]]]
+getOrInsertComputed [1, "zero", [0], true, ["a", "b", 0]]
+getOrInsertComputed-mutating-cb ["computed", [["k", "computed"], ["other", 1]]]
+getOrInsertComputed-noncallable THROW TypeError: callback is not callable
+getOrInsert-bad-this THROW TypeError: method called on an incompatible receiver
+getOrInsertComputed-cb-throws ["cb threw", 0]
+weak-getOrInsert ["v1", "v1", "v1"]
+weak-getOrInsertComputed ["computed-for-k2", "computed-for-k2"]
+weak-getOrInsert-prim THROW TypeError: Invalid value used as weak map key
+weak-getOrInsertComputed-prim THROW TypeError: Invalid value used as weak map key
+weak-getOrInsertComputed-noncallable THROW TypeError: callback is not callable
+weak-getOrInsert-bad-this THROW TypeError: method called on incompatible receiver
+set-keys-values [[3, 1, 2], [3, 1, 2], [[3, 3], [1, 1], [2, 2]], {value: 3, done: false}, "[object Set Iterator]"]
+set-clear [0, {value: undefined, done: true}, undefined, [5]]
+set-clear-bad-this THROW TypeError: method called on an incompatible receiver
+map-clear-bad-this THROW TypeError: method called on an incompatible receiver
+set-forEach-delete-readd ["a", "c", "b"]
+map-forEach-noncallable THROW TypeError: forEach callback is not callable
+set-forEach-noncallable THROW TypeError: forEach callback is not callable
+map-groupBy-noncallable THROW TypeError: Map.groupBy callback is not callable
+map-groupBy-keys-samevaluezero [[NaN, [1, 3]], [0, [2, 4]]]
+object-groupBy-key-coercion {k1: [1], k2: [2]}
+object-groupBy-symbol-key ["Symbol(Symbol.iterator)"]
+big-size 1256
+big-lookups ["number", "number", "string", "bigint", "boolean", "boolean", "object", "object", "undefined", "number", "symbol", undefined, false, true]
+big-after-delete [300, 956, false, true, "string", [-0.5, 0n, true, 1, -1.5, "k1"]]
+big-readded-order [1106, true, "readded", [294, 296, 298]]
+bigset [666, true, false, false, [1.5, 3, 6, 7.5]]
+bigint-keys ["a", "big", false, "a"]
+bool-keys ["t", "f", undefined, true, 1]
+size-infinity [[1, 3], true]
+size-minus-infinity THROW RangeError: set-like size is negative
+size-fractional [1]
+keys-no-next THROW TypeError: set-like keys iterator has no next method
+keys-result-nonobj THROW TypeError: iterator result is not an object
+keys-result-nonobj-intersection THROW TypeError: iterator result is not an object
+difference-iterate-this [[1, 3], [1, 2, 3]]
+difference-iterate-other [[1, 3, 4], ["keys"]]
+symmetricDifference-dupes [3, 4]
+isSupersetOf-smaller-this [false, []]
+isSupersetOf-iterates-other [false, ["keys", "next", "next", "return"]]
+isDisjointFrom-iterates-other [false, ["keys", "next", "return"]]
+isSubsetOf-larger-this false
+isSubsetOf-has-coerced false
+union-mutation-during [[1, 99, 2, 3], [1, 99]]
+intersection-has-mutates-this [1, 3]
+set-method-result-class [false, true, true]

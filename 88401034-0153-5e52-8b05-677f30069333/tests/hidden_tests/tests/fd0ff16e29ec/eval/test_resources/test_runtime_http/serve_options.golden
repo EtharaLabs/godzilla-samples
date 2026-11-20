@@ -1,0 +1,22 @@
+onListen hostname,port 127.0.0.1 number
+fn+opts 200 fn-only
+deno object 200 deno-object
+app 200 app:true
+app 500 Internal Server Error
+onError 503 onError saw RangeError: handled
+onError throws 500 Internal Server Error
+async handler 200 {"m":"GET","remote":"127.0.0.1","transport":"tcp","portType":"number"}
+server object hostname,port,finished,shutdown,ref,unref 127.0.0.1 number undefined undefined true
+TypeError Lumen.serve requires a handler function or an object with a fetch() method
+TypeError Lumen.serve requires a handler function or an object with a fetch() method
+TypeError Lumen.serve requires a handler function or an object with a fetch() method
+TypeError Lumen.serve requires a handler function or an object with a fetch() method
+TypeError Lumen.serve requires a handler function or an object with a fetch() method
+in use: Error listen 127.0.0.1:PORT: Address already in use (os error 98)
+TypeError listen: port must be 0..=65535
+TypeError listen: port must be 0..=65535
+shutdown twice undefined
+after shutdown: TypeError fetch 'http://127.0.0.1:PORT/': connect: Connection refused (os error 111)
+signal server 200 signal
+finished after abort
+pre-aborted signal finished

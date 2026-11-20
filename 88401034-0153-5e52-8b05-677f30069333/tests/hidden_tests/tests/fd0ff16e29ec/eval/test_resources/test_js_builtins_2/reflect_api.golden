@@ -1,0 +1,56 @@
+get: 1 | "receiver" | 6 | undefined
+set: true | 2 | true | "v" | undefined
+set-receiver-data: [true, {x: 9}]
+set-receiver-nonwritable: false
+set-receiver-accessor: false
+set-receiver-prim: false
+set-frozen: false | false | false
+set-getter-only: false
+set-inherited-nonwritable: false
+set-array-length: [true, [1]]
+has: true | true | true | true
+deleteProperty: true | false | true | false
+defineProperty: true | false | false
+gopd: {value: 1, writable: true, enumerable: true, configurable: true} | undefined
+ownKeys: ["1", "b", "a", Symbol(Symbol.iterator)] | ["0", "1", "length"] | ["length", "name", "prototype"]
+protos: true | true | false | true | true | false
+apply: 3 | true | "ello" | 3
+construct: 7 | "Other" | true | false | 0 | 3
+construct-builtin-newtarget: true | true | true
+get-nonobj: THROW TypeError: Reflect.get called on non-object
+set-nonobj: THROW TypeError: Reflect.set called on non-object
+has-nonobj: THROW TypeError: Reflect.has called on non-object
+deleteProperty-nonobj: THROW TypeError: Reflect.deleteProperty called on non-object
+defineProperty-nonobj: THROW TypeError: Reflect.defineProperty on non-object
+defineProperty-baddesc: THROW TypeError: Property description must be an object
+gopd-nonobj: THROW TypeError: Reflect.getOwnPropertyDescriptor on non-object
+ownKeys-nonobj: THROW TypeError: Reflect.ownKeys called on non-object
+getPrototypeOf-nonobj: THROW TypeError: Reflect.getPrototypeOf called on non-object
+setPrototypeOf-nonobj: THROW TypeError: Reflect.setPrototypeOf called on non-object
+setPrototypeOf-badproto: THROW TypeError: prototype must be an object or null
+setPrototypeOf-noarg: THROW TypeError: prototype must be an object or null
+isExtensible-nonobj: THROW TypeError: Reflect.isExtensible called on non-object
+preventExtensions-nonobj: THROW TypeError: Reflect.preventExtensions called on non-object
+apply-nonfn: THROW TypeError: Reflect.apply target is not callable
+apply-noargs: THROW TypeError: CreateListFromArrayLike called on a non-object
+apply-badargs: THROW TypeError: CreateListFromArrayLike called on a non-object
+construct-nonctor: THROW TypeError: Reflect.construct target is not a constructor
+construct-bad-newtarget: THROW TypeError: Reflect.construct newTarget is not a constructor
+construct-badargs: THROW TypeError: CreateListFromArrayLike called on a non-object
+key-toString-throws: THROW EvalError: key coercion
+Reflect-object: "[object Reflect]" | "object" | 0 | ["apply", "construct", "defineProperty", "deleteProperty", "get", "getOwnPropertyDescriptor", "getPrototypeOf", "has", "isExtensible", "ownKeys", "preventExtensions", "set", "setPrototypeOf"] | 3 | 2 | 3 | 3
+proxy-set-default-receiver: true | 2 | true | 3 | ["trap v rcv===proxy:true rcv===rcv2:false", "trap n rcv===proxy:false rcv===rcv2:true"]
+proxy-set-no-trap: true | 5 | true | ["acc setter this===rcv:true"] | true | 1
+proxy-set-no-trap-frozen: false | false
+proxy-set-trap-invariant: THROW TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+proxy-set-revoked: THROW TypeError: proxy is revoked
+proxy-get-receiver: "R" | "R2"
+reflect-gopd-proxy: {value: 1, writable: true, enumerable: true, configurable: true} | true
+reflect-ta: ["0", "1"] | {value: 9, writable: true, enumerable: true, configurable: true} | undefined | false | true | true
+reflect-arguments-gopd: "updated"
+reflect-set-arraylike-receiver: [true, 0]
+reflect-set-setter-receiver-prim: true
+reflect-set-getter-only-proto: false
+reflect-set-receiver-proxy: ["gopd q", "define q {\"value\":1,\"writable\":true,\"enumerable\":true,\"configurable\":true}", "gopd q", "define q {\"value\":2}"]
+reflect-apply-arraylike-holes: [3, undefined, "mid", undefined]
+reflect-construct-newtarget-proxy: true

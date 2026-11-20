@@ -1,0 +1,31 @@
+forwarded, read-only receiver prop: false ro=1
+forwarded, accessor receiver prop: false
+forwarded, non-extensible receiver: false
+forwarded, array receiver with fixed length: false len=3
+forwarded, index past fixed length: false len=3
+forwarded, array length truncation: true -> [1]
+  defineProperty trap k {"value":5,"writable":true,"enumerable":true,"configurable":true}
+forwarded, proxy receiver: true
+TA in chain, receiver is the TA: true ta=0,44,0,0
+TA in chain, foreign receiver: true own={"value":7,"writable":true,"enumerable":true,"configurable":true} ta=0,44,0,0
+TA in chain, non-integer key: true own=false
+  coerced
+TA in chain, -0 key on TA receiver: true
+TA in chain, out-of-range index: true
+TA in chain, named key: true L
+BigInt TA in chain: true 77
+plain write through TA chain: {"value":11,"writable":true,"enumerable":true,"configurable":true} ta=0,44,0,0
+sloppy super.ro on read-only this: 0
+sloppy super.length on fixed-length array: 3
+super.length truncation: [1]
+  refusing defineProperty k=3
+sloppy super.k on refusing proxy: ok
+receiver trap throws: RangeError define-trap
+  refusing defineProperty k=4
+strict super.k on refusing proxy: TypeError: cannot create property 'k' on the receiver
+strict super.length: TypeError: cannot assign to read-only property 'length'
+strict super.ro: TypeError: cannot assign to read only property 'ro'
+strict frozen length: TypeError: cannot assign to read-only property 'length'
+strict inherited read-only: TypeError: cannot assign to read-only property 'x'
+strict Reflect.set still returns: false
+sloppy inherited read-only: 1 own=false

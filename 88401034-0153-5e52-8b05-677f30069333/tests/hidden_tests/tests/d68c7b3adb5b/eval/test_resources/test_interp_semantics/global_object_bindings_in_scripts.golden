@@ -1,0 +1,21 @@
+var/function become global properties: {"value":1,"writable":true,"enumerable":true,"configurable":false} function true
+let is not a global property: undefined lex
+delete declared var: false
+implicit global configurable: true true undefined
+global accessor via identifier: 1,2,201,number
+global accessor in nested function: 203
+sloppy write to read-only global: ro
+strict write to read-only global: TypeError: cannot assign to read-only property 'readOnlyGlobal'
+strict write to getter-only global: TypeError: cannot set getter-only property 'getterOnlyGlobal'
+typeof undeclared: undefined undefined
+read undeclared: ReferenceError: neverDeclaredAnywhere is not defined
+global this in sloppy function: true undefined
+builtin attributes: true,false,true,false,false,false
+assign NaN/undefined: NaN undefined
+strict assign undefined: TypeError: cannot assign to read-only property 'undefined'
+global prototype chain: true true true
+identifier resolves via Object.prototype: inherited
+after delete: undefined
+eval var at top creates deletable global: 7,true,undefined
+function decl over existing global accessor: function fn
+globalThis writable: string

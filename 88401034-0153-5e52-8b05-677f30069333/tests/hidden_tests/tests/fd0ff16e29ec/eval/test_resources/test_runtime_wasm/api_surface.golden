@@ -1,0 +1,38 @@
+namespace CompileError,Global,Instance,LinkError,Memory,Module,RuntimeError,Table,compile,instantiate,validate
+classes CompileError:true LinkError:true RuntimeError:true
+result module,instance true true
+simd RuntimeError(wasm: unsupported opcode 0xfd)
+meminit RuntimeError(wasm: unsupported 0xfc op 8)
+tableinit RuntimeError(wasm: unsupported 0xfc op 12)
+try RuntimeError(wasm: unsupported opcode 0x6)
+fine 9
+refnull RuntimeError(wasm: unsupported opcode 0xd0)
+datadrop RuntimeError(wasm: unsupported 0xfc op 9)
+baddepth RuntimeError(wasm: branch depth out of range)
+earlyend 1
+confused_eqz 1
+confused_neg -0
+confused_i64 1n
+confused_f32 -0
+typedlocals 0
+stray_else 3
+externref null null
+unbounded grow 0 -1 0 2
+from module true 9
+subarray source true true
+returned false
+TypeError WebAssembly: expected a BufferSource
+TypeError WebAssembly.Instance expects a Module
+returned false
+compile rejects CompileError wasm: bad magic
+instantiate rejects CompileError wasm: bad magic
+start trap RuntimeError wasm: unreachable executed
+elem oob LinkError wasm: element segment out of table bounds
+data oob LinkError wasm: data segment out of memory bounds
+elem no table LinkError wasm: element segment references missing table
+elem bad func LinkError wasm: elem func index out of range
+data no memory LinkError wasm: data segment but no memory
+truncated LEB LinkError wasm: truncated LEB
+truncated blocktype LinkError wasm: truncated blocktype
+truncated SLEB LinkError wasm: truncated SLEB
+data at global offset at-global 0

@@ -1,0 +1,22 @@
+# labels
+"L: for (var i = 0; i < 3; i++) { for (;;) { continue L; } } i" => ok 3
+"L: { break L; } \"after block\"" => ok "after block"
+"L: if (true) break L; \"after if\"" => ok "after if"
+"L: try { break L; } finally { 1; } \"after try\"" => ok "after try"
+"L: L2: { break L; } \"nested\"" => ok "nested"
+"L: { L: ; }" => SyntaxError: label 'L' has already been declared
+"L: { M: { break L; } } \"inner label\"" => ok "inner label"
+"L: function f() {} typeof f" => ok "function"
+"yield: { break yield; } \"yield label\"" => ok "yield label"
+"await: { break await; } \"await label\"" => ok "await label"
+"let: 1" => ok 1
+"static: 1" => ok 1
+"async: 1" => ok 1
+"of: 2" => ok 2
+"L: while (false) {} L: while (false) {} \"reused label\"" => ok "reused label"
+"L: for (;;) { (function () { L: for (;;) { break L; } })(); break L; } \"function boundary\"" => ok "function boundary"
+"L: do { continue L; } while (false); \"do continue\"" => ok "do continue"
+"x: { var y = 1; } y" => ok 1
+"L: { continue L; }" => SyntaxError: continue label does not target an iteration statement
+"L: while (0) { function f() { continue L; } }" => SyntaxError: undefined continue label
+"L:\nfor (;;) break L; \"label newline\"" => ok "label newline"

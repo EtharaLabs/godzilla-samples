@@ -1,0 +1,8 @@
+plain            ok ["127.0.0.1",4]
+empty options    ok ["127.0.0.1",4]
+family number 4  ok ["10.20.30.40",4]
+family option 4  ok ["192.0.2.55",4]
+all              ok [[{"address":"127.0.0.1","family":4}]]
+all + family 4   ok [[{"address":"0.0.0.0","family":4}]]
+family 0         ok ["255.255.255.255",4]
+null options     ok ["198.51.100.7",4]

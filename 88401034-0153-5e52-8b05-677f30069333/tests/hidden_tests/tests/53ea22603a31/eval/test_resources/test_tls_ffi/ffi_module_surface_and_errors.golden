@@ -1,0 +1,20 @@
+exports CFunction,CString,FFIType,JSCallback,cc,dlopen,linkSymbols,native,ptr,read,suffix,toArrayBuffer,toBuffer,viewSource
+suffix so native keys dlopen,callback
+named types char=0 int8_t=1 i8=1 uint8_t=2 u8=2 int16_t=3 i16=3 uint16_t=4 u16=4 int32_t=5 i32=5 int=5 c_int=5 uint32_t=6 u32=6 c_uint=6 int64_t=7 i64=7 isize=7 uint64_t=8 u64=8 usize=8 double=9 f64=9 float=10 f32=10 bool=11 void*=12 ptr=12 pointer=12 char*=12 void=13 cstring=14 i64_fast=15 u64_fast=16 function=17 callback=17 fn=17 napi_env=18 napi_value=19 buffer=20
+numeric keys 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
+dlopen missing library THREW Error: cannot open library 'libdefinitely-missing.so': libdefinitely-missing.so: cannot open shared object file: No such file or directory
+dlsym missing symbol THREW Error: symbol "no_such_function_xyz" not found
+unknown arg type THREW TypeError: bun:ffi: unknown FFIType int128
+unknown return type THREW TypeError: bun:ffi: unknown FFIType long double
+null type THREW TypeError: bun:ffi: unknown FFIType null
+{tag} type objects -> 9
+numeric type codes -> 10
+empty symbol table -> []
+close() -> [1, undefined, "symbols,close"]
+CFunction without ptr -> "function"
+cc() THREW TypeError: bun:ffi cc expects an options object
+cc({ source: 42 }) THREW TypeError: bun:ffi cc options.source must be a file path
+cc missing file THREW Error: bun:ffi cc source not found: missing.c
+cc missing file URL THREW Error: bun:ffi cc source not found: /nonexistent/dir/x.c
+cc file-like object THREW Error: bun:ffi cc source not found: nope.c
+dynamic import -> TypeError: module not found: bun:ffi (imported from <cwd>/ffi_module_surface_and_errors.cjs)

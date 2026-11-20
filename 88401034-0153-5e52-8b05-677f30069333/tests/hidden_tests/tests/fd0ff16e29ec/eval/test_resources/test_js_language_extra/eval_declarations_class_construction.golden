@@ -1,0 +1,53 @@
+indirect eval var over global let !SyntaxError: Identifier 'globalLex' has already been declared
+direct eval var over block let !SyntaxError: Identifier 'bx' has already been declared
+direct eval var over param 5
+direct eval in catch param ok 2
+strict indirect eval isolation "undefined,undefined"
+sloppy indirect eval leaks "number,function"
+eval super in method "proto-v"
+eval super in arrow in method "pv2"
+eval super in nested function !SyntaxError: 'super' keyword unexpected here
+eval super at top !SyntaxError: 'super' keyword unexpected here
+eval super() in method !SyntaxError: 'super' keyword unexpected here
+eval super() in derived ctor "base"
+eval arguments in field !SyntaxError: 'arguments' is not allowed in class field initializer code
+eval arguments in field arrow !SyntaxError: 'arguments' is not allowed in class field initializer code
+eval arguments in field fn 2
+eval new.target in field "undefined"
+const assign sloppy !TypeError: assignment to constant 'c'
+named fn expr assign sloppy "function"
+named fn expr assign strict !TypeError: assignment to constant 'nfe'
+const assign in eval !TypeError: assignment to constant 'c2'
+named fn expr via eval "function"
+strict undeclared !ReferenceError: undeclaredStrictVar is not defined
+strict undeclared via eval !ReferenceError: undeclaredStrict2 is not defined
+sloppy undeclared 3
+with strict vanish "{\"w\":2}"
+with getbinding vanish "undefined"
+extends null proto null
+extends fn proto null null
+extends fn proto prim !TypeError: Class extends value does not have a valid prototype property
+extends non-ctor !TypeError: Class extends value is not a constructor or null
+extends arrow !TypeError: Class extends value is not a constructor or null
+extends proxy ctor "base,true,1,true"
+extends bound ctor !TypeError: Class extends value does not have a valid prototype property
+private methods twice !TypeError: cannot initialize private methods of a class twice on the same object
+private methods non-extensible !TypeError: cannot add private members to a non-extensible object
+private field non-extensible !TypeError: cannot add a private field to a non-extensible object
+private field twice !TypeError: cannot initialize the same private field twice
+static private on frozen !TypeError: cannot add a private field to a non-extensible object
+private getter+setter pair 8
+private setter then getter "g1"
+static accessor pair "Q1"
+getter then setter same key "1,9"
+ctor field anonymous fn name "f,#g,h"
+static block var this "C"
+class field this true
+derived ctor returns prim !TypeError: a derived constructor may only return an object or undefined
+derived ctor returns undefined no super !ReferenceError: derived constructor returned without calling super()
+derived ctor returns obj no super 1
+super twice !ReferenceError: super() may only be called once
+new.target undefined "undefined"
+class ctor call !TypeError: Class constructor cannot be invoked without 'new'
+setPrototypeOf class then super "B"
+super ctor null !TypeError: super constructor is not a constructor

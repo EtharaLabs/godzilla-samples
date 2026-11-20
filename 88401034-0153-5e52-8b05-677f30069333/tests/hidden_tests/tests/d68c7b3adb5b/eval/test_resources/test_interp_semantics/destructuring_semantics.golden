@@ -1,0 +1,27 @@
+array pattern closes iterator: 3 next,next,return
+exhausted iterator not closed: 1 undefined next,next
+rest drains: 1 [2,3] next,next,next,next
+elision: 3 next,next,next,return
+empty pattern: return
+default evaluated lazily: a,,0,e calls=a,e
+defaults see earlier bindings: 1,10,11
+default TDZ: undefined
+let default TDZ: ReferenceError: cannot access 'q' before initialization
+object rest: 1 {"b":2} sym=true hidden=false
+object rest computed key excluded: D {"keep":"K"}
+rest from primitive: 2 {"0":"a","1":"b"}
+null destructure: TypeError: cannot destructure null or undefined
+undefined destructure: TypeError
+non-iterable: TypeError: value is not iterable
+nested defaults: deflt
+assignment targets: {"p":"X","q1":"dz","r":1} ["Y",[2,3]]
+assignment evaluation order: get source, target ref, get a, set a=1
+swap: 2,1
+destructure in params: A|C|dd|E|F ||dd|| 0
+params null: TypeError: cannot destructure null or undefined
+catch destructuring: 42x
+for-of destructuring: a1,bnone,3,1
+generator closed by pattern: 1 gen closed
+return throws during close: Error: close failed
+next throws not closed: next failed closed=false
+default throws closes: default threw closed=true

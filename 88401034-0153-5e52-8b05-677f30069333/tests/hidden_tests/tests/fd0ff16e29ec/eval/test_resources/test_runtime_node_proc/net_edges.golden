@@ -1,0 +1,17 @@
+addrinuse EADDRINUSE listen 127.0.0.1 true listen EADDRINUSE 127.0.0.1:PORT
+unix connect missing ENOENT connect missing.sock connect ENOENT missing.sock
+unix connect close true
+unix listen bad dir ENOENT listen listen ENOENT no/such/dir/x.sock
+unix nodelay true true {} undefined undefined
+unix data bye
+unix server closed false
+iface ok ok this
+iface bad Error UNKNOWN setMulticastInterface: IPv4 multicast interface must be an IPv4 address
+add bad TypeError undefined Invalid multicast address: not-mcast
+drop bad TypeError undefined Invalid multicast address: 1.2.3
+ssm bad TypeError undefined Invalid source address: x
+ssm bad group TypeError undefined Invalid multicast address: nope
+send after close Error ERR_SOCKET_DGRAM_NOT_RUNNING Not running
+address after close Error EBADF getsockname EBADF
+server unref'd; loop may exit
+udp unref'd

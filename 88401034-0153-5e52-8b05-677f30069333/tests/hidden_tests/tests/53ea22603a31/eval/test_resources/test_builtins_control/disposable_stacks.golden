@@ -1,0 +1,39 @@
+fresh: false function [object DisposableStack] true
+use returns value: true
+adopt returns value: held
+use null/undefined: ,
+after move: true false true
+defer on disposed: ReferenceError: DisposableStack already disposed
+use on disposed: ReferenceError: DisposableStack already disposed
+adopt on disposed: ReferenceError: DisposableStack already disposed
+move on disposed: ReferenceError: DisposableStack already disposed
+dispose disposed: undefined
+LIFO: adopt held, use1, defer1 true
+use non-disposable !! TypeError: value is not disposable
+use without method !! TypeError: value is not disposable
+defer non-callable !! TypeError: onDispose is not callable
+adopt non-callable !! TypeError: onDispose is not callable
+without new !! TypeError: Constructor DisposableStack requires 'new'
+dispose wrong receiver !! TypeError: receiver is not a DisposableStack
+errors aggregated => ["SuppressedError", "", "d1", "d2", "ok one"]
+single error not wrapped => ["TypeError", "lonely"]
+SuppressedError => ["SuppressedError", "supp", "new", "old", "SuppressedError: supp", 3, ["error", "message", "suppressed"], true]
+SuppressedError no message => ["", false, 1, 2]
+SuppressedError call => "c"
+disposeAsync returns promise: true 2
+async LIFO: ok one, as adopt v, as use sync, as use async, as defer true
+disposeAsync again: undefined
+async errors => ["SuppressedError", "r1", "r2"]
+async use non-disposable !! TypeError: value is not async-disposable
+disposeAsync wrong receiver !! TypeError: receiver is not a AsyncDisposableStack
+async tags => ["[object AsyncDisposableStack]", true]
+async move => [true, false, true, 0, "moved defer"]
+async defer on disposed !! ReferenceError: AsyncDisposableStack already disposed
+async use on disposed !! ReferenceError: AsyncDisposableStack already disposed
+async adopt on disposed !! ReferenceError: AsyncDisposableStack already disposed
+async move on disposed !! ReferenceError: AsyncDisposableStack already disposed
+async use null/undefined => [null, undefined]
+async defer non-callable !! TypeError: onDisposeAsync is not callable
+async adopt non-callable !! TypeError: onDisposeAsync is not callable
+async without new !! TypeError: Constructor AsyncDisposableStack requires 'new'
+async disposed getter wrong receiver !! TypeError: receiver is not a AsyncDisposableStack

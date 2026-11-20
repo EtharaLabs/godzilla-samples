@@ -1,0 +1,16 @@
+%F0%9F%98%80%C3%A9%20%2F%3F%23 | %F0%9F%98%80/a%20b?x=1#f | true | €%2F
+d800 | URIError: URI malformed | URIError: URI malformed
+dc00 | URIError: URI malformed | URIError: URI malformed
+61 d83d | URIError: URI malformed | URIError: URI malformed
+de00 d83d | URIError: URI malformed | URIError: URI malformed
+%ED%A0%80 | URIError: URI malformed
+%F4%90%80%80 | URIError: URI malformed
+%C0%AF | URIError: URI malformed
+%E2%82 | URIError: URI malformed
+%FF | URIError: URI malformed
+% | URIError: URI malformed
+%G0 | URIError: URI malformed
+%uD83D%uDE00%E4%20+ | d83d de00 | 25 75 31 32 25 7a 7a 41
+97,195,169,226,130,172 | 240,159,152,128 | 240,159,152,128
+d83d de00 fffd 41 | fffd fffd fffd | fffd
+41 | feff 41 | TypeError: TextDecoder: invalid utf-8 (fatal)

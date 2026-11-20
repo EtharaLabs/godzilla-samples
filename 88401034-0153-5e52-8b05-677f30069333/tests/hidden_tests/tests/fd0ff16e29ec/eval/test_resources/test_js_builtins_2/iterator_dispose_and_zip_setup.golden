@@ -1,0 +1,20 @@
+iterator-dispose ["function", undefined, ["return called"]]
+iterator-dispose-generator [["gen finally"], {value: undefined, done: true}]
+iterator-dispose-using ["closed by using"]
+asyncDispose-no-return fulfilled undefined
+return args 0
+asyncDispose-return-value-dropped fulfilled undefined
+asyncDispose-return-throws rejected return threw
+asyncDispose-return-getter-throws rejected getter threw
+asyncDispose-return-rejects rejected rejected result
+asyncDispose-return-noncallable fulfilled undefined
+asyncDispose-async-generator fulfilled ["ag finally"]
+zip-mode-undefined [[1, 2]]
+zip-bad-element-closes-opened ["value is not iterable", ["open a", "open b", "close b", "close a"]]
+zip-iterables-next-throws ["iterables next", ["open x", "close x"]]
+zip-padding-iter-throws ["padding next", ["open a", "close a"]]
+zip-padding-closed ["open a", "padding closed"]
+zipKeyed-proxy-input [{a: "A", b: "B"}]
+zipKeyed-getter-throws-closes ["getter b", ["open a", "close a"]]
+zipKeyed-gopd-throws THROW Error: gopd threw
+zipKeyed-padding-getter-throws ["pad getter", ["open a", "close a"]]

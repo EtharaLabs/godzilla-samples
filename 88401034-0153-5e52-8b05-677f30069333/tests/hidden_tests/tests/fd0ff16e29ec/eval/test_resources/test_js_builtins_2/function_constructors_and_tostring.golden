@@ -1,0 +1,36 @@
+ctor-names: "GeneratorFunction" | "AsyncFunction" | "AsyncGeneratorFunction" | 1 | true | "object"
+generator-function: [1, 2] | "anonymous" | "function* anonymous(a,b\n) {\nyield a; yield b; return a + b;\n}" | "[object GeneratorFunction]" | true
+generator-function-call: [7, 8] | "object"
+async-function-shape: "anonymous" | 1 | "async function anonymous(x\n) {\nreturn await x * 2\n}" | "[object AsyncFunction]" | "undefined" | "async function* anonymous("
+generator-ctor-syntax: THROW SyntaxError: expected ';'
+async-ctor-await-param: THROW SyntaxError: 'await' cannot be used as a binding here
+generator-ctor-yield-param: THROW SyntaxError: 'yield' cannot be used as a binding here
+fn-ctor-param-injection: THROW SyntaxError: expected ')'
+fn-ctor-body-close-brace: THROW SyntaxError: unexpected token Punct(")")
+fn-ctor-strict-dupe-params: THROW SyntaxError: duplicate parameter name 'a'
+fn-ctor-sloppy-dupe-params: 2
+fn-ctor-param-coercion: "coerced" | 1 | 3 | 3 | 5
+fn-ctor-global-scope: "global"
+fn-ctor-newtarget: [9, true, true]
+fn-ctor-newtarget-bad-proto: true | true
+toString "function plain(a, /* comment */ b) { return a; }" "plain"
+toString "async (x) => { await x; }" ""
+toString "function* gen() { yield 1; }" "gen"
+toString "class { static s() {} }" ""
+toString "m(a) {}" "m"
+toString "async *am() {}" "am"
+toString "['computed' + 1]() {}" "computed1"
+toString "set s(v) {}" "set s"
+toString "function inner() {}" "inner"
+toString-natives: ["function call() { [native code] }", "function get flags() { [native code] }", "function Symbol() { [native code] }", "function entries() { [native code] }", "function () { [native code] }", "function toString() { [native code] }"]
+toString-class-method-native-bound: "function () { [native code] }"
+call-symbol-this: "symbol" | "object" | true
+apply-huge-arraylike: NaN | "Hi"
+bind-preserves-new-target: [{}, {}, {}]
+bound-instanceof: [true, true, false]
+bound-proxy-target: ["proxied", "bound target", 0]
+bound-of-generator: [["bv"], "bound g", true]
+bound-async-proto: true
+bind-length-getter-throws: "length getter"
+hasInstance-bound: [true, false]
+print-is-silent: undefined | "function" | 1

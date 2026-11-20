@@ -1,0 +1,32 @@
+JSCallback ptr -> ["number", true, "ptr"]
+qsort with the JSCallback object itself THREW TypeError: To convert a value to a pointer, it must be a TypedArray, number, or null
+qsort with cmp.ptr -> [-100, -3, -3, 0, 5, 7, 42, 99]
+comparator argument types -> ["number/number"]
+bsearch hit index -> 6
+bsearch miss -> null
+after close() -> null
+thunk before close -> 7
+thunk after close returns 0 -> 0
+8 integer args -> -1
+8 integer args (wrapping) -> -1
+callback saw -> ["-1 255 -300 65535 -5 4294967295 -9223372036854775808n 18446744073709551615n", "-1 0 -25536 65535 -2147483648 4294967295 5n 7n"]
+pointer/bool/char/fast args -> [1, 1]
+callback saw -> ["null true -56 null 1n -1n", "ADDR false -1 null 0n 0n"]
+i64 return -2n -> [-2n, 18446744073709551614n]
+bool/string/null returns -> [1, 17, null, 3]
+void callback returns 0 -> 0
+throwing callback -> 0
+linkSymbols -> [42, undefined, undefined, "symbols,close"]
+native.callback -> "number"
+float argument THREW Error: bun:ffi JSCallback with floating-point arguments is not supported in lumen
+float return THREW Error: bun:ffi JSCallback with a floating-point return is not supported in lumen
+not a function THREW TypeError: bun:ffi JSCallback expects a function
+9 arguments THREW Error: bun:ffi JSCallback with 9 arguments is not supported in lumen (max 8)
+unknown type THREW TypeError: bun:ffi: unknown FFIType quux
+call with 9 arguments THREW Error: bun:ffi call with 9 arguments is not supported in lumen (max 8; struct-by-value and varargs are unsupported)
+pool of arity 3 THREW Error: bun:ffi JSCallback pool exhausted (16 live callbacks of arity 3)
+created before exhaustion -> 16
+slot reusable after close -> "number"
+viewSource(native) -> "native function @ 0xADDR (1,2,3,4,5,6,7,8) -> 5"
+viewSource(js) -> "function f(a) { return a; }"
+viewSource(5) THREW TypeError: bun:ffi viewSource expects a function

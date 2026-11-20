@@ -1,0 +1,13 @@
+client:
+connect allowHalfOpen=false
+end callback readable=true
+finish
+end got=late-1;late-2
+close false
+server:
+connection allowHalfOpen=true
+end got=ping writable=true
+end callback
+finish
+close false
+server closed

@@ -1,0 +1,39 @@
+empty Error: zstd: empty input
+magic-only Error: zstd: truncated frame header
+valid-a OK 1 "a"
+reserved-bit Error: zstd: reserved frame header bit set
+dictionary Error: zstd: dictionary frames are not supported
+reserved-block Error: zstd: reserved block type
+size-mismatch Error: zstd: frame content size mismatch
+checksum-mismatch Error: zstd: content checksum mismatch
+checksum-truncated Error: zstd: truncated content checksum
+block-header-truncated Error: zstd: truncated block header
+rle-truncated Error: zstd: truncated RLE block
+rle-valid OK 5 "aaaaa"
+raw-truncated Error: zstd: truncated raw block
+raw-size-mismatch Error: zstd: frame content size mismatch
+skippable-truncated Error: zstd: truncated skippable frame
+skippable-header-only Error: zstd: truncated skippable frame
+skippable-then-frame OK 1 "a"
+second-frame-truncated Error: zstd: truncated block header
+bad-magic Error: zstd: bad magic number
+trailing-garbage Error: zstd: truncated frame
+text.l19.check.zst:truncated Error: zstd: truncated compressed block
+text.l19.check.zst:mut@1988=39 Error: zstd: sequence offset too far back
+text.l19.check.zst:mut@449=150 Error: zstd: content checksum mismatch
+text.l19.check.zst:mut@777=175 Error: zstd: sequence literals overrun
+text.l19.check.zst:mut@271=136 Error: zstd: Huffman stream overrun
+text.l19.check.zst:mut@513=47 Error: zstd: Huffman stream not fully consumed
+text.l19.check.zst:mut@38=17 Error: zstd: corrupted Huffman weights
+text.l19.check.zst:mut@680=23 Error: zstd: FSE accuracy log too large
+text.l19.check.zst:mut@698=244 Error: zstd: truncated sequences bitstream
+text.l19.check.zst:mut@717=99 Error: zstd: sequences bitstream not fully consumed
+text.l19.check.zst:mut@6=107 Error: zstd: frame content size mismatch
+text.l19.check.zst:mut@4=96 Error: zstd: bad magic number
+text.l6.flushes.zst:truncated Error: zstd: truncated compressed block
+text.l6.flushes.zst:mut@2137=11 Error: zstd: truncated compressed block
+text.l6.flushes.zst:mut@840=130 Error: zstd: reserved sequence mode bits set
+text.l6.flushes.zst:mut@1645=241 Error: zstd: block size exceeds maximum
+text.l6.flushes.zst:mut@2140=154 Error: zstd: truncated literals section
+text.l6.flushes.zst:mut@636=29 Error: zstd: literals jump table exceeds section
+text.l6.flushes.zst:mut@12=200 Error: zstd: Huffman weight too large

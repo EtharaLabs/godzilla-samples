@@ -1,0 +1,36 @@
+# parameters
+"function f(a, b = a + 1, c = b * 2) { return [a, b, c].join(); } f(1)" => ok "1,2,4"
+"function f(a = b, b = 1) { return a; } f()" => ReferenceError: cannot access 'b' before initialization
+"function f(a = arguments.length) { return a; } f(undefined, 2, 3)" => ok 3
+"function f(a, b = () => a) { var a = \"body\"; return b(); } f(\"param\")" => ok "param"
+"function f(a, b = () => a) { a = \"reassigned\"; return b(); } f(\"param\")" => ok "reassigned"
+"function f({ x = 1, y } = {}, [z = 2] = []) { return [x, y, z].join(); } f()" => ok "1,,2"
+"function f(...[a, b]) { return a + b; } f(1, 2)" => ok 3
+"function f(...{ length }) { return length; } f(1, 2, 3)" => ok 3
+"function f(a, ...rest,) {}" => SyntaxError: expected ')'
+"function f(...a = []) {}" => SyntaxError: expected ')'
+"function f(a,) { return f.length; } f()" => ok 1
+"(function (a, b = 1, c) {}).length" => ok 1
+"((a, ...b) => {}).length" => ok 1
+"function f(x = this) { return typeof x; } f.call(\"s\")" => ok "object"
+"function f(x = new.target) { return x === undefined; } f()" => ok true
+"function* g(x = 1) { yield x; } g().next().value" => ok 1
+"async function af(x = 1) { return x; } typeof af()" => ok "object"
+"function f(eval) { return eval; } f(3)" => ok 3
+"function f(arguments) { return arguments; } f(4)" => ok 4
+"function f(a, a) { \"use strict\"; }" => SyntaxError: duplicate parameter name 'a'
+"function f(x = super.y) {}" => SyntaxError: 'super' keyword unexpected here
+"var o = { m(x = super.toString) { return typeof x; } }; o.m()" => ok "function"
+"function f(x = yield) { return x; } f()" => ReferenceError: yield is not defined
+"function f(x = await) { return x; } f()" => ReferenceError: await is not defined
+"(a = 1, { b }, [c]) => a" => ok fn
+"({ a } = {}) => a" => ok fn
+"([a] = [1]) => a" => ok fn
+"(a, b) => a + b" => ok fn
+"() => {}" => ok fn
+"(...a) => a.length" => ok fn
+"async (...a) => a.length" => ok fn
+"async x => x" => ok fn
+"async (x) => await x" => ok fn
+"x => { return x; }" => ok fn
+"x => ({ x })" => ok fn

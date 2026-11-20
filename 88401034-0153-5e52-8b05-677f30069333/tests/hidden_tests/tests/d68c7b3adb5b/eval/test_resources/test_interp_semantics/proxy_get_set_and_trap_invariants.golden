@@ -1,0 +1,32 @@
+get frozen mismatch: TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+get frozen via Reflect: TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+get accessor without getter: TypeError: proxy 'get' trap violated an invariant for a non-configurable property
+get writable non-configurable: anything
+get unrelated: other
+set frozen different: TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set frozen same value: ok
+set accessor without setter: TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+Reflect.set accessor without setter: TypeError: proxy 'set' trap violated an invariant for a non-configurable property
+set writable ok: ok
+honest get: 1,g,
+sloppy set false: silently ignored
+strict set false: TypeError: cannot assign to property 'a'
+strict delete false: TypeError: cannot delete property 'a'
+Reflect.deleteProperty: false
+apply trap: 30
+call via call(): 70
+construct trap: {"made":7}
+has trap: true
+delete trap: true
+log: apply:1,2 apply:3,4 construct:1:true has:length delete:extra
+construct returns primitive: TypeError: proxy construct trap returned a non-object
+apply not callable trap: TypeError: proxy 'apply' trap is not callable
+non-callable target apply: TypeError: expression is not a function
+has hides non-extensible: TypeError: proxy 'has' trap hid a non-configurable property
+has hides non-configurable: TypeError: proxy 'has' trap hid a non-configurable property
+deleteProperty non-configurable: TypeError: proxy 'deleteProperty' removed a non-configurable property
+isExtensible mismatch: TypeError: proxy 'isExtensible' must match the target
+preventExtensions lie: TypeError: proxy 'preventExtensions' reported success but the target is extensible
+setPrototypeOf non-extensible: TypeError: proxy 'setPrototypeOf' changed a non-extensible target's prototype
+revoked get: TypeError: cannot read property 'get' of null
+revoked typeof: object

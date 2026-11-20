@@ -1,0 +1,64 @@
+0 | 0 0.00 0.00000 | 0 0 0.00 0.00000000000000000000 | 0e+0 0e+0 0.000e+0
+0 | 0 0.00 0.00000 | 0 0 0.00 0.00000000000000000000 | 0e+0 0e+0 0.000e+0
+1 | 1 1.00 1.00000 | 1 1 1.00 1.00000000000000000000 | 1e+0 1e+0 1.000e+0
+-1 | -1 -1.00 -1.00000 | -1 -1 -1.00 -1.00000000000000000000 | -1e+0 -1e+0 -1.000e+0
+0.1 | 0 0.10 0.10000 | 0.1 0.1 0.100 0.100000000000000005551 | 1e-1 1e-1 1.000e-1
+0.5 | 1 0.50 0.50000 | 0.5 0.5 0.500 0.500000000000000000000 | 5e-1 5e-1 5.000e-1
+1.5 | 2 1.50 1.50000 | 1.5 2 1.50 1.50000000000000000000 | 1.5e+0 2e+0 1.500e+0
+2.5 | 3 2.50 2.50000 | 2.5 2 2.50 2.50000000000000000000 | 2.5e+0 3e+0 2.500e+0
+123.456 | 123 123.46 123.45600 | 123.456 1e+2 123 123.456000000000003070 | 1.23456e+2 1e+2 1.235e+2
+1e+21 | 1e+21 1e+21 1e+21 | 1e+21 1e+21 1.00e+21 1.00000000000000000000e+21 | 1e+21 1e+21 1.000e+21
+1e-7 | 0 0.00 0.00000 | 1e-7 1e-7 1.00e-7 9.99999999999999954748e-8 | 1e-7 1e-7 1.000e-7
+123456789.123 | 123456789 123456789.12 123456789.12300 | 123456789.123 1e+8 1.23e+8 123456789.122999995947 | 1.23456789123e+8 1e+8 1.235e+8
+-1.005 | -1 -1.00 -1.00500 | -1.005 -1 -1.00 -1.00499999999999989342 | -1.005e+0 -1e+0 -1.005e+0
+0.000001 | 0 0.00 0.00000 | 0.000001 0.000001 0.00000100 9.99999999999999954748e-7 | 1e-6 1e-6 1.000e-6
+1.45 | 1 1.45 1.45000 | 1.45 1 1.45 1.44999999999999995559 | 1.45e+0 1e+0 1.450e+0
+8.345 | 8 8.35 8.34500 | 8.345 8 8.35 8.34500000000000063949 | 8.345e+0 8e+0 8.345e+0
+255 | 255 255.00 255.00000 | 255 3e+2 255 255.000000000000000000 | 2.55e+2 3e+2 2.550e+2
+1e+100 | 1e+100 1e+100 1e+100 | 1e+100 1e+100 1.00e+100 1.00000000000000001590e+100 | 1e+100 1e+100 1.000e+100
+5e-324 | 0 0.00 0.00000 | 5e-324 5e-324 4.94e-324 4.94065645841246544177e-324 | 5e-324 5e-324 4.941e-324
+1.7976931348623157e+308 | 1.7976931348623157e+308 1.7976931348623157e+308 1.7976931348623157e+308 | 1.7976931348623157e+308 2e+308 1.80e+308 1.79769313486231570815e+308 | 1.7976931348623157e+308 2e+308 1.798e+308
+NaN | NaN NaN NaN | NaN NaN NaN NaN | NaN NaN NaN
+Infinity | Infinity Infinity Infinity | Infinity Infinity Infinity Infinity | Infinity Infinity Infinity
+-Infinity | -Infinity -Infinity -Infinity | -Infinity -Infinity -Infinity -Infinity | -Infinity -Infinity -Infinity
+toFixed-big: "123000000000000000000.00" | "1" | "2" | "-1" | "1000000000000000128" | "0.10000000000000000555" | "1.25" | "10.23" | 104
+toFixed-101: THROW RangeError: toFixed() digits argument must be between 0 and 100
+toFixed--1: THROW RangeError: toFixed() digits argument must be between 0 and 100
+toPrecision-0: THROW RangeError: toPrecision() argument must be between 1 and 100
+toPrecision-101: THROW RangeError: toPrecision() argument must be between 1 and 100
+toPrecision-100: "0.3333333333333333148296162562473909929394721984863281250000000000000000000000000000000000000000000000"
+toExponential-101: THROW RangeError: toExponential() argument must be between 0 and 100
+toExponential-neg: THROW RangeError: toExponential() argument must be between 0 and 100
+nonfinite-toFixed-range: THROW RangeError: toFixed() digits argument must be between 0 and 100
+nonfinite-ignores-range: "Infinity" | "NaN" | "NaN"
+ties: "2" | "2e+1" | "12" | "0.12" | "4" | "3e+0" | "1.3e+1" | "1.3" | "1.13"
+toString-radix: "11111111" | "73" | "-ff" | "0.1" | "0.0022002200220022002200220022002201000021002100001101" | "3.6" | "3w5e11264sgsf" | "5350140446150306054" | "0" | "NaN" | "-Infinity" | "3f.gez4w97ry0a18ymf6qadcxr" | 13 | 54
+toString-radix-1: THROW RangeError: toString() radix must be between 2 and 36
+toString-radix-37: THROW RangeError: toString() radix must be between 2 and 36
+toString-radix-undef: "10" | "10"
+shortest: ["0.30000000000000004", "0.3333333333333333", "9007199254740994", "1e+21", "0.000001", "1e-7", "1.23e-18", "5e-324", "-1e-323", "4.35", "0.000123", "1.0000000000000002", "100", "100000000000000000000", "12345678901234567000"]
+Number(): 0 | 12 | 31 | 5 | 15 | NaN | 1000 | 0.5 | 5 | Infinity | -Infinity | NaN | NaN | 0 | NaN | 5 | NaN | 1 | 12 | 7 | NaN | NaN | Infinity
+Number(symbol): THROW TypeError: Cannot convert a Symbol value to a number
+statics: 9007199254740991 | -9007199254740991 | 2.220446049250313e-16 | 1.7976931348623157e+308 | 5e-324 | true | true
+isInteger: [true, false, true, false, false, false, true, true]
+isSafeInteger: [true, true, false, true, false, false]
+isFinite/isNaN: false | true | false | true | true | true | true
+parseInt: 42 | -26 | NaN | 35 | 2 | NaN | NaN | 10 | NaN | -0 | 0 | 5 | 27 | 9007199254740992 | 1 | -12 | 0 | 255 | 255 | 1112745 | NaN | 12
+parseFloat: 3.14 | 0.5 | -0.0005 | Infinity | -Infinity | 0 | 1 | 1 | NaN | NaN | 7 | -0 | Infinity | 0 | 12.5
+Number-proto: 0 | "object" | "[object Number]"
+toFixed-bad-this: THROW TypeError: Number method called on incompatible receiver
+toString-bad-this: THROW TypeError: Number method called on incompatible receiver
+valueOf-bad-this: THROW TypeError: Number method called on incompatible receiver
+boxed: "5.0" | "ff" | "object" | 4
+toLocaleString: false | "string"
+Boolean: false | true | true | false | false | true | "truthy" | "true" | true | "false"
+Boolean-bad-this: THROW TypeError: Boolean method called on incompatible receiver
+Boolean-valueOf-bad: THROW TypeError: Boolean method called on incompatible receiver
+BigInt: 10n | 31n | 12n | 1n | "ff" | "-11111111" | -1n | 255n | -9223372036854775808n | 0n | "3w5e11264sgsg" | "object" | 3n
+BigInt-frac: THROW RangeError: The number cannot be converted to a BigInt
+BigInt-str: THROW SyntaxError: Cannot convert string to a BigInt
+BigInt-new: THROW TypeError: BigInt is not a constructor
+BigInt-sym: THROW TypeError: Cannot convert value to a BigInt
+BigInt-radix: THROW RangeError: toString radix must be between 2 and 36
+BigInt-asIntN-neg: THROW RangeError: index out of range
+BigInt-toString-bad: THROW TypeError: BigInt method called on incompatible receiver

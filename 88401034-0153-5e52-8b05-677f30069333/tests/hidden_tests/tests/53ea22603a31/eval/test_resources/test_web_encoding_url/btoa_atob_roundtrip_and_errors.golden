@@ -1,0 +1,19 @@
+"" "" true
+"a" "YQ==" true
+"ab" "YWI=" true
+"abc" "YWJj" true
+"abcd" "YWJjZA==" true
+"hello world" "aGVsbG8gd29ybGQ=" true
+"ÿþ\u0000" "//4A" true
+"<<???>>" "PDw/Pz8+Pg==" true
+btoa number MTIzNDU=
+atob whitespace hello
+atob unpadded aab
+atob binary 255,239,0
+atob null "ée"
+"a" InvalidCharacterError atob: invalid base64 true
+"ab$c" InvalidCharacterError atob: invalid base64 true
+"YQ===" InvalidCharacterError atob: invalid base64 true
+"=YQ" InvalidCharacterError atob: invalid base64 true
+"Y Q=x" InvalidCharacterError atob: invalid base64 true
+InvalidCharacterError btoa: character beyond latin1 range true true

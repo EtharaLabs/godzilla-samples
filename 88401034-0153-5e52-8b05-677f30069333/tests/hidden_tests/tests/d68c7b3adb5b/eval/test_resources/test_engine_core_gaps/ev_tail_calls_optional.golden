@@ -1,0 +1,35 @@
+ident tag => a|b|c#1,2#undef
+member tag => obj:m_n:1
+call tag => q|#3#undef
+computed tag => obj:k_:1
+null base tag => TypeError
+non-callable tag => TypeError
+deep tail tag => done|#0#undef
+template identity => true
+optional tail undefined => undefined
+optional tail call => called
+get 1
+index after short => undefined
+get 2
+call member after short => undefined
+get 3
+call of short call => undefined
+get 4
+delete member after short => true
+get 5
+delete index after short => true
+get 6
+delete optional member after short => true
+get 7
+delete optional index after short => true
+side 8
+delete optional index live => true {"a":{}}
+get 9
+live chain => m on object
+get 10
+tail short chain => undefined
+get 11
+tail live chain => inner 2
+strict tail fake eval => fake eval 1+1
+sloppy fake eval => fake eval 2+2
+restored eval => 6

@@ -1,0 +1,23 @@
+subclass construct: MyDate(2024-05-06) true false false PlainDate
+subclass new.target prototype getter: true calls=1
+subclass non-object prototype: true
+prototype getter throws: EvalError: proto getter
+call without new: TypeError: constructor requires 'new'
+brand checks: TypeError,TypeError,TypeError,TypeError,TypeError,TypeError,TypeError
+property bag read order: 2024-02-29T01:00:00 calendar,day,hour,microsecond,millisecond,minute,month,monthCode,nanosecond,second,year
+options read order: largestUnit,roundingIncrement,roundingMode,smallestUnit
+compare/equals: -1,0,false,1,0,0,1,-1
+sort with compare: 2023-12-31 2024-01-15 2024-03-01
+PlainYearMonth arithmetic: 2025-02 2022-12 P1Y6M P18M P3Y 31/366/12/true 2024-01-31 2024-02
+PlainYearMonth invalid ops: RangeError:cannot add units smaller than months to a PlainYearMonth | RangeError:smallestUnit must be year or month | TypeError:toPlainDate() argument must be an object | RangeError:invalid year-month
+PlainYearMonth in calendars: 2024-02-10[u-ca=hebrew] M06 M06 P1Y7M 2023-03-22[u-ca=chinese] M02 29
+PlainMonthDay: 02-29 2023-02-28 2024-02-29 02-29 true 02-29 1970-02-07[u-ca=hebrew]
+PlainMonthDay errors: RangeError:day out of range | TypeError:year is required to interpret an ordinal month | TypeError:missing field 'month' | RangeError:invalid monthCode for this calendar | RangeError:invalid month-day
+non-ISO with(): 2025-03-15[u-ca=hebrew] | RangeError:invalid monthCode for this calendar | 30 | M06 | RangeError:month and monthCode disagree
+non-ISO with reject: RangeError: leap month does not exist in this year
+weeks and dayOfYear: 53/2020/4/366 53/2020/7/3 1/2025/1/365 1/2026/4/1 hebrew week=undefined
+Instant conversions: 1700000000123000000 2023-11-15T07:13:20.123+09:00[Asia/Tokyo] PT7630H13M20.123S 1700003600123
+Instant invalid add: RangeError: Instant.add does not accept calendar units
+toLocaleString: 7/4/2024 | 3:04:05 PM | 7/4/2024, 3:04:00 PM | 7/2024 | July 4, 2024
+toLocaleString calendar mismatch: RangeError: calendar mismatch: hebrew vs gregory
+zdt toLocaleString timeZone option: TypeError: the timeZone option is not allowed for Temporal.ZonedDateTime.prototype.toLocaleString

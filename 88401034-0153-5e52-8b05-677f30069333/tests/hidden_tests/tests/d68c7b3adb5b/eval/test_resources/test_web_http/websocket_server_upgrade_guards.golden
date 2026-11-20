@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK ... not upgraded: /plain upgrade=null
+HTTP/1.1 200 OK ... not upgraded: /no-key upgrade=websocket
+HTTP/1.1 200 OK ... not upgraded: /wrong-upgrade upgrade=h2c
+HTTP/1.1 101 Switching Protocols ... 
+foreign request: TypeError: upgradeWebSocket: the request was not delivered by Lumen.serve
+no request: TypeError: upgradeWebSocket: the request was not delivered by Lumen.serve
+server: second upgrade: Error: upgradeWebSocket: connection already upgraded
+server: upgraded /ws remote=127.0.0.1 handle=send:function,close:function,onmessage:object,onclose:object

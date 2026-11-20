@@ -1,0 +1,8 @@
+server saw GET /items?id=5 HTTP/1.1 [Connection: close; Host: 127.0.0.1:PORT; User-Agent: lumen/VERSION; x-request: one] body=""
+fetch GET -> 201 Created ok=true type=text/plain by=lumen-tls url=https://127.0.0.1:PORT/items?id=5 body="secure reply to GET /items?id=5 (0 body bytes)"
+server saw POST /submit HTTP/1.1 [Connection: close; Content-Length: 22; Host: 127.0.0.1:PORT; User-Agent: lumen/VERSION; content-type: application/json] body="{\"secure\":true,\"n\":42}"
+fetch POST -> 201 body="secure reply to POST /submit (22 body bytes)"
+server saw GET /via-https-get HTTP/1.1 [Connection: close; Host: 127.0.0.1:PORT; User-Agent: lumen/VERSION] body=""
+https.get -> 201 Created by=lumen-tls body="secure reply to GET /via-https-get (0 body bytes)"
+server saw PUT /via-https-request HTTP/1.1 [Connection: close; Content-Length: 23; Host: 127.0.0.1:PORT; User-Agent: lumen/VERSION; content-type: text/plain] body="first part, second part"
+https.request -> 201 body="secure reply to PUT /via-https-request (23 body bytes)"

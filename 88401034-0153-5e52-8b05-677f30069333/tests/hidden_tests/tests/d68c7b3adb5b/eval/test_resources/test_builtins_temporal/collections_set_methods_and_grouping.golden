@@ -1,0 +1,15 @@
+set algebra: {1,2,3,4} {3} {1,2} {1,2,4} true true true
+set-like argument: {2} {1,2,5} false calls=keys,keys,keys
+set-like validation: TypeError:set-like size is NaN | TypeError:set-like has is not callable | TypeError:set-like keys is not callable | TypeError:set-like size is NaN | RangeError:set-like size is negative
+intersection order when other smaller: {1,3} {1,3}
+mutation during iteration: 1,3,2 {1,2,3,4}
+clear during iteration: {"value":9,"done":false} {"done":true}
+SameValueZero keys: nan zero true false 2
+groupBy: {"odd":[1,3,5],"even":[2,4]} true [["a",["apple","avocado"]],["b",["banana"]]]
+groupBy errors: TypeError,TypeError
+getOrInsert: first,first,C,C,1,w,w
+getOrInsertComputed errors: TypeError | TypeError:Invalid value used as weak map key
+weak collections with symbols: sym-value,true,TypeError,weakref TypeError,true
+constructor iterables: TypeError:iterator value is not an entry object | set calls=2 | TypeError
+size getter receiver: TypeError,TypeError
+iterator protos: [object Map Iterator],[object Set Iterator],true,true,true

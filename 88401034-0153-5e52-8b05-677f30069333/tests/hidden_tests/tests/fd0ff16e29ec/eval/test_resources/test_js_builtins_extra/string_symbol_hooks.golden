@@ -1,0 +1,27 @@
+split null ["a",",","b",",","",",","c"]
+split null limit ["a","1","b","2"]
+split null empty ["a","b","c"]
+split null empty u ["😀","x","😀"]
+split null zero []
+split null nomatch ["abc"]
+split null groups ["x","1",null,"y"]
+split null limit groups ["a","1"]
+replace undef "aXc"
+replaceAll undef "x/a/y/a/"
+match null ["/q/"]
+matchAll null [1,5]
+search null 2
+replace noncallable throws TypeError @@replace is not callable
+replaceAll noncallable throws TypeError @@replace is not callable
+split noncallable throws TypeError @@split is not callable
+match noncallable throws TypeError @@match is not callable
+matchAll noncallable throws TypeError @@matchAll is not callable
+search noncallable throws TypeError @@search is not callable
+custom splitter ["abc",7,"T"]
+custom replacer "abc|R"
+substr edge ["de","ab","","","abcdef","ef"]
+at edge [null,null,"c","a","b"]
+fromCharCode odd [65,65535,66,0,0]
+concat many "1nullundefined[object Object]2,3"
+codePointAt surrogates [128512,56832,55357,56832,null]
+iter surrogates [1,2,1,1,1]

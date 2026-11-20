@@ -1,0 +1,6 @@
+ok /^*/ | SyntaxError: repetition count too large | ok /[a-[b]]/v | ok /[\q{a}-z]/v
+ok /\p{Script=greek}/u | ok /\p{sc=GREEK}/u
+0 | 0 | 0 | 0 | 1 | 1
+\x00\x1f\x7f | \x85
+1 | 2 | 2
+false | true | false

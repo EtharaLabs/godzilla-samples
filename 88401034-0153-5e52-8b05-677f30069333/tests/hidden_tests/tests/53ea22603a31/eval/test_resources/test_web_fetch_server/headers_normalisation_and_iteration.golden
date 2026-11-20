@@ -1,0 +1,16 @@
+[["content-type","text/html"],["set-cookie","a=1, b=2"],["x-a","1, 2"],["x-b","padded"]]
+1, 2 "padded" null true false
+["content-type","set-cookie","x-a"] ["text/html","a=1, b=2","only"] [["content-type","text/html"],["set-cookie","a=1, b=2"],["x-a","only"]]
+content-type=text/html:true! set-cookie=a=1, b=2:true! x-a=only:true!
+bad name "" THREW TypeError: invalid header name ''
+bad name "a b" THREW TypeError: invalid header name 'a b'
+bad name "x:y" THREW TypeError: invalid header name 'x:y'
+bad name "é" THREW TypeError: invalid header name 'é'
+bad name "a\n" THREW TypeError: invalid header name 'a
+'
+bad name "(paren)" THREW TypeError: invalid header name '(paren)'
+bad name on get THREW TypeError: invalid header name 'bad name'
+bad name on has THREW TypeError: invalid header name 'a@b'
+[["a","1"],["b","2, 3"]] [["z","9"]]
+bad pair THREW TypeError: Headers: init pair needs two items
+undefined "5" "value" 0 0

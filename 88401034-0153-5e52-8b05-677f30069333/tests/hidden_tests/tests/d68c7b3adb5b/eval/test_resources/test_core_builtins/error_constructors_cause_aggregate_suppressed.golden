@@ -1,0 +1,45 @@
+Error basics: Error | msg | Error: msg | message=msg | true | [object Error] | called | true | true | false | false
+message coercion: 42,null,obj,true
+message symbol: TypeError: Cannot convert a Symbol value to a string
+cause: true | cause=TypeError: inner message=outer | false | true | false | 0 | true | cause read
+cause proxy has trap: has cause,get cause C
+native error types: EvalError:EvalError:true:true:true:1:true:c:true RangeError:RangeError:true:true:true:1:true:c:true ReferenceError:ReferenceError:true:true:true:1:true:c:true SyntaxError:SyntaxError:true:true:true:1:true:c:true TypeError:TypeError:true:true:true:1:true:c:true URIError:URIError:true:true:true:1:true:c:true
+Error.prototype: Error | "" | [object Object] | function | 1 | Error | 0 | {"value":"TypeError","writable":true,"enumerable":false,"configurable":true}
+toString variants: Error | N | Error: M | M | N | Error | 5: obj | Z: z | namedFn | Error
+toString non-object: TypeError: Error.prototype.toString called on a non-object
+toString getter throws: EvalError: name getter
+AggregateError: AggregateError | agg | c | 2 | Error: x | cause=c errors=[1,{}] message=agg | true | true | s | 2 | true | false | AggregateError: agg
+AggregateError non-iterable: TypeError: value is not iterable
+AggregateError order: msg,iter iter threw
+AggregateError errors fresh array: true true
+SuppressedError: SuppressedError | msg | err | sup | error=1 suppressed=2 | 3 | true | false | [object Error] | true | SuppressedError: msg
+SuppressedError message coercion: coerced false
+captureStackTrace: string true 2 TypeError
+isError: true,true,false,false,false,false,true,true,true,true
+stack property: string Error: s
+subclass: MyErr: boom | true | true | sub | [object Error] | true
+new.target proto: true RangeError nt
+new.target bad proto realm fallback: true
+thrown errors: TypeError ReferenceError:undefinedVar is not defined TypeError RangeError URIError SyntaxError ReferenceError:undeclared is not defined
+error message for calls: cannot read property 'c' of undefined | (intermediate value).f is not a function | (intermediate value).nope is not a function | cannot set property 'x' of undefined | cannot read property of null or undefined | object is not a constructor | value is not iterable | cannot destructure null or undefined | expression is not a function | 'in' requires an object on the right
+Error props writable: Renamed: changed {"value":"Error","writable":true,"enumerable":false,"configurable":true}
+Error ctor message toString order: msg,cause
+stack accessor shape: function,function,false,true,false,get stack,set stack
+stack getter non-error object: undefined
+stack getter primitive: TypeError: Error.prototype.stack getter called on a non-object
+stack getter name/message variants: Error: m | OnlyName | only message
+stack setter primitive this: TypeError: Error.prototype.stack setter requires an object
+stack setter non-string: TypeError: Error.prototype.stack setter requires a string value
+stack setter on Error.prototype: TypeError: cannot set stack on %Error.prototype%
+stack setter creates own: custom stack,true,true,true
+stack setter updates own: new
+stack setter on frozen: TypeError: cannot define stack
+stack setter own read-only: TypeError: Cannot assign to read only property 'stack'
+stack setter proxy with own: set stack=accepted set stack=reject TypeError
+stack setter proxy without trap: via target
+stack setter proxy defines: define stack defined
+stack assignment on error: replaced true
+AggregateError newTarget non-object prototype: true
+SuppressedError newTarget non-object prototype: true
+AggregateError cross-realm newTarget: true
+errors cross realm: false,true,[object Error],TypeError: x

@@ -1,0 +1,49 @@
+"a"/gig SyntaxError: duplicate regular expression flag g
+"a"/z SyntaxError: invalid regular expression flag z
+"a"/uv SyntaxError: the u and v regular expression flags are mutually exclusive
+"a)"/ SyntaxError: unexpected character in pattern
+"(?:a"/ SyntaxError: expected ')' in pattern
+"(a"/ SyntaxError: expected ')' in pattern
+"\\k<nope>(?<x>a)"/ SyntaxError: invalid named back reference <nope>
+"(?<x>a)(?<x>b)"/ SyntaxError: duplicate group name x
+"(?<x>a)|(?<x>b)(?<x>c)"/ SyntaxError: duplicate group name x
+"(?:(?<x>a)|b)(?<x>c)"/ SyntaxError: duplicate group name x
+"(?<x>a)|(?<x>b)"/ ok (?<x>a)|(?<x>b) 
+"(a)\\2"/u SyntaxError: back reference \2 exceeds the number of capture groups
+"(?<a>.)\\k<b>"/u SyntaxError: invalid named back reference <b>
+"*a"/ SyntaxError: nothing to repeat
+"a**"/ SyntaxError: nothing to repeat
+"a+*"/ SyntaxError: nothing to repeat
+"{2}"/ SyntaxError: nothing to repeat
+"|?"/ SyntaxError: nothing to repeat
+"(*)"/ SyntaxError: nothing to repeat
+"a{3,2}"/ SyntaxError: numbers out of order in {} quantifier
+"a{"/u SyntaxError: lone '{' is not valid in a unicode pattern
+"}"/u SyntaxError: lone '}' is not valid in a unicode pattern
+"]"/u SyntaxError: lone ']' is not valid in a unicode pattern
+"(?x)"/ SyntaxError: unsupported group
+"(?"/ SyntaxError: unsupported group
+"(?ii:a)"/ SyntaxError: duplicate inline modifier flag
+"(?i-x:a)"/ SyntaxError: invalid inline modifier
+"(?i"/ SyntaxError: invalid inline modifier
+"(?-:a)"/ SyntaxError: empty inline modifier
+"(?i-i:a)"/ SyntaxError: inline modifier flag added and removed
+"(?m-sm:a)"/ SyntaxError: inline modifier flag added and removed
+"(?s-s:a)"/ SyntaxError: inline modifier flag added and removed
+"(?<=a)*"/ SyntaxError: quantifier on an assertion
+"(?<!a)?"/ SyntaxError: quantifier on an assertion
+"(?=a)+"/u SyntaxError: quantifier on an assertion
+"(?!a){2}"/u SyntaxError: quantifier on an assertion
+"(?:ab){1001}"/ SyntaxError: repetition count too large
+"(ab){2,1001}"/ SyntaxError: repetition count too large
+"x{1001}"/ ok x{1001} 
+"\\"/ SyntaxError: trailing backslash
+"[a-"/ SyntaxError: unterminated character class
+"(?<a>(?<a>x))"/ SyntaxError: duplicate group name a
+"(?<a>x)(?i:(?<a>y))"/ SyntaxError: duplicate group name a
+eval /a**/ SyntaxError: nothing to repeat
+eval /(?<n>a)\k<m>/ SyntaxError: invalid named back reference <m>
+eval x = /[b-a]/; SyntaxError: range out of order in character class
+eval /a/gg SyntaxError: duplicate regular expression flag g
+eval /(?<=x)+/ SyntaxError: quantifier on an assertion
+eval /a{2,1}/u SyntaxError: numbers out of order in {} quantifier

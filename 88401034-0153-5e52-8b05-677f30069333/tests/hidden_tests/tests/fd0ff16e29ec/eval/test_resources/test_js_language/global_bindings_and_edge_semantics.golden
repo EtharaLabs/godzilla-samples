@@ -1,0 +1,16 @@
+global fn over builtin script-level isNaN(1) function/true/true/false
+eval fn over non-configurable var now a function function/true/true/false
+eval fn over configurable prop redefined function/true/true/true
+eval fn over undefined TypeError: cannot declare global binding 'undefined'
+eval var/let clash SyntaxError: Identifier 'x1' has already been declared
+no sync throw true
+sloppy read after vanish undefined
+strict read ReferenceError: wy is not defined
+sloppy write after vanish recreated
+strict write ReferenceError: wq is not defined
+rejected TypeError: cannot destructure null or undefined
+rejected2 param default threw
+got ok1
+await-using-null in block,tick1,after block,tick2
+sync iterator closed
+for-await caught rejected value

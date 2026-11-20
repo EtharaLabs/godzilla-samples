@@ -1,0 +1,52 @@
+field field pub false false false true true
+sfield field sf true false false true true
+priv field #p false true false true true
+method method meth false false false true false
+pmeth method #pm false true false true false
+getter getter g false false false true false
+setter setter g false false false false true
+acc accessor ac false false false true true
+sacc accessor sac true false false true true
+pacc accessor #pac false true false true true
+sym method Symbol(symKey) false false false true false
+nested method nn false false false true false
+pget getter #pg false true false true false
+pset setter #pg false true false false true
+smeth method sm true false false true false
+spm method #spm true true false true false
+sget getter sg true false false true false
+field get 1
+field set 10
+priv get 3
+priv set 30
+priv get foreign undefined
+method get "m"
+pmeth get "pm"
+getter get "g"
+setter set "S"
+acc get/set "acc2/acc2"
+sacc get "sacc"
+pacc get/set "pacc2/pacc2"
+sym get "sym"
+pget "pg"
+pset "PS"
+smeth "sm"
+spm "spm,spm"
+sget "sg"
+sfield get 2
+field get on prim undefined
+field set on other "{\"pub\":4}"
+accessor get unrelated !TypeError: cannot read auto-accessor backing field from an unrelated object
+accessor set unrelated !TypeError: cannot write auto-accessor backing field on an unrelated object
+class X { @(5) m() {} } !TypeError: decorator is not callable
+class X { @(5) f = 1; } !TypeError: decorator is not callable
+class X { @(5) accessor q = 1; } !TypeError: decorator is not callable
+class X { @((v,c) => 5) f = 1; } !TypeError: field decorator must return a function or undefined
+class X { @((v,c) => 5) accessor q = 1; } !TypeError: accessor decorator must return an object or undefined
+class X { @((v,c) => ({get: 5, set: 6, init: 7}))  undefined
+class X { @((v,c) => undefined) accessor q = 1; }; 1
+class X { @((v,c) => {}) static m() {} }; typeof X "function"
+class X { @((v,c) => {}) static get m() { return 1 1
+class X { @((v,c) => { c.addInitializer(function() true
+class X { @((v,c) => { c.addInitializer(function() "inst"
+class X { @((v,c) => { c.addInitializer(function() "static-field"

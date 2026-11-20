@@ -1,0 +1,54 @@
+warm: 180
+like: b len=1 push=2 {"0":"a","1":"z","length":2}
+max push: RangeError
+after max push: 4294967295 stored=x pop=undefined len=4294967294
+p1 delete 2
+p1 define length=2
+pop: 3 len=2
+p1 define 0=2
+p1 delete 1
+p1 define length=1
+shift: 1 rest=[2]
+p2 delete 2
+pop refused: TypeError
+p3 define 0=2
+p3 define 1=3
+p3 delete 2
+splice refused: TypeError
+made define 0="a"
+made define 1="b"
+made define length=2
+from: {"0":"a","1":"b","length":2}
+made define 0="z"
+made define length=1
+from arraylike: {"0":"z","length":1}
+thr define 0=1
+from throws: RangeError: define 0
+made define 0=10
+made define 1=12
+map species: {"0":10,"1":12}
+from non-ctor: ["x","y"] true
+from non-ctor iterable: [3,4]
+of non-ctor: [1,2]
+from huge non-ctor: RangeError
+values on string: ["61","dbff","dfff"]
+entries on number: []
+keys on null: TypeError
+map huge arraylike: RangeError
+foreign %Array%: true 2,3,4
+foreign Object ctor: true 2,4,6
+foreign species: true -1,-2,-3
+define inside/after compact: ["0","1","2","6"] len=7 a|B|c||||G
+far index then pop: far ["0","1","2","6"] len=1000
+pop again: undefined ["0","1","2","6"] len=999
+holey shrink then push: ["3"] len=4 [null,null,null,"pushed"]
+holey pop: pushed undefined [] len=2
+pop of hole: undefined 3 delete beyond true delete hole true
+pop accessor tail: got ["0"] len=1
+pop non-configurable tail: TypeError
+after failed pop: ["0","1"] len=2
+indexed big push/gap: 46 40 false 45
+pop accessor on big: acc45 45
+truncate keeps names: 0,1,2,3,4,name0,name1,name2,name3,name4,name5,name6,name7,name8,name9 0,1,2,3,4
+mirror far/non-canonical: 1001 2 b 10.5 1172
+fromAsync huge: RangeError

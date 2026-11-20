@@ -1,0 +1,37 @@
+toFixed-carry: "10.0" | "100.0" | "1.00" | "10" | "-10.0" | "1000.000" | "0.001" | "0.00000" | "123.4560000000"
+toString-radix-NaN: THROW RangeError: toString() radix must be between 2 and 36
+toString-radix-coerce: "ff" | "ff" | "11111111"
+Number-noargs: 0 | 0 | NaN | 5 | "number"
+Number-ctor-bigint: 18446744073709552000 | -1 | Infinity
+Number-toLocaleString-basic: "string" | true
+BigInt-ctor-obj: 7n | 8n | 9n | 16n | 0n | 0n | 5n | 15n | 9007199254740993n
+BigInt-neg-hex: THROW SyntaxError: Cannot convert string to a BigInt
+BigInt-nan: THROW RangeError: The number cannot be converted to a BigInt
+BigInt-inf: THROW RangeError: The number cannot be converted to a BigInt
+BigInt-undefined: THROW TypeError: Cannot convert value to a BigInt
+BigInt-null: THROW TypeError: Cannot convert value to a BigInt
+asIntN: 3n | -4n | 3n | -1n | 0n | -170141183460469231731687303715884105728n | 5n | -56n
+asUintN: 1n | 18446744073709551615n | 1n | 5n | 1n
+asUintN-huge-neg: THROW RangeError: BigInt is too large to allocate
+asIntN-bits-too-big: THROW RangeError: index out of range
+asUintN-nonbigint: THROW TypeError: Cannot convert a Number to a BigInt
+BigInt-proto: "ff" | false | "string" | "[object BigInt]" | "BigInt"
+BigInt-valueOf-bad: THROW TypeError: BigInt method called on incompatible receiver
+BigInt-toLocaleString-bad: THROW TypeError: BigInt method called on incompatible receiver
+Boolean-boxed: "true" | false | true | true
+Boolean-toString-obj: THROW TypeError: Boolean method called on incompatible receiver
+Symbol-boxed: "Symbol(boxed)" | "d" | true | "via getter"
+Symbol-valueOf-bad: THROW TypeError: Symbol method called on incompatible receiver
+Symbol-description-bad: THROW TypeError: Symbol.prototype.description requires a symbol
+Symbol-ctor-coerce: "1" | "null" | "obj" | true
+Symbol-desc-symbol: THROW TypeError: Cannot convert a Symbol value to a string
+indirect-eval: 42 | "number" | 5 | 1 | undefined | "eval" | 1
+indirect-eval-syntax: THROW SyntaxError: unexpected token Eof
+indirect-eval-throw: THROW RangeError: from eval
+indirect-eval-scope: "undefined" | "local"
+global-print: "function"
+parseInt-more: 31 | 42 | NaN | 16 | NaN | true | 1371 | NaN | 0 | NaN | NaN
+parseFloat-more: 0.5 | NaN | 100000 | NaN | NaN | Infinity | NaN | 1000 | 1 | 1
+Number-parse-more: 0.5 | -0.05 | NaN | NaN | NaN | NaN | 12 | NaN | 12 | NaN | Infinity | -0 | NaN | NaN
+math-sumPrecise-more: -Infinity | -Infinity | 1e-308 | 0 | -0 | 1e-323 | 2 | 8.98846567431158e+307 | NaN
+math-more: NaN | -0 | 0 | -2 | 2 | -0 | -0 | -0 | -0 | Infinity | NaN | NaN | -Infinity | 1.0009765625 | 1 | 1.0009765625 | 32 | 0

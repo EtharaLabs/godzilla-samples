@@ -1,0 +1,8 @@
+net listen 0.0.0.0 IPv4 true true
+client got "hi from the wildcard listener"
+net server closed false null
+error Error: "getaddrinfo ENOTFOUND bad\u0000host:81" code=ENOTFOUND syscall=getaddrinfo address="bad\u0000host" port=81
+close hadError=true destroyed=true
+Lumen.serve hostname 0.0.0.0 number
+fetch 200 served /wild
+Lumen.serve shut down

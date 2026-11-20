@@ -1,0 +1,19 @@
+map order => [["a", 5], ["c", 3], ["b", 4]]
+set order => ["y", "z", "x"]
+map -0 and NaN => ["zero", "nan2", false, true, 2]
+set -0 and NaN => [4, false, [0, NaN, "0", 0n]]
+object keys identity => [1, undefined, 2]
+mixed key types => ["num", "str", "big", "bool", "null", "undef", "undef", 6]
+symbol keys => [1, 1]
+chaining => [true, true, true, false, undefined, undefined, 0, 0]
+set entries => [[["a", "a"], ["b", "b"]], ["a"]]
+map keys/values => [[1, 2], ["a", "b"], [[1, "a"], [2, "b"]]]
+forEach args and thisArg => [2, 1, true, "T", "x", "x", 1]
+forEach not callable !! TypeError: forEach callback is not callable
+large => [500, 250000, ["k1", "k3", "k5"]]
+protos and tags => ["[object Map]", "[object Set]", true, true, true, 2, 1]
+size getter => ["get size", "undefined"]
+Map.prototype.size !! TypeError: method called on an incompatible receiver
+get on Set !! TypeError: method called on an incompatible receiver
+size of Map via Set getter !! TypeError: method called on an incompatible receiver
+add on WeakSet !! TypeError: method called on an incompatible receiver

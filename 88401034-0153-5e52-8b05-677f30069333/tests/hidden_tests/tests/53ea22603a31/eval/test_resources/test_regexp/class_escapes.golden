@@ -1,0 +1,22 @@
+1 1 1 1 1 1
+1 0 0 0 1 0 1 0 0 1
+1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1
+[\x4] u => invalid hexadecimal escape
+[\u12] u => invalid unicode escape
+[\cA\c] v => invalid \c escape in class set
+[\z] v => invalid identity escape \z in v-mode class
+[\ v => trailing backslash in class
+[\x4] v => invalid hexadecimal escape
+[\c1] u => invalid \c escape in unicode pattern
+[\00] u => legacy octal escape in unicode pattern
+[\8] u => invalid identity escape \8 in unicode class
+\k u => expected '<' in named back reference
+(?<a>.)\k  => expected '<' in named back reference
+(?<a>.)\ka  => expected '<' in named back reference
+(?<\u0030>.)  => invalid capture group name <0>
+(?<a\x41>.)  => invalid escape in capture group name
+[\d-z] u => invalid character class range
+[a-\d] u => invalid character class range
+\u{FFFFFFFFF} u => invalid code point escape
+["ab"] ["𝒜"] ["𝒜b"] ["ab"]

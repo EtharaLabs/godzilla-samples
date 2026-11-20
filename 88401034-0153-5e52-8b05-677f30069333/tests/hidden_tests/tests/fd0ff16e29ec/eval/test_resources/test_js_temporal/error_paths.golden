@@ -1,0 +1,75 @@
+obj cal number => THROW TypeError: calendar is not a string
+relTo cal number => THROW TypeError: calendar is not a string
+zdt bag cal number => THROW TypeError: calendar is not a string
+dt outside => -P547581Y4M23DT23H59M59.999999999S
+dt outside2 => THROW RangeError: date is outside the supported range
+reject add hebrew leap => THROW RangeError: leap month does not exist in the target year
+reject add hebrew day => THROW RangeError: day is out of range in the target month
+reject add chinese => THROW RangeError: leap month does not exist in the target year
+reject add coptic => THROW RangeError: day is out of range in the target month
+reject add islamic => THROW RangeError: day is out of range in the target month
+constrain add islamic => 2023-09-15[u-ca=islamic-civil]
+constrain add hebrew leap => 2025-03-29[u-ca=hebrew]
+day required => THROW TypeError: missing field 'day'
+day required cal => THROW TypeError: missing field 'day'
+era together => THROW TypeError: missing field 'year'
+era together2 => THROW TypeError: missing field 'year'
+with era only => THROW TypeError: era and eraYear must both be provided
+with era both => 1993-01-01[u-ca=japanese]
+with eraYear+year => THROW TypeError: eraYear and year are mutually exclusive
+with eraYear only => THROW TypeError: era and eraYear must both be provided
+with year greg => -000005-01-01[u-ca=gregory]
+with month 0 => THROW RangeError: month must be positive
+with monthCode num => THROW TypeError: monthCode must be a string
+with monthCode obj => 2020-04-01
+from month 0 => THROW RangeError: month must be positive
+from month -1 => THROW RangeError: month must be positive
+from no month cal => THROW TypeError: missing field 'month'
+from no month => THROW TypeError: missing field 'month'
+ym no month => THROW TypeError: missing field 'month'
+md no month => THROW TypeError: missing field 'month'
+monthCode bool => THROW TypeError: monthCode must be a string
+pdt no date => THROW RangeError: no date in PlainDateTime string
+pdt no date T => THROW RangeError: no date in PlainDateTime string
+zdt offset num => THROW TypeError: offset must be a string
+zdt with offset num => THROW TypeError: offset must be a string
+relTo offset num => THROW TypeError: offset must be a string
+relTo needs date => THROW TypeError: day is required
+relTo bad time field => PT24H
+relTo bad tz string => THROW RangeError: invalid time zone in relativeTo string
+relTo bad tz bag => THROW RangeError: invalid time zone identifier
+relTo datetime string => P29D
+relTo zdt string offset ok => PT743H
+relTo string Z bad => THROW RangeError: invalid relativeTo string
+relTo pdt => 29
+relTo other => THROW TypeError: day is required
+round no args => THROW TypeError: round() requires an options argument
+zdt round no args => THROW TypeError: round() requires an options argument
+dur with str => THROW TypeError: with() argument must be an object
+zdt with str => THROW TypeError: with() argument must be an object
+time with empty => THROW TypeError: with() requires at least one time field
+time with unknown => THROW TypeError: with() requires at least one time field
+time with string => THROW TypeError: with() argument must be a plain object
+time with temporal => THROW TypeError: with() argument must be a plain object
+instant toString su hour => THROW RangeError: invalid smallestUnit for toString
+zdt toString su hour => THROW RangeError: invalid smallestUnit for toString
+zdt toString su day => THROW RangeError: invalid smallestUnit for toString
+ym outside => THROW RangeError: date is outside the supported range
+ym outside2 => THROW RangeError: date is outside the supported range
+ym outside cal => +275760-10
+epochNs out of range => THROW RangeError: instant is outside the representable range
+zdt ctor out of range => THROW RangeError: instant is outside the representable range
+zdt from obj bad => THROW TypeError: missing timeZone
+iso date invalid => THROW RangeError: ISO date field is out of range
+pd from undefined => THROW TypeError: cannot convert to Temporal.PlainDate
+dt ctor bad date => THROW RangeError: ISO date field is out of range
+cal brand => THROW TypeError: calendarId called on a non-Temporal receiver
+brands => receiver is not a Temporal.Duration | receiver is not a Temporal.Instant | receiver is not a Temporal.PlainDateTime | receiver is not a Temporal.PlainMonthDay | receiver is not a Temporal.PlainTime | receiver is not a Temporal.PlainYearMonth | receiver is not a Temporal.ZonedDateTime
+method brands => TypeError:receiver is not a Temporal.Duration | TypeError:receiver is not a Temporal.Instant | TypeError:receiver is not a Temporal.PlainDateTime | TypeError:receiver is not a Temporal.PlainMonthDay | TypeError:receiver is not a Temporal.PlainTime | TypeError:receiver is not a Temporal.PlainYearMonth | TypeError:receiver is not a Temporal.ZonedDateTime
+calendar ctor non-string => THROW TypeError: calendar must be a string
+withCalendar obj => THROW TypeError: calendar must be a string
+withCalendar temporal => 2020-01-01[u-ca=japanese]
+withCalendar iso string => 2020-01-01[u-ca=hebrew]
+withTimeZone zdt => 2020-01-01T09:00:00+09:00[Asia/Tokyo]
+tz string forms => UTC | +01:00 | Asia/Tokyo | Asia/Tokyo | RangeError:invalid time zone identifier | +01:00 | +01:00 | UTC | Etc/GMT+5 | RangeError:invalid time zone identifier
+cal string forms => japanese | iso8601 | japanese | japanese | hebrew | iso8601 | gregory | iso8601 | RangeError:invalid calendar identifier

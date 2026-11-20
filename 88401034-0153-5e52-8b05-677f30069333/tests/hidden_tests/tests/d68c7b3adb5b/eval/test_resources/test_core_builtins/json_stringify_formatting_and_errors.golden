@@ -1,0 +1,69 @@
+pretty nested: {
+--"a": [
+----1,
+----{
+------"b": []
+----},
+----{}
+--],
+--"c": {
+----"d": null,
+----"e": "x"
+--}
+}
+pretty tab: [
+	{
+		"k": [
+			1
+		]
+	}
+]
+space String wrapper: [
+ab1,
+ab2
+]
+space Number wrapper: {
+ "a": 1
+}
+space bool ignored: {"a":1}
+space fractional: [
+  1
+]
+replacer proxy array: {"b":2,"a":1}
+replacer array with holes and objects: {"1":"x","a":"y"}
+replacer array applies to nested: {"keep":{"keep":1}}
+replacer array with String/Number objects: {"x":1,"2":"two"}
+control chars: "\b\f\n\r\t\u0000\u001f\"\\/  "
+surrogate pairs: "😀😀" "\udead\ud83d" {"\ud800":"\udc00"}
+BigInt wrapper: TypeError: Do not know how to serialize a BigInt
+BigInt nested: TypeError: Do not know how to serialize a BigInt
+BigInt replaced: {"n":"5n"}
+Date toJSON: {"d":"1970-01-01T00:00:00.000Z","inv":null}
+Date toJSON generic: custom iso null
+Date toJSON non-callable: TypeError: toISOString is not callable
+toJSON non-function: {"toJSON":5,"v":1}
+toJSON throws: EvalError: tj
+toJSON on prototype: {"a":"P@a","b":["P@0"]}
+Map/Set/RegExp/Error: [{},{},{},{},{},null,null,{},{},true,0,{}]
+getter throws: URIError: getter
+nested cycle message: TypeError: Converting circular structure to JSON
+cycle through toJSON: TypeError: Converting circular structure to JSON
+repeated non-cyclic references: {"x":{"s":1},"y":{"s":1},"z":[{"s":1},{"s":1}]}
+non-enumerable/inherited skipped: {"vis":3}
+array-like object: {"0":"a","length":2} [1,2] {"0":1,"1":2}
+sparse array: [null,1,null,null]
+numbers: [1e+21,1e-7,0,0.30000000000000004,9007199254740994,5e-324,-1.5e+300,null,null]
+replacer function on root: {"wrapped":5}
+replacer returns undefined root: undefined
+replacer this binding: :object: a:object 0:array
+replacer throws: RangeError: replacer threw
+stringify proxy revoked: TypeError: cannot read property 'get' of null
+stringify proxy ownKeys order: {"b":2,"a":1}
+stringify proxy array: [1,2] toJSON,length,0,1
+stringify key order: {"1":4,"2":2,"b":1,"a":3}
+stringify string escapes key: {"a\"b":1,"c\nd":2," ":3}
+JSON space plain object ignored: [1][1]
+JSON proxy with symbol keys: {"a":1} {"w":{"a":1}}
+large structure: 43781 v1999 2000
+stringify deep nest: 1202
+JSON object: 0 isRawJSON,parse,rawJSON,stringify JSON 3 object true

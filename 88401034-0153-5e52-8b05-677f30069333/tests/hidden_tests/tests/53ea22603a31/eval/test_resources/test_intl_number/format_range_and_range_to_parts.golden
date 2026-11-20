@@ -1,0 +1,9 @@
+3–5 | $3.00 – $5.00 | ~$3.00 | 3,00 € – 5,00 €
+~3 | -5–-3 | 10%–20% | 5–3
+1K–5K | 1 m–2 m | 1–10 | 1.5–2.5
+RangeError: formatRange arguments must not be NaN | TypeError: formatRange requires two arguments | TypeError: formatRange requires two arguments | RangeError: formatRange arguments must not be NaN
+[{"type":"currency","value":"$","source":"startRange"},{"type":"integer","value":"3","source":"startRange"},{"type":"decimal","value":".","source":"startRange"},{"type":"fraction","value":"00","source":"startRange"},{"type":"literal","value":" – ","source":"shared"},{"type":"currency","value":"$","source":"endRange"},{"type":"integer","value":"5","source":"endRange"},{"type":"decimal","value":".","source":"endRange"},{"type":"fraction","value":"00","source":"endRange"}]
+[{"type":"approximatelySign","value":"~","source":"shared"},{"type":"integer","value":"3","source":"shared"}]
+[{"type":"minusSign","value":"-","source":"startRange"},{"type":"integer","value":"1","source":"startRange"},{"type":"group","value":" ","source":"startRange"},{"type":"integer","value":"234","source":"startRange"},{"type":"literal","value":"–","source":"shared"},{"type":"integer","value":"5","source":"endRange"},{"type":"group","value":" ","source":"endRange"},{"type":"integer","value":"678","source":"endRange"}]
+3,00 - 5,00 € | -5 - 3 | 1 - 2 | -$5.00–3.00 | +$3.00–5.00
+[{"type":"integer","value":"3","source":"startRange"},{"type":"decimal","value":",","source":"startRange"},{"type":"fraction","value":"00","source":"startRange"},{"type":"literal","value":" - ","source":"shared"},{"type":"integer","value":"5","source":"endRange"},{"type":"decimal","value":",","source":"endRange"},{"type":"fraction","value":"00","source":"endRange"},{"type":"literal","value":" ","source":"endRange"},{"type":"currency","value":"€","source":"endRange"}]

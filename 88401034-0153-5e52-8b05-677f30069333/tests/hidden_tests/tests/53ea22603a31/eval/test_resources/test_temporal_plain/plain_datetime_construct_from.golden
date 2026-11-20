@@ -1,0 +1,27 @@
+ctor full => 2024-02-29T23:59:59.999999999
+ctor date only => 2024-02-29T00:00:00
+ctor bad hour => threw RangeError: ISO time field is out of range
+ctor calendar => 2024-02-29T00:00:00[u-ca=japanese]
+min edge => -271821-04-19T00:00:00.000000001
+below min => threw RangeError: date-time is outside the representable range
+max edge => +275760-09-13T23:59:59.999999999
+"2024-02-29T12:34:56.5" => 2024-02-29T12:34:56.5
+"2024-02-29" => 2024-02-29T00:00:00
+"20240229T123456" => 2024-02-29T12:34:56
+"2024-02-29T12:34:56+09:00[Asia/Tokyo]" => 2024-02-29T12:34:56
+"2024-02-29T12:34:56Z" => threw RangeError: UTC designator not valid for PlainDateTime
+"2024-02-29T12:34:56.000000001[u-ca=hebrew]" => 2024-02-29T12:34:56.000000001[u-ca=hebrew]
+"2024-02-29T24:00" => threw RangeError: invalid datetime
+"-271821-04-19T00:00" => threw RangeError: date-time outside representable range
+"-271821-04-19T00:00:00.000000001" => -271821-04-19T00:00:00.000000001
+"+275760-09-13T23:59" => +275760-09-13T23:59:00
+"+275760-09-14T00:00" => threw RangeError: date-time outside representable range
+bag => 2024-02-29T23:59:00
+bag reject => threw RangeError: hour out of range
+bag missing day => threw TypeError: missing field 'day'
+from PlainDate => 2024-01-01T00:00:00
+from ZonedDateTime => 2024-01-01T00:00:00.5
+getters => 2024 12 M12 31 18 7 9 10 203 40 2 366 1 2025 31 366 true iso8601
+valueOf => threw TypeError: Temporal.PlainDateTime has no valueOf; use compare
+compare => 0 1
+equals calendar => false

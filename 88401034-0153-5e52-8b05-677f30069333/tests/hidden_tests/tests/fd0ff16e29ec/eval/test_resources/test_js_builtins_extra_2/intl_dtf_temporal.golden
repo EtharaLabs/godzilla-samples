@@ -1,0 +1,68 @@
+en default pt "1:05:09 PM"
+en default pd "7/4/2021"
+en default pdt "7/4/2021, 1:05:09 PM"
+en default ym throws RangeError calendar mismatch: iso8601 vs gregory
+en default md throws RangeError calendar mismatch: iso8601 vs gregory
+en default inst "7/4/2021, 1:05:09 PM"
+de default pt "13:05:09"
+de default pd "4.7.2021"
+de default pdt "4.7.2021, 13:05:09"
+de default ym throws RangeError calendar mismatch: iso8601 vs gregory
+de default md throws RangeError calendar mismatch: iso8601 vs gregory
+de default inst "4.7.2021, 13:05:09"
+ja default pt "13:05:09"
+ja default pd "2021/7/4"
+ja default pdt "2021/7/4, 13:05:09"
+ja default ym throws RangeError calendar mismatch: iso8601 vs gregory
+ja default md throws RangeError calendar mismatch: iso8601 vs gregory
+ja default inst "2021/7/4, 13:05:09"
+en-u-ca-iso8601 default pt "1:05:09 PM"
+en-u-ca-iso8601 default pd "7/4/2021"
+en-u-ca-iso8601 default pdt "7/4/2021, 1:05:09 PM"
+en-u-ca-iso8601 default ym "7/2021"
+en-u-ca-iso8601 default md "7/4"
+en-u-ca-iso8601 default inst "7/4/2021, 1:05:09 PM"
+fr-u-hc-h23 default pt "13:05:09"
+fr-u-hc-h23 default pd "4/7/2021"
+fr-u-hc-h23 default pdt "4/7/2021, 13:05:09"
+fr-u-hc-h23 default ym throws RangeError calendar mismatch: iso8601 vs gregory
+fr-u-hc-h23 default md throws RangeError calendar mismatch: iso8601 vs gregory
+fr-u-hc-h23 default inst "4/7/2021, 13:05:09"
+en hour12 false pt "13:05:09"
+de hour12 true pt "1:05:09 PM"
+en timeStyle pt "1:05 PM"
+en dateStyle pt throws TypeError no overlap between the formatter and the Temporal value
+en hour12 false pd "7/4/2021"
+de hour12 true pd "4.7.2021"
+en timeStyle pd throws TypeError no overlap between the formatter and the Temporal value
+en dateStyle pd "Jul 4, 2021"
+en hour12 false pdt "7/4/2021, 13:05:09"
+de hour12 true pdt "4.7.2021, 1:05:09 PM"
+en timeStyle pdt "1:05 PM"
+en dateStyle pdt "Jul 4, 2021"
+en hour12 false ym throws RangeError calendar mismatch: iso8601 vs gregory
+de hour12 true ym throws RangeError calendar mismatch: iso8601 vs gregory
+en timeStyle ym throws TypeError no overlap between the formatter and the Temporal value
+en dateStyle ym throws RangeError calendar mismatch: iso8601 vs gregory
+en hour12 false md throws RangeError calendar mismatch: iso8601 vs gregory
+de hour12 true md throws RangeError calendar mismatch: iso8601 vs gregory
+en timeStyle md throws TypeError no overlap between the formatter and the Temporal value
+en dateStyle md throws RangeError calendar mismatch: iso8601 vs gregory
+en hour12 false inst "7/4/2021, 13:05:09"
+de hour12 true inst "4.7.2021, 1:05:09 PM"
+en timeStyle inst "1:05 PM"
+en dateStyle inst "Jul 4, 2021"
+iso8601 md range "7/4 – 8/1"
+iso8601 ym range "7/2021 – 1/2022"
+iso8601 md/ym mismatch throws TypeError formatRange endpoints must be the same type
+pt range "1:05:09 PM – 3:00:00 PM"
+pt range parts "hour:1:startRange|literal:::startRange|minute:05:startRange|literal: :startRange|dayPeriod:PM:startRange|literal: – :shared|hour:3:endRange|literal:::endRange|minute:30:endRange|literal: :endRange|dayPeriod:PM:endRange"
+inst range "7/4/2021, 10:05:09 PM – 7/5/2021, 10:00:00 AM"
+pd range same "7/4/2021"
+pdt range diff literal "July 4, 1 PM – August 4, 3 PM"
+hebrew month name "Tamuz 24, 5781"
+ms with tz name "7 PM Eastern Standard Time"
+fractional ["05.6","05.67","05.678"]
+dtf timeStyle bad throws RangeError invalid timeStyle: bogus
+dtf call no new [true,"function"]
+dtf legacy chain [true,"function"]

@@ -1,0 +1,26 @@
+body var seeded from parameter: orig,changed,orig
+body function shadows parameter: function number
+var arguments seeded with param exprs: object 0
+param closures see param scope: init / set-by-param-closure
+param TDZ: ReferenceError: cannot access 'b' before initialization
+param refers to earlier: 3,6,9
+default not applied for null: dflt||dflt
+length stops at first default or rest: 1,1,2,2
+sloppy duplicate params: 2 2
+strict duplicate params: SyntaxError: duplicate parameter name 'a'
+duplicate with default: SyntaxError: duplicate parameter name 'a'
+use strict with non-simple params: SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+defaults evaluated per call: 1,2,10,3
+default sees outer not body: outer
+body function invisible to defaults: undefined
+rest param: 2 true 3
+arrow params and arguments: from-outer:2
+new.target in default: true undefined
+this in default: true
+super in default param: base
+yield in generator default: SyntaxError: yield expression is not allowed in formal parameters
+await as param name in async: SyntaxError: 'await' cannot be used as a binding here
+auto-accessor: 5,function,function,false,0,static,priv,np
+auto-accessor foreign receiver get: TypeError: cannot read auto-accessor backing field from an unrelated object
+auto-accessor foreign receiver set: TypeError: cannot write auto-accessor backing field on an unrelated object
+auto-accessor subclass override: overridden 1

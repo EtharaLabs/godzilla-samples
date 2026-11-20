@@ -1,0 +1,18 @@
+spawn {"so":"got:line1\nsecond:line2\n","se":"E\n","code":5,"signal":null} true 5 number false 3 true true
+spawn noshell "$HOME * a b\n"
+spawn env "custom env-p\n"
+spawn shell "X2\n"
+spawn cwd "in sub"
+spawn big 4000 012345678901 0
+stdio array null null
+stdio array out "visible\n"
+kill ret true
+killed null null true
+ignore null null null
+ignore exit 0
+spawn missing Error undefined spawn no-such-binary-zzz: No such file or directory (os error 2)
+exec ok null "" ""
+exec fail Command failed with exit code 7 7
+execFile fail Command failed with exit code 3 3
+exec returns true "returned child\n"
+execFile returns "a|b|"

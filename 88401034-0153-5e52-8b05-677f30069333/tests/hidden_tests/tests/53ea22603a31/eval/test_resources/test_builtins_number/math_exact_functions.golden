@@ -1,0 +1,22 @@
+round => [3, -2, -0, 0, -0, 4503599627370496, NaN, -0, -1, 2, 3]
+floor/ceil/trunc => [-1, -0, -0, 7, -0, 1, Infinity, -Infinity]
+sign/abs => [-1, -0, NaN, 1, 5, 0, 2, 0, 3]
+max/min => [-Infinity, Infinity, NaN, 0, -0, 7, NaN, -1e+308]
+max coerces all => ["a", "b"]
+max bigint !! TypeError: Cannot convert a BigInt value to a number
+sqrt => [1.4142135623730951, NaN, -0, Infinity, 9.99994433575849e-161, 4]
+pow specials => [1024, 1, NaN, NaN, NaN, 5e-324, Infinity, -Infinity, Infinity, -8, NaN, 1, -Infinity]
+fround => [5.5, 5.050000190734863, Infinity, 0, -0, 16777216, NaN]
+f16round => [5.05078125, Infinity, 65504, 0, 65504, 0.0999755859375, -0, 5.960464477539063e-8, 0]
+clz32/imul => [31, 32, 0, 32, 32, 12, -5, 0, -60, 21]
+hypot => [0, 5, Infinity, Infinity, 0, 0, 3, NaN]
+hypot extremes => [Infinity, 0, Infinity]
+sumPrecise => [0.30000000000000004, 0.1, -0, -0, 0, NaN, 1e+308, Infinity, 2, 0.6, 9007199254740994, NaN]
+sumPrecise subnormals => [1e-323, 1.5e-323, 1e-323]
+sumPrecise non-number !! TypeError: Math.sumPrecise: not a number
+sumPrecise closes iterator => ["Math.sumPrecise: not a number", true]
+sumPrecise not iterable !! TypeError: value is not iterable
+Math object => ["Math", "object", true, 2, 2, 1]
+Math not callable !! TypeError: Math is not a function
+Math not constructible !! TypeError: object is not a constructor
+random shape => [true, true]

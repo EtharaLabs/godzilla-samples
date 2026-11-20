@@ -1,0 +1,23 @@
+6 40 s 102 p g
+6
+evaluate tag y
+apply tag y on m
+evaluate tag x
+apply tag x on m
+method:m static=false private=false hasAccess=true
+field:f static=false private=false hasAccess=true
+method:sm static=true private=false hasAccess=true
+accessor:acc static=false private=false hasAccess=true
+method:#pm static=false private=true hasAccess=true
+getter:g static=false private=false hasAccess=true
+class:C hasAccess=true
+class init C
+call m
+call sm
+call #pm
+added by D 
+21 10
+"@dec function f() {}" SyntaxError: expected '{'
+"class X { @dec }" SyntaxError: expected property key
+"class X { @ m() {} }" SyntaxError: expected property key
+"@dec export class Y {}" SyntaxError: expected '{'

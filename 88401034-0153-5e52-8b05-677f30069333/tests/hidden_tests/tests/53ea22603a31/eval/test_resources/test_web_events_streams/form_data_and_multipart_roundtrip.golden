@@ -1,0 +1,38 @@
+[object FormData] true false null ["1","2"]
+true blob text/x q.bin true
+a,file,named,f2,quote"d ["replaced"]
+a,file,f2,quote"d,new
+[["a","replaced"],["file","File:blob"],["f2","File:name.txt"],["quote\"d","line1\nline2"],["new","n"]]
+a:true!,file:true!,f2:true!,quote"d:true!,new:true!
+5 5
+filename with string value THREW TypeError: FormData: a filename is only valid with a Blob/File value
+multipart/form-data; boundary=----lumenFormBoundary<hex>
+------lumenFormBoundary<hex>\r\n
+Content-Disposition: form-data; name="a"\r\n
+\r\n
+replaced\r\n
+------lumenFormBoundary<hex>\r\n
+Content-Disposition: form-data; name="file"; filename="blob"\r\n
+Content-Type: text/x\r\n
+\r\n
+xyz\r\n
+------lumenFormBoundary<hex>\r\n
+Content-Disposition: form-data; name="f2"; filename="name.txt"\r\n
+Content-Type: text/plain\r\n
+\r\n
+abc\r\n
+------lumenFormBoundary<hex>\r\n
+Content-Disposition: form-data; name="quote%22d"\r\n
+\r\n
+line1
+line2\r\n
+------lumenFormBoundary<hex>\r\n
+Content-Disposition: form-data; name="new"\r\n
+\r\n
+n\r\n
+------lumenFormBoundary<hex>--\r\n
+
+[["a","replaced"],["file",["blob","text/x",3]],["f2",["name.txt","text/plain",3]],["quote\"d","line1\nline2"],["new","n"]]
+application/x-www-form-urlencoded;charset=UTF-8
+[["k","v 1"],["k","2"],["e","é"]]
+formData wrong type THREW TypeError: formData(): unsupported content-type 'text/plain;charset=UTF-8'

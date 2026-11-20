@@ -1,0 +1,22 @@
+default 127.0.0.1|0|ipv4|0
+ipv6 default ::|0|ipv6|0
+explicit 10.0.0.5|8080|ipv4|0
+IPV6 family case-insensitive fe80::1|443|ipv6|7
+parse "1.2.3.4:80" 1.2.3.4|80|ipv4|0
+parse "[::1]:443" ::1|443|ipv6|0
+parse "[fe80::1]" fe80::1|0|ipv6|0
+parse "9.9.9.9" 9.9.9.9|0|ipv4|0
+parse "fe80::2" fe80::2|0|ipv6|0
+parse "nope" undefined
+parse "1.2.3.4:x" undefined
+parse "999.1.1.1:5" undefined
+TypeError: Invalid family: ipx
+TypeError: Invalid address: 1.2.3
+TypeError: Invalid address: 10.0.0.1
+autoSelectFamily true 250
+after set false 10
+after set again true 300
+RangeError: autoSelectFamilyAttemptTimeout must be a positive integer
+RangeError: autoSelectFamilyAttemptTimeout must be a positive integer
+RangeError: autoSelectFamilyAttemptTimeout must be a positive integer
+RangeError: autoSelectFamilyAttemptTimeout must be a positive integer

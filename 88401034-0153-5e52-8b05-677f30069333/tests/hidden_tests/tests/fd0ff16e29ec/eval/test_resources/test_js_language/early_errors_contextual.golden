@@ -1,0 +1,145 @@
+"class A { #x = 1; m() { return eval(\"this.#x\"); } } new A().m()" -> ok 1
+"class A { #x = 1; m() { return eval(\"this.#y\"); } } new A().m()" -> SyntaxError: Private name '#y' is not declared in an enclosing class
+"class A { m() { eval(\"super()\"); } } new A().m()"               -> SyntaxError: 'super' keyword unexpected here
+"class A extends Object { constructor() { super(); eval(\"super.toString\"); } } new A(); \"ok\"" -> ok "ok"
+"(function () { eval(\"new.target\"); })(); \"ok\""                -> ok "ok"
+"eval(\"new.target\")"                                             -> SyntaxError: new.target is only valid inside a function
+"{ let f; function f() {} }"                                       -> SyntaxError: Identifier 'f' has already been declared
+"{ function f() {} let f; }"                                       -> SyntaxError: Identifier 'f' has already been declared
+"{ async function f() {} function f() {} }"                        -> SyntaxError: Identifier 'f' has already been declared
+"{ function* g() {} function* g() {} }"                            -> SyntaxError: Identifier 'g' has already been declared
+"{ function h() {} function h() {} } \"sloppy dup ok\""            -> ok "sloppy dup ok"
+"\"use strict\"; { function h() {} function h() {} }"              -> SyntaxError: Identifier 'h' has already been declared
+"{ class C {} let C; }"                                            -> SyntaxError: Identifier 'C' has already been declared
+"({ if })"                                                         -> SyntaxError: 'if' is a reserved word and cannot be a shorthand property
+"({ \\u0069f })"                                                   -> SyntaxError: 'if' is a reserved word and cannot be a shorthand property
+"\"use strict\"; ({ implements })"                                 -> SyntaxError: 'implements' cannot be used as a shorthand property in strict mode
+"async function f() { ({ await }); }"                              -> SyntaxError: 'await' cannot be used as a shorthand property here
+"function* g() { ({ yield }); }"                                   -> SyntaxError: 'yield' cannot be used as a shorthand property here
+"while (1) { continue nope; }"                                     -> SyntaxError: undefined continue label
+"function* g() { a: yield: ; }"                                    -> SyntaxError: 'yield' cannot be used as a label here
+"async function f() { await: ; }"                                  -> SyntaxError: 'await' cannot be used as a label here
+"\"use strict\"; let: ;"                                           -> SyntaxError: 'let' cannot be used as a label in strict mode
+"\"use strict\"; static: ;"                                        -> SyntaxError: 'static' cannot be used as a label in strict mode
+"a: b: function* g() {}"                                           -> SyntaxError: a labelled function declaration must be a plain function
+"l: async function f() {}"                                         -> SyntaxError: function declaration cannot appear in a single-statement context
+"var #a;"                                                          -> SyntaxError: private names cannot be used as binding identifiers
+"function f(#a) {}"                                                -> SyntaxError: private names cannot be used as binding identifiers
+"const { \"str\" } = {};"                                          -> SyntaxError: invalid shorthand destructuring target
+"({ 1 } = {});"                                                    -> SyntaxError: expected ':' after property key
+"if (1) label: function f() {}"                                    -> SyntaxError: function declaration cannot appear in a single-statement context
+"while (1) class C {}"                                             -> SyntaxError: lexical declaration cannot appear in a single-statement context
+"do x; foo"                                                        -> SyntaxError: expected 'while' after do-body
+"for (let [let] of []) {}"                                         -> SyntaxError: 'let' is disallowed as a lexically bound name
+"for (const let of []) {}"                                         -> SyntaxError: 'let' is disallowed as a lexically bound name
+"for (let let = 0;;) {}"                                           -> SyntaxError: 'let' is disallowed as a lexically bound name
+"for (async of []) {}"                                             -> SyntaxError: 'async' as a for-of left side must be parenthesized
+"for ({ a: 1 } of []) {}"                                          -> SyntaxError: invalid for-in/of target
+"for (f() in {}) {}"                                               -> ok undefined
+"for (1 of []) {}"                                                 -> SyntaxError: invalid for-in/of target
+"\"use strict\"; for (eval of []) {}"                              -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"\"use strict\"; for (arguments in {}) {}"                         -> SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"for (var i = 0 in {}) {} \"annex-b ok\""                          -> ok "annex-b ok"
+"\"use strict\"; for (var i = 0 in {}) {}"                         -> SyntaxError: expected ';'
+"for (let x = 1 of []) {}"                                         -> SyntaxError: expected ';'
+"for (x of [], 1) {}"                                              -> SyntaxError: expected ')'
+"async function f() { for await (var x in []) {} }"                -> SyntaxError: 'for await' is only valid with a for-of head
+"`${a`"                                                            -> SyntaxError: unterminated nested template
+"({ a: 1, b })"                                                    -> (runtime) ReferenceError: b is not defined
+"x = { get a() {}, get a() {} }; \"dup getters ok\""               -> ok "dup getters ok"
+"({ async *g() { yield await 1; } }); \"ok\""                      -> ok "ok"
+"({ get [1 + 1]() { return 2; } })[2]"                             -> ok 2
+"(a = 1) => { \"use strict\"; }"                                   -> SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"(function (a = 1) { \"use strict\"; })"                           -> SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"class A { constructor() {} [\"constructor\"]() {} } \"computed ctor name ok\"" -> ok "computed ctor name ok"
+"class A { static constructor() {} } \"static constructor ok\""    -> ok "static constructor ok"
+"class A { get #a() {} set #a(v) {} } \"accessor pair ok\""        -> ok "accessor pair ok"
+"class A { get #a() {} get #a() {} }"                              -> SyntaxError: duplicate private name '#a'
+"class A { #a; static #a; }"                                       -> SyntaxError: duplicate private name '#a'
+"class A { m() { class B { [this.#x]; } } #x; }"                   -> ok undefined
+"class A { static { var await; } }"                                -> SyntaxError: 'await' cannot be used as a binding here
+"class A { static { yield; } } \"yield ident in static block ok\"" -> SyntaxError: 'yield' is a reserved word in strict mode
+"class A { static { super(); } }"                                  -> SyntaxError: 'super' call unexpected here
+"class A { x = arguments; }"                                       -> SyntaxError: 'arguments' is not allowed in a class field initializer
+"class A extends B { constructor() { (() => super())(); } } \"arrow super ok\"" -> (runtime) ReferenceError: B is not defined
+"function f() { (() => super.x)(); }"                              -> SyntaxError: 'super' keyword unexpected here
+"a?.b++"                                                           -> SyntaxError: invalid increment/decrement operand
+"++a?.b"                                                           -> SyntaxError: invalid increment/decrement operand
+"new a?.()"                                                        -> SyntaxError: an optional chain cannot follow 'new' without arguments
+"new import(\"x\")"                                                -> SyntaxError: 'import(...)' cannot be used with 'new'
+"async () => { new await x; }"                                     -> SyntaxError: 'await' expression cannot be the operand of 'new'
+"n\\u0065w Object()"                                               -> SyntaxError: keywords must not contain escape sequences
+"new.t\\u0061rget"                                                 -> SyntaxError: 'new.target' must not contain escape sequences
+"(async function () { aw\\u0061it 1; })"                           -> SyntaxError: 'await' keyword must not contain escape sequences
+"#x in {}"                                                         -> SyntaxError: Private name '#x' is not declared in an enclosing class
+"class A { #f; m() { return #f in #f in {}; } }"                   -> SyntaxError: a private name may only appear to the left of 'in'
+"class A { #f; m() { return (#f) in {}; } }"                       -> ok undefined
+"a ?? b && c"                                                      -> SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"a && b ?? c"                                                      -> SyntaxError: cannot mix '??' with '&&' or '||' without parentheses
+"(a ?? b) || c; \"parenthesized ok\""                              -> (runtime) ReferenceError: a is not defined
+"(a = function () {}) => a"                                        -> ok (a = function () {}) => a
+"((a)) = 1; \"parenthesized ident assign ok\""                     -> ok "parenthesized ident assign ok"
+"({ a }) = 1"                                                      -> SyntaxError: invalid assignment target
+"([a]) = 1"                                                        -> SyntaxError: invalid assignment target
+"[...a,] = []"                                                     -> SyntaxError: invalid destructuring assignment target
+"[(a)] = [1]; \"parenthesized element ok\""                        -> ok "parenthesized element ok"
+"[(a = 1)] = []"                                                   -> SyntaxError: invalid destructuring assignment target
+"({ a: (b) } = {}); \"parenthesized prop target ok\""              -> ok "parenthesized prop target ok"
+"({ a: (b = 1) } = {})"                                            -> SyntaxError: invalid destructuring assignment target
+"f() = 1"                                                          -> (runtime) ReferenceError: f is not defined
+"\"use strict\"; f() = 1"                                          -> SyntaxError: invalid assignment target
+"f()++"                                                            -> (runtime) ReferenceError: f is not defined
+"\"use strict\"; f()++"                                            -> SyntaxError: invalid increment/decrement operand
+"for (f() of []) {}"                                               -> ok undefined
+"import(\"x\", {}, 3)"                                             -> SyntaxError: expected ')'
+"import()"                                                         -> SyntaxError: unexpected token Punct(")")
+"import(...a)"                                                     -> SyntaxError: unexpected token Punct("...")
+"super.#x"                                                         -> SyntaxError: 'super' keyword unexpected here
+"class A { #x; m() { super.#x; } }"                                -> SyntaxError: cannot access a private member through 'super'
+"x = a?.b`tpl`"                                                    -> SyntaxError: tagged template cannot appear in an optional chain
+"export default 1"                                                 -> SyntaxError: 'export' declaration may only appear at the top level of a module
+"yield"                                                            -> (runtime) ReferenceError: yield is not defined
+"function* g() { yield\n* 2; }"                                    -> SyntaxError: unexpected token Punct("*")
+"function* g() { var o = { [yield]: 1 }; } \"computed yield ok\""  -> ok "computed yield ok"
+"function* g(x = yield) {}"                                        -> SyntaxError: yield expression is not allowed in formal parameters
+"async function* g() { yield* await x; } \"ok\""                   -> ok "ok"
+"let [a, ...b,] = [];"                                             -> SyntaxError: expected ']'
+"let { ...{ a } } = {};"                                           -> SyntaxError: expected binding identifier
+"let [...[a, b]] = [1, 2]; [a, b].join()"                          -> ok "1,2"
+"({ ...{ a } } = {})"                                              -> SyntaxError: invalid destructuring assignment target
+"var a = 1, a = 2; a"                                              -> ok 2
+"let a, a;"                                                        -> SyntaxError: Identifier 'a' has already been declared
+"label: { label2: { break label; } } \"ok\""                       -> ok "ok"
+"x: while (0) { y: { continue x; } } \"ok\""                       -> ok "ok"
+"switch (1) { case 1: let a; case 2: let a; }"                     -> SyntaxError: Identifier 'a' has already been declared
+"switch (1) { case 1: var v; case 2: var v; } \"ok\""              -> ok "ok"
+"try {} catch (e) { var e; } \"annex b ok\""                       -> ok "annex b ok"
+"try {} catch (e) { for (var e in {}) {} } \"annex b for-in ok\""  -> ok "annex b for-in ok"
+"function f() { \"use strict\"; with (a) {} }"                     -> SyntaxError: 'with' statements are not allowed in strict mode
+"0n.toString()"                                                    -> ok "0"
+"1.e5n"                                                            -> SyntaxError: identifier starts immediately after numeric literal
+"0x_1"                                                             -> SyntaxError: invalid use of numeric separator
+"0b"                                                               -> SyntaxError: invalid numeric literal
+"0o8"                                                              -> SyntaxError: invalid numeric literal
+"09.5; \"non-octal decimal float ok\""                             -> ok "non-octal decimal float ok"
+"\"use strict\"; 09"                                               -> SyntaxError: legacy octal literals are not allowed in strict mode
+"\"use strict\"; \"\\8\""                                          -> SyntaxError: legacy octal literals are not allowed in strict mode
+"`\\8`"                                                            -> SyntaxError: invalid escape sequence in template literal
+"\"\\u{1F600}\".length"                                            -> ok 2
+"\"\\u{}\""                                                        -> SyntaxError: bad \u escape
+"a\\u{62}c = 3; abc"                                               -> ok 3
+"var \\u{1F600} = 1;"                                              -> SyntaxError: invalid character in escaped identifier
+"/(?<n>a)\\k<n>/.test(\"aa\")"                                     -> ok true
+"/[/"                                                              -> SyntaxError: unterminated regular expression
+"/a/\\u0067"                                                       -> SyntaxError: expected ';'
+"x = 1 /* unterminated"                                            -> SyntaxError: unterminated block comment
+"\"\\\r\nline continuation crlf\""                                 -> ok "line continuation crlf"
+"q = 5; q"                                                         -> ok 5
+"1 ?.5 : 2"                                                        -> ok 0.5
+"[1] ?.[0]"                                                        -> ok 1
+"a ¬ b"                                                            -> SyntaxError: unexpected character '¬'
+"@"                                                                -> SyntaxError: expected a decorator expression after '@'
+"x = function () {} / 2; String(x)"                                -> ok "NaN"
+"x = class {} / 2; String(x)"                                      -> ok "NaN"
+"x = {} / 2"                                                       -> ok NaN
+"({} / 2)"                                                         -> ok NaN

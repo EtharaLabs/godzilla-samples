@@ -1,0 +1,12 @@
+garbage certificate
+  client: error: TLS handshake failed (...) | close hadError=true
+  server: tlsClientError: invalid PEM: error:0480006C:PEM routines::no start line
+garbage key
+  client: error: TLS handshake failed (...) | close hadError=true
+  server: tlsClientError: invalid PEM: error:1E08010C:DECODER routines::unsupported
+key of another certificate
+  client: error: TLS handshake failed (...) | close hadError=true
+  server: tlsClientError: TLS certificate/private key configuration failed: error:05800074:x509 certificate routines::key values mismatch
+server alpn name of 300 bytes
+  client: error: TLS handshake failed (...) | close hadError=true
+  server: tlsClientError: TLS ALPN protocol names must contain 1 to 255 bytes

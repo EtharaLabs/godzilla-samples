@@ -1,0 +1,37 @@
+trap receives normalized descriptor: cfg{value,enumerable}
+trap receives accessor halves: cfg{get,set}
+trap false -> Reflect false: false
+trap false -> Object throws: TypeError: proxy defineProperty returned a falsish value
+new non-configurable prop target lacks: TypeError: proxy 'defineProperty' defined a non-configurable property the target lacks
+add to non-extensible target: TypeError: proxy 'defineProperty' added a property to a non-extensible target
+configurable target made non-configurable: TypeError: proxy 'defineProperty' made a configurable target property non-configurable
+non-configurable made configurable: TypeError: proxy 'defineProperty' made a non-configurable target property configurable
+enumerable change on non-configurable: TypeError: proxy can't report a different 'enumerable' for 'fixed' when the target property is not configurable
+shape change on non-configurable: TypeError: proxy can't change the descriptor shape of the non-configurable property 'fixed'
+getter change on non-configurable accessor: TypeError: proxy must define the same getter for the non-configurable property 'acc'
+setter change on non-configurable accessor: TypeError: proxy must define the same setter for the non-configurable property 'acc'
+same accessor ok: true
+non-writable made writable: TypeError: proxy 'defineProperty' made a non-writable property writable
+non-writable value change: TypeError: proxy 'defineProperty' changed a non-configurable non-writable value
+non-writable same value ok: true
+writable non-configurable made non-writable: TypeError: proxy 'defineProperty' reported a non-configurable writable property as non-writable
+defineProperty trap not callable: TypeError: proxy 'defineProperty' trap is not callable
+defineProperty forward: {"x":"forwarded"}
+defineProperty revoked: TypeError: cannot read property 'defineProperty' of null
+gopd reports configurable for non-configurable: TypeError: proxy can't report an existing non-configurable property 'fixed' as configurable
+gopd reports different enumerable: TypeError: proxy can't report a different 'enumerable' for 'fixed' when the target property is not configurable
+gopd reports accessor for data: TypeError: proxy can't report a differently-shaped descriptor for the non-configurable property 'fixed'
+gopd reports writable for non-writable: TypeError: proxy can't report a non-configurable, non-writable property 'fixed' as writable
+gopd reports different value: TypeError: proxy must report the same value for the non-writable, non-configurable property 'fixed'
+gopd reports matching: {"value":1,"writable":false,"enumerable":false,"configurable":false}
+gopd returns primitive: TypeError: getOwnPropertyDescriptor trap must return an object or undefined
+gopd non-configurable for configurable target: TypeError: gOPD trap reported non-configurable for a configurable target property
+gopd non-configurable non-writable for writable target: TypeError: gOPD trap reported non-writable for a writable target property
+gopd undefined for non-configurable: TypeError: gOPD trap reported undefined for a non-configurable property
+gopd undefined for missing ok: undefined
+gopd trap not callable: TypeError: proxy 'getOwnPropertyDescriptor' trap is not callable
+gopd revoked: TypeError: proxy is revoked
+gopd completes partial descriptor: {"value":"v","writable":false,"enumerable":false,"configurable":true}
+gopd accessor result: get,set,enumerable,configurable undefined undefined
+hasOwnProperty via gopd trap: true,false
+getOwnPropertyDescriptors via proxy: a,b B

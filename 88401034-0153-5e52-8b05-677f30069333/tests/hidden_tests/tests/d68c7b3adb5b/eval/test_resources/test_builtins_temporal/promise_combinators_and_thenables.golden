@@ -1,0 +1,27 @@
+all non-iterable: rejected TypeError: value is not iterable
+all reject first: rejected Error: r1
+all resolve not callable: rejected TypeError: Promise combinator: this.resolve is not callable
+all with custom resolve: fulfilled [1,2,"resolveCalls=2"]
+all: fulfilled [1,2,"from-thenable"]
+allKeyed non-object: rejected TypeError: argument must be an object
+allKeyed reject: rejected SyntaxError: keyed
+allKeyed: fulfilled {"a":1,"b":"B","c":"from-thenable"}
+allSettled: fulfilled [{"status":"fulfilled","value":1},{"status":"rejected","reason":"no"},{"status":"rejected","reason":{}}]
+allSettledKeyed: fulfilled {"x":{"status":"rejected","reason":"nope"},"y":{"status":"fulfilled","value":2}}
+any all rejected: rejected AggregateError:  errors=["Error: a","b"]
+any empty: rejected AggregateError:  errors=[]
+any: fulfilled "winner"
+finally passthrough: fulfilled "keep"
+finally thenable delay: rejected "orig"
+finally throw: rejected Error: finally threw
+order: thenable.then called,thenable.then called,thenable.then called
+race empty-ish: rejected RangeError: then getter
+race: fulfilled "fast"
+resolve non-promise ctor: fulfilled "plain object"
+resolve self: rejected TypeError: Chaining cycle detected for promise
+subclass all: fulfilled [1]
+subclass instance: true
+then non-callable: fulfilled "pass"
+try sync throw: rejected EvalError: tried
+try sync value: fulfilled 5
+withResolvers: fulfilled "resolved-later"

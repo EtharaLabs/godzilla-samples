@@ -1,0 +1,35 @@
+asyncIterator returns prim !TypeError: @@asyncIterator did not return an object
+asyncIterator noncallable !TypeError: @@asyncIterator is not callable
+sync value ctor throws "1,caught ctor getter"
+sync value rejects closes "1,closed,rej"
+async next returns prim !TypeError: iterator result is not an object
+break closes async iter "1,ret"
+break closes, return noncallable !TypeError: iterator 'return' is not callable
+break closes, return gives prim !TypeError: iterator result is not an object
+break sync source close prim !TypeError: iterator result is not an object
+break sync source close value "sync-ret"
+throw in body swallows close err "body"
+yield* throw no throw method !TypeError: the delegated iterator has no 'throw' method
+yield* throw done "{\"value\":\"g:thrown-done\",\"done\":true}"
+yield* return not done "{\"value\":\"still\",\"done\":false}"
+yield* asyncIterator noncallable !TypeError: @@asyncIterator is not callable
+yield* asyncIterator returns prim !TypeError: @@asyncIterator did not return an object
+sync yield* throw noncallable !TypeError: iterator 'throw' is not callable
+sync yield* return noncallable !TypeError: iterator 'return' is not callable
+sync yield* result prim !TypeError: iterator result is not an object
+  finally ran
+sync yield* return missing "{\"value\":42,\"done\":true}"
+await bad ctor !Error: ctor getter
+async gen await bad ctor !Error: ctor getter
+async gen yield bad ctor !Error: ctor getter
+async gen return bad ctor !Error: ctor getter
+async gen return bad ctor done !Error: ctor getter
+async gen throw after done !Error: late
+async gen return value after done "{\"value\":\"rv\",\"done\":true}"
+  ag finally
+async gen return in finally await "{\"value\":\"R\",\"done\":true}"
+await thenable obj "thenable-val"
+await thenable throws !Error: then threw
+await then getter throws !Error: then getter
+await non-thenable obj 1
+done

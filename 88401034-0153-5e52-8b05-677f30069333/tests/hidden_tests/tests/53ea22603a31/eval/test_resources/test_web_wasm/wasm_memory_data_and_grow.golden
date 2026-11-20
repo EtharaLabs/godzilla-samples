@@ -1,0 +1,16 @@
+true true 65536
+"Hello, wasm!"
+6c6c6548 -1 255 -128 -32513 383 6c6c6548
+4,3,2,1 69,35,0
+js writes visible 42 2.75 bigint 16909060
+load 65532 0
+load 65533 RuntimeError wasm: out of bounds memory access
+load 65536 RuntimeError wasm: out of bounds memory access
+load -1 RuntimeError wasm: out of bounds memory access
+size 1 grow 1 size 2 131072 false 65536
+grow past max -1 2 negative -1
+JS grow 2 196608 3
+JS grow past max RangeError WebAssembly.Memory.grow() failed
+grow 0 3 top of grown memory 0
+standalone 65536 1 131072 0
+standalone past max RangeError

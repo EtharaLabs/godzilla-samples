@@ -1,0 +1,28 @@
+export const a = 1; export { a };
+  rc=1 stdout='' stderr="Uncaught SyntaxError: duplicate export name 'a'\n"
+export { nope };
+  rc=1 stdout='' stderr="Uncaught SyntaxError: export 'nope' is not declared in the module\n"
+export default 1; export default 2;
+  rc=1 stdout='' stderr="Uncaught SyntaxError: duplicate export name 'default'\n"
+import { a } from "./dep.mjs"; import { a } from "./dep.mjs";
+  rc=1 stdout='' stderr="Uncaught SyntaxError: Identifier 'a' has already been declared\n"
+export { a as "\uD800" } from "./dep.mjs";
+  rc=1 stdout='' stderr='Uncaught SyntaxError: module export name must be well-formed Unicode\n'
+import { "str" } from "./dep.mjs";
+  rc=1 stdout='' stderr='Uncaught SyntaxError: imported binding name must be an identifier\n'
+import j from "./dep.json" with { type: "json", type: "json" };
+  rc=1 stdout='' stderr="Uncaught SyntaxError: duplicate import attribute key 'type'\n"
+import j from "./dep.json" with { type: 1 };
+  rc=1 stdout='' stderr='Uncaught SyntaxError: import attribute value must be a string literal\n'
+with ({}) {}
+  rc=1 stdout='' stderr="Uncaught SyntaxError: 'with' statements are not allowed in strict mode\n"
+var await = 1;
+  rc=1 stdout='' stderr="Uncaught SyntaxError: 'await' cannot be used as a binding here\n"
+var x = 1; <!-- html comment
+  rc=1 stdout='' stderr='Uncaught SyntaxError: unexpected token Punct("<")\n'
+import * from "./dep.mjs";
+  rc=1 stdout='' stderr="Uncaught SyntaxError: expected 'as'\n"
+if (1) { export const z = 1; }
+  rc=1 stdout='' stderr="Uncaught SyntaxError: 'export' declaration may only appear at the top level of a module\n"
+export function () {}
+  rc=0 stdout='' stderr=''

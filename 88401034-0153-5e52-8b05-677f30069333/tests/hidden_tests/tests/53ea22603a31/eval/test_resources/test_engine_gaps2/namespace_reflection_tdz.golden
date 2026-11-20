@@ -1,0 +1,18 @@
+during a (TDZ)
+  hasOwnProperty ReferenceError: cannot access 'x' before initialization false
+  propertyIsEnumerable ReferenceError: cannot access 'x' before initialization false
+  gOPD ReferenceError: cannot access 'x' before initialization undefined
+  keys ReferenceError: cannot access 'fn' before initialization 3
+  get via chain ReferenceError: cannot access 'x' before initialization ReferenceError: cannot access 'x' before initialization
+  set false true ReferenceError: cannot access 'x' before initialization
+  define ReferenceError: cannot access 'x' before initialization ReferenceError: cannot access 'x' before initialization ReferenceError: cannot access 'x' before initialization
+  has/delete true false true
+after a init
+  hasOwnProperty true false
+  propertyIsEnumerable true false
+  gOPD {"value":"X","writable":true,"enumerable":true,"configurable":false} undefined
+  keys ["fn","x"] 3
+  get via chain X X
+  set false true TypeError: Cannot assign to read only property 'x' of module namespace object
+  define true true false
+  has/delete true false true

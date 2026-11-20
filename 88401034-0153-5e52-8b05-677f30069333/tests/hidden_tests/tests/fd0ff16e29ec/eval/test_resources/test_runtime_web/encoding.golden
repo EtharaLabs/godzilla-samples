@@ -1,0 +1,26 @@
+encoder utf-8 97,195,169,226,130,172,240,159,152,128 0 49,50,51 true
+decoder utf-8 false false
+bom stripped "hi" kept with ignoreBOM 5
+replacement "a�b�" "😀���"
+inputs "" "hi" "hi" "é"
+subarray view world
+decode error TypeError TextDecoder.decode expects a BufferSource
+decode error TypeError TextDecoder.decode expects a BufferSource
+decode error TypeError TextDecoder.decode expects a BufferSource
+decode error TypeError TextDecoder.decode expects a BufferSource
+fatal flags true €
+fatal 195 TypeError TextDecoder: invalid utf-8 (fatal)
+fatal 255 TypeError TextDecoder: invalid utf-8 (fatal)
+fatal 237,160,128 TypeError TextDecoder: invalid utf-8 (fatal)
+fatal 192,128 TypeError TextDecoder: invalid utf-8 (fatal)
+label "UTF-8" utf-8
+label "utf8" utf-8
+label "UTF8" utf-8
+label "unicode-1-1-utf-8" utf-8
+label " utf-8 " RangeError TextDecoder: unsupported encoding ' utf-8 ' (utf-8 only for now)
+label "latin1" RangeError TextDecoder: unsupported encoding 'latin1' (utf-8 only for now)
+label "utf-16le" RangeError TextDecoder: unsupported encoding 'utf-16le' (utf-8 only for now)
+label "windows-1252" RangeError TextDecoder: unsupported encoding 'windows-1252' (utf-8 only for now)
+label "nonsense" RangeError TextDecoder: unsupported encoding 'nonsense' (utf-8 only for now)
+stream option "��"
+roundtrip true

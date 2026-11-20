@@ -1,0 +1,21 @@
+plain: ok default="mod"
+options undefined: ok default="mod"
+options not object: TypeError: import options must be an object
+with undefined: ok default="mod"
+with not object: TypeError: import attributes must be an object
+json with type: ok default={"j":1}
+attribute non-string: TypeError: import attribute values must be strings
+proxy attributes: ok default={"j":1}
+proxy attributes non-string: TypeError: import attribute values must be strings
+proxy attributes non-enumerable: ok default="mod"
+symbol keyed attribute ignored: ok default="mod"
+non-enumerable attribute ignored: ok default="mod"
+with getter throws: EvalError: with getter
+specifier toString throws: RangeError: specifier
+specifier object: ok default="mod"
+missing module: TypeError: module not found: ./nope.mjs
+import.source: SyntaxError: source phase import is not available
+import.defer: ok default="mod"
+same namespace twice: ok true
+namespace tag: ok [object Module]
+import from script-like eval: ok default="mod"

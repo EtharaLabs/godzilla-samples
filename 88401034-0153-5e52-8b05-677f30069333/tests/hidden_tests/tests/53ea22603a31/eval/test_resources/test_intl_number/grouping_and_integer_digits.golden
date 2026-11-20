@@ -1,0 +1,15 @@
+true 1,234 | 12,345 | 1,234,567 | "always"
+false 1234 | 12345 | 1234567 | false
+"always" 1,234 | 12,345 | 1,234,567 | "always"
+"auto" 1,234 | 12,345 | 1,234,567 | "auto"
+"min2" 1234 | 12,345 | 1,234,567 | "min2"
+undefined 1,234 | 12,345 | 1,234,567 | "auto"
+0 1234 | 12345 | 1234567 | false
+"" 1234 | 12345 | 1234567 | false
+RangeError: invalid useGrouping: sometimes
+"min2" "1234" "12.345"
+minInt 1 12 | 3.5 | 0 | 123,456
+minInt 2 12 | 03.5 | 00 | 123,456
+minInt 5 00,012 | 00,003.5 | 00,000 | 123,456
+minInt 21 000,000,000,000,000,000,012 | 000,000,000,000,000,000,003.5 | 000,000,000,000,000,000,000 | 000,000,000,000,000,123,456
+RangeError: minimumIntegerDigits out of range | RangeError: minimumIntegerDigits out of range

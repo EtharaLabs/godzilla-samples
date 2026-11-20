@@ -1,0 +1,39 @@
+# control flow
+"break" => SyntaxError: illegal 'break' statement
+"continue" => SyntaxError: illegal 'continue' statement
+"break L" => SyntaxError: undefined break label
+"L: { break L; } 1" => ok 1
+"L: { continue L; }" => SyntaxError: continue label does not target an iteration statement
+"L: if (1) { continue L; }" => SyntaxError: continue label does not target an iteration statement
+"L: while (0) { continue M; }" => SyntaxError: undefined continue label
+"L: while (0) { (function () { break L; }); }" => SyntaxError: undefined break label
+"while (0) { function f() { break; } }" => SyntaxError: illegal 'break' statement
+"return" => SyntaxError: 'return' outside of a function
+"return 1" => SyntaxError: 'return' outside of a function
+"throw\n1" => SyntaxError: illegal newline after throw
+"try {}" => SyntaxError: missing catch or finally after try
+"try {} catch {} 1" => ok 1
+"switch (1) { default: default: }" => SyntaxError: more than one default clause in switch statement
+"switch (1) { case 1: case 1: } 1" => ok 1
+"switch (1) { foo }" => SyntaxError: expected 'case' or 'default'
+"switch (1) {} case 1:" => SyntaxError: unexpected token Keyword("case")
+"do x = 1; while (0) 1" => ok 1
+"do {} 1" => SyntaxError: expected 'while' after do-body
+"do ; while (0) 2" => ok 2
+"for (;;) break; 3" => ok 3
+"for await (var x of []) {}" => SyntaxError: 'for await' is only valid in an async context
+"async function f() { for await (var x in {}) {} }" => SyntaxError: 'for await' is only valid with a for-of head
+"async function f() { for await (var i = 0; i < 1; i++) {} }" => SyntaxError: 'for await' is only valid with a for-of head
+"async function f() { for await (x of []) {} } 1" => ok 1
+"function f() { for await (x of []) {} }" => SyntaxError: 'for await' is only valid in an async context
+"for (var i, j of []) {}" => SyntaxError: expected ';'
+"for (var i = 0 of []) {}" => SyntaxError: expected ';'
+"for (let i = 0 in {}) {}" => SyntaxError: expected ';'
+"for (x = 0 in {}) {}" => SyntaxError: invalid for-in/of target
+"for (var [a] = 0 in {}) {}" => SyntaxError: expected ';'
+"if (1) else 2" => SyntaxError: unexpected token Keyword("else")
+"else 1" => SyntaxError: unexpected token Keyword("else")
+"debugger; 4" => ok 4
+"with (1) 5" => ok 5
+"yield 1" => SyntaxError: expected ';'
+"await 1" => SyntaxError: expected ';'

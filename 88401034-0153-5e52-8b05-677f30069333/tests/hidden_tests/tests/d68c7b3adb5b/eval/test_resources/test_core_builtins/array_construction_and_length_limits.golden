@@ -1,0 +1,28 @@
+ctor: [_,_,_] [1,2] ["3"] [] 1 [_,_] []
+ctor bad length: RangeError: Invalid array length
+ctor fractional: RangeError: Invalid array length
+ctor 2^32: RangeError: Invalid array length
+ctor max: 4294967295
+ctor subclass: true 3 true true
+ctor new.target proto: true 2
+length assignments: [1] [_,_,_] RangeError: Invalid array length RangeError 2 0
+index beyond 2^32-2: 4294967295 4294967294,4294967295
+push past 2^32: RangeError 4294967295 1
+splice huge array-like: TypeError: splice result is too long
+splice 2^32: 4294967295 false
+unshift huge: TypeError: unshift result is too long
+unshift huge zero args: 9007199254740991
+concat huge: TypeError: concat result is too long
+concat huge non-spreadable: 3
+toSpliced too long: TypeError: toSpliced result is too long
+toReversed huge: RangeError: array length exceeds engine limit
+toSorted huge: RangeError: array length exceeds engine limit
+with huge: RangeError: array length exceeds engine limit
+fill huge array-like: 1099511627776
+apply huge: RangeError: array length exceeds engine limit
+Array.from length: 3,0,2
+Array.from huge: RangeError: Invalid array length
+Array.of: [][7][1,"a"][]
+Array.of non-writable result: TypeError: Array.of: cannot define property
+isArray: true,true,true,false,true,false,false,false,TypeError
+species length overflow: {"0":1,"1":2,"length":0,"n":2}

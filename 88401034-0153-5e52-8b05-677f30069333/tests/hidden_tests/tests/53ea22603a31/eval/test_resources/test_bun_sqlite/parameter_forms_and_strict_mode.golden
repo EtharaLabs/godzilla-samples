@@ -1,0 +1,19 @@
+forms [[1,2,3],[4,5,6],[7,8,9],[null,null,null],[13,null,15]]
+numbered {"a":7,"b":7,"c":8} {"c":3,"a":1}
+numbered-array {"two":"y","one":"x"}
+mixed {"n":"named","q":null}
+blob-arg {"b":"u8:1,2"}
+array-arg {"x":"only"}
+paramsCount 2 0 2 5
+first {"x":1,"y":2}
+reuse {"x":1,"y":2} [{"x":1,"y":2}] SELECT 1 AS x, 2 AS y
+rebind {"x":"p","y":"q"} SELECT 'p' AS x, 'q' AS y
+mismatch-few Error Error undefined undefined | SQLite query expected 3 values, received 1
+mismatch-many Error Error undefined undefined | SQLite query expected 1 values, received 2
+zero-param-ignores {"c":5} [{"one":1}]
+strict [{"a":10,"b":20},{"a":30,"b":40},{"a":50,"b":60}]
+strict-missing Error Error undefined undefined | Missing parameter "b"
+strict-prefixed Error Error undefined undefined | Missing parameter "a"
+strict-positional-to-named ok {"a":5}
+strict-get {"x":"X","y":null}
+strict-flag-with-readwrite {"v":1}

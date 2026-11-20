@@ -1,0 +1,16 @@
+language code | English | British English | American English | German | Chinese | Arabic | fr-CA | American English | xx | zh-Hant | he | RangeError: invalid language code: en-u-ca-x | RangeError: invalid language code: abc-def-1 | RangeError: invalid language code: en-x-priv
+language none | English | British English | American English | German | Chinese | Arabic | undefined | American English | undefined | undefined | undefined | RangeError: invalid language code: en-u-ca-x | RangeError: invalid language code: abc-def-1 | RangeError: invalid language code: en-x-priv
+region code | United States | United Kingdom | Latin America | Germany | ZZ | 001 | RangeError: invalid region code: usa | RangeError: invalid region code: 1 | Brazil | South Korea
+region none | United States | United Kingdom | Latin America | Germany | undefined | undefined | RangeError: invalid region code: usa | RangeError: invalid region code: 1 | Brazil | South Korea
+script code | Latin | Latin | Cyrillic | Simplified Han | Zzzz | RangeError: invalid script code: Lat | Korean
+script none | Latin | Latin | Cyrillic | Simplified Han | undefined | RangeError: invalid script code: Lat | Korean
+currency code | US Dollar | Euro | Japanese Yen | XYZ | RangeError: invalid currency code: US | Chinese Yuan | British Pound
+currency none | US Dollar | Euro | Japanese Yen | undefined | RangeError: invalid currency code: US | Chinese Yuan | British Pound
+calendar code | Gregorian Calendar | Islamic Calendar (tabular, civil epoch) | Ethiopic Amete Alem Calendar | Japanese Calendar | Minguo Calendar | bogus | Islamic Calendar (tabular, civil epoch) | RangeError: invalid calendar code: x | Islamic Calendar (Umm al-Qura) | ISO-8601 Calendar
+calendar none | Gregorian Calendar | Islamic Calendar (tabular, civil epoch) | Ethiopic Amete Alem Calendar | Japanese Calendar | Minguo Calendar | undefined | Islamic Calendar (tabular, civil epoch) | RangeError: invalid calendar code: x | Islamic Calendar (Umm al-Qura) | ISO-8601 Calendar
+dateTimeField code | era | year | month | weekOfYear | dayPeriod | timeZoneName | RangeError: invalid dateTimeField: century
+dateTimeField none | undefined | undefined | undefined | undefined | undefined | undefined | RangeError: invalid dateTimeField: century
+French | Japan | British English
+{"locale":"en-GB","style":"long","type":"region","fallback":"code","languageDisplay":"dialect"} {"locale":"en","style":"short","type":"calendar","fallback":"none","languageDisplay":"standard"}
+TypeError: options is required for Intl.DisplayNames | TypeError: type option is required | RangeError: invalid type: foo | TypeError: Intl.DisplayNames requires 'new' | RangeError: invalid style: tiny | RangeError: invalid fallback: x | RangeError: invalid languageDisplay: x
+TypeError: options must be an object or undefined | RangeError: invalid region code: undefined | TypeError: Cannot convert a Symbol value to a string | TypeError: method called on an incompatible receiver

@@ -1,0 +1,22 @@
+client address before first send THREW Error [EBADF] getsockname EBADF
+send() returns undefined
+auto-bound to 0.0.0.0 IPv4 true
+first reply echo:hello server got "hello" len=5 buffer=true from=127.0.0.1/IPv4 size=5 senderPortMatches=true keys=address,family,port,size
+buffer offset/length | sent 5 | server got "23456" len=5 buffer=true from=127.0.0.1/IPv4 size=5 senderPortMatches=true keys=address,family,port,size | reply [101,99,104,111,58,50,51,52,53,54] len 10
+uint8array, no address | sent 4 | server got "hi\u0000ÿ" len=4 buffer=true from=127.0.0.1/IPv4 size=4 senderPortMatches=true keys=address,family,port,size | reply [101,99,104,111,58,104,105,0,255] len 9
+array of chunks, empty address | sent 5 | server got "abcde" len=5 buffer=true from=127.0.0.1/IPv4 size=5 senderPortMatches=true keys=address,family,port,size | reply [101,99,104,111,58,97,98,99,100,101] len 10
+empty string | sent 0 | server got "" len=0 buffer=true from=127.0.0.1/IPv4 size=0 senderPortMatches=true keys=address,family,port,size | reply [101,99,104,111,58] len 5
+60000 bytes | sent 60000 | server got "aaaaaaaaaaaa" len=60000 buffer=true from=127.0.0.1/IPv4 size=60000 senderPortMatches=true keys=address,family,port,size | reply [101,99,104,111,58,97,97,97,97,97,97,97] len 60005
+string port | sent 1 | server got "p" len=1 buffer=true from=127.0.0.1/IPv4 size=1 senderPortMatches=true keys=address,family,port,size | reply [101,99,104,111,58,112] len 6
+70000 bytes ERR Error [UNKNOWN] send UNKNOWN 127.0.0.1:PORT syscall=send
+port 0 ERR RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received 0. syscall=undefined
+port "abc" ERR RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received abc. syscall=undefined
+port 70000 ERR RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received 70000. syscall=undefined
+port 1.5 ERR RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received 1.5. syscall=undefined
+object message ERR TypeError [undefined] The "msg" argument must be of type string or an instance of Buffer, TypedArray, or DataView syscall=undefined
+number message ERR TypeError [undefined] The "msg" argument must be of type string or an instance of Buffer, TypedArray, or DataView syscall=undefined
+sync bad port RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received -1.
+sync bad msg TypeError [undefined] The "msg" argument must be of type string or an instance of Buffer, TypedArray, or DataView
+sync no port RangeError [ERR_SOCKET_BAD_PORT] Port should be > 0 and < 65536. Received undefined.
+server saw nothing else: []
+done

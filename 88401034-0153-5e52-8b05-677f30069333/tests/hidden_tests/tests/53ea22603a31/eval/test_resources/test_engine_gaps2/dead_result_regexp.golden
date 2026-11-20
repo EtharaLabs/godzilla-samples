@@ -1,0 +1,29 @@
+exec sticky b  1 c
+  sticky lastIndex 2
+exec global z z 2 
+  global lastIndex 0
+exec plain cd c 2 
+exec non-writable lastIndex cd c 2 
+  threw 300
+exec fractional lastIndex m m 0 m
+  frac lastIndex 1
+replace literal global empty   2 
+replace literal o w o 4 orld
+match literal global 22 2 3 
+match literal empty   2 
+replace with own exec   2 
+  own exec calls 300
+replace sticky odd lastIndex s s 0 s
+replace non-writable lastIndex s s 0 s
+  replace threw 300
+replace with own flags g g 1 
+split literal ; ; 3 c
+split limit , , 1 b;c
+fused replace ["","","X","X"]
+fused empty replace ["","X",""]
+fused match ["X","X","",""]
+fused empty match ["","X","X"]
+fused non-global ["no","o","none"]
+patched calls 200 200
+symbol/exec calls 200 220
+non-string subject 20 X

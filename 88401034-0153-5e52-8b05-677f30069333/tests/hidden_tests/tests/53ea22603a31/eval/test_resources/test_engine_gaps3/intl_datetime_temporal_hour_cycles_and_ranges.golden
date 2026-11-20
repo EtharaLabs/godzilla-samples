@@ -1,0 +1,21 @@
+plain time en {} ["12:05:09 AM","1:05:09 PM",null]
+plain time de {} ["00:05:09","13:05:09",null]
+plain time en {"hour12":false} ["00:05:09","13:05:09",null]
+plain time de {"hour12":true} ["12:05:09 AM","1:05:09 PM",null]
+plain time ja {} ["00:05:09","13:05:09",null]
+plain time en {"hourCycle":"h23"} ["00:05:09","13:05:09",null]
+plain time en-u-hc-h11 {} ["0:05:09 AM","1:05:09 PM",null]
+plain time en {"timeStyle":"short"} ["12:05 AM","1:05 PM","h12"]
+duration "1/1/1970" "1/1/1970" "1/1/1970"
+zoned TypeError: Intl.DateTimeFormat does not support Temporal.ZonedDateTime; use zonedDateTime.toLocaleString() TypeError: formatRange endpoints must be the same type
+mixed TypeError: formatRange endpoints must be the same type TypeError: formatRange endpoints must be the same type
+same type "1/1/1970, 12:00:00 AM – 1/2/1970, 12:00:00 AM" "10:00:00 AM – 11:30:00 AM"
+calendar mismatch RangeError: calendar mismatch: iso8601 vs gregory RangeError: calendar mismatch: iso8601 vs gregory
+no overlap TypeError: no overlap between the formatter and the Temporal value TypeError: no overlap between the formatter and the Temporal value
+hebrew 5783 Tevet 22, 5783 | Adar 22, 5783 | Iyar 24, 5783 | Tamuz 26, 5783 | Elul 29, 5783 | Kislev 2, 5784
+hebrew 5784 Shevat 5, 5784 | Adar I 6, 5784 | Adar 5, 5784 | Nisan 7, 5784
+hebrew defaults Sivan 26, 5783 Sivan
+era ranges "-5 – 2020" "Jan – Jun, 6 BC"
+period ranges "9 in the morning – 3 in the afternoon" "01.10 – 01.90"
+offset zones "5:30 AM GMT+5:30" "9:30 PM"
+chinese range "Twelfth Month, 2019(己亥) – Fourth Month, 2021(辛丑)"

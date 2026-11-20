@@ -1,0 +1,25 @@
+subclass methods keep species: map=true filter=true slice=true splice=true concat=true flat=true flatMap=true
+non-species methods: false,false,false,false
+species override to Array: true,false,true
+custom species constructor: Recorder len=3 items=2,6 length=undefined
+null species falls back: true Array
+undefined species falls back: true
+non-constructor species: TypeError: Array @@species is not a constructor
+primitive constructor: TypeError: Array @@species is not a constructor
+undefined constructor: true
+species result not writable: TypeError: cannot create data property
+foreign map keeps foreign realm: false true
+local map on foreign array uses local Array: true false
+promise then species: true,true,true,true
+promise species getter: false true species
+promise species non-promise capability: NotAPromise
+species executor never called: TypeError: promise capability functions are not callable
+regexp split species: a|b|c calls=6 first=species
+regexp matchAll species: 1@1,2@3 species
+typed array species: true,true,true,true,false
+typed array species too short: TypeError: TypedArray destination is too small
+typed array species content type: TypeError: Cannot convert a Number to a BigInt
+arraybuffer slice species: true
+arraybuffer species same buffer: TypeError: slice species returned the same ArrayBuffer
+arraybuffer species too small: TypeError: slice species buffer is too small
+species getters: true,true,true,true,true,true,true get [Symbol.species]

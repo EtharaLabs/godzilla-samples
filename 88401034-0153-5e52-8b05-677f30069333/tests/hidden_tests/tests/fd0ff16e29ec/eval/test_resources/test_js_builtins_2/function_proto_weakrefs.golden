@@ -1,0 +1,44 @@
+call: ["T", 1, 2, 3] | ["number", 1, undefined] | ["null", undefined, undefined] | ["undef", undefined, undefined]
+call-sloppy-this: "object" | true | true | true
+apply: ["A", 1, 2, undefined] | ["B", undefined, undefined, undefined] | ["C", undefined, undefined, undefined] | ["D", "x", "y", undefined] | ["string", "a", "b"]
+apply-prim-args: THROW TypeError: apply: argument list must be array-like
+apply-string-args: THROW TypeError: apply: argument list must be array-like
+call-noncallable: THROW TypeError: value is not a function
+apply-noncallable: THROW TypeError: number is not a function
+bind: ["bound", "p1", "p2", "p3"] | "bound add" | 2 | 0 | "undefined" | {value: "bound add", writable: false, enumerable: false, configurable: true} | {value: 2, writable: false, enumerable: false, configurable: true}
+bind-twice: ["first", "a", "b", undefined] | "bound bound add"
+bind-new: 10 | 20 | true | true | true
+bind-length-edge: [Infinity, Infinity] | 0 | 2 | 0 | 0
+bind-name-edge: "bound " | "bound f" | "bound max" | "bound K" | "bound "
+bind-noncallable: THROW TypeError: bind must be called on a function
+bind-arrow-this: true
+bound-native: [NaN, NaN, NaN] | "1-2"
+toString-user: "function foo(a, b) { return a + b; }" | "x => x * 2" | "async function* ag() {}" | "class A { m() {} }" | "method() { return 1; }" | "get g() { return 1; }"
+toString-native: "function max() { [native code] }" | "function Array() { [native code] }" | "function () { [native code] }" | "function () { [native code] }" | "function get size() { [native code] }" | "function [Symbol.toPrimitive]() { [native code] }"
+toString-nonfn: THROW TypeError: Function.prototype.toString requires that 'this' be a function
+toString-proxy-fn: "function () { [native code] }"
+Function-ctor: 12 | 42 | 6 | "anonymous" | "function anonymous(x\n) {\nreturn x\n}"
+Function-ctor-syntax: THROW SyntaxError: unexpected token Punct(")")
+Function-ctor-body-injection: THROW SyntaxError: unterminated block comment
+fn-props: 1 | 2 | "" | "" | ["length", "name", "prototype"] | ["length", "name"] | ["length", "name"]
+fn-proto-props: 0 | "" | "function" | undefined | true
+hasInstance: true | true | false | false
+instanceof-nonobj-proto: THROW TypeError: prototype property is not an object
+instanceof-noncallable: THROW TypeError: right-hand side of instanceof is not callable
+instanceof-custom: true | true
+caller-arguments: "TypeError" | "function"
+weakref: true | "target" | "[object WeakRef]" | 1 | "function" | [] | "Symbol(ws)"
+weakref-prim: THROW TypeError: WeakRef target must be an object or symbol
+weakref-registered-sym: THROW TypeError: WeakRef target must be an object or symbol
+weakref-no-new: THROW TypeError: WeakRef requires 'new'
+weakref-deref-bad: THROW TypeError: deref called on a non-WeakRef
+finreg: undefined | true | false | undefined | "[object FinalizationRegistry]" | 1 | []
+finreg-same: THROW TypeError: target and held value must not be the same
+finreg-prim-target: THROW TypeError: target cannot be held weakly
+finreg-bad-token: THROW TypeError: unregister token cannot be held weakly
+finreg-unregister-prim: THROW TypeError: unregister token cannot be held weakly
+finreg-no-callback: THROW TypeError: cleanup callback must be callable
+finreg-no-new: THROW TypeError: FinalizationRegistry requires 'new'
+finreg-register-bad-this: THROW TypeError: register called on a non-FinalizationRegistry
+finreg-unregister-bad-this: THROW TypeError: unregister called on a non-FinalizationRegistry
+finreg-symbol-target: undefined | false

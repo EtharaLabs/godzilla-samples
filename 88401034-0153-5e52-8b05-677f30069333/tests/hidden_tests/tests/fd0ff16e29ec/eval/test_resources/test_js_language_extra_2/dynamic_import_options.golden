@@ -1,0 +1,16 @@
+opts prim !TypeError: import options must be an object
+with prim !TypeError: import attributes must be an object
+with undefined "mod"
+json via with {"j":1}
+non-string attr !TypeError: import attribute values must be strings
+non-enumerable attr "mod"
+symbol attr ignored "mod"
+proxy attrs {"j":1}
+proxy attrs sym/ghost/hidden "mod"
+proxy attr non-string !TypeError: import attribute values must be strings
+options getter throws !Error: with getter
+specifier toString throws !Error: spec toString
+specifier object "mod"
+json without attr {"j":1}
+unknown type "mod"
+default class name default fn default arrow default

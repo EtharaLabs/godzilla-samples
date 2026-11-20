@@ -1,0 +1,15 @@
+union => [Set{1, 2, 3, 4, 5}, Set{3, 4, 5, 1, 2}]
+intersection => [Set{3, 4}, Set{3, 4}, Set{1, 3}, Set{1, 3}]
+difference => [Set{1, 2}, Set{5}, Set{1, 2, 3, 4}]
+symmetricDifference => [Set{1, 2, 5}, Set{5, 1, 2}, Set{}]
+isSubsetOf => [true, false, true, true]
+isSupersetOf => [true, false, true]
+isDisjointFrom => [true, false, true]
+with Map argument => [Set{1, 2, 3, 4, 9}, true, Set{2}]
+-0 in argument => [1, false]
+result is fresh => [true, true, true]
+subclass result is Set => ["Set", "Set"]
+receivers unchanged => [Set{1, 2, 3, 4}, Set{3, 4, 5}]
+this not a Set !! TypeError: method called on an incompatible receiver
+this is array !! TypeError: method called on an incompatible receiver
+lengths => [1, 1, 1, 1, 1, 1, 1]

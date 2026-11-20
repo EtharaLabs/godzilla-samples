@@ -1,0 +1,13 @@
+close:
+  after close() readyState=2
+  open readyState=1
+  after second close() readyState=2
+  close 4001 "bye" wasClean=true readyState=3
+fail:
+  after close() readyState=2
+  open readyState=1
+  after second close() readyState=2
+  error readyState=3
+  close 1002 "reserved bits set (no extension negotiated)" wasClean=false readyState=3
+close: 0 bytes received after the handshake, socket closed
+fail: 0 bytes received after the handshake, socket closed

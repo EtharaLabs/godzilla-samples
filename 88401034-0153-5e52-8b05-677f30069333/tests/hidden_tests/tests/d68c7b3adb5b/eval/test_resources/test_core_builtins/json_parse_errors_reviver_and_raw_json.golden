@@ -1,0 +1,65 @@
+parse basics: [{},[],[],{},false,true,null,"\"\\/\b\f\n\r\tA",-150,0,[[[]]],{"a":{"b":{}}},100,0,"é😀"]
+parse reviver empty containers: {"a":{},"b":[]}
+parse errors messages: "{\"a\" 1}"=>SyntaxError:Expected ':' in JSON object
+  "{\"a\":1 \"b\":2}"=>SyntaxError:Expected ',' or '}' in JSON object
+  "[1 2]"=>SyntaxError:Expected ',' or ']' in JSON array
+  "{1:2}"=>SyntaxError:Expected string key in JSON object
+  "[1,2"=>SyntaxError:Expected ',' or ']' in JSON array
+  "{\"a\":1"=>SyntaxError:Expected ',' or '}' in JSON object
+  "\"abc"=>SyntaxError:Unterminated JSON string
+  "-"=>SyntaxError:Invalid number in JSON
+  "1."=>SyntaxError:Invalid number in JSON
+  "1e"=>SyntaxError:Invalid number in JSON
+  "1e+"=>SyntaxError:Invalid number in JSON
+  "01"=>SyntaxError:Unexpected non-whitespace after JSON
+  "{\"a\":1}x"=>SyntaxError:Unexpected non-whitespace after JSON
+  "falsy"=>SyntaxError:Invalid literal in JSON
+  "nul"=>SyntaxError:Invalid literal in JSON
+  "\"\\q\""=>SyntaxError:Bad escape in JSON
+  "\"\\u12\""=>SyntaxError:Bad \u escape in JSON
+  " 1 x"=>SyntaxError:Unexpected non-whitespace after JSON
+  "[,]"=>SyntaxError:Unexpected token in JSON
+  "{,}"=>SyntaxError:Expected string key in JSON object
+  "+1"=>SyntaxError:Unexpected token in JSON
+  ".5"=>SyntaxError:Unexpected token in JSON
+  "NaN"=>SyntaxError:Unexpected token in JSON
+  "\"\t\""=>SyntaxError:Unescaped control character in JSON string
+  "{\"a\":1,}"=>SyntaxError:Expected string key in JSON object
+  "[1,]"=>SyntaxError:Unexpected token in JSON
+  "'single'"=>SyntaxError:Unexpected token in JSON
+  " 1"=>SyntaxError:Unexpected token in JSON
+  "["=>SyntaxError:Unexpected end of JSON input
+  "{\"a\":}"=>SyntaxError:Unexpected token in JSON
+  "tRue"=>SyntaxError:Invalid literal in JSON
+  "-01"=>SyntaxError:Unexpected non-whitespace after JSON
+  "0x10"=>SyntaxError:Unexpected non-whitespace after JSON
+  "\"\\uZZZZ\""=>SyntaxError:Bad \u escape in JSON
+parse whitespace kinds: 1,2
+parse reviver deletes: {"a":{"x":1,"self":1}}
+reviver grafts proxy: delete p,define q {"a":1,"b":{"q":"Q"}}
+reviver grafts proxy array: del 0 [1,[null,8]]
+reviver grafts typed array: 10,12
+reviver non-configurable target: {"a":1,"b":"fixed"}
+reviver delete non-configurable: {"a":1,"b":"stays"}
+reviver array length getter: [1,{"0":"al","length":1}]
+reviver source for nested: n:-0.0 s:"\u0041" 0:true 1:null arr:- :-
+reviver source after modification: 0:1 1:nosrc :nosrc
+reviver order: b,0,c,a,d,<root>
+reviver throws: RangeError: rev
+reviver non-callable ignored: [1]
+parse coercion: 9 1 null true wrapped
+parse undefined: SyntaxError: Unexpected token in JSON
+parse symbol: TypeError: Cannot convert a Symbol value to a string
+parse duplicate and __proto__: __proto__,a 2 true
+parse big numbers and precision: [null,null,1.2345678901234568e+29,0.1,1.7976931348623157e+308,5e-324,5e-324]
+JSON parse errors with reviver: Expected ':' in JSON object | Expected string key in JSON object | Expected ',' or '}' in JSON object | Expected ',' or ']' in JSON array | Unexpected non-whitespace after JSON | Unexpected token in JSON | Unexpected token in JSON
+reviver walks grafted proxy with symbol keys: a,x,b,
+rawJSON errors: SyntaxError:JSON.rawJSON: empty string | SyntaxError:JSON.rawJSON: leading/trailing whitespace | SyntaxError:JSON.rawJSON: leading/trailing whitespace | SyntaxError:JSON.rawJSON value must be a primitive | SyntaxError:JSON.rawJSON value must be a primitive | SyntaxError:Invalid literal in JSON | SyntaxError:Unterminated JSON string | null | 1e5 | -0 | "\n" | SyntaxError:JSON.rawJSON: leading/trailing whitespace | SyntaxError:JSON.rawJSON: leading/trailing whitespace | SyntaxError:Unterminated JSON string | SyntaxError:JSON.rawJSON: invalid JSON text
+rawJSON in array/pretty: [
+ 1.000,
+ {
+  "r": true
+ }
+]
+rawJSON symbol: TypeError: Cannot convert a Symbol value to a string
+rawJSON object shape: rawJSON "x" true  true false false

@@ -1,0 +1,149 @@
+pdt.with calendar throws TypeError with() argument must not have 'calendar'
+pdt.with timeZone throws TypeError with() argument must not have 'timeZone'
+pdt.with temporal throws TypeError with() argument must be a plain object
+pdt.with month 0 throws RangeError month must be positive
+pdt.with monthCode num throws TypeError monthCode must be a string
+pdt.with monthCode bad throws RangeError invalid monthCode: M1
+pdt.with offset num throws TypeError with() requires at least one field
+pdt.with offset str 2020-03-15T03:20:30
+pdt.calendarId bad throws TypeError calendarId called on a non-Temporal receiver
+pdt.toJSON 2020-03-15T10:20:30
+pdt.round 5 throws TypeError options must be an object or a string
+pdt.withCalendar() throws TypeError calendar argument is required
+pdt.withCalendar(pd) hebrew
+pdt.withCalendar({}) throws TypeError calendar must be a string
+pd.with calendar throws TypeError with() argument must not have 'calendar'
+pd.with timeZone throws TypeError with() argument must not have 'timeZone'
+pd.with temporal throws TypeError with() argument must be a plain object
+pd.with month 0 throws RangeError month must be positive
+pd.with monthCode num throws TypeError monthCode must be a string
+pd.with monthCode bad throws RangeError invalid monthCode: M1
+pd.with offset num throws TypeError with() requires at least one field
+pd.with offset str throws TypeError with() requires at least one field
+pd.calendarId bad throws TypeError calendarId called on a non-Temporal receiver
+pd.toJSON 2020-03-15
+pd.withCalendar() throws TypeError calendar argument is required
+pd.withCalendar(pd) hebrew
+pd.withCalendar({}) throws TypeError calendar must be a string
+pt.with calendar throws TypeError with() argument must not have 'calendar'
+pt.with timeZone throws TypeError with() argument must not have 'timeZone'
+pt.with temporal throws TypeError with() argument must be a plain object
+pt.with month 0 throws TypeError with() requires at least one time field
+pt.with monthCode num throws TypeError with() requires at least one time field
+pt.with monthCode bad throws TypeError with() requires at least one time field
+pt.with offset num throws TypeError with() requires at least one time field
+pt.with offset str 03:20:30
+pt.calendarId absent
+pt.toJSON 10:20:30
+pt.round 5 throws TypeError options must be an object or a string
+ym.with calendar throws TypeError with() argument must not have 'calendar'
+ym.with timeZone throws TypeError with() argument must not have 'timeZone'
+ym.with temporal throws TypeError with() argument must be a plain object
+ym.with month 0 throws RangeError month must be positive
+ym.with monthCode num throws TypeError monthCode must be a string
+ym.with monthCode bad throws RangeError invalid monthCode: M1
+ym.with offset num throws TypeError with() requires at least one field
+ym.with offset str throws TypeError with() requires at least one field
+ym.calendarId bad throws TypeError calendarId called on a non-Temporal receiver
+ym.toJSON 2020-03
+md.with calendar throws TypeError with() argument must not have 'calendar'
+md.with timeZone throws TypeError with() argument must not have 'timeZone'
+md.with temporal throws TypeError with() argument must be a plain object
+md.with month 0 throws RangeError month must be positive
+md.with monthCode num throws TypeError monthCode must be a string
+md.with monthCode bad throws RangeError invalid monthCode: M1
+md.with offset num throws TypeError with() requires at least one field
+md.with offset str throws TypeError with() requires at least one field
+md.calendarId bad throws TypeError calendarId called on a non-Temporal receiver
+md.toJSON 03-15
+zdt.with calendar throws TypeError with() argument must not have 'calendar'
+zdt.with timeZone throws TypeError with() argument must not have 'timeZone'
+zdt.with temporal throws TypeError with() argument must be a plain object
+zdt.with month 0 throws RangeError month must be positive
+zdt.with monthCode num throws TypeError monthCode must be a string
+zdt.with monthCode bad throws RangeError invalid monthCode: M1
+zdt.with offset num throws TypeError offset must be a string
+zdt.with offset str 2020-03-15T03:20:30+01:00[Europe/Paris]
+zdt.calendarId bad throws TypeError calendarId called on a non-Temporal receiver
+zdt.toJSON 2020-03-15T10:20:30+01:00[Europe/Paris]
+zdt.round 5 throws TypeError options must be an object or a string
+zdt.withCalendar() throws TypeError calendar argument is required
+zdt.withCalendar(pd) hebrew
+zdt.withCalendar({}) throws TypeError calendar must be a string
+gpdt.with era+year throws TypeError eraYear and year are mutually exclusive
+gpdt.toJSON 2020-03-15T10:20:30
+gpd.with era+year throws TypeError eraYear and year are mutually exclusive
+gpd.toJSON 2020-03-15
+gym.with era+year throws TypeError eraYear and year are mutually exclusive
+gym.toJSON 2020-03-01[u-ca=gregory]
+gmd.with era+year 1972-03-15[u-ca=gregory]
+gmd.toJSON 1972-03-15[u-ca=gregory]
+gzdt.with era+year throws TypeError eraYear and year are mutually exclusive
+gzdt.toJSON 2020-03-15T10:20:30+01:00[Europe/Paris]
+pdt.from missing month throws TypeError missing field 'month'
+pdt.from missing day throws TypeError missing field 'day'
+zdt.from missing month throws TypeError missing field 'month'
+zdt.from missing day throws TypeError missing field 'day'
+ym hebrew toPlainDate 2024-02-19[u-ca=hebrew]
+ym hebrew toJSON 2024-01-11[u-ca=hebrew]
+md gregory toPlainDate era 2021-02-28[u-ca=gregory]
+md gregory toPlainDate bce -000004-02-28[u-ca=gregory]
+md toPlainDate prim throws TypeError toPlainDate() argument must be an object
+md hebrew toJSON throws RangeError invalid monthCode for this calendar
+md from md opts throws RangeError invalid overflow (bogus)
+md from md ok 03-15
+md cal obj iso8601
+md cal bad throws TypeError calendar is not a string
+md day 0 throws RangeError day must be positive
+md month 0 throws RangeError month must be positive
+md monthCode num throws TypeError monthCode must be a string
+md monthCode bad throws RangeError invalid monthCode: X01
+ym cal obj iso8601
+pdt cal obj iso8601
+zdt cal obj iso8601
+zdt cal bad throws TypeError calendar is not a string
+zdt offset opt 2020-01-01T00:00:00+01:00[Europe/Paris]
+zdt offset num throws TypeError offset must be a string
+zdt offset use 2019-12-31T20:00:00+01:00[Europe/Paris]
+zdt offset prefer sec 1900-01-01T00:00:00+00:09[Europe/Paris]
+zdt offset reject sec 1900-01-01T00:00:00+00:09[Europe/Paris]
+zdt tz from string +05:30
+zdt tz from Z string UTC
+zdt tz from bracket Asia/Tokyo
+zdt tz from bracket off +03:00
+zdt tz from sec offset throws RangeError invalid time zone identifier
+zdt tz obj bad throws TypeError timeZone must be a string or ZonedDateTime
+zdt tz num throws TypeError timeZone must be a string or ZonedDateTime
+zdt equals offsets true
+instant toString tz offset sec 2020-01-01T05:30:00+05:30
+instant round 5 throws TypeError options must be an object or a string
+instant toZDT 2019-12-31T23:30:00-00:30[-00:30]
+instant fromEpochNs bool 1970-01-01T00:00:00.000000001Z
+zdt round 5 throws TypeError options must be an object or a string
+zdt.toString bad smallest throws RangeError invalid smallestUnit for toString
+zdt.toString bogus smallest throws RangeError invalid smallestUnit
+instant.toString bogus smallest throws RangeError invalid smallestUnit
+pdt.toString bogus smallest throws RangeError invalid smallestUnit
+pt.toString bogus smallest throws RangeError invalid smallestUnit
+dur round 5 throws TypeError options must be an object or a string
+dur total 5 throws TypeError options must be an object or a string
+dur round bogus largest throws RangeError invalid largestUnit
+dur round bogus smallest throws RangeError invalid smallestUnit
+ym until bogus throws RangeError invalid largestUnit
+ym until bogus small throws RangeError invalid smallestUnit
+ym until small>large throws RangeError smallestUnit is larger than largestUnit
+ym until cal mismatch throws RangeError cannot compare dates in different calendars
+ym since cal mismatch throws RangeError cannot compare dates in different calendars
+pdt until cal mismatch throws RangeError cannot compare dates in different calendars
+pdt until bogus small throws RangeError invalid smallestUnit
+zdt until cal mismatch throws RangeError cannot compare dates in different calendars
+zdt until bogus large throws RangeError invalid largestUnit
+zdt until bogus small throws RangeError invalid smallestUnit
+zdt until small>large throws RangeError smallestUnit is larger than largestUnit
+zdt until auto ms P1D
+pd until bogus large throws RangeError invalid largestUnit
+pd until bogus small throws RangeError invalid smallestUnit
+pd until small>large throws RangeError smallestUnit is larger than largestUnit
+pd until auto P15M
+opts prim throws TypeError options must be an object or undefined
+opts prim2 throws TypeError relativeTo must be an object, a string, or undefined

@@ -1,0 +1,38 @@
+dur add sec+ms PT6.5S
+dur add ms+us PT0.0065S
+dur add us+ns PT0.0000065S
+dur add ns+ns PT0.000001505S
+dur sub sec-min -PT55S
+dur sub mixed PT59M59.999000003S
+dur add days P2DT6H5S
+dur add years throws RangeError Duration arithmetic with years, months, or weeks requires a relativeTo
+md with leap code islamic throws RangeError invalid monthCode for this calendar
+md with leap code persian throws RangeError invalid monthCode for this calendar
+md with leap code gregory throws RangeError invalid monthCode for this calendar
+md with leap code hebrew M01L throws RangeError invalid monthCode for this calendar
+md with leap code chinese reject throws RangeError invalid monthCode for this calendar
+md with leap code chinese 1972-02-14[u-ca=chinese]
+relTo bag bad offset str throws RangeError invalid UTC offset: bogus
+instant bracket offset sec throws RangeError invalid Instant string
+instant bracket offset 2019-12-31T23:00:00Z
+zdt from bad offset opt str throws RangeError invalid UTC offset: +0x:00
+zdt with bad offset str throws RangeError invalid UTC offset: +25:00
+zdt with offset use 2020-06-02T09:00:00+02:00[Europe/Paris]
+zdt with offset ignore 2020-06-02T12:00:00+02:00[Europe/Paris]
+zdt with offset prefer 2020-06-02T12:00:00+02:00[Europe/Paris]
+zdt from offset use dst 2020-10-24T23:30:00+02:00[Europe/Paris]
+zdt from offset ignore dst 2020-10-25T02:30:00+01:00[Europe/Paris]
+zdt from offset prefer ambiguous 2020-10-25T02:30:00+01:00[Europe/Paris]
+zdt from offset reject gap throws RangeError offset does not match the time zone
+ym until round err throws RangeError date is outside the supported range
+ym since round P8Y
+zdt toString round over +275760-09-13T00:00+00:00[UTC]
+zdt round over +275760-09-13T00:00:00+00:00[UTC]
+pdt toZDT west edge +275760-09-13T00:00:00+01:00[+01:00]
+dur round zdt over throws RangeError date is outside the supported range
+dur total zdt over throws RangeError date is outside the supported range
+dur round pdt big incr throws RangeError roundingIncrement out of range
+dur round days rel pd P1M12D
+dur round weeks rel zdt P5W5DT12H
+dur total months rel zdt dst 1.0013888888888889
+dur total week neg -1.4464285714285714

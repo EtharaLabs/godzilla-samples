@@ -1,0 +1,39 @@
+BigInt() => [31n, -42n, 0n, 0n, 5n, 15n, 31n, 7n, 12n, 1n, 9007199254740991n, 1000000000000000000000n, 0n, 0n]
+BigInt("1.5") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("-0x10") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("1n") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("0x") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("1_000") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("1e3") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("--1") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("0b2") !! SyntaxError: Cannot convert string to a BigInt
+BigInt("Infinity") !! SyntaxError: Cannot convert string to a BigInt
+BigInt(1.5) !! RangeError: The number cannot be converted to a BigInt
+BigInt(NaN) !! RangeError: The number cannot be converted to a BigInt
+BigInt(undefined) !! TypeError: Cannot convert value to a BigInt
+BigInt(null) !! TypeError: Cannot convert value to a BigInt
+BigInt(Symbol) !! TypeError: Cannot convert value to a BigInt
+BigInt(object) => 12n
+new BigInt !! TypeError: BigInt is not a constructor
+asIntN => [-1n, -128n, 127n, 255n, 18446744073709551615n, -9223372036854775808n, 0n, 1n, -1n, true]
+asIntN wide => [5n, 18446744073709551615n, -18446744073709551616n, 3n, 3n, -56n, 1n, 1n]
+asIntN negative bits !! RangeError: index out of range
+asUintN too many bits !! RangeError: index out of range
+asIntN huge width => [5n, 5n, -5n]
+asUintN huge width negative !! RangeError: BigInt is too large to allocate
+asIntN number value !! TypeError: Cannot convert a Number to a BigInt
+asIntN bad string !! SyntaxError: Cannot convert string to a BigInt
+toString radix => ["ff", "-11111111", "3w5e11264sgsg", "0", "zzzzzzzzzz", "123", "111"]
+toString radix 1 !! RangeError: toString radix must be between 2 and 36
+toString bad receiver !! TypeError: BigInt method called on incompatible receiver
+valueOf => [5n, "object", true]
+valueOf bad receiver !! TypeError: BigInt method called on incompatible receiver
+toLocaleString => ["1,234,567", "-1,234,567,890,123,456,789", "1.234.567"]
+Number(bigint) => [18446744073709552000, -Infinity, 123, "1000000000000000000000"]
+loose equality => [true, false, true, false, true, true, true, true, false, false, true, true, false]
+relational => [true, true, true, false, false, true, false, true, false, true, true]
+mixed sort => [-1n, 0, 0n, 3n, 8.5, 9, 10n]
+truthiness => ["f", true, "y", true]
+collections => [true, true, 2, "a", -1]
+as property key => [["10"], "ten", "ten"]
+BigInt statics => [1, "BigInt", "constructor toLocaleString toString valueOf", "BigInt"]

@@ -1,0 +1,75 @@
+proto-accessors ["function", "function", false, true, "function", "Iterator", true]
+set-on-proto THROW TypeError: cannot assign to a property of Iterator.prototype
+set-tag-on-proto THROW TypeError: cannot assign to a property of Iterator.prototype
+set-on-derived [{value: "own", writable: true, enumerable: true, configurable: true}, "[object MyTag]"]
+set-on-prim THROW TypeError: cannot create property on a primitive
+set-undefined-this THROW TypeError: cannot create property on a primitive
+construct-newtarget-bad-proto true
+construct-subclass [true, "undefined"]
+map-next-throws THROW RangeError: next threw
+map-next-throws-log []
+map-result-nonobj THROW TypeError: iterator result is not an object
+map-next-noncallable THROW TypeError: iterator.next is not a function
+map-done-getter-throws THROW EvalError: done getter
+filter-callback-throws THROW URIError: pred threw
+filter-log ["src.next", "src.return"]
+take-limit-valueOf-throws THROW Error: limit valueOf
+take-limit-log ["src.return"]
+drop-skips-then-done [{value: undefined, done: true}, ["d.next", "d.next", "d.next"]]
+flatMap-inner-next-throws THROW TypeError: inner next
+flatMap-inner-log ["outer.next", "outer.return"]
+flatMap-mapper-throws THROW Error: mapper
+flatMap-mapper-log ["outer.next", "outer.return"]
+flatMap-returns-iterator-not-iterable ["it1", "it2"]
+flatMap-return-mid-inner [{value: 1, done: false}, {value: undefined, done: true}, {value: undefined, done: true}, ["outer.next", "inner1.next", "inner1.return", "outer.return"]]
+return-before-start [{value: undefined, done: true}, {value: undefined, done: true}, ["ns.return"]]
+return-after-done [{value: undefined, done: true}, {value: undefined, done: true}, ["dn.next"]]
+helper-return-throws THROW Error: return threw
+helper-return-nonobj-result THROW TypeError: iterator 'return' must return an object
+reduce-callback-throws ["reduce cb", ["s.next", "s.next", "s.return"]]
+some-callback-throws ["some cb", ["s.next", "s.return"]]
+every-callback-throws ["every cb", ["s.next", "s.return"]]
+find-callback-throws ["find cb", ["s.next", "s.return"]]
+forEach-callback-throws ["forEach cb", ["s.next", "s.return"]]
+toArray-nonobj-result THROW TypeError: iterator result is not an object
+every-false-closes [false, ["e.next", "e.return"]]
+find-not-found [undefined, ["f.next", "f.next"]]
+from-string-object ["a", "b"]
+from-next-only ["n", "n", "n"]
+from-iterator-returning-nonobj THROW TypeError: iterator is not an object
+from-null-iterator-method []
+wrap-next-bad-this THROW TypeError: next called on an incompatible receiver
+wrap-return-bad-this THROW TypeError: return called on an incompatible receiver
+wrap-return-noncallable THROW TypeError: iterator return is not callable
+concat-lazy [[], {value: 1, done: false}, {value: 2, done: false}, ["a.next", "a.next", "b.next"], {value: undefined, done: true}, ["a.next", "a.next", "b.next", "b.return"], {value: undefined, done: true}]
+concat-iterator-method-nonobj THROW TypeError: @@iterator did not return an object
+concat-next-throws THROW Error: concat inner
+concat-reentrant THROW TypeError: Iterator.concat iterator is already running
+concat-bad-this-next {value: undefined, done: true}
+concat-shape ["[object Iterator]", false, "function"]
+concat-return-before-start [{value: undefined, done: true}, []]
+zip-shortest-closes-others [{value: [1, "a"], done: false}, {value: [2, "b"], done: false}, {value: undefined, done: true}, ["p.next", "q.next", "p.next", "q.next", "p.next", "q.return"]]
+zip-return-mid [{value: [1, "a"], done: false}, {value: undefined, done: true}, {value: undefined, done: true}, ["p.next", "q.next", "q.return", "p.return"]]
+zip-return-before-start [{value: undefined, done: true}, ["a.return"]]
+zip-strict-ok [[1, "a"], [2, "b"]]
+zip-strict-first-longer ["Iterator.zip strict: input iterators have different lengths", ["a.next", "b.next", "a.next", "b.next", "a.return"]]
+zip-strict-second-longer ["Iterator.zip strict: input iterators have different lengths", ["a.next", "b.next", "a.next", "b.next", "b.return"]]
+zip-longest-padding-iter [[1, "p1", 1], ["p0", "p1", 2], ["p0", "p1", 3]]
+zip-empty [[], {value: undefined, done: true}]
+zip-input-nonobj THROW TypeError: Iterator.zip input is not an object
+zip-options-nonobj THROW TypeError: Iterator.zip options is not an object
+zip-padding-nonobj THROW TypeError: Iterator.zip padding is not an object
+zip-input-string-element THROW TypeError: value is not iterable
+zip-next-throws ["zip next", ["ok.next", "ok.return"]]
+zip-reentrant THROW TypeError: Iterator.zip iterator is already running
+zip-bad-this THROW TypeError: next called on an incompatible receiver
+zipKeyed-symbols-order [["1", "b", "a", "Symbol(k)"]]
+zipKeyed-longest-padding [{a: 1, b: 9}, {a: 2, b: "B"}]
+zipKeyed-undefined-skipped [{a: 1}]
+zipKeyed-nonobj THROW TypeError: Iterator.zip input is not an object
+string-iter-joined ["😀", "x"]
+string-iter-next-detached [{value: "a", done: false}, {value: "b", done: false}, {value: undefined, done: true}]
+array-iter-entries-arraylike [[0, "z"], [1, undefined]]
+array-iter-shrinking [1]
+array-iter-typed [[0, 4], [1, 5]]
+array-iter-proto-chain [true, "Array Iterator", "function"]

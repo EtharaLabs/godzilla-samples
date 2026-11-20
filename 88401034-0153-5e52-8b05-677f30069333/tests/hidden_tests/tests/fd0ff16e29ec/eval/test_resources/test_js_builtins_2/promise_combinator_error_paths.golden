@@ -1,0 +1,90 @@
+all bad-resolve rejected Error: resolve threw
+  iter-log ["next", "next", "return"]
+all bad-then-getter rejected Error: then getter threw
+  iter-log ["next", "next", "return"]
+all bad-then-call rejected Error: then call threw
+  iter-log ["next", "next", "return"]
+all next-throws rejected Error: iterator next threw
+  iter-log ["next"]
+all iterator-getter-throws rejected Error: @@iterator getter threw
+all non-object-this rejected TypeError: NewPromiseCapability: receiver is not a constructor
+all resolve-getter-throws rejected Error: resolve getter
+allSettled bad-resolve rejected Error: resolve threw
+  iter-log ["next", "next", "return"]
+allSettled bad-then-getter rejected Error: then getter threw
+  iter-log ["next", "next", "return"]
+allSettled bad-then-call rejected Error: then call threw
+  iter-log ["next", "next", "return"]
+allSettled next-throws rejected Error: iterator next threw
+  iter-log ["next"]
+allSettled iterator-getter-throws rejected Error: @@iterator getter threw
+allSettled non-object-this rejected TypeError: NewPromiseCapability: receiver is not a constructor
+allSettled resolve-getter-throws rejected Error: resolve getter
+any bad-resolve rejected Error: resolve threw
+  iter-log ["next", "next", "return"]
+any bad-then-getter rejected Error: then getter threw
+  iter-log ["next", "next", "return"]
+any bad-then-call rejected Error: then call threw
+  iter-log ["next", "next", "return"]
+any next-throws rejected Error: iterator next threw
+  iter-log ["next"]
+any iterator-getter-throws rejected Error: @@iterator getter threw
+any non-object-this rejected TypeError: NewPromiseCapability: receiver is not a constructor
+any resolve-getter-throws rejected Error: resolve getter
+race bad-resolve rejected Error: resolve threw
+  iter-log ["next", "next", "return"]
+race bad-then-getter rejected Error: then getter threw
+  iter-log ["next", "next", "return"]
+race bad-then-call rejected Error: then call threw
+  iter-log ["next", "next", "return"]
+race next-throws rejected Error: iterator next threw
+  iter-log ["next"]
+race iterator-getter-throws rejected Error: @@iterator getter threw
+race non-object-this rejected TypeError: NewPromiseCapability: receiver is not a constructor
+race resolve-getter-throws rejected Error: resolve getter
+species-then-result true false
+species-captured resolved:species-value!
+species-bad TypeError: @@species is not a constructor
+species-undefined-default true
+constructor-not-object TypeError: constructor is not an object
+finally-then-noncallable TypeError: then is not callable
+finally-generic-thenable then called with function/function
+finally-generic-noncallable-arg [7, 7]
+finally-thenable-delay fulfilled orig
+executor-throws rejected RangeError: executor threw
+executor-throws-after-resolve fulfilled kept
+executor-reject-then-resolve rejected first
+newtarget-nonobj-proto true
+resolve-functions [[1, "", "undefined"], [1, "", "undefined"]]
+resolve-noncallable-then fulfilled 1
+resolve-thenable-rejects rejected TypeError: thenable rejected
+allKeyed-nested fulfilled {a: 1, b: 2, c: 3}
+allKeyed-empty fulfilled {}
+allKeyed-proto fulfilled null
+allKeyed-nonenum-skipped fulfilled {v: 1}
+allSettledKeyed-mixed fulfilled [{status: "fulfilled", value: "y"}, "rejected", "n"]
+allKeyed-bad-resolve rejected Error: resolve threw
+allKeyed-bad-then rejected Error: then call threw
+allKeyed-proxy fulfilled {y: 2, x: 1}
+allKeyed-getter-throws rejected Error: keyed getter
+ag-return-before-start fulfilled {value: "early", done: true}
+ag finally
+ag-return-thenable fulfilled {value: "from thenable", done: true}
+ag-return-rejected-promise rejected Error: return arg rejected
+ag finally
+ag-return-rejected-mid rejected Error: mid rejected
+ag-next-after fulfilled {value: undefined, done: true}
+ag-throw-before-start rejected Error: thrown in
+ag finally
+ag-queued fulfilled [{value: 1, done: false}, [{value: 1, done: false}, {value: 2, done: false}, {value: undefined, done: true}, {value: "done-q", done: true}]]
+ag-next-bad-this rejected TypeError: AsyncGenerator method called on an incompatible receiver
+ag-return-bad-this rejected TypeError: AsyncGenerator method called on an incompatible receiver
+ag-throw-bad-this rejected TypeError: AsyncGenerator method called on an incompatible receiver
+ag-tags [object AsyncGenerator] [object AsyncGeneratorFunction] function
+fromAsync-arraylike-mapfn fulfilled ["a0", "b1"]
+fromAsync-async-iter-nonobj rejected TypeError: iterator result is not an object
+fromAsync-bad-asyncIterator rejected TypeError: iterator method is not callable
+fromAsync-mapfn-throws-closes fulfilled ["map fail", ["closed"]]
+fromAsync-ctor-define-fails rejected TypeError: cannot define element '0'
+fromAsync-arraylike-ctor fulfilled [1, 1, "v"]
+fromAsync-sync-iter-rejects-closes fulfilled ["elem rejected", ["sync return"]]

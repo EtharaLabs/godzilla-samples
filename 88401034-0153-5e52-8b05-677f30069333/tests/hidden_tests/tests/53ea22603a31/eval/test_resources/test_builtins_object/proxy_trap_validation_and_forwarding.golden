@@ -1,0 +1,47 @@
+non-callable get !! TypeError: proxy 'get' trap is not callable
+non-callable set !! TypeError: proxy 'set' trap is not callable
+non-callable has !! TypeError: proxy 'has' trap is not callable
+non-callable deleteProperty !! TypeError: proxy 'deleteProperty' trap is not callable
+non-callable ownKeys !! TypeError: proxy 'ownKeys' trap is not callable
+non-callable getOwnPropertyDescriptor !! TypeError: proxy 'getOwnPropertyDescriptor' trap is not callable
+non-callable defineProperty !! TypeError: proxy 'defineProperty' trap is not callable
+non-callable getPrototypeOf !! TypeError: proxy 'getPrototypeOf' trap is not callable
+non-callable setPrototypeOf !! TypeError: proxy 'setPrototypeOf' trap is not callable
+non-callable isExtensible !! TypeError: proxy 'isExtensible' trap is not callable
+non-callable preventExtensions !! TypeError: proxy 'preventExtensions' trap is not callable
+non-callable apply !! TypeError: proxy 'apply' trap is not callable
+non-callable construct !! TypeError: proxy 'construct' trap is not callable
+revoked get !! TypeError: cannot read property 'get' of null
+revoked set !! TypeError: cannot read property 'set' of null
+revoked has !! TypeError: cannot perform 'has' on a revoked proxy
+revoked deleteProperty !! TypeError: cannot delete on a revoked proxy
+revoked ownKeys !! TypeError: cannot read property 'ownKeys' of null
+revoked getOwnPropertyDescriptor !! TypeError: proxy is revoked
+revoked defineProperty !! TypeError: cannot read property 'defineProperty' of null
+revoked getPrototypeOf !! TypeError: cannot read property 'getPrototypeOf' of null
+revoked setPrototypeOf !! TypeError: proxy is revoked
+revoked isExtensible !! TypeError: proxy is revoked
+revoked preventExtensions !! TypeError: proxy is revoked
+revoked apply !! TypeError: cannot read property 'apply' of null
+revoked construct !! TypeError: cannot read property 'construct' of null
+forward get/set => ["inner x", 2]
+forward has/delete => [true, false, true, false]
+forward keys => [["prototype", "x"], true, [Symbol(Symbol.iterator)]]
+forward gopd/define => [{value: "inner x", writable: true, enumerable: true, configurable: true}, "zz"]
+forward proto/extensible => [true, true]
+forward call/construct => ["called", "object"]
+forward preventExtensions => [false, false, true]
+forward setPrototypeOf on nonext !! TypeError: could not set prototype
+forward keys/values/entries => [["a", "b"], [1, 2], [["a", 1], ["b", 2]]]
+isFrozen through traps => [true, ["a", "b"]]
+ownKeys omits key of nonext !! TypeError: ownKeys trap omitted a key of a non-extensible target
+Reflect.set with trap and receiver => [true, ["k", 1, true]]
+Reflect.set trapless forwards receiver => [true, 9, false]
+Reflect.set non-object !! TypeError: Reflect.set called on non-object
+Reflect.setPrototypeOf non-object !! TypeError: Reflect.setPrototypeOf called on non-object
+Reflect on proxies => [1, true, false, true]
+proxy as prototype get => [1, "proto:missing:true"]
+proxy as prototype set => [["own"], ["own"]]
+proxy as prototype has => [true, false]
+receiver is proxy => ["gopd p", "define p {\"value\":5,\"writable\":true,\"enumerable\":true,\"configurable\":true}", "gopd p", "define p {\"value\":6}"]
+legacy lookup through proxy => ["function", true]

@@ -1,0 +1,34 @@
+read unscopables x
+read=undefined
+write unscopables y
+e2.y=42 outer y=outer-y
+strict-read unscopables x
+strict read: ReferenceError: x is not defined
+strict-write unscopables y
+strict write: ReferenceError: y is not defined
+e4 keys=x outer y=outer-y
+compound unscopables x
+e5.x=NaN
+strict-compound unscopables x
+strict compound: ReferenceError: x is not defined
+e5s keys=y
+typeof unscopables x
+typeof=undefined
+var-pattern unscopables y
+e7.y=43 outer y=outer-y
+rest unscopables x
+e8.x={"p":1,"q":2} outer x=outer-x
+strict-rest unscopables y
+strict rest: ReferenceError: y is not defined
+e9 keys=x outer y=outer-y
+sloppy fn-name rest: function
+sloppy fn-name compound: function
+strict fn-name rest: TypeError: assignment to constant 'g'
+strict fn-name compound: TypeError: assignment to constant 'nm'
+const rest: TypeError: assignment to constant 'k'
+const compound: TypeError: assignment to constant 'k'
+strict global vanish: ReferenceError: gz is not defined
+gz after: undefined
+sloppy global vanish: 3
+tdz assign: ReferenceError: cannot access 'x1' before initialization
+holes 1 undefined

@@ -1,0 +1,34 @@
+push/pop => [3, 3, [1, 2], undefined, 0]
+shift/unshift => [4, 0, [0.5, 1, 2], undefined, 1]
+splice => [[2, 3], [5], [4, "a", "b"], [1]]
+splice no args => [[], [1, 2]]
+splice undefined start => [[1, 2], []]
+splice undefined count => [[], [1, "x", 2, 3]]
+splice neg count => [[], [1, "y", 2, 3]]
+splice huge start => [[], [1, 2, "z"]]
+reverse => [[3, 2, 1], [<hole>, 3, <hole>, 1], []]
+fill => [[0, 0, 0, 0], [1, 9, 9, 4], [7, 7, 7], [1, 2], [8, 8, 3]]
+copyWithin => [[4, 5, 3, 4, 5], [1, 2, 3, 1, 2], [1, 1, 2, 3, 4], [<hole>, 3, 3], [1, 2, 3]]
+forEach holes => ["0:1:3:T", "2:3:3:T"]
+map holes => [2, <hole>, 6]
+filter holes => [1, 3, undefined, 0]
+reduce => [6, "321", 5, 12, [2, 1]]
+reduce empty !! TypeError: Reduce of empty array with no initial value
+reduce holes only !! TypeError: Reduce of empty array with no initial value
+every/some => [true, false, true, true, true]
+forEach no callback !! TypeError: Array.prototype.forEach callback is not callable
+map bad callback !! TypeError: Array.prototype.map callback is not callable
+filter bad callback !! TypeError: Array.prototype.filter callback is not callable
+reduce bad callback !! TypeError: Array.prototype.reduce callback is not callable
+find bad callback !! TypeError: predicate is not callable
+reduceRight bad callback !! TypeError: Array.prototype.reduceRight callback is not callable
+some bad callback !! TypeError: predicate is not callable
+every bad callback !! TypeError: predicate is not callable
+mutation during forEach => [[1, 2, "changed"], 4]
+delete during map => [1, <hole>, 3]
+hot dense => [200, 400, [0, 0, 2, 4, 6, 3], 39700]
+hot holes => [36, 67, [0, 0, 2, 4, 6, 3], 1232]
+hot non-writable length !! TypeError: Cannot assign to read only property '1'
+hot frozen pop => ["TypeError: Cannot delete property '1'", 2]
+hot pop empty => [100, 0]
+hot array-like push => [100, 99]

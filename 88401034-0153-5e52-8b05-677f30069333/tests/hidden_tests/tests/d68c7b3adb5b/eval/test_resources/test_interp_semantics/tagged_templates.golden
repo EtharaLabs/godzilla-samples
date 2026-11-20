@@ -1,0 +1,17 @@
+basic: {"cooked":["a","b","c"],"raw":["a","b","c"],"subs":[1,"two"]}
+escapes: {"cooked":["\n\tAB"],"raw":["\\n\\t\\u0041\\x42"],"subs":[]}
+invalid escapes cooked undefined: {"cooked":[null],"raw":["\\unicode and \\xZZ and \\01"],"subs":[]}
+String.raw: C:\new\table2\x
+String.raw object: x1y2z
+site caching: true false
+frozen: true true true
+raw descriptor: {"value":["same site"],"writable":false,"enumerable":false,"configurable":false}
+member tag this: >val=7 >idx=8
+chained: first+second
+new binds to tagged result: made
+evaluation order: 3 1,2,tag
+empty: {"cooked":[""],"raw":[""],"subs":[]} {"cooked":["",""],"raw":["",""],"subs":[0]}
+line continuation: {"cooked":["ab"],"raw":["a\\\nb"],"subs":[]}
+untagged: x1y1,2zobj
+symbol in template: TypeError: Cannot convert a Symbol value to a string
+strict tag this: undefined

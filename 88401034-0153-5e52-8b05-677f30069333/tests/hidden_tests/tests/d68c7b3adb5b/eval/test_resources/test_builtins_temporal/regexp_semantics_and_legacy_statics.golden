@@ -1,0 +1,34 @@
+legacy statics: 12|345|true|12-345|12-345|tel |tel | end| end|345|345|tel 12-345 end|tel 12-345 end
+statics after replace: bc abca bc
+statics after failed match keep: b bc
+statics input setter: set-input
+statics on subclass: false function
+global lastIndex walk: 1:2 2:3 5:6 6:7 end=0
+lastIndex beyond length: null 0
+sticky: true false 0
+non-global ignores lastIndex: 0 5
+lastIndex valueOf read: 1
+frozen lastIndex global: TypeError: Cannot assign to read only property 'lastIndex'
+frozen lastIndex failing match: TypeError: Cannot assign to read only property 'lastIndex'
+replace patterns: Smith, John [Smith John] $ John Smith (|) $0 $9 .
+replace function args: a|a|undefined|1|xay|{}
+replaceAll non-global regexp: TypeError: replaceAll must be called with a global RegExp
+matchAll non-global: TypeError: String.prototype.matchAll called with a non-global RegExp
+replaceAll string special: a..b..c -x-x-
+split limit and captures: ["a","1","b","2"] [""] ["a","b","c"] []
+search restores lastIndex: 1 2
+custom exec result: true [fake]
+custom exec bad return: TypeError: RegExp exec method returned something other than an Object or null
+exec on non-regexp: TypeError: exec on non-RegExp
+flags getter order: dgimsuvy hasIndices,global,ignoreCase,multiline,dotAll,unicode,unicodeSets,sticky
+source escaping: \/ (?:) \n (?:) /a\/b/gi
+RegExp from regexp: m true false
+invalid flags: SyntaxError: duplicate regular expression flag g
+invalid pattern: SyntaxError: duplicate group name n
+indices: [[1,2],[1,2],null] {"w":[1,2]}
+lookbehind and unicode sets: 42 false true true
+case-insensitive unicode: true false true
+RegExp.escape: \x61\.b\*c \x31x \x20\x2d
+Symbol.match false: true false
+compile: true b i 0
+toString generic: /S/F

@@ -1,0 +1,26 @@
+2
+yield ident await ident of ident g s st impl pkg t m f a acc
+of of 1
+using ident
+2
+1
+set m static m static static async m getter get
+{"42":6,"static":1,"get":2,"async":3,"accessor":4,"quoted":5,"c":7} true
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 44
+labels named like keywords ok
+shadowed function
+escaped as ident
+"function* g() { var yield; }" SyntaxError: 'yield' cannot be used as a binding here
+"async function f() { var await; }" SyntaxError: 'await' cannot be used as a binding here
+"\"use strict\"; var let = 1" SyntaxError: 'let' cannot be used as a binding in strict mode
+"\"use strict\"; var static" SyntaxError: 'static' cannot be used as a binding in strict mode
+"\"use strict\"; var implements" SyntaxError: 'implements' cannot be used as a binding in strict mode
+"let [let] = []" SyntaxError: 'let' is disallowed as a lexically bound name
+"class C { m() { var yield; } }" SyntaxError: 'yield' cannot be used as a binding in strict mode
+"async function f() { function await() {} }" SyntaxError: 'await' cannot be used as a function name here
+"function* g() { function yield() {} }" SyntaxError: 'yield' cannot be used as a function name here
+"var enum" SyntaxError: expected binding identifier
+"let\nlet = 1" SyntaxError: 'let' is disallowed as a lexically bound name
+"for (let of of []) ;" parses
+"for (let in {}) ;" parses
+await prop 2

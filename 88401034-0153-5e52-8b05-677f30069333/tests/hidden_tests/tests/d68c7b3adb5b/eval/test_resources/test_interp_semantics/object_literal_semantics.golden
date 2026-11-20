@@ -1,0 +1,18 @@
+evaluation and key order: key b, val 1, val 2, key 1, val 3, key g, key b, val 4 => 1,b,a,g b=4
+accessor merging: get2 5 function true
+data then accessor: acc false undefined
+accessor then data: data {"value":"data","writable":true,"enumerable":true,"configurable":true}
+__proto__ literal: true,true,true,true,true
+__proto__ null: null false
+duplicate __proto__: SyntaxError: duplicate __proto__ property in object literal
+spread invokes getters, skips non-enumerable: {"0":9,"1":"i","g":"G"} calls=1 syms=1 getterCopiedAsData=true
+spread does not trigger setters: false 1
+function names: plain|arrow|[described]|[]|get acc|method|computed|inner|am|gm
+assignment names: x|y|[]|[]|d1|d2
+logical assignment names: a|b|c
+super in object methods: base hi from child! | base hi from borrowed! | SyntaxError
+super property set: via-proto-setter:1 w-own=true
+super with null proto: TypeError: cannot read property 'x' of a null super base
+numeric keys canonicalized: 0,16,1000,1.5,01,0.5
+shorthand and computed symbols: 1,2 {"x":1,"y":2}
+getter on primitive receiver: number

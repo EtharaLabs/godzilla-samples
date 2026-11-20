@@ -1,0 +1,17 @@
+client:
+before: pending=true connecting=true encrypted=true authorized=false alpn=false servername=localhost address={}
+connect
+secureConnect callback
+secureConnect authorized=true authorizationError=null pending=false connecting=false
+  remote=127.0.0.1 remotePortIsServerPort=true local=127.0.0.1 family=IPv4
+  protocolOk=true cipherKeys=name,standardName,version cipherNamed=true reused=false
+ready
+data "hello from the TLS server"
+end bytesRead=25
+close hadError=false address={}
+server:
+listening {"address":"127.0.0.1","port":"number","family":"IPv4"} listening=true
+secureConnection encrypted=true alpn=false remote=127.0.0.1 local=127.0.0.1 portIsServerPort=true protocolOk=true
+getConnections err=null count=1
+socket close hadError=false destroyed=true
+server close callback listening=false

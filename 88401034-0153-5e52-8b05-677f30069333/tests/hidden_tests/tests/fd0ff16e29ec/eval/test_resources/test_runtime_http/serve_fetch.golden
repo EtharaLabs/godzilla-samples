@@ -1,0 +1,30 @@
+listening 127.0.0.1 number
+headers 200 true true a text/plain;charset=UTF-8 178 close lumen/VER
+echo {"method":"POST","path":"/echo","q":"?a=1","ct":"text/plain;charset=UTF-8","xh":"hv","cl":"7","body":"payload","ua":"lumen/VER","hostOk":true,"conn":"close","remote":"127.0.0.1"}
+get 200 "OK" false http://127.0.0.1:PORT/echo "{\"method\":\"GET\",\"path\":\"/echo\",\"q\":\"\",\"ct\":null,\"xh\":null,\"cl\":null,\"body\":null,\"ua\":\"lumen/VER\",\"hostOk\":true,\"conn\":\"close\",\"remote\":\"127.0.0.1\"}"
+302 POST->GET 200 "OK" true http://127.0.0.1:PORT/echo?from=302 "{\"method\":\"GET\",\"path\":\"/echo\",\"q\":\"?from=302\",\"ct\":\"text/plain;charset=UTF-8\",\"xh\":null,\"cl\":null,\"body\":null,\"ua\":\"lumen/VER\",\"hostOk\":true,\"conn\":\"close\",\"remote\":\"127.0.0.1\"}"
+303 PUT->GET 200 "OK" true http://127.0.0.1:PORT/echo?from=303 "{\"method\":\"GET\",\"path\":\"/echo\",\"q\":\"?from=303\",\"ct\":\"text/plain;charset=UTF-8\",\"xh\":null,\"cl\":null,\"body\":null,\"ua\":\"lumen/VER\",\"hostOk\":true,\"conn\":\"close\",\"remote\":\"127.0.0.1\"}"
+307 keeps 200 "OK" true http://127.0.0.1:PORT/echo?from=307 "{\"method\":\"POST\",\"path\":\"/echo\",\"q\":\"?from=307\",\"ct\":\"text/plain;charset=UTF-8\",\"xh\":null,\"cl\":\"4\",\"body\":\"kept\",\"ua\":\"lumen/VER\",\"hostOk\":true,\"conn\":\"close\",\"remote\":\"127.0.0.1\"}"
+308 keeps 200 "OK" true http://127.0.0.1:PORT/echo?from=308 "{\"method\":\"PATCH\",\"path\":\"/echo\",\"q\":\"?from=308\",\"ct\":\"text/plain;charset=UTF-8\",\"xh\":null,\"cl\":\"5\",\"body\":\"kept8\",\"ua\":\"lumen/VER\",\"hostOk\":true,\"conn\":\"close\",\"remote\":\"127.0.0.1\"}"
+301 no location 301 "Moved Permanently" false http://127.0.0.1:PORT/noloc "no location"
+redirect loop TypeError fetch 'http://127.0.0.1:PORT/loop': too many redirects
+custom status 299 "Custom Text" false http://127.0.0.1:PORT/custom "c"
+custom headers [["connection","close"],["content-length","1"],["content-type","text/plain;charset=UTF-8"],["server","mine"]]
+handler throws 500 "Internal Server Error" false http://127.0.0.1:PORT/throw "Internal Server Error"
+not a Response 500 "Internal Server Error" false http://127.0.0.1:PORT/notresp "Internal Server Error"
+used body 200 "OK" false http://127.0.0.1:PORT/consumed ""
+204 204 "No Content" false http://127.0.0.1:PORT/empty ""
+HEAD 200 "OK" false http://127.0.0.1:PORT/echo ""
+404 404 "Not Found" false http://127.0.0.1:PORT/nope "not found"
+binary 0,1,254,255 null
+urlencoded {"method":"PATCH","path":"/echo","q":"","ct":"application/x-www-form-urlencoded;charset=UTF-8","xh":null,"cl":"5","body":"k=v+w","ua":"lumen/VER","hostOk":true,"conn":"close","remote":"127.0.0.1"}
+bytes body {"method":"PUT","path":"/echo","q":"","ct":null,"xh":null,"cl":"2","body":"hi","ua":"lumen/VER","hostOk":true,"conn":"close","remote":"127.0.0.1"}
+multipart [["name","lumen"],["f","five.bin:5:app/bin"]]
+stream body stream
+pre-aborted AbortError signal is aborted without reason
+custom reason RangeError mine
+data url TypeError fetch: unsupported scheme 'data'
+ftp TypeError fetch: unsupported scheme 'ftp'
+invalid url TypeError URL: invalid URL 'nope' (relative, and no base given)
+GET body TypeError GET request cannot have a body
+shutdown done

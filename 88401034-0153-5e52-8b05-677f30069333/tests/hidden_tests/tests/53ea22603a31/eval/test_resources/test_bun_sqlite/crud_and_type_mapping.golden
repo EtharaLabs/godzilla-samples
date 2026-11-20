@@ -1,0 +1,18 @@
+create {"changes":0,"lastInsertRowid":0}
+insert {"changes":1,"lastInsertRowid":1}
+insert {"changes":1,"lastInsertRowid":2}
+insert {"changes":1,"lastInsertRowid":3}
+types number string number true Uint8Array false 1,2,3 number
+row {"id":1,"name":"alice","val":3.5,"data":"u8:1,2,3","n":42}
+missing null []
+values [[1,"alice","u8:1,2,3"],[2,"bob",null],[3,"","u8:"]]
+all [{"key":1,"Upper Name":"ALICE","val * 2":7},{"key":2,"Upper Name":"BOB","val * 2":-0.5},{"key":3,"Upper Name":"","val * 2":2e+300}]
+update {"changes":2,"lastInsertRowid":3}
+select-run {"changes":0,"lastInsertRowid":3}
+delete {"changes":1,"lastInsertRowid":3}
+exec {"changes":4,"lastInsertRowid":5}
+after [[1,"alice",3.5,43],[3,"",1e+300,-1],[4,"x",0,null],[5,"y",0,null]]
+literal {"one":1,"onef":1,"f":1.5,"s":"x","b":"u8:0,255","n":null,"big":9007199254740992,"negz":0}
+dup-names {"a":2,"b":3} [[1,2]]
+count {"count(*)":4}
+blob Uint8Array 4 deadbeef

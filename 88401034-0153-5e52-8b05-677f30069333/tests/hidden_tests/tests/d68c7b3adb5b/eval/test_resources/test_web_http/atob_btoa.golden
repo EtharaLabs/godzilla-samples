@@ -1,0 +1,19 @@
+""  ""
+"f" Zg== "f"
+"fo" Zm8= "fo"
+"foo" Zm9v "foo"
+"foob" Zm9vYg== "foob"
+"fooba" Zm9vYmE= "fooba"
+"foobar" Zm9vYmFy "foobar"
+"\u0000ÿ" AP+A "\u0000ÿ"
+"round-trip" cm91bmQtdHJpcA== "round-trip"
+btoa coerces MTIzNDU= bnVsbA== dW5kZWZpbmVk
+atob forms ["foo","foob","foob","foobar",""]
+btoa non-latin1 InvalidCharacterError: btoa: character beyond latin1 range true
+atob "Zg="        InvalidCharacterError: atob: invalid base64 true
+atob "Zm9v!"      InvalidCharacterError: atob: invalid base64 true
+atob "Z"          InvalidCharacterError: atob: invalid base64 true
+atob "Zm9vY"      InvalidCharacterError: atob: invalid base64 true
+atob "Zm9v===="   InvalidCharacterError: atob: invalid base64 true
+atob "=="         InvalidCharacterError: atob: invalid base64 true
+atob "Zm=9"       InvalidCharacterError: atob: invalid base64 true

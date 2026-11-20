@@ -1,0 +1,63 @@
+# strict
+"with ({}) {}" => SyntaxError: 'with' statements are not allowed in strict mode
+"delete x" => SyntaxError: delete of an unqualified identifier in strict mode
+"delete (x)" => SyntaxError: delete of an unqualified identifier in strict mode
+"delete ((x))" => SyntaxError: delete of an unqualified identifier in strict mode
+"function f(a, a) {}" => SyntaxError: duplicate parameter name 'a'
+"eval = 1" => SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"arguments = 1" => SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"eval++" => SyntaxError: cannot increment/decrement 'eval' or 'arguments' in strict mode
+"--arguments" => SyntaxError: cannot increment/decrement 'eval' or 'arguments' in strict mode
+"[eval] = []" => SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"({a: arguments} = {})" => SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"var eval" => SyntaxError: 'eval' cannot be used as a binding in strict mode
+"let arguments" => SyntaxError: 'arguments' cannot be used as a binding in strict mode
+"function eval() {}" => SyntaxError: 'eval' can't be a function name in strict mode
+"function f(eval) {}" => SyntaxError: 'eval' cannot be used as a binding in strict mode
+"(function arguments() {})" => SyntaxError: 'arguments' can't be a function name in strict mode
+"try {} catch (eval) {}" => SyntaxError: 'eval' cannot be used as a binding in strict mode
+"var implements" => SyntaxError: 'implements' cannot be used as a binding in strict mode
+"var package" => SyntaxError: 'package' cannot be used as a binding in strict mode
+"var let" => SyntaxError: 'let' cannot be used as a binding in strict mode
+"var static" => SyntaxError: 'static' cannot be used as a binding in strict mode
+"var yield" => SyntaxError: 'yield' cannot be used as a binding in strict mode
+"interface: 1" => SyntaxError: 'interface' cannot be used as a label in strict mode
+"class let {}" => SyntaxError: 'let' cannot be used as a class name
+"function f() { \"use strict\"; var private; }" => SyntaxError: 'private' cannot be used as a binding in strict mode
+"(eval) => 1" => SyntaxError: 'eval' cannot be used as a binding in strict mode
+"for (eval in {}) {}" => SyntaxError: cannot assign to 'eval' or 'arguments' in strict mode
+"implements" => SyntaxError: 'implements' is a reserved word in strict mode
+"x = { implements }" => SyntaxError: 'implements' cannot be used as a shorthand property in strict mode
+"function protected() {}" => SyntaxError: 'protected' can't be a function name in strict mode
+"class C { m(private) {} }" => SyntaxError: 'private' cannot be used as a binding in strict mode
+"({ static }) => 1" => SyntaxError: 'static' cannot be used as a shorthand property in strict mode
+"for (let let of []) {}" => SyntaxError: 'let' cannot be used as a binding in strict mode
+# sloppy
+"with ({}) {}" => ok
+"delete x" => ok true
+"function f(a, a) { return a; } f(1, 2)" => ok 2
+"eval = eval" => ok fn
+"var let = 1; let" => ok 1
+"var static, yield, implements" => ok
+"let\nx = 1" => ok
+"yield: 1" => ok 1
+"await: 2" => ok 2
+"var await = 3; await" => ok 3
+"function f(a, a = 1) {}" => SyntaxError: duplicate parameter name 'a'
+"(a, a) => 1" => SyntaxError: duplicate parameter name 'a'
+"function f([a, a]) {}" => SyntaxError: duplicate parameter name 'a'
+"function f(a, ...a) {}" => SyntaxError: duplicate parameter name 'a'
+"function f(a) { \"use strict\"; } f()" => ok
+"function f(a = 1) { \"use strict\"; }" => SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"function f({a}) { \"use strict\"; }" => SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"function f(...a) { \"use strict\"; }" => SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"(a = 1) => { \"use strict\"; }" => SyntaxError: illegal 'use strict' directive in a function with a non-simple parameter list
+"function f() { \"\\07\"; \"use strict\"; }" => SyntaxError: legacy octal literals are not allowed in strict mode
+"function f() { \"use strict\"; 010; }" => SyntaxError: legacy octal literals are not allowed in strict mode
+"function eval() { \"use strict\"; }" => SyntaxError: 'eval' can't be a function name in strict mode
+"function f(eval) { \"use strict\"; }" => SyntaxError: 'eval' can't be a parameter name in strict mode
+"(function (eval) { \"use strict\"; })" => SyntaxError: 'eval' can't be a parameter name in strict mode
+"({ set s(arguments) { \"use strict\"; } })" => SyntaxError: 'arguments' cannot be used as a binding in strict mode
+"class C { m() { var implements; } }" => SyntaxError: 'implements' cannot be used as a binding in strict mode
+"class C { static m() { with ({}) {} } }" => SyntaxError: 'with' statements are not allowed in strict mode
+"class C extends (function () { with ({}) {} return Object; })() {}" => SyntaxError: 'with' statements are not allowed in strict mode

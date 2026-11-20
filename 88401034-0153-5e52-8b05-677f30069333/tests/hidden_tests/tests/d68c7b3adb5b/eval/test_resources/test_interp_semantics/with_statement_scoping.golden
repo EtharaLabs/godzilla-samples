@@ -1,0 +1,19 @@
+read 3 this-binding true
+after: x=11 y=20 hoisted=5 own=false
+unscopables: a=1 b=outer-b
+outer b now set-outer, uns.b 2
+throwing unscopables: Error: unscopables getter boom
+strict assign vanished: ReferenceError: v is not defined
+strict destructure vanished: ReferenceError: w is not defined
+sloppy assign vanished: undefined
+vanish now {}{}
+strict destructure undeclared: ReferenceError: notDeclaredAnywhere is not defined
+strict for-of undeclared: ReferenceError: alsoUndeclared is not defined
+sloppy destructure global: made
+proxy with: 7 undefined
+proxy traps: out|k|k|get k|missing
+String wrapper with: 3 t
+with null: TypeError: Cannot convert undefined or null to object
+loop in with: 3 3
+delete in with: true false typeof undefined
+closure: closure

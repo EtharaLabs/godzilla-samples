@@ -1,0 +1,9 @@
+gzip 240 -> 34 chunks 1 -> 240 chunks 1 true head 31,139,8
+deflate 240 -> 22 chunks 1 -> 240 chunks 1 true head 120,156,75
+deflate-raw 240 -> 16 chunks 1 -> 240 chunks 1 true head 75,206,207
+empty gzip 20 1 -> 0 0
+binary roundtrip 256 true
+true true
+bad format THREW TypeError: Unsupported CompressionStream format: 'brotli'
+bad decompress format THREW TypeError: Unsupported DecompressionStream format: 'zip'
+string chunk THREW TypeError: CompressionStream expects BufferSource chunks

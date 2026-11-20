@@ -1,0 +1,69 @@
+separators "1000000,255,170,63,10.55,10000000000"
+bases "255,3,15,15,19,8,5,0.5,5,31,1,7"
+bigint-lits "31,3,15,1000,12345678901234567890 bigint"
+number-member "1,1.5,1,Number,5e-7"
+escapes "ABC😀\t|\u000b|\u0000|\b|\f|'|\"|\\|continued"
+legacy-octal-escape "65,48,7"
+line-sep-in-string 4
+unicode-idents "escaped ident,unicode ident,6,bc"
+keyword-props "escaped keyword as prop,kw prop,1,kw prop"
+division 1
+div-regex-like 1
+regex-literals "[/] a\\/b g 2024"
+asi-no-regex 0.5
+regex-after-bracket 2
+regex-after-brace-stmt "foo"
+regex-after-brace-expr NaN
+regex-after-return "ret"
+regex-after-typeof "object"
+regex-in-template "a}b"
+division-assign 2
+regex-class-slash "]/]"
+asi-prefix-incr "1,3"
+asi-no-insert-before-paren "hazard-called:function"
+asi-no-insert-before-bracket 2
+return-asi undefined
+leading-semicolon 2
+no-asi-in-ternary "yes"
+asi-postfix 4
+html-open-comment "ok"
+html-close-comment "ok"
+html-in-expr 1
+arrow-ops "true,gt"
+template "a2bWnested W${escaped}\n"
+template-multiline "l1\nl2l3"
+template-crlf "97,10,98,10,99"
+tagged "{\"cooked\":[\"x\",\"y\\n\",\"A\"],\"raw\":[\"x\",\"y\\\\n\",\"\\\\u0041\"],\"vals\":[1,2],\"frozen\":true}"
+tagged-invalid-escape "{\"cooked\":[null],\"raw\":[\"\\\\unicode and \\\\xZ and \\\\01\"],\"vals\":[],\"frozen\":true}"
+string-raw "C:\\new\\table2\\u|a1b2c|p-q"
+template-identity "true,false"
+tag-member-call "NpreV"
+tag-chain "firstsecond"
+comments 3
+comment-asi undefined
+nested-templates "L1 L2 L3 N back2 back1"
+substitution-lexing "c1|str with } and `|dq }|lc|}`|}|fn}"
+substitution-division "5|2|`|'"
+substitution-raw "\\u{110000}#\\x4#\\08#\\9"
+substitution-cooked "undefined#ok#undefined"
+template-escapes "0,124,65,124,66,124,67"
+hashbang-in-eval 42
+lex-error "`${ /* never closed" "SyntaxError: unterminated comment in template"
+lex-error "`${ `never closed" "SyntaxError: unterminated nested template"
+lex-error "`${ /never closed" "SyntaxError: unterminated regex in template"
+lex-error "`${ \"never closed" "SyntaxError: unterminated string in template"
+lex-error "`${ 1 " "SyntaxError: unterminated template substitution"
+lex-error "`${ 1 }" "SyntaxError: unterminated template literal"
+lex-error "`\\u{110000}`" "SyntaxError: invalid escape sequence in template literal"
+lex-error "`\\u{}`" "SyntaxError: invalid escape sequence in template literal"
+lex-error "`\\x4`" "SyntaxError: invalid escape sequence in template literal"
+lex-error "`\\08`" "SyntaxError: invalid escape sequence in template literal"
+lex-error "\"\\u{41\"" "SyntaxError: unterminated \\u{...} escape"
+lex-error "\"\\u{zz}\"" "SyntaxError: bad \\u escape"
+lex-error "\"line\nbreak\"" "SyntaxError: unterminated string literal"
+lex-error "01_0" "SyntaxError: numeric separator not allowed in legacy literal"
+lex-error "/re\ngex/" "SyntaxError: unterminated regular expression"
+lex-error "/re\\\ngex/" "SyntaxError: unterminated regular expression"
+lex-error "/unterminated\\" "SyntaxError: unterminated regular expression"
+lex-error "Function(\"#!x\\nreturn 1\")" "SyntaxError: expected ';'"
+lex-error "var \\u0030x" "SyntaxError: invalid character in escaped identifier"

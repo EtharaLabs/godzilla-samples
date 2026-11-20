@@ -1,0 +1,60 @@
+map-this: [[10, 0, 2], [20, 1, 2]]
+map-holes: [2, <hole>, 6]
+filter: [1, 3]
+forEach: ["0=1", "2=3"]
+some/every: true | false | true | true
+reduce: 6 | 16 | [2, 1]
+reduce-trace: "(0:1)(2:3)" | ">2c1b0a"
+reduce-empty: THROW TypeError: Reduce of empty array with no initial value
+reduceRight-empty: THROW TypeError: Reduce of empty array with no initial value
+reduce-single: 5
+map-mutate: [1, 2, 30] | [1, 2, 30, 99]
+forEach-delete: [1, 2, 4]
+sort-default: [1, 10, 100, 9, "a", "b", null, undefined]
+sort-holes: [1, 2, 3, undefined, <hole>]
+sort-cmp: [5, 4, 1]
+sort-stable: "gjbdfilacehk"
+sort-bad-cmp-return: [3, 1, 2]
+sort-strings: ["10", "9", "A", "B", "a", "b", "e", "é", "￿", "😀"]
+sort-noncallable: THROW TypeError: the comparator must be a function or undefined
+sort-noncallable-obj: THROW TypeError: the comparator must be a function or undefined
+toSorted-noncallable: THROW TypeError: comparator is not callable
+sort-throwing: THROW RangeError: cmp failed
+sort-arraylike: {0: "a", 1: "b", 2: "c", length: 3}
+generic-join: "x++z"
+generic-map: ["A", "B", "C"]
+generic-push: 4 | {0: "x", 2: "z", 3: "w", length: 4}
+generic-indexOf: 1
+generic-includes: true
+generic-pop-empty: [undefined, 0]
+generic-length-str: [1, 2]
+generic-length-neg: []
+generic-reverse: {0: "c", 2: "a", length: 3}
+generic-splice: [[1, 2], {0: 0, 1: 3, length: 2}]
+generic-unshift: {0: "z", 1: "a", length: 2}
+generic-shift: ["a", {0: "b", length: 1}]
+generic-fill: {0: "f", 1: "f", length: 2}
+generic-flat: [1, 2]
+generic-at: "y"
+generic-toReversed: ["b", "a"]
+generic-with: ["q", "b"]
+generic-copyWithin: {1: "c", 2: "c", length: 3}
+generic-lastIndexOf: 1
+generic-concat: ["object", "number"]
+map-null: THROW TypeError: Array.prototype method called on null or undefined
+forEach-undef: THROW TypeError: Array.prototype method called on null or undefined
+map-nonfn: THROW TypeError: Array.prototype.map callback is not callable
+filter-nonfn: THROW TypeError: Array.prototype.filter callback is not callable
+forEach-nonfn: THROW TypeError: Array.prototype.forEach callback is not callable
+find-nonfn: THROW TypeError: predicate is not callable
+findLast-nonfn: THROW TypeError: predicate is not callable
+some-nonfn: THROW TypeError: predicate is not callable
+every-nonfn: THROW TypeError: predicate is not callable
+reduce-nonfn: THROW TypeError: Array.prototype.reduce callback is not callable
+flatMap-nonfn: THROW TypeError: Array.prototype.flatMap mapper is not callable
+from-nonfn: THROW TypeError: Array.from: mapFn is not callable
+new-Array-neg: THROW RangeError: Invalid array length
+new-Array-frac: THROW RangeError: Invalid array length
+set-length: THROW RangeError: Invalid array length
+set-length-frac: THROW RangeError: Invalid array length
+Array-ctor: 3 | ["3"] | [1, 2] | [] | []

@@ -1,0 +1,55 @@
+pdt bag year over throws RangeError date-time outside representable range
+zdt bag year over throws RangeError date-time is outside the representable range
+pdt bag reject throws RangeError day out of range
+zdt bag reject throws RangeError day out of range
+ym bag reject throws RangeError month out of range
+md bag reject throws RangeError day out of range
+pd with reject throws RangeError day out of range
+pdt with reject throws RangeError day out of range
+ym with reject throws RangeError month out of range
+pd withCalendar num throws TypeError calendar must be a string
+pdt withCalendar num throws TypeError calendar must be a string
+zdt withCalendar num throws TypeError calendar must be a string
+pd from cal num throws TypeError calendar is not a string
+pd ctor cal num throws TypeError calendar must be a string
+pt from 1214 throws RangeError ambiguous time string requires a T designator
+pt from 12-14 throws RangeError ambiguous time string requires a T designator
+pt from --12-14 throws RangeError invalid PlainTime string
+pt from -12-14 throws RangeError invalid PlainTime string
+pt from 1232 12:32:00
+pt from 0229 throws RangeError ambiguous time string requires a T designator
+pt from 1130 throws RangeError ambiguous time string requires a T designator
+pt from 2021-12 throws RangeError ambiguous time string requires a T designator
+pt from 202112 throws RangeError ambiguous time string requires a T designator
+pt from 12:14 12:14:00
+pt from T1214 12:14:00
+pt from 1214[u-ca=iso8601] throws RangeError ambiguous time string requires a T designator
+pt from 1214Z throws RangeError UTC designator not valid for PlainTime
+pt from 12-31 throws RangeError invalid PlainTime string
+pt from --1314 throws RangeError invalid PlainTime string
+pt from 0230 02:30:00
+pt from 1301 13:01:00
+hebrew checksum 1144 829072533 526101,526101,526101,526102,526007,526007,526007,526007
+persian checksum 1144 112201778 187306,187306,187307,187307,187212,187301,187301,187301
+hebrew/persian -2000 -002000-03-21[u-ca=hebrew] -002000-03-21[u-ca=persian] -002000-03-21[u-ca=islamic-civil] -002000-03-21[u-ca=indian]
+hebrew/persian -500 -000500-03-21[u-ca=hebrew] -000500-03-21[u-ca=persian] -000500-03-21[u-ca=islamic-civil] -000500-03-21[u-ca=indian]
+hebrew/persian 1 0001-03-21[u-ca=hebrew] 0001-03-21[u-ca=persian] 0001-03-21[u-ca=islamic-civil] 0001-03-21[u-ca=indian]
+hebrew/persian 622 0622-03-21[u-ca=hebrew] 0622-03-21[u-ca=persian] 0622-03-21[u-ca=islamic-civil] 0622-03-21[u-ca=indian]
+hebrew/persian 623 0623-03-21[u-ca=hebrew] 0623-03-21[u-ca=persian] 0623-03-21[u-ca=islamic-civil] 0623-03-21[u-ca=indian]
+hebrew/persian 3000 3000-03-21[u-ca=hebrew] 3000-03-21[u-ca=persian] 3000-03-21[u-ca=islamic-civil] 3000-03-21[u-ca=indian]
+hebrew/persian 9999 9999-03-21[u-ca=hebrew] 9999-03-21[u-ca=persian] 9999-03-21[u-ca=islamic-civil] 9999-03-21[u-ca=indian]
+coptic until months P27M26D
+coptic add months 2023-09-11[u-ca=coptic] 2024-09-10[u-ca=coptic]
+ethioaa months 13,2023-09-12[u-ca=ethioaa],2022-08-07[u-ca=ethioaa]
+islamic add months 2025-07-26[u-ca=islamic-civil]
+hebrew leap until P3Y
+hebrew leap since P37M
+hebrew leap to adar P12M29D
+hebrew adar to leap P12M1D
+chinese leap until P2Y5M
+chinese leap since P2Y4M
+chinese leap to regular P12M
+chinese regular to leap P1Y1M
+gregory clamp until P11M30D
+gregory clamp until 31 P2M30D
+japanese clamp since P31D

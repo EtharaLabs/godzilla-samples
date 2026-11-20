@@ -1,0 +1,22 @@
+cached true false false true
+before-run SELECT id AS foo, name FROM it WHERE id = NULL
+toString SELECT id AS foo, name FROM it WHERE id = 2 SELECT id AS foo, name FROM it WHERE id = 2
+toString-text SELECT id AS foo, name FROM it WHERE id = 'it''s'
+columnNames ["foo","name"] paramsCount 1
+columnNames-star ["id","name","id * 2"] []
+for-of ["1a","2b","3c"]
+next {"value":{"id":1,"name":"a"},"done":false} {"value":{"id":2,"name":"b"},"done":false} {"value":{"id":3,"name":"c"},"done":false} {"done":true} {"done":true}
+break [1,2] [1,2,3]
+iterate-params ["b","c"]
+as true 1:A,2:B,3:C ["id","name"] 1:A 3 true
+finalized-get Error Error undefined undefined | Statement has finalized
+finalized-columnNames Error Error undefined undefined | Statement has finalized
+finalized-toString SELECT 1 AS x
+recreated {"x":1}
+construct-statement TypeError TypeError undefined undefined | Statement cannot be constructed directly (use Database.prototype.query)
+closed-query RangeError RangeError undefined undefined | Cannot use a closed database
+closed-prepare RangeError RangeError undefined undefined | Cannot use a closed database
+closed-run Error Error undefined undefined | Database has closed
+closed-exec Error Error undefined undefined | Database has closed
+closed-statement Error Error undefined undefined | Statement has finalized
+surface function 20 function 1 2 4 128 1 42 true
