@@ -1,0 +1,279 @@
+   Compiling lumen v0.1.3 (/workspace)
+warning: unused import: `create_typed_array`
+ --> src/runtime/buffer.rs:3:35
+  |
+3 | use crate::builtins::typedarray::{create_typed_array, ta_bytes};
+  |                                   ^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> src/modules.rs:180:9
+    |
+180 |     let mut add_req = |s: &Rc<str>, requested: &mut Vec<Rc<str>>| {
+    |         ----^^^^^^^
+    |         |
+    |         help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `vm`
+  --> src/repl.rs:73:20
+   |
+73 | fn settle_if_await(vm: &mut Vm, v: Value, src: &str) -> Value {
+   |                    ^^ help: if this is intentional, prefix it with an underscore: `_vm`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `encv` is never read
+   --> src/runtime/buffer.rs:671:20
+    |
+671 |     let mut encv = Value::Undefined;
+    |                    ^^^^^^^^^^^^^^^^ this value is reassigned later and never used
+...
+674 |             encv = a.arg(1);
+    |             ---- `encv` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `rest_start` is never read
+   --> src/runtime/util.rs:416:26
+    |
+416 |     let mut rest_start = 1;
+    |                          ^ this value is reassigned later and never used
+...
+478 |         rest_start = ai;
+    |         --------------- `rest_start` is overwritten here before the previous value is read
+
+warning: field `is_module` is never read
+  --> src/ast.rs:32:9
+   |
+29 | pub struct Program {
+   |            ------- field in this struct
+...
+32 |     pub is_module: bool,
+   |         ^^^^^^^^^
+   |
+   = note: `Program` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `expr_body`, `body_scope`, `is_decl`, and `has_use_strict_directive` are never read
+   --> src/ast.rs:115:9
+    |
+110 | pub struct Function {
+    |            -------- fields in this struct
+...
+115 |     pub expr_body: bool,
+    |         ^^^^^^^^^
+...
+125 |     pub body_scope: ScopeId,
+    |         ^^^^^^^^^^
+...
+128 |     pub is_decl: bool,
+    |         ^^^^^^^
+129 |     pub line: u32,
+130 |     pub has_use_strict_directive: bool,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `Function` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: field `is_accessor` is never read
+   --> src/ast.rs:162:73
+    |
+162 |     Field { key: PropKey, value: Option<Rc<Function>>, is_static: bool, is_accessor: bool },
+    |     ----- field in this variant                                         ^^^^^^^^^^^
+    |
+    = note: `ClassMember` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: function `to_uint16` is never used
+  --> src/builtins/number.rs:27:8
+   |
+27 | pub fn to_uint16(n: f64) -> u16 {
+   |        ^^^^^^^^^
+
+warning: function `new_array_buffer` is never used
+   --> src/builtins/typedarray.rs:374:8
+    |
+374 | pub fn new_array_buffer(vm: &Vm, bytes: Vec<u8>) -> Obj {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `detach_buffer` is never used
+   --> src/builtins/typedarray.rs:524:8
+    |
+524 | pub fn detach_buffer(o: &Obj) {
+    |        ^^^^^^^^^^^^^
+
+warning: fields `func_rid`, `imports`, and `scope_marks` are never read
+  --> src/compiler.rs:68:5
+   |
+46 | struct FuncState<'a> {
+   |        --------- fields in this struct
+...
+68 |     func_rid: usize,
+   |     ^^^^^^^^
+69 |     pending_labels: Vec<Rc<str>>,
+70 |     imports: Vec<Rc<str>>,
+   |     ^^^^^^^
+...
+73 |     scope_marks: Vec<usize>,
+   |     ^^^^^^^^^^^
+
+warning: field `is_module` is never read
+  --> src/compiler.rs:80:5
+   |
+76 | pub struct Compiler<'a> {
+   |            -------- field in this struct
+...
+80 |     is_module: bool,
+   |     ^^^^^^^^^
+
+warning: methods `is_global_lexical` and `opt_end_slot` are never used
+    --> src/compiler.rs:486:8
+     |
+ 125 | impl<'a> Compiler<'a> {
+     | --------------------- methods in this implementation
+...
+ 486 |     fn is_global_lexical(&self, name: &str) -> bool {
+     |        ^^^^^^^^^^^^^^^^^
+...
+2045 |     fn opt_end_slot(&mut self) -> &mut Option<Label> {
+     |        ^^^^^^^^^^^^
+
+warning: function `closure_in` is never used
+   --> src/loader.rs:173:8
+    |
+173 | pub fn closure_in(vm: &mut Vm, code: Rc<FunctionCode>, env: Option<Env>) -> Obj {
+    |        ^^^^^^^^^^
+
+warning: fields `msg` and `line` are never read
+   --> src/modules.rs:145:9
+    |
+144 | pub struct ModuleSyntaxError {
+    |            ----------------- fields in this struct
+145 |     pub msg: String,
+    |         ^^^
+146 |     pub line: u32,
+    |         ^^^^
+
+warning: field `in_class_body` is never read
+  --> src/parser.rs:27:5
+   |
+22 | struct Ctx {
+   |        --- field in this struct
+...
+27 |     in_class_body: bool,
+   |     ^^^^^^^^^^^^^
+   |
+   = note: `Ctx` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+
+warning: method `into_source` is never used
+   --> src/parser.rs:281:12
+    |
+ 83 | impl Parser {
+    | ----------- method in this implementation
+...
+281 |     pub fn into_source(&self) -> Rc<str> {
+    |            ^^^^^^^^^^^
+
+warning: method `set_eval_flags` is never used
+   --> src/resolver.rs:589:12
+    |
+100 | impl Resolver {
+    | ------------- method in this implementation
+...
+589 |     pub fn set_eval_flags(&mut self) {}
+    |            ^^^^^^^^^^^^^^
+
+warning: enum `Completion` is never used
+  --> src/runtime/mod.rs:43:10
+   |
+43 | pub enum Completion {
+   |          ^^^^^^^^^^
+
+warning: function `run_completion` is never used
+   --> src/runtime/mod.rs:316:8
+    |
+316 | pub fn run_completion(vm: &mut Vm, c: Completion) {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `setup` is never used
+ --> src/runtime/child_process.rs:7:8
+  |
+7 | pub fn setup(vm: &mut Vm) {}
+  |        ^^^^^
+
+warning: function `create_module` is never used
+  --> src/runtime/fetch.rs:10:8
+   |
+10 | pub fn create_module(vm: &mut Vm, name: &str) -> Value {
+   |        ^^^^^^^^^^^^^
+
+warning: function `setup` is never used
+ --> src/runtime/http.rs:7:8
+  |
+7 | pub fn setup(vm: &mut Vm) {}
+  |        ^^^^^
+
+warning: function `setup` is never used
+ --> src/runtime/net.rs:7:8
+  |
+7 | pub fn setup(vm: &mut Vm) {}
+  |        ^^^^^
+
+warning: function `setup` is never used
+ --> src/runtime/readline.rs:7:8
+  |
+7 | pub fn setup(vm: &mut Vm) {}
+  |        ^^^^^
+
+warning: function `create_module` is never used
+  --> src/runtime/streams.rs:10:8
+   |
+10 | pub fn create_module(vm: &mut Vm, name: &str) -> Value {
+   |        ^^^^^^^^^^^^^
+
+warning: function `setup` is never used
+ --> src/runtime/vmmod.rs:7:8
+  |
+7 | pub fn setup(vm: &mut Vm) {}
+  |        ^^^^^
+
+warning: fields `msg` and `line` are never read
+   --> src/runtime/node.rs:515:9
+    |
+514 | pub struct CjsSyntaxError {
+    |            -------------- fields in this struct
+515 |     pub msg: String,
+    |         ^^^
+516 |     pub line: u32,
+    |         ^^^^
+
+warning: calls to `std::mem::drop` with a reference instead of an owned value does nothing
+   --> src/builtins/promise.rs:245:21
+    |
+245 |                     drop(cs);
+    |                     ^^^^^--^
+    |                          |
+    |                          argument has type `&CapSlots`
+    |
+    = note: `#[warn(dropping_references)]` on by default
+help: use `let _ = ...` to ignore the expression or result
+    |
+245 -                     drop(cs);
+245 +                     let _ = cs;
+    |
+
+warning: direct cast of function item into an integer
+   --> src/builtins/regexp.rs:507:144
+    |
+507 | ...f.borrow().kind, ObjKind::Native(n) if n.f as usize == exec as usize))
+    |                                                                ^^^^^^^^
+    |
+    = note: `#[warn(function_casts_as_integer)]` on by default
+help: first cast to a pointer `as *const ()`
+    |
+507 |             matches!(e, Some(Prop::Data { value: Value::Obj(f), .. }) if matches!(&f.borrow().kind, ObjKind::Native(n) if n.f as usize == exec as *const () as usize))
+    |                                                                                                                                                ++++++++++++
+
+warning: `lumen` (bin "lumen") generated 31 warnings (run `cargo fix --bin "lumen" -p lumen` to apply 4 suggestions)
+    Finished `release` profile [optimized] target(s) in 16.03s
