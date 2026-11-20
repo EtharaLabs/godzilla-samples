@@ -1,0 +1,19 @@
+[package]
+name = "lumen"
+version = "0.1.3"
+edition = "2021"
+
+[[bin]]
+name = "lumen"
+path = "src/main.rs"
+
+[dependencies]
+
+[profile.release]
+opt-level = 3
+debug = false
+codegen-units = 16
+incremental = true
+
+[profile.dev]
+opt-level = 1
