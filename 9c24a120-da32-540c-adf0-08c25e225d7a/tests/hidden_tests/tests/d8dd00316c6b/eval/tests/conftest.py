@@ -3,9 +3,13 @@
 Every test treats ./executable (the workspace root) as a black box: run it as a
 subprocess and assert on stdout, stderr, exit code and the files it writes.
 Expected outputs that were captured from the reference program live under
-eval/test_resources/<test module name>/.
+eval/test_resources/<test module name>/, or in one file per module,
+eval/test_resources/<test module name>.bundle.json.gz (see resources_for).
 """
 
+import functools
+import gzip
+import io
 import json
 import os
 import re
@@ -20,9 +24,78 @@ RESOURCES = Path(__file__).resolve().parent.parent / "test_resources"
 DEFAULT_TIMEOUT = 20
 
 
-def resources_for(test_file: str) -> Path:
-    """eval/test_resources/<module>/ for the calling test module (pass __file__)."""
-    return RESOURCES / Path(test_file).stem
+# Time limits follow this machine's speed. They were set on native hardware (pytest's per-test --timeout in
+# eval/run.sh, each run of the program, the tests' own socket waits). Under CPU emulation (an amd64 image on an arm64
+# host, or the reverse) everything runs 10-35x slower, and the reference program itself would hit them. A fixed amount
+# of pure-Python work is timed once: within 4x of its native time (0.0142 s on the arm64 host the limits were checked
+# on) every limit stays exactly as written; slower than that, every limit is multiplied by the measured slowdown, at
+# most 20x.
+def _measured_slowdown() -> float:
+    import time
+
+    best = float("inf")
+    for _ in range(3):
+        start = time.perf_counter()
+        n = 0
+        for i in range(200_000):
+            n = (n + i * i) % 1_000_003
+        best = min(best, time.perf_counter() - start)
+    return best / 0.0142
+
+
+SLOWDOWN = _measured_slowdown()
+TIME_SCALE = 1.0 if SLOWDOWN < 4 else min(SLOWDOWN, 20.0)
+
+
+def scaled(seconds):
+    """A time limit for this machine: as written on native hardware, longer under emulation."""
+    return None if seconds is None else seconds * TIME_SCALE
+
+
+class BundledPath:
+    """A path inside one module's resource bundle, eval/test_resources/<module>.bundle.json.gz: every file of the
+    module's resource directory keyed by its relative path, in one read-only file of the grader's eval/ tree (the
+    core-behavior modules carry about 20,000 resource files; one file each keeps the task small). It answers the
+    reads the tests make with pathlib's results: `/`, read_bytes(), and read_text() in text mode (newlines translated
+    as Path.read_text translates them)."""
+
+    def __init__(self, files: dict[str, str], rel: str = ""):
+        self._files, self._rel = files, rel
+
+    def __truediv__(self, name) -> "BundledPath":
+        return BundledPath(self._files, f"{self._rel}/{name}" if self._rel else str(name))
+
+    def __repr__(self) -> str:
+        return f"BundledPath({self._rel!r})"
+
+    def is_file(self) -> bool:
+        return self._rel in self._files
+
+    def exists(self) -> bool:
+        return self.is_file() or any(k.startswith(f"{self._rel}/") for k in self._files)
+
+    def read_bytes(self) -> bytes:
+        if self._rel not in self._files:
+            raise FileNotFoundError(f"{self._rel}: not in the module's resource bundle")
+        return self._files[self._rel].encode("utf-8")
+
+    def read_text(self, encoding: str | None = None, errors: str | None = None) -> str:
+        return io.TextIOWrapper(io.BytesIO(self.read_bytes()), encoding=encoding, errors=errors).read()
+
+
+@functools.lru_cache(maxsize=None)
+def _bundle(path: Path) -> dict[str, str]:
+    return json.loads(gzip.decompress(path.read_bytes()).decode("utf-8"))
+
+
+def resources_for(test_file: str):
+    """eval/test_resources/<module>/ for the calling test module (pass __file__): the module's directory when it has
+    one, else its bundle eval/test_resources/<module>.bundle.json.gz, read the same way."""
+    stem = Path(test_file).stem
+    directory, bundle = RESOURCES / stem, RESOURCES / f"{stem}.bundle.json.gz"
+    if not directory.exists() and bundle.is_file():
+        return BundledPath(_bundle(bundle))
+    return directory
 
 
 COVERAGE_VARS = ("LLVM_PROFILE_FILE", "GOCOVERDIR")  # only set while measuring coverage
@@ -53,7 +126,7 @@ def run_executable(args, *, input=None, cwd=None, env=None, timeout=DEFAULT_TIME
         input = input.encode()
     stdin = {"stdin": subprocess.DEVNULL} if input is None else {"input": input}  # never inherit pytest's stdin
     return subprocess.run([str(EXECUTABLE), *map(str, args)], cwd=cwd, env=env, capture_output=True,
-                          timeout=timeout, **stdin)
+                          timeout=scaled(timeout), **stdin)
 
 
 @pytest.fixture
@@ -224,3 +297,12 @@ def lsp_transcript(proc: subprocess.CompletedProcess, workdir: Path | None) -> s
         body = body.replace(root_uri(workdir), "{root}").replace(str(workdir), "{root-path}")
     return (f"exit: {proc.returncode}\n--- messages ---\n{body}"
             f"--- stderr ---\n{proc.stderr.decode('utf-8', 'replace')}")
+
+
+def pytest_collection_modifyitems(config, items):
+    """pytest's per-test limit (eval/run.sh --timeout) scales like every other limit; untouched on native hardware."""
+    if TIME_SCALE == 1.0:
+        return
+    base = config.getoption("timeout", None) or 30
+    for item in items:
+        item.add_marker(pytest.mark.timeout(base * TIME_SCALE))

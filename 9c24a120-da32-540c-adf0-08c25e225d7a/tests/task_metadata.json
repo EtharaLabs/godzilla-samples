@@ -1,7 +1,7 @@
 {
   "blob_sha256": {
-    "99c3a3379b99": "4f48dbaaf17ed9aada1a146eb511b6e99b0ef129dc46d99ea6f22aa6cbcb665e",
-    "d8dd00316c6b": "533081f0db1ca00a2cfd227cdebfd71abb5437b8438f4ca5d51401b6d585e165"
+    "99c3a3379b99": "3f806971ae9d60e714f0e639508dbd9c510a78fadfd81cfd7dcd4acba5059fb8",
+    "d8dd00316c6b": "a4c58b99e35a7c0fc1aa0df4901832b3d670112d9c8bf441997145121f8c5df8"
   },
   "branches": {
     "99c3a3379b99": {
@@ -1520,6 +1520,60 @@
               "note": "fails on linux/amd64: AssertionError: assert 'exit: 1\\n---... stderr ---\\n' == 'exit: 1\\n---... `python3`)\\n'\n  \n    exit: 1\n    --- stdout ---\n    --- stderr ---\n  - error: no Python interpreter found on PATH (tried `python`, `python3`) [this platform reports a missing program as started (posix_spawn succeeds, the child exits 127)]",
               "timestamp": 1794248193,
               "user": "generator"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_hard_edge_cli_grid.test_command_and_flag_grid[p_note__run_no_python]",
+          "reasons": [
+            {
+              "id": "arch_mismatch",
+              "note": "fails on linux/amd64 (emulated): with no python on PATH, QEMU user-mode emulation reports the start of the missing interpreter as a success (exit 127), so the no-Python path differs from native hardware; AssertionError"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_hard_edge_cli_grid.test_command_and_flag_grid[s_ok__run_no_python]",
+          "reasons": [
+            {
+              "id": "arch_mismatch",
+              "note": "fails on linux/amd64 (emulated): with no python on PATH, QEMU user-mode emulation reports the start of the missing interpreter as a success (exit 127), so the no-Python path differs from native hardware; AssertionError"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_hard_edge_cli_grid.test_command_and_flag_grid[s_note__run_no_python]",
+          "reasons": [
+            {
+              "id": "arch_mismatch",
+              "note": "fails on linux/amd64 (emulated): with no python on PATH, QEMU user-mode emulation reports the start of the missing interpreter as a success (exit 127), so the no-Python path differs from native hardware; AssertionError"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_hard_edge_cli_grid.test_command_and_flag_grid[s_runtime__run_no_python]",
+          "reasons": [
+            {
+              "id": "arch_mismatch",
+              "note": "fails on linux/amd64 (emulated): with no python on PATH, QEMU user-mode emulation reports the start of the missing interpreter as a success (exit 127), so the no-Python path differs from native hardware; AssertionError"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_hard_edge_cli_grid.test_command_and_flag_grid[p_ok__run_no_python]",
+          "reasons": [
+            {
+              "id": "arch_mismatch",
+              "note": "fails on linux/amd64 (emulated): with no python on PATH, QEMU user-mode emulation reports the start of the missing interpreter as a success (exit 127), so the no-Python path differs from native hardware; AssertionError"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_hard_edge_cli_grid.test_command_and_flag_grid[p_nort__run_no_python]",
+          "reasons": [
+            {
+              "id": "arch_mismatch",
+              "note": "fails on linux/amd64 (emulated): with no python on PATH, QEMU user-mode emulation reports the start of the missing interpreter as a success (exit 127), so the no-Python path differs from native hardware; AssertionError"
             }
           ]
         }
