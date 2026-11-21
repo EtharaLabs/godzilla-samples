@@ -4,7 +4,7 @@
 
 <p align="center"><b>Five sample tasks from godzilla, a Harbor benchmark that measures whether an autonomous agent can rebuild a working program from its documentation and a compiled reference binary alone, with no access to the original source.</b></p>
 
-<p align="center"><a href="#summary"><img src="https://img.shields.io/badge/tasks-5-845EF7" alt="tasks: 5"></a> <a href="#summary"><img src="https://img.shields.io/badge/harbor_schema-1.4-845EF7" alt="harbor schema: 1.4"></a> <a href="#trials"><img src="https://img.shields.io/badge/mean_reward-0.4939-845EF7" alt="mean reward: 0.4939"></a> <a href="#coverage"><img src="https://img.shields.io/badge/hidden_tests-34218-845EF7" alt="hidden tests: 34218"></a></p>
+<p align="center"><a href="#summary"><img src="https://img.shields.io/badge/tasks-5-845EF7" alt="tasks: 5"></a> <a href="#summary"><img src="https://img.shields.io/badge/harbor_schema-1.4-845EF7" alt="harbor schema: 1.4"></a> <a href="#trials"><img src="https://img.shields.io/badge/mean_reward-0.4941-845EF7" alt="mean reward: 0.4941"></a> <a href="#coverage"><img src="https://img.shields.io/badge/hidden_tests-34201-845EF7" alt="hidden tests: 34201"></a></p>
 
 <p align="center"><sub><a href="#abstract">Abstract</a> | <a href="#summary">Summary</a> | <a href="#tasks">Tasks</a> | <a href="#trials">Trials</a> | <a href="#integrity-screening">Integrity screening</a> | <a href="#coverage">Coverage</a> | <a href="#dataset-structure">Dataset structure</a> | <a href="#reproduction">Reproduction</a> | <a href="#cite">Cite</a> | <a href="#license">License</a> | <a href="#contact">Contact</a></sub></p>
 
@@ -16,7 +16,7 @@ The answer is withheld rather than hidden in plain sight: the upstream source tr
 
 Grading compares the rebuilt program against the original's behaviour over a hidden suite, so partial credit tracks how much of the program actually works. The reward is continuous from 0 to 1, a weighted mean of three channels: the hidden tests, a compiled integrity rubric, and an LLM-judged rubric.
 
-This repository holds the five-task sample. All five are Rust, and they span three subfields: three compilers, a source formatter, and a building-information-modelling tool. The set is deliberately uneven in scale, from a 2,375-test BIM tool to an 18,590-test compiler, and expert rebuild estimates run from 80 to 300 hours.
+This repository holds the five-task sample. All five are Rust, and they span three subfields: three compilers, a source formatter, and a building-information-modelling tool. The set is deliberately uneven in scale, from a 2,375-test BIM tool to an 18,584-test compiler, and expert rebuild estimates run from 80 to 300 hours.
 
 ## Summary
 
@@ -31,14 +31,14 @@ This repository holds the five-task sample. All five are Rust, and they span thr
 | Platforms | linux/amd64, linux/arm64 |
 | Resources per task | 4 CPUs, 8192 MB |
 | Reward | `0.90 * tests_passed + 0.05 * test_output + 0.05 * judge`, bounded continuous on [0, 1] |
-| Hidden tests | 34,218 active across the set |
+| Hidden tests | 34,201 active across the set |
 | Language policy | Rebuild in the original's language; standard library only |
 | Agent | Claude Code 2.1.311 with `claude-opus-5-5`, reasoning effort `max` |
 | Judge | `openai/gpt-6.1-sol` via codex 0.165.0, reasoning effort `max`, 3 samples per criterion |
 | Runs per task | 1 |
 | Agent time limit | 12 hours per trial |
-| Mean reward | 0.4939 |
-| Mean hidden-test score | 0.4655 |
+| Mean reward | 0.4941 |
+| Mean hidden-test score | 0.4657 |
 | Mean compiled-rubric score | 0.9167 |
 | Mean judged-rubric score | 0.5819 |
 
@@ -59,17 +59,17 @@ Each task was run once with Claude Code 2.1.311 driving `claude-opus-5-5` at rea
 | Task | Reward | Hidden tests<br/>(weight 0.9) | Compiled rubric<br/>(weight 0.05) | Judged rubric<br/>(weight 0.05) | Tests<br/>passed | Agent time | Cost (USD) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | [`5c9ba5b7-b29a-5361-b2ae-40c9b4e3f8e8`](5c9ba5b7-b29a-5361-b2ae-40c9b4e3f8e8/trials/opus-5.5/) | 0.6329 | 0.6140 | 1.0000 | 0.6061 | 1616 / 2632 | 12h 00m | 1365.51 |
-| [`88401034-0153-5e52-8b05-677f30069333`](88401034-0153-5e52-8b05-677f30069333/trials/opus-5.5/) | 0.3632 | 0.3110 | 1.0000 | 0.6667 | 1165 / 3746 | 12h 00m | 783.89 |
-| [`9c24a120-da32-540c-adf0-08c25e225d7a`](9c24a120-da32-540c-adf0-08c25e225d7a/trials/opus-5.5/) | 0.6912 | 0.6839 | 1.0000 | 0.5152 | 12713 / 18590 | 12h 00m | 389.81 |
+| [`88401034-0153-5e52-8b05-677f30069333`](88401034-0153-5e52-8b05-677f30069333/trials/opus-5.5/) | 0.3640 | 0.3119 | 1.0000 | 0.6667 | 1165 / 3735 | 12h 00m | 783.89 |
+| [`9c24a120-da32-540c-adf0-08c25e225d7a`](9c24a120-da32-540c-adf0-08c25e225d7a/trials/opus-5.5/) | 0.6912 | 0.6839 | 1.0000 | 0.5152 | 12709 / 18584 | 12h 00m | 389.81 |
 | [`a7e731ba-e0b9-5ad8-8479-fc9920f34235`](a7e731ba-e0b9-5ad8-8479-fc9920f34235/trials/opus-5.5/) | 0.5830 | 0.5740 | 0.7222 | 0.6061 | 3946 / 6875 | 12h 00m | 422.33 |
 | [`e76101a8-4917-55c2-8a8e-9a7485f31d2f`](e76101a8-4917-55c2-8a8e-9a7485f31d2f/trials/opus-5.5/) | 0.1992 | 0.1448 | 0.8611 | 0.5152 | 344 / 2375 | 12h 00m | 1923.70 |
-| **mean** | **0.4939** | **0.4655** | **0.9167** | **0.5819** | **19784 / 34218** | **12h 00m** | **977.05** |
+| **mean** | **0.4941** | **0.4657** | **0.9167** | **0.5819** | **19780 / 34201** | **12h 00m** | **977.05** |
 
 The reward weights are listed in the [Summary](#summary) table. Across the set the agent consumed 15.86 billion input tokens and produced 49.07 million output tokens, for 4,885.25 USD over 60 hours of agent execution.
 
 Every trial here ended at the 12-hour agent limit rather than at the agent's own stopping point, so these scores are a floor under that budget and not a converged result. The `e76101a8` trial also recorded 52.1M tokens against `claude-opus-4-8` (33.14 USD of its total) from subagent traffic.
 
-Reward is not monotone in program size. `9c24a120` carries by far the largest suite at 18,590 tests and still scored 0.6839 on it, the best hidden-test result in the set. The two weakest results track the expert estimates instead: `e76101a8` scored 0.1448 against a 200-hour estimate, and `88401034` scored 0.3110 against 300 hours, the highest estimate here, on suites a fraction of that size.
+Reward is not monotone in program size. `9c24a120` carries by far the largest suite at 18,584 tests and still scored 0.6839 on it, the best hidden-test result in the set. The two weakest results track the expert estimates instead: `e76101a8` scored 0.1448 against a 200-hour estimate, and `88401034` scored 0.3119 against 300 hours, the highest estimate here, on suites a fraction of that size.
 
 Each trial folder is Harbor's trial output:
 
@@ -106,11 +106,11 @@ Difficulty is carried in each task's manifest alongside an expert rebuild estima
 | Task | Upstream | Language | Difficulty | Active<br/>tests | Ignored<br/>tests | Test<br/>branches | Expert<br/>estimate | Subfield |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [`5c9ba5b7`](5c9ba5b7-b29a-5361-b2ae-40c9b4e3f8e8/) | monfa-red/lini | Rust | medium | 2632 | 0 | 2 | 120 h | compilers |
-| [`88401034`](88401034-0153-5e52-8b05-677f30069333/) | lucid-softworks/lumen | Rust | medium | 3746 | 15 | 3 | 300 h | compilers |
-| [`9c24a120`](9c24a120-da32-540c-adf0-08c25e225d7a/) | simontreanor/Pyfun | Rust | medium | 18590 | 53 | 2 | 100 h | compilers |
+| [`88401034`](88401034-0153-5e52-8b05-677f30069333/) | lucid-softworks/lumen | Rust | medium | 3735 | 26 | 3 | 300 h | compilers |
+| [`9c24a120`](9c24a120-da32-540c-adf0-08c25e225d7a/) | simontreanor/Pyfun | Rust | medium | 18584 | 59 | 2 | 100 h | compilers |
 | [`a7e731ba`](a7e731ba-e0b9-5ad8-8479-fc9920f34235/) | t-kalinowski/yamark | Rust | medium | 6875 | 68 | 3 | 80 h | developer-tools |
 | [`e76101a8`](e76101a8-4917-55c2-8a8e-9a7485f31d2f/) | IPedrax/BIMCraft | Rust | hard | 2375 | 31 | 2 | 200 h | computer-aided-design |
-| **total** | | | | **34218** | **167** | **12** | **800 h** | |
+| **total** | | | | **34201** | **184** | **12** | **800 h** | |
 
 Every task is additionally scored on 8 compiled-rubric conditions and 9 judged criteria, for 40 and 45 across the set.
 
