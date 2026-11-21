@@ -1,8 +1,8 @@
 {
   "blob_sha256": {
-    "53ea22603a31": "2c82d350689ca5ef48c778c9baf803cbf94624166a27ebb26b2612b518cff503",
-    "d68c7b3adb5b": "0e1391a1436fcaec62e9fc1899609c3b649f9357c1cdd62ad947e95a21f8f4f2",
-    "fd0ff16e29ec": "9c55ec3834aa5bc21a08ce236285456a89cd02a6f95aec1aef817b00a6637b21"
+    "53ea22603a31": "e2cedc7f9f2b7a07e718c99492a74239f738c549dcff3888620d5344cef7ad48",
+    "d68c7b3adb5b": "84957e753ba6f531f50d719858f8368337497bb6237dd151caa5852a0b5c3177",
+    "fd0ff16e29ec": "6e438c4785e9a74d1fcfd50022ea1196b3d1b6ee893695a471c76e1035117111"
   },
   "branches": {
     "53ea22603a31": {
@@ -39,6 +39,42 @@
               "note": "fails on linux/amd64: assert 'cwd relative...d \"done\\\\n\"\\n' == 'cwd relative...d \"done\\\\n\"\\n'\n  \n    cwd relative exit 0 \"<cwd>/sub\\n\"\n    cwd with .. exit 0 \"<cwd>/sub\\ninner\\n\"\n    cwd nested exit 0 \"f.txt\\n\"\n  - cwd URL object threw Error: spawn /bin/sh: No such file or directory (os error 2)\n  - cwd missing threw Err [this platform reports a missing program as started (posix_spawn succeeds, the child exits 127)]",
               "timestamp": 1794442407,
               "user": "generator"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_web_fetch_server.test_websocket_client_against_net_server",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_web_fetch_server.test_lumen_upgrade_websocket_receive_and_close",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_runtime_final.test_websocket_close_while_connecting",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_tls_ffi.test_tls_handshake_failures_and_config_errors",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
             }
           ]
         }
@@ -1148,6 +1184,69 @@
               "note": "fails on linux/amd64: assert '3 null \"out\\...mand failed\\n' == '3 null \"out\\...awn /bin/sh\\n'\n  \n    3 null \"out\\n\" \"err\\n\" true\n    0 piped in 3 null\n    \"a b c\\n\"\n    \"hello\\nx\"\n    buffer input\n    inner.txt...\n  \n  ...Full output truncated (6 lines hidden), use '-vv' to show [this platform reports a missing program as started (posix_spawn succeeds, the child exits 127)]",
               "timestamp": 1794442407,
               "user": "generator"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_node_net.test_ipv6_loopback_connection_and_unspecified_listener",
+          "reasons": [
+            {
+              "id": "gold_fail",
+              "note": "skipped, so not passed, on the reference when the verifier container has no IPv6 (Docker's default bridge network has none); passes where the container has IPv6"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_tls.test_ipv6_wildcard_listen_and_close",
+          "reasons": [
+            {
+              "id": "gold_fail",
+              "note": "skipped, so not passed, on the reference when the verifier container has no IPv6 (Docker's default bridge network has none); passes where the container has IPv6"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_tls.test_self_signed_server_rejected_unless_verification_disabled",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_tls.test_verified_session_delivers_server_greeting[bytecode]",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_tls.test_verified_session_delivers_server_greeting[interp]",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_tls.test_verified_session_delivers_server_greeting[jit]",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the expected output depends on the order of network events inside the program (WebSocket connect/close, TLS handshake/close), and the reference itself fails it intermittently on a loaded host or under emulation (seen in 1-3 of 7 oracle runs, 2026-11-20); it passes otherwise"
+            }
+          ]
+        },
+        {
+          "name": "tests.test_web_http.test_websocket_client_well_formed_exchanges",
+          "reasons": [
+            {
+              "id": "gold_flaky",
+              "note": "flaky on the reference: the lumen WebSocket client gives the test's threaded peer 100 ms per read to answer the upgrade, and on a loaded host the reference itself misses it (all 3 attempts in 1 of 21 oracle runs, native amd64, 2026-11-20); it passes otherwise"
             }
           ]
         }

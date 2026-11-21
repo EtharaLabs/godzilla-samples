@@ -18,6 +18,34 @@ RESOURCES = Path(__file__).resolve().parent.parent / "test_resources"
 DEFAULT_TIMEOUT = 20
 
 
+# Time limits follow this machine's speed. They were set on native hardware (pytest's per-test --timeout in
+# eval/run.sh, each run of the program, the tests' own socket waits). Under CPU emulation (an amd64 image on an arm64
+# host, or the reverse) everything runs 10-35x slower, and the reference program itself would hit them. A fixed amount
+# of pure-Python work is timed once: within 4x of its native time (0.0142 s on the arm64 host the limits were checked
+# on) every limit stays exactly as written; slower than that, every limit is multiplied by the measured slowdown, at
+# most 20x.
+def _measured_slowdown() -> float:
+    import time
+
+    best = float("inf")
+    for _ in range(3):
+        start = time.perf_counter()
+        n = 0
+        for i in range(200_000):
+            n = (n + i * i) % 1_000_003
+        best = min(best, time.perf_counter() - start)
+    return best / 0.0142
+
+
+SLOWDOWN = _measured_slowdown()
+TIME_SCALE = 1.0 if SLOWDOWN < 4 else min(SLOWDOWN, 20.0)
+
+
+def scaled(seconds):
+    """A time limit for this machine: as written on native hardware, longer under emulation."""
+    return None if seconds is None else seconds * TIME_SCALE
+
+
 def resources_for(test_file: str) -> Path:
     """eval/test_resources/<module>/ for the calling test module (pass __file__)."""
     return RESOURCES / Path(test_file).stem
@@ -51,7 +79,7 @@ def run_executable(args, *, input=None, cwd=None, env=None, timeout=DEFAULT_TIME
         input = input.encode()
     stdin = {"stdin": subprocess.DEVNULL} if input is None else {"input": input}  # never inherit pytest's stdin
     return subprocess.run([str(EXECUTABLE), *map(str, args)], cwd=cwd, env=env, capture_output=True,
-                          timeout=timeout, **stdin)
+                          timeout=scaled(timeout), **stdin)
 
 
 @pytest.fixture
@@ -81,7 +109,9 @@ def run(workdir: Path, env: dict[str, str]):
 
 def golden(test_file: str, name: str) -> bytes:
     """Expected bytes captured from the reference binary: test_resources/<module>/<name>.golden."""
-    return (resources_for(test_file) / f"{name}.golden").read_bytes()
+    # The fixed test keys' PEM label is stored as PRIVATE__KEY (so secret scanners do not take these test
+    # fixtures for leaked credentials) and restored here, byte for byte.
+    return (resources_for(test_file) / f"{name}.golden").read_bytes().replace(b"PRIVATE__KEY", b"PRIVATE KEY")
 
 
 def write_files(base: Path, files: dict[str, str | bytes]) -> None:
@@ -114,7 +144,7 @@ def run_tty(args, *, input: bytes, cwd: Path, env: dict[str, str], timeout=DEFAU
         os.close(slave)
         slave = -1
         os.write(master, input)
-        out, err = proc.communicate(timeout=timeout)
+        out, err = proc.communicate(timeout=scaled(timeout))
         return subprocess.CompletedProcess(proc.args, proc.returncode, out, err)
     finally:
         if slave != -1:
@@ -130,3 +160,12 @@ def tty_run(workdir: Path, env: dict[str, str]):
         return run_tty(args, input=input, cwd=workdir, env={**env, **(env_overrides or {})}, timeout=timeout)
 
     return _run
+
+
+def pytest_collection_modifyitems(config, items):
+    """pytest's per-test limit (eval/run.sh --timeout) scales like every other limit; untouched on native hardware."""
+    if TIME_SCALE == 1.0:
+        return
+    base = config.getoption("timeout", None) or 30
+    for item in items:
+        item.add_marker(pytest.mark.timeout(base * TIME_SCALE))

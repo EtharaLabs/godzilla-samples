@@ -22,7 +22,7 @@ import time
 
 import pytest
 
-from conftest import golden, write_files
+from conftest import golden, scaled, write_files
 
 TIERS = [[], ["--tier=interp"], ["--tier=bytecode"]]
 TIER_IDS = ["jit", "interp", "bytecode"]
@@ -653,7 +653,7 @@ class ScriptedWsPeer:
 
     def _serve(self, conn):
         try:
-            conn.settimeout(15)
+            conn.settimeout(scaled(15))
             conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             data = b""
             while b"\r\n\r\n" not in data:
@@ -711,7 +711,7 @@ class ScriptedWsPeer:
         return ("\n".join(lines) + "\n").encode()
 
 
-def _wait_until(predicate, timeout=5.0):
+def _wait_until(predicate, timeout=scaled(5.0)):
     """Poll until predicate() holds (frames the client sent just before exiting may still be queued)."""
     deadline = time.monotonic() + timeout
     while not predicate() and time.monotonic() < deadline:

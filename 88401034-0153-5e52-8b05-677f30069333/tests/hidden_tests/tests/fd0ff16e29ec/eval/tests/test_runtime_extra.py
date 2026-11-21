@@ -24,7 +24,7 @@ import time
 
 import pytest
 
-from conftest import golden, write_files
+from conftest import golden, scaled, write_files
 
 # Engine tiers for programs whose JS glue does real work (all tiers share one golden).
 TIERS = [[], ["--tier=interp"], ["--tier=bytecode"]]
@@ -507,7 +507,7 @@ def _describe_frame(fin, op, masked, payload):
     return f"fin={int(fin)} op={op} masked={int(masked)} {body}"
 
 
-def _wait_for_file(path, done, timeout=15):
+def _wait_for_file(path, done, timeout=scaled(15)):
     """Poll for a marker file the program writes; give up once the program has exited."""
     deadline = time.monotonic() + timeout
     while not path.exists():
@@ -518,7 +518,7 @@ def _wait_for_file(path, done, timeout=15):
 
 
 def _ws_session(port, path, batch, on_close, log):
-    s = socket.create_connection(("127.0.0.1", port), timeout=15)
+    s = socket.create_connection(("127.0.0.1", port), timeout=scaled(15))
     try:
         key = base64.b64encode(path.encode().ljust(16, b"-")[:16]).decode()
         s.sendall(f"GET {path} HTTP/1.1\r\nHost: test\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
@@ -646,7 +646,7 @@ class ResettingSsePeer:
 
     def _serve(self, conn):
         try:
-            conn.settimeout(15)
+            conn.settimeout(scaled(15))
             data = b""
             while b"\r\n\r\n" not in data:
                 chunk = conn.recv(65536)
@@ -665,7 +665,7 @@ class ResettingSsePeer:
             if resetting:
                 conn.sendall(ok + b"retry: 20\nid: 7\ndata: before reset\n\n")
                 if path == "/close-then-reset":  # reset only once the client has called close()
-                    deadline = time.monotonic() + 10
+                    deadline = time.monotonic() + scaled(10)
                     while not (self.workdir / "es-closed").exists() and time.monotonic() < deadline:
                         time.sleep(0.005)
                 conn.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("ii", 1, 0))
@@ -986,14 +986,14 @@ def test_serve_survives_client_reset_before_response(run, workdir):
         if not _wait_for_file(workdir / "port.txt", done):
             return
         port = int((workdir / "port.txt").read_text())
-        a = socket.create_connection(("127.0.0.1", port), timeout=15)
+        a = socket.create_connection(("127.0.0.1", port), timeout=scaled(15))
         a.sendall(b"GET /reset-me HTTP/1.1\r\nHost: x\r\n\r\n")
         if not _wait_for_file(workdir / "handler-started", done):
             return
         a.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("ii", 1, 0))
         a.close()
         (workdir / "client-reset").write_text("")
-        b = socket.create_connection(("127.0.0.1", port), timeout=15)
+        b = socket.create_connection(("127.0.0.1", port), timeout=scaled(15))
         b.sendall(b"GET /after HTTP/1.1\r\nHost: x\r\nConnection: close\r\n\r\n")
         data = b""
         while True:
@@ -1049,7 +1049,7 @@ class EchoAfterIdlePeer:
 
     def _serve(self, conn):
         try:
-            conn.settimeout(15)
+            conn.settimeout(scaled(15))
             conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             data = b""
             while b"\r\n\r\n" not in data:
@@ -1111,7 +1111,7 @@ def test_websocket_client_survives_idle_read_timeouts(run, workdir):
                 return any("op=8" in line for line in peer.log)
 
         # The client's close echo may still be in flight when the program exits.
-        deadline = time.monotonic() + 5
+        deadline = time.monotonic() + scaled(5)
         while b"close 1000" in r.stdout and not close_echo_seen() and time.monotonic() < deadline:
             time.sleep(0.01)
     finally:

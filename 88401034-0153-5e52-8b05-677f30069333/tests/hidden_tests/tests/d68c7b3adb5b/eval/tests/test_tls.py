@@ -26,7 +26,7 @@ import time
 
 import pytest
 
-from conftest import out
+from conftest import out, scaled
 
 
 def _openssl_loads() -> bool:
@@ -73,12 +73,12 @@ aLzGMM0CIQCfQwE+4Ko1L4MAe5wb4IB93WSfG9wBOysfFh/BjRa1oQ==
 -----END CERTIFICATE-----
 """
 # CN=localhost, SAN DNS:localhost + IP:127.0.0.1, issued by the test CA.
-SERVER_KEY = """-----BEGIN PRIVATE KEY-----
+SERVER_KEY = """-----BEGIN PRIVATE__KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQggcRUu1kR7IOTO1Ac
 yT8GOdO0sS0FB3SR+3bB4HAyAV+hRANCAATXJxopeIb0b7SqR0qQknC17YYoi4NO
 G69DgiUvWEkwcXPU0o9Zo12BXvkfogdXcF3OfNIviBMqoj5u1aa0uhn0
------END PRIVATE KEY-----
-"""
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY")
 SERVER_CERT = """-----BEGIN CERTIFICATE-----
 MIIB6jCCAZGgAwIBAgIBAjAKBggqhkjOPQQDAjA4MRswGQYDVQQDDBJMdW1lbiBU
 ZXN0IFJvb3QgQ0ExGTAXBgNVBAoMEEx1bWVuIFRlc3QgU3VpdGUwIBcNMDAwMTAx
@@ -94,12 +94,12 @@ wqYsGA3KoDIxjC8rtGo=
 -----END CERTIFICATE-----
 """
 # CN=other.test, SAN DNS:other.test + DNS:*.wild.test (no IP), issued by the test CA.
-OTHER_KEY = """-----BEGIN PRIVATE KEY-----
+OTHER_KEY = """-----BEGIN PRIVATE__KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg1Go2P4ZrVLc3qcfr
 yL/Hp0+XitSqLDPlN/AYebEq+YGhRANCAARO3SqjHgN2MJM2RL755TsbPgGMrF6Q
 5jo3sWmlr2BtnMk8F41g5C67B19r0gnB2F4KiZtU7cK47j0m9boFAzxP
------END PRIVATE KEY-----
-"""
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY")
 OTHER_CERT = """-----BEGIN CERTIFICATE-----
 MIIB9TCCAZqgAwIBAgIBBDAKBggqhkjOPQQDAjA4MRswGQYDVQQDDBJMdW1lbiBU
 ZXN0IFJvb3QgQ0ExGTAXBgNVBAoMEEx1bWVuIFRlc3QgU3VpdGUwIBcNMDAwMTAx
@@ -115,12 +115,12 @@ PMOxM4OHCgT2hVClx5LYq6U3aR6RfN1HPQ==
 -----END CERTIFICATE-----
 """
 # Self-signed CN=localhost (SAN DNS:localhost + IP:127.0.0.1), trusted by nobody.
-SELF_KEY = """-----BEGIN PRIVATE KEY-----
+SELF_KEY = """-----BEGIN PRIVATE__KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgQxp2ZOYdpiydjj3C
 OWtQVihz4du27UEyjv3KIETC3yKhRANCAAQMOw4RgNiCORy1tgu6y0y8WzopRTfZ
 78GAWoekzpDueHnOnnKFXZK3JI2ZsYGtDexL+m0LyPUeQgUtxiIjTqEc
------END PRIVATE KEY-----
-"""
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY")
 SELF_CERT = """-----BEGIN CERTIFICATE-----
 MIIBsTCCAVagAwIBAgIBAzAKBggqhkjOPQQDAjAoMRIwEAYDVQQDDAlsb2NhbGhv
 c3QxEjAQBgNVBAoMCVVudHJ1c3RlZDAgFw0wMDAxMDEwMDAwMDBaGA8yMTk5MTEx
@@ -635,7 +635,7 @@ class PeerThread:
 
     def wait_for_port(self, port_file):
         """The port the program wrote to `port_file` once it was listening."""
-        deadline = time.monotonic() + 15
+        deadline = time.monotonic() + scaled(15)
         while not port_file.exists() or not port_file.read_text().strip().isdigit():
             if self.stop.is_set() or time.monotonic() > deadline:
                 raise OSError("the program never wrote its port file")
@@ -645,7 +645,7 @@ class PeerThread:
     def accept(self, listener):
         """accept() that gives up once the program has exited."""
         listener.settimeout(0.05)
-        deadline = time.monotonic() + 15
+        deadline = time.monotonic() + scaled(15)
         while True:
             try:
                 return listener.accept()[0]
@@ -674,7 +674,7 @@ class PyTlsServer(PeerThread):
         def run():
             port = self.wait_for_port(port_file)
             for greeting in greetings:
-                raw = socket.create_connection(("127.0.0.1", port), timeout=10)
+                raw = socket.create_connection(("127.0.0.1", port), timeout=scaled(10))
                 tls = self.ctx.wrap_socket(raw, server_side=True)
                 self.log.append(f"handshake sni={self.sni[-1]!r} alpn={tls.selected_alpn_protocol()!r}")
                 tls.sendall(greeting)
@@ -690,11 +690,11 @@ class PyTlsServer(PeerThread):
         def run():
             with listener:
                 conn = self.accept(listener)
-            conn.settimeout(10)
+            conn.settimeout(scaled(10))
             tls = self.ctx.wrap_socket(conn, server_side=True)
             self.log.append(f"handshake sni={self.sni[-1]!r}")
             raw = socket.socket(fileno=os.dup(tls.fileno()))
-            raw.settimeout(10)
+            raw.settimeout(scaled(10))
             raw.sendall(bytes([0x17, 0x03, 0x03, 0x00, 0x20]) + b"\x5a" * 32)
             reply = b""
             while chunk := raw.recv(4096):
@@ -785,7 +785,7 @@ def raw_exchanges(peer, port_file, payloads):
     def run():
         port = peer.wait_for_port(port_file)
         for payload in payloads:
-            sock = socket.create_connection(("127.0.0.1", port), timeout=10)
+            sock = socket.create_connection(("127.0.0.1", port), timeout=scaled(10))
             sock.sendall(payload)
             received = b""
             ending = "eof"

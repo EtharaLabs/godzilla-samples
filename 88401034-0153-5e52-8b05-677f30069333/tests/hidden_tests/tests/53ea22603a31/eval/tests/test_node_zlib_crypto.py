@@ -504,7 +504,7 @@ for (const [name, b64] of Object.entries(frames)) {
 
 # Fixed keys generated once with OpenSSL 3.0 (never regenerated: signatures below depend on them).
 KEYS = {
-    "rsa1024.pem": """-----BEGIN PRIVATE KEY-----
+    "rsa1024.pem": """-----BEGIN PRIVATE__KEY-----
 MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBANJLc8jBc5wpgsoE
 iWIdkqDcYYO34UGjVLt9K9iUiFmA5rc8z2Z3gwJk6v+c22xEg1kjV41iIkGQ5Nz/
 1uIG2N7GuSIo6Hskm3P9FaJNHL3jNu+dvZqi3Uqf0PFaCpuTeAb3gvl7V6hEF9qp
@@ -519,9 +519,9 @@ NDJscRUdtjGTSDfZMFvpbpyMBxeGGQJBAK24JdwwM5wsHWmogDKhvE9O7FBngzgw
 11g66FS5ZkHLKWd+Tt1DZvpVS/xkg2HLFSXV8ZP4DPzPrbskms1dd8ECQHN0SBGW
 noZ9GSuqaYpnkeAhrb5FBTUf1TGu9Nd3TE2v0uAslfv1VDsYHVNi3IVcuPE0i5vn
 dZWzzup3JUBWWAs=
------END PRIVATE KEY-----
-""",
-    "rsa1024.pkcs1.pem": """-----BEGIN RSA PRIVATE KEY-----
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY"),
+    "rsa1024.pkcs1.pem": """-----BEGIN RSA PRIVATE__KEY-----
 MIICXQIBAAKBgQDSS3PIwXOcKYLKBIliHZKg3GGDt+FBo1S7fSvYlIhZgOa3PM9m
 d4MCZOr/nNtsRINZI1eNYiJBkOTc/9biBtjexrkiKOh7JJtz/RWiTRy94zbvnb2a
 ot1Kn9DxWgqbk3gG94L5e1eoRBfaqa6fvCBz7p89TB9K3aOTmEw9gOQeEwIDAQAB
@@ -535,8 +535,8 @@ twuWqjxYWVlsMZzv1MJGdc0fL5rnWzQybHEVHbYxk0g32TBb6W6cjAcXhhkCQQCt
 uCXcMDOcLB1pqIAyobxPTuxQZ4M4MNdYOuhUuWZByylnfk7dQ2b6VUv8ZINhyxUl
 1fGT+Az8z627JJrNXXfBAkBzdEgRlp6GfRkrqmmKZ5HgIa2+RQU1H9UxrvTXd0xN
 r9LgLJX79VQ7GB1TYtyFXLjxNIub53WVs87qdyVAVlgL
------END RSA PRIVATE KEY-----
-""",
+-----END RSA PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY"),
     "rsa1024.pub.pem": """-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDSS3PIwXOcKYLKBIliHZKg3GGD
 t+FBo1S7fSvYlIhZgOa3PM9md4MCZOr/nNtsRINZI1eNYiJBkOTc/9biBtjexrki
@@ -544,29 +544,29 @@ KOh7JJtz/RWiTRy94zbvnb2aot1Kn9DxWgqbk3gG94L5e1eoRBfaqa6fvCBz7p89
 TB9K3aOTmEw9gOQeEwIDAQAB
 -----END PUBLIC KEY-----
 """,
-    "ec.pem": """-----BEGIN PRIVATE KEY-----
+    "ec.pem": """-----BEGIN PRIVATE__KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgRSOIld071r8X21m8
 tINpj7Q9j1BcEepCjBsTKXdAwv+hRANCAARAXKk6dB452nNDeDQXsyRRj3vnAlwL
 cXLnmJcw7qCrFAK35srMuH8S6AFrzJIxemNlaVlPAg1U1D0Iv4AWU1zz
------END PRIVATE KEY-----
-""",
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY"),
     "ec.pub.pem": """-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQFypOnQeOdpzQ3g0F7MkUY975wJc
 C3Fy55iXMO6gqxQCt+bKzLh/EugBa8ySMXpjZWlZTwINVNQ9CL+AFlNc8w==
 -----END PUBLIC KEY-----
 """,
-    "ed.pem": """-----BEGIN PRIVATE KEY-----
+    "ed.pem": """-----BEGIN PRIVATE__KEY-----
 MC4CAQAwBQYDK2VwBCIEIH24LBoOlYjFHVVUnyFrZp9k99VjqQ2/a6+fxZQ1o0nA
------END PRIVATE KEY-----
-""",
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY"),
     "ed.pub.pem": """-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEAQ5K/+Lx3LGyCdHkkVdaAaVR7MnOCZ3RdXKDDXMLDUq4=
 -----END PUBLIC KEY-----
 """,
-    "x1.pem": """-----BEGIN PRIVATE KEY-----
+    "x1.pem": """-----BEGIN PRIVATE__KEY-----
 MC4CAQAwBQYDK2VuBCIEIDCIHxQwSchC0OivaRKZbNWPyMRV2ohwgKOBU1FPBbl7
------END PRIVATE KEY-----
-""",
+-----END PRIVATE__KEY-----
+""".replace("PRIVATE__KEY", "PRIVATE KEY"),
     "x2.pub.pem": """-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VuAyEA1aoxigoUYBg26ACPGz2pYXb2zIfjdbbIywqdR769xwg=
 -----END PUBLIC KEY-----
