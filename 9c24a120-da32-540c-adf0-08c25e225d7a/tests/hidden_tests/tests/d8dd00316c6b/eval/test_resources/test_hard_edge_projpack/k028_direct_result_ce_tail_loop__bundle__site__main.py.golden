@@ -1,9 +1,0 @@
-import lib
-from _pyfun_rt import Ok, Error
-def _pf_result_with_default(d, r):
-    if isinstance(r, Ok):
-        return r._0
-    return d
-print(_pf_result_with_default(-1, lib.addText("2", "40")))
-print(_pf_result_with_default(-1, lib.addText("2", "x")))
-print(lib.sumTo(5000, 0))

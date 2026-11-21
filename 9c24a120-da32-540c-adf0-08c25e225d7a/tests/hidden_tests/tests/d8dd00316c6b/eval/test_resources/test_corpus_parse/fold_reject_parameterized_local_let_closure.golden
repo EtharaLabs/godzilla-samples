@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let step acc x =
-    let peek u = (Map.len acc)
-    (((Map.add x) (peek 0)) acc)
-let out = (Map.toList (((List.fold step) Map.empty) [1, 2, 3]))
---- stderr ---

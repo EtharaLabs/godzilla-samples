@@ -1,5 +1,0 @@
-exit: 0
---- stdout ---
-let step s x = ((Set.remove (x - 1)) ((Set.add x) s))
-let out = (Set.toList (((List.fold step) Set.empty) [1, 2, 3]))
---- stderr ---

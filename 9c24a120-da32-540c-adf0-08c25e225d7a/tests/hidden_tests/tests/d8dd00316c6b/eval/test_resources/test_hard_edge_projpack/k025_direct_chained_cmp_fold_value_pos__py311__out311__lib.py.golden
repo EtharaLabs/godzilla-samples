@@ -1,7 +1,0 @@
-import functools
-def _pf_fold(f, acc, xs):
-    return functools.reduce(f, xs, acc)
-def within(lo, x, hi):
-    return lo <= x < hi
-def total(xs):
-    return 1 + _pf_fold(lambda a, x: a + x * 2, 0, xs)

@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-built main.pyfun natively: run it with `python native`
---- stderr ---
-note: in `Lib`: `walk` calls itself in tail position but keeps its recursive form: a closure in it captures `n`
-[mypyc] -m mypyc --allow-redefinition-new --local-partial-types --disable-error-code func-returns-value --disable-error-code var-annotated --disable-error-code union-attr lib.py mid.py main.py

@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-import threading
-def _pf_fn0(_):
-    return print("from the thread")
-t = threading.Thread(daemon=True, target=lambda: _pf_fn0(None))
-t.start()
-t.join()
---- stderr ---

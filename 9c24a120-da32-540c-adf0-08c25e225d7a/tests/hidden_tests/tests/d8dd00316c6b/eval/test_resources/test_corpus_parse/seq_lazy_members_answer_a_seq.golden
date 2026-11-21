@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let s = (Seq.ofList [1, 2, 3])
-let a = (Seq.toList ((Seq.drop 1) s))
-let b = (Seq.toList ((Seq.takeWhile (fun x -> (x < 3))) s))
-let c = (Seq.toList ((Seq.dropWhile (fun x -> (x < 3))) s))
-let d = (Seq.toList (Seq.distinct s))
-let e = (Seq.toList (Seq.pairwise s))
---- stderr ---

@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-type P = { x: bool, y: bool }
-let f p =
-    match p:
-        case P { x = true, y = true }: 1
-        case P { x = true, y = false }: 2
-        case P { x = false, y = true }: 3
---- stderr ---

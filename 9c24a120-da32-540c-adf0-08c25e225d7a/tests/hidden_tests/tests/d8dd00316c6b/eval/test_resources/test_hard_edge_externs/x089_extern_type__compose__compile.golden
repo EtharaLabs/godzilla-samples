@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-import pathlib
-def pathSuffix(s):
-    return pathlib.PurePosixPath(s).suffix
-twice = lambda _pf_x: (lambda v: (v, v))(pathSuffix(_pf_x))
-print(twice("report.csv"))
---- stderr ---

@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-type Pair = { name: string, age: int }
-let user = (((Decode.map2 (fun name age -> Pair { name = name, age = age })) ((Decode.field "name") Decode.string)) ((Decode.field "age") Decode.int))
-let r = ((Decode.decodeString user) "{\"name\": \"ada\", \"age\": 36}")
---- stderr ---

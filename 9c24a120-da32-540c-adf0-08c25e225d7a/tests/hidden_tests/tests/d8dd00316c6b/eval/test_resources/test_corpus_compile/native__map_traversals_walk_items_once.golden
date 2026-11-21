@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-def _pf_map_fold(f, acc, m):
-    for kv in m.items():
-        acc = f(acc, kv[0], kv[1])
-    return acc
-m: dict[int, str] = dict([(1, "a")])
-t: int = _pf_map_fold(lambda acc, k, v: acc + k, 0, m)
---- stderr ---

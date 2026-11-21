@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-let kind r =
-    match r:
-        case (Ok v): "ok"
-        case (Error e): e.errorKind
-let malformed = (kind ((Decode.decodeString Decode.bool) "not json"))
---- stderr ---

@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-let doubles = (Seq.toList ((Seq.take 5) (Seq.initInfinite (fun i -> (i * 2)))))
-let powers = (Seq.toList ((Seq.take 4) ((Seq.unfold (fun s -> (if (s > 100) then None else (Some (s, (s * 2)))))) 1)))
-let firstBig = ((Seq.find (fun x -> (x > 6))) (Seq.initInfinite (fun i -> (i * 2))))
---- stderr ---

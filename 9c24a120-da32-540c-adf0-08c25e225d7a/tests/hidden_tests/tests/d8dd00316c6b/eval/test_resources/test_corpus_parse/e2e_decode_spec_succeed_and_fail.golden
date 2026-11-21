@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let show r =
-    match r:
-        case (Ok v): f"ok: {v}"
-        case (Error e): f"{e.errorKind}: {e.errorMessage}"
-let s = (show ((Decode.decodeString (Decode.succeed 42)) "0"))
-let failed = (show ((Decode.decodeString (Decode.fail "boom")) "0"))
---- stderr ---

@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-let f = ((Decode.decodeString Decode.auto) "1")
-let g =
-    match f:
-        case (Ok h): (h 1)
-        case (Error _): 0
---- stderr ---

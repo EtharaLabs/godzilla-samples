@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-00000002ok00000060List.groupBy : ('a -> 'b) -> (List 'a) -> List ('b, List 'a)0000000000000002ok0000000000000160def _pf_group_by(f, xs):
-    groups = dict()
-    for x in xs:
-        groups.setdefault(f(x), []).append(x)
-    return list(groups.items())
-print(_pf_group_by)
---- stderr ---

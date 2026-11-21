@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let step m x = (((Map.add x) x) m)
-module M =
-    let scan xs = (((List.fold step) Map.empty) xs)
-let r = (Map.len (M.scan [1, 2, 3]))
---- stderr ---

@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-extern import asyncio
-extern runAsync: (Async a) -> a = asyncio.run
-extern toThread: (unit -> a) -> Async a = asyncio.to_thread
-let answer n = (n * 7)
-let main = async { let! v = (toThread (fun _ -> (6 * 7))) let! w = (toThread (fun _ -> (answer 7))) return (v + w) }
-(print (runAsync main))
---- stderr ---

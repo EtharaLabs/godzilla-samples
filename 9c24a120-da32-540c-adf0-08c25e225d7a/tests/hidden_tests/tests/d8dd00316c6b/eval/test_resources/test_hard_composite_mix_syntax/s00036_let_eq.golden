@@ -1,8 +1,0 @@
-exit: 1
---- stdout ---
---- stderr ---
-error: expected a constructor name after `.`, found identifier `forall`
-  --> 50:18
-   |
-50 | let digest (List.forall (fun x -> x >= 0)) (List.map (fun x -> if x < 0 then -x else x * 4) (List.map ((+) 4) (List.filter (fun x -> x % 4 == 3) (List.sortDescending (List.drop 1 (List.sort (values)))))))
-   |                  ^^^^^^

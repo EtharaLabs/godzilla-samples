@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-let worker = async { do! (Async.sleep 0.01) }
-let launch w = (Task.start w)
-let session = (Task.scope async { let _ = (Task.start worker) let _ = (launch worker) return 1 })
---- stderr ---

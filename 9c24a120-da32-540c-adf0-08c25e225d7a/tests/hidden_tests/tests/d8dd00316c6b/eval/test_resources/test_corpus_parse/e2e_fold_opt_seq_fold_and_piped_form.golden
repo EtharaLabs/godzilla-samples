@@ -1,6 +1,0 @@
-exit: 0
---- stdout ---
-let s = (((Seq.fold (fun m x -> (((Map.add x) x) m))) Map.empty) ((Seq.range 0) 3))
-let p = ([1, 2, 3] |> ((List.fold (fun a x -> ((List.concat a) [x]))) []))
-let so = (Map.toList s)
---- stderr ---

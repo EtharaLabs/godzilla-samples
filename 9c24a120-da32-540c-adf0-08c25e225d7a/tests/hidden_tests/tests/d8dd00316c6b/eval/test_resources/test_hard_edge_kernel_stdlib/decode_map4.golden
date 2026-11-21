@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-00000002ok00000120Decode.map4 : ('a -> 'b -> 'c -> 'd -> 'e) -> (Decoder 'a) -> (Decoder 'b) -> (Decoder 'c) -> (Decoder 'd) -> Decoder 'e0000000000000002ok0000000000000131def _pf_dec_map4(f, da, db, dc, dd):
-    def go(v):
-        return f(da(v), db(v), dc(v), dd(v))
-    return go
-print(_pf_dec_map4)
---- stderr ---

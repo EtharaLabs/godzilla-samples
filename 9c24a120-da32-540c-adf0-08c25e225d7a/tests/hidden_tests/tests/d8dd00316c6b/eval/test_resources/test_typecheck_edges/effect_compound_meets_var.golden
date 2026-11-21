@@ -1,8 +1,0 @@
-exit: 1
---- stdout ---
---- stderr ---
-error: this function performs nothing, but `k` takes this callback as `'a ->{io} unit`, which performs exactly {io}; to accept a callback whatever it does, give that arrow an effect variable in the extern that declares it: `'a ->{e} unit`
- --> 6:12
-  |
-6 | let r = k (fun y -> ()) true 5
-  |            ^^^^^^^^^^^

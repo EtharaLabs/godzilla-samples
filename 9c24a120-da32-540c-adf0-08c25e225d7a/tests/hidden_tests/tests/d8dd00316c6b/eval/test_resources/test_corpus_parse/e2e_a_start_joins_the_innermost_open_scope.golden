@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-extern runAsync: (Async a) -> a = asyncio.run
-let worker name = async { do! (Async.sleep 0.01) let _ = (print name) }
-let launch name = (Task.start (worker name))
-let session = (Task.scope async { let _ = (launch "outer-1") let! inner = (Task.scope async { let _ = (launch "inner") return 1 }) let _ = (launch "outer-2") return (inner + 1) })
-(print (runAsync session))
---- stderr ---

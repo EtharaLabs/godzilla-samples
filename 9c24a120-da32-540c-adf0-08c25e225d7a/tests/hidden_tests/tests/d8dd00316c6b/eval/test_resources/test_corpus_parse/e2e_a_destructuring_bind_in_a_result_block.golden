@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-let f r = result { let! (a, b) = r let (c, d) = (b, a) return ((c * 10) + d) }
-let ok =
-    match (f (Ok (1, 2))):
-        case (Ok v): v
-        case (Error _): 0
---- stderr ---

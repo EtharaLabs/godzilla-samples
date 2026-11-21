@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-import functools
-import textwrap as tw
-curried = functools.partial(tw.indent, "a\nb")
-both = lambda _pf_x: (lambda v: [v])(curried(_pf_x))
-print(both("> "))
---- stderr ---

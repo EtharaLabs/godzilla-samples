@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-extern import asyncio
-extern runAsync: (Async a) -> a = asyncio.run
-let job = async { let _ = (print "run") return 1 }
-(print "built")
-let twice = async { let! a = job let! b = job let! both = (Async.parallel [job, job]) return ((a + b) + (List.sum both)) }
-(print (runAsync twice))
---- stderr ---

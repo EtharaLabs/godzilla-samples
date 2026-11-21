@@ -1,7 +1,0 @@
-exit: 0
---- stdout ---
-let n = 5
-let f u = result { let m = (n + 1) let! n = (if (u > 0) then (Ok 2) else (Error "no")) return (n + m) }
-let a = (f 1)
-let b = (f 0)
---- stderr ---

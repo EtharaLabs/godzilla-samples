@@ -1,9 +1,0 @@
-exit: 0
---- stdout ---
-let cap acc x =
-    match acc:
-        case (m, fs): ((((Map.add x) x) m), ((List.concat fs) [(fun u -> (Map.len m))]))
-let out =
-    match (((List.fold cap) (Map.empty, [])) [1, 2]):
-        case (m, fs): ((List.map (fun f -> (f 0))) fs)
---- stderr ---

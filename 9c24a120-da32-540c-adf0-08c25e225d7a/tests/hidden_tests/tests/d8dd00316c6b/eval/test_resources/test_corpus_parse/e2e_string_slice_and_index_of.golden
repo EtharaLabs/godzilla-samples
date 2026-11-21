@@ -1,8 +1,0 @@
-exit: 0
---- stdout ---
-let s = "hello world"
-let a = (((String.slice 0) 5) s)
-let b = (((String.slice 6) 100) s)
-let c = ((Option.withDefault (0 - 1)) ((String.tryIndexOf "world") s))
-let d = ((Option.withDefault (0 - 1)) ((String.tryIndexOf "zzz") s))
---- stderr ---
